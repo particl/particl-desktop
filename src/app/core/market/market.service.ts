@@ -1,17 +1,20 @@
 
-import {throwError as observableThrowError,  Observable } from 'rxjs';
+import {throwError as observableThrowError,  Observable, interval } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
 
 import { dataURItoBlob } from 'app/core/util/utils';
 import { environment } from '../../../environments/environment';
-import { map, catchError } from 'rxjs/operators';
+import { takeWhile, map, catchError } from 'rxjs/operators';
+import { IpcService } from 'app/core/ipc/ipc.service';
 
 @Injectable()
 export class MarketService {
 
-  private log: any = Log.create('rpc-state.class');
+  private log: any = Log.create('market-service id: ' + Math.floor((Math.random() * 1000) + 1));
+  public isMarketStarted: boolean = false;
+  public _checkMarket: any;
 
   // hostname: string = 'dev1.particl.xyz';
   // hostname: string = 'localhost';
@@ -22,7 +25,10 @@ export class MarketService {
   url: string = `http://${this.hostname}:${this.port}/api/rpc`;
   imageUrl: string = `http://${this.hostname}:${this.port}/api/item-images/template/`;
 
-  constructor(private _http: HttpClient) { }
+  constructor(
+    private _http: HttpClient,
+    private _ipc: IpcService
+  ) { }
 
   public call(method: string, params?: Array<any> | null): Observable<any> {
     // Running in browser, delete?
@@ -86,5 +92,43 @@ export class MarketService {
       return this.extractMPErrorMessage(errorObj.error);
     }
     return 'Invalid marketplace request';
+  }
+
+  startMarket(wallet: string): Observable<any> {
+    return new Observable((observer) => {
+
+      if (this.isMarketStarted) {
+        observer.next(this.isMarketStarted);
+        observer.complete();
+        return;
+      }
+      if (window.electron) {
+        this._ipc.runCommand('start-market', null, wallet);
+        this._checkMarket =
+          interval(1000)
+            .pipe(takeWhile(() => !this.isMarketStarted))
+            .subscribe(() => {
+              this.call('profile', ['list'])
+                .pipe(map((profiles) => profiles.length > 0))
+                .subscribe((started) => {
+                  if (started) {
+                    this.isMarketStarted = started;
+                    observer.next(started);
+                    observer.complete();
+                  }
+                });
+            });
+      } else {
+        observer.complete()
+      }
+    });
+  }
+
+  stopMarket() {
+    if (window.electron) {
+      this._checkMarket.unsubscribe();
+      this._ipc.runCommand('stop-market', null, null);
+      this.isMarketStarted = false;
+    }
   }
 }

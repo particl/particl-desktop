@@ -20,6 +20,7 @@ exports.start = function (mainWindow) {
   notification.init();
   closeGui.init();
   daemon.init();
+  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
@@ -58,10 +59,9 @@ daemonManager.on('status', (status, msg) => {
     multiwallet.get()
     // TODO: activate for prompting wallet
     .then(chosenWallets => {
-      daemon.start(chosenWallets);
+      daemon.start();
     })
     .then(() => {
-      market.init();
       daemonConfig.send();
     })
     .catch(err          => log.error(err));

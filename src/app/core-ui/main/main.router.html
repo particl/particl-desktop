@@ -1,0 +1,238 @@
+<!-- TODO: dynamically add `with-top-notification` class when message is shown (new release / alpha warning etc.): -->
+<mat-sidenav-container fullscreen [ngClass]="{'with-top-notification': showAnnouncements}">
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
+
+    <multiwallet-sidebar class="sidebar-multiwallet"></multiwallet-sidebar>
+
+    <div class="sidebar-menu">
+      <div class="logo">
+        <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
+        <div class="balances">
+          <div class="balance">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
+            <div class="text">
+              <div class="key">Locked</div>
+              <app-balance class="value" type="locked_balance" [inSidebar]="true"></app-balance>
+            </div>
+          </div>
+          <div class="balance">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
+            <div class="text">
+              <div class="key">Spendable</div>
+              <app-balance class="value" type="actual_balance" [inSidebar]="true"></app-balance>
+            </div>
+          </div>
+        </div><!-- .balances -->
+      </div>
+
+      <mat-divider></mat-divider>
+
+
+      <div class="menu-links">
+
+        <mat-content class="sidebar-section">
+          <mat-list class="sidebar-item-group">
+            <a class="sidebar-item-link"
+              routerLinkActive="active" routerLink="wallet/overview">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
+                <span class="text">Overview</span>
+              </mat-list-item>
+            </a>
+          </mat-list><!-- .sidebar-item-group -->
+        </mat-content><!-- .sidebar-section -->
+
+        <mat-content class="sidebar-section" *ngIf="_market.isMarketStarted">
+          <mat-accordion [multi]="'multi'">
+            <mat-expansion-panel #panel2 expanded="true" class="no-padding arrow-colored">
+              <mat-expansion-panel-header>Market</mat-expansion-panel-header>
+              <mat-content>
+                <mat-list class="sidebar-item-group">
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="market/listings">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-listings"></mat-icon>
+                      <span class="text">Listings</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="market/buy">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-bag-buy"></mat-icon>
+                      <span class="text">Buy</span>
+                      <app-order-count [type]="'buy'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="market/sell">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-bag-sell"></mat-icon>
+                      <span class="text">Sell</span>
+                      <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count>
+                    </mat-list-item>
+                  </a>
+
+                </mat-list><!-- .sidebar-item-group -->
+              </mat-content>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-content><!-- .sidebar-section -->
+
+        <mat-content class="sidebar-section">
+          <mat-accordion [multi]="'multi'">
+            <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+              <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
+              <mat-content>
+                <mat-list class="sidebar-item-group">
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="wallet/send">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-send"></mat-icon>
+                      <span class="text">Send</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="wallet/receive">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-receive"></mat-icon>
+                      <span class="text">Receive</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="wallet/history">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon"
+                        fontSet="partIcon" fontIcon="part-date"></mat-icon>
+                      <span class="text">History</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="wallet/address-book">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-people"></mat-icon>
+                      <span class="text">Address Book</span>
+                    </mat-list-item>
+                  </a>
+
+                </mat-list><!-- .sidebar-item-group -->
+              </mat-content>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-content><!-- .sidebar-section -->
+
+        <mat-content class="sidebar-section" *ngIf="_market.isMarketStarted">
+          <mat-list class="sidebar-item-group">
+            <a class="sidebar-item-link"
+              routerLinkActive="active" routerLink="wallet/proposals">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+                <span class="text">Proposals</span>
+                <app-count-badge class="tag" [count]="proposalsNotificationsService?.proposalsCountRequiredVoteAction"></app-count-badge>
+              </mat-list-item>
+            </a>
+          </mat-list><!-- .sidebar-item-group -->
+        </mat-content><!-- .sidebar-section -->
+
+        <mat-content class="sidebar-section">
+          <mat-list class="sidebar-item-group">
+            <a class="sidebar-item-link" routerLinkActive="active" routerLink="wallet/help">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
+                <span class="text">Help &amp; Support</span>
+              </mat-list-item>
+            </a>
+          </mat-list>
+        </mat-content>
+      </div><!-- .menu-links -->
+
+
+      <footer class="footer">
+
+        <!-- Errors & Notifications -->
+        <mat-content class="errors-notifications">
+          <mat-list class="notification sidebar-item-group">
+
+            <mat-list-item class="message sidebar-item" *ngIf="!daemonRunning">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console"></mat-icon>
+              <span class="text"><strong>Connecting</strong> to daemon...</span>
+            </mat-list-item>
+
+            <mat-list-item class="error sidebar-item" *ngIf="daemonError != undefined && daemonError.error">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+
+              <!-- TODO: better handling of errors / mix with modules/rpc/rpc.js -->
+              <div *ngIf="daemonError.error.status">
+                <span *ngIf="daemonError.error.status == 401" class="text">
+                  <strong>RPC connection failed:</strong> check credentials
+                </span>
+                <span *ngIf="daemonError.error.status == 502" class="text">
+                  <strong>Waiting for daemon</strong> initialisation...
+                </span>
+              </div>
+
+              <div *ngIf="daemonError.error.code">
+                <span class="text">
+                  {{ daemonError.error.message }}
+                </span>
+              </div>
+            </mat-list-item>
+
+            <mat-list-item class="info sidebar-item" *ngIf="unlocked_until > 0">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+              <span class="text"
+                matTooltip="As a security measure, wallet auto-locks after 5 mins"
+                matTooltipPosition="above"><strong>Wallet unlocked</strong> for {{ time }}</span>
+            </mat-list-item>
+
+          </mat-list>
+        </mat-content>
+        <app-version [daemonVersion]="daemonVersion"></app-version>
+
+        <!-- Sync progress -->
+        <block-sync-bar #progress (click)="syncScreen()"></block-sync-bar>
+
+      </footer><!-- .pin-to-bottom -->
+    </div>
+
+  </mat-sidenav><!-- .sidebar -->
+
+
+
+  <!-- ======= Page Header ======= -->
+
+  <!-- info/warning notification -->
+  <app-announcement-notification *ngIf="showAnnouncements"></app-announcement-notification>
+
+  <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
+
+    <div class="left" fxFlex="1 1 40%">
+      <!--button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
+        <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+      </button-->
+      <div class="title">
+        {{ title }}
+      </div>
+    </div><!-- .left -->
+    <div class="right" fxFlex="1 1 60%">
+      <app-cart *ngIf="_market.isMarketStarted"></app-cart>
+      <app-status></app-status>
+    </div><!-- .right -->
+
+  </mat-toolbar><!-- .header-main -->
+
+  <router-outlet></router-outlet>
+
+</mat-sidenav-container>

@@ -87,7 +87,7 @@ export class AddProposalComponent implements OnInit {
   }
 
   backToProposals(): void {
-    this.router.navigate(['/wallet/proposals']);
+    this.router.navigate(['/wallet/main/wallet/proposals']);
   }
 
   submitProposal(): void {

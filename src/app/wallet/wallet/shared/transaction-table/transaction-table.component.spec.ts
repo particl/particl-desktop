@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { RpcModule } from '../../../../core/rpc/rpc.module';
+import { RpcWithStateModule } from '../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
 import { CoreModule } from '../../../../core/core.module';
@@ -21,7 +21,7 @@ describe('TransactionTableComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot(),
+        RpcWithStateModule.forRoot(),
         CoreModule.forRoot(),
         BrowserAnimationsModule
       ]
