@@ -91,13 +91,6 @@
       "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
         {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        },
-        {
           "target": "zip",
           "arch": [
             "x64",
@@ -123,12 +116,6 @@
       "target": [
         {
           "target": "deb",
-          "arch": [
-            "x64"
-          ]
-        },
-        {
-          "target": "rpm",
           "arch": [
             "x64"
           ]
