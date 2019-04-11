@@ -14,7 +14,7 @@
       </mat-form-field>
 
       <!--  <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-        <mat-select placeholder="Sort orders" [(ngModel)]="filters.sort" (change)="filter()">
+        <mat-select placeholder="Sort orders" [(ngModel)]="filters.sort" (selectionChange)="filter()">
           <mat-option *ngFor="let sorting of order_sortings" [value]="sorting.value">
             {{ sorting.title }}
           </mat-option>
@@ -37,7 +37,7 @@
       </div> -->
     </mat-card>
   </div><!-- .filter-by-type -->
-  
+
   <div class="section filter-by-type">
     <div class="subtitle">Filter by status</div>
     <mat-card class="filter-card">

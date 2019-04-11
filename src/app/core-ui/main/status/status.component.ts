@@ -46,7 +46,7 @@ export class StatusComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => this.encryptionStatus = status);
 
-    this._rpcState.observe('ui:coldstaking')
+    this._rpcState.observe('getcoldstakinginfo', 'enabled')
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => this.coldStakingStatus = status);
 
@@ -87,7 +87,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   getColdStakingStatus() {
-    return (this.coldStakingStatus) ? 'enabled' : 'disabled';
+    return (this.coldStakingStatus) ? 'active' : 'inactive';
   }
 
   toggle() {

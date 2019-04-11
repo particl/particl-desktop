@@ -7,13 +7,10 @@ const Observable = require('rxjs/Observable').Observable;
 const _options = require('../options');
 const clearCookie = require('../webrequest/http-auth').removeWalletAuthentication;
 const rpc = require('../rpc/rpc');
-const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
-const multiwallet = require('../multiwallet');
 const daemonConfig = require('./daemonConfig');
 
 let daemon = undefined;
-let chosenWallets = [];
 
 function daemonData(data, logger) {
   data = data.toString().trim();
@@ -45,7 +42,7 @@ exports.restart = function (alreadyStopping) {
       // clear authentication
       clearCookie();
       // restart
-      this.start(chosenWallets);
+      this.start();
     });
   }
 
@@ -62,7 +59,7 @@ exports.restart = function (alreadyStopping) {
 
 let attemptsToStart = 0;
 const maxAttempts = 10;
-exports.start = function (wallets, doReindex = false) {
+exports.start = function (doReindex = false) {
   let options = _options.get();
 
   if (+options.addressindex !== 1) {
@@ -74,8 +71,6 @@ exports.start = function (wallets, doReindex = false) {
   }
 
   return (new Promise((resolve, reject) => {
-
-    chosenWallets = wallets;
 
     exports.check().then(() => {
       log.info('daemon already started');
@@ -94,8 +89,8 @@ exports.start = function (wallets, doReindex = false) {
         log.info('Adding reindex flag to daemon startup');
         addedArgs.push('-reindex');
       }
-      wallets = wallets.map(wallet => `-wallet=${wallet}`);
-      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets, ...addedArgs];
+
+      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...addedArgs];
       log.info(`starting daemon: ${deamonArgs.join(' ')}`);
 
       const child = spawn(daemonPath, deamonArgs)
@@ -117,7 +112,7 @@ exports.start = function (wallets, doReindex = false) {
         if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
           log.error('Restarting the daemon with the -reindex flag.');
           attemptsToStart++;
-          exports.start(wallets, true);
+          exports.start(true);
         }
         daemonData(data, console.log);
       });
@@ -145,7 +140,7 @@ exports.check = function () {
   });
 }
 
-exports.stop = function (restarting) {
+exports.stop = function () {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
@@ -153,12 +148,10 @@ exports.stop = function (restarting) {
 
       // attach event to stop electron when daemon closes.
       // do not close electron when restarting (e.g encrypting wallet)
-      if (!restarting) {
-        daemon.once('close', code => {
-          log.info('daemon exited successfully - we can now quit electron safely! :)');
-          electron.app.quit();
-        });
-      }
+      daemon.once('close', code => {
+        log.info('daemon exited successfully - we can now quit electron safely! :)');
+        electron.app.quit();
+      });
 
       log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
@@ -168,7 +161,7 @@ exports.stop = function (restarting) {
           reject();
         } else {
           log.info('Daemon stopping gracefully...');
-          resolve();
+          // resolve();
         }
       });
     } else {

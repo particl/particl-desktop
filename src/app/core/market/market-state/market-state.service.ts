@@ -8,21 +8,24 @@ import { finalize } from 'rxjs/operators';
 @Injectable()
 export class MarketStateService extends StateService implements OnDestroy {
 
-  private log: any = Log.create('market-state.service');
+  private log: any = Log.create('market-state.service id: ' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
+  private _enableState: boolean = true;
 
   constructor(private market: MarketService) {
     super();
     this.log.d('MarketState: initialized');
-    // this.register('currencyprice', 30 * 1000, ['PART', 'USD']);
+  }
 
-    /*
-     * @TODO change 'category' timmer '(3 * 1000)' as '(60 * 1000)' once category loading got fixed.
-     * Or Once improve-router branch got merged.
-     */
-
+  start(): void {
+    this._enableState = true;
     this.register('profile', 60 * 1000, ['list']);
     this.register('bid', 15 * 1000, ['search', 0, 99999, 'ASC', '*', '*', ''])
+  }
+
+  stop() {
+    this._enableState = false;
+    this.clear();
   }
 
   /** Register a state call, executes every X seconds (timeout) */
@@ -32,8 +35,7 @@ export class MarketStateService extends StateService implements OnDestroy {
 
     // loop procedure
     const _call = () => {
-      if (this.destroyed) {
-        // RpcState service has been destroyed, stop.
+      if (this.destroyed || ! this._enableState) {
         return;
       }
       this.market.call(method, params)

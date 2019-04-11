@@ -11,7 +11,7 @@ import { take, takeWhile } from 'rxjs/operators';
 @Injectable()
 export class ProposalsNotificationsService implements OnDestroy {
 
-  log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
+  log: any = Log.create('proposals-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
   public destroyed: boolean = false;
   private numNewProposals: number = 0;
   private lastUpdatedTimeStamp: number = 0;
@@ -28,6 +28,7 @@ export class ProposalsNotificationsService implements OnDestroy {
     private peerService: PeerService,
     private _notification: NotificationService,
   ) {
+    this.log.d('creating service');
 
     // load stored proposal.
     this.loadLastViewedProposalTimestamp();
@@ -106,5 +107,6 @@ export class ProposalsNotificationsService implements OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.log.d('stopping service');
   }
 }

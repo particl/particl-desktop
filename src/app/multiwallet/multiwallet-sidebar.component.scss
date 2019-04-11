@@ -1,0 +1,70 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// small sidebar for multiwallet, settings etc.
+.mini-sidebar-menu {
+  $spacing: 12px;
+  display: flex;
+  flex-direction: column;
+  background: darken($bg-black, 5%);
+  height: 100vh;
+
+  // wallet selection
+  .multiwallet {
+    flex: 1 1 100%;
+    overflow-y: scroll;
+    padding: $spacing (10px - $scrollbar-width) $spacing 10px;
+    .mat-raised-button {
+      @extend %tfx;
+      min-width: auto;
+      margin: 0 auto $spacing;
+      width: 34px;
+      padding: 0;
+      height: 32px;
+      line-height: 32px;
+      font-family: $font;
+      font-weight: 700;
+      &.mat-primary:not(.active) {
+        background: lighten($bg-black, 7%);
+        font-weight: 500;
+        &:hover {
+          background: lighten($bg-black, 15%);
+        }
+      }
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+    &::-webkit-scrollbar-thumb {
+      background: darken($bg-black, 10%);
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: darken($bg-black, 5%);
+    }
+  }
+
+  // app-wide stuff (settings, bugs, ..)
+  .buttons {
+    flex: 1 1 10px;
+    padding: $spacing 10px;
+    .mat-button {
+      width: 34px;
+      margin: 6px 0 0;
+      padding: 0;
+      text-align: center;
+      opacity: 0.25;
+      &:hover {
+        opacity: 1;
+        color: $color-white;
+      }
+    }
+  }
+
+}
+
+.mat-button,
+.mat-raised-button {
+  .mat-icon {
+    margin: 0;
+  }
+}

@@ -10,6 +10,7 @@ import { ModalsModule } from 'app/modals/modals.module';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { AddressBookComponent } from './address-book.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
@@ -23,6 +24,7 @@ describe('AddressBookComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot(),
         BrowserAnimationsModule
       ],
       declarations: [ ],

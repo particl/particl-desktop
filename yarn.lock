@@ -7105,12 +7105,12 @@ ngx-clipboard@11.1.9:
     ngx-window-token "^1.0.2"
     tslib "^1.9.0"
 
-ngx-infinite-scroll@6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-6.0.1.tgz#571e54860ce32839451569bcf6e7a63cfae327bd"
-  integrity sha512-20WcD+3Qh3O0IEFyIjt55JPTKw5W1hAxERXMUDgGDRveS3IBpBxv2DuX5vuHG/bNGC+WoTDlNR/XXScNNicRpw==
+ngx-infinite-scroll@7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-7.1.0.tgz#87dd5e0c596cd4795d2a487f7e30a0eabbb5e442"
+  integrity sha512-uytsKxUgGcPQjYMcf7FObcducQHkEsilPHZGJ3AMhOM4mtxP+YramnXXdyp2thEcuMgfNr9fBJjYnP0YcJciEQ==
   dependencies:
-    opencollective "^1.0.3"
+    opencollective-postinstall "^2.0.2"
 
 ngx-window-token@^1.0.2:
   version "1.0.2"
@@ -7522,6 +7522,11 @@ ono@^4.0.2:
   integrity sha512-jQ31cORBFE6td25deYeD80wxKBMj+zBmHTrVxnc6CKhx8gho6ipmWM5zj/oeoqioZ99yqBls9Z/9Nss7J26G2g==
   dependencies:
     format-util "^1.0.3"
+
+opencollective-postinstall@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
+  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
 
 opencollective@^1.0.3:
   version "1.0.3"

@@ -1,8 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Log } from 'ng2-logger';
 
-import { Address } from './address/address.model';
 import { MarketService } from 'app/core/market/market.service';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
@@ -18,17 +17,25 @@ export class ProfileService implements OnDestroy {
 
   private defaultProfileId: number;
   private destroyed: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private market: MarketService,
     private marketState: MarketStateService,
     public address: AddressService
   ) {
+  }
+
+  start() {
     // find default profile
-    this.defaultId().pipe(takeWhile(() => !this.destroyed)).subscribe((id: number) => {
+    this.profile$ = this.defaultId().pipe(takeWhile(() => !this.destroyed)).subscribe((id: number) => {
       this.log.d('setting default profile id to ' + id);
       this.defaultProfileId = id;
     });
+  }
+
+  stop() {
+    this.profile$.unsubscribe();
   }
 
   list() {

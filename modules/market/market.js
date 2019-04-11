@@ -1,6 +1,9 @@
-const log         = require('electron-log');
-const config    = require('../daemon/daemonConfig');
-const market      = require('particl-marketplace');
+const log = require('electron-log');
+const config = require('../daemon/daemonConfig');
+const market = require('particl-marketplace');
+const rxIpc = require('rx-ipc-electron/lib/main').default;
+const Observable = require('rxjs/Observable').Observable;
+const marketConfig = require('./config.js');
 
 // Stores the child process
 let child = undefined;
@@ -8,17 +11,30 @@ let child = undefined;
 const _options = config.getConfiguration();
 
 exports.init = function() {
+  rxIpc.registerListener('start-market', function(walletName) {
+    return Observable.create(observer => {
+      exports.start(walletName);
+      observer.complete(true);
+    });
+  });
 
-  if (child !== undefined) {
-    return;
-  }
+  rxIpc.registerListener('stop-market', function() {
+    return Observable.create(observer => {
+      exports.stop();
+      observer.complete(true);
+    });
+  });
+}
 
-  const isTestnet = Boolean(+_options.testnet);
-
-  if (!_options.skipmarket) {
+exports.start = function(walletName) {
+  if (!_options.skipmarket && !child) {
     log.info('market process starting.');
+
+    const isTestnet = Boolean(+_options.testnet);
+
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
+      WALLET: walletName || '',
       RPCHOSTNAME: _options.rpcbind || 'localhost',
       RPC_PORT: _options.port,
       TESTNET: isTestnet
@@ -52,8 +68,8 @@ exports.init = function() {
 
 exports.stop = async function() {
   if (!_options.skipmarket && child) {
+    log.info('market process stopping.');
     market.stop();
+    child = null;
   }
 }
-
-// TODO: Export startup function..

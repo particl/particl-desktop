@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { BehaviorSubject } from 'rxjs'
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+
 import { MarketService } from 'app/core/market/market.service';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -9,16 +9,17 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 @Injectable()
 export class CategoryService {
   private categories: BehaviorSubject<Category> = new BehaviorSubject(null);
-  constructor(private market: MarketService) {
+
+  private category$: Subscription;
+
+  constructor(private market: MarketService) {}
+
+  start() {
     this.loadCategories();
   }
 
-  list() {
-    return this.categories;
-  }
-
-  loadCategories() {
-    this.market.call('category', ['list']).subscribe(
+  loadCategories () {
+    this.category$ = this.market.call('category', ['list']).subscribe(
       resp => {
         if (resp && resp.name) {
           this.categories.next(new Category(resp));
@@ -30,6 +31,13 @@ export class CategoryService {
     )
   }
 
+  stop() {
+    this.category$.unsubscribe();
+  }
+
+  list() {
+    return this.categories;
+  }
 
   add(categoryName: string, description: string, parent: string | number): Observable<any> {
     return this.market.call('category', ['add', categoryName, description, parent]);

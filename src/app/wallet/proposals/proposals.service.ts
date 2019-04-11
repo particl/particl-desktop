@@ -5,23 +5,42 @@ import { ProposalResult } from 'app/wallet/proposals/models/proposal-result.mode
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Profile } from 'app/core/market/api/profile/profile.model';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
+import { Subscription, of } from 'rxjs';
+import { Log } from 'ng2-logger';
 import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ProposalsService {
+  private log: any = Log.create('proposals.service id:' + Math.floor((Math.random() * 1000) + 1));
+
   public submitterId: number;
+  private profile$: Subscription;
+  private isEnabled: boolean = false;
 
   constructor(
     private marketService: MarketService,
     private profileService: ProfileService
-  ) {
-    this.profileService.default().subscribe((profile: Profile) => {
+  ) {}
+
+  start() {
+    this.log.d('Starting service');
+    this.isEnabled = true;
+    this.profile$ = this.profileService.default().subscribe((profile: Profile) => {
       this.submitterId = profile.id;
-    })
+    });
+  }
+
+  stop() {
+    this.log.d('Stopping service');
+    this.isEnabled = false;
+    this.profile$.unsubscribe();
   }
 
   // proposal list.
   list(startTime: any, expireTime: any) {
+    if (!this.isEnabled) {
+      return of([]);
+    }
     const params = ['list', startTime, expireTime];
     return this.marketService.call('proposal', params)
       .pipe(map((v) =>
@@ -39,7 +58,6 @@ export class ProposalsService {
      * estimationFee = true to get proposal fee.
      * estimationFee = false to post proposal.
      */
-
     const params = ['post', this.submitterId, ...options]
     return this.marketService.call('proposal', params);
   }

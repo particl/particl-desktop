@@ -1,9 +1,9 @@
 /*
 
-    ____ ____ _  _ ____ _ ____ 
-    |    |  | |\ | |___ | | __ 
-___ |___ |__| | \| |    | |__] 
-                               
+    ____ ____ _  _ ____ _ ____
+    |    |  | |\ | |___ | | __
+___ |___ |__| | \| |    | |__]
+
 Global SCSS config file defining app-wide settings (included in every page)
 
   TOC:
@@ -22,7 +22,7 @@ $font: 'Inter_UI', sans-serif;
 
 // main colors
 $color: #02e8b0; // primary green-ish color
-$color-secondary: #1597DD; // new blue
+$color-secondary: #1597dd; // new blue
 $color-success: #4f8a10;
 $color-alert: #ec4b50;
 $color-warning: #f1a500; // yellow-ish
@@ -46,7 +46,7 @@ $radius: 4px; // default border-radius
 // layouts
 $header-main-height: 64px;
 $tab-bar-height: 48px;
-$sidebar-width: 250px; // main navigation
+$sidebar-width: 270px; // main navigation
 $filter-width: 230px; // sidebar in content area (filter/sort, search)
 $scrollbar-width: 6px;
 $padding: 35px; // spacing between elements
@@ -116,6 +116,11 @@ $break-xhd: 2200px;
   padding: 0 11px;
 }
 
+%mat-card {
+  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+  background: $color-white;
+}
+
 %menu-divider { // diviers in sidebar menu
   border-top: 1px solid #15191a;
   box-shadow: 0 1px 0 #333 inset;
@@ -132,7 +137,7 @@ $break-xhd: 2200px;
 
 %enable-select,
 .enable-select {
-  user-select: auto;
+  user-select: text;
   cursor: text;
 }
 

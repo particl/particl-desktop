@@ -24,7 +24,6 @@ export class ColdstakeService implements OnDestroy {
   };
 
   coldStakingEnabled: boolean = undefined;
-  walletInitialized: boolean = undefined;
   public encryptionStatus: string = 'Locked';
 
   private progress: Amount = new Amount(0, 2);
@@ -55,13 +54,10 @@ export class ColdstakeService implements OnDestroy {
         this.update();
       });
 
-    this._rpcState.observe('ui:coldstaking')
+    this._rpcState.observe('getcoldstakinginfo', 'enabled')
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => this.coldStakingEnabled = status);
 
-    this._rpcState.observe('ui:walletInitialized')
-      .pipe(takeWhile(() => !this.destroyed))
-      .subscribe(status => this.walletInitialized = status);
     this.update();
   }
 
@@ -75,10 +71,8 @@ export class ColdstakeService implements OnDestroy {
 
       if ('enabled' in coldstakinginfo) {
         const enabled = coldstakinginfo['enabled'];
-        this._rpcState.set('ui:coldstaking', enabled);
         this.coldStakingEnabled = enabled;
-      } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-        this._rpcState.set('ui:coldstaking', false);
+      } else {
         this.coldStakingEnabled = false;
       }
       this.updateStakingInfo();

@@ -1,17 +1,34 @@
-import { NgModule } from '@angular/core';
+import {
+  NgModule,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ModuleWithProviders
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TestComponent } from './test/test.component';
+import { HttpClient } from '@angular/common/http';
+
+import { MaterialModule } from 'app/core-ui/material/material.module';
+import { RouterModule } from '@angular/router';
+
+import { MultiwalletSidebarComponent } from './multiwallet-sidebar.component';
+import { MultiwalletService } from './multiwallet.service';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [TestComponent],
-  exports: [
-    TestComponent
-  ]
+  imports: [CommonModule, RouterModule, MaterialModule],
+  exports: [MultiwalletSidebarComponent],
+  declarations: [MultiwalletSidebarComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MultiwalletModule { }
+export class MultiwalletModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: MultiwalletModule,
+      providers: [MultiwalletService]
+    };
+  }
 
-export { TestComponent } from './test/test.component';
-
+  static forTest(): ModuleWithProviders {
+    const root = this.forRoot();
+    root.providers.push(HttpClient);
+    return root;
+  }
+}

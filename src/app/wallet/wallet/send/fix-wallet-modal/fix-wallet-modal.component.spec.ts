@@ -5,9 +5,9 @@ import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { FixWalletModalComponent } from './fix-wallet-modal.component';
-
 
 
 describe('FixWalletModalComponent', () => {
@@ -23,7 +23,8 @@ describe('FixWalletModalComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [ { provide: MatDialogRef } ]
     })
