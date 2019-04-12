@@ -5,7 +5,7 @@ import { CoreModule } from '../../../core/core.module';
 import { CoreUiModule } from '../../core-ui.module';
 
 import { CartComponent } from './cart.component';
-import { cartItemList } from 'app/_test/core-test/market-test/api-test/cart-test/mock-data';
+import { cartItemList } from 'app/_test/core-test/market-test/api-test/cart-test/mock-data/list';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 
 describe('CartComponent', () => {
