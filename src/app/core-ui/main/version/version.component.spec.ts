@@ -3,6 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { VersionComponent } from './version.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MainModule } from '../main.module';
+import { RpcService } from 'app/core/rpc/rpc.service';
+import { MockRpcService } from 'app/core/rpc/rpc.mockservice';
 
 describe('VersionComponent', () => {
   let component: VersionComponent;
@@ -12,7 +14,10 @@ describe('VersionComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpClientModule,
-        MainModule
+        MainModule,
+      ],
+      providers: [
+        { provide: RpcService, useClass: MockRpcService }
       ]
     })
     .compileComponents();
