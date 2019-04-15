@@ -6,7 +6,7 @@
       <span class="selectable">{{ clientVersion }}</span>
     </span>
   </div>
-  <div class="client item">
+  <div class="client item" *ngIf="isMarketWallet">
     Market
     <span class="version" >
       {{ marketVersion }}

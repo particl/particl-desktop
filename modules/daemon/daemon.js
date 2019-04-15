@@ -32,30 +32,30 @@ exports.init = function () {
   });
 }
 
-exports.restart = function (alreadyStopping) {
-  log.info('restarting daemon...')
+// exports.restart = function (alreadyStopping) {
+//   log.info('restarting daemon...')
 
-  // setup a listener, waiting for the daemon
-  // to exit.
-  if (daemon) {
-    daemon.once('close', code => {
-      // clear authentication
-      clearCookie();
-      // restart
-      this.start();
-    });
-  }
+//   // setup a listener, waiting for the daemon
+//   // to exit.
+//   if (daemon) {
+//     daemon.once('close', code => {
+//       // clear authentication
+//       clearCookie();
+//       // restart
+//       this.start();
+//     });
+//   }
 
-  // wallet encrypt will restart by itself
-  if (!alreadyStopping) {
-    // stop daemon but don't make it quit the app.
-    const restarting = true;
-    exports.stop(restarting).then(() => {
-      log.debug('waiting for daemon shutdown...')
-    });
-  }
+//   // wallet encrypt will restart by itself
+//   if (!alreadyStopping) {
+//     // stop daemon but don't make it quit the app.
+//     const restarting = true;
+//     exports.stop(restarting).then(() => {
+//       log.debug('waiting for daemon shutdown...')
+//     });
+//   }
 
-}
+// }
 
 let attemptsToStart = 0;
 const maxAttempts = 10;
@@ -161,16 +161,13 @@ exports.stop = function () {
           reject();
         } else {
           log.info('Daemon stopping gracefully...');
-          // resolve();
+          resolve();
         }
       });
     } else {
       log.info('Daemon not managed by gui.');
-
-      if (!restarting) {
-        log.info('Daemon succesfully cleaned up - we can now quit electron safely! :)');
-        electron.app.quit();
-      }
+      log.info('Daemon disconnecting - we can now quit electron safely! :)');
+      electron.app.quit();
       resolve();
     }
 
