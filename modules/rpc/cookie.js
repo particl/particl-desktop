@@ -97,16 +97,13 @@ function getAuth(options) {
   }
 
   let auth;
-  var dataDir = getParticlPath(options);
-  const COOKIE_FILE = dataDir
-                    + (options.testnet ? '/testnet' : '')
-                    + '/.cookie';
+  const COOKIE_PATH = getCookiePath(options);
 
-  if (fs.existsSync(COOKIE_FILE)) {
-    auth = fs.readFileSync(COOKIE_FILE, 'utf8').trim();
+  if (fs.existsSync(COOKIE_PATH)) {
+    auth = fs.readFileSync(COOKIE_PATH, 'utf8').trim();
   } else {
     auth = undefined;
-    log.debug('could not find cookie file! path:', COOKIE_FILE);
+    log.debug('could not find cookie file! path:', COOKIE_PATH);
   }
 
   return (auth)
@@ -116,5 +113,21 @@ function getParticlPath(options) {
   return options.datadir ? options.datadir : findCookiePath();
 }
 
+function getCookieName(options) {
+  return options.rpccookiefile ? options.rpccookiefile : `.cookie`;
+}
+
+function getCookiePath(options) {
+  let dataDir = getParticlPath(options);
+  const segments = [dataDir];
+  if (options.testnet) {
+    segments.push('testnet');
+  }
+  segments.push(getCookieName(options));
+  return path.join(...segments);
+}
+
 exports.getAuth = getAuth;
 exports.getParticlPath = getParticlPath;
+exports.getCookieName = getCookieName;
+exports.getCookiePath = getCookiePath;
