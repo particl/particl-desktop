@@ -76,8 +76,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   selectedCountry: Country;
 
   // used to check for new listings
-  currentListings: string;
-  newListings: string;
+  oldListings: Array<Listing>;
+  newListArrived: boolean;
+
   showIndicator: boolean;
   checkInterval: any;
 
@@ -139,16 +140,23 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.isLoadingBig = false;
 
       // check for listing indicator.
-      if (!refreshListing && listings && listings[0]) {
+      if (pageNumber === 0 && !refreshListing && listings && listings[0]) {
 
-        this.newListings = listings[0].hash;
+        // assign initially this.oldListings.
+        if (!this.oldListings) {
+          this.oldListings = listings
+        }
 
-        if (this.currentListings !== this.newListings) {
+        if (this.oldListings[0] && this.oldListings[0].hash !== listings[0].hash) {
 
           // Should indicator or whatever once confirm via allien.
           console.log('New listing appear');
 
-          this.currentListings = this.newListings
+
+          // New listing appear
+          this.newListArrived = true;
+
+          this.oldListings = listings
         }
       }
 
@@ -156,6 +164,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
       // update the listing data.
       if (refreshListing) {
         // new page
+
+        // remove the indicator if page 0 is refreshed.
+        if (pageNumber === 0) {
+          this.newListArrived = true;
+        }
+
         const page = {
           pageNumber: pageNumber,
           listings: listings

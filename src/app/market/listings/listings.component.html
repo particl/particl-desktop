@@ -46,7 +46,7 @@
 
     <div class="filter-by buttons" fxFlex="0 1 120px">
 
-      <button mat-button (click)="clearAndLoadPage()" matTooltip="Refresh listings">
+      <button mat-button [ngClass]="{'indicator': newListArrived}" (click)="clearAndLoadPage()" matTooltip="Refresh listings">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
       </button>
 
