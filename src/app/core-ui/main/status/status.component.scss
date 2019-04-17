@@ -20,10 +20,10 @@
   // Staking icon
   &.staking {
     font-size: 0.8em;
-    &.enabled {
+    &.active {
       color: $color-info;
     }
-    &.disabled {
+    &.inactive {
       color: darken($bg-shadow, 15%);
     }
   }

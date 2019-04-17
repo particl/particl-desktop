@@ -1,7 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { SharedModule } from '../../shared/shared.module';
-import { RpcService, RpcStateService } from '../../../core/rpc/rpc.module';
+import { RpcStateService } from '../../../core/rpc/rpc.module';
+import { RpcService } from '../../../core/rpc/rpc.service';
 import { CoreModule } from '../../../core/core.module';
 import { MockRpcService } from 'app/core/rpc/rpc.mockservice';
 import { TransactionService } from './transaction.service';

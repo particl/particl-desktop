@@ -1,9 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
@@ -29,9 +28,9 @@ export class SellerListingComponent {
   @Input() listing: Listing;
 
   constructor(
+    private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router,
-    private rpcState: RpcStateService,
     private modals: ModalsHelperService,
     private template: TemplateService,
     private snackbar: SnackbarService,
@@ -112,7 +111,8 @@ export class SellerListingComponent {
   }
 
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['/market/template'], {
+    this.router.navigate(['../template'], {
+      relativeTo: this.route,
       queryParams: { 'id': id, 'clone': clone }
     });
   }

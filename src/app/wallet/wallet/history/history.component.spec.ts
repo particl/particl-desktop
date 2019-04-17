@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../../wallet/wallet.module';
-import { RpcModule } from '../../../core/rpc/rpc.module';
+import { RpcWithStateModule } from '../../../core/rpc/rpc.module';
 import { CoreModule } from '../../../core/core.module';
 
 import { HistoryComponent } from './history.component';
@@ -23,8 +23,8 @@ describe('HistoryComponent', () => {
         BrowserAnimationsModule,
         SharedModule,
         WalletModule.forRoot(),
-        RpcModule.forRoot(),
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ]
     })
 

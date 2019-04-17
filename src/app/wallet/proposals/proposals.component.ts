@@ -177,7 +177,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
   addProposal(): void {
-    this.router.navigate(['/wallet/proposal']);
+    this.router.navigate(['/wallet/main/wallet/proposal']);
   }
 
   changeTab(index: number): void {

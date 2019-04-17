@@ -6,6 +6,9 @@ import { VersionModel } from './version.model';
 import { ClientVersionService } from 'app/core/http/client-version.service';
 import { isPrerelease } from 'app/core/util/utils';
 import { Log } from 'ng2-logger';
+import { RpcService } from 'app/core/rpc/rpc.service';
+
+import * as marketConfig from '../../../../../modules/market/config.js';
 
 enum VersionText {
   latest = 'This is the latest client version',
@@ -28,12 +31,17 @@ export class VersionComponent implements OnInit, OnDestroy {
   public isClientLatest: boolean = true;
   public isUpdateProcessing: boolean = false;
   public clientUpdateText: string = '';
+  public isMarketWallet: boolean = false;
   private destroyed: boolean = false;
   private log: any = Log.create('VersionComponent');
 
-  constructor(private clientVersionService: ClientVersionService) { }
+  constructor(
+    private clientVersionService: ClientVersionService,
+    private _rpc: RpcService
+  ) { }
 
   ngOnInit() {
+    this.isMarketWallet = (marketConfig.allowedWallets || []).includes(this._rpc.wallet);
     // Initially need to call to verify the client version
     this.getCurrentClientVersion()
     // check new update in every 30 minute
