@@ -6,9 +6,8 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ order?.listing?.title }}</div>
+        <div class="hash" matTooltip="Order ID: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
         <div class="date">
-          <!-- TODO: 3-letter "hash" as semi-unique order ID (generated randomly or e.g. by first letters of TXID) + randomized background color based on the hash -->
-          <span class="hash {{ order?.hash_bg }}" matTooltip="Order hash">{{ order?.hash }}</span>
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
@@ -72,7 +71,9 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button mat-button color="warn" (click)="callBid('reject')" *ngIf="order?.messages?.allow_reject_order"
+      <button mat-button color="warn"
+              (click)="callBid('reject')"
+              *ngIf="order?.messages?.allow_reject_order"
               class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
         Reject bid &amp; cancel order
@@ -82,10 +83,12 @@
         Edit
       </button-->
       <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-      <button mat-button matTooltip="Escrow TX details" *ngIf="order?.show_escrow_txdetails" class="small">
+      <!-- <button mat-button matTooltip="Escrow TX details"
+              *ngIf="order?.show_escrow_txdetails" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
         View payment
       </button>
+      -->
       <!-- TODO: shortcut to e2e message to buyer -->
       <!--button mat-button class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
@@ -94,7 +97,8 @@
     </div>
     <div class="right">
       <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.tooltip }}"
-              [disabled]="order?.messages?.action_disabled" (click)="order_action()">
+              [disabled]="order?.messages?.action_disabled"
+              (click)="order_action()">
         <mat-icon fontSet="partIcon" fontIcon="{{ order?.messages?.action_icon }}"></mat-icon>
         {{ order?.messages?.action_button }}
       </button>

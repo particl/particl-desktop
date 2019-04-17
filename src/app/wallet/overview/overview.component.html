@@ -1,35 +1,40 @@
 <mat-card class="balance-overview">
-  <div class="total balance-item">
+  <div class="balance-item">
     <app-balance type="total_balance"></app-balance>
   </div>
-  <div class="public balance-item">
+  <div class="balance-item">
     <app-balance type="balance"></app-balance>
   </div>
-  <div class="blind balance-item">
+  <div class="balance-item">
     <app-balance type="blind_balance"></app-balance>
   </div>
-  <div *ngIf="testnet" class="anon balance-item">
+  <div class="balance-item" *ngIf="testnet">
     <app-balance type="anon_balance"></app-balance>
   </div>
-  <div class="stake balance-item">
-    <app-balance type="staked_balance"></app-balance>
-  </div>
+  <table class="balances by-status" cellspacing="0">
+    <tr>
+      <th>Spendable</th>
+      <td><app-balance type="actual_balance" [inSidebar]="true"></app-balance></td>
+    </tr>
+    <tr>
+      <th>Locked</th>
+      <td><app-balance type="locked_balance" [inSidebar]="true"></app-balance></td>
+    </tr>
+    <tr>
+      <th>Staking</th>
+      <td><app-balance type="staked_balance" [inSidebar]="true"></app-balance></td>
+    </tr>
+  </table>
 </mat-card>
 
 
 <div class="overview">
   <div class="overview-content">
     <!-- @TODO comment out the code for widget for total listing, sell orders -->
-    <!-- <div class="seller-overview to-do">
-      <app-header>
-        <ul class="header-nav">
-          <li>Seller overview</li>
-          li class="buttons">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
-            <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
-          </li
-        </ul>
-      </app-header>
+    <!--div class="seller-overview section">
+      <header>
+        <div class="subtitle">Seller overview</div>
+      </header>
       <mat-card fxLayout>
         <div class="list listings" fxFlex="1 1 50%" fxLayout>
           <div class="total" fxFlex="1 1 40%">
@@ -41,7 +46,7 @@
             <div class="item"><div class="value">1</div><div class="desc">Expired</div></div>
             <div class="item"><div class="value">0</div><div class="desc">Unpublished</div></div>
           </div>
-        </div>.list.listings
+        </div>
         <div class="list orders" fxFlex="1 1 50%" fxLayout>
           <div class="total" fxFlex="1 1 40%">
             <div class="value">12</div>
@@ -52,9 +57,9 @@
             <div class="item"><div class="value">1</div><div class="desc">In escrow</div></div>
             <div class="item"><div class="value">3</div><div class="desc">Shipped</div></div>
           </div>
-        </div>.list.orders
+        </div>
       </mat-card>
-    </div>.seller-overview -->
+    </div><!-- .seller-overview -->
 
     <div class="recent-transactions section">
       <header>
@@ -75,16 +80,10 @@
 
   <div class="overview-sidebar">
     <!-- @TODO comment out the code for widget for total buy orders -->
-    <!-- <div class="buy-orders to-do">
-      <app-header>
-        <ul class="header-nav">
-          <li>Your buy orders</li>
-          li class="buttons">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog" matTooltip="Edit widget"></mat-icon>
-            <mat-icon class="icon move" fontSet="partIcon" fontIcon="part-hamburger" matTooltip="Move widget"></mat-icon>
-          </li
-        </ul>
-      </app-header>
+    <!--div class="buy-orders section">
+      <header>
+        <div class="subtitle">Your buy orders</div>
+      </header>
       <mat-card class="list orders" fxLayout>
         <div class="total" fxFlex="1 1 40%">
           <div class="value">5</div>
@@ -95,8 +94,8 @@
           <div class="item"><div class="value">0</div><div class="desc">In escrow</div></div>
           <div class="item"><div class="value">2</div><div class="desc">Shipped</div></div>
         </div>
-      </mat-card>.list.orders
-    </div>.buy-orders -->
+      </mat-card>
+    </div><!-- .buy-orders -->
 
     <app-coldstake></app-coldstake>
     <app-stakinginfo></app-stakinginfo>

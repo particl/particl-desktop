@@ -39,7 +39,7 @@
         <div class="item price">
           <div class="title">Price</div>
           <div class="value part">
-            <span class="big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="big">{{ data?.listing?.basePrice.dot() }}</span><span class="small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
+            <span class="number big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="point big">{{ data?.listing?.basePrice.dot() }}</span><span class="number small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
             <span class="currency">PART</span>
           </div>
           <div class="value fiat">
@@ -51,7 +51,7 @@
       <p class="summary description">
         {{ data?.listing?.shortDescription }}
       </p>
-      
+
       <table class="meta">
         <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
           <th class="title">
@@ -68,7 +68,7 @@
             Shipping
           </th>
           <td class="value">
-            {{ data?.listing?.domesticShippingPrice.getAmount() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmount() }} <small>PART</small>
+            {{ data?.listing?.domesticShippingPrice.getAmountAsString() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmountAsString() }} <small>PART</small>
           </td>
         </tr>
         <tr>
@@ -105,7 +105,7 @@
   </div><!-- .product-summary -->
 
   <div class="product-details">
-    <mat-tab-group class="listing-tabs" (selectChange)="changeTab($event.index)">
+    <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)">
       <mat-tab label="Details"></mat-tab>
       <mat-tab label="Shipping &amp; Escrow"></mat-tab>
       <mat-tab label="Comments" *ngIf="!data.buyPage"></mat-tab>
@@ -134,7 +134,7 @@
             <!-- domestic shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.domesticShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.domesticShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -143,7 +143,7 @@
             <!-- domestic escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -152,7 +152,7 @@
             <!-- domestic total -->
             <td>
               <span class="part price">
-                <strong>{{data?.listing?.totalAmountDomestic?.getAmount()}}</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountDomestic?.getAmountAsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -161,13 +161,13 @@
           </tr>
           <tr>
             <th>
-              Worldwide 
+              Worldwide
               <small>Shipping carrier</small>
             </th>
             <!-- international shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.internationalShippingPrice.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.internationalShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -176,7 +176,7 @@
             <!-- international escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceInternational?.getAmount() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceInternational?.getAmountAsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -185,7 +185,7 @@
             <!-- international total -->
             <td>
               <span class="part price">
-                <strong>{{data?.listing?.totalAmountInternaltional?.getAmount()}}</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountInternaltional?.getAmountAsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -207,10 +207,12 @@
         </tbody>
       </table><!-- .shipping-escrow -->
     </div><!-- .tab-content.shipping-->
-    
+
     <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
       <div class="no-results">
-        Comments coming soon™
+        <p>
+          Comments coming soon™
+        </p>
       </div>
     </div>
   </div><!-- .product-details -->
@@ -230,9 +232,11 @@
         <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
         <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)" matTooltip="Item is fine and should stay on Market">
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+          Keep it
         </button>
         <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)" matTooltip="Item is inappropriate/illegal and should be removed from Market">
           <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+          Remove it
         </button>
       </div>
       <!-- Reported & voted already -->

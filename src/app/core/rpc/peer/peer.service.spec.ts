@@ -13,6 +13,7 @@ describe('PeerService', () => {
         CoreModule.forRoot()
       ],
       providers: [
+        PeerService
       ]
     });
   });

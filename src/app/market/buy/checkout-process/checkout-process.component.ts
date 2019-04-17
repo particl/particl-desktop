@@ -2,7 +2,7 @@ import {
   Component, EventEmitter, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -29,13 +29,21 @@ import { CheckoutProcessCacheService } from 'app/core/market/market-cache/checko
 import { Address } from 'app/core/market/api/profile/address/address.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
+import { takeWhile, take } from 'rxjs/operators';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+
+enum errorType {
+  itemExpired = 'An item in your basket has expired!'
+}
+
 
 @Component({
   selector: 'app-checkout-process',
   templateUrl: './checkout-process.component.html',
   styleUrls: ['./checkout-process.component.scss']
 })
+
 export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('buy.component: ' + Math.floor((Math.random() * 1000) + 1));
@@ -56,6 +64,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   // stepper form data
   public cartFormGroup: FormGroup;
   public shippingFormGroup: FormGroup;
+  public confirmation: FormGroup;
   public country: string = '';
 
   constructor(// 3rd party
@@ -74,17 +83,18 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     public countryList: CountryListService,
     public cache: CheckoutProcessCacheService,
     private bid: BidService,
-    private listCache: PostListingCacheService,
+    public listCache: PostListingCacheService,
     public dialog: MatDialog) {
   }
 
   ngOnInit() {
+
     this.formBuild();
 
     this.getProfile();
 
     this.cartService.list()
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe((cart: Cart) => {
         /** If we add an item to cart and move the checkout process and complete first two steps,
          * then we are on the third step.
@@ -153,7 +163,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(shoppingCartId: number): void {
-    this.cartService.removeItem(shoppingCartId).take(1).subscribe(res => {
+    this.cartService.removeItem(shoppingCartId).pipe(take(1)).subscribe(res => {
       this.snackbarService.open('Item successfully removed from cart');
     }, error => this.snackbarService.open(error));
   }
@@ -168,14 +178,17 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
   /* shipping */
 
-  updateShippingAddress(): void {
+  moveToConfirmation(): void {
     if (!this.profile) {
       this.snackbarService.open('Profile was not fetched!');
       return;
     }
-
     this.country = this.shippingFormGroup.value.country || '';
+    this.allowGoingBack();
+    this.storeCache();
+  }
 
+  updateShippingAddress(): void {
     let upsert: Function;
 
     if (this.shippingFormGroup.value.newShipping === true) {
@@ -194,18 +207,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     if (upsert !== undefined) {
       const address = this.shippingFormGroup.value as Address;
-      upsert(address).take(1).subscribe(addressWithId => {
+      upsert(address).pipe(take(1)).subscribe(addressWithId => {
         // we need to retrieve the id of  address we added (new)
         this.select(addressWithId);
-
-        // update the cache
-        this.allowGoingBack();
-        this.storeCache();
-
       });
-    } else {
-      this.allowGoingBack();
-      this.storeCache();
     }
   }
 
@@ -242,7 +247,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   getProfile(): void {
-    this.profileService.default().take(1).subscribe(
+    this.profileService.default().pipe(take(1)).subscribe(
       (profile: any) => {
         this.profile = profile;
         this.log.d('checkout got profile:', this.profile);
@@ -275,7 +280,10 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    this.modals.unlock({timeout: 30}, (status) => this.bidOrder());
+    this.modals.unlock({timeout: 30}, (status) => {
+      this.openProcessingModal();
+      this.bidOrder()
+    });
   }
 
   bidOrder() {
@@ -302,11 +310,20 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
 
     this.bid.order(this.cart, this.profile, shippingInfo).then((res) => {
+      this.updateShippingAddress();
       this.clear();
       this.snackbarService.open('Order has been successfully placed');
+      this.dialog.closeAll();
       this.onOrderPlaced.emit(1);
     }, (error) => {
+    if (error === errorType.itemExpired) {
+      this.resetStepper();
+      this.shippingFormGroup.value.id = this.cache.address.id;
+      this.setDefaultCountry(this.cache.address.country);
+      this.shippingFormGroup.patchValue(this.cache.address);
+    }
       this.snackbarService.open(error, 'warn');
+      this.dialog.closeAll();
       this.log.d(`Error while placing an order`);
     });
   }
@@ -396,4 +413,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  openProcessingModal() {
+      const dialog = this.dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: 'Hang on, we are busy processing your cart'
+        }
+      });
+  }
 }

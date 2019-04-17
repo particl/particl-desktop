@@ -5,30 +5,46 @@ import { Subject } from 'rxjs';
 
 import { StateService } from 'app/core/state/state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Injectable()
 export class RpcStateService extends StateService implements OnDestroy {
 
-  private log: any = Log.create('rpc-state.class');
+  private log: any = Log.create('rpc-state.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
 
   private _enableState: boolean = true;
+  private stateTimeouts: any = {};
 
   /** errors gets updated everytime the stateCall RPC requests return an error */
   public errorsStateCall: Subject<any> = new Subject<any>();
 
   constructor(private _rpc: RpcService) {
     super();
+  }
 
-    this.register('getwalletinfo', 1000);
+  start(): void {
+    this.log.d('Rpc-State Service Started');
+    this._enableState = true;
+    this.register('getwalletinfo', 5000);
+    this.register('listunspent', 5000, [0]);
     this.register('getblockchaininfo', 5000);
     this.register('getnetworkinfo', 10000);
     this.register('getstakinginfo', 10000);
+    this.register('getcoldstakinginfo', 10000);
 
     // TODO: get rid of these
     this.walletLockedState();
-    this.initWalletState();
+  }
 
+  stop() {
+    Object.keys(this.stateTimeouts).forEach(method => {
+      clearTimeout(this.stateTimeouts[method]);
+    });
+    this.stateTimeouts = {};
+    this._enableState = false;
+    this.clear();
+    this.log.d('Rpc-State Service stopped');
   }
 
   /**
@@ -44,7 +60,7 @@ export class RpcStateService extends StateService implements OnDestroy {
    * ```
    */
   stateCall(method: string): void {
-    if (!this._enableState) {
+    if (!this._enableState || !this._rpc.enabled) {
       return;
     } else {
       this._rpc.call(method)
@@ -61,27 +77,23 @@ export class RpcStateService extends StateService implements OnDestroy {
 
       // loop procedure
       const _call = () => {
-        if (this.destroyed) {
-          // RpcState service has been destroyed, stop.
+        if (this.destroyed || !this._enableState) {
           return;
         }
-        if (!this._enableState) {
-          // re-start loop after timeout - keep the loop going
-          setTimeout(_call, timeout);
-          return;
-        }
+        const preflightTimeout = this.stateTimeouts[method];
         this._rpc.call(method, params)
+          .pipe(takeWhile(() => this._enableState && preflightTimeout === this.stateTimeouts[method] ))
           .subscribe(
             success => {
               this.stateCallSuccess(method, success);
 
               // re-start loop after timeout
-              setTimeout(_call, timeout);
+              this.stateTimeouts[method] = setTimeout(_call, timeout);
             },
             error => {
               this.stateCallError(method, error, firstError);
 
-              setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
+              this.stateTimeouts[method] = setTimeout(_call, firstError ? 250 : error.status === 0 ? 500 : 10000);
               firstError = false;
             });
       };
@@ -95,8 +107,7 @@ export class RpcStateService extends StateService implements OnDestroy {
   private stateCallSuccess(method: string, response: any) {
     // no error
     this.errorsStateCall.next({
-      error: false,
-      electron: this._rpc.isElectron
+      error: false
     });
 
     this.set(method, response);
@@ -109,8 +120,7 @@ export class RpcStateService extends StateService implements OnDestroy {
     // if not first error, show modal
     if (!firstError) {
       this.errorsStateCall.next({
-        error: error.target ? error.target : error,
-        electron: this._rpc.isElectron
+        error: error.target ? error.target : error
       });
     }
   }
@@ -119,28 +129,15 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.destroyed = true;
   }
 
-
-
   // TODO: get rid of these some day..
 
   private walletLockedState() {
     this.observe('getwalletinfo', 'encryptionstatus')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => {
-        this.log.d(' [rm] updating locked state maybe');
+        this.log.d(' [rm] updating locked state maybe', status);
         this.set('locked', ['Locked', 'Unlocked, staking only'].includes(status));
       });
   }
 
-  // TODO: get rid of this after improve-router
-  private initWalletState() {
-    this.observe('getwalletinfo').subscribe(response => {
-      // check if account is active
-      if (!!response.hdmasterkeyid) {
-        this.set('ui:walletInitialized', true);
-      } else {
-        this.set('ui:walletInitialized', false);
-      }
-    }, error => this.log.er('RPC Call returned an error', error));
-}
 }

@@ -3,6 +3,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material';
 
 import { ModalsModule } from './modals.module';
 import { CoreModule } from '../core/core.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { ModalsHelperService } from './modals-helper.service';
 
@@ -12,7 +13,8 @@ describe('ModalsHelperService', () => {
       imports: [
         MatDialogModule,
         ModalsModule,
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef}

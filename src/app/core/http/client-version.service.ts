@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
+import { Observable ,  of } from 'rxjs';
 import { Log } from 'ng2-logger';
 
-import { ReleaseNotification } from '../../core-ui/main/release-notification/release-notification.model';
-import { environment } from '../../../environments/environment.prod';
+import { ClientVersionRelease } from './client-version.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ClientVersionService {
@@ -17,10 +16,10 @@ export class ClientVersionService {
 
   constructor(private http: HttpClient) { }
 
-  getCurrentVersion(): Observable<ReleaseNotification> {
+
+  getCurrentVersion(): Observable<ClientVersionRelease> {
     return this.http.get(this.releasesUrl).pipe(
-      map(response => response as ReleaseNotification),
-      catchError(this.handleError<ReleaseNotification>('error while update'))
+      map(response => response as ClientVersionRelease)
     );
   }
 

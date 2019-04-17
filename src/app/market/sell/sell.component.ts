@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
+import * as _ from 'lodash';
 
-import { DeleteListingComponent } from '../../modals/delete-listing/delete-listing.component';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { Template } from 'app/core/market/api/template/template.model';
+import { take } from 'rxjs/operators';
+import { throttle } from 'lodash';
 
 interface IPage {
   pageNumber: number,
@@ -18,18 +19,40 @@ interface IPage {
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss']
 })
-export class SellComponent implements OnInit {
+export class SellComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false;
   public isPageLoading: boolean = false;
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
+  private resizeEventer: any;
 
   filters: any = {
-    search:   undefined,
-    sort:     undefined,
-    status:   undefined
+    search:   '',
+    sort:     'DATE',
+    category: '*',
+    hashItems: ''
   };
+
+  // listing_sortings: Array<any> = [
+  //   { title: 'By creation date',   value: 'date-created'    },
+  //   { title: 'By expiration date', value: 'date-expiration' },
+  //   { title: 'By item name',       value: 'item-name'       },
+  //   { title: 'By category',        value: 'category'        },
+  //   { title: 'By quantity',        value: 'quantity'        },
+  //   { title: 'By price',           value: 'price'           }
+  // ];
+
+  listing_sortings: Array<any> = [
+    { title: 'By title', value: 'TITLE' },
+    { title: 'By state', value: 'STATE' }
+  ];
+
+  listing_filtering: Array<any> = [
+    { title: 'All listings',  value: '' },
+    { title: 'Published',     value: true },
+    { title: 'Unpublished',   value: false }
+  ];
 
   templateSearchSubcription: any;
 
@@ -49,44 +72,55 @@ export class SellComponent implements OnInit {
   public category: string = '';
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
     private listingService: ListingService,
-  ) {}
+  ) {
+    this.getScreenSize();
+  }
 
   ngOnInit() {
     this.isPageLoading = true;
     this.loadPage(0);
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    try {
+      window.addEventListener('resize', this.resizeEventer);
+    } catch (err) { }
   }
 
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['/market/template'], {
+    this.router.navigate(['../template'], {
+      relativeTo: this.route,
       queryParams: {'id': id, 'clone': clone }
     });
   }
 
   clear(): void {
     this.filters = {
-      search:   undefined,
-      sort:     undefined,
-      status:   undefined
+      search:   '',
+      sort:     'DATE',
+      category: '*',
+      hashItems: ''
     };
     this.loadPage(0, true);
   }
 
   changeTab(index: number): void {
+    this.clear();
     this.selectedTab = index;
   }
 
   clearAndLoadPage() {
+    this.pages = [];
     this.loadPage(0, true);
   }
 
   loadPage(pageNumber: number, clear?: boolean) {
     this.isLoading = true;
-    const category = this.filters.category ? this.filters.category : null;
-    const search = this.filters.search ? this.filters.search : null;
+    const search = this.filters.search ? this.filters.search : '*';
+    const hashItems = this.filters.hashItems ? this.filters.hashItems === 'true' : undefined;
     const max = this.pagination.maxPerPage;
 
     /*
@@ -100,16 +134,18 @@ export class SellComponent implements OnInit {
       this.templateSearchSubcription.unsubscribe();
     }
 
-    this.templateSearchSubcription = this.template.search(pageNumber, max, 1, category, search)
-      .take(1).subscribe((listings: Array<Listing>) => {
+    this.templateSearchSubcription = this.template.search(pageNumber, max, this.filters.sort, 1, this.filters.category, search, hashItems)
+      .pipe(take(1)).subscribe((listings: Array<Listing>) => {
         listings = listings.map((t) => {
         if (this.listingService.cache.isAwaiting(t)) {
           t.status = 'awaiting';
         }
         return t;
       });
-      console.log(listings);
+
       this.isLoading = false;
+
+
       // new page
       const page = {
         pageNumber: pageNumber,
@@ -138,37 +174,15 @@ export class SellComponent implements OnInit {
 
     // previous page
     if (this.pages[0] && this.pages[0].pageNumber > newPageNumber) {
-      console.log('adding page to top');
       this.pages.unshift(page);
       goingDown = false;
     } else { // next page
-      console.log('adding page to bottom');
       this.pages.push(page);
-    }
-
-    // if exceeding max length, delete a page of the other direction
-    if (this.pages.length > this.pagination.maxPages) {
-      if (goingDown) {
-        this.pages.shift(); // delete first page
-      } else {
-        this.pages.pop(); // going up, delete last page
-      }
-    }
-  }
-  // TODO: fix scroll up!
-  loadPreviousPage() {
-    console.log('prev page trigered');
-    let previousPage = this.getFirstPageCurrentlyLoaded();
-    previousPage--;
-    console.log('loading prev page' + previousPage);
-    if (previousPage > -1) {
-      this.loadPage(previousPage);
     }
   }
 
   loadNextPage() {
     let nextPage = this.getLastPageCurrentlyLoaded(); nextPage++;
-    console.log('loading next page: ' + nextPage);
     this.loadPage(nextPage);
   }
 
@@ -187,4 +201,24 @@ export class SellComponent implements OnInit {
     this.pages[pageIndex].listings.splice(listingIndex, 1);
   }
 
+  getScreenSize() {
+    const currentMaxPerPage = this.pagination.maxPerPage;
+    const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
+    const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
+
+    if (isLarger) {
+      // Load more pages to fill the screen
+      // maxPages 2 -> 3, ensure no pages are deleted when loading
+      // the next page.
+      this.pagination.maxPages = 3;
+      this.pagination.maxPerPage = newMaxPerPage;
+      this.loadNextPage();
+    }
+  }
+
+  ngOnDestroy() {
+    try {
+      window.removeEventListener('resize', this.resizeEventer);
+    } catch (err) { }
+  }
 }

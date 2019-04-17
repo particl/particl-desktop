@@ -7,12 +7,10 @@ const Observable = require('rxjs/Observable').Observable;
 const _options = require('../options');
 const clearCookie = require('../webrequest/http-auth').removeWalletAuthentication;
 const rpc = require('../rpc/rpc');
-const cookie = require('../rpc/cookie');
 const daemonManager = require('../daemon/daemonManager');
-const multiwallet = require('../multiwallet');
+const daemonConfig = require('./daemonConfig');
 
 let daemon = undefined;
-let chosenWallets = [];
 
 function daemonData(data, logger) {
   data = data.toString().trim();
@@ -34,36 +32,45 @@ exports.init = function () {
   });
 }
 
-exports.restart = function (alreadyStopping) {
-  log.info('restarting daemon...')
+// exports.restart = function (alreadyStopping) {
+//   log.info('restarting daemon...')
 
-  // setup a listener, waiting for the daemon
-  // to exit.
-  if (daemon) {
-    daemon.once('close', code => {
-      // clear authentication
-      clearCookie();
-      
-      // restart
-      this.start(chosenWallets);
-    });
+//   // setup a listener, waiting for the daemon
+//   // to exit.
+//   if (daemon) {
+//     daemon.once('close', code => {
+//       // clear authentication
+//       clearCookie();
+//       // restart
+//       this.start();
+//     });
+//   }
+
+//   // wallet encrypt will restart by itself
+//   if (!alreadyStopping) {
+//     // stop daemon but don't make it quit the app.
+//     const restarting = true;
+//     exports.stop(restarting).then(() => {
+//       log.debug('waiting for daemon shutdown...')
+//     });
+//   }
+
+// }
+
+let attemptsToStart = 0;
+const maxAttempts = 10;
+exports.start = function (doReindex = false) {
+  let options = _options.get();
+
+  if (+options.addressindex !== 1) {
+    const daemonSettings = daemonConfig.getSettings();
+    if (!(daemonSettings.global && daemonSettings.global.addressindex === 1)) {
+      daemonConfig.saveSettings({addressindex: true});
+      doReindex = true;
+    }
   }
 
-  // wallet encrypt will restart by itself
-  if (!alreadyStopping) {
-    // stop daemon but don't make it quit the app.
-    const restarting = true;
-    exports.stop(restarting).then(() => {
-      log.debug('waiting for daemon shutdown...')
-    });
-  }
-
-}
-
-exports.start = function (wallets) {
   return (new Promise((resolve, reject) => {
-
-    chosenWallets = wallets;
 
     exports.check().then(() => {
       log.info('daemon already started');
@@ -71,15 +78,22 @@ exports.start = function (wallets) {
 
     }).catch(() => {
 
-      let options = _options.get();
       const daemonPath = options.customdaemon
         ? options.customdaemon
         : daemonManager.getPath();
 
-      wallets = wallets.map(wallet => `-wallet=${wallet}`);
-      log.info(`starting daemon ${daemonPath} ${process.argv} ${wallets}`);
 
-      const child = spawn(daemonPath, [...process.argv, "-rpccorsdomain=http://localhost:4200", ...wallets])
+      const addedArgs = [];
+
+      if (doReindex) {
+        log.info('Adding reindex flag to daemon startup');
+        addedArgs.push('-reindex');
+      }
+
+      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...addedArgs];
+      log.info(`starting daemon: ${deamonArgs.join(' ')}`);
+
+      const child = spawn(daemonPath, deamonArgs)
         .on('close', code => {
           log.info('daemon exited - setting to undefined.');
           daemon = undefined;
@@ -94,6 +108,12 @@ exports.start = function (wallets) {
       // TODO change for logging
       child.stdout.on('data', data => daemonData(data, console.log));
       child.stderr.on('data', data => {
+        const err = data.toString('utf8');
+        if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
+          log.error('Restarting the daemon with the -reindex flag.');
+          attemptsToStart++;
+          exports.start(true);
+        }
         daemonData(data, console.log);
       });
 
@@ -120,7 +140,7 @@ exports.check = function () {
   });
 }
 
-exports.stop = function (restarting) {
+exports.stop = function () {
   log.info('daemon stop called..');
   return new Promise((resolve, reject) => {
 
@@ -128,12 +148,10 @@ exports.stop = function (restarting) {
 
       // attach event to stop electron when daemon closes.
       // do not close electron when restarting (e.g encrypting wallet)
-      if (!restarting) {
-        daemon.once('close', code => {
-          log.info('daemon exited successfully - we can now quit electron safely! :)');
-          electron.app.quit();
-        });
-      }
+      daemon.once('close', code => {
+        log.info('daemon exited successfully - we can now quit electron safely! :)');
+        electron.app.quit();
+      });
 
       log.info('Call RPC stop!');
       rpc.call('stop', null, (error, response) => {
@@ -148,6 +166,8 @@ exports.stop = function (restarting) {
       });
     } else {
       log.info('Daemon not managed by gui.');
+      log.info('Daemon disconnecting - we can now quit electron safely! :)');
+      electron.app.quit();
       resolve();
     }
 

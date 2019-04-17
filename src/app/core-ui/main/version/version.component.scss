@@ -1,0 +1,82 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ VERSIONS ------ //
+
+.client-version {
+  @extend %enable-select;
+  margin: 0 0 14px;
+  padding: 14px 24px 0;
+  display: block;
+  font-size: 11px;
+  line-height: 1.6;
+  color: $text-muted;
+  .version {
+    @extend %tfx;
+    color: lighten($text-muted, 15%);
+    margin-left: 2px;
+    &:hover {
+      color: $color-white;
+    }
+
+    .selectable {
+      @extend %enable-select;
+    }
+
+    // version check indicator
+    .dot {
+      @extend %tfx;
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      position: relative;
+      top: -1px;
+      margin: 0 2px;
+      background: darken($text-muted, 20%);
+    }
+    &.current {
+      &:hover {
+        .dot {
+          background: $color;
+        }
+      }
+    }
+    &.outdated {
+      font-weight: 700;
+      color: $color-white;
+      .dot {
+        background: $color-warning;
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid $color-warning;
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
+      }
+    }
+    &.unknown {
+      color: $color-white;
+      .dot {
+        background: $color-alert;
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid $color-alert;
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
+      }
+    }
+  }
+}

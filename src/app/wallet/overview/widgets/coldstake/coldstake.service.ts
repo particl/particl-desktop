@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Log } from 'ng2-logger';
 import { Amount } from '../../../../core/util/utils';
 
 import { RpcService, RpcStateService } from 'app/core/core.module';
+import { takeWhile, debounceTime } from 'rxjs/operators';
 
 @Injectable()
 export class ColdstakeService implements OnDestroy {
@@ -23,7 +24,6 @@ export class ColdstakeService implements OnDestroy {
   };
 
   coldStakingEnabled: boolean = undefined;
-  walletInitialized: boolean = undefined;
   public encryptionStatus: string = 'Locked';
 
   private progress: Amount = new Amount(0, 2);
@@ -34,33 +34,30 @@ export class ColdstakeService implements OnDestroy {
   ) {
 
     this._rpcState.observe('getwalletinfo', 'encryptionstatus')
-      .takeWhile(() => !this.destroyed)
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => {
         this.encryptionStatus = status;
         this.update();
       });
 
     this._rpcState.observe('getwalletinfo', 'txcount')
-      .takeWhile(() => !this.destroyed)
-      .debounceTime(1000/*ms*/)
+      .pipe(takeWhile(() => !this.destroyed))
+      .pipe(debounceTime(1000/*ms*/))
       .subscribe(txcount => {
         this.update();
       });
 
     this._rpcState.observe('getblockchaininfo', 'blocks')
-      .takeWhile(() => !this.destroyed)
-      .debounceTime(10 * 1000/*ms*/)
+      .pipe(takeWhile(() => !this.destroyed))
+      .pipe(debounceTime(10 * 1000/*ms*/))
       .subscribe(status => {
         this.update();
       });
 
-    this._rpcState.observe('ui:coldstaking')
-      .takeWhile(() => !this.destroyed)
+    this._rpcState.observe('getcoldstakinginfo', 'enabled')
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(status => this.coldStakingEnabled = status);
 
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(status => this.walletInitialized = status);
     this.update();
   }
 
@@ -74,10 +71,8 @@ export class ColdstakeService implements OnDestroy {
 
       if ('enabled' in coldstakinginfo) {
         const enabled = coldstakinginfo['enabled'];
-        this._rpcState.set('ui:coldstaking', enabled);
         this.coldStakingEnabled = enabled;
-      } else { // ( < 0.15.1.2) enabled = undefined ( => false)
-        this._rpcState.set('ui:coldstaking', false);
+      } else {
         this.coldStakingEnabled = false;
       }
       this.updateStakingInfo();

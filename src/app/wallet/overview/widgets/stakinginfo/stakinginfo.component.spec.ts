@@ -7,6 +7,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { StakinginfoComponent } from './stakinginfo.component';
 
 import { Amount, Duration } from '../../../../core/util/utils';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('StakinginfoComponent', () => {
   let component: StakinginfoComponent;
@@ -17,6 +18,7 @@ describe('StakinginfoComponent', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
+        RpcWithStateModule.forRoot(),
         CoreUiModule.forRoot(),
       ],
       declarations: [ StakinginfoComponent ],

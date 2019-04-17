@@ -11,6 +11,8 @@ import { CoreUiModule } from '../../../../../core-ui/core-ui.module';
 import { AddressService } from '../../../shared/address.service';
 
 import { NewAddressModalComponent } from './new-address-modal.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('NewAddressModalComponent', () => {
   let component: NewAddressModalComponent;
@@ -22,7 +24,9 @@ describe('NewAddressModalComponent', () => {
         SharedModule,
         ModalsModule.forRoot(),
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule
       ],
       declarations: [ NewAddressModalComponent ],
       providers: [

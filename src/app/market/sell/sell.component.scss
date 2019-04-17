@@ -20,3 +20,12 @@
     right: $padding-l;
   }
 }
+
+
+// ------ LOADING BAR (bottom) ------ //
+
+.loading-bar {
+  position: fixed;
+  bottom: 0;
+  height: 8px;
+}

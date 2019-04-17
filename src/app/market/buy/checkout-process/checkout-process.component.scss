@@ -20,10 +20,8 @@ table {
 }
 
 .mat-card { // @ Shipping step
-  & > .title { // TODO: replace with %placeholders when Settings is merged
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 13px;
+  & > .title {
+    @extend %box-title;
     margin: -4px 0 16px !important;
   }
 }
@@ -39,10 +37,20 @@ custom-icon { // overwrite of Material Stepper's step icons
 
 // ------ LAYOUT ------ //
 
+// for offsetting of Material's Stepper
+$custom-padding: ($padding - 24px);
+$custom-padding-l: ($padding-l - 24px);
+
 .container-block {
-  padding: 15px 15px 0;
+  padding: $custom-padding $custom-padding 0;
+  @include break(l) {
+    padding: $custom-padding-l $custom-padding-l 0;
+  }
   .no-results {
-    margin-top: 16px;
+    margin-top: $custom-padding;
+    @include break(l) {
+      margin-top: $custom-padding-l;
+    }
   }
 }
 
@@ -164,9 +172,7 @@ table.cart-items {
   line-height: 1.8;
   padding: 24px 30px;
   .title {
-    text-transform: uppercase;
-    font-weight: 500;
-    font-size: 13px;
+    @extend %box-title;
     color: $text;
   }
   .shipping-overview {
@@ -193,7 +199,7 @@ table.cart-items {
 // ------ SHIPPING ------ //
 
 .shipping {
-  margin-top: 16px;
+  margin-top: $custom-padding;
 }
 
 
@@ -207,3 +213,6 @@ table.summary {
   }
 }
 
+h3 {
+  text-align: center;
+}

@@ -7,7 +7,8 @@ import {
   OnChanges,
   ViewChild,
   ElementRef,
-  OnInit } from '@angular/core';
+  OnInit
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
@@ -52,10 +53,10 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.stateGroupOptions = this.stateForm.get('stateGroup')!.valueChanges
       .pipe(
-        startWith(''),
-        map(value => {
-          return this._filterGroup(value)
-        })
+      startWith(''),
+      map(value => {
+        return this._filterGroup(value)
+      })
       );
   }
 
@@ -78,7 +79,7 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
       return opt || []
     }
 
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase();
+    const filterValue = value.toString().toLowerCase();
 
     if (from) {
       return opt.filter(item => item.name.toLowerCase() === filterValue);
@@ -93,15 +94,18 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
 
   onSelectionChanged($event: any): void {
     // emit selected value.
-    this.selectedOption = $event.option.value;
-    this.change.emit($event.option.value);
+    if ($event.option && $event.option.value && $event.option.value.id) {
+
+      this.selectedOption = $event.option.value;
+      this.change.emit($event.option.value);
+    }
   }
 
   onBlur($event: any): void {
     //  TODO: remove this nasty use of setTimeout()
     //    This is not the ideal way to do this, but its the current best interim option
     //    (remove when updating to angular >= 6 or changing this component.)
-    setTimeout( () => {
+    setTimeout(() => {
       const currentValidValue = (this.selectedOption ? this.selectedOption.name : this.defaultSelectedValue) || this.defaultSelectedValue;
       if (this.invalidReturnsToPrevious) {
         if ($event.target.value !== currentValidValue) {
@@ -110,7 +114,9 @@ export class MatOtpGroupSelectSearchComponent implements OnInit, OnChanges {
       } else {
         if ($event.target.value !== currentValidValue) {
           this.stateForm.reset();
-          this.change.emit();
+          this.change.emit(null);
+        } else {
+          this.change.emit(this.selectedOption);
         }
       }
     }, 300);

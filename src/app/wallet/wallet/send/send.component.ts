@@ -1,10 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { MatDialog, MatSliderChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
-import { RpcService } from '../../../core/rpc/rpc.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from '../../../core/rpc/rpc-state/rpc-state.service';
 
 import { SendService } from './send.service';
@@ -18,17 +18,21 @@ import { TransactionBuilder, TxType } from './transaction-builder.model';
 import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
+import { take, takeWhile } from 'rxjs/operators';
+import { Amount } from 'app/core/util/utils';
 
 @Component({
   selector: 'app-send',
   templateUrl: './send.component.html',
   styleUrls: ['./send.component.scss']
 })
-export class SendComponent implements OnInit {
+export class SendComponent implements OnInit, OnDestroy {
 
   // General
   log: any = Log.create('send.component');
   private addressHelper: AddressHelper;
+  private destroyed: boolean = false;
+
   testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
@@ -36,6 +40,9 @@ export class SendComponent implements OnInit {
   advanced: boolean = false;
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
+  private availableBal: Amount = new Amount(0);
+
+  public TxType: typeof TxType = TxType;
 
   constructor(
     private sendService: SendService,
@@ -48,7 +55,6 @@ export class SendComponent implements OnInit {
     private flashNotification: SnackbarService
   ) {
     this.addressHelper = new AddressHelper();
-
     this.setFormDefaultValue();
   }
 
@@ -62,11 +68,30 @@ export class SendComponent implements OnInit {
 
   ngOnInit() {
     /* check if testnet -> Show/Hide Anon Balance */
-    this._rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
+
+    // Calculate Spendable balance
+    this._rpcState.observe('listunspent')
+      .pipe(takeWhile(() => !this.destroyed))
+      .subscribe(
+        unspent => {
+          let tempAmount = 0;
+          for (let ut = 0; ut < unspent.length; ut++) {
+            if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+              tempAmount += unspent[ut].amount;
+            };
+          }
+          this.availableBal = new Amount(tempAmount, 8);
+        },
+        error => this.log.error('Failed to get balance, ', error));
   }
+
+
+
   /** Select tab */
   selectTab(tabIndex: number): void {
+    this.advanced = false;
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
     this.send.input = TxType.PUBLIC;
     this.send.output = TxType.PUBLIC;
@@ -79,20 +104,22 @@ export class SendComponent implements OnInit {
   }
 
   /** Get current account balance (Public / Blind / Anon) */
-  getBalance(account: TxType): number {
+  availableBalance(account: TxType): number {
     const balance = this.txTypeToBalanceType(account);
-    return this._rpcState.get('getwalletinfo')[balance] || 0;
-  }
 
-  getBalanceString(account: TxType): string {
-    const balance = this.txTypeToBalanceType(account);
-    return this._rpcState.get('getwalletinfo')[balance];
-  }
-
-  checkBalance(account: TxType): boolean {
-    if (account === TxType.BLIND) {
-      return parseFloat(this.getBalanceString(account)) < 0.0001 && parseFloat(this.getBalanceString(account)) > 0;
+    if (balance === 'balance') {
+      return this.availableBal.getAmount();
     }
+    return (this._rpcState.get('getwalletinfo') || {})[balance] || 0;
+  }
+
+  balanceDisplay(account: TxType): string {
+    return new Amount(this.availableBalance(account)).getAmountAsString();
+  }
+
+  showBalanceHelp(account: TxType): boolean {
+    const amount = this.availableBalance(account);
+    return (amount < 0.0001) &&  (amount > 0);
   }
 
   private txTypeToBalanceType(type: TxType): string {
@@ -136,7 +163,7 @@ export class SendComponent implements OnInit {
       return;
     }
     // is amount in range of 0...CurrentBalance
-    this.send.validAmount = (this.send.amount <= this.getBalance(this.send.input) && this.send.amount > 0);
+    this.send.validAmount = (this.send.amount <= this.availableBalance(this.send.input) && this.send.amount > 0);
   }
 
   /** checkAddres: returns boolean, so it can be private later. */
@@ -337,10 +364,14 @@ export class SendComponent implements OnInit {
   }
 
   sendAllBalance(): void {
-    this.send.amount = (!this.send.subtractFeeFromAmount) ? this.getBalance(this.send.input) : null;
+    this.send.amount = !this.send.subtractFeeFromAmount ? this.availableBalance(this.send.input) : null;
   }
 
   updateAmount(): void {
-    this.send.amount = (this.send.subtractFeeFromAmount) ? this.getBalance(this.send.input) : null;
+    this.send.amount = (this.send.subtractFeeFromAmount) ? this.availableBalance(this.send.input) : null;
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 }

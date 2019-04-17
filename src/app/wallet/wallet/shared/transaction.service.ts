@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger'
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as _ from 'lodash'
 import { Transaction } from './transaction.model';
 
 import { RpcService, RpcStateService } from '../../../core/core.module';
+import { takeWhile, distinctUntilChanged, take, skip, debounceTime } from 'rxjs/operators';
 
 @Injectable()
 export class TransactionService implements OnDestroy {
@@ -73,19 +74,19 @@ export class TransactionService implements OnDestroy {
     // It doesn't get called sometimes ?
     // this.rpc.state.observe('blocks').throttle(val => Observable.interval(30000/*ms*/)).subscribe(block =>  {
     this.rpcState.observe('getblockchaininfo', 'blocks')
-      .takeWhile(() => !this.destroyed)
-      .distinctUntilChanged() // only update when blocks changes
-      .skip(1) // skip the first one (shareReplay)
-      .debounceTime(30 * 1000/*ms*/)
+      .pipe(takeWhile(() => !this.destroyed))
+      .pipe(distinctUntilChanged()) // only update when blocks changes
+      .pipe(skip(1)) // skip the first one (shareReplay)
+      .pipe(debounceTime(30 * 1000/*ms*/))
       .subscribe(block => {
         this.log.d(`--- update by blockcount: ${block} ---`);
         this.loadTransactions();
       });
 
     this.rpcState.observe('getwalletinfo', 'txcount')
-      .takeWhile(() => !this.destroyed)
-      .distinctUntilChanged() // only update when txcount changes
-      .skip(1) // skip the first one (shareReplay)
+      .pipe(takeWhile(() => !this.destroyed))
+      .pipe(distinctUntilChanged()) // only update when txcount changes
+      .pipe(skip(1)) // skip the first one (shareReplay)
       .subscribe(txcount => {
         this.log.d(`--- update by txcount${txcount} ---`);
         this.loadTransactions();
@@ -93,7 +94,7 @@ export class TransactionService implements OnDestroy {
 
 
     /* check if testnet -> block explorer url */
-    this.rpcState.observe('getblockchaininfo', 'chain').take(1)
+    this.rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
       .subscribe(chain => this.testnet = chain === 'test');
   }
 
@@ -165,11 +166,14 @@ export class TransactionService implements OnDestroy {
     Object.keys(this.filters).map(filter => options[filter] = this.filters[filter]);
 
     this.rpc.call('filtertransactions', [options])
-      .subscribe((txResponse: Array<Object>) => {
-        this.log.d(`countTransactions, number of transactions after filter: ${txResponse.length}`);
-        this.txCount = txResponse.length;
-        return;
-      });
+      .subscribe(
+        (txResponse: Array<Object>) => {
+          this.log.d(`countTransactions, number of transactions after filter: ${txResponse.length}`);
+          this.txCount = txResponse.length;
+          return;
+        },
+        (err) => this.log.d('filtertransactions call failed!')
+      );
   }
 
   // TODO: remove shitty hack

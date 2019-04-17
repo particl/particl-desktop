@@ -1,13 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
-import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 import { ColdstakeService } from './coldstake.service'
 
-import { Amount } from '../../../../core/util/utils';
 import { ZapColdstakingComponent } from './zap-coldstaking/zap-coldstaking.component';
 import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstaking.component';
 
@@ -26,9 +23,7 @@ export class ColdstakeComponent {
      *  @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
      */
     private _modals: ModalsHelperService,
-    private _rpc: RpcService,
-    private _rpcState: RpcStateService,
-    private _coldstake: ColdstakeService
+    public _coldstake: ColdstakeService
   ) { }
 
   zap() {

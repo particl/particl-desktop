@@ -1,17 +1,16 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
-
-import { RpcService } from './rpc.service';
 import { RpcStateService } from './rpc-state/rpc-state.service';
 
 import { BlockStatusService } from './blockstatus/blockstatus.service';
 import { NewTxNotifierService } from './new-tx-notifier/new-tx-notifier.service';
 import { PeerService } from './peer/peer.service';
+import { RpcService } from './rpc.service';
 
 @NgModule({
   imports: [
-    CommonModule,
+    HttpClientModule
   ]
 })
 export class RpcModule {
@@ -19,7 +18,26 @@ export class RpcModule {
     return {
       ngModule: RpcModule,
       providers: [
-        RpcService,
+        RpcService
+      ]
+    };
+  }
+
+  static forTest(): ModuleWithProviders {
+    return this.forRoot();
+  }
+}
+
+@NgModule({
+  imports: [
+    RpcModule.forRoot()
+  ]
+})
+export class RpcWithStateModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: RpcWithStateModule,
+      providers: [
         RpcStateService,
         BlockStatusService,
         NewTxNotifierService,
@@ -29,8 +47,6 @@ export class RpcModule {
   }
 }
 
-
-export { RpcService } from './rpc.service';
 export { RpcStateService } from './rpc-state/rpc-state.service';
 
 export { BlockStatusService } from './blockstatus/blockstatus.service'

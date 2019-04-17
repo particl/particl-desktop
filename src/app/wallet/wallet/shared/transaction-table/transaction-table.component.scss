@@ -56,10 +56,11 @@
   .type {
     .mat-icon {
       font-size: 14px;
-      position: absolute;
+      position: relative;
+      top: 2px;
       // narration icon
       &.narration {
-        margin: 0 0 0 2px;
+        margin: 0 0 0 6px;
         font-size: 12px;
         color: lighten($text-muted, 20%) !important;
         padding: 3px;
@@ -69,7 +70,7 @@
     .tx-type {
       .name {
         font-weight: 500;
-        margin-left: 26px;
+        margin-left: 12px;
       }
       &.staked {
         .mat-icon {
@@ -91,6 +92,11 @@
           color: $color;
         }
       }
+      &.listing-fee {
+        .mat-icon {
+          color: $color-secondary;
+        }
+      }
     }
   }
 
@@ -105,6 +111,9 @@
       .point,
       .small {
         color: $text-muted;
+      }
+      .currency {
+        margin-left: 4px;
       }
     }
     .negative {
@@ -121,6 +130,19 @@
       top: 1px;
     }
   }
+}
+
+
+.tx-description {
+  @extend %lighter;
+  padding: 16px 24px;
+  font-size: 93%;
+  border-top: 1px solid $bg-shadow;
+  border-bottom: 1px dashed $bg-shadow;
+}
+
+.tx-details {
+  padding: 16px 24px;
 }
 
 // detail item of TX info
@@ -152,7 +174,6 @@
   .tx-detail-link {
     width: 100%;
     color: $text-muted;
-    font-family: monospace;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -160,5 +181,8 @@
     &:hover {
       color: $color;
     }
+  }
+  .value { // fee & total TX value
+    margin-left: 6px;
   }
 }

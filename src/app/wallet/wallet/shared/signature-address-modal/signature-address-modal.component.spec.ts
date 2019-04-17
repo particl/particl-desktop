@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material';
 
 import { CoreModule } from '../../../../core/core.module';
@@ -8,6 +9,7 @@ import { ModalsModule } from '../../../../modals/modals.module';
 import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 
 import { SignatureAddressModalComponent } from './signature-address-modal.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('SignatureAddressModalComponent', () => {
   let component: SignatureAddressModalComponent;
@@ -20,7 +22,9 @@ describe('SignatureAddressModalComponent', () => {
         WalletModule, // is this even needed?
         CoreModule.forRoot(),
         ModalsModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: MatDialogRef }
