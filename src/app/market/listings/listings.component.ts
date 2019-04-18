@@ -50,10 +50,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // sorting
   sortings: Array<ISorting> = [
-    {value: 'newest', viewValue: 'Newest'},
-    {value: 'popular', viewValue: 'Popular'},
-    {value: 'price-asc', viewValue: 'Cheapest'},
-    {value: 'price-des', viewValue: 'Most expensive'}
+    { value: 'newest', viewValue: 'Newest' },
+    { value: 'popular', viewValue: 'Popular' },
+    { value: 'price-asc', viewValue: 'Cheapest' },
+    { value: 'price-des', viewValue: 'Most expensive' }
   ];
 
   pages: Array<IPage> = [];
@@ -80,7 +80,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   newListArrived: boolean;
 
   showIndicator: boolean;
-  checkInterval: any;
+  checkTimeout: any;
 
   constructor(
     private category: CategoryService,
@@ -98,16 +98,27 @@ export class ListingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadCategories();
     this.loadPage(0);
-    this.checkInterval = setInterval(() => this.loadPage(0, false, false), 5000);
-    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, { leading: false, trailing: true });
     try {
       window.addEventListener('resize', this.resizeEventer);
     } catch (err) { }
+
+    this.checkForNewListing();
+  }
+
+  checkForNewListing() {
+
+    this.checkTimeout = setTimeout(() => {
+      if (!this.destroyed) {
+        this.loadPage(0, false, false)
+        this.checkForNewListing();
+      }
+    }, 5000);
   }
 
   loadCategories() {
     this.category.list()
-    .subscribe(
+      .subscribe(
       list => {
         this._rootCategoryList = list;
       });
@@ -136,58 +147,54 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
       .pipe(take(1)).subscribe((listings: Array<Listing>) => {
-      this.isLoading = false;
-      this.isLoadingBig = false;
+        this.isLoading = false;
+        this.isLoadingBig = false;
 
-      // check for listing indicator.
-      if (pageNumber === 0 && !refreshListing && listings && listings[0]) {
+        // check for listing indicator.
+        if (pageNumber === 0 && !refreshListing && listings && listings[0]) {
 
-        // assign initially this.oldListings.
-        if (!this.oldListings) {
-          this.oldListings = listings
-        }
+          // assign initially this.oldListings.
+          if (!this.oldListings) {
+            this.oldListings = listings
+          }
 
-        if (this.oldListings[0] && this.oldListings[0].hash !== listings[0].hash) {
+          if (this.oldListings[0] && this.oldListings[0].hash !== listings[0].hash) {
 
-          // Should indicator or whatever once confirm via allien.
-          console.log('New listing appear');
+            // New listing appear
+            this.newListArrived = true;
 
-
-          // New listing appear
-          this.newListArrived = true;
-
-          this.oldListings = listings
-        }
-      }
-
-
-      // update the listing data.
-      if (refreshListing) {
-        // new page
-
-        // remove the indicator if page 0 is refreshed.
-        if (pageNumber === 0) {
-          this.newListArrived = false;
-        }
-
-        const page = {
-          pageNumber: pageNumber,
-          listings: listings
-        };
-
-        // should we clear all existing pages? e.g search
-        if (clear === true) {
-          this.pages = [page];
-          this.noMoreListings = false;
-        } else { // infinite scroll
-          if (listings.length > 0) {
-            this.pushNewPage(page);
-          } else {
-            this.noMoreListings = true;
+            this.oldListings = listings
           }
         }
-      }
-    })
+
+
+        // update the listing data.
+        if (refreshListing) {
+          // new page
+
+          // remove the indicator if page 0 is refreshed.
+          if (pageNumber === 0) {
+            this.newListArrived = false;
+          }
+
+          const page = {
+            pageNumber: pageNumber,
+            listings: listings
+          };
+
+          // should we clear all existing pages? e.g search
+          if (clear === true) {
+            this.pages = [page];
+            this.noMoreListings = false;
+          } else { // infinite scroll
+            if (listings.length > 0) {
+              this.pushNewPage(page);
+            } else {
+              this.noMoreListings = true;
+            }
+          }
+        }
+      })
   }
 
   pushNewPage(page: IPage) {
@@ -278,7 +285,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
-    clearInterval(this.checkInterval);
+    clearTimeout(this.checkTimeout);
     try {
       window.removeEventListener('resize', this.resizeEventer);
     } catch (err) { }
