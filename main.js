@@ -26,6 +26,7 @@ const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
 const _auth = require('./modules/webrequest/http-auth');
 
+daemonConfig.deleteAuthFile();
 const options = daemonConfig.getConfiguration();
 
 // Keep a global reference of the window object, if you don't, the window will
