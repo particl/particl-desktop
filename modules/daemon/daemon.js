@@ -1,14 +1,15 @@
 const electron = require('electron');
 const log = require('electron-log');
+const fs   = require('fs');
 const spawn = require('child_process').spawn;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
 
 const _options = require('../options');
-const clearCookie = require('../webrequest/http-auth').removeWalletAuthentication;
 const rpc = require('../rpc/rpc');
 const daemonManager = require('../daemon/daemonManager');
 const daemonConfig = require('./daemonConfig');
+const cookie = require('../rpc/cookie');
 
 let daemon = undefined;
 
@@ -67,6 +68,24 @@ exports.start = function (doReindex = false) {
     if (!(daemonSettings.global && daemonSettings.global.addressindex === 1)) {
       daemonConfig.saveSettings({addressindex: true});
       doReindex = true;
+    }
+  }
+
+  if (attemptsToStart === 0) {
+    let success = true;
+    log.info('Checking if cookie file exists (from incorrect shutdown)...');
+    // On startup, cleanup any leftover cookie file (which prevents proper daemon startup)
+    const cookiePath = cookie.getCookiePath(options);
+    try {
+      fs.unlinkSync(cookiePath);
+    } catch (err) {
+      if (err && err.code !== 'ENOENT') {
+        log.error('Failed to remove existing cookie file!!');
+        success = false;
+      }
+    }
+    if (success) {
+      log.info('Cookie file check completed successfully');
     }
   }
 
