@@ -167,7 +167,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         // remove the indicator if page 0 is refreshed.
         if (pageNumber === 0) {
-          this.newListArrived = true;
+          this.newListArrived = false;
         }
 
         const page = {
