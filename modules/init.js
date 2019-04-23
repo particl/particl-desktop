@@ -16,7 +16,6 @@ const market        = require('./market/market');
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
-  rpc.init();
   notification.init();
   closeGui.init();
   daemon.init();
@@ -59,7 +58,9 @@ daemonManager.on('status', (status, msg) => {
     multiwallet.get()
     // TODO: activate for prompting wallet
     .then(chosenWallets => {
-      daemon.start();
+      daemon.start().then(() => {
+        rpc.init();
+      });
     })
     .then(() => {
       daemonConfig.send();
