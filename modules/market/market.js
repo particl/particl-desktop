@@ -1,9 +1,9 @@
 const log = require('electron-log');
 const config = require('../daemon/daemonConfig');
+const cookie = require('../rpc/cookie');
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
-const marketConfig = require('./config.js');
 
 // Stores the child process
 let child = undefined;
@@ -31,13 +31,15 @@ exports.start = function(walletName) {
     log.info('market process starting.');
 
     const isTestnet = Boolean(+_options.testnet);
+    const cookieFile = cookie.getCookieName(_options);
 
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
-      WALLET: walletName || '',
+      WALLET: String(walletName) || '',
       RPCHOSTNAME: _options.rpcbind || 'localhost',
       RPC_PORT: _options.port,
-      TESTNET: isTestnet
+      TESTNET: isTestnet,
+      RPCCOOKIEFILE: cookieFile
     };
 
     if (isTestnet) {

@@ -1,11 +1,11 @@
 const electron = require('electron');
 const log = require('electron-log');
+const fs   = require('fs');
 const spawn = require('child_process').spawn;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
 
 const _options = require('../options');
-const clearCookie = require('../webrequest/http-auth').removeWalletAuthentication;
 const rpc = require('../rpc/rpc');
 const daemonManager = require('../daemon/daemonManager');
 const daemonConfig = require('./daemonConfig');
