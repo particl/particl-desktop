@@ -76,7 +76,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   selectedCountry: Country;
 
   // used to check for new listings
-  private firstListingHash = '';
+  private firstListingHash: string = '';
   private timeoutNewListingCheck: any;
   newListArrived: boolean;
 
