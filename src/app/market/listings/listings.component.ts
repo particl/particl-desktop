@@ -76,11 +76,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   selectedCountry: Country;
 
   // used to check for new listings
-  oldListings: Array<Listing>;
+  private firstListingHash = '';
+  private timeoutNewListingCheck: any;
   newListArrived: boolean;
-
-  showIndicator: boolean;
-  checkTimeout: any;
 
   constructor(
     private category: CategoryService,
@@ -97,23 +95,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadCategories();
-    this.loadPage(0);
+    this.loadPage(0, true);
     this.resizeEventer = throttle(() => this.getScreenSize(), 400, { leading: false, trailing: true });
     try {
       window.addEventListener('resize', this.resizeEventer);
     } catch (err) { }
-
-    this.checkForNewListing();
-  }
-
-  checkForNewListing() {
-
-    this.checkTimeout = setTimeout(() => {
-      if (!this.destroyed) {
-        this.loadPage(0, false, false)
-        this.checkForNewListing();
-      }
-    }, 5000);
   }
 
   loadCategories() {
@@ -124,9 +110,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadPage(pageNumber: number, clear?: boolean, refreshListing: boolean = true) {
+  private loadPage(pageNumber: number, clear: boolean, queryNewListings: boolean = false) {
     // set loading aninmation
-    this.isLoading = refreshListing;
+    this.isLoading = !queryNewListings;
 
     // params
     const max = this.pagination.maxPerPage;
@@ -145,42 +131,36 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.listingServiceSubcription.unsubscribe();
     }
 
+    if ((queryNewListings || (pageNumber === 0 && clear)) && this.timeoutNewListingCheck) {
+      try {
+        clearTimeout(this.timeoutNewListingCheck);
+      } catch (err) { }
+    }
+
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
       .pipe(take(1)).subscribe((listings: Array<Listing>) => {
+
+        if (this.destroyed) {
+          return;
+        }
         this.isLoading = false;
         this.isLoadingBig = false;
 
-        // check for listing indicator.
-        if (pageNumber === 0 && !refreshListing && listings && listings[0]) {
+        if (queryNewListings) {
+          // Queried for new listings available - are there any new ones?
+          this.newListArrived = listings.length && (listings[0].hash || '') !== this.firstListingHash;
+        } else {
 
-          // assign initially this.oldListings.
-          if (!this.oldListings) {
-            this.oldListings = listings
-          }
-
-          if (this.oldListings[0] && this.oldListings[0].hash !== listings[0].hash) {
-
-            // New listing appear
-            this.newListArrived = true;
-
-            this.oldListings = listings
-          }
-        }
-
-
-        // update the listing data.
-        if (refreshListing) {
           // new page
-
-          // remove the indicator if page 0 is refreshed.
-          if (pageNumber === 0) {
-            this.newListArrived = false;
-          }
-
           const page = {
             pageNumber: pageNumber,
             listings: listings
           };
+
+          if (pageNumber === 0) {
+            this.firstListingHash = listings.length ? (listings[0].hash || '') : '';
+            this.newListArrived = false;
+          }
 
           // should we clear all existing pages? e.g search
           if (clear === true) {
@@ -194,7 +174,27 @@ export class ListingsComponent implements OnInit, OnDestroy {
             }
           }
         }
-      })
+
+        if (queryNewListings || (pageNumber === 0 && clear)) {
+          // Check for new listings if this is such a request, or a new result set is being loaded
+          if (!this.destroyed) {
+            this.timeoutNewListingCheck = setTimeout(() => {
+              if (!this.destroyed) {
+                this.loadPage(0, false, true);
+              }
+            }, 20000);
+          }
+        }
+      },
+
+      (error) => {
+        setTimeout(() => {
+          if (!this.destroyed) {
+            this.loadPage(0, clear, queryNewListings);
+          }
+        }, 5000);
+      }
+      )
   }
 
   pushNewPage(page: IPage) {
@@ -233,7 +233,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       previousPage--;
       this.log.d('loading prev page' + previousPage);
       if (previousPage > -1) {
-        this.loadPage(previousPage);
+        this.loadPage(previousPage, false);
       }
     }
   }
@@ -242,7 +242,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.pages.length) {
       let nextPage = this.pages[this.pages.length - 1].pageNumber; nextPage++;
       this.log.d('loading next page: ' + nextPage);
-      this.loadPage(nextPage);
+      this.loadPage(nextPage, false);
     }
   }
 
@@ -285,7 +285,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
-    clearTimeout(this.checkTimeout);
+    try {
+      clearTimeout(this.timeoutNewListingCheck);
+    } catch (err) { }
     try {
       window.removeEventListener('resize', this.resizeEventer);
     } catch (err) { }
