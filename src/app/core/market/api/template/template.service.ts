@@ -6,6 +6,7 @@ import { MarketService } from 'app/core/market/market.service';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 import { Template } from 'app/core/market/api/template/template.model';
+import { EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { map, tap } from 'rxjs/operators';
 
 @Injectable()
@@ -30,7 +31,9 @@ export class TemplateService {
     basePrice: number,
     domesticShippingPrice: number,
     internationalShippingPrice: number,
-    paymentAddress?: string // TODO: class
+    escrowType: EscrowType,
+    buyerRatio: number,
+    sellerRatio: number
     ) {
       const params  = [
         'add',
@@ -44,11 +47,10 @@ export class TemplateService {
         basePrice,
         domesticShippingPrice,
         internationalShippingPrice,
-        paymentAddress
+        escrowType,
+        +buyerRatio,
+        +sellerRatio
       ];
-      if (paymentAddress === undefined) {
-        params.pop();
-      }
       return this.market.call('template', params);
   }
 

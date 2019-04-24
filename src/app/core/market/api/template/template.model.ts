@@ -79,7 +79,7 @@ export class Template {
   get country(): any {
     const itemlocation = this.object.ItemInformation.ItemLocation;
     if (itemlocation) {
-      return itemlocation.region;
+      return itemlocation.country;
     }
     return undefined;
   }

@@ -307,14 +307,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
       'PARTICL',
       +item.basePrice,
       +item.domesticShippingPrice,
-      +item.internationalShippingPrice
+      +item.internationalShippingPrice,
+      EscrowType.MAD,
+      100,
+      100
     ).toPromise();
 
     this.preloadedTemplate = new Template(template);
 
     this.templateId = template.id;
     await this.location.execute('add', this.templateId, country, null, null).toPromise();
-    await this.escrow.add(template.id, EscrowType.MAD).toPromise();
     await this.uploadImages();
 
     return this.template.get(template.id, false).toPromise();
@@ -341,9 +343,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
       await this.location.execute('update', this.templateId, country, null, null).toPromise();
     }
 
-    // update escrow
-    // @TODO EscrowType will change in future?
-    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
+    // @TODO Update Escrow in future if the escrow details change
+    // await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
 
     // update shipping?
     // update messaging?
