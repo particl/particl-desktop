@@ -157,7 +157,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
             listings: listings
           };
 
-          if (pageNumber === 0) {
+          if ( (pageNumber === 0) && clear) {
             this.firstListingHash = listings.length ? (listings[0].hash || '') : '';
             this.newListArrived = false;
           }
