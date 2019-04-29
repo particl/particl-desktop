@@ -10,6 +10,7 @@ import { SharedModule } from '../../shared/shared.module';  // is this even need
 
 import { ReceiveComponent } from './receive.component';
 import { DetailAddressComponent } from './../shared/detail-address/detail-address.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('ReceiveComponent', () => {
   let component: ReceiveComponent;
@@ -26,7 +27,8 @@ describe('ReceiveComponent', () => {
         SharedModule,  // is this even needed?
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [ ]
     })

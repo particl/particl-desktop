@@ -3,12 +3,12 @@
     Client
     <span class="version" [ngClass]="isUpdateProcessing ? 'unknown' : (isClientLatest ? 'current' : 'outdated')" [matTooltip]=" clientUpdateText " matTooltipPosition="right">
       <span class="dot"></span>
-      {{ clientVersion }}
+      <span class="selectable">{{ clientVersion }}</span>
     </span>
   </div>
-  <div class="client item">
+  <div class="client item" *ngIf="isMarketWallet">
     Market
-    <span class="version" >
+    <span class="version">
       {{ marketVersion }}
     </span>
   </div>

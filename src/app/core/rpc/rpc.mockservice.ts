@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RpcService } from './rpc.service';
 import { Result } from './rpc.responses';
 import { of } from 'rxjs'
 /*

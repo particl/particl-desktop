@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Observer, Subscription } from 'rxjs'; // use this for testing atm
 import { Log } from 'ng2-logger';
 
-import { RpcService } from '../rpc.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
 import { publishReplay } from 'rxjs/operators';
 
 @Injectable()

@@ -16,10 +16,10 @@ const market        = require('./market/market');
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
-  rpc.init();
   notification.init();
   closeGui.init();
   daemon.init();
+  market.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
@@ -58,10 +58,11 @@ daemonManager.on('status', (status, msg) => {
     multiwallet.get()
     // TODO: activate for prompting wallet
     .then(chosenWallets => {
-      daemon.start(chosenWallets);
+      daemon.start().then(() => {
+        rpc.init();
+      });
     })
     .then(() => {
-      market.init();
       daemonConfig.send();
     })
     .catch(err          => log.error(err));
@@ -110,7 +111,11 @@ electron.app.on('before-quit', async function beforeQuit(event) {
   daemonManager.shutdown();
   market.stop()
   .then(() => sleep(2000))
-  .then(() => daemon.stop())
+  .then(async () => {
+    await daemon.stop().catch(() => {
+      // Shutting down now, so a rejection or error should not stop the rest of the app shutting down, ie: do nothing
+    })
+  })
   .then(() => {
     log.info('daemon.stop() resolved!');
   });

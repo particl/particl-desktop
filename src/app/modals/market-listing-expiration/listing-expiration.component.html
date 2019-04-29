@@ -14,7 +14,7 @@
       <mat-label>Select expiry time</mat-label>
       <mat-select [(value)]="expiration" (selectionChange)="loadTransactionFee()">
         <mat-option>None</mat-option>
-        <mat-option *ngFor="let expire of expiredList" [value]="expire.value">
+        <mat-option [disabled]="expire?.isDisabled" *ngFor="let expire of expiredList" [value]="expire.value">
           {{ expire.title }}
         </mat-option>
       </mat-select>

@@ -1,0 +1,61 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+body {
+  margin: 0 !important;
+}
+
+.loading-wrapper {
+  background: url('../../assets/splash-bg.png') no-repeat bottom left #232323;
+  color: $bg;
+  text-align: center;
+  font-family: $font;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  .logo {
+    width: 300px;
+    height: auto;
+    margin: 210px 0 60px;
+  }
+  .loader {
+    color: $color;
+    opacity: 0.8;
+    font-size: 60px;
+    font-family: monospace;
+    span {
+      display: inline-block;
+      margin: 0 3px;
+      animation: pulse 0.6s alternate infinite ease-in-out;
+      transform-origin: bottom;
+      &:nth-child(2n+1) {
+        animation-delay: 0.15s;
+      }
+      &:nth-child(2n+2) {
+        animation-delay: 0.3s;
+      }
+      &:nth-child(2n+3) {
+        animation-delay: 0.45s;
+      }
+    }
+  }
+}
+
+
+@keyframes pulse {
+  to {
+    transform: scale(0.5);
+    opacity: 0.3;
+  }
+}
+
+.quote {
+  font-size: 17px;
+  margin-top: 90px;
+}
+
+.author {
+  font-size: 13px;
+  color: $text-muted;
+}

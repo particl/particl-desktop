@@ -136,7 +136,6 @@ export class ZapColdstakingComponent {
     }], 'coldstaking zap', '', 4, 64, false, JSON.stringify({
       inputs: this.utxos.txs
     })]).subscribe(info => {
-      this._rpcState.set('ui:coldstaking', true);
       this.log.d('zap', info);
 
       this.dialogRef.close();

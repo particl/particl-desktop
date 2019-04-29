@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
 
-import { RpcModule } from '../../../../../core/rpc/rpc.module';
+import { RpcWithStateModule } from '../../../../../core/rpc/rpc.module';
 import { SharedModule } from '../../../../shared/shared.module';
 import { CoreModule } from '../../../../../core/core.module'
 
@@ -17,7 +17,7 @@ describe('RevertColdstakingComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RpcModule.forRoot(),
+        RpcWithStateModule.forRoot(),
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot()

@@ -1,0 +1,20 @@
+<!-- Small sidebar for Multiwallet, Settings etc. -->
+<div class="mini-sidebar-menu">
+
+  <div class="multiwallet">
+
+    <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.displayname.toUpperCase()}}" matTooltipPosition="after">{{wallet.displayname.toUpperCase()[0]}}</button>
+
+    <button mat-raised-button color="primary" routerLink="/installer/create" routerLinkActive="active" matTooltip="Add new wallet" matTooltipPosition="after">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
+    </button>
+
+  </div><!-- .multiwallet -->
+
+  <div class="buttons">
+    <a mat-button href="https://github.com/particl/particl-desktop/issues" target="_blank" class="small" color="basic" matTooltip="Report bug" matTooltipPosition="after">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bug"></mat-icon>
+    </a>
+  </div><!-- .buttons -->
+
+</div><!-- .mini-sidebar-menu -->

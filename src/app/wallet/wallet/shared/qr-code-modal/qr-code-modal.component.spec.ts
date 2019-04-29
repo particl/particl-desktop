@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogRef } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SharedModule } from '../../../shared/shared.module';
 import { WalletModule } from '../../../wallet/wallet.module';
@@ -9,6 +10,7 @@ import { ModalsModule } from '../../../../modals/modals.module';
 
 
 import { QrCodeModalComponent } from './qr-code-modal.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('QrCodeModalComponent', () => {
   let component: QrCodeModalComponent;
@@ -21,7 +23,9 @@ describe('QrCodeModalComponent', () => {
         WalletModule.forRoot(),  // is this even needed?
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule
       ],
       providers: [
         { provide: MatDialogRef}

@@ -31,7 +31,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('chart') chart: NvD3Component;
   @Input() proposal: Proposal;
   @Input() selectedTab: string;
-  @Input() currentBlockCount: number;
 
   // pie chart config(s).
   public graphOptions: any = {
@@ -152,7 +151,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.dialog.closeAll();
       // Update graph data as votes are now saving locally
       this.getProposalResult();
-      this.snackbarService.open(`Successfully Vote for ${this.proposal.title}`, 'info');
+      this.snackbarService.open(`Successfully voted for ${this.proposal.title}`, 'info');
     }, (error) => {
       this.btnValidate = false;
       this.dialog.closeAll();

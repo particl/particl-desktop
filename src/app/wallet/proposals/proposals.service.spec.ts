@@ -1,4 +1,4 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject, tick } from '@angular/core/testing';
 import { CoreModule } from 'app/core/core.module';
 
 import { ProposalsService } from './proposals.service';
@@ -37,6 +37,7 @@ describe('ProposalsService', async () => {
   }));
 
   it('should list method return the proposals list', inject([ProposalsService], async (service: ProposalsService) => {
+    service.start();
     const startTime = new Date();
     const endTime = '*';
     const proposals = await service.list(startTime, endTime).toPromise();

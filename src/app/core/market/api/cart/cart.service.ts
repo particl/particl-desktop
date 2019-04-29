@@ -8,6 +8,7 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 import { Cart } from './cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { Subscription } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 
 
@@ -17,18 +18,25 @@ export class CartService {
   private log: any = Log.create('cart.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   private defaultCartId: number;
+  private profile$: Subscription;
 
   constructor(
     private market: MarketService,
     private marketState: MarketStateService,
     private profile: ProfileService,
     public cache: AddToCartCacheService
-  ) {
-    this.default().subscribe((cart: any) => {
+  ) {}
+
+  start() {
+    this.profile$ = this.default().subscribe((cart: any) => {
       this.log.d('Setting default cartId and registering listener= ' + cart.id);
       this.defaultCartId = cart.id;
       this.marketState.register('cartitem', 60 * 1000, ['list', cart.id, true]);
     });
+  }
+
+  stop() {
+    this.profile$.unsubscribe();
   }
 
   add(listing: Listing): Observable<any> {

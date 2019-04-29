@@ -1,23 +1,30 @@
 <div class="staking-info section">
+
   <header>
     <div class="subtitle">Staking stats</div>
   </header>
 
-  <mat-card>
-    <table class="staking-overview" cellspacing="0">
-      <tr>
-        <th>Next reward</th>
-        <td>~{{ expectedtime.getShortReadableDuration() }}</td>
-      </tr>
-      <tr>
-        <th>Your Stake weight</th>
-        <td>{{ ownPercentageOfActiveStakingSupply.getIntegerPart() }}.<small>{{ ownPercentageOfActiveStakingSupply.getFractionalPart() }}</small>&nbsp;%</td>
-      </tr>
-      <tr>
-        <th>Stake percentage</th>
-        <td>{{ curStakeReward.getIntegerPart() }}&nbsp;%</td>
-      </tr>
-    </table>
-  </mat-card>
+  <mat-card class="staking-overview">
+
+    <div class="row">
+      <div class="key">Next reward</div>
+      <div class="value">~{{ expectedtime.getShortReadableDuration() }}</div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">
+      <div class="key">Your Stake weight</div>
+      <div class="value">{{ ownPercentageOfActiveStakingSupply.getIntegerPart() }}.<small>{{ ownPercentageOfActiveStakingSupply.getFractionalPart() }}</small>&nbsp;%</div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">
+      <div class="key">Stake percentage</div>
+      <div class="value">{{ curStakeReward.getIntegerPart() }}&nbsp;%</div>
+    </div>
+
+  </mat-card><!-- .staking-overview -->
 
 </div><!-- .staking-info -->

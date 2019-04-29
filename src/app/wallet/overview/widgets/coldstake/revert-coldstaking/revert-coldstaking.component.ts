@@ -104,7 +104,6 @@ export class RevertColdstakingComponent implements OnInit {
 
     this.disableColdstaking();
     if (this.utxos.txs.length === 0) {
-      this._rpcState.set('ui:coldstaking', false);
       this.dialogRef.close();
       this.flashNotification.open(
         `Succesfully disabled coldstaking, no transactions needed.`, 'warn');
@@ -129,7 +128,6 @@ export class RevertColdstakingComponent implements OnInit {
         amount += tx.amount;
 
         if (++sentTXs === this.utxos.txs.length) {
-          this._rpcState.set('ui:coldstaking', false);
           this.dialogRef.close();
           this.flashNotification.open(
             `Succesfully brought ${amount} PART into hot wallet`, 'warn');

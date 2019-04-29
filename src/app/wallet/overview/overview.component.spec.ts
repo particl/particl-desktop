@@ -13,6 +13,8 @@ import { TransactionService } from 'app/wallet/wallet/shared/transaction.service
 
 import { TransactionsTableComponent } from 'app/wallet/wallet/shared/transaction-table/transaction-table.component';
 import { MockTransactionService } from 'app/wallet/wallet/shared/transaction.mockservice';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('OverviewComponent', () => {
@@ -27,6 +29,8 @@ describe('OverviewComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule
       ],
       declarations: [
         OverviewComponent,

@@ -7,6 +7,7 @@ import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../../modals/modals.module';
 
 import { AddressTableComponent } from './address-table.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('AddressTableComponent', () => {
   let component: AddressTableComponent;
@@ -19,7 +20,8 @@ describe('AddressTableComponent', () => {
         WalletModule.forRoot(),  // is this even needed?
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
     })
       .compileComponents();
