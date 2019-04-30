@@ -81,13 +81,17 @@
         <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
 
-      <mat-otpgroup-select-search
+      <!-- <mat-otpgroup-select-search
         [options]="_rootCategoryList?.subCategoryList"
         [placeHolder]="'Select category'"
         [isRequired]="'true'"
         [defaultSelectedValue]="selectedCategory"
         (change)="onCategoryChange($event)">
-      </mat-otpgroup-select-search>
+      </mat-otpgroup-select-search> -->
+      <app-tree-with-search
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        [options]="_rootCategoryList?.subCategoryList"
+      ></app-tree-with-search>
 
       <mat-select-search
         class="full-width"
