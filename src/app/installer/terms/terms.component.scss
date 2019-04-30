@@ -7,6 +7,11 @@ $installer-header-height: 96px;
 
 .container-block {
   margin-top: $header-main-height;
+  .page-intro {
+    p {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .mat-divider { // section divider
@@ -103,9 +108,6 @@ $installer-header-height: 96px;
         margin: auto;
       }
     }
-    .title {
-      text-align: center;
-    }
   }
   & > .content {
     background: $bg;
@@ -125,6 +127,11 @@ $installer-header-height: 96px;
       z-index: 100;
     }
   }
+}
+
+.terms-text {
+  text-align: justify;
+  line-height: 1.5;
 }
 
 .action-buttons {
@@ -179,9 +186,3 @@ $installer-header-height: 96px;
 .confirmation-checkbox {
   margin-right: 12px;
 }
-
-.terms-text {
-  text-align: justify;
-}
-
-
