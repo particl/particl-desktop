@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Log } from 'ng2-logger';
-import { environment } from 'environments/environment';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 
@@ -15,8 +14,6 @@ import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
 import { ListingExpirationComponent } from 'app/modals/market-listing-expiration/listing-expiration.component';
-import { TermsComponent } from 'app/modals/terms/terms.component';
-import { termsObj } from 'app/modals/terms/terms-txt';
 import { take } from 'rxjs/operators';
 
 interface ModalsSettings {
@@ -56,10 +53,6 @@ export class ModalsHelperService implements OnDestroy {
       this.progress.next(status.syncPercentage);
     });
 
-    /* Hook for checking the accept & terms modal */
-    if (!environment.isTesting) {
-      this.checkForNewVersion();
-    }
   }
 
   /**
@@ -132,28 +125,6 @@ export class ModalsHelperService implements OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('listing exiry modal closed');
     });
-  }
-
-  /**
-    * Open the accept & terms modal if it wasn't accepted before
-    */
-  checkForNewVersion() {
-    if (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
-      && this.getVersion().text !== termsObj.text)) {
-      const dialogRef = this._dialog.open(TermsComponent, this.modelSettings)
-      dialogRef.componentInstance.text = termsObj.text;
-      dialogRef.afterClosed().subscribe(() => {
-        this.setVersion();
-      });
-    }
-  }
-
-  getVersion(): any {
-    return JSON.parse(localStorage.getItem('terms'));
-  }
-
-  setVersion() {
-    localStorage.setItem('terms', JSON.stringify(termsObj));
   }
 
   /** Get progress set by block status */
