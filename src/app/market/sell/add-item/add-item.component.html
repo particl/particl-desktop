@@ -55,26 +55,7 @@
       </mat-card>
       <!-- .photos -->
 
-    </div>
-    <!-- .left -->
 
-
-    <mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
-      <div class="title">Listing details *</div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Listing title (product name) *" #title formControlName="title">
-        <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
-        <textarea matInput #summary rows="3" placeholder="Summary (short description) *" formControlName="shortDescription"></textarea>
-        <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
-        <textarea matInput #description rows="12" placeholder="Description *" formControlName="longDescription"></textarea>
-        <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
-      </mat-form-field>
 
       <mat-card class="category">
         <div class="title">Category</div>
@@ -84,93 +65,92 @@
         </div>
       </mat-card>
       <!-- .category -->
+    </div>
+    <!-- .left -->
 
-  </div>
-  <!-- .left -->
+    <div class="right" fxFlex="50">
 
-  <div class="right" fxFlex="50">
+      <mat-card class="details" [formGroup]="itemFormGroup">
+        <div class="title">Listing details *</div>
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Listing title (product name) *" #title formControlName="title">
+          <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
+        </mat-form-field>
 
-    <mat-card class="details" [formGroup]="itemFormGroup">
-      <div class="title">Listing details *</div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Listing title (product name) *" #title formControlName="title">
-        <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
-      </mat-form-field>
+        <mat-form-field class="full-width">
+          <textarea matInput #summary rows="3" placeholder="Summary (short description) *" formControlName="shortDescription"></textarea>
+          <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
+        </mat-form-field>
 
-      <mat-form-field class="full-width">
-        <textarea matInput #summary rows="3" placeholder="Summary (short description) *" formControlName="shortDescription"></textarea>
-        <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
-      </mat-form-field>
+        <mat-form-field class="full-width">
+          <textarea matInput #description rows="12" placeholder="Description *" formControlName="longDescription"></textarea>
+          <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
+        </mat-form-field>
+      </mat-card>
+      <!-- .details -->
 
-      <mat-form-field class="full-width">
-        <textarea matInput #description rows="12" placeholder="Description *" formControlName="longDescription"></textarea>
-        <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
-      </mat-form-field>
-    </mat-card>
-    <!-- .details -->
+      <mat-card class="shipping-price">
+        <div class="title">Shipping &amp; price</div>
+        <mat-select-search class="full-width" [options]="countryList.getList()" [showValueOf]="'name'" [placeHolder]="'Shipping from (your country)'"
+          [isRequired]="'true'" [defaultSelectedValue]="selectedCountry" [isLexigraphicalOrder]="true" (onChange)="onCountryChange($event)">
+        </mat-select-search>
 
-    <mat-card class="shipping-price">
-      <div class="title">Shipping &amp; price</div>
-      <mat-select-search class="full-width" [options]="countryList.getList()" [showValueOf]="'name'" [placeHolder]="'Shipping from (your country)'"
-        [isRequired]="'true'" [defaultSelectedValue]="selectedCountry" [isLexigraphicalOrder]="true" (onChange)="onCountryChange($event)">
-      </mat-select-search>
+        <!-- TODO: add another input for fiat value and inter-connect the two: -->
+        <mat-form-field class="full-width">
+          <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *"
+            formControlName="basePrice" type="text">
+          <span matSuffix>PART</span>
+        </mat-form-field>
 
-      <!-- TODO: add another input for fiat value and inter-connect the two: -->
-      <mat-form-field class="full-width">
-        <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *"
-          formControlName="basePrice" type="text">
-        <span matSuffix>PART</span>
-      </mat-form-field>
-
-      <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
-        <!--mat-form-field fxFlex="0 0 70px" class="auto-width">
+        <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
+          <!--mat-form-field fxFlex="0 0 70px" class="auto-width">
             <input matInput placeholder="Quantity">
           </mat-form-field-->
-        <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *"
-            formControlName="domesticShippingPrice" type="text">
-          <span matSuffix>PART</span>
-        </mat-form-field>
-        <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *"
-            formControlName="internationalShippingPrice" type="text">
-          <span matSuffix>PART</span>
-        </mat-form-field>
-      </div>
-      <p class="widget-help">
-        Don't forget to include quantity units (e.g. 1 piece, 1 pair, 1 kg or 100 ml).
-        <br> Prices are in PART.
-      </p>
-    </mat-card>
-    <!-- .shipping-price -->
+          <mat-form-field fxFlex="50%" class="auto-width">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *"
+              formControlName="domesticShippingPrice" type="text">
+            <span matSuffix>PART</span>
+          </mat-form-field>
+          <mat-form-field fxFlex="50%" class="auto-width">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *"
+              formControlName="internationalShippingPrice" type="text">
+            <span matSuffix>PART</span>
+          </mat-form-field>
+        </div>
+        <p class="widget-help">
+          Don't forget to include quantity units (e.g. 1 piece, 1 pair, 1 kg or 100 ml).
+          <br> Prices are in PART.
+        </p>
+      </mat-card>
+      <!-- .shipping-price -->
+    </div>
+    <!-- .right -->
+
   </div>
-  <!-- .right -->
 
-</div>
+  <p class="warning" *ngIf="!canPublish">
+    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  </p>
 
-<p class="warning" *ngIf="!canPublish">
-  <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
-</p>
+  <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
+    <div class="left">
+      <button mat-button (click)="backToSell()" color="warn">
+        <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+        Back to Listings
+      </button>
+    </div>
+    <div class="right">
+      <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
+        <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+        {{ isExistingTemplate() ? 'Update' : 'Save'}}
+      </button>
 
-<div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
-  <div class="left">
-    <button mat-button (click)="backToSell()" color="warn">
-      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-      Back to Listings
-    </button>
+      <button [disabled]="!itemFormGroup?.valid" mat-raised-button color="primary" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+        <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
+      </button>
+    </div>
   </div>
-  <div class="right">
-    <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
-      <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-      {{ isExistingTemplate() ? 'Update' : 'Save'}}
-    </button>
-
-    <button [disabled]="!itemFormGroup?.valid" mat-raised-button color="primary" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
-      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish'}}
-    </button>
-  </div>
-</div>
-<!-- .action-buttons -->
+  <!-- .action-buttons -->
 </div>
