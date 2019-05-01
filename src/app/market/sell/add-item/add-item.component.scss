@@ -10,6 +10,7 @@
 }
 
 .mat-card {
+  margin-bottom: 24px;
   & > .title {
     text-transform: uppercase;
     font-size: 13px;
@@ -98,6 +99,14 @@
   }
 }
 
+mat-card.category {
+  padding-bottom: 0;
+  .category-tree {
+    height: 200px;
+    overflow-y: scroll;
+    margin: 0 -24px -24px -12px;
+  }
+}
 
 
 // ------ BUTTONS ------ //
