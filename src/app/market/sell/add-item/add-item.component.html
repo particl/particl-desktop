@@ -58,7 +58,6 @@
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
 
-<<<<<<< refs/remotes/origin/market
       <mat-card class="category">
         <div class="title">Category</div>
         <div class="category-tree">
@@ -68,41 +67,6 @@
           ></app-tree-with-search>
         </div>
       </mat-card><!-- .category -->
-=======
-    </div><!-- .left -->
-
-
-    <mat-card class="details" fxFlex="50" [formGroup]="itemFormGroup">
-      <div class="title">Listing details *</div>
-      <mat-form-field class="full-width">
-        <input matInput placeholder="Listing title (product name) *" #title formControlName="title">
-        <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
-        <textarea matInput #summary rows="3" placeholder="Summary (short description) *"
-                  formControlName="shortDescription"></textarea>
-        <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
-      </mat-form-field>
-
-      <mat-form-field class="full-width">
-        <textarea matInput #description rows="12" placeholder="Description *"
-                  formControlName="longDescription"></textarea>
-        <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
-      </mat-form-field>
-
-      <!-- <mat-otpgroup-select-search
-        [options]="_rootCategoryList?.subCategoryList"
-        [placeHolder]="'Select category'"
-        [isRequired]="'true'"
-        [defaultSelectedValue]="selectedCategory"
-        (change)="onCategoryChange($event)">
-      </mat-otpgroup-select-search> -->
-      <app-tree-with-search-single-selection
-        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-        [options]="_rootCategoryList?.subCategoryList"
-      ></app-tree-with-search-single-selection>
->>>>>>> - Created the new tree component with the single option section option.
 
     </div><!-- .left -->
 
@@ -197,4 +161,5 @@
       </button>
     </div>
   </div><!-- .action-buttons -->
+
 </div>
