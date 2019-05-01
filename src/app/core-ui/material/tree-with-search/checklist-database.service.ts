@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Category } from 'app/core/market/api/category/category.model';
-import { ItemNode } from 'app/core-ui/material/tree-with-search/tree-with-search.component';
+import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node';
 
 @Injectable({
   providedIn: 'root'
