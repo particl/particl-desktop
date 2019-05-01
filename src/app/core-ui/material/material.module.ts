@@ -22,6 +22,7 @@ import { MatSelectSearchComponent } from './mat-select-search/mat-select-search.
 import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/mat-otpgroup-select-search.component';
 import { TreeWithSearchComponent } from './tree-with-search/tree-with-search.component';
 import { CdkTreeModule } from '@angular/cdk/tree';
+import { TreeWithSearchSingleSelectionComponent } from './tree-with-search/tree-with-search-single-selection/tree-with-search-single-selection.component';
 
 /* A unified module that will simply manage all our Material imports (and export them again) */
 
@@ -95,12 +96,14 @@ import { CdkTreeModule } from '@angular/cdk/tree';
     // custom component.
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
-    TreeWithSearchComponent
+    TreeWithSearchComponent,
+    TreeWithSearchSingleSelectionComponent
   ],
   declarations: [
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
-    TreeWithSearchComponent
+    TreeWithSearchComponent,
+    TreeWithSearchSingleSelectionComponent
   ]
 })
 export class MaterialModule { }

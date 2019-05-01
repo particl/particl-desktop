@@ -88,10 +88,10 @@
         [defaultSelectedValue]="selectedCategory"
         (change)="onCategoryChange($event)">
       </mat-otpgroup-select-search> -->
-      <app-tree-with-search
+      <app-tree-with-search-single-selection
         *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
         [options]="_rootCategoryList?.subCategoryList"
-      ></app-tree-with-search>
+      ></app-tree-with-search-single-selection>
 
       <mat-select-search
         class="full-width"

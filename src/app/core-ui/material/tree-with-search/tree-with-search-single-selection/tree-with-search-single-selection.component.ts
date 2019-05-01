@@ -9,18 +9,14 @@ import { ItemFlatNode } from 'app/core-ui/material/tree-with-search/model/item-f
 import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node';
 import { ChecklistDatabaseService } from 'app/core-ui/material/tree-with-search/checklist-database.service';
 
-/**
- * @title Tree with checkboxes
- */
-
 @Component({
-  selector: 'app-tree-with-search',
-  templateUrl: './tree-with-search.component.html',
-  styleUrls: ['./tree-with-search.component.scss'],
-  providers: []
+  selector: 'app-tree-with-search-single-selection',
+  templateUrl: './tree-with-search-single-selection.component.html',
+  styleUrls: ['./tree-with-search-single-selection.component.scss']
 })
-export class TreeWithSearchComponent implements OnInit {
-  log: any = Log.create('tree-with-search.component');
+export class TreeWithSearchSingleSelectionComponent implements OnInit {
+
+  log: any = Log.create('tree-with-search-single-selection');
   @Input() options: any = [];
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap: any = new Map<ItemFlatNode, ItemNode>();
@@ -42,7 +38,6 @@ export class TreeWithSearchComponent implements OnInit {
 
   /** The selection for checklist */
   checklistSelection: any = new SelectionModel<ItemFlatNode>(true /* multiple */);
-
 
   constructor(private database: ChecklistDatabaseService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
