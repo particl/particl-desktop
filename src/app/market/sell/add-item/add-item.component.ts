@@ -504,7 +504,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.itemFormGroup.patchValue({ country: country ? country.name : '' })
   }
 
-
   onCategoryChange(category: Category): void {
     this.log.d('category', category);
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
@@ -517,8 +516,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
 
   private initDragDropEl(elementID: string) {
     this.dropArea = document.getElementById(elementID);
