@@ -393,8 +393,8 @@ p.info {
 }
 
 code {
-  color: darken($color-secondary, 10%);
-  background: rgba($color-secondary, 0.15);
+  color: darken($secondary, 10%);
+  background: rgba($secondary, 0.15);
   padding: 1px 3px;
   border-radius: $radius;
 }
