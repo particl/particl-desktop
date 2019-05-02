@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TreeWithSearchSingleSelectionComponent } from './tree-with-search-single-selection.component';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 describe('TreeWithSearchSingleSelectionComponent', () => {
   let component: TreeWithSearchSingleSelectionComponent;
@@ -8,7 +9,9 @@ describe('TreeWithSearchSingleSelectionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TreeWithSearchSingleSelectionComponent ]
+      imports: [
+        CoreUiModule.forRoot()
+      ]
     })
     .compileComponents();
   }));

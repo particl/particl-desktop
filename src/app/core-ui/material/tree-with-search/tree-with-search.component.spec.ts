@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TreeWithSearchComponent } from './tree-with-search.component';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TreeWithSearchComponent', () => {
   let component: TreeWithSearchComponent;
@@ -8,7 +10,10 @@ describe('TreeWithSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TreeWithSearchComponent ]
+      imports: [
+        CoreUiModule.forRoot(),
+        BrowserAnimationsModule
+      ]
     })
     .compileComponents();
   }));
