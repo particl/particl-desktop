@@ -10,6 +10,7 @@ import { InstallerRouterComponent } from './installer.router';
 
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { PassphraseComponent } from 'app/installer/create-wallet/passphrase/passphrase.component';
+import { TermsComponent } from './terms/terms.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { PassphraseComponent } from 'app/installer/create-wallet/passphrase/pass
   declarations: [
     InstallerRouterComponent,
     CreateWalletComponent,
-    PassphraseComponent
+    PassphraseComponent,
+    TermsComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

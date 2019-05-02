@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule, MatDialogRef } from '@angular/material';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TermsComponent } from './terms.component';
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
@@ -12,15 +12,13 @@ describe('TermsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        RouterTestingModule,
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
        ],
       declarations: [ TermsComponent ],
-      providers: [
-        /* deps */
-        { provide: MatDialogRef },
-      ]
+      providers: []
     })
     .compileComponents();
   }));

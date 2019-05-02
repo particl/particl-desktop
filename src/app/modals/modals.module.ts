@@ -8,7 +8,6 @@ import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 /* modals */
-import { TermsComponent } from './terms/terms.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
@@ -52,7 +51,6 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
   ],
   declarations: [
     PasswordComponent,
-    TermsComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
@@ -82,7 +80,6 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
   ],
   entryComponents: [
     DaemonComponent,
-    TermsComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,

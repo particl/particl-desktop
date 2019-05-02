@@ -8,6 +8,8 @@ import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from './updater.service';
 import { take } from 'rxjs/operators';
 import { MarketService } from 'app/core/market/market.module';
+import { termsObj } from 'app/installer/terms/terms-txt';
+import { environment } from 'environments/environment';
 
 import * as marketConfig from '../../../modules/market/config.js';
 
@@ -84,16 +86,22 @@ export class LoadingComponent implements OnInit {
   }
 
   decideWhereToGoTo(getwalletinfo: any) {
-    this.log.d('Where are we going next?', getwalletinfo);
-    if ('hdseedid' in getwalletinfo) {
-      const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
-      if (isMarketWallet) {
-        this.startMarketService();
-      } else {
-        this.goToWallet();
-      }
+    // Check the terms and conditions
+    if (!environment.isTesting && (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
+      && this.getVersion().text !== termsObj.text))) {
+      this.goToTerms();
     } else {
-      this.goToInstaller(getwalletinfo);
+      this.log.d('Where are we going next?', getwalletinfo);
+      if ('hdseedid' in getwalletinfo) {
+        const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
+        if (isMarketWallet) {
+          this.startMarketService();
+        } else {
+          this.goToWallet();
+        }
+      } else {
+        this.goToInstaller(getwalletinfo);
+      }
     }
   }
 
@@ -110,6 +118,11 @@ export class LoadingComponent implements OnInit {
   goToWallet() {
     this.log.d('MainModule: moving to new wallet', this.rpc.wallet);
     this.router.navigate(['wallet', 'main', 'wallet']);
+  }
+
+  goToTerms() {
+    this.log.d('Going to terms');
+    this.router.navigate(['installer', 'terms']);
   }
 
   private startMarketService() {
@@ -135,5 +148,9 @@ export class LoadingComponent implements OnInit {
     } else {
       this.decideWhereToGoTo(getwalletinfo);
     }
+  }
+
+  private getVersion(): any {
+    return JSON.parse(localStorage.getItem('terms'));
   }
 }
