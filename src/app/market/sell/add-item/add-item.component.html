@@ -70,9 +70,9 @@
 
     </div><!-- .left -->
 
-    <div class="right" fxFlex="50">
+    <div class="right" fxFlex="50" [formGroup]="itemFormGroup">
 
-      <mat-card class="details" [formGroup]="itemFormGroup">
+      <mat-card class="details">
         <div class="title">Listing details *</div>
         <mat-form-field class="full-width">
           <input matInput placeholder="Listing title (product name) *" #title formControlName="title">
