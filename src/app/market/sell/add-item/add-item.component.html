@@ -61,10 +61,11 @@
       <mat-card class="category">
         <div class="title">Category</div>
         <div class="category-tree">
-          <app-tree-with-search
+          <app-tree-with-search-single-selection
+            (onChange)="onCategoryChange($event)"
             *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-            [options]="_rootCategoryList?.subCategoryList"
-          ></app-tree-with-search>
+            [options]="_rootCategoryList?.subCategoryList">
+          </app-tree-with-search-single-selection>
         </div>
       </mat-card><!-- .category -->
 

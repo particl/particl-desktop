@@ -1,9 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Injectable, Input, OnChanges, SimpleChange, AfterViewInit, OnInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { BehaviorSubject } from 'rxjs';
-import { Category } from 'app/core/market/api/category/category.model';
 import { Log } from 'ng2-logger';
 import { ItemFlatNode } from 'app/core-ui/material/tree-with-search/model/item-flat-node';
 import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node';
@@ -18,6 +16,8 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
 
   log: any = Log.create('tree-with-search-single-selection');
   @Input() options: any = [];
+  @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
+
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap: any = new Map<ItemFlatNode, ItemNode>();
 
@@ -37,7 +37,7 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
   dataSource: MatTreeFlatDataSource<ItemNode, ItemFlatNode>;
 
   /** The selection for checklist */
-  checklistSelection: any = new SelectionModel<ItemFlatNode>(true /* multiple */);
+  checklistSelection: any = new SelectionModel<ItemFlatNode>();
 
   constructor(private database: ChecklistDatabaseService) {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel,
@@ -77,72 +77,21 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
     const flatNode = existingNode && existingNode.item === node.item
       ? existingNode
       : new ItemFlatNode();
+
     flatNode.item = node.item;
     flatNode.level = level;
+    flatNode.id = node.id;
     flatNode.expandable = !!node.children;
     this.flatNodeMap.set(flatNode, node);
     this.nestedNodeMap.set(node, flatNode);
     return flatNode;
   }
 
-  /** Whether all the descendants of the node are selected. */
-  descendantsAllSelected(node: ItemFlatNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.checklistSelection.isSelected(child)
-    );
-    return descAllSelected;
-  }
-
-  /** Whether part of the descendants are selected */
-  descendantsPartiallySelected(node: ItemFlatNode): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some(child => this.checklistSelection.isSelected(child));
-    return result && !this.descendantsAllSelected(node);
-  }
-
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  todoItemSelectionToggle(node: ItemFlatNode): void {
-    this.checklistSelection.toggle(node);
-    const descendants = this.treeControl.getDescendants(node);
-    this.checklistSelection.isSelected(node)
-      ? this.checklistSelection.select(...descendants)
-      : this.checklistSelection.deselect(...descendants);
-
-    // Force update for the parent
-    descendants.every(child =>
-      this.checklistSelection.isSelected(child)
-    );
-    this.checkAllParentsSelection(node);
-  }
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   todoLeafItemSelectionToggle(node: ItemFlatNode): void {
     this.checklistSelection.toggle(node);
-    // this.checkAllParentsSelection(node);
-  }
-
-  /* Checks all the parents when a leaf node is selected/unselected */
-  checkAllParentsSelection(node: ItemFlatNode): void {
-    let parent: ItemFlatNode | null = this.getParentNode(node);
-    while (parent) {
-      this.checkRootNodeSelection(parent);
-      parent = this.getParentNode(parent);
-    }
-  }
-
-  /** Check root node checked state and change it accordingly */
-  checkRootNodeSelection(node: ItemFlatNode): void {
-    const nodeSelected = this.checklistSelection.isSelected(node);
-    const descendants = this.treeControl.getDescendants(node);
-    const descAllSelected = descendants.every(child =>
-      this.checklistSelection.isSelected(child)
-    );
-    if (nodeSelected && !descAllSelected) {
-      this.checklistSelection.deselect(node);
-    } else if (!nodeSelected && descAllSelected) {
-      this.checklistSelection.select(node);
-    }
+    this.onChange.emit(node);
   }
 
   /* Get the parent node of a node */
@@ -163,33 +112,6 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
       }
     }
     return null;
-  }
-
-  /** Select the category so we can insert the new item. */
-  addNewItem(node: ItemFlatNode) {
-    const parentNode = this.flatNodeMap.get(node);
-    this.database.insertItem(parentNode!, '');
-    this.treeControl.expand(node);
-  }
-
-  /** Save the node to database */
-  saveNode(node: ItemFlatNode, itemValue: string) {
-    const nestedNode = this.flatNodeMap.get(node);
-    this.database.updateItem(nestedNode!, itemValue);
-  }
-
-  filterChanged(filterText: string) {
-    // @TODO do search related stuff here.
-
-
-    // this.database.filter(filterText);
-
-    // @TODO can expand and collapse after filter the tree node.
-    // if (filterText) {
-    //   this.treeControl.expandAll();
-    // } else {
-    //   this.treeControl.collapseAll();
-    // }
   }
 
 }

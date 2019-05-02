@@ -29,8 +29,11 @@
         [defaultOption]="'All categories'"
         (change)="onCategoryChange($event)">
       </mat-otpgroup-select-search> -->
-      <app-tree-with-search-single-selection *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-      [options]="_rootCategoryList?.subCategoryList"></app-tree-with-search-single-selection>
+      <app-tree-with-search-single-selection
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        (onChange)="onCategoryChange($event)"
+        [options]="_rootCategoryList?.subCategoryList">
+      </app-tree-with-search-single-selection>
     </div>
 
     <div class="filter-by buyer-country" fxFlex="1 1 25%">
