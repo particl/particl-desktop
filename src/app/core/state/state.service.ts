@@ -52,6 +52,17 @@ export class StateService {
     return state;
   }
 
+  clear() {
+    Object.keys(this._observerPairs).forEach((prop) => {
+      if (this._observerPairs[prop].observer) {
+        this._observerPairs[prop].observer.complete()
+      };
+    })
+
+    this._observerPairs = {};
+    this._state = {};
+  }
+
   observe(prop: string, subkey?: string) {
     let observable = this._getObservablePair(prop).observable;
     if (subkey) {

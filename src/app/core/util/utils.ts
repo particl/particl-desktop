@@ -285,7 +285,7 @@ export const Messages = {
       'status_info': 'Seller rejected bid on this item, order has been cancelled (no money was spent)'
     },
     'sell': {
-      'action_button': 'Order rejected',
+      'action_button': 'Rejected order',
       'tooltip': '',
       'action_icon': 'part-error',
       'action_disabled': true,

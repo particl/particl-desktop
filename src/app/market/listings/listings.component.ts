@@ -9,7 +9,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
-import { take, takeWhile } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
 
 
@@ -50,10 +50,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // sorting
   sortings: Array<ISorting> = [
-    {value: 'newest', viewValue: 'Newest'},
-    {value: 'popular', viewValue: 'Popular'},
-    {value: 'price-asc', viewValue: 'Cheapest'},
-    {value: 'price-des', viewValue: 'Most expensive'}
+    { value: 'newest', viewValue: 'Newest' },
+    { value: 'popular', viewValue: 'Popular' },
+    { value: 'price-asc', viewValue: 'Cheapest' },
+    { value: 'price-des', viewValue: 'Most expensive' }
   ];
 
   pages: Array<IPage> = [];
@@ -75,6 +75,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   selectedCountry: Country;
 
+  // used to check for new listings
+  private firstListingHash: string = '';
+  private timeoutNewListingCheck: any;
+  newListArrived: boolean;
+
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
@@ -89,10 +94,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.log.d('overview created');
     this.loadCategories();
-    this.loadPage(0);
-    this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
+    this.loadPage(0, true);
+    this.resizeEventer = throttle(() => this.getScreenSize(), 400, { leading: false, trailing: true });
     try {
       window.addEventListener('resize', this.resizeEventer);
     } catch (err) { }
@@ -100,15 +104,15 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   loadCategories() {
     this.category.list()
-    .subscribe(
+      .subscribe(
       list => {
         this._rootCategoryList = list;
       });
   }
 
-  loadPage(pageNumber: number, clear?: boolean) {
+  private loadPage(pageNumber: number, clear: boolean, queryNewListings: boolean = false) {
     // set loading aninmation
-    this.isLoading = true;
+    this.isLoading = !queryNewListings;
 
     // params
     const max = this.pagination.maxPerPage;
@@ -127,29 +131,70 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.listingServiceSubcription.unsubscribe();
     }
 
+    if ((queryNewListings || (pageNumber === 0 && clear)) && this.timeoutNewListingCheck) {
+      try {
+        clearTimeout(this.timeoutNewListingCheck);
+      } catch (err) { }
+    }
+
     this.listingServiceSubcription = this.listingService.search(pageNumber, max, null, search, category, country, this.flagged)
       .pipe(take(1)).subscribe((listings: Array<Listing>) => {
-      this.isLoading = false;
-      this.isLoadingBig = false;
 
-      // new page
-      const page = {
-        pageNumber: pageNumber,
-        listings: listings
-      };
-
-      // should we clear all existing pages? e.g search
-      if (clear === true) {
-        this.pages = [page];
-        this.noMoreListings = false;
-      } else { // infinite scroll
-        if (listings.length > 0) {
-          this.pushNewPage(page);
-        } else {
-          this.noMoreListings = true;
+        if (this.destroyed) {
+          return;
         }
+        this.isLoading = false;
+        this.isLoadingBig = false;
+
+        if (queryNewListings) {
+          // Queried for new listings available - are there any new ones?
+          this.newListArrived = listings.length && (listings[0].hash || '') !== this.firstListingHash;
+        } else {
+
+          // new page
+          const page = {
+            pageNumber: pageNumber,
+            listings: listings
+          };
+
+          if ( (pageNumber === 0) && clear) {
+            this.firstListingHash = listings.length ? (listings[0].hash || '') : '';
+            this.newListArrived = false;
+          }
+
+          // should we clear all existing pages? e.g search
+          if (clear === true) {
+            this.pages = [page];
+            this.noMoreListings = false;
+          } else { // infinite scroll
+            if (listings.length > 0) {
+              this.pushNewPage(page);
+            } else {
+              this.noMoreListings = true;
+            }
+          }
+        }
+
+        if (queryNewListings || (pageNumber === 0 && clear)) {
+          // Check for new listings if this is such a request, or a new result set is being loaded
+          if (!this.destroyed) {
+            this.timeoutNewListingCheck = setTimeout(() => {
+              if (!this.destroyed) {
+                this.loadPage(0, false, true);
+              }
+            }, 20000);
+          }
+        }
+      },
+
+      (error) => {
+        setTimeout(() => {
+          if (!this.destroyed) {
+            this.loadPage(0, clear, queryNewListings);
+          }
+        }, 5000);
       }
-    })
+      )
   }
 
   pushNewPage(page: IPage) {
@@ -188,7 +233,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       previousPage--;
       this.log.d('loading prev page' + previousPage);
       if (previousPage > -1) {
-        this.loadPage(previousPage);
+        this.loadPage(previousPage, false);
       }
     }
   }
@@ -197,7 +242,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.pages.length) {
       let nextPage = this.pages[this.pages.length - 1].pageNumber; nextPage++;
       this.log.d('loading next page: ' + nextPage);
-      this.loadPage(nextPage);
+      this.loadPage(nextPage, false);
     }
   }
 
@@ -240,6 +285,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    try {
+      clearTimeout(this.timeoutNewListingCheck);
+    } catch (err) { }
     try {
       window.removeEventListener('resize', this.resizeEventer);
     } catch (err) { }

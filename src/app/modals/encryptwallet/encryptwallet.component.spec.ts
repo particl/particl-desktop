@@ -7,6 +7,8 @@ import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { EncryptwalletComponent } from './encryptwallet.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('EncryptwalletComponent', () => {
@@ -16,10 +18,12 @@ describe('EncryptwalletComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
         ModalsModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef }

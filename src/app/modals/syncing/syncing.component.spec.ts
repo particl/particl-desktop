@@ -6,6 +6,7 @@ import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { SyncingComponent } from './syncing.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('SyncingComponent', () => {
   let component: SyncingComponent;
@@ -16,7 +17,8 @@ describe('SyncingComponent', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot()
        ],
        providers: [ { provide: MatDialogRef } ],
        declarations: [SyncingComponent]

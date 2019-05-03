@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject ,  Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Log } from 'ng2-logger';
-import { environment } from 'environments/environment';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
 
@@ -14,11 +13,8 @@ import { ListingExpiryConfig } from './models/listingExpiry.modal.config.interfa
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
-import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
 import { ListingExpirationComponent } from 'app/modals/market-listing-expiration/listing-expiration.component';
-import { TermsComponent } from 'app/modals/terms/terms.component';
-import { termsObj } from 'app/modals/terms/terms-txt';
-import { take, takeWhile } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -57,10 +53,6 @@ export class ModalsHelperService implements OnDestroy {
       this.progress.next(status.syncPercentage);
     });
 
-    /* Hook for checking the accept & terms modal */
-    if (!environment.isTesting) {
-      this.checkForNewVersion();
-    }
   }
 
   /**
@@ -107,36 +99,11 @@ export class ModalsHelperService implements OnDestroy {
     });
   }
 
-  createWallet() {
-    const dialogRef = this._dialog.open(CreateWalletComponent, this.modelSettings);
-    dialogRef.afterClosed().subscribe(() => {
-      this.log.d('createWallet modal closed');
-    });
-  }
-
   encrypt() {
     const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
     });
-  }
-
-  /**
-    * Open the Createwallet modal if wallet is not initialized
-    */
-
-  openInitialCreateWallet(): void {
-    this._rpcState.observe('ui:walletInitialized')
-      .pipe(takeWhile(() => !this.destroyed))
-      .subscribe(
-        state => {
-          this.initializedWallet = state;
-          if (state) {
-            this.log.i('Wallet already initialized.');
-            return;
-          }
-          this.createWallet();
-        });
   }
 
   /**
@@ -158,32 +125,6 @@ export class ModalsHelperService implements OnDestroy {
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('listing exiry modal closed');
     });
-  }
-
-  /**
-    * Open the accept & terms modal if it wasn't accepted before
-    */
-  checkForNewVersion() {
-    if (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
-      && this.getVersion().text !== termsObj.text)) {
-      const dialogRef = this._dialog.open(TermsComponent, this.modelSettings)
-      dialogRef.componentInstance.text = termsObj.text;
-      dialogRef.afterClosed().subscribe(() => {
-        this.setVersion();
-        /* Hook wallet initialized -> open createwallet modal */
-        this.openInitialCreateWallet();
-      });
-    } else {
-      this.openInitialCreateWallet();
-    }
-  }
-
-  getVersion(): any {
-    return JSON.parse(localStorage.getItem('terms'));
-  }
-
-  setVersion() {
-    localStorage.setItem('terms', JSON.stringify(termsObj));
   }
 
   /** Get progress set by block status */

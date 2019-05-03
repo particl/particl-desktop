@@ -94,7 +94,6 @@
       <app-proposal-details
         [proposal]="proposal"
         [selectedTab]="tabLabels[selectedTab]"
-        [currentBlockCount]="currentBlockCount"
         *ngFor="let proposal of activeProposals;">
       </app-proposal-details>
       <!-- FIXME: implement no results -->
@@ -117,7 +116,6 @@
       <app-proposal-details
         [proposal]="proposal"
         [selectedTab]="tabLabels[selectedTab]"
-        [currentBlockCount]="currentBlockCount"
         *ngFor="let proposal of pastProposals;">
       </app-proposal-details>
 

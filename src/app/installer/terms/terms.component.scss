@@ -1,0 +1,188 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+$installer-minisidebar-width: 54px;
+$installer-sidebar-width: (270px - $installer-minisidebar-width);
+$installer-sidebar-padding: 30px;
+$installer-header-height: 96px;
+
+.container-block {
+  margin-top: $header-main-height;
+  .page-intro {
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.mat-divider { // section divider
+  border-bottom: 1px solid lighten($bg-black, 5%);
+  border-top: 1px solid darken($bg-black, 5%);
+}
+
+.progress {
+  margin-left: -15px;
+  padding: 30px 0;
+  .step {
+    margin-bottom: 16px;
+    position: relative;
+    .number {
+      $size: 28px;
+      display: inline-block;
+      background: lighten($bg-black, 10%);
+      width: $size;
+      height: $size;
+      border-radius: 50%;
+      text-align: center;
+      line-height: $size;
+      position: relative;
+      z-index: 10;
+    }
+    .desc {
+      display: inline-block;
+      font-size: 13px;
+      text-transform: uppercase;
+      margin-left: 16px;
+      color: darken($bg, 50%);
+    }
+    &:not(.last):after { // lines connecting numbers
+      content: '';
+      display: block;
+      background: lighten($bg-black, 5%);
+      width: 2px;
+      position: absolute;
+      top: 12px;
+      bottom: -24px;
+      left: 13px;
+      z-index: 1;
+    }
+    &.active { // active steps
+      .number {
+        background: $color;
+        font-weight: 700;
+        color: $bg-black;
+      }
+      .desc {
+        color: $bg;
+        font-weight: 600;
+      }
+    }
+    &.done { // finished steps
+      &:after {
+        background: rgba($color, 0.2);
+      }
+      .number {
+        background: mix($color, $bg-black);
+        color: $bg-black;
+      }
+      .desc {
+        font-weight: 400;
+        color: rgba($bg, 0.8);
+      }
+    }
+  }
+}
+
+.terms {
+  @extend %disable-select;
+  & > .mini-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: $installer-minisidebar-width;
+    background: darken($bg-black, 5%);
+  }
+  & > .sidebar {
+    width: $installer-sidebar-width;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: $installer-minisidebar-width;
+    background: $bg-black;
+    color: $bg;
+    .logo {
+      display: flex;
+      height: 120px;
+      img {
+        display: block;
+        margin: auto;
+      }
+    }
+  }
+  & > .content {
+    background: $bg;
+    margin-left: ($installer-sidebar-width + $installer-minisidebar-width);
+    .header-main {
+      border-bottom: 1px solid $bg-shadow;
+      background: $color-white;
+      padding-left: 35px;
+      padding-right: 26px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      position: fixed;
+      top: 0;
+      left: ($installer-minisidebar-width + $installer-sidebar-width);
+      right: 0;
+      z-index: 100;
+    }
+  }
+}
+
+.terms-text {
+  text-align: justify;
+  line-height: 1.5;
+}
+
+.action-buttons {
+  margin: 6px 35px 35px;
+  &.huge {
+    margin: 15px 0 0;
+    display: flex;
+    align-items: stretch;
+    .half {
+      @extend %tfx;
+      flex: 1 1 50%;
+      text-align: center;
+      margin: 0;
+      padding: 36px 46px 46px;
+      .icon {
+        @extend %tfx;
+        font-size: 38px;
+        color: $bg-shadow;
+      }
+      .choice-title {
+        font-size: 15px;
+        text-transform: uppercase;
+        font-weight: 700;
+        margin: 14px 0 12px;
+      }
+      .choice-desc {
+        margin: 8px 0 26px;
+        color: $text-muted;
+      }
+      &:hover {
+        background: $color-white;
+        &.create {
+          .icon {
+            transform: scale(1.1);
+            color: $color;
+          }
+        }
+        &.restore {
+          .icon {
+            transform: rotate(45deg) scale(1.1);
+            color: $color-info;
+          }
+        }
+      }
+      &:last-of-type {
+        margin-left: 30px;
+      }
+    }
+  }
+}
+
+.confirmation-checkbox {
+  margin-right: 12px;
+}

@@ -1,11 +1,10 @@
 
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { MatDialog, MatSliderChange } from '@angular/material';
 import { Log } from 'ng2-logger';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
-import { RpcService } from '../../../core/rpc/rpc.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from '../../../core/rpc/rpc-state/rpc-state.service';
 
 import { SendService } from './send.service';

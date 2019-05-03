@@ -10,6 +10,7 @@ import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 
 import { ProposalsComponent } from './proposals.component';
 import { ProposalDetailsComponent } from 'app/wallet/proposals/proposal-details/proposal-details.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('ProposalsComponent', () => {
   let component: ProposalsComponent;
@@ -22,7 +23,8 @@ describe('ProposalsComponent', () => {
         BrowserAnimationsModule,
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [
         ProposalsService,

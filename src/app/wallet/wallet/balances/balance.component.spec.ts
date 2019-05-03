@@ -5,6 +5,7 @@ import { WalletModule } from '../wallet.module';
 
 import { BalanceComponent } from './balance.component';
 import { CoreModule } from 'app/core/core.module';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -15,7 +16,8 @@ describe('BalanceComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ]
     })
     .compileComponents();

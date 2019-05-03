@@ -7,25 +7,18 @@
 
 .staking-overview { // listing of staking stats
   width: 100%;
-  td,
-  th {
-    padding: 10px 20px;
-    border-bottom: 1px solid rgba($bg-shadow, 0.4);
-  }
-  tr:last-of-type {
-    td,
-    th {
-      border: 0;
+  .row {
+    display: flex;
+    .key {
+      @extend %lighter;
+      flex: auto;
+      padding: 10px 5px 10px 20px;
     }
-  }
-  th {
-    text-align: left;
-    padding-right: 20px;
-    font-weight: normal;
-    color: $text-muted;
-  }
-  td {
-    font-weight: 500;
-    text-align: right;
+    .value {
+      text-align: right;
+      font-weight: 500;
+      flex: auto;
+      padding: 10px 20px 10px 5px;
+    }
   }
 }

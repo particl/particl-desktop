@@ -10,6 +10,7 @@ import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
 import { TransactionBuilder } from './transaction-builder.model';
 import { map, take } from 'rxjs/operators';
+import { Amount } from 'app/core/util/utils';
 
 /*
   Note: due to upcoming multiwallet, we should never ever store addresses in the GUI for transaction purposes.
@@ -101,8 +102,8 @@ export class SendService {
 
     // Truncate the address to 16 characters only
     const trimAddress = address.substring(0, 16) + '...';
-    const txsId = json.substring(0, 45) + '...';
-    this.flashNotification.open(`Succesfully sent ${amount} PART to ${trimAddress}!\nTransaction id: ${txsId}`, 'warn');
+    const displayAmount = (new Amount(amount)).getAmountAsString();
+    this.flashNotification.open(`Successfully sent ${displayAmount} PART to ${trimAddress}`, 'warn');
   }
 
   private rpc_send_failed(message: string, address?: string, amount?: number) {

@@ -309,9 +309,23 @@ const initializeIpcChannels = (mainWindow) => {
 }
 
 
+const deleteAuthFile = () => {
+  let settings = getConfiguration();
+  cookie.clearCookieFilePath(settings);
+  if ('auth' in STORED_CONFIGURATION) {
+    try {
+      delete STORED_CONFIGURATION.auth;
+    } catch (err) {
+      STORED_CONFIGURATION.auth = null;
+    }
+  }
+}
+
+
 exports.getConfiguration = getConfiguration;
 exports.init = initializeIpcChannels;
 exports.destroy = destroyIpcChannels;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;
 exports.send = emitConfiguration;
+exports.deleteAuthFile = deleteAuthFile;

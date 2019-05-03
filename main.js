@@ -26,6 +26,7 @@ const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
 const _auth = require('./modules/webrequest/http-auth');
 
+daemonConfig.deleteAuthFile();
 const options = daemonConfig.getConfiguration();
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -78,6 +79,23 @@ app.on('browser-window-created', function (e, window) {
 function initMainWindow() {
   if (platform !== "darwin") {
     let trayImage = makeTray();
+  } else {
+    electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate([
+      {
+        label: 'Edit',
+        submenu: [
+          { role: 'undo' },
+          { role: 'redo' },
+          { type: 'separator' },
+          { role: 'cut' },
+          { role: 'copy' },
+          { role: 'paste' },
+          { role: 'pasteandmatchstyle' },
+          { role: 'delete' },
+          { role: 'selectall' }
+        ]
+      }
+    ]));
   }
 
   // Create the browser window.

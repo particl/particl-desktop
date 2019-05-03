@@ -1,5 +1,5 @@
 
-import {throwError as observableThrowError,  Subject ,  Observable } from 'rxjs';
+import {throwError as observableThrowError, Observable } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
@@ -20,10 +20,12 @@ declare global {
  * It has two important functions: call and register.
  */
 
-@Injectable()
+@Injectable(
+  {providedIn: 'root'}
+)
 export class RpcService implements OnDestroy {
 
-  private log: any = Log.create('rpc.service');
+  private log: any = Log.create('rpc.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
   private isInitialized: boolean = false;
   private DAEMON_CHANNEL: string = 'rpc-configuration';
@@ -41,27 +43,38 @@ export class RpcService implements OnDestroy {
   // note: password basic64 equiv= dGVzdDp0ZXN0
   private authorization: string = btoa('test:test');
 
-  public isElectron: boolean = false;
-
   constructor(
     private _http: HttpClient,
     private _ipc: IpcService
   ) {
-    this.isElectron = false;  // window.electron
     if (environment.isTesting || !window.electron) {
       this.isInitialized = true;
     } else {
       this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
       this.requestConfiguration();
+      this.log.d('Creating service');
     }
   }
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.log.d('Destroying service');
   }
 
   get enabled(): boolean {
     return this.isInitialized;
+  }
+
+  /**
+   * Set the wallet to execute commands against.
+   * @param w the wallet filename .
+   */
+  set wallet(w: string) {
+    localStorage.setItem('wallet', w);
+  }
+
+  get wallet(): string {
+    return localStorage.getItem('wallet') || '';
   }
 
   /**
@@ -85,44 +98,40 @@ export class RpcService implements OnDestroy {
       return observableThrowError('Initializing...');
     }
 
-    if (this.isElectron) {
-      return this._ipc.runCommand('rpc-channel', null, method, params).pipe(
-        map(response => response && (response.result !== undefined)
-                      ? response.result
-                      : response
-        )
-      );
-    } else {
-      // Running in browser, delete?
-      const postData = JSON.stringify({
-        method: method,
-        params: params,
-        id: 1
-      });
+    // Running in browser, delete?
+    const postData = JSON.stringify({
+      method: method,
+      params: params,
+      id: 1
+    });
 
-      const headerJson = {
-       'Content-Type': 'application/json',
-       'Authorization': 'Basic ' + this.authorization,
-       'Accept': 'application/json',
-      };
-      const headers = new HttpHeaders(headerJson);
+    const headerJson = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + this.authorization,
+      'Accept': 'application/json',
+    };
+    const headers = new HttpHeaders(headerJson);
 
-      return this._http
-        .post(`http://${this.hostname}:${this.port}`, postData, { headers: headers })
-          .pipe(map((response: any) => response.result))
-          .pipe(catchError((error => {
-            let err: string;
-            if (typeof error._body === 'object') {
-              err =  error._body
-            } else if (error._body) {
-              err = JSON.parse(error._body);
-            } else {
-              err = error.error && error.error.error ? error.error.error : error.message;
-            }
-
-            return observableThrowError(err)
-          })))
+    let url = `http://${this.hostname}:${this.port}`;
+    if (!['createwallet', 'loadwallet', 'listwalletdir',
+          'listwallet', 'smsgdisable', 'smsgenable'].includes(method)) {
+      url += `/wallet/${this.wallet}`
     }
+
+    return this._http
+      .post(url, postData, { headers: headers })
+        .pipe(map((response: any) => response.result))
+        .pipe(catchError((error => {
+          let err: string;
+          if (typeof error._body === 'object') {
+            err =  error._body
+          } else if (error._body) {
+            err = JSON.parse(error._body);
+          } else {
+            err = error.error && error.error.error ? error.error.error : error.message;
+          }
+          return observableThrowError(err)
+        })))
   }
 
   private daemonListener(config: any): Observable<any> {

@@ -7,6 +7,8 @@ import { CoreUiModule } from '../../../../core-ui/core-ui.module';
 import { ModalsModule } from '../../../../modals/modals.module';
 
 import { DetailAddressComponent } from './detail-address.component';
+import { RpcModule, RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('DetailAddressComponent', () => {
   let component: DetailAddressComponent;
@@ -15,12 +17,14 @@ describe('DetailAddressComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,  // is this even needed?
         WalletModule.forRoot(),  // is this even needed?
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
-      ],
+        ModalsModule.forRoot(),
+        RpcWithStateModule.forRoot(),
+      ]
     })
       .compileComponents();
   }));

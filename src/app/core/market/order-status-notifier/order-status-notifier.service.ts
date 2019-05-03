@@ -44,6 +44,7 @@ export class OrderStatusNotifierService implements OnDestroy {
       .pipe(map(o => new BidCollection(o, this.profile.address)))
       .subscribe(bids => {
         this.bids = bids;
+        this.log.d(`Order notification counts: buy: ${this.bids.buyCount}, sell: ${this.bids.sellCount}`);
         if (bids.address) {
           this.checkForNewStatus(bids.orders);
         }
