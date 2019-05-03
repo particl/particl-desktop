@@ -287,7 +287,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   bidOrder() {
-    const addressId: number = this.selectedAddress && this.selectedAddress.id ? +this.selectedAddress.id : -1;
 
     // Extract the shipping address details here (always use the address entered by the user in this.shippingFormGroup)
     const shippingInfo: any = {

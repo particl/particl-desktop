@@ -6,7 +6,6 @@ import { BidService } from 'app/core/market/api/bid/bid.service';
 import { ListingService } from '../../../../core/market/api/listing/listing.service';
 
 import { ModalsHelperService } from 'app/modals/modals.module';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
 import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
@@ -28,7 +27,6 @@ export class OrderItemComponent implements OnInit {
   constructor(
     private listingService: ListingService,
     private bid: BidService,
-    private rpcState: RpcStateService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
