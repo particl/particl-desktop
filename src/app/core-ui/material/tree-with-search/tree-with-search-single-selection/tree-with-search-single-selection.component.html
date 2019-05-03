@@ -5,7 +5,7 @@
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="category">
-    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
+    <button mat-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename" class="full-width text-left">
       <mat-icon class="part-icon" [ngClass]="{
           'part-triangle-down': treeControl.isExpanded(node),
           'part-triangle-right': !treeControl.isExpanded(node)
