@@ -66,7 +66,16 @@ export class LoadingComponent implements OnInit {
         this.con
           .whenRpcIsResponding()
           .subscribe(
-            getwalletinfo => {
+            async getwalletinfo => {
+              if (!this.rpc.daemonProtocol) {
+                await this.rpc.call('getnetworkinfo').toPromise().then(networkinfo => {
+                  if (networkinfo && +networkinfo.protocolversion) {
+                    this.rpc.daemonProtocol = +networkinfo.protocolversion;
+                  }
+                }).catch(rpcErr => {
+                  // do nothing, mostly just prevents an error from not being handled in case of an issue
+                });
+              }
               this.multi.refreshWalletList();
               // Swap smsg to the new wallet
               this.rpc.call('smsgdisable').subscribe(
@@ -87,10 +96,14 @@ export class LoadingComponent implements OnInit {
 
   decideWhereToGoTo(getwalletinfo: any) {
     // Check the terms and conditions
-    if (!environment.isTesting && (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
-      && this.getVersion().text !== termsObj.text))) {
+    const termsVersion = this.getVersion();
+    if (!environment.isTesting && (!termsVersion || (termsVersion && termsVersion.createdAt !== termsObj.createdAt
+      && termsVersion.text !== termsObj.text))) {
       this.goToTerms();
+    } else if (this.rpc.daemonProtocol < 90008) {
+      this.goToStartupError();
     } else {
+
       this.log.d('Where are we going next?', getwalletinfo);
       if ('hdseedid' in getwalletinfo) {
         const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
@@ -123,6 +136,11 @@ export class LoadingComponent implements OnInit {
   goToTerms() {
     this.log.d('Going to terms');
     this.router.navigate(['installer', 'terms']);
+  }
+
+  goToStartupError() {
+    this.log.d('Going to startup error');
+    this.router.navigate(['installer', 'error']);
   }
 
   private startMarketService() {
