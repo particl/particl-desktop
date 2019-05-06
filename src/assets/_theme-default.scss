@@ -69,6 +69,4 @@ $light-theme: create-part-theme($theme-primary, $theme-accent, $theme-warn);
 
 
 // Include theme styles for core and each component used in app
-.part-light-theme {
-  @include angular-material-theme($light-theme);
-}
+@include angular-material-theme($light-theme);
