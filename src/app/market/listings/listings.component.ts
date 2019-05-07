@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { OverlayConfig, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { Log } from 'ng2-logger';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -11,6 +12,7 @@ import { FavoritesService } from '../../core/market/api/favorites/favorites.serv
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
+import { TemplatePortalDirective, Portal } from '@angular/cdk/portal';
 
 
 interface ISorting {
@@ -30,6 +32,10 @@ interface IPage {
 })
 
 export class ListingsComponent implements OnInit, OnDestroy {
+
+  @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;
+
+
   // general
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
@@ -79,8 +85,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private firstListingHash: string = '';
   private timeoutNewListingCheck: any;
   newListArrived: boolean;
+  overlayRef: OverlayRef;
+  selectedCategory: any;
 
   constructor(
+    public overlay: Overlay,
     private category: CategoryService,
     private listingService: ListingService,
     private favoritesService: FavoritesService,
@@ -105,9 +114,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   loadCategories() {
     this.category.list()
       .subscribe(
-      list => {
-        this._rootCategoryList = list;
-      });
+        list => {
+          this._rootCategoryList = list;
+        });
   }
 
   private loadPage(pageNumber: number, clear: boolean, queryNewListings: boolean = false) {
@@ -157,7 +166,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
             listings: listings
           };
 
-          if ( (pageNumber === 0) && clear) {
+          if ((pageNumber === 0) && clear) {
             this.firstListingHash = listings.length ? (listings[0].hash || '') : '';
             this.newListArrived = false;
           }
@@ -187,13 +196,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
         }
       },
 
-      (error) => {
-        setTimeout(() => {
-          if (!this.destroyed) {
-            this.loadPage(0, clear, queryNewListings);
-          }
-        }, 5000);
-      }
+        (error) => {
+          setTimeout(() => {
+            if (!this.destroyed) {
+              this.loadPage(0, clear, queryNewListings);
+            }
+          }, 5000);
+        }
       )
   }
 
@@ -256,9 +265,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChange(category: any): void {
+
     if (!category || category.id) {
+      this.selectedCategory = category;
+      // this.overlayRef.detach();
       this.filters.category = category ? category.id : undefined;
       this.clearAndLoadPage();
+    } else {
+      this.selectedCategory = null;
     }
 
   }
@@ -291,5 +305,23 @@ export class ListingsComponent implements OnInit, OnDestroy {
     try {
       window.removeEventListener('resize', this.resizeEventer);
     } catch (err) { }
+  }
+
+
+
+  openCategoryOptions() {
+
+    const config = new OverlayConfig({
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      positionStrategy: this.overlay.position().global().centerHorizontally()
+    });
+
+    this.overlayRef = this.overlay.create(config);
+    this.overlayRef.attach(this.templatePortals.first);
+    this.overlayRef.backdropClick().subscribe(() => {
+      console.log('asfassafsagsagsagsag');
+      return this.overlayRef.detach()
+    });
   }
 }

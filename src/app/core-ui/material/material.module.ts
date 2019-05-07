@@ -25,6 +25,7 @@ import { CdkTreeModule } from '@angular/cdk/tree';
 import {
   TreeWithSearchSingleSelectionComponent
 } from './tree-with-search/tree-with-search-single-selection/tree-with-search-single-selection.component';
+import { PortalModule } from '@angular/cdk/portal';
 
 /* A unified module that will simply manage all our Material imports (and export them again) */
 
@@ -60,7 +61,8 @@ import {
     MatAutocompleteModule,
     MatButtonToggleModule,
     MatTreeModule,
-    CdkTreeModule
+    CdkTreeModule,
+    PortalModule
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -94,6 +96,7 @@ import {
     MatButtonToggleModule,
     MatTreeModule,
     CdkTreeModule,
+    PortalModule,
 
     // custom component.
     MatSelectSearchComponent,

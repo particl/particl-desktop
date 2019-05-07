@@ -16,6 +16,7 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
 
   log: any = Log.create('tree-with-search-single-selection');
   @Input() options: any = [];
+  @Input() selected: any [];
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
 
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
@@ -47,6 +48,8 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
 
     database.dataChange.subscribe(data => {
       this.dataSource.data = data;
+
+      this.setSelectedItem(this.dataSource.data, this.selected);
     });
 
   }
@@ -97,6 +100,18 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
     } else {
       this.onChange.emit(null);
     }
+  }
+
+
+
+  setSelectedItem(data: ItemNode[], selected: any): void {
+    data.forEach((node: ItemNode) => {
+      node.children.forEach((childNode: ItemNode) => {
+        if (selected && selected.id === childNode.id) {
+          this.checklistSelection.toggle(childNode);
+        }
+      })
+    })
   }
 
 }
