@@ -310,7 +310,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   openCategoryOptions() {
-
     const config = new OverlayConfig({
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
@@ -320,7 +319,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.overlayRef = this.overlay.create(config);
     this.overlayRef.attach(this.templatePortals.first);
     this.overlayRef.backdropClick().subscribe(() => {
-      console.log('asfassafsagsagsagsag');
       return this.overlayRef.detach()
     });
   }
