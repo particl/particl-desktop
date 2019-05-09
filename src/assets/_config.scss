@@ -13,6 +13,8 @@ Global SCSS config file defining app-wide settings (included in every page)
 
 */
 
+@import '~@angular/material/theming';
+
 
 /* ------------------------------- *\
     1. Variables
@@ -21,10 +23,12 @@ Global SCSS config file defining app-wide settings (included in every page)
 $font: 'Inter_UI', sans-serif;
 
 // main colors
-$color: #02e8b0; // primary green-ish color
-$color-secondary: #1597dd; // new blue
+$color: #45d492; // primary green-ish color
+$secondary: #1597DD; // new blue
+$tertiary: #5949a7; // new purple
+
 $color-success: #4f8a10;
-$color-alert: #ec4b50;
+$color-alert: #d4292e;
 $color-warning: #f1a500; // yellow-ish
 $color-info: #108cda; // blue-ish (e.g. status cold staking icon)
 $color-white: #fff;
@@ -32,12 +36,12 @@ $color-ugly: #ff69b4;
 
 // text colors
 $text: #232728; // default text color
-$text-muted: #7e8790; // grey (for section titles, descriptions etc.)
+$text-muted: #747c82; // grey (for section titles, descriptions etc.)
 
 // bg/element colors
 $bg: #fafafa; // light grey bg color
 $bg-hover: darken($bg, 2%);
-$bg-black: #222828; // sidebar
+$bg-black: $text; // sidebar
 $bg-shadow: #dcdcdc; // lines, box shadows etc.
 
 // UI
@@ -63,7 +67,12 @@ $break-xhd: 2200px;
     2. Global imports
 \* ------------------------------- */
 
+@import 'color-palettes'; // Material theming color palettes
 @import 'scss/mixins';
+
+// Import themes
+@import 'theme-default';
+
 
 
 /* ------------------------------- *\
@@ -86,11 +95,11 @@ $break-xhd: 2200px;
 }
 
 %subtitle { // section titles / H2's
+  @extend %lighter;
   font-size: 14px;
   font-family: $font;
   font-weight: normal;
   text-transform: uppercase;
-  color: $text-muted;
   margin: 30px 0 16px;
 }
 

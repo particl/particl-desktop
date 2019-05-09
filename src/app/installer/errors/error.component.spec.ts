@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule, MatDialogRef } from '@angular/material';
-import { TermsComponent } from './terms.component';
+import { ErrorComponent } from './error.component';
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 describe('TermsComponent', () => {
-  let component: TermsComponent;
-  let fixture: ComponentFixture<TermsComponent>;
+  let component: ErrorComponent;
+  let fixture: ComponentFixture<ErrorComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -16,17 +15,14 @@ describe('TermsComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot()
        ],
-      declarations: [ TermsComponent ],
-      providers: [
-        /* deps */
-        { provide: MatDialogRef },
-      ]
+      declarations: [ ErrorComponent ],
+      providers: []
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TermsComponent);
+    fixture = TestBed.createComponent(ErrorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
