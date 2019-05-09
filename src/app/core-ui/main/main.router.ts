@@ -7,6 +7,7 @@ import { filter, map, flatMap, distinctUntilChanged, takeWhile, take } from 'rxj
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
+import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 import { UserMessageService } from 'app/core/market/user-messages/user-message.service';
@@ -68,6 +69,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     public _market: MarketService,
 
     private _marketState: MarketStateService,
+    private txNotify: NewTxNotifierService,
     private _profile: ProfileService,
     private _cart: CartService,
     private _category: CategoryService,
