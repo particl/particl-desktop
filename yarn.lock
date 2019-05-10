@@ -7903,10 +7903,10 @@ parseurl@~1.3.2:
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
   integrity sha1-/CidTtiZMRlGDBViUyYs3I3mW/M=
 
-particl-marketplace@^0.0.57:
-  version "0.0.57"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.57.tgz#d0f47ee2f01b959c470f8cd41c1ae6c00a0d62e1"
-  integrity sha512-bv7LZVL+D8cbaGQBavMXaLV/+mcPXIMKI+ugoXOU42ovtrY1Y8utPQmT44+FkaCdQHhR5XdDeYgNkcCpenlypQ==
+particl-marketplace@^0.0.58:
+  version "0.0.58"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.58.tgz#e1d9ecf30012a06658f1c83b21a3326dbfb5dd6c"
+  integrity sha512-jus7MF9xQrhYIluVaXq3gb83XKj6ISrANU4desUD7WCcM/glqLTV9hNwzfVFBxra/RTuPMnf2JvAyNrV44WnBw==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9831,9 +9831,9 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-"sqlite3@git+https://github.com/particl/sqlite3-offline.git":
+"sqlite3@https://github.com/particl/sqlite3-offline.git":
   version "3.2.0"
-  resolved "git+https://github.com/particl/sqlite3-offline.git#168b0e73abd3b3f82a6188401f375b5a3347c731"
+  resolved "https://github.com/particl/sqlite3-offline.git#168b0e73abd3b3f82a6188401f375b5a3347c731"
 
 sshpk@^1.7.0:
   version "1.16.1"
