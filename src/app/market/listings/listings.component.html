@@ -122,7 +122,7 @@
       <ng-container *ngFor="let item of page.listings">
 
         <mat-card class="listing">
-          <app-listing-item [listing]="item"></app-listing-item>
+          <app-listing-item [listing]="item" (reportListingComplete)="clearAndLoadPage()"></app-listing-item>
         </mat-card>
 
       </ng-container>
