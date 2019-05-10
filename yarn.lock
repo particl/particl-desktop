@@ -7903,10 +7903,10 @@ parseurl@~1.3.2:
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.2.tgz#fc289d4ed8993119460c156253262cdc8de65bf3"
   integrity sha1-/CidTtiZMRlGDBViUyYs3I3mW/M=
 
-particl-marketplace@^0.0.56:
-  version "0.0.56"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.56.tgz#432d841ba198b0cea6880741666172abbb876320"
-  integrity sha512-UL8c/7gmysN5SEhu+3lbPN/XzpoQzeXC+URBQ353ONxrk+A3X75a5RxSYRPTndxn6Ulle+Smz5lV3b4lOTL/kg==
+particl-marketplace@^0.0.57:
+  version "0.0.57"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.57.tgz#d0f47ee2f01b959c470f8cd41c1ae6c00a0d62e1"
+  integrity sha512-bv7LZVL+D8cbaGQBavMXaLV/+mcPXIMKI+ugoXOU42ovtrY1Y8utPQmT44+FkaCdQHhR5XdDeYgNkcCpenlypQ==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
