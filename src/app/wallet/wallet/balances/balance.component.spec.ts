@@ -1,11 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, inject, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { SharedModule } from '../../shared/shared.module';
 import { WalletModule } from '../wallet.module';
 
 import { BalanceComponent } from './balance.component';
 import { CoreModule } from 'app/core/core.module';
-import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
+import { RpcService, RpcStateService } from 'app/core/rpc/rpc.module';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -16,8 +17,11 @@ describe('BalanceComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        CoreModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        CoreModule.forRoot()
+      ],
+      providers: [
+        RpcStateService,
+        { provide: RpcService, useClass: RpcMockService }
       ]
     })
     .compileComponents();
@@ -45,20 +49,39 @@ describe('BalanceComponent', () => {
     expect(component.balance.dot()).toBe('');
   });
 
-/*
-  it('should get balance point', () => {
-    component.getBalancePoint();
-    expect(component.getBalancePoint).toBeTruthy();
+  it('should return TOTAL BALANCE as string', () => {
+    component.type = 'total_balance'
+    expect(component.getTypeOfBalance()).toBe('TOTAL BALANCE');
   });
 
-  it('should get balance after point', () => {
-    component.getBalanceAfterPoint(true)
-    expect(component.getBalanceAfterPoint).toBeTruthy();
+  it('should return SPENDABLE as string', () => {
+    component.type = 'actual_balance'
+    expect(component.getTypeOfBalance()).toBe('Spendable');
   });
 
-  it('should get type of balance', () => {
-    component.getTypeOfBalance();
-    expect(component.getTypeOfBalance).toBeTruthy();
+  it('should return PUBLIC as string', () => {
+    component.type = 'balance'
+    expect(component.getTypeOfBalance()).toBe('Public');
   });
-*/
+
+  it('should return PRIVATE as string', () => {
+    component.type = 'anon_balance'
+    expect(component.getTypeOfBalance()).toBe('Anon (Private)');
+  });
+
+  it('should return BLIND as string', () => {
+    component.type = 'blind_balance'
+    expect(component.getTypeOfBalance()).toBe('Blind (Private)');
+  });
+
+  it('should return STAKING as string', () => {
+    component.type = 'staked_balance'
+    expect(component.getTypeOfBalance()).toBe('Staking');
+  });
+
+  it('should return LOCKED as string', () => {
+    component.type = 'locked_balance'
+    expect(component.getTypeOfBalance()).toBe('Locked');
+  });
+
 });
