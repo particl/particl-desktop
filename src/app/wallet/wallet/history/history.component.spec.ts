@@ -50,8 +50,27 @@ describe('HistoryComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should filter by category', () => {
-    // component.filterByCategory('all');
-    // expect(component.category).toBe('all');
+  it('should history info section exist', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    const txlist = compiled.querySelector('.tx-list');
+    expect(txlist).toBeTruthy();
+  });
+
+  it('should have all type select by default', () => {
+    const compiled = fixture.debugElement.nativeElement;
+    const allType = compiled.querySelector('.mat-radio-label-content').textContent.trim();
+    expect(allType).toEqual('All types');
+  });
+
+  it('should have default value set for filter and tab', () => {
+    component.default()
+    expect(component.selectedTab).toBe(0);
+    expect(component.filters.sort).toEqual('time');
+  });
+
+  it('should change category dynamically', () => {
+    component.changeCategory(1)
+    expect(component.filters.category).toEqual('send');
+    expect(component.selectedTab).toEqual(1);
   });
 });
