@@ -44,3 +44,4 @@ jobs:
               name: Build Application
               command: yarn build --base-href="./"
               no_output_timeout: 2m
+
