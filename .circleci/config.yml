@@ -26,19 +26,14 @@ jobs:
                 no_output_timeout: 2m
 
           - run:
-              name: Starting virtual framebuffer
-              command: Xvfb :99 -screen 0 1280x1024x24
-              background: true
-
-          - run:
                 name: Test Codabase
-                command: yarn travis:test
+                command: export CHROME_BIN=chromium-browser && yarn travis:test
                 no_output_timeout: 2m
 
-          - run:
-                name: Process code coverage
-                command: yarn coveralls
-                no_output_timeout: 2m
+          # - run:
+          #       name: Process code coverage
+          #       command: yarn coveralls
+          #       no_output_timeout: 2m
 
           - run:
               name: Build Application
