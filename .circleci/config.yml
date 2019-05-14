@@ -1,0 +1,46 @@
+version: 2
+jobs:
+    build:
+      working-directory: ~/particl-desktop
+      docker:
+          - image: circleci/node:10.15.3-browsers
+      steps:
+          - checkout
+          - restore_cache:
+              key: dependencies-v1-{{ checksum "yarn.lock" }}
+          - run:
+              name: Install Dependencies
+              command: yarn install --frozen-lockfile
+          - save_cache:
+              key: dependencies-v1-{{ checksum "yarn.lock" }}
+              paths:
+                  - ./yarn.lock
+                  - ./node_modules
+                  - $HOME/.npm/_prebuilds
+                  - $HOME/.cache/electron
+                  - $HOME/.cache/electron-builder
+
+          - run:
+                name: Lint Codebase
+                command: yarn lint
+                no_output_timeout: 2m
+
+          - run:
+              name: Starting virtual framebuffer
+              command: Xvfb :99 -screen 0 1280x1024x24
+              background: true
+
+          - run:
+                name: Test Codabase
+                command: yarn travis:test
+                no_output_timeout: 2m
+
+          - run:
+                name: Process code coverage
+                command: yarn coveralls
+                no_output_timeout: 2m
+
+          - run:
+              name: Build Application
+              command: yarn build --base-href="./"
+              no_output_timeout: 2m
