@@ -26,8 +26,12 @@ jobs:
                 no_output_timeout: 2m
 
           - run:
+                name: Setup chromium
+                command: apt-get install -y chromium
+
+          - run:
                 name: Test Codabase
-                command: yarn travis:test
+                command: export CHROME_BIN=chromium-browser && yarn travis:test
                 no_output_timeout: 2m
 
           # - run:
