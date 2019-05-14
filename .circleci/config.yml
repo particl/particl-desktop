@@ -27,7 +27,7 @@ jobs:
 
           - run:
                 name: Setup chromium
-                command: apt-get install -y chromium
+                command: sudo apt-get install -y chromium
 
           - run:
                 name: Test Codabase
