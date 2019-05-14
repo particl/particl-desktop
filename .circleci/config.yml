@@ -31,7 +31,9 @@ jobs:
 
           - run:
                 name: Test Codabase
-                command: export CHROME_BIN=chromium && yarn travis:test
+                command: |
+                    export CHROME_BIN=chromium
+                    yarn travis:test
                 no_output_timeout: 2m
 
           # - run:
