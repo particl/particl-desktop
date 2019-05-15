@@ -11,18 +11,7 @@
     </div>
 
     <!-- Filtering -->
-    <div class="filter-by seller-country" fxFlex="1 1 25%">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
-      <mat-select-search
-        [options]="countryList?.countries"
-        [defaultOption]="'All seller countries'"
-        [isLexigraphicalOrder]="true"
-        [showValueOf]="'name'"
-        (onChange)="onCountryChange($event)">
-      </mat-select-search>
-    </div>
-
-    <div class="filter-by category" fxFlex="1 1 50%">
+    <div class="filter-by category" fxFlex="1 1 25%">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
       <mat-form-field class="full-width">
         <input matInput
@@ -42,6 +31,17 @@
           [selected]="selectedCategory">
         </app-tree-with-search-single-selection>
       </ng-template>
+    </div>
+
+    <div class="filter-by seller-country" fxFlex="1 1 25%">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
+      <mat-select-search
+        [options]="countryList?.countries"
+        [defaultOption]="'All seller countries'"
+        [isLexigraphicalOrder]="true"
+        [showValueOf]="'name'"
+        (onChange)="onCountryChange($event)">
+      </mat-select-search>
     </div>
 
     <div class="filter-by buyer-country" fxFlex="1 1 25%">
