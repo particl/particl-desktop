@@ -32,10 +32,10 @@
           placeholder="Choose category"
           [value]="(selectedCategory ? selectedCategory?.item : '' )"
           (focus)="openCategoryOptions(); categoryInput.blur()">
-    </mat-form-field>
+      </mat-form-field>
       <ng-template cdk-portal>
         <app-tree-with-search-single-selection
-          class="tree-with-search-single-selection"
+          class="category-overlay"
           *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
           (onChange)="onCategoryChange($event)"
           [options]="_rootCategoryList?.subCategoryList"
