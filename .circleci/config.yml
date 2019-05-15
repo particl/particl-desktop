@@ -26,19 +26,20 @@ jobs:
                 no_output_timeout: 2m
 
           - run:
-                name: Setup chromium
-                command: sudo apt-get install -y chromium
-
-          - run:
                 name: Test Codabase
                 command: |
+                    sudo apt-get install -y chromium
                     export CHROME_BIN=chromium
                     yarn travis:test
                 no_output_timeout: 2m
 
+          - store_artifacts:
+                path: coverage
+
           - run:
-                name: Process Test Build
+                name: Build Creation
                 command: |
                     export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
                     export TRUE_COMMIT=$(echo $TRUE_COMMIT_MESSAGES | awk '{print $1}')
-                    echo $TRUE_COMMIT_MESSAGES
+                    if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly-circle.sh; fi;
+                    echo 'All done!'
