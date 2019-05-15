@@ -36,12 +36,9 @@ jobs:
                     yarn travis:test
                 no_output_timeout: 2m
 
-          # - run:
-          #       name: Process code coverage
-          #       command: yarn coveralls
-          #       no_output_timeout: 2m
-
           - run:
-              name: Build Application
-              command: yarn build --base-href="./"
-              no_output_timeout: 2m
+                name: Process Test Build
+                command: |
+                    export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
+                    export TRUE_COMMIT=$(echo $TRUE_COMMIT_MESSAGES | awk '{print $1}')
+                    echo $TRUE_COMMIT_MESSAGES
