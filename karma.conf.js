@@ -19,7 +19,6 @@ module.exports = function (config) {
 
     ],
     preprocessors: {
-
     },
     mime: {
       'text/x-typescript': ['ts','tsx']
