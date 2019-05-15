@@ -27,10 +27,7 @@ jobs:
 
           - run:
                 name: Test Codabase
-                command: |
-                    sudo apt-get install -y chromium
-                    export CHROME_BIN=chromium
-                    yarn travis:test
+                command: yarn travis:test
                 no_output_timeout: 2m
 
           - store_artifacts:
