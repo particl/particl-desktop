@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./terms.component.scss']
 })
 export class TermsComponent {
+  testnet: boolean = false;
   isAccepted: boolean = false;
 
   public text: string = termsObj.text;

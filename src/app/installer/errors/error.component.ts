@@ -7,6 +7,8 @@ import { CloseGuiService } from 'app/core/close-gui/close-gui.service';
   styleUrls: ['./error.component.scss']
 })
 export class ErrorComponent {
+  testnet: boolean = false;
+
   constructor(
     private close: CloseGuiService
   ) { }
