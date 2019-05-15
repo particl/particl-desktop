@@ -22,14 +22,20 @@
       </mat-select-search>
     </div>
 
-    <div class="filter-by category" fxFlex="1 1 25%">
+    <div class="filter-by category" fxFlex="1 1 50%">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
-      <button mat-button (click)="openCategoryOptions()">
-        {{ selectedCategory ? selectedCategory?.item : 'Choose Category' }}
-      </button>
+      <mat-form-field class="full-width">
+        <input matInput
+          aria-label="placeHolder"
+          #categoryInput
+          type="text" class="header-input" id="category-search"
+          placeholder="Choose category"
+          [value]="(selectedCategory ? selectedCategory?.item : '' )"
+          (focus)="openCategoryOptions(); categoryInput.blur()">
+    </mat-form-field>
       <ng-template cdk-portal>
         <app-tree-with-search-single-selection
-
+          class="tree-with-search-single-selection"
           *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
           (onChange)="onCategoryChange($event)"
           [options]="_rootCategoryList?.subCategoryList"

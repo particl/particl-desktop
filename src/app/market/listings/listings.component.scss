@@ -139,3 +139,9 @@ button.previous-page {
   bottom: 0;
   height: 8px;
 }
+
+
+.tree-with-search-single-selection {
+  max-height: 500px;
+  overflow-y: scroll;
+}

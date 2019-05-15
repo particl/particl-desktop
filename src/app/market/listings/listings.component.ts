@@ -314,7 +314,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const config = new OverlayConfig({
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
-      positionStrategy: this.overlay.position().global().centerHorizontally()
+      positionStrategy: this.overlay.position().global().left('58%').top('110px')
     });
 
     this.overlayRef = this.overlay.create(config);
