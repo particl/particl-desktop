@@ -30,8 +30,8 @@ jobs:
                 command: yarn travis:test
                 no_output_timeout: 2m
 
-          - store_artifacts:
-                path: coverage
+          # - store_artifacts:
+          #       path: coverage
 
           - run:
                 name: Build Creation
