@@ -179,6 +179,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.loadPage(0, true);
   }
 
+  checkRemoveListing(page: IPage, item: any) {
+    // We only remove items from the normal listings page
+    if (!this.flagged) {
+      for (let index = 0; index < page.listings.length; index++) {
+        if (page.listings[index] === item) {
+          page.listings.splice(index, 1);
+          break;
+        }
+      }
+    }
+  }
+
   // TODO: fix scroll up!
   loadPreviousPage() {
     this.log.d('prev page trigered');
