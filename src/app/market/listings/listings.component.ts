@@ -9,8 +9,9 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
-import { take } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs/operators';
 import { throttle } from 'lodash';
+import { range } from 'rxjs';
 
 
 interface ISorting {
@@ -179,15 +180,22 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.loadPage(0, true);
   }
 
-  checkRemoveListing(page: IPage, item: any) {
+  refreshListingsFrom(pageIndex: number) {
     // We only remove items from the normal listings page
-    if (!this.flagged) {
-      for (let index = 0; index < page.listings.length; index++) {
-        if (page.listings[index] === item) {
-          page.listings.splice(index, 1);
-          break;
-        }
-      }
+    if (!this.flagged && this.pages[pageIndex]) {
+
+      const max = this.pagination.maxPerPage;
+      const search = this.filters.search;
+      const category = this.filters.category;
+      const country = this.filters.country;
+
+      const pagesToRefresh = range(pageIndex, this.pages.length - pageIndex);
+      pagesToRefresh.pipe(
+        switchMap(i => this.listingService.search(this.pages[i].pageNumber, max, null, search, category, country, this.flagged))
+      ).subscribe((listings: Array<Listing>) => {
+        this.pages[pageIndex].listings = listings;
+        pageIndex++;
+      });
     }
   }
 
