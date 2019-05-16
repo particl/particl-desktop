@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { OverlayConfig, Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { Log } from 'ng2-logger';
 
@@ -34,6 +34,7 @@ interface IPage {
 export class ListingsComponent implements OnInit, OnDestroy {
 
   @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;
+  @ViewChildren('categoryInputSection') categoryInputSection: ElementRef;
 
 
   // general
@@ -307,13 +308,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
     } catch (err) { }
   }
 
-
-
   openCategoryOptions() {
     const config = new OverlayConfig({
       hasBackdrop: true,
       backdropClass: 'cdk-overlay-transparent-backdrop',
-      positionStrategy: this.overlay.position().global().left('58%').top('110px')
+      positionStrategy: this.overlay.position().global().left('40%').top('110px')
+      // @TODO check the all the posible cases.
+      // https://stackblitz.com/edit/overlay-cdk-example-custom-position-strategy?
+      // file=app%2Fprogress-spinner%2Fprogress-spinner.component.ts
+      // this.overlay.position().connectedTo(this.categoryInputSection, {
+      //   originX: 'center', originY: 'center'
+      // }, {overlayX: 'center', overlayY: 'bottom'})
     });
 
     this.overlayRef = this.overlay.create(config);
