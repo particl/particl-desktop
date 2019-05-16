@@ -67,6 +67,9 @@ button,
   &.full-width {
     width: 100%;
   }
+  &.not-round {
+    border-radius: 0;
+  }
 }
 
 

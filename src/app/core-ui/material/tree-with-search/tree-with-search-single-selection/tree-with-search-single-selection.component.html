@@ -1,11 +1,11 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
   <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle class="subcategory">
-    <button mat-icon-button disabled></button>
+    <!--button mat-icon-button disabled></button-->
     <mat-checkbox class="checklist-leaf-node" [checked]="(checklistSelection.isSelected(node) || defaultSelected?.id === node?.id)" (change)="todoLeafItemSelectionToggle(node)">{{node.item}}</mat-checkbox>
   </mat-tree-node>
 
   <mat-tree-node *matTreeNodeDef="let node; when: hasChild" class="category">
-    <button mat-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename" class="full-width text-left">
+    <button mat-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename" class="full-width text-left not-round">
       <mat-icon class="part-icon" [ngClass]="{
           'part-triangle-down': treeControl.isExpanded(node),
           'part-triangle-right': !treeControl.isExpanded(node)
