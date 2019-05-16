@@ -28,7 +28,39 @@ export class RpcStateServiceMock {
     },
     getblockchaininfo: {
       'chain': 'test'
-    }
+    },
+    listunspent: [
+      {
+        coldstaking_address: 'xxxxxxxxxxxxxxxxxxxxxxxx',
+        address: '',
+        confirmations: 5,
+        amount: 0.5
+      },
+      {
+        coldstaking_address: '',
+        address: 'xxxxxxxxxxxxxxxxxxxxxxxx',
+        confirmations: 2,
+        amount: 0.5
+      },
+      {
+        coldstaking_address: 'xxxxxxxxxxxxxxxxxxxxxxxx',
+        address: '',
+        confirmations: 0,
+        amount: 1.2
+      },
+      {
+        coldstaking_address: '',
+        address: 'xxxxxxxxxxxxxxxxxxxxxxxx',
+        confirmations: 0,
+        amount: 1.5
+      },
+      {
+        coldstaking_address: '',
+        address: 'xxxxxxxxxxxxxxxxxxxxxxxx',
+        confirmations: 3,
+        amount: 0.3
+      },
+    ]
   }
 
   constructor() { }
