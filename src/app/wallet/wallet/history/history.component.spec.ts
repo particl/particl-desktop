@@ -62,15 +62,34 @@ describe('HistoryComponent', () => {
     expect(allType).toEqual('All types');
   });
 
-  it('should have default value set for filter and tab', () => {
-    component.default()
-    expect(component.selectedTab).toBe(0);
-    expect(component.filters.sort).toEqual('time');
-  });
-
-  it('should change category dynamically', () => {
-    component.changeCategory(1)
+  it('should change category correctly', () => {
+    component.changeCategory(1);
     expect(component.filters.category).toEqual('send');
     expect(component.selectedTab).toEqual(1);
+    component.changeCategory(3);
+    expect(component.filters.category).toEqual('stake');
+    expect(component.selectedTab).toEqual(3);
+  });
+
+  it('should have default value set for filter and tab', () => {
+    component.changeCategory(1);
+    expect(component.selectedTab).toEqual(1);
+    component.default();
+    expect(component.selectedTab).toBe(0);
+    expect(component.filters.category).toEqual('all');
+    expect(component.filters.sort).toEqual('time');
+    expect(component.filters.type).toEqual('all');
+    expect(component.filters.search).toEqual('');
+  });
+
+  it('should clear filters', () => {
+    component.changeCategory(1);
+    expect(component.filters.category).toEqual('send');
+    component.clear();
+    expect(component.selectedTab).toBe(0);
+    expect(component.filters.category).toEqual('all');
+    expect(component.filters.sort).toEqual('time');
+    expect(component.filters.type).toEqual('all');
+    expect(component.filters.search).toEqual('');
   });
 });
