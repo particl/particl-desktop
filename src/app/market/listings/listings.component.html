@@ -11,26 +11,15 @@
     </div>
 
     <!-- Filtering -->
-    <div class="filter-by category" fxFlex="1 1 25%">
+    <div class="filter-by category" fxFlex="1 1 25%" #categoryInputSection>
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
-      <mat-form-field class="full-width" #categoryInputSection>
-        <input matInput
-          aria-label="placeHolder"
-          #categoryInput
-          type="text" class="header-input" id="category-search"
-          placeholder="Choose category"
-          [value]="(selectedCategory ? selectedCategory?.item : '' )"
-          (focus)="openCategoryOptions(); categoryInput.blur()">
-      </mat-form-field>
-      <ng-template cdk-portal>
-        <app-tree-with-search-single-selection
-          class="category-overlay"
-          *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-          (onChange)="onCategoryChange($event)"
-          [options]="_rootCategoryList?.subCategoryList"
-          [selected]="selectedCategory">
-        </app-tree-with-search-single-selection>
-      </ng-template>
+      <app-category-tree
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        (onChange)="onCategoryChange($event)"
+        [parent]="parent"
+        [options]="_rootCategoryList?.subCategoryList"
+        [selected]="selectedCategory">
+      </app-category-tree>
     </div>
 
     <div class="filter-by seller-country" fxFlex="1 1 25%">

@@ -53,19 +53,23 @@
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
 
-      <mat-card class="category">
+      <!-- <mat-card class="category">
         <div class="title">Category</div>
         <p>
           Select one category that fits your product:
         </p>
         <div class="category-tree">
-          <app-tree-with-search-single-selection
-            (onChange)="onCategoryChange($event)"
+          <app-category-tree
+            class="category-overlay"
             *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-            [options]="_rootCategoryList?.subCategoryList">
-          </app-tree-with-search-single-selection>
+            (onChange)="onCategoryChange($event)"
+            [parent]="parent"
+            [options]="_rootCategoryList?.subCategoryList"
+            [selected]="selectedCategory">
+          </app-category-tree>
         </div>
-      </mat-card><!-- .category -->
+      </mat-card> -->
+      <!-- .category -->
 
     </div><!-- .left -->
 
@@ -103,7 +107,17 @@
           [isLexigraphicalOrder]="true"
           (onChange)="onCountryChange($event)">
         </mat-select-search>
-  
+
+        <div #categorySection>
+          <app-category-tree
+          class="category-overlay"
+          *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+          (onChange)="onCategoryChange($event)"
+          [parent]="parent"
+          [options]="_rootCategoryList?.subCategoryList"
+          [selected]="selectedCategory">
+          </app-category-tree>
+        </div>
         <!-- TODO: add another input for fiat value and inter-connect the two: -->
         <mat-form-field class="full-width">
           <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>

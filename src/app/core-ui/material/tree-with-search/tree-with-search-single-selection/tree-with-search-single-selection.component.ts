@@ -89,6 +89,25 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
     return flatNode;
   }
 
+  /* Get the parent node of a node */
+  getParentNode(node: ItemFlatNode): ItemFlatNode | null {
+    const currentLevel = this.getLevel(node);
+
+    if (currentLevel < 1) {
+      return null;
+    }
+
+    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+
+    for (let i = startIndex; i >= 0; i--) {
+      const currentNode = this.treeControl.dataNodes[i];
+
+      if (this.getLevel(currentNode) < currentLevel) {
+        return currentNode;
+      }
+    }
+    return null;
+  }
 
   /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
   todoLeafItemSelectionToggle(node: ItemFlatNode): void {
@@ -98,6 +117,8 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
 
     this.defaultSelected = null;
     if (this.checklistSelection.isSelected(node)) {
+      const parant = this.getParentNode(node);
+      node['parant'] = parant;
       this.onChange.emit(node);
     } else {
       this.onChange.emit(null);

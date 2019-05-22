@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
@@ -46,7 +46,7 @@ class CurrencyMinValidator {
   styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit, OnDestroy {
-
+  @ViewChild('categorySection') parent: ElementRef
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
   // template id
@@ -506,6 +506,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   onCategoryChange(category: Category): void {
     this.log.d('category', category);
+
+    this.selectedCategory = category;
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 

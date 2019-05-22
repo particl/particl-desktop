@@ -1,5 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { OverlayConfig, Overlay, OverlayRef } from '@angular/cdk/overlay';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
+
 import { Log } from 'ng2-logger';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -8,12 +14,9 @@ import { Listing } from '../../core/market/api/listing/listing.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
-import { TemplatePortalDirective, Portal } from '@angular/cdk/portal';
-
 
 interface ISorting {
   value: string;
@@ -32,10 +35,7 @@ interface IPage {
 })
 
 export class ListingsComponent implements OnInit, OnDestroy {
-
-  @ViewChildren(TemplatePortalDirective) templatePortals: QueryList<Portal<any>>;
-  @ViewChildren('categoryInputSection') categoryInputSection: ElementRef;
-
+  @ViewChild('categoryInputSection') parent: ElementRef;
 
   // general
   log: any = Log.create('listing-item.component');
@@ -86,14 +86,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private firstListingHash: string = '';
   private timeoutNewListingCheck: any;
   newListArrived: boolean;
-  overlayRef: OverlayRef;
   selectedCategory: any;
 
   constructor(
-    public overlay: Overlay,
     private category: CategoryService,
     private listingService: ListingService,
-    private favoritesService: FavoritesService,
     public countryList: CountryListService
   ) {
     this.log.d('overview created');
@@ -266,10 +263,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChange(category: any): void {
-
     if (!category || category.id) {
       this.selectedCategory = category;
-      // this.overlayRef.detach();
       this.filters.category = category ? category.id : undefined;
       this.clearAndLoadPage();
     } else {
@@ -308,23 +303,4 @@ export class ListingsComponent implements OnInit, OnDestroy {
     } catch (err) { }
   }
 
-  openCategoryOptions() {
-    const config = new OverlayConfig({
-      hasBackdrop: true,
-      backdropClass: 'cdk-overlay-transparent-backdrop',
-      positionStrategy: this.overlay.position().global().left('40%').top('110px')
-      // @TODO check the all the posible cases.
-      // https://stackblitz.com/edit/overlay-cdk-example-custom-position-strategy?
-      // file=app%2Fprogress-spinner%2Fprogress-spinner.component.ts
-      // this.overlay.position().connectedTo(this.categoryInputSection, {
-      //   originX: 'center', originY: 'center'
-      // }, {overlayX: 'center', overlayY: 'bottom'})
-    });
-
-    this.overlayRef = this.overlay.create(config);
-    this.overlayRef.attach(this.templatePortals.first);
-    this.overlayRef.backdropClick().subscribe(() => {
-      return this.overlayRef.detach()
-    });
-  }
 }
