@@ -13,7 +13,10 @@ import {
   MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule, MatTreeModule
 } from '@angular/material';
 
-import {A11yModule} from '@angular/cdk/a11y';
+import { A11yModule } from '@angular/cdk/a11y';
+import { PortalModule } from '@angular/cdk/portal';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { CdkTreeModule } from '@angular/cdk/tree';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -21,11 +24,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectSearchComponent } from './mat-select-search/mat-select-search.component';
 import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/mat-otpgroup-select-search.component';
 import { TreeWithSearchComponent } from './tree-with-search/tree-with-search.component';
-import { CdkTreeModule } from '@angular/cdk/tree';
+
 import {
   TreeWithSearchSingleSelectionComponent
 } from './tree-with-search/tree-with-search-single-selection/tree-with-search-single-selection.component';
-import { PortalModule } from '@angular/cdk/portal';
+import { CategoryTreeComponent } from './category-tree/category-tree.component';
 
 /* A unified module that will simply manage all our Material imports (and export them again) */
 
@@ -62,7 +65,8 @@ import { PortalModule } from '@angular/cdk/portal';
     MatButtonToggleModule,
     MatTreeModule,
     CdkTreeModule,
-    PortalModule
+    OverlayModule,
+    PortalModule,
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -97,18 +101,21 @@ import { PortalModule } from '@angular/cdk/portal';
     MatTreeModule,
     CdkTreeModule,
     PortalModule,
+    OverlayModule,
 
     // custom component.
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
     TreeWithSearchComponent,
-    TreeWithSearchSingleSelectionComponent
+    TreeWithSearchSingleSelectionComponent,
+    CategoryTreeComponent
   ],
   declarations: [
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
     TreeWithSearchComponent,
-    TreeWithSearchSingleSelectionComponent
+    TreeWithSearchSingleSelectionComponent,
+    CategoryTreeComponent
   ]
 })
 export class MaterialModule { }

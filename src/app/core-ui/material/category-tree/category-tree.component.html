@@ -1,0 +1,21 @@
+<mat-form-field class="full-width">
+  <input
+    matInput
+    aria-label="placeHolder"
+    #categoryInput
+    type="text"
+    class="header-input"
+    id="category-search"
+    placeholder="Choose category"
+    [value]="(selected ? selected?.item : '' )"
+    (focus)="show(); categoryInput.blur()">
+</mat-form-field>
+
+<ng-template cdk-portal>
+  <app-tree-with-search-single-selection
+    *ngIf="options"
+    (onChange)="onChangeCall($event)"
+    [options]="options"
+    [selected]="selected">
+  </app-tree-with-search-single-selection>
+</ng-template>
