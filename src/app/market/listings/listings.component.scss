@@ -4,16 +4,6 @@
 
 // ------ UI ELEMENTS ------ //
 
-/*
-.subtitle { // title
-  @extend %subtitle;
-  margin: 24px 0 14px;
-  &.first {
-    margin-top: 0;
-  }
-}
-*/
-
 .container-block {
   .content {
     width: 100%;
@@ -85,18 +75,6 @@
   }
 }
 
-// Category tree overlay (styled from Autocomplete)
-.category-overlay {
-  max-height: 550px;
-  width: 340px;
-  overflow: auto;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
-  position: relative;
-}
-
-
 @keyframes green-pulse {
   0% {
     color: $text-muted;
@@ -106,32 +84,8 @@
   }
 }
 
-// ------ SIDEBAR (left) ------ //
-/*
-.category-filter { // category expansion panel
-  margin-bottom: 4px !important;
-  &.mat-expanded {
-    .category-filter-header .title {
-      color: $color;
-    }
-  }
-  .category-filter-header {
-    .title {
-      font-weight: 500;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-  }
-  .category-items {
-    padding: 0 0 12px !important;
-    .category-item {
-      height: auto;
-    }
-  }
-}
-*/
 
-// ------ CONTENT (right) ------ //
+// ------ CONTENT ------ //
 
 .no-results {
   width: 100%;
