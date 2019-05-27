@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ModalsModule } from '../../modals.module';
 import { CoreModule } from '../../../core/core.module';
@@ -6,6 +7,7 @@ import { SharedModule } from '../../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 import { PasswordComponent } from './password.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 
 describe('PasswordComponent', () => {
@@ -18,7 +20,9 @@ describe('PasswordComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RpcWithStateModule.forRoot(),
+        BrowserAnimationsModule
       ]
     })
     .compileComponents();

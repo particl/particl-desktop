@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
-import { RpcStateService, BlockStatusService } from '../../core/core.module';
+import { RpcStateService, BlockStatusService } from 'app/core/rpc/rpc.module';
 
 import { Log } from 'ng2-logger';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-syncing',
@@ -32,8 +33,8 @@ export class SyncingComponent implements OnDestroy {
     private _rpcState: RpcStateService,
     public _dialogRef: MatDialogRef<SyncingComponent>
   ) {
-    _rpcState.observe('getnetworkinfo', 'connections')
-      .takeWhile(() => !this.destroyed)
+    this._rpcState.observe('getnetworkinfo', 'connections')
+      .pipe(takeWhile(() => !this.destroyed))
       .subscribe(connections => this.nPeers = connections);
 
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {

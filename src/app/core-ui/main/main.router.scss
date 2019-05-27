@@ -1,0 +1,301 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+/* ------------------------------- *\
+    UI Elements
+\* ------------------------------- */
+
+
+// ------ DIVIDER ------ //
+
+.mat-divider { // section divider
+  border-bottom: 1px solid lighten($bg-black, 5%);
+  border-top: 1px solid darken($bg-black, 5%);
+}
+
+
+// ------ SECTIONS & ITEM GROUPS ------ //
+
+.sidebar-section {
+  .sidebar-item-group {
+    padding-top: 0;
+  }
+}
+
+
+// ------ SUBMENUS (Accordion) ------ //
+
+.mat-expansion-panel {
+  border-bottom: 1px solid darken($bg-black, 5%);
+  box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
+  background: $bg-black;
+  margin: 8px 0 1px !important;
+  // submenu toggle
+  .mat-expansion-panel-header {
+    @extend %tfx;
+    font-family: $font;
+    font-size: 11.5px;
+    color: lighten($text-muted, 5%);
+    text-transform: uppercase;
+    min-height: 32px !important;
+    max-height: 32px !important;
+    padding: 0 24px;
+    &:hover {
+      color: lighten($text-muted, 20%);
+    }
+  }
+}
+
+
+// ------ MENU ITEM (Single) ------ //
+
+.sidebar-item {
+  @extend %tfx;
+  padding: 0 24px;
+  .icon {
+    @extend %tfx;
+    margin: 0 16px 0 0;
+    color: lighten($bg-black, 15%);
+  }
+  .text {
+    font-family: $font;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: $color-white;
+  }
+  .tag { // order notifications
+    @extend %tfx;
+    position: absolute;
+    right: 24px;
+    top: 10px;
+    opacity: 0.6;
+  }
+  &:hover {
+    background: darken($bg-black, 1.5%);
+    .icon {
+      color: lighten($bg-black, 30%);
+    }
+    app-order-count.tag {
+      opacity: 1;
+    }
+  }
+}
+
+a.sidebar-item-link {
+  text-decoration: none;
+  text-transform: uppercase;
+  outline: none;
+  &.active .sidebar-item {
+    .icon { // highlight active menu item
+      color: $color !important;
+    }
+  }
+}
+
+
+
+// ------ ERROR & INFO MESSAGES ------ //
+
+.notification {
+  padding-top: 1px;
+  .sidebar-item {
+    @extend %tfx;
+    .icon {
+      margin: 0 14px 0 0;
+    }
+    .text {
+      color: darken($bg, 30%);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 1.5;
+      padding: 0;
+      display: inline-block;
+      strong {
+        font-weight: 500;
+        color: $bg;
+      }
+    }
+    &:hover {
+      background: none;
+    }
+  }
+  .error { // red
+    .icon,
+    &:hover .icon {
+      color: $color-alert;
+    }
+    &:hover {
+      background: rgba($color-alert, 0.05);
+    }
+  }
+  .info { // blue
+    .icon,
+    &:hover .icon {
+      color: $color-info;
+    }
+    &:hover {
+      background: rgba($color-info, 0.05);
+    }
+  }
+  .message { // green
+    .icon,
+    &:hover .icon {
+      color: $color;
+    }
+    &:hover {
+      background: rgba($color, 0.05);
+    }
+  }
+}
+
+/* ------------------------------- *\
+    LAYOUT
+\* ------------------------------- */
+
+// ------ SIDEBAR (main menu) ------ //
+
+.sidebar { // AKA .mat-sidenav
+  width: $sidebar-width;
+  background-color: $bg-black;
+  color: $color-white;
+  display: flex;
+  .mat-drawer-inner-container {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .sidebar-multiwallet {
+    flex: 0 0 54px;
+    position: sticky;
+    top: 0;
+  }
+  .sidebar-menu {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    flex: 0 0 50px;
+    position: relative;
+    &:hover {
+      img {
+        opacity: 0;
+      }
+      .balances {
+        opacity: 1;
+      }
+    }
+    img {
+      @extend %tfx;
+      width: 130px;
+      display: block;
+      margin: 35px auto;
+    }
+    .balances {
+      @extend %tfx;
+      opacity: 0;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      font-size: 12.5px;
+      .balance {
+        display: flex;
+        padding: 13px 24px;
+        &:hover {
+          background: darken($bg-black, 1.5%);
+          .part-lock {
+            color: $color-alert;
+          }
+          .part-cart {
+            color: $secondary;
+          }
+        }
+        .mat-icon {
+          @extend %tfx;
+          flex: 0 0 30px;
+          color: lighten($bg-black, 15%);
+        }
+        .text {
+          flex: 1 1 100%;
+          .key {
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+          }
+          .value {
+            font-size: 105%;
+          }
+        }
+      }
+    }
+  }
+
+  .menu-links {
+    flex: 1 1 100%;
+    overflow-y: auto;
+    margin-bottom: -1px;
+    &::-webkit-scrollbar-thumb {
+      background: lighten($bg-black, 20%);
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $bg-black;
+    }
+  }
+
+  // widgets stuck to the bottom (sidebar's footer)
+  .footer {
+    flex: 1 1 10px;
+
+    // Erros & Notifications
+    .errors-notifications {
+      @extend %menu-divider;
+      display: block;
+    }
+
+  }
+}
+
+// ------ SYNC PROGRESS BAR ------ //
+
+.sync-bar {
+  .mat-progress-bar-fill::after {
+    background-color: $color;
+  }
+}
+.sync-progress {
+  padding: 0 20px;
+}
+
+
+/* ----------------------------------- *\
+    Page header (with status icons)
+\* ----------------------------------- */
+
+.header-main {
+  border-bottom: 1px solid $bg-shadow;
+  width: calc(100% - #{$sidebar-width} - #{$scrollbar-width});
+  padding-left: 35px;
+  padding-right: 26px;
+  font-family: $font;
+  font-size: 15px;
+  text-transform: uppercase;
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: 0;
+  z-index: 100;
+  @include break(l) {
+    padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;
+  }
+  .title {
+    font-weight: 700;
+  }
+  .right {
+    text-align: right;
+    app-balance {
+      display: inline-block;
+    }
+  }
+}

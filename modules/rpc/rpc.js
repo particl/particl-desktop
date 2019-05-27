@@ -4,9 +4,7 @@ const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const Observable  = require('rxjs/Observable').Observable;
 
 const cookie      = require('./cookie');
-const _options    = require('../options');
-
-const daemon      = require('../daemon/daemon');
+const _options    = require('../daemon/daemonConfig');
 
 /* spyOnRpc will output all RPC calls being made */
 const spyOnRpc = false;
@@ -18,17 +16,14 @@ let rpcOptions;
 let auth;
 
 exports.init = function() {
-  let options = _options.get();
+  let options = _options.getConfiguration();
 
   HOSTNAME = options.rpcbind || 'localhost';
   PORT     = options.port;
-  auth     = cookie.getAuth(_options.get());
-
-  initIpcListener();
+  auth     = cookie.getAuth(options);
 }
 
 exports.destroy = function() {
-  destroyIpcListener();
 }
 
 /*
@@ -49,7 +44,7 @@ exports.call = function(method, params, callback) {
     method: method,
     params: params
   });
-  
+
   if(spyOnRpc) {
     log.debug('rpc.call:', postData);
   }
@@ -137,41 +132,3 @@ exports.call = function(method, params, callback) {
 
 exports.getTimeoutDelay = () => { return TIMEOUT }
 exports.setTimeoutDelay = function(timeout) { TIMEOUT = timeout }
-
-
-/*
- * All IPC-related stuff, below here.
-*/
-
-function initIpcListener() {
-
-  // Make sure that rpc-channel has no active listeners.
-  // Better safe than sorry.
-  destroyIpcListener();
-
-  // Register new listener
-  rxIpc.registerListener('rpc-channel', (method, params) => {
-    return Observable.create(observer => {
-      exports.call(method, params, (error, response) => {
-        try {
-          if(error) {
-            observer.error(error);
-          } else {
-            observer.next(response || undefined);
-            observer.complete();
-          }
-        } catch (err) {
-          if (err.message == 'Object has been destroyed') {
-            // suppress error
-          } else {
-            log.error(err);
-          }
-        }
-      });
-    });
-  });
-}
-
-function destroyIpcListener() {
-  rxIpc.removeListeners('rpc-channel');
-}

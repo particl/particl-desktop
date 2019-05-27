@@ -2,6 +2,7 @@ import { TestBed, inject } from '@angular/core/testing';
 
 import { CoreModule } from '../../core.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
+import { RpcWithStateModule } from '../rpc.module';
 
 import { BlockStatusService } from './blockstatus.service';
 
@@ -10,7 +11,8 @@ describe('BlockStatusService', () => {
     TestBed.configureTestingModule({
       imports: [
         SharedModule,
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [
       ]

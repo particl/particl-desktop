@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 
 import { ListingService } from 'app/core/market/api/listing/listing.service';
@@ -9,6 +9,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
 import { Bid } from 'app/core/market/api/bid/bid.model';
+import { take, takeWhile, map } from 'rxjs/operators';
 
 @Injectable()
 export class OrderStatusNotifierService implements OnDestroy {
@@ -39,10 +40,11 @@ export class OrderStatusNotifierService implements OnDestroy {
   loadOrders() {
     // @TODO need to replace with marketplace command so this should probably gone :)
     this._marketState.observe('bid')
-      .takeWhile(() => !this.destroyed)
-      .map(o => new BidCollection(o, this.profile.address))
+      .pipe(takeWhile(() => !this.destroyed))
+      .pipe(map(o => new BidCollection(o, this.profile.address)))
       .subscribe(bids => {
         this.bids = bids;
+        this.log.d(`Order notification counts: buy: ${this.bids.buyCount}, sell: ${this.bids.sellCount}`);
         if (bids.address) {
           this.checkForNewStatus(bids.orders);
         }
@@ -114,7 +116,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   }
 
   loadProfile(): void {
-    this.profileService.default().take(1).subscribe(
+    this.profileService.default().pipe(take(1)).subscribe(
       profile => {
         this.profile = profile;
       });

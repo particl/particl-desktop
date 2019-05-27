@@ -8,11 +8,9 @@
         <div class="name">{{ listing?.title }}</div>
         <div class="categories">{{ listing?.category.name }}</div>
         <div class="date">
-          <!--span class="hash" matTooltip="Order hash">AGR</span-->
           Added {{ listing?.createdAt }}
           <br>
-          {{ listing?.expiredAt }} 
-          <!-- &bull; <span class="to-do">Expires 2018-02-13</span> -->
+          {{ listing?.expiredAt }}
         </div>
       </div>
       <div *ngFor="let status of getStatus(listing?.status)">
@@ -38,8 +36,8 @@
         <!--tr><th>Quantity</th><td>2</td></tr-->
         <tr>
           <th>Price per item</th>
-          <td>{{ listing?.basePrice.getIntegerPart() }} {{ listing?.basePrice.dot() }}
-            <small>{{ listing?.basePrice.getFractionalPart() }}</small>
+          <td>
+            {{ listing?.basePrice.getIntegerPart() }}{{ listing?.basePrice.dot() }}<small>{{ listing?.basePrice.getFractionalPart() }}</small>
             PART
           </td>
         </tr>

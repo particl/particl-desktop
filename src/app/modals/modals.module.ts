@@ -2,15 +2,12 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ClipboardModule } from 'ngx-clipboard';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MaterialModule } from '../core-ui/material/material.module';
 import { DirectiveModule } from '../core-ui/directive/directive.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 /* modals */
-import { TermsComponent } from './terms/terms.component';
-import { CreateWalletComponent } from './createwallet/createwallet.component';
 import { ColdstakeComponent } from './coldstake/coldstake.component';
 import { DaemonComponent } from './daemon/daemon.component';
 import { SyncingComponent } from './syncing/syncing.component';
@@ -20,12 +17,8 @@ import { AlertComponent } from './shared/alert/alert.component';
 import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 
 /* shared in modals */
-import { PassphraseComponent } from './createwallet/passphrase/passphrase.component';
-import { PassphraseService } from './createwallet/passphrase/passphrase.service';
 import { PasswordComponent } from './shared/password/password.component';
-import { MultiwalletComponent } from './multiwallet/multiwallet.component';
 
-import { SnackbarService } from '../core/snackbar/snackbar.service';
 import { DaemonConnectionComponent } from './shared/daemon-connection/daemon-connection.component';
 import { ManageWidgetsComponent } from './manage-widgets/manage-widgets.component';
 
@@ -45,29 +38,25 @@ import {
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
 import { ProcessingModalComponent } from './processing-modal/processing-modal.component';
+import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
-    BrowserAnimationsModule,
     ClipboardModule,
     /* own */
     MaterialModule,
     DirectiveModule
   ],
   declarations: [
-    PassphraseComponent,
     PasswordComponent,
-    TermsComponent,
-    CreateWalletComponent,
     DaemonComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
     AlertComponent,
     ColdstakeComponent,
-    MultiwalletComponent,
     DaemonConnectionComponent,
     DeleteListingComponent,
     ManageWidgetsComponent,
@@ -79,20 +68,18 @@ import { ProcessingModalComponent } from './processing-modal/processing-modal.co
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent
+    ProcessingModalComponent,
+    AlphaMainnetWarningComponent
   ],
   exports: [
     ClipboardModule
   ],
   providers: [
     // @TODO rename ModalsHelperService and replace with the modalsService once modals service refactored.
-    ModalsHelperService,
-    PassphraseService,
-    SnackbarService
+    ModalsHelperService
   ],
   entryComponents: [
     DaemonComponent,
-    TermsComponent,
     SyncingComponent,
     UnlockwalletComponent,
     EncryptwalletComponent,
@@ -103,14 +90,14 @@ import { ProcessingModalComponent } from './processing-modal/processing-modal.co
     PlaceOrderComponent,
     ReportModalComponent,
     ShippingComponent,
-    CreateWalletComponent,
     ColdstakeComponent,
     SendConfirmationModalComponent,
     ProposalConfirmationComponent,
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent
+    ProcessingModalComponent,
+    AlphaMainnetWarningComponent
   ],
 })
 export class ModalsModule {
@@ -118,11 +105,11 @@ export class ModalsModule {
     return {
       ngModule: ModalsModule,
       providers: [
-        ModalsHelperService
+        // ModalsHelperService
       ]
     };
   }
 }
 
 export { ModalsHelperService } from './modals-helper.service';
-export { PassphraseService } from './createwallet/passphrase/passphrase.service';
+

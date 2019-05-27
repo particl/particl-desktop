@@ -1,16 +1,18 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
-/* Preload strategry */
-import { PreloadingStrategy, PreloadAllModules, Route } from '@angular/router';
-/* end preload strategy */
+import { LoadingComponent } from './loading/loading.component';
+import { installer_routing } from './installer/installer.router';
 
 /* actual routing */
-const routes: Routes = [
-  { path: '', redirectTo: 'wallet', pathMatch: 'full' },
-  { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule'},
-  { path: 'market', loadChildren: './market/market.module#MarketModule'}
+const app_routes: Routes = [
+  { path: '', redirectTo: 'loading', pathMatch: 'full' },
+  { path: 'loading', component: LoadingComponent },
+  installer_routing,
+  { path: 'wallet', loadChildren: './core-ui/main/main.module#MainModule' }
 ];
 
-export const routing: ModuleWithProviders = RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules});
+export const app_routing: ModuleWithProviders = RouterModule.forRoot(
+  app_routes,
+  // { enableTracing: true }
+);
 

@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { CoreModule } from '../core.module';
-import { RpcService } from './rpc.service';
+import { RpcService } from 'app/core/rpc/rpc.service';
 
 describe('RpcService', () => {
   beforeEach(() => {

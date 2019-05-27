@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { MarketCacheModule } from './market-cache/market-cache.module';
 
 import { MarketService } from './market.service';
@@ -24,11 +23,13 @@ import { OrderStatusNotifierService } from './order-status-notifier/order-status
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
 import { ShippingService } from 'app/core/market/api/template/shipping/shipping.service';
+import { UserMessageService } from './user-messages/user-message.service';
+import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 
 @NgModule({
   imports: [
     CommonModule,
-    HttpClientModule,
+    // HttpClientModule,
     MarketCacheModule.forRoot()
   ],
   declarations: []
@@ -58,7 +59,9 @@ export class MarketModule {
         OrderStatusNotifierService,
         ProposalsService,
         PaymentService,
-        ShippingService
+        ShippingService,
+        UserMessageService,
+        ProposalsNotificationsService
       ]
     };
   }

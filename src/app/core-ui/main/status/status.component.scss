@@ -10,10 +10,7 @@
 }
 
 .icon {
-  padding: 1px;
-  @include break(l) {
-    padding: 1px 2px;
-  }
+  padding: 1px 0 1px 4px;
 
   // Encryption
   &.encryption {
@@ -23,10 +20,10 @@
   // Staking icon
   &.staking {
     font-size: 0.8em;
-    &.enabled {
+    &.active {
       color: $color-info;
     }
-    &.disabled {
+    &.inactive {
       color: darken($bg-shadow, 15%);
     }
   }

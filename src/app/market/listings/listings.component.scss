@@ -1,8 +1,10 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import './src/app/market/_product-card'; // listing item card preview
 
 
 // ------ UI ELEMENTS ------ //
 
+/*
 .subtitle { // title
   @extend %subtitle;
   margin: 24px 0 14px;
@@ -10,18 +12,21 @@
     margin-top: 0;
   }
 }
+*/
 
 .container-block {
-  padding: $padding $padding $padding 5px; // temp fix until the sidebar will be shown again
   .content {
     width: 100%;
+    mat-card.listing {
+      overflow: hidden;
+    }
   }
 }
 
 // ------ CONTROL BAR (top) ------ //
 
 .control-bar {
-  padding: 0 16px 0 35px; // offset filtering of reported items
+  padding: 0 16px 0 $padding; // offset filtering of reported items
   // search
   .search-listings {
     padding-right: 24px;
@@ -60,12 +65,21 @@
       button {
         min-width: 0;
         padding: 0 12px;
+        &.new-listings-available {
+          .mat-icon {
+            animation: 2s ease infinite green-pulse;
+          }
+        }
         .mat-icon {
           margin: 0;
         }
       }
       // Reported toggle
       mat-button-toggle.reported-only {
+        border: none;
+        &:hover {
+          background: rgba($bg-shadow, 0.25);
+        }
         &.mat-button-toggle-checked {
           color: $color-alert;
           background: rgba($color-alert, 0.1) !important;
@@ -78,6 +92,14 @@
   }
 }
 
+@keyframes green-pulse {
+  0% {
+    color: $text-muted;
+  }
+  50% {
+    color: $color;
+  }
+}
 
 // ------ SIDEBAR (left) ------ //
 /*
@@ -106,27 +128,10 @@
 
 // ------ CONTENT (right) ------ //
 
-.content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-
-  .listing { // item
-    margin: 0 0 25px 25px;
-    padding: 24px 16px 12px;
-    flex: 0 0 calc((100% / 4) - 57px); // default screen: 4 per row
-    max-width: calc((100% / 4) - 57px);
-    @include break-from(1650px) {
-      flex: 0 0 calc((100% / 6) - 57px); // larger: 6 per row
-      max-width: calc((100% / 6) - 57px);
-    }
-  }
-
-}
-
 .no-results {
   width: 100%;
-  margin: 0 0 30px 30px;
+  margin: 24px 0 0;
+  padding: 50px 0;
 }
 
 button.previous-page {

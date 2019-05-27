@@ -2,23 +2,22 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
-import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 
 import { Template } from 'app/core/market/api/template/template.model';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TemplateService {
 
   constructor(
     private market: MarketService,
-    private marketState: MarketStateService,
     public listingCache: PostListingCacheService
   ) { }
 
-  get(templateId: number): Observable<Template> {
-    return this.market.call('template', ['get', templateId]).map(t => new Template(t));
+  get(templateId: number, returnImageData: boolean = false): Observable<Template> {
+    return this.market.call('template', ['get', templateId, returnImageData]).pipe(map(t => new Template(t)));
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
@@ -55,18 +54,30 @@ export class TemplateService {
 
   search(page: number, pageLimit: number, sort: string, profileId: number, category: string,
     searchString: string, hashItems: any): Observable<Array<Template>> {
-    const params = ['search', page, pageLimit, 'DESC', sort,  profileId, searchString, category, hashItems];
+    // TODO: Place radio buttons on gui to determine sorting action directions
+      let direction;
+      if (sort === 'TITLE') {
+        direction = 'ASC';
+      } else {
+        direction = 'DESC';
+      }
+    const params = ['search', page, pageLimit, direction, sort,  profileId, searchString, category, hashItems];
     return this.market.call('template', params)
-    .map(
+    .pipe(map(
       (templates: any) => {
         return templates.map(t => new Template(t));
       }
-    );
+    ));
   }
 
-  post(template: Template, marketId: number, expTime: number) {
-    return this.market.call('template', ['post', template.id, expTime, marketId])
-    .do(t => this.listingCache.posting(template));
+  post(template: Template, marketId: number, expTime: number, estimateFee: boolean = false) {
+    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee])
+    .pipe(tap(t => {
+      if (!estimateFee) {
+        this.listingCache.posting(template)
+      }
+      return t;
+    }));
   }
 
   size(listingTemplateId: number) {

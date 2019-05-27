@@ -1,23 +1,21 @@
 const electron      = require('electron');
 const log           = require('electron-log');
 
-const ipc           = require('./ipc/ipc');
 const rpc           = require('./rpc/rpc');
 const zmq           = require('./zmq/zmq');
 
 const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
+const daemonConfig  = require('./daemon/daemonConfig');
 const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
 
 
-
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
-  rpc.init();
   notification.init();
   closeGui.init();
   daemon.init();
@@ -36,7 +34,7 @@ exports.start = function (mainWindow) {
 exports.startDaemonManager = function() {
   daemon.check()
     .then(()            => log.info('daemon already started'))
-    .catch(()           => daemonManager.init())
+    .catch(()           => daemonManager.init(daemonConfig.getConfiguration()))
     .catch((error)      => log.error(error));
 }
 
@@ -56,13 +54,19 @@ daemonManager.on('status', (status, msg) => {
   // Done -> means we have a binary!
   if (status === 'done') {
     log.debug('daemonManager returned successfully, starting daemon!');
+    daemonManager.shutdown();
     multiwallet.get()
     // TODO: activate for prompting wallet
-    // .then(wallets       => ipc.promptWalletChoosing(wallets, mainWindow.webContents))
-    .then(chosenWallets => daemon.start(chosenWallets))
+    .then(chosenWallets => {
+      daemon.start().then(() => {
+        rpc.init();
+      });
+    })
+    .then(() => {
+      daemonConfig.send();
+    })
     .catch(err          => log.error(err));
     // TODO: activate for daemon ready IPC message to RPCService
-    // .then(()            => ipc.daemonReady(mainWindow.webContents))
 
 
   } else if (status === 'error') {
@@ -87,7 +91,11 @@ daemonManager.on('status', (status, msg) => {
 
 });
 
-electron.app.on('before-quit', function beforeQuit(event) {
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+};
+
+electron.app.on('before-quit', async function beforeQuit(event) {
   log.info('received quit signal, cleaning up...');
 
   event.preventDefault();
@@ -95,13 +103,22 @@ electron.app.on('before-quit', function beforeQuit(event) {
 
   // destroy IPC listeners
   rpc.destroy();
+  daemonWarner.destroy();
+  daemonConfig.destroy();
   notification.destroy();
   closeGui.destroy();
 
-  market.stop();
-  daemon.stop().then(() => {
-    log.info('daemon.stop() resolved!');
+  daemonManager.shutdown();
+  market.stop()
+  .then(() => sleep(2000))
+  .then(async () => {
+    await daemon.stop().catch(() => {
+      // Shutting down now, so a rejection or error should not stop the rest of the app shutting down, ie: do nothing
+    })
   })
+  .then(() => {
+    log.info('daemon.stop() resolved!');
+  });
 });
 
 electron.app.on('quit', (event, exitCode) => {

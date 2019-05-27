@@ -1,14 +1,14 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 import { DeleteListingComponent } from '../../../modals/delete-listing/delete-listing.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 import { Template } from 'app/core/market/api/template/template.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
@@ -25,13 +25,12 @@ export class SellerListingComponent {
 
   public status: Status = new Status();
   log: any = Log.create('seller-listing.component');
-  expirationTime: number;
   @Input() listing: Listing;
 
   constructor(
+    private route: ActivatedRoute,
     public dialog: MatDialog,
     private router: Router,
-    private rpcState: RpcStateService,
     private modals: ModalsHelperService,
     private template: TemplateService,
     private snackbar: SnackbarService,
@@ -62,28 +61,70 @@ export class SellerListingComponent {
   }
 
   private postTemplate(template: Template) {
+    this.openProcessingModal();
+    this.template.size(template.id).toPromise()
+      .then(
+        res => {
+          if (!res.fits) {
+            throw new Error('Upload Size Exceeded - Please reduce listing template size');
+          }
+          return true;
+        }
+      ).catch(
+        err => {
+          this.snackbar.open(err);
+          return false;
+        }
+      ).then(
+        success => {
+          this.dialog.closeAll();
 
-    this.template.size(template.id).subscribe(res => {
-      if (res.fits) {
-        this.modals.openListingExpiryModal((expirationTime) => {
-          this.expirationTime = expirationTime;
-          this.modals.unlock({ timeout: 30 }, async (status) => {
-            this.log.d('posting template id: ', template.id);
-            await this.template.post(template, 1, this.expirationTime).toPromise();
-          });
-        });
-      } else {
-        this.snackbar.open(`Upload Size Exceeded - Please reduce listing template size`);
-      }
-    }, error => {
-      this.snackbar.open(error);
-    })
+          if (!success) {
+            return;
+          }
+
+          this.modals.unlock({timeout: 30},
+            (status) => {
+              this.modals.openListingExpiryModal({template: template}, (expiration: number) => {
+                this.modals.unlock({timeout: 30},
+                  async () => {
+                    this.openProcessingModal();
+                    this.log.d('posting template id: ', template.id);
+                    await this.template.post(template, 1, expiration)
+                      .toPromise()
+                      .catch(err => this.snackbar.open(err))
+                      .then( () => this.dialog.closeAll());
+                  },
+                  () => {
+                    this.dialog.closeAll();
+                  }
+                );
+              });
+            },
+            () => {
+              this.dialog.closeAll();
+            },
+            false
+          );
+        }
+      )
   }
 
   addItem(id?: number, clone?: boolean) {
-    this.router.navigate(['/market/template'], {
+    this.router.navigate(['../template'], {
+      relativeTo: this.route,
       queryParams: { 'id': id, 'clone': clone }
     });
   }
+
+  private openProcessingModal() {
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your listing'
+      }
+    });
+  }
+
 
 }

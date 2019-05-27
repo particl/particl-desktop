@@ -72,11 +72,6 @@ export class HistoryComponent implements OnInit {
     this.filter();
   }
 
-  sortList(event: any): void {
-    this.filters.sort = event.value;
-    this.filter();
-  }
-
   filter(): void {
     this.transactions.filter(this.filters);
   }

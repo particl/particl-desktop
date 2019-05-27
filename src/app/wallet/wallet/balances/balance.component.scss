@@ -2,10 +2,8 @@
 
 .balance {
   @extend %enable-select;
+  display: inline-block;
   padding-top: 7px;
-  & > .number {
-    color: $text;
-  }
   & > .point {
     color: $color;
     margin: 0 2px;
@@ -23,8 +21,18 @@
     }
   }
   & > .description {
-    color: $text-muted;
+    @extend %lighter;
     text-transform: uppercase;
     margin-top: 6px;
   }
+
+  // Balance preview in sidebar
+  &.in-sidebar {
+    padding: 0;
+    small {
+      @extend %lighter;
+      font-weight: 400;
+    }
+  }
+
 }

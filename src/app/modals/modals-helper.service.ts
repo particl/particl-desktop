@@ -1,22 +1,20 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { BlockStatusService } from 'app/core/rpc/blockstatus/blockstatus.service';
 // modals
 import { UnlockwalletComponent } from 'app/modals/unlockwallet/unlockwallet.component';
 import { UnlockModalConfig } from './models/unlock.modal.config.interface';
+import { ListingExpiryConfig } from './models/listingExpiry.modal.config.interface';
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
-import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
 import { ListingExpirationComponent } from 'app/modals/market-listing-expiration/listing-expiration.component';
-import { TermsComponent } from 'app/modals/terms/terms.component';
-import { termsObj } from 'app/modals/terms/terms-txt';
+import { take } from 'rxjs/operators';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -45,7 +43,7 @@ export class ModalsHelperService implements OnDestroy {
   ) {
 
     /* Hook BlockStatus -> open syncing modal only once */
-    this._blockStatusService.statusUpdates.asObservable().take(1).subscribe(status => {
+    this._blockStatusService.statusUpdates.asObservable().pipe(take(1)).subscribe(status => {
       // Hiding the sync modal initially
       // this.openSyncModal(status);
     });
@@ -55,8 +53,6 @@ export class ModalsHelperService implements OnDestroy {
       this.progress.next(status.syncPercentage);
     });
 
-    /* Hook for checking the accept & terms modal */
-    this.checkForNewVersion();
   }
 
   /**
@@ -64,7 +60,7 @@ export class ModalsHelperService implements OnDestroy {
     * @param {UnlockModalConfig} data       Optional - data to pass through to the modal.
     */
 
-  unlock(data: UnlockModalConfig, callback?: Function, cancelcallback?: Function) {
+  unlock(data: UnlockModalConfig, callback?: Function, cancelcallback?: Function, cancelOnSuccess: boolean = true) {
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
       if (data || callback) {
@@ -72,7 +68,10 @@ export class ModalsHelperService implements OnDestroy {
       }
       dialogRef.afterClosed().subscribe(() => {
         if (cancelcallback) {
-          cancelcallback();
+          const isLocked = this._rpcState.get('locked');
+          if (isLocked || cancelOnSuccess) {
+            cancelcallback();
+          }
         }
         this.log.d('unlock modal closed');
       });
@@ -100,36 +99,11 @@ export class ModalsHelperService implements OnDestroy {
     });
   }
 
-  createWallet() {
-    const dialogRef = this._dialog.open(CreateWalletComponent, this.modelSettings);
-    dialogRef.afterClosed().subscribe(() => {
-      this.log.d('createWallet modal closed');
-    });
-  }
-
   encrypt() {
     const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
     });
-  }
-
-  /**
-    * Open the Createwallet modal if wallet is not initialized
-    */
-
-  openInitialCreateWallet(): void {
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(
-        state => {
-          this.initializedWallet = state;
-          if (state) {
-            this.log.i('Wallet already initialized.');
-            return;
-          }
-          this.createWallet();
-        });
   }
 
   /**
@@ -145,38 +119,12 @@ export class ModalsHelperService implements OnDestroy {
     }
   }
 
-  openListingExpiryModal(callback: Function): void {
+  openListingExpiryModal(data: ListingExpiryConfig, callback: Function): void {
     const dialogRef = this._dialog.open(ListingExpirationComponent, this.modelSettings);
-    dialogRef.componentInstance.setData(callback);
+    dialogRef.componentInstance.setData(data, callback);
     dialogRef.afterClosed().subscribe(() => {
-      this.log.d('encrypt modal closed');
+      this.log.d('listing exiry modal closed');
     });
-  }
-
-  /**
-    * Open the accept & terms modal if it wasn't accepted before
-    */
-  checkForNewVersion() {
-    if (!this.getVersion() || (this.getVersion() && this.getVersion().createdAt !== termsObj.createdAt
-      && this.getVersion().text !== termsObj.text)) {
-      const dialogRef = this._dialog.open(TermsComponent, this.modelSettings)
-      dialogRef.componentInstance.text = termsObj.text;
-      dialogRef.afterClosed().subscribe(() => {
-        this.setVersion();
-        /* Hook wallet initialized -> open createwallet modal */
-        this.openInitialCreateWallet();
-      });
-    } else {
-      this.openInitialCreateWallet();
-    }
-  }
-
-  getVersion(): any {
-    return JSON.parse(localStorage.getItem('terms'));
-  }
-
-  setVersion() {
-    localStorage.setItem('terms', JSON.stringify(termsObj));
   }
 
   /** Get progress set by block status */
