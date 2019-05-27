@@ -24,7 +24,7 @@
     </div>
 
     <div class="tx-amount">
-      <span  class="big">{{ bidItem?.listing?.totalAmount(country)?.getIntegerPart() }}</span><span class="point">{{ bidItem?.listing?.totalAmount(country)?.dot() }}</span><span class="small">{{ bidItem?.listing?.totalAmount(country)?.getFractionalPart() }}</span>&ensp;
+      <span class="big">{{ bidItem?.listing?.totalAmount(country)?.getIntegerPart() }}</span><span class="point">{{ bidItem?.listing?.totalAmount(country)?.dot() }}</span><span class="small">{{ bidItem?.listing?.totalAmount(country)?.getFractionalPart() }}</span>&ensp;
       <span class="currency">PART</span>
       <!-- TODO: until fiat estimations are implemented, hide them -->
       <div class="fiat">&asymp; 3.42 USD</div>
@@ -34,6 +34,23 @@
     <div class="receiver-info">
       <div class="label">{{ bidItem?.listing?.title }}</div>
       <code class="address">{{ bidItem?.OrderItem?.Order?.seller }}</code>
+    </div>
+
+    <div class="contact-info">
+      <div class="subtitle">Shipping contact info</div>
+      <p>Seller's shipping method requires you to supply your contact information for successful delivery:</p>
+      <div class="row" fxLayout fxLayoutGap="20px">
+        <div class="half" fxFlex="50%">
+          <mat-form-field class="full-width no-top-padding">
+            <input type="tel" matInput placeholder="Telephone number" required>
+          </mat-form-field>
+        </div>
+        <div class="half" fxFlex="50%">
+          <mat-form-field class="full-width no-top-padding">
+            <input type="email" matInput placeholder="E-mail address" required>
+          </mat-form-field>
+        </div>
+      </div>
     </div>
 
     <p class="fee-info">

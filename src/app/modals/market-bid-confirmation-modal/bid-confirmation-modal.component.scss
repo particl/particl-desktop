@@ -10,3 +10,19 @@ p.alpha {
   text-align: left;
   line-height: 1.4;
 }
+
+.contact-info {
+  background: $bg;
+  margin: 32px -15px 24px;
+  padding: 8px 24px;
+  text-align: left;
+  .subtitle {
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 12px;
+  }
+  p {
+    @extend %lighter;
+    line-height: 1.45;
+  }
+}
