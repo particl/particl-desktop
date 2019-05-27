@@ -11,12 +11,11 @@
     </div>
 
     <!-- Filtering -->
-    <div class="filter-by category" fxFlex="1 1 25%" #categoryInputSection>
+    <div class="filter-by category" fxFlex="1 1 25%">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
       <app-category-tree
         *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
         (onChange)="onCategoryChange($event)"
-        [parent]="parent"
         [options]="_rootCategoryList?.subCategoryList"
         [selected]="selectedCategory">
       </app-category-tree>

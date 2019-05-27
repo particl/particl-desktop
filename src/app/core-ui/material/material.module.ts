@@ -23,7 +23,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectSearchComponent } from './mat-select-search/mat-select-search.component';
 import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/mat-otpgroup-select-search.component';
-import { TreeWithSearchComponent } from './tree-with-search/tree-with-search.component';
 
 import {
   TreeWithSearchSingleSelectionComponent
@@ -106,14 +105,12 @@ import { CategoryTreeComponent } from './category-tree/category-tree.component';
     // custom component.
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
-    TreeWithSearchComponent,
     TreeWithSearchSingleSelectionComponent,
     CategoryTreeComponent
   ],
   declarations: [
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
-    TreeWithSearchComponent,
     TreeWithSearchSingleSelectionComponent,
     CategoryTreeComponent
   ]

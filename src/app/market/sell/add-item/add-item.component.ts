@@ -46,7 +46,6 @@ class CurrencyMinValidator {
   styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit, OnDestroy {
-  @ViewChild('categorySection') parent: ElementRef
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
   // template id

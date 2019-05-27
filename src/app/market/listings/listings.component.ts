@@ -35,7 +35,6 @@ interface IPage {
 })
 
 export class ListingsComponent implements OnInit, OnDestroy {
-  @ViewChild('categoryInputSection') parent: ElementRef;
 
   // general
   log: any = Log.create('listing-item.component');

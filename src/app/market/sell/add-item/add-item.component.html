@@ -108,16 +108,14 @@
           (onChange)="onCountryChange($event)">
         </mat-select-search>
 
-        <div #categorySection>
-          <app-category-tree
+
+        <app-category-tree
           class="category-overlay"
           *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
           (onChange)="onCategoryChange($event)"
-          [parent]="parent"
           [options]="_rootCategoryList?.subCategoryList"
           [selected]="selectedCategory">
-          </app-category-tree>
-        </div>
+        </app-category-tree>
         <!-- TODO: add another input for fiat value and inter-connect the two: -->
         <mat-form-field class="full-width">
           <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>

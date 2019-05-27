@@ -9,8 +9,8 @@ import { TemplatePortalDirective } from '@angular/cdk/portal';
 })
 export class CategoryTreeComponent {
   overlayRef: OverlayRef;
-
-  @Input() parent: ElementRef;
+  @ViewChild('categoryInput') public categoryInput: ElementRef;
+  @ViewChild('parent') parent: ElementRef;
   @ViewChild(TemplatePortalDirective)
   public contentTemplate: TemplatePortalDirective;
 
@@ -28,7 +28,7 @@ export class CategoryTreeComponent {
 
   getOverlayConfig(): any {
     const positionStrategy = this.overlay.position()
-      .flexibleConnectedTo(this.parent)
+      .flexibleConnectedTo(this.categoryInput)
       .withPush(false)
       .withPositions([{
         originX: 'start',
@@ -50,6 +50,13 @@ export class CategoryTreeComponent {
   }
 
   show() {
+
+    /**
+     * for closing the other open popup modals.
+     * need to refactor it later in future.
+     */
+    this.parent['_elementRef'].nativeElement.click()
+
     this.overlayRef = this.overlay.create(this.getOverlayConfig());
     this.overlayRef.attach(this.contentTemplate);
     this.overlayRef.backdropClick().subscribe(() => {
@@ -59,5 +66,5 @@ export class CategoryTreeComponent {
 
   public hide() {
     this.overlayRef.detach();
- }
+  }
 }
