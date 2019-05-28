@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { CategoryTreeComponent } from './category-tree.component';
 import { MaterialModule } from '../material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('CategoryTreeComponent', () => {
+fdescribe('CategoryTreeComponent', () => {
   let component: CategoryTreeComponent;
   let fixture: ComponentFixture<CategoryTreeComponent>;
 
@@ -27,4 +27,18 @@ describe('CategoryTreeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show() method open the category drop-down', fakeAsync(() => {
+    expect(component).toBeTruthy();
+    const compiled = fixture.debugElement.nativeElement;
+    const categoryOverlayTree = compiled.querySelector('.category-overlay');
+    expect(categoryOverlayTree).toBeFalsy();
+
+    // category-overlay
+    component.show();
+    fixture.detectChanges();
+
+  }));
+
+
 });
