@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoryTreeComponent } from './category-tree.component';
+import { MaterialModule } from '../material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CategoryTreeComponent', () => {
   let component: CategoryTreeComponent;
@@ -8,7 +10,10 @@ describe('CategoryTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CategoryTreeComponent ]
+      imports: [
+        MaterialModule,
+        BrowserAnimationsModule
+      ]
     })
     .compileComponents();
   }));
