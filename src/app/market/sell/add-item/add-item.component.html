@@ -1,39 +1,104 @@
-<div class="container-block">
+<div class="container-block" [formGroup]="itemFormGroup">
+
+  <div class="page-intro">
+    <h1>Add new Product for sale</h1>
+    <div class="content">
+      <p>
+        Here you can add new Product for sale on Particl Open Marketplace.
+      </p>
+      <p class="widget-help">
+        This Product will be available for all users on Particl network.
+      </p>
+    </div>
+  </div><!-- .page-intro -->
+
   <div class="row" fxLayout="row" fxLayoutGap="30px">
 
-    <div class="left" fxFlex="50">
+    <div class="left column" fxFlex="50">
 
+      <h2 class="subtitle">Product details</h2>
+      <mat-card class="details">
+
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Product name" #title formControlName="title">
+          <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <textarea matInput #summary rows="3" placeholder="Summary (short description)"
+                    formControlName="shortDescription"></textarea>
+          <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <textarea matInput #description rows="12" placeholder="Description"
+                    formControlName="longDescription"></textarea>
+          <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
+        </mat-form-field>
+
+        <app-category-tree
+          class="category-overlay"
+          *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+          (onChange)="onCategoryChange($event)"
+          [parent]="parent"
+          [options]="_rootCategoryList?.subCategoryList"
+          [selected]="selectedCategory">
+        </app-category-tree>
+
+      </mat-card><!-- .details -->
+
+
+      <h2 class="subtitle">Pricing <!--&amp; Quantity--></h2>
+      <mat-card class="pricing">
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            <!-- TODO: add another input for fiat value and inter-connect the two: -->
+            <mat-form-field class="full-width">
+              <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price" formControlName="basePrice" type="number">
+              <span matSuffix>PART</span>
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="widget-help">
+              Price per 1 item
+            </p>
+          </div>
+        </div>
+
+        <!--div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            // FIXME: implement quantity functionality:
+            <mat-form-field class="auto-width">
+              <input matInput type="number" placeholder="Quantity in stock" min="1" formControlName="quantity">
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="widget-help TO_DO">Enter amount of items in stock. This will help you manage your inventory. In other words: how many items are you selling?</p>
+          </div>
+        </div-->
+      </mat-card><!-- .pricing -->
+
+    </div><!-- .left -->
+
+
+    <div class="right column" fxFlex="50">
+
+      <h2 class="subtitle">Product gallery</h2>
       <mat-card class="photos">
-        <div class="title">Upload photos</div>
         <div id="drag-n-drop" class="drag-n-drop">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
-
-          <!--hide input -->
           <input class="hide-file" type="file" accept="image/*" multiple="true" id="fileInput">
-
           <button mat-button color="primary" (click)="uploadPicture()">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
             Upload a photo
           </button>
           <p>or drag'n'drop it here</p>
         </div>
         <p class="widget-help">
-          Upload photos of your listing item, then choose one of them as featured (this will be the main photo shown on market). Be
-          sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2MB.
+          Upload photos of your Product (first photo will be set as main, featured image). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2 MB.
         </p>
         <div class="gallery" fxLayout="row wrap">
-
-          <div *ngFor="let image of images" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
-            <div class="photo" fxFLex>
-              <img src="{{image.thumbnail}}">
-              <div class="icons">
-                <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image)">
-                </mat-icon>
-                <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
-                          matTooltip="Set as featured" (click)="featurePicture(i)">
-                </mat-icon-->
-              </div>
-            </div>
-          </div>
 
           <div *ngFor="let picture of picturesToUpload ; index as i" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
             <!-- TODO: maybe not gif, but removing is 'unsafe' -->
@@ -53,50 +118,10 @@
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
 
-      <!-- <mat-card class="category">
-        <div class="title">Category</div>
-        <p>
-          Select one category that fits your product:
-        </p>
-        <div class="category-tree">
-          <app-category-tree
-            class="category-overlay"
-            *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-            (onChange)="onCategoryChange($event)"
-            [parent]="parent"
-            [options]="_rootCategoryList?.subCategoryList"
-            [selected]="selectedCategory">
-          </app-category-tree>
-        </div>
-      </mat-card> -->
-      <!-- .category -->
 
-    </div><!-- .left -->
+      <h2 class="subtitle">Shipping</h2>
+      <mat-card class="shipping">
 
-    <div class="right" fxFlex="50" [formGroup]="itemFormGroup">
-
-      <mat-card class="details">
-        <div class="title">Listing details *</div>
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Listing title (product name) *" #title formControlName="title">
-          <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
-        </mat-form-field>
-  
-        <mat-form-field class="full-width">
-          <textarea matInput #summary rows="3" placeholder="Summary (short description) *"
-                    formControlName="shortDescription"></textarea>
-          <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
-        </mat-form-field>
-  
-        <mat-form-field class="full-width">
-          <textarea matInput #description rows="12" placeholder="Description *"
-                    formControlName="longDescription"></textarea>
-          <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
-        </mat-form-field>
-      </mat-card><!-- .details -->
-  
-      <mat-card class="shipping-price">
-        <div class="title">Shipping &amp; price</div>
         <mat-select-search
           class="full-width"
           [options]="countryList.getList()"
@@ -108,43 +133,31 @@
           (onChange)="onCountryChange($event)">
         </mat-select-search>
 
-
-        <app-category-tree
-          class="category-overlay"
-          *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-          (onChange)="onCategoryChange($event)"
-          [options]="_rootCategoryList?.subCategoryList"
-          [selected]="selectedCategory">
-        </app-category-tree>
-        <!-- TODO: add another input for fiat value and inter-connect the two: -->
-        <mat-form-field class="full-width">
-          <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" formControlName="basePrice" type="text">
-          <span matSuffix>PART</span>
-        </mat-form-field>
-  
-        <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
-          <!--mat-form-field fxFlex="0 0 70px" class="auto-width">
-            <input matInput placeholder="Quantity">
-          </mat-form-field-->
-          <mat-form-field fxFlex="50%" class="auto-width">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *" formControlName="domesticShippingPrice" type="text">
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <mat-form-field fxFlex="50%" class="half auto-width">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic price" formControlName="domesticShippingPrice" type="number">
             <span matSuffix>PART</span>
           </mat-form-field>
-          <mat-form-field fxFlex="50%" class="auto-width">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *" formControlName="internationalShippingPrice"
-                    type="text">
-            <span matSuffix>PART</span>
-          </mat-form-field>
+          <p fxFlex="50%" class="widget-help half">
+            Shipping price when sending the item inside your country.
+          </p>
         </div>
-        <p class="widget-help">
-          Don't forget to include quantity units (e.g. 1 piece, 1 pair, 1 kg or 100 ml).<br>
-          Prices are in PART.
-        </p>
-      </mat-card><!-- .shipping-price -->
-    </div><!-- .right -->
 
-  </div>
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <mat-form-field fxFlex="50%" class="half auto-width">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International price" formControlName="internationalShippingPrice"
+                    type="number">
+            <span matSuffix>PART</span>
+          </mat-form-field>
+          <p fxFlex="50%" class="widget-help half">
+            Shipping price for sending the item across your borders, worldwide.
+          </p>
+        </div>
+
+      </mat-card><!-- .shipping -->
+
+    </div><!-- .right -->
+  </div><!-- .row -->
 
   <p class="warning" *ngIf="!canPublish">
     <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
