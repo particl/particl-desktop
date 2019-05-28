@@ -1,6 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { Log } from 'ng2-logger';
 import { ItemFlatNode } from 'app/core-ui/material/tree-with-search/model/item-flat-node';
@@ -12,7 +12,7 @@ import { ChecklistDatabaseService } from 'app/core-ui/material/tree-with-search/
   templateUrl: './tree-with-search-single-selection.component.html',
   styleUrls: ['./tree-with-search-single-selection.component.scss']
 })
-export class TreeWithSearchSingleSelectionComponent implements OnInit {
+export class TreeWithSearchSingleSelectionComponent implements OnInit, AfterViewInit {
 
   log: any = Log.create('tree-with-search-single-selection');
   @Input() options: any = [];
@@ -59,6 +59,15 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
     } else {
       this.log.d('category options are not available');
     }
+  }
+
+  ngAfterViewInit() {
+
+    if (this.selected) {
+      // open the parent node from which the child is selected if any.
+      document.getElementById(`node-${this.selected['parent']['id']}`).click();
+    }
+
   }
 
   getLevel = (node: ItemFlatNode) => node.level;
@@ -117,8 +126,8 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit {
 
     this.defaultSelected = null;
     if (this.checklistSelection.isSelected(node)) {
-      const parant = this.getParentNode(node);
-      node['parant'] = parant;
+      const parent = this.getParentNode(node);
+      node['parent'] = parent;
       this.onChange.emit(node);
     } else {
       this.onChange.emit(null);
