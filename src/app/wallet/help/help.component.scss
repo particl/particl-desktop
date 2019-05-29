@@ -56,7 +56,7 @@
     .item {
       flex: 1 1 calc(25% - 1px);
       display: block;
-      padding: 26px 0;
+      padding: 29px 0;
       text-align: center;
       border-right: 1px dashed mix($bg, $bg-shadow);
       border-bottom: 1px dashed mix($bg, $bg-shadow);
@@ -70,12 +70,12 @@
         border-bottom: 0;
       }
       .text .title {
-        font-size: 11px;
+        font-size: 12px;
       }
       .icon {
-        margin: auto auto 5px;
+        margin: auto auto 6px;
         .mat-icon {
-          font-size: 18px;
+          font-size: 20px;
         }
       }
     }
@@ -105,6 +105,8 @@
     .text {
       .title {
         @extend %box-title;
+        font-size: 14px;
+        font-weight: 500;
       }
       .desc {
         color: $text-muted;
