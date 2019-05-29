@@ -1,10 +1,10 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CategoryTreeComponent } from './category-tree.component';
 import { MaterialModule } from '../material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-fdescribe('CategoryTreeComponent', () => {
+describe('CategoryTreeComponent', () => {
   let component: CategoryTreeComponent;
   let fixture: ComponentFixture<CategoryTreeComponent>;
 
@@ -15,7 +15,7 @@ fdescribe('CategoryTreeComponent', () => {
         BrowserAnimationsModule
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -28,17 +28,27 @@ fdescribe('CategoryTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show() method open the category drop-down', fakeAsync(() => {
+  it('should input available/visible', () => {
     expect(component).toBeTruthy();
     const compiled = fixture.debugElement.nativeElement;
-    const categoryOverlayTree = compiled.querySelector('.category-overlay');
-    expect(categoryOverlayTree).toBeFalsy();
+    const categoryInput = compiled.querySelector('.header-input');
+    expect(categoryInput).toBeTruthy();
+  });
+
+  it('should onChangeCall() method close the category drop-down', () => {
+    expect(component).toBeTruthy();
 
     // category-overlay
     component.show();
     fixture.detectChanges();
 
-  }));
+    // category-overlay
+    component.onChangeCall({});
+    fixture.detectChanges();
 
+    const compiled = fixture.debugElement.nativeElement;
+    const categoryOverlayTree = compiled.querySelector('.category-overlay');
+    expect(categoryOverlayTree).toBeFalsy();
+  });
 
 });

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { OverlayConfig, OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortalDirective } from '@angular/cdk/portal';
 
@@ -65,6 +65,8 @@ export class CategoryTreeComponent {
   }
 
   public hide() {
-    this.overlayRef.detach();
+    if (this.overlayRef) {
+      this.overlayRef.detach();
+    }
   }
 }
