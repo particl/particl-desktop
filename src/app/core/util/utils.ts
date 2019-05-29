@@ -56,26 +56,6 @@ export class Amount {
   }
 
   /**
-   * Returns zero if negative value.
-   * Else return input value.
-   * e.g:
-   * -25.9 -> '0'
-   * 25 -> '25'
-   * 25.9 -> '25.9'
-   */
-  public positiveOrZero(int?: number) {
-    if (int === undefined) {
-      int = this.getAmount();
-    }
-
-    if (int < 0) {
-      return '0';
-    }
-
-    return int;
-  }
-
-  /**
    * Returns a dot only when it exists in the number.
    * e.g:
    * -25.9 -> '.'
@@ -97,15 +77,32 @@ export class Amount {
    * -25.99999 with dec=2 -> '-25.99'
    * 25 -> ''
    * 25.9 with dec=8 -> '25.9'
+   * An upper limit of supported decimal places has been made. Reason for this is that there needs to be a distinction
+   *  between (a) an explicit value of 0.199999999 truncated at 8 decimals,
+   *  and     (b) a JS binary -> decimal floating point error from eg: (0.6 + 0.000002), truncated at 8 decimals
+   *              (the dec representation of this calculation is 0.6000019999...)
+   *  In the case of (a), the result should be 0.19999999 whereas in (b) it should be 0.600002 (not 0.60000199)
+   *  Care needs to be taken that the value in (a) is not converted to 0.2 when truncated to a number of decimal places lower
+   *    than currently "allocated". At the same time, (b) should be updated to be represented as 0.600002
+   *  As a temporary measure, the max number of decimal places is fixed. It becomes the developer's responsibility at this point to ensure
+   *    that any floating point value that has a number of decimal places greater than this is appropriately adjusted before creating
+   *    an Amount from the value.
    */
-  truncateToDecimals(int: number, dec: number) {
-    const calcDec = Math.pow(10, dec);
-    return Math.trunc(int * calcDec) / calcDec;
+  private truncateToDecimals(num: number, dec: number) {
+    const maxDec = 12;
+    const tmp = (+num).toFixed(maxDec);
+    const val = tmp.substr(0, tmp.length - (maxDec - dec));
+    return +val;
   }
 
   // Convert satoshi coins to original Part coins
+  // @TODO (2019-05-28 zaSmilingIdiot): what is the purpose of this? Shouldn't the conversion occur before creating an amount value?
+  //    Possible re-work required
   public getPartCoins() {
-    return (this.amount) / 100000000;
+    if (this.ifDotExist()) {
+      return this.amount;
+    }
+    return (this.amount) / Math.pow(10, 8);
   }
 
 }
@@ -124,7 +121,7 @@ export class Fee {
     return this.truncateToDecimals(total, 8);
   }
 
-  truncateToDecimals(int: number, dec: number): number {
+  private truncateToDecimals(int: number, dec: number): number {
     const calcDec = Math.pow(10, dec);
     return Math.trunc(int * calcDec) / calcDec;
   }
@@ -190,6 +187,8 @@ export class Duration {
       return  hours + ' hours';
     } else if (minutes > 0) {
       return  minutes + ' minutes';
+    } else {
+      return  '< 1 minute' ;
     }
   }
 
