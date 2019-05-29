@@ -184,7 +184,7 @@ describe('Duration', () => {
 
 describe('DateFormatter', () => {
   it('should return the correctly formatted date', () => {
-    let df = new DateFormatter(new Date('2019-01-01 15:49:21 GMT+0'));
+    const df = new DateFormatter(new Date('2019-01-01 15:49:21 GMT+0'));
     expect(df.dateFormatter()).toBe('01-01-2019');
     expect(df.dateFormatter(true)).toBe('01-01-2019');
   });
