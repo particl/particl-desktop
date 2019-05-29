@@ -43,43 +43,52 @@ export class ChecklistDatabaseService {
     }, [])
   }
 
-  /** Add an item to to-do list */
-  insertItem(parent: ItemNode, name: string) {
-    if (parent.children) {
-      parent.children.push({ item: name } as ItemNode);
-      this.dataChange.next(this.data);
-    }
-  }
+  /**
+   * @TODO if need to add and remove dynamic categories
+   *
+   * // Add an item to to-do list
+   *   insertItem(parent: ItemNode, name: string) {
+   *     if (parent.children) {
+   *       parent.children.push({ item: name } as ItemNode);
+   *       this.dataChange.next(this.data);
+   *     }
+   *   }
+   *
+   *   updateItem(node: ItemNode, name: string) {
+   *     node.item = name;
+   *     this.dataChange.next(this.data);
+   *   }
+   **/
 
-  updateItem(node: ItemNode, name: string) {
-    node.item = name;
-    this.dataChange.next(this.data);
-  }
 
-  public filter(filterText: string) {
-    let filteredTreeData;
-    if (filterText) {
-      filteredTreeData = this.treeData.map(d => {
-        if (d.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1) {
-          return d;
-        }
-        d.subCategoryList = d.subCategoryList.filter((sd) => {
-          return (sd.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1);
-        })
-
-        return d;
-      }).filter((d) => (d.subCategoryList.length));
-
-    } else {
-
-      filteredTreeData = this.treeData;
-    }
-
-    // Build the tree nodes from Json object. The result is a list of `ItemNode` with nested
-    // file node as children.
-    const data = this.buildCategoryTree(filteredTreeData, 0);
-    // Notify the change.
-    this.dataChange.next(data);
-  }
+  /**
+   * @TODO use the commented code filter the category tree
+   *
+   *   public filter(filterText: string) {
+   *     let filteredTreeData;
+   *     if (filterText) {
+   *       filteredTreeData = this.treeData.map(d => {
+   *         if (d.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1) {
+   *           return d;
+   *         }
+   *         d.subCategoryList = d.subCategoryList.filter((sd) => {
+   *           return (sd.name.toLocaleLowerCase().indexOf(filterText.toLocaleLowerCase()) > -1);
+   *         })
+   *
+   *         return d;
+   *       }).filter((d) => (d.subCategoryList.length));
+   *
+   *     } else {
+   *
+   *       filteredTreeData = this.treeData;
+   *     }
+   *
+   *     // Build the tree nodes from Json object. The result is a list of `ItemNode` with nested
+   *     // file node as children.
+   *     const data = this.buildCategoryTree(filteredTreeData, 0);
+   *     // Notify the change.
+   *     this.dataChange.next(data);
+   *   }
+   **/
 
 }
