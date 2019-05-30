@@ -114,7 +114,8 @@ export class PartoshiAmount {
   private amount: string = '0';
 
   constructor(amount: number) {
-    this.amount = this.isValid(+amount) ? `${amount}` : this.amount;
+    const num = Math.floor(amount);
+    this.amount = this.isValid(+num) ? `${num}` : this.amount;
   }
 
   public partoshis(): number {
@@ -170,7 +171,7 @@ export class PartoshiAmount {
   }
 
   private isValid(amount: number): boolean {
-    return (+amount < Number.MAX_SAFE_INTEGER && +amount >= 0);
+    return (+amount <= Number.MAX_SAFE_INTEGER && +amount >= 0);
   }
 }
 
@@ -297,7 +298,7 @@ export class DateFormatter {
     return (
       (this.date.getDate() < 10 ? '0' + this.date.getDate() : this.date.getDate()) + '-' +
       ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
-      (this.date.getFullYear() < 10 ? '0' + this.date.getFullYear() : this.date.getFullYear())
+      this.date.getFullYear()
       + (onlyShowDate === false ?  ' ' + this.hourSecFormatter() : '')
     )
   }
