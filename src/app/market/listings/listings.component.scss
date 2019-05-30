@@ -7,6 +7,9 @@
 .container-block {
   .content {
     width: 100%;
+    mat-card.listing {
+      overflow: hidden;
+    }
   }
 }
 
@@ -63,6 +66,10 @@
       }
       // Reported toggle
       mat-button-toggle.reported-only {
+        border: none;
+        &:hover {
+          background: rgba($bg-shadow, 0.25);
+        }
         &.mat-button-toggle-checked {
           color: $color-alert;
           background: rgba($color-alert, 0.1) !important;

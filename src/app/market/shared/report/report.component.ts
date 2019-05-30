@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MatDialog } from '@angular/material';
 
@@ -23,10 +23,12 @@ export class ReportComponent {
   public defaultVoteDetails: VoteDetails = new VoteDetails({
     ProposalOption: {
       description: 'REMOVE'
-    }
-  })
+    },
+    isReported: true
+  });
   @Input() listing: Listing;
   @Input() from: string;
+  @Output() complete: EventEmitter<any> = new EventEmitter();
   constructor(
     public reportService: ReportService,
     private modals: ModalsHelperService,
@@ -55,6 +57,7 @@ export class ReportComponent {
       this.listing.isFlagged = !this.listing.isFlagged;
       this.listing.VoteDetails = this.defaultVoteDetails;
       this.snackbar.open(`${this.listing.title} has been reported successfully`);
+      this.complete.emit();
     }, err => {
       this.dialog.closeAll()
       this.snackbar.open(err);

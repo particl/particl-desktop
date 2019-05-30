@@ -22,6 +22,7 @@ import { FavoritesService } from 'app/core/market/api/favorites/favorites.servic
 import { ReportService } from 'app/core/market/api/report/report.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
+import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 
 import * as marketConfig from '../../../../modules/market/config.js';
 
@@ -68,6 +69,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     public _market: MarketService,
 
     private _marketState: MarketStateService,
+    private txNotify: NewTxNotifierService,
     private _profile: ProfileService,
     private _cart: CartService,
     private _category: CategoryService,
