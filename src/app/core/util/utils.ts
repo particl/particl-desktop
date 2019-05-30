@@ -110,6 +110,73 @@ export class Amount {
 
 }
 
+export class PartoshiAmount {
+
+  private MAX_DECIMALS: number = 8;
+  private DEC_SEP: string = '.';
+  private amount: string = '0';
+
+  constructor(amount: number) {
+    this.amount = this.isValid(+amount) ? `${amount}` : this.amount;
+  }
+
+  public partoshis(): number {
+    return +this.amount;
+  }
+
+  public particls(): number {
+    return +this.calculateParticls();
+  }
+
+  public partoshisString(): string {
+    return this.amount;
+  }
+
+  public particlsString(): string {
+    const amount = this.calculateParticls().replace(/0+$/, '');
+    return amount[amount.length - 1] === '.' ? amount.replace('.', '') : amount;
+  }
+
+  public add(other: PartoshiAmount): PartoshiAmount {
+    const total = this.partoshis() + other.partoshis();
+
+    if ( this.isValid(total)) {
+      this.amount = `${total}`;
+    }
+    return this;
+  }
+
+  public particlStringInteger(): string {
+    return this.amount.length > this.MAX_DECIMALS ? this.amount.substr(0, this.amount.length - this.MAX_DECIMALS) : '0';
+  }
+
+  public particlStringFraction(): string {
+    const amount = this.calculateParticls().split(this.DEC_SEP)[1];
+    return +amount > 0 ? amount.replace(/0+$/, '') : '';
+  }
+
+  public particlStringSep(): string {
+    return  this.particlStringFraction().length ? this.DEC_SEP : '';
+  }
+
+  private calculateParticls(): string {
+    let whole = '0';
+    let decimals = this.amount;
+    if (this.amount.length > this.MAX_DECIMALS) {
+      whole = this.amount.substr(0, this.amount.length - this.MAX_DECIMALS);
+      decimals = this.amount.substr(this.amount.length - this.MAX_DECIMALS);
+    }
+    if (decimals.length < this.MAX_DECIMALS) {
+      decimals = '0'.repeat(this.MAX_DECIMALS - decimals.length) + decimals;
+    }
+    return `${whole}${this.DEC_SEP}${decimals}`;
+  }
+
+  private isValid(amount: number): boolean {
+    return (+amount < Number.MAX_SAFE_INTEGER && +amount >= 0);
+  }
+}
+
 export class Fee {
   constructor(private fee: number) {
     this.fee = this.truncateToDecimals(fee, 8);

@@ -107,7 +107,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         if (this.cart && cart.countOfItems === 0) {
           this.resetStepper();
         }
-        this.cart = cart
+        this.cart = cart;
         this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems });
       });
 

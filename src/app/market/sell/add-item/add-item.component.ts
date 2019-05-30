@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
-import { Amount } from '../../../core/util/utils';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
@@ -265,9 +264,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
 
-      t.basePrice = template.basePrice.getAmountAsString();
-      t.domesticShippingPrice = template.domesticShippingPrice.getAmountAsString();
-      t.internationalShippingPrice = template.internationalShippingPrice.getAmountAsString();
+      t.basePrice = template.basePrice.particlsString();
+      t.domesticShippingPrice = template.domesticShippingPrice.particlsString();
+      t.internationalShippingPrice = template.internationalShippingPrice.particlsString();
       this.itemFormGroup.patchValue(t);
 
       if (isCloned) {
@@ -368,9 +367,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   isPaymentInfoUpdated(item: any): boolean {
     return (
-      this.preloadedTemplate.basePrice.getAmount() !== +item.basePrice ||
-      this.preloadedTemplate.domesticShippingPrice.getAmount() !== +item.domesticShippingPrice ||
-      this.preloadedTemplate.internationalShippingPrice.getAmount() !== +item.internationalShippingPrice
+      this.preloadedTemplate.basePrice.particlsString() !== item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.particlsString() !== item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.particlsString() !== item.internationalShippingPrice
     )
   }
 
