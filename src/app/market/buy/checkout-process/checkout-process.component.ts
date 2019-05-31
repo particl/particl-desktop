@@ -184,7 +184,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
     this.country = this.shippingFormGroup.value.country || '';
-    this.allowGoingBack();
+    // this.allowGoingBack();
     this.storeCache();
   }
 
@@ -222,6 +222,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.shippingFormGroup.patchValue({
       country: (country ? country.iso : null)
     })
+    this.country = this.shippingFormGroup.value.country;
   }
 
   select(address: Address) {
@@ -387,9 +388,9 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     }
   }
 
-  allowGoingBack() {
-    this.stepper.linear = false;
-  }
+  // allowGoingBack() {
+  //   this.stepper.linear = false;
+  // }
 
   openListing(listing: any) {
     if (!this.checkExpired(listing)) {
