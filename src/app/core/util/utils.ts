@@ -255,9 +255,10 @@ export class Duration {
       return  hours + ' hours';
     } else if (minutes > 0) {
       return  minutes + ' minutes';
-    } else {
+    } else if (seconds > 0) {
       return  '< 1 minute' ;
     }
+    return 'unknown'
   }
 
   }

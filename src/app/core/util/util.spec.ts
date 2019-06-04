@@ -191,7 +191,7 @@ describe('Duration', () => {
     expect(duration10.getShortReadableDuration()).toBe('12 minutes');
     expect(duration11.getShortReadableDuration()).toBe('1 minutes');
     expect(duration12.getShortReadableDuration()).toBe('< 1 minute');
-    expect(duration13.getShortReadableDuration()).toBe('< 1 minute');
+    expect(duration13.getShortReadableDuration()).toBe('unknown');
   });
 
 });

@@ -26,7 +26,6 @@
 
     <!-- price section without shipping and total price  -->
     <div *ngIf="!listingCacheService?.selectedCountry" class="price" fxFlex>
-      <!-- {{ listing?.basePrice?.getAmountAsString() }} -->
       <span class="number big">{{ listing?.basePrice?.particlStringInteger() }}</span>
       <span class="point big">{{ listing?.basePrice?.particlStringSep() }}</span>
       <span class="number small">{{ listing?.basePrice?.particlStringFraction() || '' }}</span>

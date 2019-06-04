@@ -37,7 +37,7 @@
         <tr>
           <th>Price per item</th>
           <td>
-            {{ listing?.basePrice.getIntegerPart() }}{{ listing?.basePrice.dot() }}<small>{{ listing?.basePrice.getFractionalPart() }}</small>
+            {{ listing?.basePrice.particlStringInteger() }}{{ listing?.basePrice.particlStringSep() }}<small>{{ listing?.basePrice.particlStringFraction() }}</small>
             PART
           </td>
         </tr>

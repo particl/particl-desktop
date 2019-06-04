@@ -5,7 +5,7 @@ import { MarketService } from 'app/core/market/market.service';
 
 export enum EscrowType {
   NOP = 'NOP',
-  MAD = 'MAD_CT'
+  MAD_CT = 'MAD_CT'
 }
 
 @Injectable()
