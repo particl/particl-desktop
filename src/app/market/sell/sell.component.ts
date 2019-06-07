@@ -97,6 +97,12 @@ export class SellComponent implements OnInit, OnDestroy {
     });
   }
 
+  importListings() {
+    this.router.navigate(['../import'], {
+      relativeTo: this.route
+    });
+  }
+
   clear(): void {
     this.filters = {
       search:   '',

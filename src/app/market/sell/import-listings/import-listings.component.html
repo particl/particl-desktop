@@ -1,0 +1,109 @@
+<div class="container-block">
+
+  <mat-tab-group (selectedTabChange)="tabChange($event);">
+    <mat-tab *ngFor="let import of filterByNetwork" label="{{import.name}}">
+      <mat-card [formGroup]="import.form">
+        {{import.description}}
+        <div *ngFor="let param of import.params" [ngSwitch]="param.type">
+          <mat-form-field *ngSwitchCase="'text'"
+                          [formGroup]="import.form">
+            <input matInput [formControlName]="param.name" [placeholder]="param.message" [type]="param.type" (change)="clearOldValues()">
+          </mat-form-field>
+          <mat-form-field *ngSwitchCase="'number'"
+                          [formGroup]="import.form">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
+                   [formControlName]="param.name" [placeholder]="param.message" (change)="clearOldValues()"
+                   type="text">
+          </mat-form-field>
+    
+          <mat-form-field *ngSwitchCase="'file'"
+                          [formGroup]="import.form">
+            <ngx-mat-file-input id="test" [formControlName]="param.name" [placeholder]="param.message" [accept]="param.fileType" (change)="clearOldValues()"></ngx-mat-file-input>
+          </mat-form-field>
+      
+        </div>
+    
+        <span *ngIf="importError">{{ importError }}</span>
+    
+        <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
+          <div class="left">
+          </div>
+          <div class="right">
+            <button [disabled]="!import.form.valid" 
+                    mat-raised-button
+                    color="primary"
+                    matTooltip="Load listings"
+                    (click)="importLoad(import)">
+              <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+              Load
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
+
+  <br><br>
+
+  <mat-accordion *ngIf="listings.length > 0">
+    <app-import-listing *ngFor="let listing of listings" [listing]="listing" (onChange)="clearEstimate()"></app-import-listing>
+  </mat-accordion> 
+
+  <br><br>
+
+  <mat-card *ngIf="canPublish">
+    <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="30px">
+      
+      <div>
+        <mat-select-search
+          [options]="countryList.getList()"
+          [showValueOf]="'name'"
+          [placeHolder]="'Shipping from (your country)'"
+          [isRequired]="'true'"
+          [isLexigraphicalOrder]="true"
+          [defaultSelectedValue]="selectedCountry"
+          (onChange)="onCountryChange($event)">
+        </mat-select-search>
+      </div>
+      <div>
+        <mat-form-field>
+          <mat-label>Select expiry time</mat-label>
+          <mat-select [(value)]="selectedExpiration" (selectionChange)="clearEstimate()">
+            <mat-option>None</mat-option>
+            <mat-option [disabled]="expire?.isDisabled" *ngFor="let expire of expiredList" [value]="expire.value">
+              {{ expire.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="tx-amount" *ngIf="!!currentestimateFee">
+        Estimated Fee : 
+        <span class="big">{{ currentestimateFee.getIntegerPart() }}</span>
+        <span *ngIf="currentestimateFee.ifDotExist()">
+        <span class="point">.</span>
+        <span class="small">{{ currentestimateFee.getFractionalPart() }}</span>&ensp;</span>
+        <span class="currency">PART</span>
+      </div>
+      <div>
+        <button *ngIf="!currentestimateFee"
+                [disabled]="!selectedCountry && !selectedExpiration"
+                mat-raised-button
+                color="primary"
+                matTooltip="Get estimate fee"
+                (click)="estimateFee()">
+          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+          Estimate Fee
+        </button>
+        <button *ngIf="!!currentestimateFee" 
+                mat-raised-button
+                color="primary"
+                matTooltip="Publish listings"
+                (click)="publishListing()">
+          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+          Publish
+        </button>
+      </div>
+    </div>
+  </mat-card>
+  
+</div>

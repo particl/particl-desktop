@@ -19,12 +19,14 @@ import { OrderItemComponent } from './shared/orders/order-item/order-item.compon
 import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
 import { market_routing } from './market.routing';
+import { ImportListingsModule } from './sell/import-listings/import-listings.module';
 
 @NgModule({
   imports: [
     CommonModule,
     CoreUiModule,
     WalletModule,
+    ImportListingsModule,
     market_routing
   ],
   declarations: [

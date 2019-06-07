@@ -1,0 +1,24 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ LAYOUT ------ //
+
+.container-block {
+  margin-top: $header-main-height;
+}
+
+.tx-amount {
+  & > .big {
+    font-size: 20px;
+  }
+  & > .small {
+    font-size: 14px;
+  }
+  & > .point {
+    font-weight: bold;
+    margin: 0 2px;
+  }
+  & > .currency {
+    font-size: 17px;
+    margin-left: 0.4rem;
+  }
+}
