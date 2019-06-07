@@ -6,8 +6,7 @@ import { CartService } from 'app/core/market/api/cart/cart.service';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
-import { take, map, catchError } from 'rxjs/operators';
+import { take, catchError } from 'rxjs/operators';
 
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
@@ -63,10 +62,9 @@ export class BidService {
     return 'Placed all orders!';
   }
 
-  search(address: string, type?: any, status?: string, search?: string, additionalFilter?: any): Observable<BidCollection> {
+  search(status?: string, search?: string): Observable<any> {
     const params = ['search', 0, 99999, 'ASC', '*', status, search ];
     return this.market.call('bid', params)
-    .pipe(map(o => new BidCollection(o, address, type, additionalFilter)))
   }
 
   acceptBidCommand(id: number): Observable<any> {

@@ -21,7 +21,7 @@ export class TemplateService {
     return this.market.call('template', ['get', templateId, returnImageData]).pipe(map(t => new Template(t)));
   }
 
-  // template add 1 "title" "short" "long" 80 "SALE" "PARTICL" 5 5 5 "Pasdfdfd"
+  // template add 1 "title" "short" "long" 80 "SALE" "PART" 5 5 5 "Pasdfdfd"
   add(title: string,
     shortDescr: string,
     longDescr: string,

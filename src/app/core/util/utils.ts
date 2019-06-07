@@ -323,8 +323,56 @@ export function dataURItoBlob(dataURI: string) {
   return new Blob([ab], {type: 'image/jpeg'});
 }
 
-export const Messages = {
+export const ORDER_DATA = {
   'BIDDING': {
+    filter: {
+      query: 'MPA_BID',
+      text: 'Bids',
+      order: 1
+    },
+    orderStatus: 'BIDDED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-date',
+          'text': 'Waiting for seller',
+          'action': 'NA',
+          'primary': true
+        }
+      ],
+      status_info: 'Waiting for Seller to manually accept (or reject) your bid'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': 'Reject this bid, cancelling the order request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Reject bid & cancel order',
+          'action': 'REJECT',
+          'primary': false
+        },
+        {
+          'tooltip': 'Approve this order and sell to this Buyer',
+          'colour': 'primary',
+          'disabled': false,
+          'icon': 'part-check',
+          'text': 'Accept bid',
+          'action': 'ACCEPT',
+          'primary': true
+        }
+      ],
+      status_info: 'Buyer wants to purchase this item - approve or reject this order to continue'
+    },
+  }
+};
+
+export const Messages = {
+  'BIDDED': {
     'buy': {
       'action_button': 'Waiting for Seller',
       'tooltip': '',

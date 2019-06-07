@@ -1,10 +1,10 @@
-import { Messages, DateFormatter } from 'app/core/util/utils';
+import { Messages, ORDER_DATA, DateFormatter, PartoshiAmount } from 'app/core/util/utils';
 import { Product } from './product.model';
 import { Listing } from '../listing/listing.model';
 
 export class Bid extends Product {
   activeBuySell: boolean;
-  constructor(private order: any, public ordType: string ) {
+  constructor(private order: any, private ordType: string ) {
     super();
     this.setActiveOrders();
   }
@@ -41,6 +41,14 @@ export class Bid extends Product {
     return Messages[this.allStatus][this.type];
   }
 
+  get orderActivity(): any {
+    const action = Object.keys(ORDER_DATA).find((key) => ORDER_DATA[key].orderStatus === this.allStatus);
+    if (action) {
+      return ORDER_DATA[action][this.ordType];
+    }
+    return {};
+  }
+
   get OrderItem(): any {
     return this.order.OrderItem;
   }
@@ -50,7 +58,7 @@ export class Bid extends Product {
   }
 
   get allStatus(): string {
-    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
+    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'MPA_REJECT' : 'BIDDED';
   }
 
   get createdAt(): number {
@@ -83,9 +91,43 @@ export class Bid extends Product {
     return this.order.listing;
   }
 
+  PricingInformation(country: string): any {
+    const payment = this.order.ListingItem.PaymentInformation;
+    const itemPrice = payment.ItemPrice || {};
+    const escrow = payment.Escrow || {};
+
+    const isDomestic = this.isDomestic(country);
+    const basePrice = new PartoshiAmount (itemPrice.basePrice || 0);
+
+    // Calculate shipping
+    const shippingPrice = (new PartoshiAmount(itemPrice.ShippingPrice[isDomestic ? 'domestic' : 'international'])).partoshis();
+
+    // Calculate escrow
+    const ratio = escrow.Ratio || {};
+    const escrowPrice = basePrice.partoshis() + ((ratio.buyer || 0) / 100 * shippingPrice);
+
+    // Calculate total
+    const totalPrice = basePrice.partoshis() + shippingPrice + escrowPrice;
+
+    return {
+      base: basePrice,
+      shipping: new PartoshiAmount(shippingPrice || 0),
+      escrow: new PartoshiAmount(escrowPrice || 0),
+      total: new PartoshiAmount(totalPrice || 0)
+    };
+  }
+
   setActiveOrders() {
     this.activeBuySell = ['Accept bid', 'Mark as shipped', 'Mark as delivered', 'Make payment']
                           .includes(this.messages.action_button);
+  }
+
+  private isDomestic(country: string): boolean {
+    const itemLocation = this.ListingItem.ItemInformation.ItemLocation;
+    if (itemLocation) {
+      return itemLocation.country === country;
+    }
+    return false;
   }
 
 }

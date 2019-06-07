@@ -6,20 +6,12 @@
     <mat-card class="filter-card">
       <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
         <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
-            (keyup)="loadOrders()" (keyup.enter)="loadOrders()" (keyup.escape)="filters.search = ''; loadOrders()">
+            (keyup.enter)="loadOrders()" (keyup.escape)="filters.search = '' ">
         <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
                   (click)="filters.search=''; loadOrders()"></mat-icon>
         <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                   (click)="loadOrders()"></mat-icon>
       </mat-form-field>
-
-      <!--  <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-        <mat-select placeholder="Sort orders" [(ngModel)]="filters.sort" (selectionChange)="filter()">
-          <mat-option *ngFor="let sorting of order_sortings" [value]="sorting.value">
-            {{ sorting.title }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field> -->
     </mat-card>
   </div>
 
@@ -27,14 +19,11 @@
     <div class="subtitle">Filter</div>
     <mat-card class="filter-card">
       <div class="checkbox highlight">
-        <mat-checkbox [(ngModel)]="additionalFilter.requiredAttention" (change)="loadOrders()" color="primary">Orders requiring attention</mat-checkbox>
+        <mat-checkbox [(ngModel)]="additionalFilter.requiredAttention" color="primary">Orders requiring attention</mat-checkbox>
       </div>
       <div class="checkbox">
-        <mat-checkbox [(ngModel)]="additionalFilter.hideCompleted" (change)="loadOrders()" color="primary">Hide completed</mat-checkbox>
+        <mat-checkbox [(ngModel)]="additionalFilter.hideCompleted" color="primary">Hide completed</mat-checkbox>
       </div>
-      <!-- <div class="checkbox">
-        <mat-checkbox matTooltip="Hide orders not updated in last 30 days">Hide old orders</mat-checkbox>
-      </div> -->
     </mat-card>
   </div><!-- .filter-by-type -->
 
@@ -42,16 +31,15 @@
     <div class="subtitle">Filter by status</div>
     <mat-card class="filter-card">
       <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.status" (change)="loadOrders()">
-        <mat-radio-button class="filter-option" *ngFor="let status of order_filters?.order_filtering" value="{{ status.value }}" [disabled]="status.amount === 0" color="primary">
+        <mat-radio-button class="filter-option" *ngFor="let status of order_filters?.filters" value="{{ status.value }}" [disabled]="status.count === 0" color="primary">
           {{ status.title }}
-          <!-- FIXME: show amount (below) only if higher than 1 -->
-          <span class="amount">{{ status.amount }}</span>
+          <span class="amount">{{ status.count }}</span>
         </mat-radio-button>
       </mat-radio-group>
     </mat-card>
   </div><!-- .filter-by-type -->
 
-  <button mat-button color="basic" class="clear-filters" (click)="clear()">
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
     <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
     Clear all filters
   </button>
@@ -68,6 +56,6 @@
     </p>
   </div>
 
-  <app-order-item *ngFor="let order of orders" [order]="order"></app-order-item>
+  <app-order-item *ngFor="let order of filteredOrders" [order]="order"></app-order-item>
 
 </div><!-- .orders.list -->

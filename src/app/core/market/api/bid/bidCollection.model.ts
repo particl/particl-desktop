@@ -6,44 +6,19 @@ export class BidCollection {
   sellOrders: Array<Bid> = [];
   buyOrders: Array<Bid> = [];
 
-  constructor(orders: Bid[], public address: string, public type?: string, public additionalFilter?: any) {
-    this.setOrders(orders);
-  }
-
-  setOrders(orders: Bid[]) {
+  constructor(orders: Bid[], public address: string) {
     this.orders = orders.reverse().map(ord => {
-      return this.setBuySellOrder(ord);
-    })
-  }
-
-  setBuySellOrder(ord: Bid) {
-    if (ord.bidder === this.address) {
-      ord = new Bid(ord, 'buy');
-      this.buyOrders.push(ord);
-    }
-    if (ord.ListingItem && ord.ListingItem.seller  === this.address) {
-      ord = new Bid(ord, 'sell');
-      this.sellOrders.push(ord);
-    }
-    return ord;
-  }
-
-  get filterOrders(): Bid[] {
-    // @TODO additionalFilter stuff should be remove once it handles via backend
-    if (this.additionalFilter) {
-      if (this.additionalFilter.requiredAttention) {
-        return (this.type === 'sell' ? this.activeSellOrders : this.activeBuyOrders)
+      if (ord.bidder === this.address) {
+        ord = new Bid(ord, 'buy');
+        this.buyOrders.push(ord);
       }
-
-      if (this.additionalFilter.hideCompleted) {
-        return (this.type === 'sell' ? this.sellOrders : this.buyOrders).filter((o) => {
-          return o.status !== 'complete'
-        });
+      if (ord.ListingItem && ord.ListingItem.seller  === this.address) {
+        ord = new Bid(ord, 'sell');
+        this.sellOrders.push(ord);
       }
-    }
-    return (this.type === 'sell' ? this.sellOrders : this.buyOrders);
+      return ord;
+    });
   }
-
 
   get sellOrdersCount(): number {
     return this.sellOrders.length;
