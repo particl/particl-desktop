@@ -23,8 +23,8 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
 
   // public selectedImport: any;
   public importError: string;
-  public availableImports = [];
-  public listings = [];
+  public availableImports: any[] = [];
+  public listings: any[] = [];
   public expiredList: Array<any> = [
     { title: '1 day', value: 1, estimateFee: new Amount(0), isDisabled: false },
     { title: '2 days', value: 2, estimateFee: new Amount(0), isDisabled: false },
@@ -41,8 +41,8 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     { title: '3 weeks', value: 21, estimateFee: new Amount(0), isDisabled: true },
     { title: '4 weeks', value: 28, estimateFee: new Amount(0), isDisabled: true }
   ];
-  public selectedExpiration;
-  public selectedCountry;
+  public selectedExpiration: number;
+  public selectedCountry: Country;
   public currentestimateFee: Amount = null;
   public network: string = isMainnetRelease() ? 'mainnet' : 'testnet';
 
@@ -53,7 +53,9 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
   }
 
   get canPublish() {
-    return (this.listings.length > 0 && !_.find(this.listings, x => x.publish && x.validationError) && _.find(this.listings, x => x.publish));
+    return (this.listings.length > 0 &&
+            !_.find(this.listings, x => x.publish && x.validationError) &&
+            _.find(this.listings, x => x.publish));
   }
 
   constructor(
@@ -71,13 +73,13 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
       this.availableImports = config;
 
       for (const i of this.availableImports) {
-        let group: any = {};
+        const group: any = {};
 
         i.params.forEach(question => {
           group[question.name] = question.mandatory ? new FormControl(question.default || '', Validators.required)
                                                     : new FormControl(question.default || '');
         });
-        i["form"] = new FormGroup(group);
+        i['form'] = new FormGroup(group);
       }
     });
   }
@@ -91,7 +93,7 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     });
 
     this.clearOldValues();
-       
+
     importDef.params = importDef.params.map(param => {
       if (param.type === 'file') {
         param['value'] = importDef.form.value[param.name].files[0].path;
@@ -105,19 +107,20 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     const importParams = _.pick(importDef, ['id', 'params']);
 
     this._marketImportService.loadListingsFromImporter(importParams).subscribe(
-      (data) => {
-        if (data.status) {
-          loadDialog.componentInstance.data.message = data.status;
+      (loadData) => {
+        if (loadData.status) {
+          loadDialog.componentInstance.data.message = loadData.status;
         }
-        if (data.result) {
-          this._marketImportService.validateListings(data.result).subscribe(
+        if (loadData.result) {
+          this._marketImportService.validateListings(loadData.result).subscribe(
             (data) => {
               if (data.status) {
                 loadDialog.componentInstance.data.message = data.status;
               }
+
               if (data.result) {
-                setTimeout(()=>this.listings = data.result, 1);
-            
+                setTimeout(() => this.listings = data.result, 1);
+
                 this._dialog.closeAll();
               }
             },
@@ -150,7 +153,7 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
             estimateDialog.componentInstance.data.message = data.status;
           }
           if (data.result) {
-            setTimeout(()=>{
+            setTimeout(() => {
               this.listings = data.result;
               let fee = 0;
               for (const listing of this.listings) {
@@ -161,8 +164,8 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
               this.currentestimateFee = new Amount(fee);
               this._dialog.closeAll();
             }, 1);
-        
-            this._rpc.call('walletlock').toPromise().then(()=>{
+
+            this._rpc.call('walletlock').toPromise().then(() => {
               this._rpcState.stateCall('getwalletinfo');
             });
           }
@@ -171,7 +174,7 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
           this.importError = error;
           this._dialog.closeAll();
         }
-      )      
+      )
     });
   }
 
@@ -190,18 +193,18 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
             publishingDialog.componentInstance.data.message = data.status;
           }
           if (data.result) {
-            setTimeout(async()=>{
+            setTimeout(async() => {
               this.listings = data.result
-              
+
               publishingDialog.componentInstance.data.message = 'Hang on, we are busy updating the lisitng cache';
 
               for (let index = this.listings.length - 1; index >= 0; index--) {
                 const listing = this.listings[index];
-        
+
                 if (listing.id) {
                   const template = await this._template.get(listing.id, false).toPromise();
                   this._listingCache.posting(template);
-        
+
                   this.listings.splice(index, 1);
                 }
               }
@@ -227,20 +230,13 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
 
   clearEstimate() {
     this.currentestimateFee = null;
-    // this._marketImportService.validateListings(this.listings).subscribe(
-    //   (data) => {
-    //     if (data.result) {
-    //       this.listings = data.result;
-    //     }
-    //   }
-    // )
   }
 
   onCountryChange(country: Country): void {
     this.selectedCountry = country;
   }
 
-  tabChange(tab) {
+  tabChange(tab: any) {
     this.clearOldValues();
 
     this.availableImports[tab.index].form.reset();

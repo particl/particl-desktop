@@ -40,7 +40,7 @@ export class ImportListingComponent implements OnInit {
     } else {
       this._marketImportService.validateListings([listing]).subscribe(
         (data) => {
-          if(data.result) {
+          if (data.result) {
             listing['validationError'] = data.result[0].validationError;
             this.onChange.emit(true);
           }
@@ -109,7 +109,7 @@ export class ImportListingComponent implements OnInit {
     this.listing.category = category ? { id: category.id, name: category.name } : undefined;
   }
 
-  publishChanged($event) {
+  publishChanged($event: any) {
     this.onChange.emit($event);
   }
 

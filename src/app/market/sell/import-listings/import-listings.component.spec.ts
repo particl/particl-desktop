@@ -19,8 +19,8 @@ describe('ImportListingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ 
-        ImportListingsComponent 
+      declarations: [
+        ImportListingsComponent
       ],
       imports: [
         CoreUiModule.forRoot(),

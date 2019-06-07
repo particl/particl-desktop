@@ -1,27 +1,6 @@
 @import './src/assets/_config'; // import shared colors etc.
 @import './src/app/market/_listing'; // listing styles
 
-// .listing {
-//   .header {
-//     min-height: 80px !important;
-//     max-height: 80px !important;
-//     padding: 0 24px 0 0;
-//   }
-// }
-
-// .list-item {
-//   .header-wrapper {
-//     .photo { // crop listing's image to square
-//       min-height: 80px;
-//       max-height: 80px;
-//       height: 80px;
-//     }
-//     .meta .name {
-//       font-size: 16px;
-//     }
-//   }
-// }
-
 .drag-n-drop {
   border: 1px dashed $bg-shadow;
   border-radius: 4px;

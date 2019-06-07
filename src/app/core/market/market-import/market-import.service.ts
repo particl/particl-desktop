@@ -18,15 +18,15 @@ export class MarketImportService {
     });
   }
 
-  loadListingsFromImporter(data) {
+  loadListingsFromImporter(data: any) {
     return this._ipc.runCommand('importer-load', null, data);
   }
 
-  validateListings(listings, country?, expTime?) {
+  validateListings(listings: any[], country?: string, expTime?: number) {
     return this._ipc.runCommand('importer-validate', null, listings, country, expTime);
   }
 
-  publishListings(listings, country, expTime) {
+  publishListings(listings: any[], country: string, expTime: number) {
     return this._ipc.runCommand('importer-publish', null, listings, country, expTime);
   }
 
