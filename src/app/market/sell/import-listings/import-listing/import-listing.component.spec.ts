@@ -36,6 +36,18 @@ describe('ImportListingComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ImportListingComponent);
     component = fixture.componentInstance;
+    component.listing = {
+      title: 'Test Title',
+      category: {
+        id: 1,
+        name: 'Test Category'
+      },
+      shortDescription: 'Short Description',
+      validationError: '',
+      longDescription: 'Long Description',
+      publish: true,
+      images: ['base64:data']
+    }
     fixture.detectChanges();
   });
 
