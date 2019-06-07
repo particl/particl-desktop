@@ -1,0 +1,176 @@
+/*
+
+ __   __        __   __      __             ___ ___ ___  ___  __  
+/  ` /  \ |    /  \ |__)    |__)  /\  |    |__   |   |  |__  /__` 
+\__, \__/ |___ \__/ |  \    |    /~~\ |___ |___  |   |  |___ .__/ 
+
+Definitions of color palettes for Material components
+
+  TOC:
+    1. Palette definitions
+
+- Material color system: https://material.io/design/color/#tools-for-picking-colors
+- Theme palette generator: http://mcg.mbitson.com
+
+*/
+
+
+/* ------------------------------- *\
+    1. Palette definitions
+\* ------------------------------- */
+
+// PART green
+$part-green: (
+  50: #e9faf2,
+  100: #c7f2de,
+  200: #a2eac9,
+  300: #7de1b3,
+  400: #61daa2,
+  500: $color,
+  600: #3ecf8a,
+  700: #36c97f,
+  800: #2ec375,
+  900: #1fb963,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+// PART blue
+$part-blue: (
+  50: #e3f3fb,
+  100: #b9e0f5,
+  200: #8acbee,
+  300: #5bb6e7,
+  400: #38a7e2,
+  500: $secondary,
+  600: #128fd9,
+  700: #0f84d4,
+  800: #0c7acf,
+  900: #0669c7,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+// PART purple
+$part-purple: (
+  50: #ebe9f4,
+  100: #cdc8e5,
+  200: #aca4d3,
+  300: #8b80c1,
+  400: #7264b4,
+  500: $tertiary,
+  600: #51429f,
+  700: #483996,
+  800: #3e318c,
+  900: #2e217c,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+// red
+$part-red: (
+  50: #fae5e6,
+  100: #f2bfc0,
+  200: #ea9497,
+  300: #e1696d,
+  400: #da494d,
+  500: $color-alert,
+  600: #cf2429,
+  700: #c91f23,
+  800: #c3191d,
+  900: #b90f12,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);
+
+// white-grey
+$part-grey: (
+  50: #f4f4f5,
+  100: #e3e5e6,
+  200: #d0d3d6,
+  300: #bdc1c5,
+  400: #afb4b8,
+  500: #a1a7ac,
+  600: #999fa5,
+  700: #8f969b,
+  800: #858c92,
+  900: $text-muted,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #000000,
+    600: #000000,
+    700: #000000,
+    800: #000000,
+    900: #ffffff,
+  )
+);
+
+// blacks
+$part-black: (
+  50: #e7e8e8,
+  100: #c3c5c5,
+  200: #9b9e9f,
+  300: #737778,
+  400: #555a5b,
+  500: #373d3e,
+  600: #313738,
+  700: #2a2f30,
+  800: $bg-black,
+  900: #161a1b,
+  contrast: (
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+  )
+);

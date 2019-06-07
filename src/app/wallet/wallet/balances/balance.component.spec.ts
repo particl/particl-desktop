@@ -5,7 +5,10 @@ import { WalletModule } from '../wallet.module';
 
 import { BalanceComponent } from './balance.component';
 import { CoreModule } from 'app/core/core.module';
-import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
+import { RpcStateServiceMock } from 'app/_test/core-test/rpc-test/rpc-state-mock.service';
+import { RpcStateService } from 'app/core/rpc/rpc.module';
+import { RpcService } from 'app/core/rpc/rpc.service';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -16,8 +19,11 @@ describe('BalanceComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        CoreModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        CoreModule.forRoot()
+      ],
+      providers: [
+        { provide: RpcStateService, useClass: RpcStateServiceMock },
+        { provide: RpcService, useClass: RpcMockService }
       ]
     })
     .compileComponents();
@@ -33,32 +39,40 @@ describe('BalanceComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return a balance equal to 0 (getIntegerPart)', () => {
-    expect(component.balance.getIntegerPart()).toBe(0);
+  it('should return the correct balance type', () => {
+    component.type = 'total_balance';
+    expect(component.getTypeOfBalance()).toBe('TOTAL BALANCE');
+    component.type = 'actual_balance';
+    expect(component.getTypeOfBalance()).toBe('Spendable');
+    component.type = 'balance';
+    expect(component.getTypeOfBalance()).toBe('Public');
+    component.type = 'anon_balance';
+    expect(component.getTypeOfBalance()).toBe('Anon (Private)');
+    component.type = 'blind_balance';
+    expect(component.getTypeOfBalance()).toBe('Blind (Private)');
+    component.type = 'staked_balance';
+    expect(component.getTypeOfBalance()).toBe('Staking');
+    component.type = 'locked_balance';
+    expect(component.getTypeOfBalance()).toBe('Locked');
+    component.type = 'non-existing-option';
+    expect(component.getTypeOfBalance()).toBe('non-existing-option');
+    component.type = '';
+    expect(component.getTypeOfBalance()).toBe('');
   });
 
-  it('should return a balance equal to 0 (getFractionalPart)', () => {
-    expect(component.balance.getFractionalPart()).toBe('');
+  it('should calculate the correct balance', () => {
+    component.type = 'total_balance';
+    const total = 10;
+    component.listUnSpent(total);
+    expect(component.balance.getAmountAsString()).toBe('10');
+
+    component.type = 'locked_balance';
+    component.listUnSpent(total);
+    expect(component.balance.getAmount().toFixed(1)).toBe('9.2');
+
+    component.type = 'actual_balance';
+    component.listUnSpent(total);
+    expect(component.balance.getAmount().toFixed(1)).toBe('0.8');
   });
 
-  it('should not return a dot because its just 0, not 0.0 ', () => {
-    expect(component.balance.dot()).toBe('');
-  });
-
-/*
-  it('should get balance point', () => {
-    component.getBalancePoint();
-    expect(component.getBalancePoint).toBeTruthy();
-  });
-
-  it('should get balance after point', () => {
-    component.getBalanceAfterPoint(true)
-    expect(component.getBalanceAfterPoint).toBeTruthy();
-  });
-
-  it('should get type of balance', () => {
-    component.getTypeOfBalance();
-    expect(component.getTypeOfBalance).toBeTruthy();
-  });
-*/
 });

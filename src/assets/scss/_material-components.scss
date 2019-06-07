@@ -153,6 +153,9 @@ mat-card.mat-card {
   font-family: $font;
   box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
   padding: 24px;
+  &.not-rounded {
+    border-radius: 0;
+  }
 }
 
 
@@ -245,7 +248,7 @@ mat-card.mat-card {
   }
   // buy/cart-shipping: remove white background
   &.no-bg {
-    background: none;
+    background: none !important;
   }
 }
 

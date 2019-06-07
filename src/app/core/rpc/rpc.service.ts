@@ -40,6 +40,8 @@ export class RpcService implements OnDestroy {
    */
   private port: number = environment.particlPort;
 
+  private daemonProto: number = 0;
+
   // note: password basic64 equiv= dGVzdDp0ZXN0
   private authorization: string = btoa('test:test');
 
@@ -63,6 +65,22 @@ export class RpcService implements OnDestroy {
 
   get enabled(): boolean {
     return this.isInitialized;
+  }
+
+  set daemonProtocol(protocol: number) {
+    /*
+      @TODO (zaSmilingIdiot 2019-05-03):
+        This shouldn't be set externally, but since we are doing a connection check elsewhere,
+        but need to store this on a singleton instance, this is the quickest (dirtiest) place to put this.
+        Fix this!!
+    */
+   if (!this.daemonProto) {
+    this.daemonProto = +protocol;
+   }
+  }
+
+  get daemonProtocol(): number {
+    return this.daemonProto;
   }
 
   /**

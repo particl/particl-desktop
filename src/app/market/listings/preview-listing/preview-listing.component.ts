@@ -95,11 +95,17 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       this.snackbarService.open(`Successfully voted for ${this.data.listing.title}`, 'info');
       this.data.listing.VoteDetails = new VoteDetails({
         ProposalOption: option
-      })
+      });
+      this.reportListingFinished();
     }, (error) => {
       this.processModal.close();
       this.snackbarService.open(error);
     })
+  }
+
+  reportListingFinished() {
+    this.data.reportListingComplete.emit();
+    this.dialogClose();
   }
 
   dialogClose(): void {
