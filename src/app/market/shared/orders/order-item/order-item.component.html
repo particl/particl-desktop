@@ -71,7 +71,8 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button *ngFor="let actionable of secondaryActions" color="actionable.colour"
+      <button *ngFor="let actionable of secondaryActions"
+              mat-button color="{{actionable.colour}}"
               [disabled]="actionable.disabled"
               (click)="executeAction(actionable.action)"
               class="small">

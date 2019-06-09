@@ -136,8 +136,7 @@ export class OrderItemComponent implements OnInit {
   //   }
   // }
 
-  // @TODO: refactor method for all calls
-  callBid(type: string) {
+  private callBid(type: string) {
     const dialogRef = this.dialog.open(type === 'shipping' ? ShippingComponent : PlaceOrderComponent);
     dialogRef.componentInstance.type = type;
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {

@@ -6,7 +6,7 @@ export class Bid extends Product {
   activeBuySell: boolean;
   constructor(private order: any, private ordType: string ) {
     super();
-    this.setActiveOrders();
+    this.activeBuySell = (this.orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
   }
 
   get id(): number {
@@ -38,7 +38,8 @@ export class Bid extends Product {
   }
 
   get messages(): any {
-    return Messages[this.allStatus][this.type];
+    // return Messages[this.allStatus][this.type];
+    return this.orderActivity;
   }
 
   get orderActivity(): any {
@@ -58,7 +59,7 @@ export class Bid extends Product {
   }
 
   get allStatus(): string {
-    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'MPA_REJECT' : 'BIDDED';
+    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'REJECTED' : 'BIDDED';
   }
 
   get createdAt(): number {
@@ -115,11 +116,6 @@ export class Bid extends Product {
       escrow: new PartoshiAmount(escrowPrice || 0),
       total: new PartoshiAmount(totalPrice || 0)
     };
-  }
-
-  setActiveOrders() {
-    this.activeBuySell = ['Accept bid', 'Mark as shipped', 'Mark as delivered', 'Make payment']
-                          .includes(this.messages.action_button);
   }
 
   private isDomestic(country: string): boolean {

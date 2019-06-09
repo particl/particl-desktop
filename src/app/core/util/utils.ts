@@ -339,7 +339,7 @@ export const ORDER_DATA = {
           'disabled': true,
           'icon': 'part-date',
           'text': 'Waiting for seller',
-          'action': 'NA',
+          'action': '',
           'primary': true
         }
       ],
@@ -367,6 +367,43 @@ export const ORDER_DATA = {
         }
       ],
       status_info: 'Buyer wants to purchase this item - approve or reject this order to continue'
+    },
+  },
+
+  'REJECTED': {
+    filter: {
+      query: 'MPA_REJECT',
+      text: 'Rejected',
+      order: 2
+    },
+    orderStatus: 'REJECTED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order rejected',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Seller rejected bid on this item, order has been cancelled (no money was spent)'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Rejected order',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'You have rejected this bid, order has been cancelled'
     },
   }
 };
