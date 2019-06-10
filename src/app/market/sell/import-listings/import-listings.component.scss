@@ -1,9 +1,26 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+// ------ UI ------ //
+
+
+.subtitle {
+  @extend %subtitle;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+
 // ------ LAYOUT ------ //
 
 .mat-tab-group {
   margin-top: $header-main-height;
+}
+
+.mat-card {
+  // 1. step - Import file upload
+  &.import-file {
+  }
 }
 
 .tx-amount {

@@ -2,8 +2,8 @@
   <mat-tab *ngFor="let import of filterByNetwork" label="{{import.name}}">
     <div class="container-block">
 
-      <div class="subtitle">Import product file</div>
-      <mat-card [formGroup]="import.form" [ngSwitch]="import.id">
+      <h2 class="subtitle">Import product file</h2>
+      <mat-card [formGroup]="import.form" [ngSwitch]="import.id" class="import-file">
         <ng-container *ngSwitchCase="'csv-import'">
           <app-import-custom-ui-csv [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-csv>
         </ng-container>

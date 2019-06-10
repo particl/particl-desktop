@@ -1,6 +1,6 @@
-{{import.description}}
+<h3 class="box-title">{{import.description}}</h3>
 <div>
-  <mat-form-field [formGroup]="import.form">
+  <mat-form-field class="full-width" [formGroup]="import.form">
     <ngx-mat-file-input formControlName="file" placeholder="CSV file to import" accept=".csv" (change)="emitClear()"></ngx-mat-file-input>
   </mat-form-field>
 </div>
