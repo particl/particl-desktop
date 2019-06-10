@@ -1,13 +1,12 @@
 <mat-expansion-panel class="listing list-item no-padding" (closed)="editItem(listing, false)">
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-      <div class="photo" fxFlex="0 0 110px">
+      <div class="photo" fxFlex="0 0 75px">
         <img src="{{ listing?.images[0] ? listing?.images[0] : './assets/images/placeholder_1-1.jpg' }}">
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ listing?.title }}</div>
-        <div class="categories">{{ listing?.category?.name }}</div>
-        <div class="description">{{ listing?.shortDescription }}</div>
+        <div class="category">{{ listing?.category?.name }}</div>
         <span class="error">{{ listing?.validationError || '' }}</span>
       </div>
       <div class="publish" fxFlex="2 2 80px">
@@ -19,17 +18,10 @@
   <div *ngIf="!listing?.editing" class="detail" fxLayout="row" fxLayoutGap="30px">
     <div class="description" fxFlex="65%">
       <div class="title">Listing description</div>
+      <p class="lead">{{ listing?.shortDescription }}</p>
       <p>
         {{ listing?.longDescription }}
       </p>
-      <div class="gallery" fxLayout="row wrap">
-        <div *ngFor="let image of listing.images; let i = index"
-            class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
-          <div class="photo" fxFLex>
-            <img src="{{image}}">
-          </div>
-        </div>
-      </div>
     </div><!-- .description -->
     <div class="info" fxFlex="35%">
       <div class="title">Price Information</div>
@@ -56,8 +48,17 @@
           </td>
         </tr>
       </table>
+      <div class="title">Listing photos</div>
+      <div class="gallery" fxLayout="row wrap">
+        <div *ngFor="let image of listing.images; let i = index"
+             class="photo-wrapper" fxFlex="0 0 85px" fxLayoutAlign="center center">
+          <div class="photo" fxFLex>
+            <img src="{{image}}">
+          </div>
+        </div>
+      </div><!-- .gallery -->
     </div>
-  </div>
+  </div><!-- .detail -->
 
   <div *ngIf="listing?.editing" class="detail editing" fxLayout="row" fxLayoutGap="30px">
     <div class="left" fxFlex="50">

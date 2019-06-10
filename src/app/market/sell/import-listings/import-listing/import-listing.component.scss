@@ -1,6 +1,30 @@
 @import './src/assets/_config'; // import shared colors etc.
 @import './src/app/market/_listing'; // listing styles
 
+$listing-size: 75px;
+
+.listing {
+  .header {
+    min-height: $listing-size !important;
+    max-height: $listing-size !important;
+  }
+}
+.list-item {
+  .header-wrapper {
+    .photo { // crop listing's image to square
+      min-height: $listing-size;
+      max-height: $listing-size;
+      height: $listing-size;
+    }
+  }
+}
+
+.listing {
+  .detail.editing {
+    color: $text; // fix color inheritance from original component
+  }
+}
+
 .drag-n-drop {
   border: 1px dashed $bg-shadow;
   border-radius: 4px;
@@ -20,6 +44,12 @@
   }
 }
 
+.info {
+  .prices {
+    margin-bottom: 24px;
+  }
+}
+
 .gallery {
   margin: 0 -10px;
 }
@@ -28,7 +58,7 @@
   position: relative;
   margin: 10px;
   background: repeating-linear-gradient(45deg, $bg, $bg 5px, mix($bg-shadow, $bg) 5px, mix($bg-shadow, $bg) 7px);
-  height: 123px;
+  height: 85px;
   overflow: hidden;
   &:hover .icons {
     opacity: 1;
@@ -81,8 +111,4 @@
 
 .hide-file {
   display: none;
-}
-
-.detail .editing {
-  padding: 10px;
 }

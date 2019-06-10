@@ -100,7 +100,7 @@ export class ImportListingComponent implements OnInit {
       }
     });
     if (failedImgs) {
-      this.snackbar.open('1 or more images failed: max image size is 2MB');
+      this.snackbar.open('1 or more images failed: max image size is 2 MB');
     }
     this.fileInput.value = '';
   }

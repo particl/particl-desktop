@@ -2,11 +2,11 @@
 
 <div class="row" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="30px">
 
-  <mat-form-field [formGroup]="import.form" class="full-width" fxFlex="1 1 25%">
+  <mat-form-field [formGroup]="import.form" class="full-width" fxFlex="1 1 30%">
     <ngx-mat-file-input formControlName="file" placeholder="Woocommerce export file" accept=".csv" (change)="emitClear()"></ngx-mat-file-input>
   </mat-form-field>
 
-  <div class="desc" fxFlex="1 1 75%">
+  <div class="desc" fxFlex="1 1 70%">
     <p>
       Load your Woocommerce product export file
     </p>
@@ -20,17 +20,17 @@
 
 <div class="row" fxLayout fxLayoutGap="30px">
 
-  <mat-form-field [formGroup]="import.form" class="full-width" fxFlex="1 1 25%">
+  <mat-form-field [formGroup]="import.form" class="full-width" fxFlex="1 1 30%">
     <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
           formControlName="currency_rate" placeholder="Currency rate" (change)="emitClear()" type="text">
   </mat-form-field>
 
-  <div class="desc" fxFlex="1 1 75%">
+  <div class="desc" fxFlex="1 1 70%">
     <p>
       Set static currency conversion rate (currency of your shop > PART)
     </p>
     <p class="widget-help">
-      Until we support fiat rates, you'll need to set a conversion rate manually. If you're selling for USD on your shop and USD/PART price is $5, enter "5". Keep in mind, that the price of your products won't reflect future PART price changes.
+      Until we support fiat rates, you'll need to set a conversion rate manually. If you're selling for USD on your shop and USD/PART price is $5, enter "0.2" (1 ÷ $5). Keep in mind, that the price of your products won't reflect future PART price changes.
     </p>
   </div>
 
