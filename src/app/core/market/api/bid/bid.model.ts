@@ -1,4 +1,4 @@
-import { Messages, ORDER_DATA, DateFormatter, PartoshiAmount } from 'app/core/util/utils';
+import { OrderData, DateFormatter, PartoshiAmount } from 'app/core/util/utils';
 import { Product } from './product.model';
 import { Listing } from '../listing/listing.model';
 
@@ -25,10 +25,6 @@ export class Bid extends Product {
     return this.order.ShippingAddress;
   }
 
-  get status(): string {
-    return Messages[this.allStatus].status;
-  }
-
   get added(): string {
     return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
   }
@@ -37,15 +33,10 @@ export class Bid extends Product {
     return new DateFormatter(new Date(this.updatedAt)).dateFormatter(false);
   }
 
-  get messages(): any {
-    // return Messages[this.allStatus][this.type];
-    return this.orderActivity;
-  }
-
   get orderActivity(): any {
-    const action = Object.keys(ORDER_DATA).find((key) => ORDER_DATA[key].orderStatus === this.allStatus);
+    const action = Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus);
     if (action) {
-      return ORDER_DATA[action][this.ordType];
+      return OrderData[action][this.ordType];
     }
     return {};
   }
@@ -70,9 +61,6 @@ export class Bid extends Product {
     return this.order.updatedAt;
   }
 
-  set listing(listing: Listing) {
-    this.order.listing = listing;
-  }
 
   get hash(): string {
     if (this.order.ListingItem && this.order.ListingItem.hash) {
@@ -88,9 +76,10 @@ export class Bid extends Product {
     return '';
   }
 
-  get listing(): Listing {
-    return this.order.listing;
+  get step(): string {
+    return (Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus) || '').replace('_', ' ').toLowerCase();
   }
+
 
   PricingInformation(country: string): any {
     const payment = this.order.ListingItem.PaymentInformation;

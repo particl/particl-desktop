@@ -323,7 +323,7 @@ export function dataURItoBlob(dataURI: string) {
   return new Blob([ab], {type: 'image/jpeg'});
 }
 
-export const ORDER_DATA = {
+export const OrderData = {
   'BIDDING': {
     filter: {
       query: 'MPA_BID',
@@ -376,7 +376,8 @@ export const ORDER_DATA = {
       text: 'Rejected',
       order: 2
     },
-    orderStatus: 'REJECTED',
+    from_action: 'REJECT',
+    orderStatus: 'BID_REJECTED',
     buy: {
       buttons: [
         {
@@ -408,7 +409,7 @@ export const ORDER_DATA = {
   }
 };
 
-export const Messages = {
+const OldMessages = {
   'BIDDED': {
     'buy': {
       'action_button': 'Waiting for Seller',

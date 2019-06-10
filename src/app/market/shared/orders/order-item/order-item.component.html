@@ -11,18 +11,18 @@
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
-      <div class="status {{ order?.status }} {{ order?.type }}" fxFlex="0 0 120px"><span class="dot"></span>{{ order?.status }}</div>
+      <div class="status {{ order?.step }} {{ order?.type }}" fxFlex="0 0 120px"><span class="dot"></span>{{ order?.step }}</div>
     </div>
   </mat-expansion-panel-header>
 
   <div class="status-info">
     <p>{{ orderActivity?.status_info }}</p>
-    <div *ngIf="order?.type === 'buy' && order?.status === 'shipping'" class="additional-shipping-info">
-      <p *ngIf="order?.listing?.memo">
+    <div *ngIf="order?.type === 'buy' && order?.step === 'shipping'" class="additional-shipping-info">
+      <p *ngIf="(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
-        <code class="more-info">{{ order?.listing?.memo}}</code>
+        <code class="more-info">{{ memo }}</code>
       </p>
-      <p *ngIf="!order?.listing?.memo">
+      <p *ngIf="!(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
         <em>No information provided</em>
       </p>

@@ -1,5 +1,5 @@
 import { Bid } from 'app/core/market/api/bid/bid.model';
-import { ORDER_DATA } from 'app/core/util/utils';
+import { OrderData } from 'app/core/util/utils';
 import { sortBy } from 'lodash';
 
 export class OrderFilter {
@@ -23,24 +23,26 @@ export class OrderFilter {
       filter: '',
       order: 0
     };
-    const itemKeys = Object.keys(ORDER_DATA);
+    const itemKeys = Object.keys(OrderData);
+    const newFilters: any[] = [];
     for (const key of itemKeys) {
-      const filterData = ORDER_DATA[key].filter || {};
+      const filterData = OrderData[key].filter || {};
       if (typeof filterData.text === 'string') {
-        this._filters.push({
+        newFilters.push({
           title: filterData.text,
           value: filterData.query,
           count: 0,
-          filter: ORDER_DATA[key].orderStatus || '',
+          filter: OrderData[key].orderStatus || '',
           order: filterData.order
         });
       }
       this._filters = [
         all,
-        ...(sortBy(this._filters, ['order']))
+        ...(sortBy(newFilters, ['order']))
       ];
     }
     this.setCounts(orders);
+    console.log('@@@@@ CREATED NEW ORDER FILTERS: ', this._filters);
   }
 
   private setCounts(orders: Bid[]) {

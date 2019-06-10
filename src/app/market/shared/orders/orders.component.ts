@@ -107,7 +107,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       !this.orders ||
       (this.orders.length !== newOrders.length) ||
       (_.differenceWith(this.orders, newOrders, (o1, o2) => {
-        return (o1.id === o2.id) && (o1.status === o2.status)
+        return (o1.id === o2.id) && (o1.allStatus === o2.allStatus)
       }).length)
     )
   }
