@@ -3,26 +3,40 @@
     <div class="container-block">
 
       <div class="subtitle">Import product file</div>
-      <mat-card [formGroup]="import.form">
-        {{import.description}}
-        <div *ngFor="let param of import.params" [ngSwitch]="param.type">
-          <mat-form-field *ngSwitchCase="'text'"
-                          [formGroup]="import.form">
-            <input matInput [formControlName]="param.name" [placeholder]="param.message" [type]="param.type" (change)="clearOldValues()">
-          </mat-form-field>
+      <mat-card [formGroup]="import.form" [ngSwitch]="import.id">
+        <ng-container *ngSwitchCase="'csv-import'">
+          <app-import-custom-ui-csv [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-csv>
+        </ng-container>
 
-          <mat-form-field *ngSwitchCase="'number'"
-                          [formGroup]="import.form">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
-                  [formControlName]="param.name" [placeholder]="param.message" (change)="clearOldValues()"
-                  type="text">
-          </mat-form-field>
+        <ng-container *ngSwitchCase="'woocommerce-import'">
+          <app-import-custom-ui-woocommerce [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-woocommerce>
+        </ng-container>
 
-          <mat-form-field *ngSwitchCase="'file'"
-                          [formGroup]="import.form">
-            <ngx-mat-file-input id="test" [formControlName]="param.name" [placeholder]="param.message" [accept]="param.fileType" (change)="clearOldValues()"></ngx-mat-file-input>
-          </mat-form-field>
-        </div>
+        <ng-container *ngSwitchCase="'ebay-testnet-scraper'">
+          <app-import-custom-ui-ebay-scraper [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-ebay-scraper>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          {{import.description}}
+          <div *ngFor="let param of import.params" [ngSwitch]="param.type">
+            <mat-form-field *ngSwitchCase="'text'"
+                            [formGroup]="import.form">
+              <input matInput [formControlName]="param.name" [placeholder]="param.message" [type]="param.type" (change)="clearOldValues()">
+            </mat-form-field>
+
+            <mat-form-field *ngSwitchCase="'number'"
+                            [formGroup]="import.form">
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
+                    [formControlName]="param.name" [placeholder]="param.message" (change)="clearOldValues()"
+                    type="text">
+            </mat-form-field>
+
+            <mat-form-field *ngSwitchCase="'file'"
+                            [formGroup]="import.form">
+              <ngx-mat-file-input [formControlName]="param.name" [placeholder]="param.message" [accept]="param.fileType" (change)="clearOldValues()"></ngx-mat-file-input>
+            </mat-form-field>
+          </div>
+        </ng-container>
     
         <span *ngIf="importError">{{ importError }}</span>
     

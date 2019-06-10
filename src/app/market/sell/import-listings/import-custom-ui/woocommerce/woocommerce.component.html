@@ -1,0 +1,12 @@
+{{import.description}}
+<div>
+  <mat-form-field [formGroup]="import.form">
+    <ngx-mat-file-input formControlName="file" placeholder="Woocommerce export file" accept=".csv" (change)="emitClear()"></ngx-mat-file-input>
+  </mat-form-field>
+</div>
+<div>
+  <mat-form-field [formGroup]="import.form">
+    <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
+          formControlName="currency_rate" placeholder="Currency rate" (change)="emitClear()" type="text">
+  </mat-form-field>
+</div>

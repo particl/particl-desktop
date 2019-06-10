@@ -1,0 +1,8 @@
+{{import.description}}
+<div>
+  <mat-form-field [formGroup]="import.form">
+    <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
+          formControlName="listings_to_scrape" placeholder="Number of products to scrape" (change)="emitClear()" type="text">
+  </mat-form-field>
+</div>
+  
