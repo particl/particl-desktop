@@ -445,7 +445,46 @@ export const OrderData = {
       status_info: 'Awaiting on buyer to lock funds in escrow'
     },
   },
+
+  'COMPLETE_ESCROW': {
+    filter: {
+      query: 'ESCROW_LOCKED',
+      text: 'Awaiting Escrow Lock',
+      order: 2
+    },
+    from_action: 'LOCK_ESCROW',
+    orderStatus: 'ESCROW_LOCKED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-date',
+          'text': 'Waiting for Seller',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Waiting on seller to complete escrow'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': 'Pay for your escrow',
+          'colour': 'primary',
+          'disabled': false,
+          'icon': 'part-check',
+          'text': 'Complete escrow',
+          'action': 'COMPLETE_ESCROW',
+          'primary': true
+        }
+      ],
+      status_info: 'Buyer has paid - please proceed to completing your escrow payment (this will lock the funds to escrow)'
+    },
+  },
 };
+
 
 const OldMessages = {
   'BIDDED': {

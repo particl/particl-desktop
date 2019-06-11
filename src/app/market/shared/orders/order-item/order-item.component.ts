@@ -141,8 +141,10 @@ export class OrderItemComponent implements OnInit {
           resp = this.acceptBid();
         } else if (action === 'REJECT') {
           resp = this.rejectBid();
-        } if (action === 'LOCK_ESCROW') {
+        } else if (action === 'LOCK_ESCROW') {
           resp = this.escrowLock(res);
+        } else if (action === 'COMPLETE_ESCROW') {
+          resp = this.escrowComplete();
         }
 
         if (resp) {
@@ -191,6 +193,12 @@ export class OrderItemComponent implements OnInit {
     const contactDetails = []; // TODO: check and use the data from the modal (contained in 'data')
     return this.bid.escrowLockCommand(this.order.OrderItem.id, contactDetails).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Payment made for order ${this.itemTitle}`);
+    });
+  }
+
+  private async escrowComplete(): Promise<void> {
+    return this.bid.escrowCompleteCommand(this.order.OrderItem.id).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Escrow has been completed for order ${this.itemTitle}`);
     });
   }
 
