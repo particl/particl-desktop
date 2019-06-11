@@ -2,12 +2,16 @@
 
 // ------ UI ------ //
 
-
 .subtitle {
   @extend %subtitle;
   &:first-of-type {
     margin-top: 0;
   }
+}
+
+.box-title {
+  @extend %box-title;
+  margin-top: 0;
 }
 
 
@@ -17,25 +21,6 @@
   margin-top: $header-main-height;
 }
 
-.mat-card {
-  // 1. step - Import file upload
-  &.import-file {
-  }
-}
-
-.tx-amount {
-  & > .big {
-    font-size: 20px;
-  }
-  & > .small {
-    font-size: 14px;
-  }
-  & > .point {
-    font-weight: bold;
-    margin: 0 2px;
-  }
-  & > .currency {
-    font-size: 17px;
-    margin-left: 0.4rem;
-  }
+.action-buttons {
+  margin-top: 32px;
 }
