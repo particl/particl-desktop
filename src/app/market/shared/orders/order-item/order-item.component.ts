@@ -120,9 +120,9 @@ export class OrderItemComponent implements OnInit {
         dialogRef = this.dialog.open(BidConfirmationModalComponent);
         dialogRef.componentInstance.bidItem = this.order;
         break;
-      case 'SHIPPING':
+      case 'SHIP_ITEM':
         dialogRef = this.dialog.open(ShippingComponent);
-        dialogRef.componentInstance.type = action.toLowerCase();
+        // dialogRef.componentInstance.type = action.toLowerCase();
         break;
       default:
         dialogRef = this.dialog.open(PlaceOrderComponent);
@@ -145,6 +145,10 @@ export class OrderItemComponent implements OnInit {
           resp = this.escrowLock(res);
         } else if (action === 'COMPLETE_ESCROW') {
           resp = this.escrowComplete();
+        } else if (action === 'SHIP_ITEM') {
+          resp = this.shipItem(res);
+        } else if (action === 'COMPLETE') {
+          resp = this.escrowRelease();
         }
 
         if (resp) {
@@ -176,19 +180,6 @@ export class OrderItemComponent implements OnInit {
     });
   }
 
-  escrowRelease(ordStatus: string) {
-    this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).pipe(take(1)).subscribe(res => {
-      this.snackbarService.open(`Escrow of Order ${this.itemTitle} has been released`);
-      this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
-      this.order = new Bid(this.order, this.order.type)
-      this.dialog.closeAll();
-    }, (error) => {
-      this.dialog.closeAll();
-      this.snackbarService.open(`${error}`);
-    });
-
-  }
-
   private async escrowLock(data: any): Promise<void> {
     const contactDetails = []; // TODO: check and use the data from the modal (contained in 'data')
     return this.bid.escrowLockCommand(this.order.OrderItem.id, contactDetails).pipe(take(1)).toPromise().then(() => {
@@ -199,6 +190,19 @@ export class OrderItemComponent implements OnInit {
   private async escrowComplete(): Promise<void> {
     return this.bid.escrowCompleteCommand(this.order.OrderItem.id).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Escrow has been completed for order ${this.itemTitle}`);
+    });
+  }
+
+  private async shipItem(data: any | string): Promise<void> {
+    const memo = typeof data === 'string' ? data : '';
+    return this.bid.shippingCommand(this.order.OrderItem.id, memo).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Escrow has been completed for order ${this.itemTitle}`);
+    });
+  }
+
+  private async escrowRelease(): Promise<void> {
+    return this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Escrow of order ${this.itemTitle} has been released`);
     });
   }
 

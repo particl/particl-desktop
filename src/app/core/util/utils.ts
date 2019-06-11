@@ -450,7 +450,7 @@ export const OrderData = {
     filter: {
       query: 'ESCROW_LOCKED',
       text: 'Awaiting Escrow Lock',
-      order: 2
+      order: 3
     },
     from_action: 'LOCK_ESCROW',
     orderStatus: 'ESCROW_LOCKED',
@@ -483,125 +483,239 @@ export const OrderData = {
       status_info: 'Buyer has paid - please proceed to completing your escrow payment (this will lock the funds to escrow)'
     },
   },
+
+  'SHIPMENT': {
+    filter: {
+      query: 'ESCROW_COMPLETED',
+      text: 'Escrow Locked',
+      order: 4
+    },
+    from_action: 'COMPLETE_ESCROW',
+    orderStatus: 'ESCROW_COMPLETED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': 'Shipment of item is pending',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-date',
+          'text': 'Waiting for Seller',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Funds locked in escrow, waiting for Seller to process order for shipping'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': 'Confirm that the order has been shipped to Buyer',
+          'colour': 'primary',
+          'disabled': false,
+          'icon': 'part-check',
+          'text': 'Mark as shipped',
+          'action': 'SHIP_ITEM',
+          'primary': true
+        }
+      ],
+      status_info: 'Order is ready to ship - when sent, mark order as shipped and await its delivery'
+    },
+  },
+
+  'DELIVERY': {
+    filter: {
+      query: 'SHIPPING',
+      text: 'Shipping',
+      order: 5
+    },
+    from_action: 'SHIP_ITEM',
+    orderStatus: 'SHIPPING',
+    buy: {
+      buttons: [
+        {
+          'tooltip': 'Confirm that you have received the order',
+          'colour': 'primary',
+          'disabled': false,
+          'icon': 'part-check',
+          'text': 'Mark as delivered',
+          'action': 'COMPLETE',
+          'primary': true
+        }
+      ],
+      status_info: 'Order has been shipped - when you receive it, mark it as delivered and the escrow funds will be released'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': 'Awaiting confirmation of successfull delivery by Bbyer',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-date',
+          'text': 'Waiting for delivery',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery'
+    },
+  },
+
+  'COMPLETE': {
+    filter: {
+      query: 'COMPLETE',
+      text: 'Complete',
+      order: 6
+    },
+    from_action: 'COMPLETE',
+    orderStatus: 'COMPLETE',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-check',
+          'text': 'Order Complete',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Successfully finalized order'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-check',
+          'text': 'Order Complete',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order delivery confirmed by Buyer - order successfully finalized'
+    }
+  }
 };
 
 
-const OldMessages = {
-  'BIDDED': {
-    'buy': {
-      'action_button': 'Waiting for Seller',
-      'tooltip': '',
-      'action_disabled': true,
-      'action_icon': 'part-date',
-      'allow_reject_order': false,
-      'status_info': 'Waiting for Seller to manually accept (or reject) your bid'
-    },
-    'sell': {
-      'action_button': 'Accept bid',
-      'tooltip': 'Approve this order and sell to this Buyer',
-      'action_icon': 'part-check',
-      'action_disabled': false,
-      'allow_reject_order': true,
-      'status_info': 'Buyer wants to purchase this item - approve or reject this order to continue'
-    },
-    'status' : 'bidding'
-  },
-  'REJECTED': {
-    'buy': {
-      'action_button': 'Order rejected',
-      'tooltip': '',
-      'action_disabled': true,
-      'action_icon': 'part-error',
-      'allow_reject_order': false,
-      'status_info': 'Seller rejected bid on this item, order has been cancelled (no money was spent)'
-    },
-    'sell': {
-      'action_button': 'Rejected order',
-      'tooltip': '',
-      'action_icon': 'part-error',
-      'action_disabled': true,
-      'allow_reject_order': false,
-      'status_info': 'You have rejected this bid, order has been cancelled'
-    },
-    'status' : 'rejected'
-  },
-  'AWAITING_ESCROW': {
-    'buy': {
-      'action_button': 'Make payment',
-      'tooltip': 'Pay for your order and escrow',
-      'action_icon': 'part-check',
-      'action_disabled': false,
-      'allow_reject_order': false,
-      'status_info': 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)'
-    },
-    'sell': {
-      'action_button': 'Waiting for Buyer',
-      'tooltip': 'Waiting for Buyer\'s Payment',
-      'action_icon': 'part-date',
-      'action_disabled': true,
-      'allow_reject_order': false,
-      'status_info': 'Waiting for Buyer to lock the payment into escrow'
-    },
-    'status' : 'awaiting'
-  },
-  'ESCROW_LOCKED': {
-    'buy': {
-      'action_button': 'Waiting for shipping',
-      'tooltip': '',
-      'action_icon': 'part-date',
-      'action_disabled': true,
-      'allow_reject_order': false,
-      'status_info': 'Funds locked in escrow, waiting for Seller to process order for shipping'
-    },
-    'sell': {
-      'action_button': 'Mark as shipped',
-      'tooltip': 'Confirm that the order has been shipped to Buyer',
-      'action_icon': 'part-check',
-      'action_disabled': false,
-      'allow_reject_order': false,
-      'status_info': `Buyer\'s funds are locked in escrow, order is ready to ship - when sent, Mark order as shipped and await its delivery`
-    },
-    'status' : 'escrow'
-  },
-  'SHIPPING': {
-    'buy': {
-      'action_button': 'Mark as delivered',
-      'tooltip': 'Confirm that you have received the order',
-      'action_icon': 'part-check',
-      'action_disabled': false,
-      'allow_reject_order': false,
-      'status_info': 'Order has been shipped - when you receive it, Mark it as delivered and the escrow funds will be released'
-    },
-    'sell': {
-      'action_button': 'Waiting for delivery',
-      'tooltip': 'Awaiting confirmation of successfull delivery by Buyer',
-      'action_icon': 'part-date',
-      'action_disabled': true,
-      'allow_reject_order': false,
-      'status_info': 'Order sent to Buyer, waiting for Buyer to confirm the delivery'
-    },
-    'status' : 'shipping'
-  },
-  'COMPLETE': {
-    'buy': {
-      'action_button': 'Order complete',
-      'tooltip': '',
-      'action_icon': 'part-check',
-      'action_disabled': true,
-      'allow_reject_order': false,
-      'status_info': 'Successfully finalized order'
-    },
-    'sell': {
-      'action_button': 'Order Complete',
-      'tooltip': '',
-      'action_icon': 'part-check',
-      'action_disabled': true,
-      'allow_reject_order': false,
-      'status_info': 'Order delivery confirmed by Buyer - order successfully finalized'
-    },
-    'status' : 'complete'
-  }
-}
+// const OldMessages = {
+//   'BIDDED': {
+//     'buy': {
+//       'action_button': 'Waiting for Seller',
+//       'tooltip': '',
+//       'action_disabled': true,
+//       'action_icon': 'part-date',
+//       'allow_reject_order': false,
+//       'status_info': 'Waiting for Seller to manually accept (or reject) your bid'
+//     },
+//     'sell': {
+//       'action_button': 'Accept bid',
+//       'tooltip': 'Approve this order and sell to this Buyer',
+//       'action_icon': 'part-check',
+//       'action_disabled': false,
+//       'allow_reject_order': true,
+//       'status_info': 'Buyer wants to purchase this item - approve or reject this order to continue'
+//     },
+//     'status' : 'bidding'
+//   },
+//   'REJECTED': {
+//     'buy': {
+//       'action_button': 'Order rejected',
+//       'tooltip': '',
+//       'action_disabled': true,
+//       'action_icon': 'part-error',
+//       'allow_reject_order': false,
+//       'status_info': 'Seller rejected bid on this item, order has been cancelled (no money was spent)'
+//     },
+//     'sell': {
+//       'action_button': 'Rejected order',
+//       'tooltip': '',
+//       'action_icon': 'part-error',
+//       'action_disabled': true,
+//       'allow_reject_order': false,
+//       'status_info': 'You have rejected this bid, order has been cancelled'
+//     },
+//     'status' : 'rejected'
+//   },
+//   'AWAITING_ESCROW': {
+//     'buy': {
+//       'action_button': 'Make payment',
+//       'tooltip': 'Pay for your order and escrow',
+//       'action_icon': 'part-check',
+//       'action_disabled': false,
+//       'allow_reject_order': false,
+//       'status_info': 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)'
+//     },
+//     'sell': {
+//       'action_button': 'Waiting for Buyer',
+//       'tooltip': 'Waiting for Buyer\'s Payment',
+//       'action_icon': 'part-date',
+//       'action_disabled': true,
+//       'allow_reject_order': false,
+//       'status_info': 'Waiting for Buyer to lock the payment into escrow'
+//     },
+//     'status' : 'awaiting'
+//   },
+//   'ESCROW_LOCKED': {
+//     'buy': {
+//       'action_button': 'Waiting for shipping',
+//       'tooltip': '',
+//       'action_icon': 'part-date',
+//       'action_disabled': true,
+//       'allow_reject_order': false,
+//       'status_info': 'Funds locked in escrow, waiting for Seller to process order for shipping'
+//     },
+//     'sell': {
+//       'action_button': 'Mark as shipped',
+//       'tooltip': 'Confirm that the order has been shipped to Buyer',
+//       'action_icon': 'part-check',
+//       'action_disabled': false,
+//       'allow_reject_order': false,
+//       'status_info': `Buyer\'s funds are locked in escrow, order is ready to ship - when sent, Mark order as shipped and await its delivery`
+//     },
+//     'status' : 'escrow'
+//   },
+//   'SHIPPING': {
+//     'buy': {
+//       'action_button': 'Mark as delivered',
+//       'tooltip': 'Confirm that you have received the order',
+//       'action_icon': 'part-check',
+//       'action_disabled': false,
+//       'allow_reject_order': false,
+//       'status_info': 'Order has been shipped - when you receive it, Mark it as delivered and the escrow funds will be released'
+//     },
+//     'sell': {
+//       'action_button': 'Waiting for delivery',
+//       'tooltip': 'Awaiting confirmation of successfull delivery by Buyer',
+//       'action_icon': 'part-date',
+//       'action_disabled': true,
+//       'allow_reject_order': false,
+//       'status_info': 'Order sent to Buyer, waiting for Buyer to confirm the delivery'
+//     },
+//     'status' : 'shipping'
+//   },
+//   'COMPLETE': {
+//     'buy': {
+//       'action_button': 'Order complete',
+//       'tooltip': '',
+//       'action_icon': 'part-check',
+//       'action_disabled': true,
+//       'allow_reject_order': false,
+//       'status_info': 'Successfully finalized order'
+//     },
+//     'sell': {
+//       'action_button': 'Order Complete',
+//       'tooltip': '',
+//       'action_icon': 'part-check',
+//       'action_disabled': true,
+//       'allow_reject_order': false,
+//       'status_info': 'Order delivery confirmed by Buyer - order successfully finalized'
+//     },
+//     'status' : 'complete'
+//   }
+// }
 
 
 export const isPrerelease = (release?: string): boolean => {
