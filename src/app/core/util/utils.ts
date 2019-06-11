@@ -374,7 +374,7 @@ export const OrderData = {
     filter: {
       query: 'MPA_REJECT',
       text: 'Rejected',
-      order: 2
+      order: 10
     },
     from_action: 'REJECT',
     orderStatus: 'BID_REJECTED',
@@ -406,7 +406,45 @@ export const OrderData = {
       ],
       status_info: 'You have rejected this bid, order has been cancelled'
     },
-  }
+  },
+
+  'AWAITING PAYMENT': {
+    filter: {
+      query: 'AWAITING_ESCROW',
+      text: 'Awaiting Payment',
+      order: 2
+    },
+    from_action: 'ACCEPT',
+    orderStatus: 'AWAITING_ESCROW',
+    buy: {
+      buttons: [
+        {
+          'tooltip': 'Pay for your order and escrow',
+          'colour': 'primary',
+          'disabled': false,
+          'icon': 'part-check',
+          'text': 'Make payment',
+          'action': 'LOCK_ESCROW',
+          'primary': true
+        }
+      ],
+      status_info: 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)'
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': 'Waiting for Buyer\'s Payment',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-date',
+          'text': 'Waiting for Buyer',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Awaiting on buyer to lock funds in escrow'
+    },
+  },
 };
 
 const OldMessages = {

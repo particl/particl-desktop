@@ -522,10 +522,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       (resp) => {
         return resp.fits;
       }
-    ).catch(err => {
-      // @TODO (zasmilingidiot 2019-05-31): added this to bypass current MP bug. Perform proper error handling response here.
-      return true;
-    });
+    );
   }
 
 

@@ -87,15 +87,18 @@ export class BidService {
     return this.market.call('escrow', params);
   }
 
-  escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
-    const params = ['lock', id, nonce, memo];
+  escrowLockCommand(id: number, contactInfo: string[]): Observable<any> {
+    const params = ['lock', id];
+    if (contactInfo.length) {
+      params.push(...contactInfo);
+    }
     return this.market.call('escrow', params);
   }
 
   errorHandle(error: any) {
     if (error.includes('unspent')) {
       error = errorType.unspent;
-    } else if (error.includes('broke')) {
+    } else if (error.includes('broke') && !error.toLowerCase().includes('something')) {
       error = errorType.broke;
     }
     return error;

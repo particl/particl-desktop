@@ -1,6 +1,5 @@
 import { OrderData, DateFormatter, PartoshiAmount } from 'app/core/util/utils';
 import { Product } from './product.model';
-import { Listing } from '../listing/listing.model';
 
 export class Bid extends Product {
   activeBuySell: boolean;

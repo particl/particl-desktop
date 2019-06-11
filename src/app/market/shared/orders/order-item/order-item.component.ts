@@ -69,6 +69,9 @@ export class OrderItemComponent implements OnInit {
     this.pricing.totalInt = price.total.particlStringInteger();
     this.pricing.totalFraction = price.total.particlStringFraction();
     this.orderActivity = this.order.orderActivity;
+
+    const imageList: any[] = (this.order.ListingItem.ItemInformation || {}).ItemImages || [];
+    this._featuredImage = new Image(imageList.length ? imageList[0] : { ItemImageDatas: [] });
   }
 
   get title(): string {
@@ -108,92 +111,60 @@ export class OrderItemComponent implements OnInit {
     }
   }
 
-  // Testing of all the scenarios
-  // order_action() {
-  //   switch (this.order.status) {
-  //     case 'bidding':
-  //       // run accept command for seller
-  //       if (this.order.type === 'sell') {
-  //         this.callBid('accept')
-  //       }
-  //       break;
-
-  //     case 'awaiting':
-  //       // Escrow lock call with popup
-  //       if (this.order.type === 'buy') {
-  //         this.openPaymentConfirmationModal();
-  //         // this.escrowLock();
-  //       }
-  //       break;
-
-  //     case 'escrow':
-  //       if (this.order.type === 'sell') {
-  //         this.callBid('shipping');
-  //       }
-  //       break;
-
-  //     case 'shipping':
-  //       // escrow release call with popup
-  //       if (this.order.type === 'buy') {
-  //         this.callBid('escrow');
-  //       }
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-  // }
-
   private callBid(action: string) {
-    const dialogRef = this.dialog.open(action === 'shipping' ? ShippingComponent : PlaceOrderComponent);
-    dialogRef.componentInstance.type = action.toLowerCase();
+
+    // Open appropriate confirmation modal
+    let dialogRef;
+    switch (action) {
+      case 'LOCK_ESCROW':
+        dialogRef = this.dialog.open(BidConfirmationModalComponent);
+        dialogRef.componentInstance.bidItem = this.order;
+        break;
+      case 'SHIPPING':
+        dialogRef = this.dialog.open(ShippingComponent);
+        dialogRef.componentInstance.type = action.toLowerCase();
+        break;
+      default:
+        dialogRef = this.dialog.open(PlaceOrderComponent);
+        dialogRef.componentInstance.type = action.toLowerCase();
+    }
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
-      this.trackNumber = res ? res : '';
-      this.checkForWallet(action);
-    });
-  }
 
-  checkForWallet(type: string) {
-    this.modals.unlock({timeout: 30}, (status) => {
-      this.openProcessingModal();
-      this.callAction(type);
-    });
-  }
+      // processing confirmed, take the correct action
 
-  private callAction(action: string) {
+      // unlock the wallet if applicable
+      this.modals.unlock({timeout: 30}, (status) => {
+        this.openProcessingModal();
 
-    let resp: Promise<void>;
-    if (action === 'accept') {
-      resp = this.acceptBid();
-    } else if (action === 'reject') {
-      resp = this.rejectBid();
-    } else {
-      // Escrow Release Command
-      this.escrowRelease(action);
-    }
-
-    if (resp) {
-      resp.then(() => {
-        const nextStep = Object.keys(OrderData).find((key) => OrderData[key].from_action === action);
-        if (nextStep) {
-          this.order.OrderItem.status = OrderData[nextStep].orderStatus;
+        let resp: Promise<void>;
+        if (action === 'ACCEPT') {
+          resp = this.acceptBid();
+        } else if (action === 'REJECT') {
+          resp = this.rejectBid();
+        } if (action === 'LOCK_ESCROW') {
+          resp = this.escrowLock(res);
         }
-        this.order = new Bid(this.order, this.order.type);
-        this.dialog.closeAll();
-      }).catch(error => {
-          this.dialog.closeAll();
-          this.snackbarService.open(`${error}`);
+
+        if (resp) {
+          resp.then(() => {
+            const nextStep = Object.keys(OrderData).find((key) => OrderData[key].from_action === action);
+            if (nextStep) {
+              this.order.OrderItem.status = OrderData[nextStep].orderStatus;
+            }
+            this.order = new Bid(this.order, this.order.type);
+            this.dialog.closeAll();
+          }).catch(error => {
+              this.dialog.closeAll();
+              this.snackbarService.open(`${error}`);
+          });
+        }
       });
-    }
+    });
   }
 
   private async acceptBid(): Promise<void> {
     return this.bid.acceptBidCommand(this.order.id).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Order accepted ${this.itemTitle}`);
-      // // Reload same order without calling api
-      // this.order.OrderItem.status = 'AWAITING_ESCROW';
-      // this.order = new Bid(this.order, this.order.type);
-      // this.dialog.closeAll();
     });
   }
 
@@ -216,29 +187,10 @@ export class OrderItemComponent implements OnInit {
 
   }
 
-  openPaymentConfirmationModal() {
-    // @TODO need to be sets trasaction fee.
-    const dialogRef = this.dialog.open(BidConfirmationModalComponent);
-
-    dialogRef.componentInstance.bidItem = this.order;
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // do other action after confirm
-      this.modals.unlock({timeout: 30}, (status) => {
-        this.openProcessingModal();
-        this.escrowLock()
-      });
-    });
-  }
-
-  escrowLock() {
-    // <orderItemId> <nonce> <memo> , @TODO send nonce ?
-    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').pipe(take(1)).subscribe(res => {
-      this.snackbarService.open(`Payment done for order ${this.itemTitle}`);
-      this.order.OrderItem.status = 'ESCROW_LOCKED';
-      this.order = new Bid(this.order, this.order.type);
-      this.dialog.closeAll();
-    }, (error) => {
-      this.snackbarService.open(`${error}`);
+  private async escrowLock(data: any): Promise<void> {
+    const contactDetails = []; // TODO: check and use the data from the modal (contained in 'data')
+    return this.bid.escrowLockCommand(this.order.OrderItem.id, contactDetails).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Payment made for order ${this.itemTitle}`);
     });
   }
 
