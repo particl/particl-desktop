@@ -2,7 +2,6 @@ import {
   Component, EventEmitter, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -18,7 +17,7 @@ import { Profile } from 'app/core/market/api/profile/profile.model';
 import { CartService } from 'app/core/market/api/cart/cart.service';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-// import { MarketService } from '../../../core/market/market.service';
+import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
 // import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
@@ -77,7 +76,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     // market
-    // private market: MarketService,
+    private market: MarketService,
     private profileService: ProfileService,
     private cartService: CartService,
     public countryList: CountryListService,
