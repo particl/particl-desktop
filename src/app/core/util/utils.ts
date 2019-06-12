@@ -408,7 +408,7 @@ export const OrderData = {
     },
   },
 
-  'AWAITING PAYMENT': {
+  'PAYMENT': {
     filter: {
       query: 'AWAITING_ESCROW',
       text: 'Awaiting Payment',
@@ -446,7 +446,7 @@ export const OrderData = {
     },
   },
 
-  'COMPLETE_ESCROW': {
+  'ESCROW': {
     filter: {
       query: 'ESCROW_LOCKED',
       text: 'Pending Escrow Lock',
