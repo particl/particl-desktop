@@ -1,4 +1,5 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
@@ -7,8 +8,9 @@ import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { OrderFilter } from './order-filter.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { take, takeWhile, map, distinctUntilChanged } from 'rxjs/operators';
+import { take, takeWhile, map, filter } from 'rxjs/operators';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 @Component({
   selector: 'app-orders',
@@ -33,73 +35,121 @@ export class OrdersComponent implements OnInit, OnDestroy {
     hideCompleted: false
   };
   timer: Observable<number>;
-  destroyed: boolean = false;
+  private destroyed: boolean = false;
 
   constructor(
-    private bid: BidService,
+    private bidService: BidService,
+    private dialog: MatDialog,
     private profileService: ProfileService,
     private _marketState: MarketStateService) { }
 
   ngOnInit() {
-    this.log.d('@@@@@@ created');
-
     this.profileService.default().pipe(
       take(1)
     ).subscribe(
       profile => {
-        this.log.d('@@@@@@ profile fetched success');
         this.profile = profile;
       },
       () => {},
       () => {
-        this.log.d('@@@@@@ init profile fetch complete');
         this._marketState.observe('bid')
-        .pipe(takeWhile(() => !this.destroyed))
         .pipe(
-          distinctUntilChanged((x, y: any) => _.isEqual(x, y)),
-          map((bids) => {
-            console.log('@@@@@ init subscription pipe map');
-            return this.extractBidsFromSource(bids);
-          })
+          takeWhile(() => !this.destroyed),
+          map((bids) => this.extractTypedBids(bids))
         )
-        .subscribe(bids => this.processBids(bids));
+        .subscribe( (bids) => {
+          console.log('@@@@@ processed Bids from source: ', bids);
+          const newFilters = new OrderFilter(bids);
+          const filterKeys = Object.keys(newFilters.filters);
+          let doUpdate = false;
+          for (const key of filterKeys) {
+            if (newFilters.filters[key].count !== this.order_filters.filters[key].count) {
+              doUpdate = true;
+              break;
+            }
+          }
+
+          if (doUpdate) {
+            console.log('@@@@@ needing to update orders');
+            this.order_filters = newFilters;
+            this.updateOrders(false);
+          }
+        });
       }
     );
   }
 
-  get isFiltering(): boolean {
-    return (this.filters.status !== '*') || (this.filters.search !== '');
+  get isFilteringExtra(): boolean {
+    return Object.getOwnPropertyNames(this.additionalFilter).filter(key => this.additionalFilter[key] === true).length > 0;
   }
 
-  get filteredOrders(): Bid[] {
-    if (this.additionalFilter.requiredAttention || this.additionalFilter.hideCompleted) {
-      return this.orders.filter(order => {
-        return (this.additionalFilter.requiredAttention ? order.activeBuySell : false) ||
-          (this.additionalFilter.hideCompleted ? order.status !== 'complete' : false);
-      });
-    }
-    return this.orders;
-  }
-
-  private processBids(bids: Bid[]) {
-    console.log(`@@@@@@@@ Order component: recieved orders from marketState subscription`);
-    if (!this.isFiltering && this.hasUpdatedOrders(bids)) {
-      this.order_filters = new OrderFilter(bids);
-    }
-    this.orders = bids;
-  }
-
-  private extractBidsFromSource(bids: Bid[]): Bid[] {
-    console.log('@@@@@@@@@ extractBidsFromSource GOT BIDS:', bids);
+  private extractTypedBids(bids: Bid[]): Bid[] {
     const actualBids: Bid[] = [];
-    bids.forEach(bid => {
-      if ( (this.type === 'sell' && bid.ListingItem && bid.ListingItem.seller  === this.profile.address) ||
-        (this.type === 'buy' && bid.bidder === this.profile.address) ) {
-          actualBids.push(new Bid(bid, this.type));
+    for (let ii = bids.length - 1; ii >= 0; --ii) {
+      if (!this.isOfCurrentType(bids[ii])) {
+        continue;
       }
-    })
-    console.log('@@@@@@@@@ extractBidsFromSource MAPPED REPONSE:', actualBids);
+      actualBids.push(new Bid(bids[ii], this.type));
+    }
     return actualBids;
+  }
+
+  private updateOrders(showModal: boolean = true) {
+    if (showModal) {
+      this.openProcessingModal();
+    }
+    const searchStr = String(this.filters.search);
+    const statusStr = String(this.filters.status);
+    this.bidService.search('MPA_BID', searchStr)
+      .pipe(
+        take(1),
+        map((bids: Bid[]) => this.extractTypedBids(bids)),
+        map( (bids: Bid[]) => {
+          const orderFilter = this.order_filters.filters.find((f) => f.value === statusStr);
+          if (orderFilter) {
+            const filterValue = orderFilter.filter;
+            if (statusStr === '*') {
+              return bids;
+            }
+
+            return bids.filter((bid) => bid.allStatus === filterValue);
+          }
+          return [];
+        })
+      )
+      .subscribe(
+        (bids) => {
+          console.log('@@@@@@@@@ updateOrders List received:', bids);
+          const totalCount = bids.length;
+          // additional filtering here:
+          if (this.isFilteringExtra) {
+            bids = bids.filter(
+              (bid) => {
+                return (this.additionalFilter.hideCompleted ? bid.step !== 'complete' : true) &&
+                        (this.additionalFilter.requiredAttention ? bid.activeBuySell : true)
+                }
+            );
+          }
+          // Only update if needed
+          if (this.hasUpdatedOrders(bids)) {
+            this.order_filters.setFilterCount(statusStr, totalCount);
+            this.orders = bids;
+          }
+        },
+        () => {},
+        () => {
+          this.dialog.closeAll();
+        }
+      );
+  }
+
+  private openProcessingModal() {
+    this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Please wait while we filter your items'
+      }
+    });
   }
 
   private hasUpdatedOrders(newOrders: Bid[]): boolean {
@@ -112,20 +162,18 @@ export class OrdersComponent implements OnInit, OnDestroy {
     )
   }
 
-  loadOrders(): void {
-    let observer$: Observable<any>;
-    if (this.isFiltering) {
-      observer$ = this.bid.search(this.filters.status, this.filters.search)
-    } else {
-      // Might as well use what is already available, instead of making an additional request
-      observer$ = this._marketState.observe('bid')
-    }
+  private isOfCurrentType(bid: any): boolean {
+    return (this.type === 'sell' && bid.ListingItem && bid.ListingItem.seller  === this.profile.address) ||
+      (this.type === 'buy' && bid.bidder === this.profile.address);
+  }
 
-    observer$.pipe(take(1))
-    .pipe(
-      map((bids) => this.extractBidsFromSource(bids))
-    )
-    .subscribe((bids) => this.processBids(bids));
+  loadOrders () {
+    this.updateOrders(true);
+  }
+
+  orderItemUpdated(update: any) {
+    console.log('@@@@@@ PROCESSING ORDER ITEM UPDATE EVENT');
+    this.updateOrders(true);
   }
 
   clearAllFilters(): void {
@@ -133,11 +181,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.filters.search = '';
     this.additionalFilter.requiredAttention = false;
     this.additionalFilter.hideCompleted = false;
-    this.loadOrders();
+    this.updateOrders(true);
   }
 
   ngOnDestroy() {
     this.destroyed = true;
-    this.log.d('@@@@@ destroyed');
   }
 }

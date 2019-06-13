@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Bid } from '../../../../core/market/api/bid/bid.model';
 import { BidService } from 'app/core/market/api/bid/bid.service';
@@ -10,6 +10,7 @@ import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmatio
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { take } from 'rxjs/operators';
 import { OrderData } from 'app/core/util/utils';
+import { Image } from 'app/core/market/api/template/image/image.model';
 
 @Component({
   selector: 'app-order-item',
@@ -18,6 +19,7 @@ import { OrderData } from 'app/core/util/utils';
 })
 export class OrderItemComponent implements OnInit {
 
+  @Output() onOrderUpdated: EventEmitter<any> = new EventEmitter<any>();
   @Input() order: Bid;
   trackNumber: string;
   country: string = '';
@@ -83,7 +85,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   get listingImage(): string {
-    return (this._featuredImage && this._featuredImage.thumbnail) || './assets/images/placeholder_1-1.jpg';
+    return (this._featuredImage && this._featuredImage.thumbnail) ? this._featuredImage.thumbnail : './assets/images/placeholder_1-1.jpg';
   }
 
   get primaryActions(): any[] {
@@ -154,11 +156,16 @@ export class OrderItemComponent implements OnInit {
         if (resp) {
           resp.then(() => {
             const nextStep = Object.keys(OrderData).find((key) => OrderData[key].from_action === action);
+            const prevStatus = String(this.order.OrderItem.status) || '';
+            const newStatus = String(OrderData[nextStep].orderStatus) || '';
             if (nextStep) {
-              this.order.OrderItem.status = OrderData[nextStep].orderStatus;
+              this.order.OrderItem.status = newStatus;
+              this.order = new Bid(this.order, this.order.type);
             }
-            this.order = new Bid(this.order, this.order.type);
             this.dialog.closeAll();
+            if (nextStep) {
+              this.onOrderUpdated.emit({prevStatus: prevStatus, newStatus: newStatus});
+            }
           }).catch(error => {
               this.dialog.closeAll();
               this.snackbarService.open(`${error}`);
@@ -207,7 +214,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   openProcessingModal() {
-    const dialog = this.dialog.open(ProcessingModalComponent, {
+    this.dialog.open(ProcessingModalComponent, {
       disableClose: true,
       data: {
         message: 'Please wait while your action is processed'

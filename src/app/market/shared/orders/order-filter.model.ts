@@ -4,16 +4,7 @@ import { sortBy } from 'lodash';
 
 export class OrderFilter {
 
-  private _filters: Array<any> = [
-    // { title: 'All orders',      value: '*',               count: 0 },
-    // { title: 'Bids',            value: 'BIDDED',          count: 0 },
-    // { title: 'Awaiting Escrow', value: 'AWAITING_ESCROW', count: 0 },
-    // { title: 'Escrow Pending',  value: 'ESCROW_PENDING',  count: 0 },
-    // { title: 'In escrow',       value: 'ESCROW_LOCKED',   count: 0 },
-    // { title: 'Shipping',        value: 'SHIPPING',        count: 0 },
-    // { title: 'Completed',       value: 'COMPLETE',        count: 0 },
-    // { title: 'Rejected',        value: 'MPA_REJECT',      count: 0 }
-  ];
+  private _filters: Array<any> = [];
 
   constructor(orders: Bid[]) {
     const all: any = {
@@ -42,7 +33,20 @@ export class OrderFilter {
       ];
     }
     this.setCounts(orders);
-    console.log('@@@@@ CREATED NEW ORDER FILTERS: ', this._filters);
+  }
+
+  setFilterCount(status: string, count: number) {
+    if (count < 0) {
+      return;
+    }
+    const filter = this.findFilter(status);
+    if (filter) {
+      filter.count = +count;
+    }
+  }
+
+  private findFilter(status: string): any|undefined {
+    return this._filters.find((f) => f.filter === status);
   }
 
   private setCounts(orders: Bid[]) {
