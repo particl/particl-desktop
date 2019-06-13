@@ -1,4 +1,5 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import './src/app/wallet/shared/_filter-sorting'; // filtering & sorting
 
 // ------ UI ------ //
 
@@ -27,4 +28,11 @@
 
 .table-full-width {
   width: 100%;
+}
+
+
+// ------ 1. SELECT IMPORT ------ //
+
+.select-import {
+  margin-top: 24px;
 }
