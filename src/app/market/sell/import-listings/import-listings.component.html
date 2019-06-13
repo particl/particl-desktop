@@ -1,4 +1,17 @@
-<mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg without-tab-bar" #stepper>
+<div class="page-intro">
+  <h1>Import Listings</h1>
+  <div class="content">
+    <p>
+      Already selling elsewhere? Do you want to import dozens of Listings at once? We've got you covered!<br>
+      Choose your preferred Product import method below, specify import settings and tweak the result.
+    </p>
+    <p class="widget-help">
+      Some of the attributes of imported products might be missing or lost during import (due to not standardized formats),<br>so you'll likely need to update few of them manually in 2nd step.
+    </p>
+  </div>
+</div><!-- .page-intro -->
+
+<mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
   <ng-template matStepperIcon="edit">
     <custom-icon>
@@ -17,9 +30,9 @@
   <mat-step [completed]="stepper.selectedIndex >= 1">
     <ng-template matStepLabel>Select Import</ng-template>
 
-      <div class="select-import" fxLayout fxLayoutGap="30px">
+      <div class="select-import" fxLayout fxLayoutGap="35px">
 
-        <div class="filter" fxFlex="0 0 250px">
+        <div class="filter" fxFlex="0 0 230px">
           <h2 class="subtitle">Select import source</h2>
           <mat-card class="filter-card">
             <mat-radio-group class="radio-group block-radio" [(ngModel)]="selectedImport">
