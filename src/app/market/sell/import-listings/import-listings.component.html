@@ -17,78 +17,72 @@
   <mat-step [completed]="stepper.selectedIndex >= 1">
     <ng-template matStepLabel>Select Import</ng-template>
 
-    <mat-tab-group (selectedTabChange)="tabChange($event);" animationDuration="0ms">
-      <mat-tab *ngFor="let import of filterImportsByNetwork" label="{{import.name}}">
+      <div class="select-import" fxLayout fxLayoutGap="30px">
 
-        <div class="select-import" fxLayout fxLayoutGap="30px">
+        <div class="filter" fxFlex="0 0 250px">
+          <h2 class="subtitle">Select import source</h2>
+          <mat-card class="filter-card">
+            <mat-radio-group class="radio-group block-radio" [(ngModel)]="selectedImport">
+              <mat-radio-button *ngFor="let import of filterImportsByNetwork" class="filter-option" 
+                                color="primary" [value]="import"
+                                (change)="radioChange($event)">{{ import.name }}</mat-radio-button>
+            </mat-radio-group>
+          </mat-card>
+        </div><!-- .filter-->
 
-          <div class="filter" fxFlex="0 0 250px">
-            <h2 class="subtitle">Select import source</h2>
-            <mat-card class="filter-card">
-              <mat-radio-group class="radio-group block-radio">
-                <mat-radio-button class="filter-option" color="primary">CSV file</mat-radio-button>
-                <mat-radio-button class="filter-option" color="primary">Woocommerce</mat-radio-button>
-                <mat-radio-button class="filter-option" color="primary">Ebay (testnet scraper)</mat-radio-button>
-              </mat-radio-group>
-            </mat-card>
-          </div><!-- .filter-->
-
-          <div class="import-config" fxFlex="0 1 100%">
-            <h2 class="subtitle">Import settings</h2>
-            <mat-card [formGroup]="import.form" [ngSwitch]="import.id" class="import-file">
-              <!-- Customized CSV UI -->
-              <ng-container *ngSwitchCase="'csv-import'">
-                <app-import-custom-ui-csv [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-csv>
-              </ng-container>
-      
-              <!-- Customized Woocommerce UI -->
-              <ng-container *ngSwitchCase="'woocommerce-import'">
-                <app-import-custom-ui-woocommerce [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-woocommerce>
-              </ng-container>
-      
-              <!-- Customized Ebay Scraper UI -->
-              <ng-container *ngSwitchCase="'ebay-testnet-scraper'">
-                <app-import-custom-ui-ebay-scraper [import]="import" (clear)="clearOldValues()"></app-import-custom-ui-ebay-scraper>
-              </ng-container>
-      
-              <!-- Dynamic Fallback UI -->
-              <ng-container *ngSwitchDefault>
-                <h3 class="box-title">{{import.description}}</h3>
-                <div *ngFor="let param of import.params" [ngSwitch]="param.type">
-                  <mat-form-field *ngSwitchCase="'text'"
-                                  [formGroup]="import.form">
-                    <input matInput [formControlName]="param.name" [placeholder]="param.message" [type]="param.type" (change)="clearOldValues()">
-                  </mat-form-field>
-      
-                  <mat-form-field *ngSwitchCase="'number'"
-                                  [formGroup]="import.form">
-                    <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
-                          [formControlName]="param.name" [placeholder]="param.message" (change)="clearOldValues()"
-                          type="text">
-                  </mat-form-field>
-      
-                  <mat-form-field *ngSwitchCase="'file'"
-                                  [formGroup]="import.form">
-                    <ngx-mat-file-input [formControlName]="param.name" [placeholder]="param.message" [accept]="param.fileType" (change)="clearOldValues()"></ngx-mat-file-input>
-                  </mat-form-field>
-                </div>
-              </ng-container>
-          
-              <span *ngIf="importError">{{ importError }}</span>
-            </mat-card>
+        <div class="import-config" fxFlex="0 1 100%" *ngIf="selectedImport">
+          <h2 class="subtitle">Import settings</h2>
+          <mat-card [formGroup]="selectedImport.form" [ngSwitch]="selectedImport.id" class="import-file">
+            <!-- Customized CSV UI -->
+            <ng-container *ngSwitchCase="'csv-import'">
+              <app-import-custom-ui-csv [import]="selectedImport" (clear)="clearOldValues()"></app-import-custom-ui-csv>
+            </ng-container>
     
-            <div class="action-buttons" fxLayoutAlign="end center" fxLayoutGap="8px">
-              <button mat-raised-button color="primary" [disabled]="!import.form.valid" (click)="importLoad(import)">
-                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-                Load
-              </button>
-            </div>
-          </div><!-- .import-config -->
+            <!-- Customized Woocommerce UI -->
+            <ng-container *ngSwitchCase="'woocommerce-import'">
+              <app-import-custom-ui-woocommerce [import]="selectedImport" (clear)="clearOldValues()"></app-import-custom-ui-woocommerce>
+            </ng-container>
+    
+            <!-- Customized Ebay Scraper UI -->
+            <ng-container *ngSwitchCase="'ebay-testnet-scraper'">
+              <app-import-custom-ui-ebay-scraper [import]="selectedImport" (clear)="clearOldValues()"></app-import-custom-ui-ebay-scraper>
+            </ng-container>
+    
+            <!-- Dynamic Fallback UI -->
+            <ng-container *ngSwitchDefault>
+              <h3 class="box-title">{{selectedImport.description}}</h3>
+              <div *ngFor="let param of selectedImport.params" [ngSwitch]="param.type">
+                <mat-form-field *ngSwitchCase="'text'"
+                                [formGroup]="selectedImport.form">
+                  <input matInput [formControlName]="param.name" [placeholder]="param.message" [type]="param.type" (change)="clearOldValues()">
+                </mat-form-field>
+    
+                <mat-form-field *ngSwitchCase="'number'"
+                                [formGroup]="selectedImport.form">
+                  <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
+                        [formControlName]="param.name" [placeholder]="param.message" (change)="clearOldValues()"
+                        type="text">
+                </mat-form-field>
+    
+                <mat-form-field *ngSwitchCase="'file'"
+                                [formGroup]="selectedImport.form">
+                  <ngx-mat-file-input [formControlName]="param.name" [placeholder]="param.message" [accept]="param.fileType" (change)="clearOldValues()"></ngx-mat-file-input>
+                </mat-form-field>
+              </div>
+            </ng-container>
+        
+            <span *ngIf="importError">{{ importError }}</span>
+          </mat-card>
+  
+          <div class="action-buttons" fxLayoutAlign="end center" fxLayoutGap="8px">
+            <button mat-raised-button color="primary" [disabled]="!selectedImport.form.valid" (click)="importLoad()">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+              Load
+            </button>
+          </div>
+        </div><!-- .import-config -->
 
-        </div><!-- .select-import -->
-
-      </mat-tab>
-    </mat-tab-group>
+      </div><!-- .select-import -->
   </mat-step>
 
 

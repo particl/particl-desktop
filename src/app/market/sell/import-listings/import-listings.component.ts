@@ -108,11 +108,12 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
         });
         i['form'] = new FormGroup(group);
       }
+
+      this.selectedImport = this.availableImports[0];
     });
   }
 
-  async importLoad(importDef: any) {
-    this.selectedImport = importDef;
+  async importLoad() {
 
     const loadDialog = this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
@@ -123,17 +124,17 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
 
     this.clearOldValues();
 
-    importDef.params = importDef.params.map(param => {
+    this.selectedImport.params = this.selectedImport.params.map(param => {
       if (param.type === 'file') {
-        param['value'] = importDef.form.value[param.name].files[0].path;
+        param['value'] = this.selectedImport.form.value[param.name].files[0].path;
       } else {
-        param['value'] = importDef.form.value[param.name];
+        param['value'] = this.selectedImport.form.value[param.name];
       }
 
       return param;
     });
 
-    const importParams = _.pick(importDef, ['id', 'params']);
+    const importParams = _.pick(this.selectedImport, ['id', 'params']);
 
     this._marketImportService.loadListingsFromImporter(importParams).subscribe(
       (loadData) => {
@@ -282,10 +283,10 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     this.selectedCountry = country;
   }
 
-  tabChange(tab: any) {
+  radioChange(event: any) {
     this.clearOldValues();
 
-    this.availableImports[tab.index].form.reset();
+    event.value.form.reset();
   }
 
   numericValidator(event: any) {
