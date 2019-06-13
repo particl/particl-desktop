@@ -237,7 +237,7 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
             setTimeout(async() => {
               this.listings = data.result
 
-              publishingDialog.componentInstance.data.message = 'Hang on, we are busy updating the lisitng cache';
+              publishingDialog.componentInstance.data.message = 'Hang on, we are busy updating the listing cache';
 
               for (let index = this.listings.length - 1; index >= 0; index--) {
                 const listing = this.listings[index];
@@ -245,17 +245,11 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
                 if (listing.id) {
                   const template = await this._template.get(listing.id, false).toPromise();
                   this._listingCache.posting(template);
-
-                  this.listings.splice(index, 1);
                 }
               }
 
               this._dialog.closeAll();
-
-              // If all were uploaded without error, redirect to sell > listings
-              if (!_.find(this.listings, (l) => l.publish && l.validationError)) {
-                this._router.navigate(['/wallet/main/market/sell']);
-              }
+              this._router.navigate(['/wallet/main/market/sell']);
             }, 1);
           }
         },
