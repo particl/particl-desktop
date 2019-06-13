@@ -177,7 +177,7 @@
     "ngx-material-file-input": "^1.1.1",
     "node-unzip-2": "^0.2.1",
     "particl-marketplace": "^0.0.69",
-    "particl-market-import-core": "^0.0.1",
+    "particl-market-import-core": "^0.0.2",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",

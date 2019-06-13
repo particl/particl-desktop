@@ -8,6 +8,10 @@ $listing-size: 75px;
     min-height: $listing-size !important;
     max-height: $listing-size !important;
   }
+
+  .detail.editing {
+    color: $text; // fix color inheritance from original component
+  }
 }
 .list-item {
   .header-wrapper {
@@ -16,12 +20,6 @@ $listing-size: 75px;
       max-height: $listing-size;
       height: $listing-size;
     }
-  }
-}
-
-.listing {
-  .detail.editing {
-    color: $text; // fix color inheritance from original component
   }
 }
 

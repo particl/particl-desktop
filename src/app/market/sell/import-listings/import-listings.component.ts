@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { MatStepper } from '@angular/material';
 
 import { isMainnetRelease, Amount } from 'app/core/util/utils';
 import { MarketImportService } from 'app/core/market/market-import/market-import.service';
 
-import * as _ from 'lodash';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { Country } from 'app/core/market/api/countrylist/country.model';
@@ -13,6 +14,9 @@ import { ProcessingModalComponent } from 'app/modals/processing-modal/processing
 import { MatDialog } from '@angular/material';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { TemplateService } from 'app/core/market/api/template/template.service';
+import { Router } from '@angular/router';
+
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-import-listings',
@@ -21,7 +25,9 @@ import { TemplateService } from 'app/core/market/api/template/template.service';
 })
 export class ImportListingsComponent implements OnInit, OnDestroy {
 
-  // public selectedImport: any;
+  /* Stepper stuff */
+  @ViewChild('stepper') stepper: MatStepper;
+
   public importError: string;
   public availableImports: any[] = [];
   public listings: any[] = [];
@@ -41,15 +47,35 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     { title: '3 weeks', value: 21, estimateFee: new Amount(0), isDisabled: true },
     { title: '4 weeks', value: 28, estimateFee: new Amount(0), isDisabled: true }
   ];
+  public selectedImport: any;
   public selectedExpiration: number;
   public selectedCountry: Country;
   public currentestimateFee: Amount = null;
   public network: string = isMainnetRelease() ? 'mainnet' : 'testnet';
 
-  public paramForm: FormGroup;
-
-  get filterByNetwork() {
+  get filterImportsByNetwork() {
     return this.availableImports.filter( x => x.networks.indexOf(this.network) > -1);
+  }
+
+  get filterListingsByPublished() {
+    return this.listings.filter( l => l.publish );
+  }
+
+  get canEstimate() {
+    return this.selectedCountry && this.selectedExpiration;
+  }
+
+  get hasValidationError() {
+    return (this.listings.length > 0 &&
+      _.find(this.listings, x => x.publish && x.validationError)
+    );
+  }
+
+  get canShip() {
+    return (this.listings.length > 0 &&
+      _.find(this.listings, x => x.publish) &&
+      !_.find(this.listings, x => x.publish && x.validationError)
+    );
   }
 
   get canPublish() {
@@ -66,6 +92,7 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     private _template: TemplateService,
     private _listingCache: PostListingCacheService,
+    private _router: Router,
     public countryList: CountryListService
   ) {
     this._marketImportService.getImportConfig()
@@ -85,6 +112,8 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
   }
 
   async importLoad(importDef: any) {
+    this.selectedImport = importDef;
+
     const loadDialog = this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
       data: {
@@ -122,6 +151,8 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
                 setTimeout(() => this.listings = data.result, 1);
 
                 this._dialog.closeAll();
+
+                this.nextStep();
               }
             },
             (error) => {
@@ -156,13 +187,23 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
             setTimeout(() => {
               this.listings = data.result;
               let fee = 0;
-              for (const listing of this.listings) {
-                if (listing.publish) {
-                  fee += listing.fee;
+
+              if (this.hasValidationError) {
+                this._dialog.closeAll();
+                this._modals.showAlert(
+                  'There was 1 or more errors estimating the fee for the listings, please go back to review the errors.',
+                  'Estimate Error'
+                );
+              } else {
+                for (const listing of this.listings) {
+                  if (listing.publish) {
+                    fee += listing.fee;
+                  }
                 }
+                this.currentestimateFee = new Amount(fee);
+                this._dialog.closeAll();
+                this.nextStep();
               }
-              this.currentestimateFee = new Amount(fee);
-              this._dialog.closeAll();
             }, 1);
 
             this._rpc.call('walletlock').toPromise().then(() => {
@@ -208,7 +249,13 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
                   this.listings.splice(index, 1);
                 }
               }
+
               this._dialog.closeAll();
+
+              // If all were uploaded without error, redirect to sell > listings
+              if (!_.find(this.listings, (l) => l.publish && l.validationError)) {
+                this._router.navigate(['/wallet/main/market/sell']);
+              }
             }, 1);
           }
         },
@@ -218,6 +265,11 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
         }
       );
     });
+  }
+
+  nextStep() {
+    this.stepper.steps.toArray()[this.stepper.selectedIndex].completed = true;
+    this.stepper.next();
   }
 
   private clearOldValues() {

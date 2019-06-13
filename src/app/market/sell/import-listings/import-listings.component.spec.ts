@@ -1,6 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { CoreModule, BlockStatusService, PeerService } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
@@ -23,11 +24,12 @@ describe('ImportListingsComponent', () => {
         ImportListingsComponent
       ],
       imports: [
+        RouterTestingModule,
+        BrowserAnimationsModule,
         CoreUiModule.forRoot(),
         CoreModule.forRoot(),
         MarketModule.forRoot(),
         ModalsModule.forRoot(),
-        BrowserAnimationsModule,
       ],
       providers: [
         { provide: RpcStateService, useClass: RpcStateServiceMock },

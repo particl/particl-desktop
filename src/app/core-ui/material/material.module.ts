@@ -10,7 +10,8 @@ import {
   MatSnackBarModule, MatTabsModule, MatToolbarModule, MatRadioModule, MatInputModule,
   MatTooltipModule,
   MatSelectModule, MatPaginatorModule, MatProgressSpinnerModule, MatDialogModule,
-  MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule
+  MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule,
+  MatTableModule
 } from '@angular/material';
 
 
@@ -54,7 +55,8 @@ import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/m
     MatStepperModule,
     MatSlideToggleModule,
     MatAutocompleteModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTableModule
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -87,7 +89,8 @@ import { MatOtpGroupSelectSearchComponent } from './mat-otpgroup-select-search/m
     MatAutocompleteModule,
     MatButtonToggleModule,
     MatSelectSearchComponent,
-    MatOtpGroupSelectSearchComponent
+    MatOtpGroupSelectSearchComponent,
+    MatTableModule
   ],
   declarations: [
     MatSelectSearchComponent,
