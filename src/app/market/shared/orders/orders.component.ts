@@ -38,6 +38,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   public orders: Bid[];
   public profile: any = {};
   public order_filters: OrderFilter = new OrderFilter([]);
+  private isProcessing: boolean = false;
 
   filters: any = {
     status: '*',
@@ -82,7 +83,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
             }
           }
 
-          if (doUpdate) {
+          console.log('@@@@@@@@@ SOURCE CALL: isProcessing:', this.isProcessing);
+          if (!this.isProcessing && doUpdate) {
             console.log('@@@@@ needing to update orders');
             this.order_filters = newFilters;
             this.updateOrders(false);
@@ -108,6 +110,10 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   private updateOrders(showModal: boolean = true) {
+    if (this.isProcessing) {
+      return;
+    }
+    this.isProcessing = true;
     if (showModal) {
       this.openProcessingModal();
     }
@@ -133,6 +139,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       .subscribe(
         (bids) => {
           console.log('@@@@@@@@@ updateOrders List received:', bids);
+          console.log('@@@@@@@@@ UPDATE ORDERS: isProcessing:', this.isProcessing);
           const totalCount = bids.length;
           // additional filtering here:
           if (this.isFilteringExtra) {
@@ -152,6 +159,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
         () => {},
         () => {
           this.dialog.closeAll();
+          this.isProcessing = false;
         }
       );
   }
