@@ -15,6 +15,11 @@
   margin-top: 0;
 }
 
+p.info {
+  margin-bottom: 0;
+  background: rgba($secondary, 0.1);
+}
+
 
 // ------ LAYOUT ------ //
 
@@ -24,7 +29,11 @@
 }
 
 .mat-stepper-horizontal {
-  padding: 11px;
+  padding: 11px; // TODO: unify with Cart styles?
+}
+
+.stepper-content {
+  margin-top: 24px; // margin between stepper "tabs" and content
 }
 
 .action-buttons {
@@ -33,11 +42,4 @@
 
 .table-full-width {
   width: 100%;
-}
-
-
-// ------ 1. SELECT IMPORT ------ //
-
-.select-import {
-  margin-top: 24px;
 }
