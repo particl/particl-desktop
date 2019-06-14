@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CountBadgeComponent } from './count-badge.component';
 
-fdescribe('CountBadgeComponent', () => {
+describe('CountBadgeComponent', () => {
   let component: CountBadgeComponent;
   let fixture: ComponentFixture<CountBadgeComponent>;
 
