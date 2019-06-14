@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
 import { Listing } from 'app/core/market/api/listing/listing.model';
@@ -14,6 +14,7 @@ import { take } from 'rxjs/operators';
 })
 export class DeleteListingComponent implements OnInit {
 
+  @Output() onDelete: EventEmitter<string> = new EventEmitter<string>();
   public templateToRemove: Template;
 
   constructor(
@@ -27,7 +28,10 @@ export class DeleteListingComponent implements OnInit {
 
   remove() {
     this.template.remove(this.templateToRemove.id).pipe(take(1)).subscribe(
-      success => this.snackbar.open('Successfully removed listing!'),
+      success => {
+        this.snackbar.open('Successfully removed listing!');
+        this.onDelete.emit();
+      },
       error => this.snackbar.open(error),
       () => this.dialogRef.close()
     )

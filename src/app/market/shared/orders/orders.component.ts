@@ -12,6 +12,19 @@ import { take, takeWhile, map, filter } from 'rxjs/operators';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
+/*
+  TODO (zaSmilingIdiot 2019-06-13):
+  It is overtly difficult to reason about any of this component's state at any given time. There's far too much
+    potentially changing state at any point in time. This smells like a bad architectural setup. Or wait...
+  I've updated it to to at least function slightly better, but even this is more a bandaid:
+    the bandaid needs to be replaced with a bandage, and then the whole component, services, child-components, etc
+    needs to be replaced. With a proper implementation.
+  A proper implementation should consider that bid lists of length 100, 1000 or even 10000 may be returned.
+    (consider a seller with 10 items, and 100 bids received per item as a simple example).
+  Probably should do this over. Paginated results, not yanking the current expanded order item out from underneath the user
+    while they are busy looking at it, just because the orders updated. Stupid things like this...
+*/
+
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
