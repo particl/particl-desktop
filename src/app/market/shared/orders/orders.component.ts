@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
 import { BidService } from 'app/core/market/api/bid/bid.service';
@@ -22,7 +22,7 @@ import { ProcessingModalComponent } from 'app/modals/processing-modal/processing
   A proper implementation should consider that bid lists of length 100, 1000 or even 10000 may be returned.
     (consider a seller with 10 items, and 100 bids received per item as a simple example).
   Probably should do this over. Paginated results, not yanking the current expanded order item out from underneath the user
-    while they are busy looking at it, just because the orders updated. Stupid things like this...
+    while they are busy looking at it, just because the orders updated. Stupid things like this can be done alot better...
 */
 
 @Component({
@@ -39,6 +39,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   public profile: any = {};
   public order_filters: OrderFilter = new OrderFilter([]);
   private isProcessing: boolean = false;
+  private request$: Subscription;
 
   filters: any = {
     status: '*',
@@ -48,7 +49,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
     requiredAttention: false,
     hideCompleted: false
   };
-  timer: Observable<number>;
   private destroyed: boolean = false;
 
   constructor(
@@ -110,16 +110,25 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   private updateOrders(showModal: boolean = true) {
-    if (this.isProcessing) {
-      return;
-    }
+    console.log('@@@@@@@@@ updateOrders called');
     this.isProcessing = true;
+    const searchStr = String(this.filters.search);
+    const statusStr = String(this.filters.status);
+
     if (showModal) {
       this.openProcessingModal();
     }
-    const searchStr = String(this.filters.search);
-    const statusStr = String(this.filters.status);
-    this.bidService.search('MPA_BID', searchStr)
+
+    if (this.request$ !== null) {
+      console.log('@@@@ request$ is not null... checking subscription status:', this.request$.closed);
+      if (!this.request$.closed) {
+        console.log('@@@@ request$ is not closed... attempting to unsubscribe');
+        try {
+          this.request$.unsubscribe();
+        } catch (err) {}
+      }
+    }
+    this.request$ = this.bidService.search('MPA_BID', searchStr)
       .pipe(
         take(1),
         map((bids: Bid[]) => this.extractTypedBids(bids)),
@@ -135,8 +144,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           }
           return [];
         })
-      )
-      .subscribe(
+      ).subscribe(
         (bids) => {
           console.log('@@@@@@@@@ updateOrders List received:', bids);
           console.log('@@@@@@@@@ UPDATE ORDERS: isProcessing:', this.isProcessing);
@@ -152,6 +160,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           }
           // Only update if needed
           if (this.hasUpdatedOrders(bids)) {
+            console.log('@@@@@@@@@ UPDATE ORDERS: hasUpdatedOrders = true:');
             this.order_filters.setFilterCount(statusStr, totalCount);
             this.orders = bids;
           }
@@ -168,12 +177,15 @@ export class OrdersComponent implements OnInit, OnDestroy {
     this.dialog.open(ProcessingModalComponent, {
       disableClose: true,
       data: {
-        message: 'Please wait while we filter your items'
+        message: 'Please wait while your items are updated'
       }
     });
   }
 
   private hasUpdatedOrders(newOrders: Bid[]): boolean {
+    console.log('@@@@@ hasUpdatedOrders: differenceWith check:', _.differenceWith(this.orders, newOrders, (o1, o2) => {
+      return (o1.id === o2.id) && (o1.allStatus === o2.allStatus)
+    }).length);
     return (
       !this.orders ||
       (this.orders.length !== newOrders.length) ||
@@ -207,5 +219,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    try {
+      this.request$.unsubscribe();
+    } catch (err) {}
   }
 }

@@ -161,6 +161,7 @@ export class OrderItemComponent implements OnInit {
             if (nextStep) {
               this.order.OrderItem.status = newStatus;
               this.order = new Bid(this.order, this.order.type);
+              this.orderActivity = this.order.orderActivity;
             }
             this.dialog.closeAll();
             if (nextStep) {
