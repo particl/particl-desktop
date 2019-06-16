@@ -72,7 +72,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
           map((bids) => this.extractTypedBids(bids))
         )
         .subscribe( (bids) => {
-          console.log('@@@@@ processed Bids from source: ', bids);
           const newFilters = new OrderFilter(bids);
           const filterKeys = Object.keys(newFilters.filters);
           let doUpdate = false;
@@ -83,9 +82,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
             }
           }
 
-          console.log('@@@@@@@@@ SOURCE CALL: isProcessing:', this.isProcessing);
           if (!this.isProcessing && doUpdate) {
-            console.log('@@@@@ needing to update orders');
             this.order_filters = newFilters;
             this.updateOrders(false);
           }
@@ -110,7 +107,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   private updateOrders(showModal: boolean = true) {
-    console.log('@@@@@@@@@ updateOrders called');
     this.isProcessing = true;
     const searchStr = String(this.filters.search);
     const statusStr = String(this.filters.status);
@@ -119,14 +115,8 @@ export class OrdersComponent implements OnInit, OnDestroy {
       this.openProcessingModal();
     }
 
-    if (this.request$ !== null) {
-      console.log('@@@@ request$ is not null... checking subscription status:', this.request$.closed);
-      if (!this.request$.closed) {
-        console.log('@@@@ request$ is not closed... attempting to unsubscribe');
-        try {
-          this.request$.unsubscribe();
-        } catch (err) {}
-      }
+    if (!_.isNil(this.request$)) {
+      this.request$.unsubscribe();
     }
     this.request$ = this.bidService.search('MPA_BID', searchStr)
       .pipe(
@@ -136,7 +126,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           const orderFilter = this.order_filters.filters.find((f) => f.value === statusStr);
           if (orderFilter) {
             const filterValue = orderFilter.filter;
-            if (statusStr === '*') {
+            if (statusStr === (this.order_filters.filters[0] || {}).value) {
               return bids;
             }
 
@@ -146,8 +136,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
         })
       ).subscribe(
         (bids) => {
-          console.log('@@@@@@@@@ updateOrders List received:', bids);
-          console.log('@@@@@@@@@ UPDATE ORDERS: isProcessing:', this.isProcessing);
           const totalCount = bids.length;
           // additional filtering here:
           if (this.isFilteringExtra) {
@@ -160,8 +148,11 @@ export class OrdersComponent implements OnInit, OnDestroy {
           }
           // Only update if needed
           if (this.hasUpdatedOrders(bids)) {
-            console.log('@@@@@@@@@ UPDATE ORDERS: hasUpdatedOrders = true:');
-            this.order_filters.setFilterCount(statusStr, totalCount);
+            if (statusStr === (this.order_filters.filters[0] || {}).value) {
+              this.order_filters = new OrderFilter(bids);
+            } else {
+              this.order_filters.setFilterCount(statusStr, totalCount);
+            }
             this.orders = bids;
           }
         },
@@ -183,9 +174,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   private hasUpdatedOrders(newOrders: Bid[]): boolean {
-    console.log('@@@@@ hasUpdatedOrders: differenceWith check:', _.differenceWith(this.orders, newOrders, (o1, o2) => {
-      return (o1.id === o2.id) && (o1.allStatus === o2.allStatus)
-    }).length);
     return (
       !this.orders ||
       (this.orders.length !== newOrders.length) ||
@@ -205,7 +193,6 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   orderItemUpdated(update: any) {
-    console.log('@@@@@@ PROCESSING ORDER ITEM UPDATE EVENT');
     this.updateOrders(true);
   }
 

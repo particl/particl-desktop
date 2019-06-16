@@ -48,7 +48,6 @@ export class OrderItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log('@@@@@@ GOT ORDER: ', this.order);
     if (!this.order) {
       return;
     }
@@ -58,7 +57,17 @@ export class OrderItemComponent implements OnInit {
       && (typeof this.order.ListingItem.ItemInformation.title === 'string') ?
       this.order.ListingItem.ItemInformation.title : '';
 
-    this.purchaseMemo = this.order.ListingItem && this.order.ListingItem.memo ? this.order.ListingItem.memo : this.purchaseMemo;
+    let _memo = '';
+    if (this.order.OrderOrder && Object.prototype.toString.call(this.order.OrderOrder.ChildBids) === "[object Array]" ) {
+      const childBid = this.order.OrderOrder.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
+      if (childBid) {
+        const memoDatas = childBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
+        if (memoDatas) {
+          _memo = String(memoDatas.value);
+        }
+      }
+    }
+    this.purchaseMemo = _memo;
 
     const price = this.order.PricingInformation(this.country);
     this.pricing.separator = price.base.particlStringSep();
@@ -103,7 +112,6 @@ export class OrderItemComponent implements OnInit {
   }
 
   executeAction(actionType: string) {
-    console.log('@@@@@ @ executeAction(): ', actionType);
     const valid = actionType &&
       this.orderActivity.buttons &&
       (this.orderActivity.buttons.findIndex((button: any) => !button.disabled && (button.action === actionType) ) !== -1);

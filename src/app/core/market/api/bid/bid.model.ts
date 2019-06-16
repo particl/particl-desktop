@@ -44,6 +44,10 @@ export class Bid extends Product {
     return this.order.OrderItem;
   }
 
+  get OrderOrder(): any {
+    return this.order.order;
+  }
+
   get ListingItem(): any {
     return this.order.ListingItem;
   }
