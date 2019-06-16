@@ -20,7 +20,6 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
-// import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/market-place-order/place-order.component';
@@ -71,7 +70,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     private router: Router,
     // core
     private snackbarService: SnackbarService,
-    // private rpcState: RpcStateService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
@@ -183,7 +181,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
     this.country = this.shippingFormGroup.value.country || '';
-    // this.allowGoingBack();
     this.storeCache();
   }
 
@@ -386,10 +383,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.cache.address.id = this.selectedAddress.id
     }
   }
-
-  // allowGoingBack() {
-  //   this.stepper.linear = false;
-  // }
 
   openListing(listing: any) {
     if (!this.checkExpired(listing)) {

@@ -72,6 +72,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           map((bids) => this.extractTypedBids(bids))
         )
         .subscribe( (bids) => {
+          bids = this.doAdditionalBidFiltering(bids);
           const newFilters = new OrderFilter(bids);
           const filterKeys = Object.keys(newFilters.filters);
           let doUpdate = false;
@@ -138,14 +139,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
         (bids) => {
           const totalCount = bids.length;
           // additional filtering here:
-          if (this.isFilteringExtra) {
-            bids = bids.filter(
-              (bid) => {
-                return (this.additionalFilter.hideCompleted ? bid.step !== 'complete' : true) &&
-                        (this.additionalFilter.requiredAttention ? bid.activeBuySell : true)
-                }
-            );
-          }
+          bids = this.doAdditionalBidFiltering(bids);
           // Only update if needed
           if (this.hasUpdatedOrders(bids)) {
             if (statusStr === (this.order_filters.filters[0] || {}).value) {
@@ -162,6 +156,21 @@ export class OrdersComponent implements OnInit, OnDestroy {
           this.isProcessing = false;
         }
       );
+  }
+
+  private doAdditionalBidFiltering(bids: Bid[]): Bid[] {
+    let filteredBids: Bid[];
+    if (this.isFilteringExtra) {
+      filteredBids = bids.filter(
+        (bid) => {
+          return (this.additionalFilter.hideCompleted ? bid.step !== 'complete' : true) &&
+                  (this.additionalFilter.requiredAttention ? bid.activeBuySell : true)
+          }
+      );
+    } else {
+      filteredBids = bids;
+    }
+    return filteredBids;
   }
 
   private openProcessingModal() {
