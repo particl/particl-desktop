@@ -58,7 +58,7 @@ export class OrderItemComponent implements OnInit {
       this.order.ListingItem.ItemInformation.title : '';
 
     let _memo = '';
-    if (this.order.OrderOrder && Object.prototype.toString.call(this.order.OrderOrder.ChildBids) === "[object Array]" ) {
+    if (this.order.OrderOrder && Object.prototype.toString.call(this.order.OrderOrder.ChildBids) === '[object Array]' ) {
       const childBid = this.order.OrderOrder.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
       if (childBid) {
         const memoDatas = childBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
