@@ -2,70 +2,58 @@
 import * as _ from 'lodash';
 
 import { Listing } from '../listing/listing.model';
-import { Amount } from 'app/core/util/utils';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 export class Cart {
 
-  public shoppingCartItems: Array<any>;
+  private items: Array<Listing> = [];
+  private subTotal: PartoshiAmount = new PartoshiAmount(0);
 
-  public subTotal: Amount = new Amount(0);
-  public shippingTotal: Amount = new Amount(0);
-  public escrowTotal: Amount = new Amount(0);
-  public total: Amount = new Amount(0);
-
-  constructor(private object: Array<any>) {
-      this.shoppingCartItems = _.cloneDeep(object)
-      this.setCartItems();
+  constructor(object: Array<any>) {
+      const items = _.cloneDeep(object);
+      this.items = items.map( (item: any) => {
+        const listing = new Listing(item.ListingItem);
+        this.subTotal.add(listing.basePrice);
+        return listing;
+      });
   }
 
-  setSubTotal(): void {
-    let total = 0.0;
+  getShippingTotal(country: string): PartoshiAmount {
+    const total = new PartoshiAmount(0);
     this.listings.forEach(listing => {
-      total += listing.basePrice.getAmount();
+      total.add(listing.shippingAmount(country));
     });
-    this.subTotal = new Amount(total);
+    return total;
   }
 
-  getShippingTotal(country: string): Amount {
-    let total = 0.0;
+  getEscrowTotal(country: string): PartoshiAmount {
+    const total = new PartoshiAmount(0);
     this.listings.forEach(listing => {
-      total += listing.shippingAmount(country).getAmount();
+      total.add(listing.escrowAmount(country));
     });
-    return new Amount(total);
+    return total;
   }
 
-  getEscrowTotal(country: string): Amount {
-    let total = 0.0;
-    this.listings.forEach(listing => {
-      total += listing.escrowAmount(country).getAmount();
-    });
-    return new Amount(total);
+  getTotal(country: string): PartoshiAmount {
+    const total = new PartoshiAmount(0);
+    total.add(this.subTotal).add(this.getShippingTotal(country)).add(this.getEscrowTotal(country));
+    return total;
   }
 
-  getTotal(country: string): Amount {
-    return new Amount(this.subTotal.getAmount()
-             + this.getShippingTotal(country).getAmount()
-             + this.getEscrowTotal(country).getAmount())
+  getSubTotalWithoutShipping(): PartoshiAmount {
+    return this.subTotal;
   }
 
-  private setCartItems(): void {
-    this.shoppingCartItems.map(item => {
-      item.ListingItem = new Listing(item.ListingItem);
-    });
-
-    this.setSubTotal();
+  getSubTotalWithShippingTotal(country: string): PartoshiAmount {
+    const total = new PartoshiAmount(0);
+    return total.add(this.subTotal).add(this.getShippingTotal(country));
   }
 
-  get countOfItems() {
-    return this.shoppingCartItems.length;
+  get countOfItems(): number {
+    return this.listings.length;
   }
 
-  get listings(): Array<Listing> {
-    return this.shoppingCartItems.map((sci: any) => sci.ListingItem);
-  }
-
-  getSubTotalWithShippingTotal(country: string): Amount {
-    const total = this.subTotal.getAmount() + this.getShippingTotal(country).getAmount();
-    return  new Amount(total);
+  get listings(): Listing[] {
+    return this.items;
   }
 }

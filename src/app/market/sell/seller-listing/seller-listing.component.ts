@@ -43,7 +43,7 @@ export class SellerListingComponent {
   confirmDeleteListing(template: Template): void {
     const dialogRef = this.dialog.open(DeleteListingComponent);
     dialogRef.componentInstance.templateToRemove = template;
-    dialogRef.afterClosed().subscribe(
+    dialogRef.componentInstance.onDelete.subscribe(
       () => this.onDelete.emit()
     );
   }
