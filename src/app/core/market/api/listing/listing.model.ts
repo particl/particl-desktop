@@ -1,5 +1,5 @@
 import { Template } from '../template/template.model';
-import { Amount } from 'app/core/util/utils';
+import { PartoshiAmount } from 'app/core/util/utils';
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 
 export class Listing extends Template {
@@ -10,7 +10,7 @@ export class Listing extends Template {
       super(listing);
   }
 
-  shippingAmount(country: string): Amount {
+  shippingAmount(country: string): PartoshiAmount {
     return this.isDomestric(country) ? (
           this.domesticShippingPrice
         ) : (
@@ -18,22 +18,22 @@ export class Listing extends Template {
         )
   }
 
-  escrowAmount(country: string): Amount {
+  escrowAmount(country: string): PartoshiAmount {
     return this.isDomestric(country)  ? this.escrowPriceDomestic : this.escrowPriceInternational;
   }
 
-  totalAmount(country: string): Amount {
+  totalAmount(country: string): PartoshiAmount {
     return this.isDomestric(country)  ? this.totalAmountDomestic : this.totalAmountInternaltional;
   }
 
-  total(country: string): Amount {
+  total(country: string): PartoshiAmount {
     return this.isDomestric(country) ? this.domesticTotal : this.internationalTotal
   }
 
   isDomestric(country: string): boolean {
     const itemLocation = this.object.ItemInformation.ItemLocation;
     if (itemLocation) {
-      return itemLocation.region === country;
+      return itemLocation.country === country;
     }
     return false;
   }

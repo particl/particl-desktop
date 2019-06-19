@@ -39,7 +39,7 @@
         <div class="item price">
           <div class="title">Price</div>
           <div class="value part">
-            <span class="number big">{{ data?.listing?.basePrice.getIntegerPart() }}</span><span class="point big">{{ data?.listing?.basePrice.dot() }}</span><span class="number small">{{ data?.listing?.basePrice.getFractionalPart() }}</span>
+            <span class="number big">{{ data?.listing?.basePrice.particlStringInteger() }}</span><span class="point big">{{ data?.listing?.basePrice.particlStringSep() }}</span><span class="number small">{{ data?.listing?.basePrice.particlStringFraction() }}</span>
             <span class="currency">PART</span>
           </div>
           <div class="value fiat">
@@ -68,7 +68,7 @@
             Shipping
           </th>
           <td class="value">
-            {{ data?.listing?.domesticShippingPrice.getAmountAsString() }} &ndash; {{ data?.listing?.internationalShippingPrice.getAmountAsString() }} <small>PART</small>
+            {{ data?.listing?.domesticShippingPrice.particlsString() }} &ndash; {{ data?.listing?.internationalShippingPrice.particlsString() }} <small>PART</small>
           </td>
         </tr>
         <tr>
@@ -134,7 +134,7 @@
             <!-- domestic shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.domesticShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.domesticShippingPrice.particlsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -143,7 +143,7 @@
             <!-- domestic escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceDomestic?.getAmountAsString() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceDomestic?.particlsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -152,7 +152,7 @@
             <!-- domestic total -->
             <td>
               <span class="part price">
-                <strong>{{data?.listing?.totalAmountDomestic?.getAmountAsString()}}</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountDomestic?.particlsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -167,7 +167,7 @@
             <!-- international shipping -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.internationalShippingPrice.getAmountAsString() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.internationalShippingPrice.particlsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -176,7 +176,7 @@
             <!-- international escrow -->
             <td>
               <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceInternational?.getAmountAsString() }}</strong> <small class="currency">PART</small>
+                <strong>{{ data?.listing?.escrowPriceInternational?.particlsString() }}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
@@ -185,7 +185,7 @@
             <!-- international total -->
             <td>
               <span class="part price">
-                <strong>{{data?.listing?.totalAmountInternaltional?.getAmountAsString()}}</strong> <small class="currency">PART</small>
+                <strong>{{data?.listing?.totalAmountInternaltional?.particlsString()}}</strong> <small class="currency">PART</small>
               </span>
               <span class="fiat price">
                 &asymp; 0.41 <small class="currency">EUR</small>
