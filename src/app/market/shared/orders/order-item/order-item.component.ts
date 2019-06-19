@@ -24,6 +24,10 @@ export class OrderItemComponent implements OnInit {
   trackNumber: string;
   country: string = '';
   orderActivity: any = {};
+  contactDetails: any = {
+    phone: '',
+    email: ''
+  };
   private itemTitle: string = '';
   private purchaseMemo: string = '';
   private pricing: any = {
@@ -58,12 +62,20 @@ export class OrderItemComponent implements OnInit {
       this.order.ListingItem.ItemInformation.title : '';
 
     let _memo = '';
-    if (this.order.OrderOrder && Object.prototype.toString.call(this.order.OrderOrder.ChildBids) === '[object Array]' ) {
-      const childBid = this.order.OrderOrder.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
-      if (childBid) {
-        const memoDatas = childBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
+    if (Object.prototype.toString.call(this.order.ChildBids) === '[object Array]' ) {
+      const shipBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
+      if (shipBid) {
+        const memoDatas = shipBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
         if (memoDatas) {
           _memo = String(memoDatas.value);
+        }
+      }
+      const lockBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_LOCK' );
+      if (lockBid) {
+        for (const data of (lockBid.BidDatas || []) ) {
+          if (data && data.key && (<string>data.key).startsWith('delivery.')) {
+            this.contactDetails[(<string>data.key).replace('delivery.', '')] = String(data.value);
+          }
         }
       }
     }
@@ -197,7 +209,15 @@ export class OrderItemComponent implements OnInit {
   }
 
   private async escrowLock(data: any): Promise<void> {
-    const contactDetails = []; // TODO: check and use the data from the modal (contained in 'data')
+    const contactDetails: string[] = [];
+    const deliveryDetails = ['phone', 'email'];
+    for (const deliveryKey of deliveryDetails) {
+      if (data && data[deliveryKey]) {
+        contactDetails.push(`delivery.${deliveryKey}`);
+        contactDetails.push( String(data[deliveryKey]) );
+      }
+    };
+
     return this.bid.escrowLockCommand(this.order.OrderItem.id, contactDetails).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Payment made for order ${this.itemTitle}`);
     });
