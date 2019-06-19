@@ -34,6 +34,19 @@
     <div class="buyer-info" fxFlex="65%">
       <div class="title">Shipping address</div>
       <app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address>
+      <ng-container *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)">
+        <div class="title">Contact information</div>
+        <table class="contact-info">
+          <tr *ngIf="(contactDetails.email.length > 0)">
+            <th>E-mail address</th>
+            <td>{{contactDetails.email}}</td>
+          </tr>
+          <tr *ngIf="(contactDetails.phone.length > 0)">
+            <th>Telephone number</th>
+            <td>{{contactDetails.phone}}</td>
+          </tr>
+        </table>
+      </ng-container>
     </div><!-- .buyer-info -->
 
     <div class="info" fxFlex="35%">
