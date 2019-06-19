@@ -3,7 +3,7 @@
 .balance {
   @extend %enable-select;
   display: inline-block;
-  padding-top: 7px;
+  padding-top: 12px;
   & > .point {
     color: $color;
     margin: 0 2px;
