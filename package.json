@@ -206,7 +206,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "4.0.3",
+    "electron": "5.0.4",
     "electron-builder": "^20.38.5",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
