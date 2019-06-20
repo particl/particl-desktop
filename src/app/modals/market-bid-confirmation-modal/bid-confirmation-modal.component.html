@@ -38,22 +38,16 @@
 
     <div class="contact-info">
       <div class="subtitle">Shipping contact info</div>
-      <p>Seller's shipping method requires you to supply your contact information for successful delivery:</p>
+      <p>Seller's shipping method may need you to supply your contact information for successful delivery. If you are comfortable providing this information, please provide it below</p>
       <div class="row" fxLayout fxLayoutGap="20px">
         <div class="half" fxFlex="50%">
           <mat-form-field class="full-width no-top-padding">
-            <input type="tel" matInput placeholder="Telephone number" required name="phone" [(ngModel)]="contactDetails.phone" #phone="ngModel">
-            <mat-hint class="error" *ngIf="phone.errors">
-                A valid contact number is required
-              </mat-hint>
+            <input type="tel" matInput placeholder="Telephone number" name="phone" [(ngModel)]="contactDetails.phone" #phone="ngModel" maxlength="30">
           </mat-form-field>
         </div>
         <div class="half" fxFlex="50%">
           <mat-form-field class="full-width no-top-padding">
-            <input type="email" matInput placeholder="E-mail address" name="email" [(ngModel)]="contactDetails.email" #email="ngModel" required email />
-            <mat-hint class="error" *ngIf="email.errors">
-                A valid email address is required
-              </mat-hint>
+            <input type="email" matInput placeholder="E-mail address" name="email" [(ngModel)]="contactDetails.email" #email="ngModel" email maxlength="255" />
           </mat-form-field>
         </div>
       </div>
@@ -84,7 +78,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button [disabled]="phone.errors || email.errors" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Buy
   </button>
