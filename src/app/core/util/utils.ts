@@ -449,7 +449,7 @@ export const OrderData = {
   'ESCROW': {
     filter: {
       query: 'ESCROW_LOCKED',
-      text: 'Pending Escrow Lock',
+      text: 'Escrow Lock',
       order: 3
     },
     from_action: 'LOCK_ESCROW',
