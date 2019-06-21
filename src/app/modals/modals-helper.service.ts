@@ -14,7 +14,7 @@ import { UnlockModalConfig } from './models/unlock.modal.config.interface';
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
-import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
+import { Router } from '@angular/router';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -39,7 +39,8 @@ export class ModalsHelperService implements OnDestroy {
   constructor (
     private _rpcState: RpcStateService,
     private _blockStatusService: BlockStatusService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _router: Router
   ) {
 
     /* Hook BlockStatus -> open syncing modal only once */
@@ -62,6 +63,7 @@ export class ModalsHelperService implements OnDestroy {
     */
 
   unlock(data: UnlockModalConfig, callback?: Function) {
+    console.log(new Error().stack);
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
       if (data || callback) {
@@ -95,10 +97,7 @@ export class ModalsHelperService implements OnDestroy {
   }
 
   createWallet() {
-    const dialogRef = this._dialog.open(CreateWalletComponent, this.modelSettings);
-    dialogRef.afterClosed().subscribe(() => {
-      this.log.d('createWallet modal closed');
-    });
+    this._router.navigate(['/installer/create']);
   }
 
   encrypt() {

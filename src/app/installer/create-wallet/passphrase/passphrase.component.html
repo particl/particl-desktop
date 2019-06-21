@@ -1,9 +1,13 @@
 <div class="passphrase">
   <div class="subtitle">Your Recovery Phrase</div>
 
-  <div fxLayout="row wrap" fxLayoutGap="3.66%" class="word-list">
-    <div fxFlex="13%" *ngFor="let k of Arr(24).fill(); let i = index">
-      <mat-form-field>
+  <div fxLayout="row wrap" fxLayoutGap="4%" class="word-list">
+    <div fxFlex="21%" *ngFor="let k of Arr(24).fill(); let i = index">
+      <div class="word-no">
+        <!-- label words by numbers -->
+        {{ i + 1 }}
+      </div>
+      <mat-form-field class="word no-top-padding">
         <input
           #phrase
           matInput

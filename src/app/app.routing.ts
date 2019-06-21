@@ -1,5 +1,6 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { installer_routing } from './installer/installer.router';
 
 /* Preload strategry */
 import { PreloadingStrategy, PreloadAllModules, Route } from '@angular/router';
@@ -8,7 +9,8 @@ import { PreloadingStrategy, PreloadAllModules, Route } from '@angular/router';
 /* actual routing */
 const routes: Routes = [
   { path: '', redirectTo: 'wallet', pathMatch: 'full' },
-  { path: 'wallet', loadChildren: './wallet/wallet.module#WalletViewsModule'}
+  installer_routing,
+  { path: 'wallet', loadChildren: './core-ui/main/main-view.module#MainViewModule'}
 ];
 
 export const routing: ModuleWithProviders = RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules});

@@ -109,7 +109,7 @@ export class ZapColdstakingComponent {
             address: 'script',
             amount: amount.getAmount(),
             script: script.hex
-          }], '', '', 4, 64, true, JSON.stringify({
+          }], '', '', 4, 32, true, JSON.stringify({
             inputs: this.utxos.txs
           })]).subscribe(tx => {
 
@@ -133,7 +133,7 @@ export class ZapColdstakingComponent {
       address: 'script',
       amount: amount.getAmount(),
       script: this.script
-    }], 'coldstaking zap', '', 4, 64, false, JSON.stringify({
+    }], 'coldstaking zap', '', 4, 32, false, JSON.stringify({
       inputs: this.utxos.txs
     })]).subscribe(info => {
       this._rpcState.set('ui:coldstaking', true);

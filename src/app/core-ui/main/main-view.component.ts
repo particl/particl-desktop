@@ -150,7 +150,9 @@ export class MainViewComponent implements OnInit, OnDestroy {
       this.unSubscribeTimer = Observable.timer(1000).
         subscribe(() => this.startTimer(min, sec));
     } else {
-      this.unSubscribeTimer.unsubscribe();
+      if (this.unSubscribeTimer) {
+        this.unSubscribeTimer.unsubscribe();
+      }
     }
   }
 
