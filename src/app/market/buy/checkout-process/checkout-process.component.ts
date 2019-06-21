@@ -141,7 +141,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city: ['', Validators.required],
-      state: [''],
+      state: ['', Validators.required],
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
