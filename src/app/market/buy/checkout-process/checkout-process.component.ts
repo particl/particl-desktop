@@ -156,7 +156,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   /* cart */
 
   goToListings(): void {
-    this.router.navigate(['/market/overview']);
+    this.router.navigate(['/wallet/main/market/listings']);
   }
 
   removeFromCart(shoppingCartId: number): void {
