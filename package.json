@@ -48,7 +48,7 @@
   },
   "productName": "Particl Desktop Testnet",
   "build": {
-    "electronVersion": "4.0.3",
+    "electronVersion": "5.0.4",
     "appId": "io.particl.desktop",
     "npmRebuild": true,
     "directories": {
