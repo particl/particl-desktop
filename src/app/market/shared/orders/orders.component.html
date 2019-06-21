@@ -1,7 +1,7 @@
 <!-- Orders > Filter -->
 <div class="filter">
 
-  <div class="section search-sorting">
+  <!-- <div class="section search-sorting">
     <div class="subtitle first">Search &amp; sort</div>
     <mat-card class="filter-card">
       <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
@@ -13,10 +13,10 @@
                   (click)="loadOrders()"></mat-icon>
       </mat-form-field>
     </mat-card>
-  </div>
+  </div> @TODO when uncommenting this remove the 'first' class from the Filter class list below -->
 
   <div class="section filter-by-group">
-    <div class="subtitle">Filter</div>
+    <div class="subtitle first">Filter</div>
     <mat-card class="filter-card">
       <div class="checkbox highlight">
         <mat-checkbox [(ngModel)]="additionalFilter.requiredAttention" (change)="loadOrders()" color="primary">Orders requiring attention</mat-checkbox>
