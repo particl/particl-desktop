@@ -14,7 +14,6 @@ import { UnlockModalConfig } from './models/unlock.modal.config.interface';
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
-import { Router } from '@angular/router';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -39,8 +38,7 @@ export class ModalsHelperService implements OnDestroy {
   constructor (
     private _rpcState: RpcStateService,
     private _blockStatusService: BlockStatusService,
-    private _dialog: MatDialog,
-    private _router: Router
+    private _dialog: MatDialog
   ) {
 
     /* Hook BlockStatus -> open syncing modal only once */
@@ -52,9 +50,6 @@ export class ModalsHelperService implements OnDestroy {
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
     });
-
-    /* Hook wallet initialized -> open createwallet modal */
-    this.openInitialCreateWallet();
   }
 
   /**
@@ -96,33 +91,11 @@ export class ModalsHelperService implements OnDestroy {
     });
   }
 
-  createWallet() {
-    this._router.navigate(['/installer/create']);
-  }
-
   encrypt() {
     const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
     });
-  }
-
-  /**
-    * Open the Createwallet modal if wallet is not initialized
-    */
-
-  openInitialCreateWallet(): void {
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(
-        state => {
-          this.initializedWallet = state;
-          if (state) {
-            this.log.i('Wallet already initialized.');
-            return;
-          }
-          this.createWallet();
-        });
   }
 
   /**

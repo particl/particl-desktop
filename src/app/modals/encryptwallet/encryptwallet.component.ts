@@ -55,7 +55,7 @@ export class EncryptwalletComponent {
     this._rpc.call('encryptwallet', [password.password]).toPromise()
       .then((s) => {
         this.pleaseWait = true
-        
+
         if (window.electron) {
           this._daemon.restart().then(res => {
             this.log.d('restart was trigger, open create wallet again');

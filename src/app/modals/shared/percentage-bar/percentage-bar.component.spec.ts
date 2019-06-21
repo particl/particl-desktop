@@ -5,6 +5,7 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 import { SharedModule } from '../../../wallet/shared/shared.module';
 
 import { PercentageBarComponent } from './percentage-bar.component';
+import { MainViewModule } from 'app/core-ui/main/main-view.module';
 
 describe('PercentageBarComponent', () => {
   let component: PercentageBarComponent;
@@ -15,7 +16,8 @@ describe('PercentageBarComponent', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MainViewModule
       ]
     })
     .compileComponents();

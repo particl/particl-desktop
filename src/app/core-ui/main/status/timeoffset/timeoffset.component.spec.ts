@@ -4,6 +4,7 @@ import { CoreModule } from '../../../../core/core.module';
 import { CoreUiModule } from '../../../core-ui.module';
 
 import { TimeoffsetComponent } from './timeoffset.component';
+import { MainViewModule } from '../../main-view.module';
 
 describe('TimeoffsetComponent', () => {
   let component: TimeoffsetComponent;
@@ -13,7 +14,8 @@ describe('TimeoffsetComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MainViewModule
       ]
     })
     .compileComponents();

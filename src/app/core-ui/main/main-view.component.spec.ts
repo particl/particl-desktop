@@ -23,7 +23,8 @@ describe('MainViewComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         ModalsModule.forRoot(),
-        MatDialogModule
+        MatDialogModule,
+        MainViewModule
       ],
       providers: [
         MatDialog
