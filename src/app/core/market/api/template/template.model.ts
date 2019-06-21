@@ -1,5 +1,5 @@
 import { Category } from 'app/core/market/api/category/category.model';
-import { DateFormatter, Amount, Duration } from 'app/core/util/utils';
+import { DateFormatter, Duration, PartoshiAmount } from 'app/core/util/utils';
 import { ImageCollection } from 'app/core/market/api/template/image/imagecollection.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 export class Template {
@@ -8,16 +8,16 @@ export class Template {
   public createdAt: string = '';
   public status: string = '';
 
-  public basePrice: Amount = new Amount(0);
-  public domesticShippingPrice: Amount = new Amount(0);
-  public internationalShippingPrice: Amount = new Amount(0);
-  public escrowPriceInternational: Amount = new Amount(0);
-  public escrowPriceDomestic: Amount = new Amount(0);
+  public basePrice: PartoshiAmount = new PartoshiAmount(0);
+  public domesticShippingPrice: PartoshiAmount = new PartoshiAmount(0);
+  public internationalShippingPrice: PartoshiAmount = new PartoshiAmount(0);
+  public escrowPriceInternational: PartoshiAmount = new PartoshiAmount(0);
+  public escrowPriceDomestic: PartoshiAmount = new PartoshiAmount(0);
 
-  public domesticTotal: Amount = new Amount(0);
-  public internationalTotal: Amount = new Amount(0);
-  public totalAmountInternaltional: Amount = new Amount(0);
-  public totalAmountDomestic: Amount = new Amount(0);
+  public domesticTotal: PartoshiAmount = new PartoshiAmount(0);
+  public internationalTotal: PartoshiAmount = new PartoshiAmount(0);
+  public totalAmountInternaltional: PartoshiAmount = new PartoshiAmount(0);
+  public totalAmountDomestic: PartoshiAmount = new PartoshiAmount(0);
   public memo: string = '';
   public imageCollection: ImageCollection;
   public expireTime: number = 4;
@@ -79,7 +79,7 @@ export class Template {
   get country(): any {
     const itemlocation = this.object.ItemInformation.ItemLocation;
     if (itemlocation) {
-      return itemlocation.region;
+      return itemlocation.country;
     }
     return undefined;
   }
@@ -92,16 +92,16 @@ export class Template {
   }
   setBasePrice(): void {
     this.basePrice = (this.object.PaymentInformation.ItemPrice
-      ? new Amount(this.object.PaymentInformation.ItemPrice.basePrice)
+      ? new PartoshiAmount(this.object.PaymentInformation.ItemPrice.basePrice || 0)
       : this.basePrice);
   }
   setShippingPrice(): void {
     const itemPrice = this.object.PaymentInformation.ItemPrice;
     if (itemPrice && itemPrice.ShippingPrice) {
       this.domesticShippingPrice = (itemPrice.ShippingPrice.domestic
-        ? new Amount(itemPrice.ShippingPrice.domestic) : this.domesticShippingPrice);
+        ? new PartoshiAmount(itemPrice.ShippingPrice.domestic) : this.domesticShippingPrice);
       this.internationalShippingPrice = (itemPrice.ShippingPrice.international
-        ? new Amount(itemPrice.ShippingPrice.international) :  this.internationalShippingPrice);
+        ? new PartoshiAmount(itemPrice.ShippingPrice.international) :  this.internationalShippingPrice);
     }
   }
 
@@ -118,29 +118,28 @@ export class Template {
       return;
     }
 
-    const totalDomestic = (ratio.buyer / 100) * (basePrice + this.domesticShippingPrice.getAmount());
-    const totalInternational = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.getAmount());
+    const totalDomestic = (ratio.buyer / 100) * (basePrice + this.domesticShippingPrice.partoshis());
+    const totalInternational = (ratio.buyer / 100) * (basePrice + this.internationalShippingPrice.partoshis());
 
-    this.escrowPriceDomestic = new Amount(totalDomestic);
-    this.escrowPriceInternational = new Amount(totalInternational);
+    this.escrowPriceDomestic = new PartoshiAmount(totalDomestic);
+    this.escrowPriceInternational = new PartoshiAmount(totalInternational);
   }
 
   setTotal(): void {
-    let iTotal = this.basePrice.getAmount();
-    let dTotal = this.basePrice.getAmount();
+    let iTotal = this.basePrice.partoshis();
+    let dTotal = this.basePrice.partoshis();
 
-    iTotal += this.internationalShippingPrice.getAmount();
-    dTotal += this.domesticShippingPrice.getAmount();
+    iTotal += this.internationalShippingPrice.partoshis();
+    dTotal += this.domesticShippingPrice.partoshis();
 
-    this.internationalTotal = new Amount(iTotal);
-    this.domesticTotal = new Amount(dTotal);
+    this.internationalTotal = new PartoshiAmount(iTotal);
+    this.domesticTotal = new PartoshiAmount(dTotal);
 
-    // TODO add total for international and domestic.
-    const totalDomestic = this.escrowPriceDomestic.getAmount() + dTotal;
-    const totalInternational = this.escrowPriceInternational.getAmount() + iTotal;
+    const totalDomestic = this.escrowPriceDomestic.partoshis() + dTotal;
+    const totalInternational = this.escrowPriceInternational.partoshis() + iTotal;
 
-    this.totalAmountDomestic = new Amount(totalDomestic);
-    this.totalAmountInternaltional = new Amount(totalInternational);
+    this.totalAmountDomestic = new PartoshiAmount(totalDomestic);
+    this.totalAmountInternaltional = new PartoshiAmount(totalInternational);
   }
 
   setMemo(): void {

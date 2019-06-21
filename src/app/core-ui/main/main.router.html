@@ -146,16 +146,6 @@
           </mat-list><!-- .sidebar-item-group -->
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section">
-          <mat-list class="sidebar-item-group">
-            <a class="sidebar-item-link" routerLinkActive="active" routerLink="wallet/help">
-              <mat-list-item class="sidebar-item">
-                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
-                <span class="text">Help &amp; Support</span>
-              </mat-list-item>
-            </a>
-          </mat-list>
-        </mat-content>
       </div><!-- .menu-links -->
 
 
@@ -193,7 +183,7 @@
             <mat-list-item class="info sidebar-item" *ngIf="unlocked_until > 0">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
               <span class="text"
-                matTooltip="As a security measure, wallet auto-locks after 5 mins"
+                matTooltip="As a security measure, wallet auto-locks after the timer expires"
                 matTooltipPosition="above"><strong>Wallet unlocked</strong> for {{ time }}</span>
             </mat-list-item>
 

@@ -10,11 +10,12 @@ import { isPrerelease, isMainnetRelease } from 'app/core/util/utils';
 })
 export class BidConfirmationModalComponent implements OnInit {
 
-  @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
+  @Output() isConfirmed: EventEmitter<string> = new EventEmitter<string>();
 
   public dialogContent: string;
   public bidItem: Bid;
   public country: string = '';
+  contactDetails: any = {};
   isPrerelease: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<BidConfirmationModalComponent>) { }
@@ -25,7 +26,7 @@ export class BidConfirmationModalComponent implements OnInit {
   }
 
   confirm(): void {
-    this.onConfirm.emit();
+    this.isConfirmed.emit(this.contactDetails);
     this.dialogClose();
   }
 

@@ -5,3 +5,23 @@
 h3 {
   text-align: center;
 }
+
+.buyer-info {
+  .title {
+    margin-top: 14px;
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+}
+
+table.contact-info {
+  th {
+    text-align: right;
+    vertical-align: top;
+    padding-right: 7px;
+  }
+  td {
+    word-break: break-word;
+  }
+}

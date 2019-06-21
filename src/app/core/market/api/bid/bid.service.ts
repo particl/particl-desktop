@@ -6,8 +6,7 @@ import { CartService } from 'app/core/market/api/cart/cart.service';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { BidCollection } from 'app/core/market/api/bid/bidCollection.model';
-import { take, map, catchError } from 'rxjs/operators';
+import { take, catchError } from 'rxjs/operators';
 
 export enum errorType {
   unspent = 'Zero unspent outputs - insufficient funds to place the order.',
@@ -63,10 +62,9 @@ export class BidService {
     return 'Placed all orders!';
   }
 
-  search(address: string, type?: any, status?: string, search?: string, additionalFilter?: any): Observable<BidCollection> {
+  search(status?: string, search?: string): Observable<any> {
     const params = ['search', 0, 99999, 'ASC', '*', status, search ];
     return this.market.call('bid', params)
-    .pipe(map(o => new BidCollection(o, address, type, additionalFilter)))
   }
 
   acceptBidCommand(id: number): Observable<any> {
@@ -84,20 +82,33 @@ export class BidService {
     return this.market.call('bid', params);
   }
 
+  escrowCompleteCommand(id: number): Observable<any> {
+    const params = ['complete', id];
+    return this.market.call('escrow', params);
+  }
+
+  shippingCommand(orderID: number, memo: string) {
+    const params = ['ship', orderID, memo];
+    return this.market.call('orderitem', params);
+  }
+
   escrowReleaseCommand(id: number, memo: string): Observable<any> {
     const params = ['release', id, memo];
     return this.market.call('escrow', params);
   }
 
-  escrowLockCommand(id: number, nonce: any, memo: string): Observable<any> {
-    const params = ['lock', id, nonce, memo];
+  escrowLockCommand(id: number, contactInfo: string[]): Observable<any> {
+    const params = ['lock', id];
+    if (contactInfo.length) {
+      params.push(...contactInfo);
+    }
     return this.market.call('escrow', params);
   }
 
   errorHandle(error: any) {
     if (error.includes('unspent')) {
       error = errorType.unspent;
-    } else if (error.includes('broke')) {
+    } else if (error.includes('broke') && !error.toLowerCase().includes('something')) {
       error = errorType.broke;
     }
     return error;

@@ -19,7 +19,7 @@ export class AddToCartCacheService implements OnDestroy {
   ) {}
 
   start() {
-    this.update();
+    // this.update();
     // subscribe to changes
     this.profile$ = this.getBids().pipe(takeWhile(() => !this.destroyed)).subscribe(orders => {
       this.orders = orders;
@@ -39,9 +39,10 @@ export class AddToCartCacheService implements OnDestroy {
     return false;
   }
 
-  update() {
-    this.marketState.register('bid', null, ['search', 0, 9999, 'ASC'])
-  }
+  // Removing as marketstate already has 'bid search' registered.
+  // update() {
+  //   this.marketState.register('bid', null, ['search', 0, 9999, 'ASC'])
+  // }
 
   getBids() {
     return this.marketState.observe('bid');

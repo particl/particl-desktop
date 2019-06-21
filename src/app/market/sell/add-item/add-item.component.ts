@@ -2,28 +2,26 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
-import { Observable } from 'rxjs';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
-import { Amount } from '../../../core/util/utils';
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { ImageService } from 'app/core/market/api/template/image/image.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { InformationService } from 'app/core/market/api/template/information/information.service';
 import { LocationService } from 'app/core/market/api/template/location/location.service';
-import { EscrowService, EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
+import { EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
 import { take } from 'rxjs/operators';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { MatDialog } from '@angular/material';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 class CurrencyMinValidator {
@@ -77,12 +75,10 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private location: LocationService,
     private listing: ListingService,
     private snackbar: SnackbarService,
-    private rpcState: RpcStateService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     public countryList: CountryListService,
-    private escrow: EscrowService,
     private payment: PaymentService,
     private dialog: MatDialog
   ) { }
@@ -265,9 +261,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.setDefaultCountry(country);
       this.setDefaultCategory(template.category);
 
-      t.basePrice = template.basePrice.getAmountAsString();
-      t.domesticShippingPrice = template.domesticShippingPrice.getAmountAsString();
-      t.internationalShippingPrice = template.internationalShippingPrice.getAmountAsString();
+      t.basePrice = template.basePrice.particlsString();
+      t.domesticShippingPrice = template.domesticShippingPrice.particlsString();
+      t.internationalShippingPrice = template.internationalShippingPrice.particlsString();
       this.itemFormGroup.patchValue(t);
 
       if (isCloned) {
@@ -298,23 +294,32 @@ export class AddItemComponent implements OnInit, OnDestroy {
     const item = this.itemFormGroup.value;
     const country = this.countryList.getCountryByName(item.country);
 
+    const multipler = Math.pow(10, 8);
+    const amounts = {
+      base: (new PartoshiAmount((+item.basePrice) * multipler)).partoshis(),
+      shippingDomestic: (new PartoshiAmount((+item.domesticShippingPrice) * multipler)).partoshis(),
+      shippingInternational: (new PartoshiAmount((+item.internationalShippingPrice) * multipler)).partoshis()
+    };
+
     const template: any = await this.template.add(
       item.title,
       item.shortDescription,
       item.longDescription,
       item.category,
       'SALE',
-      'PARTICL',
-      +item.basePrice,
-      +item.domesticShippingPrice,
-      +item.internationalShippingPrice
+      'PART',
+      amounts.base,
+      amounts.shippingDomestic,
+      amounts.shippingInternational,
+      EscrowType.MAD_CT,
+      100,
+      100
     ).toPromise();
 
     this.preloadedTemplate = new Template(template);
 
     this.templateId = template.id;
     await this.location.execute('add', this.templateId, country, null, null).toPromise();
-    await this.escrow.add(template.id, EscrowType.MAD).toPromise();
     await this.uploadImages();
 
     return this.template.get(template.id, false).toPromise();
@@ -341,21 +346,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
       await this.location.execute('update', this.templateId, country, null, null).toPromise();
     }
 
-    // update escrow
-    // @TODO EscrowType will change in future?
-    await this.escrow.update(this.templateId, EscrowType.MAD).toPromise();
-
-    // update shipping?
-    // update messaging?
+    // @TODO Update Escrow in future if the escrow type is changeable
+    // await this.escrow.update(this.templateId, EscrowType.MAD_CT).toPromise();
 
     if (this.isPaymentInfoUpdated(item)) {
 
       // update payment
+      const multipler = Math.pow(10, 8);
+      const amounts = {
+        base: (new PartoshiAmount((+item.basePrice) * multipler)).partoshis(),
+        shippingDomestic: (new PartoshiAmount((+item.domesticShippingPrice) * multipler)).partoshis(),
+        shippingInternational: (new PartoshiAmount((+item.internationalShippingPrice) * multipler)).partoshis()
+      };
       await this.payment.update(
         this.templateId,
-        +item.basePrice,
-        +item.domesticShippingPrice,
-        +item.internationalShippingPrice
+        amounts.base,
+        amounts.shippingDomestic,
+        amounts.shippingInternational
       ).toPromise();
     }
 
@@ -367,9 +374,9 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   isPaymentInfoUpdated(item: any): boolean {
     return (
-      this.preloadedTemplate.basePrice.getAmount() !== +item.basePrice ||
-      this.preloadedTemplate.domesticShippingPrice.getAmount() !== +item.domesticShippingPrice ||
-      this.preloadedTemplate.internationalShippingPrice.getAmount() !== +item.internationalShippingPrice
+      this.preloadedTemplate.basePrice.particlsString() !== item.basePrice ||
+      this.preloadedTemplate.domesticShippingPrice.particlsString() !== item.domesticShippingPrice ||
+      this.preloadedTemplate.internationalShippingPrice.particlsString() !== item.internationalShippingPrice
     )
   }
 

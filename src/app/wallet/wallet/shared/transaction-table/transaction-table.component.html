@@ -55,7 +55,14 @@
           </span>
           <span *ngSwitchCase="'multisig'" class="tx-type sent">
             <mat-icon fontSet="partIcon" fontIcon="part-lock-open" color="warn"></mat-icon>
-            <span class="name">Multisig / escrow</span>
+            <span class="name">Multisig escrow</span>
+            <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
+                      matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
+          </span>
+
+          <span *ngSwitchCase="'unknown'" class="tx-type sent">
+            <mat-icon fontSet="partIcon" fontIcon="part-lock-open" color="warn"></mat-icon>
+            <span class="name">Blinded escrow</span>
             <mat-icon class="narration" *ngIf="tx.getNarration()" fontSet="partIcon" fontIcon="part-pen-1"
                       matTooltip="{{tx.getNarration()}}" matTooltipPosition="after"></mat-icon>
           </span>
@@ -140,7 +147,7 @@
               {{tx.txid}}</a>
           </div>
         </div>
-  
+
         <div fxFlex="0 0 260px" fxLayout="column">
           <!-- TX fee (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
@@ -153,7 +160,7 @@
             <span class="value">{{ tx.getNetAmount()}} PART</span>
           </div>
         </div>
-  
+
         <!-- Narration -->
         <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="tx.getNarration()">
           <span fxFlex="0 0 80px">Narration:</span>
