@@ -26,7 +26,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, place order
     </button>
@@ -62,7 +62,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, accept bid
     </button>
@@ -96,7 +96,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="warn" (click)="placeOrder()">
+    <button mat-raised-button color="warn" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, reject bid
     </button>
@@ -127,7 +127,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, lock escrow
     </button>
@@ -161,7 +161,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, I received the order
     </button>

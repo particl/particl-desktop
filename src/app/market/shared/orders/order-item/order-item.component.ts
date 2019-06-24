@@ -123,18 +123,22 @@ export class OrderItemComponent implements OnInit {
     return this.purchaseMemo;
   }
 
-  executeAction(actionType: string) {
+  executeAction(actionable: any) {
+    const actionType = actionable.action;
     const valid = actionType &&
       this.orderActivity.buttons &&
       (this.orderActivity.buttons.findIndex((button: any) => !button.disabled && (button.action === actionType) ) !== -1);
 
     if (valid) {
-      this.callBid(actionType);
+      this.callBid(actionable);
     }
   }
 
-  private callBid(action: string) {
+  private callBid(actionable: any) {
+    // Prevent double clicking of the button
+    actionable.disabled = true;
 
+    const action = actionable.action;
     // Open appropriate confirmation modal
     let dialogRef;
     switch (action) {
@@ -150,6 +154,11 @@ export class OrderItemComponent implements OnInit {
         dialogRef = this.dialog.open(PlaceOrderComponent);
         dialogRef.componentInstance.type = action.toLowerCase();
     }
+
+    dialogRef.afterClosed().subscribe(() => {
+      actionable.disabled = false;
+    });
+
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
 
       // processing confirmed, take the correct action
