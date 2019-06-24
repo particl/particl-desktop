@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, Renderer } from '@angular/core';
+import { Directive, Input, ElementRef, Renderer, HostListener } from '@angular/core';
 
 /** Focus the given element based on a condition */
 @Directive({
@@ -34,4 +34,23 @@ export class FocusTimeoutDirective {
         this.elementRef.nativeElement, 'focus', []), 500);
     }
   }
+}
+
+/** Prevent double click of element */
+@Directive({
+  selector: '[appNoDblClick]'
+})
+export class NoDblClickDirective {
+  
+  constructor() { }
+  
+  @HostListener('click', ['$event'])
+  clickEvent(event) {
+    const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
+    button.setAttribute('disabled', true);
+    setTimeout(function(){
+      button.removeAttribute('disabled');
+    }, 1000);
+  }
+
 }
