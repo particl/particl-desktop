@@ -1,4 +1,6 @@
-import { Directive, Input, ElementRef, Renderer, HostListener } from '@angular/core';
+import { Directive, Input, ElementRef, Renderer, HostListener, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 /** Focus the given element based on a condition */
 @Directive({
@@ -36,20 +38,32 @@ export class FocusTimeoutDirective {
   }
 }
 
-/** Prevent double click of element */
+/** Debounce click on element */
 @Directive({
-  selector: '[appNoDblClick]'
+  selector: '[appDebounceClick]'
 })
-export class NoDblClickDirective {
+export class DebounceClickDirective implements OnInit, OnDestroy {
+  @Input() debounceTime: number = 1000;
+  @Output() debounceClick: EventEmitter<any> = new EventEmitter();
+  private clicks: Subject<any> = new Subject();
+  private subscription: Subscription;
 
   constructor() { }
 
+  ngOnInit() {
+    this.subscription = this.clicks.pipe(
+      debounceTime(this.debounceTime)
+    ).subscribe(e => this.debounceClick.emit(e));
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   @HostListener('click', ['$event'])
   clickEvent(event: any) {
-    const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
-    button.setAttribute('disabled', true);
-    setTimeout(function() {
-      button.removeAttribute('disabled');
-    }, 1000);
+    event.preventDefault();
+    event.stopPropagation();
+    this.clicks.next(event);
   }
 }

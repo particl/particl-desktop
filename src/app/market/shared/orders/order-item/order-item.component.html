@@ -85,10 +85,10 @@
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
       <button *ngFor="let actionable of secondaryActions"
-              appNoDblClick
               mat-button color="{{actionable.colour}}"
               [disabled]="actionable.disabled"
-              (click)="executeAction(actionable.action)"
+              appDebounceClick
+              (debounceClick)="executeAction(actionable)"
               class="small">
         <mat-icon fontSet="partIcon" fontIcon="{{actionable.icon}}"></mat-icon>
         {{ actionable.text }}
@@ -97,10 +97,10 @@
     </div>
     <div class="right">
       <button *ngFor="let actionable of primaryActions"
-              appNoDblClick
               mat-raised-button color="{{actionable.colour}}" matTooltip="{{ actionable.tooltip }}"
               [disabled]="actionable.disabled"
-              (click)="executeAction(actionable.action)">
+              appDebounceClick
+              (debounceClick)="executeAction(actionable)">
         <mat-icon fontSet="partIcon" fontIcon="{{ actionable.icon }}"></mat-icon>
         {{ actionable.text }}
       </button>
