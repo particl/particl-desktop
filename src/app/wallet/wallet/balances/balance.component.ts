@@ -15,7 +15,7 @@ import { takeWhile } from 'rxjs/operators';
 export class BalanceComponent implements OnInit, OnDestroy {
 
   @Input() type: string; // "total_balance", "anon_balance", "balance", "staked_balance", "blind_balance"
-  @Input() inSidebar: boolean = false; // located in sidebar?
+  @Input() horizontal: boolean = false; // one-line balance, without big numbers?
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
