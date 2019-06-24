@@ -80,7 +80,9 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   ) {
     this.log.d('Main.Router constructed');
 
-    if ((marketConfig.allowedWallets || []).includes(this._rpc.wallet)) {
+    if ((marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+      ) !== undefined) {
       // We recheck if the market is started here for live reload cases, and to start the various MP services
       this._market.startMarket(this._rpc.wallet).subscribe(
         () => {

@@ -89,13 +89,11 @@ export class OrderStatusNotifierService implements OnDestroy {
                                 order.ListingItem.ItemInformation.title : orderHash;
                 activeItems.data[type].items[orderHash] = {
                   title: title,
-                  activeCount: 0,
                   notificationCount: 0
                 }
             }
 
             if (order.activeBuySell) {
-              activeItems.data[type].items[orderHash].count += 1;
               activeItems.data[type].totalActive += 1;
             }
             if (order.doNotify && +order.updatedAt > notifcationTimestamp) {
@@ -118,21 +116,10 @@ export class OrderStatusNotifierService implements OnDestroy {
     for (const typeKey of newTypeKeys) {
       const bidHashes = Object.keys(newOrders.data[typeKey].items);
 
-      if (typeKey === 'buy') {
-        const count = bidHashes.reduce((total, hash) => total + +newOrders.data[typeKey].items[hash].notificationCount, 0);
-        if (count > 0) {
-          const msg = `${count} ${typeKey} order(s) have been updated.`
-          this.sendNotification(msg);
-        }
-      } else {
-        for (const hash of bidHashes) {
-          const item = newOrders.data[typeKey].items[hash];
-          if (item.notificationCount > 0) {
-            const msg = `You have ${item.notificationCount} new ${typeKey} ${+item.notificationCount > 1 ? 'action' : 'actions'} ` +
-              `for item ${item.title}`;
-            this.sendNotification(msg);
-          }
-        }
+      const count = bidHashes.reduce((total, hash) => total + +newOrders.data[typeKey].items[hash].notificationCount, 0);
+      if (count > 0) {
+        const msg = `${count} ${typeKey} order(s) have been updated.`
+        this.sendNotification(msg);
       }
     }
   }
