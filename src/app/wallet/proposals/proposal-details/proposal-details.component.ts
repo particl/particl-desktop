@@ -67,7 +67,6 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   public aleradyVoted: boolean = false
   destroyed: boolean = false;
   btnValidate: boolean = false;
-  private _balance: number;
   constructor(
     private _rpcState: RpcStateService,
     private dialog: MatDialog,
@@ -109,7 +108,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vote(): void {
-    this._balance = this._rpcState.get('getwalletinfo').total_balance;
+    const pubBal = this._rpcState.get('getwalletinfo').balance;
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     if (previousVote && previousVote.optionId === this.selectedOption.optionId) {
       this.snackbarService.open(
@@ -119,7 +118,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!this._balance) {
+    if (!pubBal) {
       this.snackbarService.open(
         `You don't have sufficient balance in your wallet.`,
         'info'
