@@ -80,7 +80,7 @@
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-send"></mat-icon>
-                      <span class="text">Send</span>
+                      <span class="text">Send / Convert</span>
                     </mat-list-item>
                   </a>
 
@@ -193,16 +193,27 @@
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
     <div class="left" fxFlex="1 1 40%">
-      <!--button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
-        <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-      </button-->
       <div class="title">
         {{ title }}
       </div>
     </div><!-- .left -->
+
     <div class="right" fxFlex="1 1 60%">
+
+      <!-- Spendable Blind balance (for Market) -->
+      <!-- FIXME: show only when one of Market pages is active (= Listings, Buy, Sell) -->
+      <div class="spendable-balance" *ngIf="_market.isMarketStarted" matTooltip="Available Blind balance for spending on Market" matTooltipPosition="before">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+        <!-- FIXME: tweak to show BLIND SPENDABLE balance on Market: -->
+        <app-balance type="blind_balance" [horizontal]="true"></app-balance>
+      </div>
+
+      <!-- Cart overview -->
       <app-cart *ngIf="_market.isMarketStarted"></app-cart>
+
+      <!-- Status icons -->
       <app-status></app-status>
+
     </div><!-- .right -->
 
   </mat-toolbar><!-- .header-main -->
