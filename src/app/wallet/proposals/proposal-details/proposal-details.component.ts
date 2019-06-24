@@ -149,7 +149,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       this.btnValidate = false;
       this.dialog.closeAll();
       let msg = response.result;
-      if (Object.prototype.toString.call(response.msgids) === '[object Array]' || (response.msgids && response.msgids.length > 1)) {
+      if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
         this.getProposalResult();
         this.aleradyVoted = true;
         msg = `Successfully voted for ${this.proposal.title}`;
