@@ -41,16 +41,15 @@ export class FocusTimeoutDirective {
   selector: '[appNoDblClick]'
 })
 export class NoDblClickDirective {
-  
+
   constructor() { }
-  
+
   @HostListener('click', ['$event'])
-  clickEvent(event) {
+  clickEvent(event: any) {
     const button = (event.srcElement.disabled === undefined) ? event.srcElement.parentElement : event.srcElement;
     button.setAttribute('disabled', true);
-    setTimeout(function(){
+    setTimeout(function() {
       button.removeAttribute('disabled');
     }, 1000);
   }
-
 }
