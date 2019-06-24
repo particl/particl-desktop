@@ -3,9 +3,12 @@ import { Product } from './product.model';
 
 export class Bid extends Product {
   activeBuySell: boolean;
+  doNotify: boolean = false;
   constructor(private order: any, private ordType: string ) {
     super();
-    this.activeBuySell = (this.orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
+    const orderActivity = this.orderActivity;
+    this.activeBuySell = (orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
+    this.doNotify = Boolean(+orderActivity.notifyOnEntry);
   }
 
   get id(): number {
