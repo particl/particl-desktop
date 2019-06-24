@@ -31,7 +31,7 @@ export class OrderItemComponent implements OnInit {
   private itemTitle: string = '';
   private purchaseMemo: string = '';
   private pricing: any = {
-    separator: '',
+    separator: '.',
     baseInt: 0,
     baseFraction: 0,
     shippingInt: 0,
@@ -82,7 +82,7 @@ export class OrderItemComponent implements OnInit {
     this.purchaseMemo = _memo;
 
     const price = this.order.PricingInformation(this.country);
-    this.pricing.separator = price.base.particlStringSep();
+    this.pricing.separator = price.base.particlStringSep() || this.pricing.separator;
     this.pricing.baseInt = price.base.particlStringInteger();
     this.pricing.baseFraction = price.base.particlStringFraction();
     this.pricing.shippingInt = price.shipping.particlStringInteger();
