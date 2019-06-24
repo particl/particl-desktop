@@ -41,7 +41,9 @@ export class VersionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.isMarketWallet = (marketConfig.allowedWallets || []).includes(this._rpc.wallet);
+    this.isMarketWallet = (marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+    ) !== undefined;
     // Initially need to call to verify the client version
     this.getCurrentClientVersion()
     // check new update in every 30 minute
