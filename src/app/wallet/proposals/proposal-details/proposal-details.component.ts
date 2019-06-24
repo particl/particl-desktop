@@ -67,6 +67,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   public aleradyVoted: boolean = false
   destroyed: boolean = false;
   btnValidate: boolean = false;
+  private _balance: number;
   constructor(
     private _rpcState: RpcStateService,
     private dialog: MatDialog,
@@ -108,7 +109,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vote(): void {
-    const pubBal = this._rpcState.get('getwalletinfo').balance;
+    this._balance = this._rpcState.get('getwalletinfo').total_balance;
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     if (previousVote && previousVote.optionId === this.selectedOption.optionId) {
       this.snackbarService.open(
@@ -118,7 +119,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!pubBal) {
+    if (!this._balance) {
       this.snackbarService.open(
         `You don't have sufficient balance in your wallet.`,
         'info'
@@ -146,11 +147,14 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     ];
     this.proposalService.vote(params).subscribe((response) => {
       this.btnValidate = false;
-      this.aleradyVoted = true;
       this.dialog.closeAll();
-      // Update graph data as votes are now saving locally
-      this.getProposalResult();
-      this.snackbarService.open(`Successfully voted for ${this.proposal.title}`, 'info');
+      let msg = response.result;
+      if (Object.prototype.toString.call(response.msgids) === '[object Array]' || (response.msgids && response.msgids.length > 1)) {
+        this.getProposalResult();
+        this.aleradyVoted = true;
+        msg = `Successfully voted for ${this.proposal.title}`;
+      }
+      this.snackbarService.open(msg, 'info');
     }, (error) => {
       this.btnValidate = false;
       this.dialog.closeAll();
