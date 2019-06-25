@@ -26,8 +26,8 @@
     margin-top: 6px;
   }
 
-  // Balance preview in sidebar
-  &.in-sidebar {
+  // Horizontal balance (on one line, no big numbers)
+  &.horizontal {
     padding: 0;
     small {
       @extend %lighter;
