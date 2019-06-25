@@ -33,7 +33,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary" (click)="placeOrder()">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Order shipped
   </button>

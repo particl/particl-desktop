@@ -122,7 +122,7 @@
     &.escrow .dot {
       background: $color-alert;
     }
-    &.fulfillment .dot {
+    &.packaging .dot {
       background: $color-alert;
     }
     &.shipping .dot {
@@ -144,7 +144,7 @@
     &.sell.bidding,
     &.buy.payment,
     &.sell.escrow,
-    &.sell.fulfillment,
+    &.sell.packaging,
     &.buy.shipping {
       // + in Listing statuses..
       // @TODO we can use blink animation for own expired listing in future.
@@ -172,7 +172,7 @@
     &.sell.escrow .dot::after {
       border-color: $color-alert;
     }
-    &.sell.fulfillment .dot::after {
+    &.sell.packaging .dot::after {
       border-color: $color-alert;
     }
     &.buy.shipping .dot::after {

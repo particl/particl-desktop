@@ -106,7 +106,9 @@ export class LoadingComponent implements OnInit {
 
       this.log.d('Where are we going next?', getwalletinfo);
       if ('hdseedid' in getwalletinfo) {
-        const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
+        const isMarketWallet = (marketConfig.allowedWallets || []).find(
+          (wname: string) => wname.toLowerCase() === this.rpc.wallet.toLowerCase()
+        ) !== undefined;
         if (isMarketWallet) {
           this.startMarketService();
         } else {
@@ -156,7 +158,9 @@ export class LoadingComponent implements OnInit {
   }
 
   private activateWallet(getwalletinfo: any, startSmsg: boolean = true) {
-    const isMarketWallet = (marketConfig.allowedWallets || []).includes(this.rpc.wallet);
+    const isMarketWallet = (marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this.rpc.wallet.toLowerCase()
+    ) !== undefined;
     if (startSmsg || isMarketWallet) {
       this.rpc.call('smsgenable', [this.rpc.wallet]).subscribe(
         () => {},

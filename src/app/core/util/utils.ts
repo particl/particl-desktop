@@ -492,10 +492,10 @@ export const OrderData = {
     },
   },
 
-  'FULFILLMENT': {
+  'PACKAGING': {
     filter: {
       query: 'ESCROW_COMPLETED',
-      text: 'Fulfillment',
+      text: 'Packaging',
       order: 4
     },
     from_action: 'COMPLETE_ESCROW',

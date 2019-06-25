@@ -41,7 +41,7 @@ export class SendComponent implements OnInit, OnDestroy {
   // TODO: Create proper Interface / type
   public send: TransactionBuilder;
   private availableBal: Amount = new Amount(0);
-
+  private availableBlind: Amount = new Amount(0);
   public TxType: typeof TxType = TxType;
 
   constructor(
@@ -76,13 +76,15 @@ export class SendComponent implements OnInit, OnDestroy {
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(
         unspent => {
-          let tempAmount = 0;
-          for (let ut = 0; ut < unspent.length; ut++) {
-            if (!unspent[ut].coldstaking_address || unspent[ut].address) {
-              tempAmount += unspent[ut].amount;
-            };
-          }
-          this.availableBal = new Amount(tempAmount, 8);
+          this.availableBal = new Amount(this.calculateUnspent(unspent), 8);
+        },
+        error => this.log.error('Failed to get balance, ', error));
+
+    this._rpcState.observe('listunspentblind')
+      .pipe(takeWhile(() => !this.destroyed))
+      .subscribe(
+        unspentblind => {
+          this.availableBlind = new Amount(this.calculateUnspent(unspentblind), 8);
         },
         error => this.log.error('Failed to get balance, ', error));
   }
@@ -106,9 +108,12 @@ export class SendComponent implements OnInit, OnDestroy {
   /** Get current account balance (Public / Blind / Anon) */
   availableBalance(account: TxType): number {
     const balance = this.txTypeToBalanceType(account);
-
     if (balance === 'balance') {
       return this.availableBal.getAmount();
+    }
+
+    if (balance === 'blind_balance') {
+      return this.availableBlind.getAmount();
     }
     return (this._rpcState.get('getwalletinfo') || {})[balance] || 0;
   }
@@ -369,6 +374,16 @@ export class SendComponent implements OnInit, OnDestroy {
 
   updateAmount(): void {
     this.send.amount = (this.send.subtractFeeFromAmount) ? this.availableBalance(this.send.input) : null;
+  }
+
+  calculateUnspent(unspent: Array<any>): number {
+    let tempAmount = 0;
+    for (let ut = 0; ut < unspent.length; ut++) {
+      if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+        tempAmount += unspent[ut].amount;
+      };
+    }
+    return tempAmount;
   }
 
   ngOnDestroy() {

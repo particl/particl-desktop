@@ -147,11 +147,14 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
     ];
     this.proposalService.vote(params).subscribe((response) => {
       this.btnValidate = false;
-      this.aleradyVoted = true;
       this.dialog.closeAll();
-      // Update graph data as votes are now saving locally
-      this.getProposalResult();
-      this.snackbarService.open(`Successfully voted for ${this.proposal.title}`, 'info');
+      let msg = response.result;
+      if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
+        this.getProposalResult();
+        this.aleradyVoted = true;
+        msg = `Successfully voted for ${this.proposal.title}`;
+      }
+      this.snackbarService.open(msg, 'info');
     }, (error) => {
       this.btnValidate = false;
       this.dialog.closeAll();
