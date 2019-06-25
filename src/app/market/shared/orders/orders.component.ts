@@ -73,18 +73,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
         )
         .subscribe( (bids) => {
           bids = this.doAdditionalBidFiltering(bids);
-          const newFilters = new OrderFilter(bids);
-          const filterKeys = Object.keys(newFilters.filters);
-          let doUpdate = false;
-          for (const key of filterKeys) {
-            if (newFilters.filters[key].count !== this.order_filters.filters[key].count) {
-              doUpdate = true;
-              break;
-            }
-          }
-
-          if (!this.isProcessing && doUpdate) {
-            this.order_filters = newFilters;
+          if (!this.isProcessing && this.hasUpdatedOrders(bids)) {
             this.updateOrders(false);
           }
         });
@@ -99,7 +88,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
   private extractTypedBids(bids: Bid[]): Bid[] {
     const actualBids: Bid[] = [];
     for (let ii = bids.length - 1; ii >= 0; --ii) {
-      if (!this.isOfCurrentType(bids[ii])) {
+      if (!this.isOfCurrentType(bids[ii]) || bids[ii].type !== 'MPA_BID') {
         continue;
       }
       actualBids.push(new Bid(bids[ii], this.type));
@@ -116,7 +105,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
       this.openProcessingModal();
     }
 
-    if (!_.isNil(this.request$)) {
+    if (this.request$ && !this.request$.closed) {
       this.request$.unsubscribe();
     }
     this.request$ = this.bidService.search('MPA_BID', searchStr)
@@ -183,13 +172,18 @@ export class OrdersComponent implements OnInit, OnDestroy {
   }
 
   private hasUpdatedOrders(newOrders: Bid[]): boolean {
-    return (
-      !this.orders ||
-      (this.orders.length !== newOrders.length) ||
-      (_.differenceWith(this.orders, newOrders, (o1, o2) => {
-        return (o1.id === o2.id) && (o1.allStatus === o2.allStatus)
-      }).length)
-    )
+    const newFilters = new OrderFilter(newOrders);
+    const filterKeys = Object.keys(newFilters.filters);
+
+    let isDifferent = false;
+    for (const key of filterKeys) {
+      if (newFilters.filters[key].count !== this.order_filters.filters[key].count) {
+        isDifferent = true;
+        break;
+      }
+    }
+
+    return isDifferent;
   }
 
   private isOfCurrentType(bid: any): boolean {

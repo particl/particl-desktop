@@ -136,7 +136,7 @@ export class OrderItemComponent implements OnInit {
 
   private callBid(actionable: any) {
     // Prevent double clicking of the button
-    actionable.disabled = true;
+    actionable.locked = true;
 
     const action = actionable.action;
     // Open appropriate confirmation modal
@@ -156,7 +156,7 @@ export class OrderItemComponent implements OnInit {
     }
 
     dialogRef.afterClosed().subscribe(() => {
-      actionable.disabled = false;
+      actionable.locked = false;
     });
 
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
@@ -185,17 +185,14 @@ export class OrderItemComponent implements OnInit {
         if (resp) {
           resp.then(() => {
             const nextStep = Object.keys(OrderData).find((key) => OrderData[key].from_action === action);
-            const prevStatus = String(this.order.OrderItem.status) || '';
-            const newStatus = String(OrderData[nextStep].orderStatus) || '';
             if (nextStep) {
+              const newStatus = String(OrderData[nextStep].orderStatus) || '';
               this.order.OrderItem.status = newStatus;
               this.order = new Bid(this.order, this.order.type);
               this.orderActivity = this.order.orderActivity;
             }
             this.dialog.closeAll();
-            if (nextStep) {
-              this.onOrderUpdated.emit({prevStatus: prevStatus, newStatus: newStatus});
-            }
+            setTimeout(() => this.onOrderUpdated.emit({}), 300);
           }).catch(error => {
               this.dialog.closeAll();
               this.snackbarService.open(`${error}`);

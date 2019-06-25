@@ -43,7 +43,7 @@ export class FocusTimeoutDirective {
   selector: '[appDebounceClick]'
 })
 export class DebounceClickDirective implements OnInit, OnDestroy {
-  @Input() debounceTime: number = 1000;
+  @Input() debounceTime: number = 250;
   @Output() debounceClick: EventEmitter<any> = new EventEmitter();
   private clicks: Subject<any> = new Subject();
   private subscription: Subscription;
