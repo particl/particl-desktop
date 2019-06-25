@@ -202,7 +202,7 @@
 
       <!-- Spendable Blind balance (for Market) -->
       <!-- FIXME: show only when one of Market pages is active (= Listings, Buy, Sell) -->
-      <div class="spendable-balance" *ngIf="_market.isMarketStarted" matTooltip="Available Blind balance for spending on Market" matTooltipPosition="before">
+      <div class="spendable-balance" *ngIf="isMarketRoute" matTooltip="Available Blind balance for spending on Market" matTooltipPosition="before">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-stake"></mat-icon>
         <!-- FIXME: tweak to show BLIND SPENDABLE balance on Market: -->
         <app-balance type="blind_balance" [horizontal]="true"></app-balance>
