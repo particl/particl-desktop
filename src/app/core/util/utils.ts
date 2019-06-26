@@ -343,7 +343,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Waiting for Seller to manually accept (or reject) your bid'
+      status_info: 'Waiting for Seller to manually accept (or reject) your bid',
+      notifyOnEntry: false
     },
     sell: {
       buttons: [
@@ -366,7 +367,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Buyer wants to purchase this item - approve or reject this order to continue'
+      status_info: 'Buyer wants to purchase this item - approve or reject this order to continue',
+      notifyOnEntry: true
     },
   },
 
@@ -390,7 +392,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Seller rejected bid on this item, order has been cancelled (no money was spent)'
+      status_info: 'Seller rejected bid on this item, order has been cancelled (no money was spent)',
+      notifyOnEntry: true
     },
     sell: {
       buttons: [
@@ -404,7 +407,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'You have rejected this bid, order has been cancelled'
+      status_info: 'You have rejected this bid, order has been cancelled',
+      notifyOnEntry: false
     },
   },
 
@@ -428,7 +432,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)'
+      status_info: 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)',
+      notifyOnEntry: true
     },
     sell: {
       buttons: [
@@ -442,14 +447,15 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Awaiting on buyer to lock funds in escrow'
+      status_info: 'Awaiting on buyer to lock funds in escrow',
+      notifyOnEntry: false
     },
   },
 
   'ESCROW': {
     filter: {
       query: 'ESCROW_LOCKED',
-      text: 'Pending Escrow Lock',
+      text: 'Escrow Lock',
       order: 3
     },
     from_action: 'LOCK_ESCROW',
@@ -466,7 +472,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Waiting on seller to complete escrow'
+      status_info: 'Waiting on seller to complete escrow',
+      notifyOnEntry: false
     },
     sell: {
       buttons: [
@@ -480,14 +487,15 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Buyer has paid - please proceed to completing your escrow payment (this will lock the funds to escrow)'
+      status_info: 'Buyer has paid - please proceed to completing your escrow payment (this will lock the funds to escrow)',
+      notifyOnEntry: true
     },
   },
 
-  'FULFILLMENT': {
+  'PACKAGING': {
     filter: {
       query: 'ESCROW_COMPLETED',
-      text: 'Fulfillment',
+      text: 'Packaging',
       order: 4
     },
     from_action: 'COMPLETE_ESCROW',
@@ -504,7 +512,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Funds locked in escrow, waiting for Seller to process order for shipping'
+      status_info: 'Funds locked in escrow, waiting for Seller to process order for shipping',
+      notifyOnEntry: true
     },
     sell: {
       buttons: [
@@ -518,7 +527,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Order is ready to ship - when sent, mark order as shipped and await its delivery'
+      status_info: 'Order is ready to ship - when sent, mark order as shipped and await its delivery',
+      notifyOnEntry: false
     },
   },
 
@@ -542,7 +552,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Order has been shipped - when you receive it, mark it as delivered and the escrow funds will be released'
+      status_info: 'Order has been shipped - when you receive it, mark it as delivered and the escrow funds will be released',
+      notifyOnEntry: true
     },
     sell: {
       buttons: [
@@ -556,7 +567,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery'
+      status_info: 'Order sent to buyer, waiting for buyer to confirm the delivery',
+      notifyOnEntry: false
     },
   },
 
@@ -580,7 +592,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Successfully finalized order'
+      status_info: 'Successfully finalized order',
+      notifyOnEntry: false
     },
     sell: {
       buttons: [
@@ -594,7 +607,8 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Order delivery confirmed by Buyer - order successfully finalized'
+      status_info: 'Order delivery confirmed by Buyer - order successfully finalized',
+      notifyOnEntry: true
     }
   }
 };

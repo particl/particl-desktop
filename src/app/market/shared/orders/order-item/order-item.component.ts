@@ -24,10 +24,14 @@ export class OrderItemComponent implements OnInit {
   trackNumber: string;
   country: string = '';
   orderActivity: any = {};
+  contactDetails: any = {
+    phone: '',
+    email: ''
+  };
   private itemTitle: string = '';
   private purchaseMemo: string = '';
   private pricing: any = {
-    separator: '',
+    separator: '.',
     baseInt: 0,
     baseFraction: 0,
     shippingInt: 0,
@@ -58,19 +62,27 @@ export class OrderItemComponent implements OnInit {
       this.order.ListingItem.ItemInformation.title : '';
 
     let _memo = '';
-    if (this.order.OrderOrder && Object.prototype.toString.call(this.order.OrderOrder.ChildBids) === '[object Array]' ) {
-      const childBid = this.order.OrderOrder.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
-      if (childBid) {
-        const memoDatas = childBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
+    if (Object.prototype.toString.call(this.order.ChildBids) === '[object Array]' ) {
+      const shipBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
+      if (shipBid) {
+        const memoDatas = shipBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
         if (memoDatas) {
           _memo = String(memoDatas.value);
+        }
+      }
+      const lockBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_LOCK' );
+      if (lockBid) {
+        for (const data of (lockBid.BidDatas || []) ) {
+          if (data && data.key && (<string>data.key).startsWith('delivery.')) {
+            this.contactDetails[(<string>data.key).replace('delivery.', '')] = String(data.value);
+          }
         }
       }
     }
     this.purchaseMemo = _memo;
 
     const price = this.order.PricingInformation(this.country);
-    this.pricing.separator = price.base.particlStringSep();
+    this.pricing.separator = price.base.particlStringSep() || this.pricing.separator;
     this.pricing.baseInt = price.base.particlStringInteger();
     this.pricing.baseFraction = price.base.particlStringFraction();
     this.pricing.shippingInt = price.shipping.particlStringInteger();
@@ -111,18 +123,22 @@ export class OrderItemComponent implements OnInit {
     return this.purchaseMemo;
   }
 
-  executeAction(actionType: string) {
+  executeAction(actionable: any) {
+    const actionType = actionable.action;
     const valid = actionType &&
       this.orderActivity.buttons &&
       (this.orderActivity.buttons.findIndex((button: any) => !button.disabled && (button.action === actionType) ) !== -1);
 
     if (valid) {
-      this.callBid(actionType);
+      this.callBid(actionable);
     }
   }
 
-  private callBid(action: string) {
+  private callBid(actionable: any) {
+    // Prevent double clicking of the button
+    actionable.locked = true;
 
+    const action = actionable.action;
     // Open appropriate confirmation modal
     let dialogRef;
     switch (action) {
@@ -138,6 +154,11 @@ export class OrderItemComponent implements OnInit {
         dialogRef = this.dialog.open(PlaceOrderComponent);
         dialogRef.componentInstance.type = action.toLowerCase();
     }
+
+    dialogRef.afterClosed().subscribe(() => {
+      actionable.locked = false;
+    });
+
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
 
       // processing confirmed, take the correct action
@@ -164,17 +185,14 @@ export class OrderItemComponent implements OnInit {
         if (resp) {
           resp.then(() => {
             const nextStep = Object.keys(OrderData).find((key) => OrderData[key].from_action === action);
-            const prevStatus = String(this.order.OrderItem.status) || '';
-            const newStatus = String(OrderData[nextStep].orderStatus) || '';
             if (nextStep) {
+              const newStatus = String(OrderData[nextStep].orderStatus) || '';
               this.order.OrderItem.status = newStatus;
               this.order = new Bid(this.order, this.order.type);
               this.orderActivity = this.order.orderActivity;
             }
             this.dialog.closeAll();
-            if (nextStep) {
-              this.onOrderUpdated.emit({prevStatus: prevStatus, newStatus: newStatus});
-            }
+            setTimeout(() => this.onOrderUpdated.emit({}), 300);
           }).catch(error => {
               this.dialog.closeAll();
               this.snackbarService.open(`${error}`);
@@ -197,7 +215,15 @@ export class OrderItemComponent implements OnInit {
   }
 
   private async escrowLock(data: any): Promise<void> {
-    const contactDetails = []; // TODO: check and use the data from the modal (contained in 'data')
+    const contactDetails: string[] = [];
+    const deliveryDetails = ['phone', 'email'];
+    for (const deliveryKey of deliveryDetails) {
+      if (data && data[deliveryKey]) {
+        contactDetails.push(`delivery.${deliveryKey}`);
+        contactDetails.push( String(data[deliveryKey]) );
+      }
+    };
+
     return this.bid.escrowLockCommand(this.order.OrderItem.id, contactDetails).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Payment made for order ${this.itemTitle}`);
     });

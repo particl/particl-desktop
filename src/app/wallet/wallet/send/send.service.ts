@@ -121,22 +121,24 @@ export class SendService {
 
     /* Detect bug in older wallets with Blind inputs */
     // AddBlindedInputs: GetBlind failed for
-    if (message.search('AddBlindedInput') !== -1) {
-      this.fixWallet();
-    }
+    // 2019-06-24 zaSmilingIdiot -> removing this as all valid blind transaction errors return with the prefix 'AddBlindedInput'
+    //    We also rescan chain where applicable on startup, so hopefully this should not be an issue.
+    // if (message.search('AddBlindedInput') !== -1) {
+    //   this.fixWallet();
+    // }
   }
 
   /*
     AddBlindedInput issue, open modal to fix it.
   */
-  fixWallet(): void {
-    const dialogRef = this.dialog.open(FixWalletModalComponent);
+  // private fixWallet(): void {
+  //   const dialogRef = this.dialog.open(FixWalletModalComponent);
 
-    dialogRef.afterClosed().subscribe(
-      (result) => {
-        this.log.d('FixWalletModal closing');
-      }
-    );
-  }
+  //   dialogRef.afterClosed().subscribe(
+  //     (result) => {
+  //       this.log.d('FixWalletModal closing');
+  //     }
+  //   );
+  // }
 
 }

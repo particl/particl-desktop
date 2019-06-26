@@ -21,7 +21,7 @@ class OrderSummary {
   constructor() {
     for (const type of this.types) {
       this.data[type] = {
-        total: 0,
+        totalActive: 0,
         items: {}
       }
     }
@@ -35,6 +35,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   private destroyed: boolean = false;
   private profileAddress: string = '';
   private activeOrders: OrderSummary = new OrderSummary();
+  private notificationKey: string = 'timestamp_notifcation_orders';
 
   constructor(
     private _marketState: MarketStateService,
@@ -46,7 +47,7 @@ export class OrderStatusNotifierService implements OnDestroy {
   }
 
   public getActiveCount(type: string): number {
-    return +((this.activeOrders.data[type] || {}).total || 0);
+    return +((this.activeOrders.data[type] || {}).totalActive || 0);
   }
 
   private loadOrders() {
@@ -57,6 +58,7 @@ export class OrderStatusNotifierService implements OnDestroy {
         this._marketState.observe('bid')
         .pipe(takeWhile(() => !this.destroyed)) // why are we not waiting for distinct updates only?
         .subscribe(bids => {
+          const notifcationTimestamp = +(localStorage.getItem(this.notificationKey) || 0);
           const activeItems = new OrderSummary();
 
           for (const bid of bids) {
@@ -72,7 +74,11 @@ export class OrderStatusNotifierService implements OnDestroy {
 
             const order = new Bid(bid, type);
             const orderHash = order.ListingItem && order.ListingItem.hash.length ? order.ListingItem && order.ListingItem.hash : '';
-            if (!order.activeBuySell || !orderHash.length) {
+            if (!orderHash.length) {
+              continue;
+            }
+
+            if (!order.activeBuySell && !order.doNotify) {
               continue;
             }
 
@@ -83,12 +89,19 @@ export class OrderStatusNotifierService implements OnDestroy {
                                 order.ListingItem.ItemInformation.title : orderHash;
                 activeItems.data[type].items[orderHash] = {
                   title: title,
-                  count: 0
+                  notificationCount: 0
                 }
             }
-            activeItems.data[type].items[orderHash].count += 1;
-            activeItems.data[type].total += 1;
+
+            if (order.activeBuySell) {
+              activeItems.data[type].totalActive += 1;
+            }
+            if (order.doNotify && +order.updatedAt > notifcationTimestamp) {
+              activeItems.data[type].items[orderHash].notificationCount += 1;
+            }
           };
+
+          localStorage.setItem(this.notificationKey, String(Date.now()));
 
           this.processUpdates(activeItems);
           this.activeOrders = activeItems;
@@ -101,26 +114,17 @@ export class OrderStatusNotifierService implements OnDestroy {
     const newTypeKeys = Object.keys(newOrders.data);
 
     for (const typeKey of newTypeKeys) {
-      const newItemKeys = Object.keys(newOrders.data[typeKey].items);
-      const oldItemKeys = Object.keys(this.activeOrders.data[typeKey].items);
+      const bidHashes = Object.keys(newOrders.data[typeKey].items);
 
-      for (const itemKey of newItemKeys) {
-        let notify = false;
-        if (!_.includes(oldItemKeys, itemKey)) {
-          notify = true;
-        } else if (newOrders.data[typeKey].items[itemKey].count > this.activeOrders.data[typeKey].items[itemKey].count) {
-          notify = true;
-        }
-
-        if (notify) {
-          this.sendNotification(typeKey, newOrders.data[typeKey].items[itemKey]);
-        }
+      const count = bidHashes.reduce((total, hash) => total + +newOrders.data[typeKey].items[hash].notificationCount, 0);
+      if (count > 0) {
+        const msg = `${count} ${typeKey} order(s) have been updated.`
+        this.sendNotification(msg);
       }
     }
   }
 
-  private sendNotification(type: string, data: any) {
-    const message = `You have ${data.count} pending ${type} ${+data.count > 1 ? 'action' : 'actions'} for item ${data.title}`;
+  private sendNotification(message: string) {
     this._notification.sendNotification(message);
   }
 

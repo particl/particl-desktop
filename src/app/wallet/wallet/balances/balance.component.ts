@@ -15,7 +15,7 @@ import { takeWhile } from 'rxjs/operators';
 export class BalanceComponent implements OnInit, OnDestroy {
 
   @Input() type: string; // "total_balance", "anon_balance", "balance", "staked_balance", "blind_balance"
-  @Input() inSidebar: boolean = false; // located in sidebar?
+  @Input() horizontal: boolean = false; // one-line balance, without big numbers?
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
@@ -29,34 +29,41 @@ export class BalanceComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const type = this.type === 'locked_balance' ? 'balance' : this.type;
 
-    if (type === 'pending_balance') {
-      this._rpcState.observe('getwalletinfo')
-        .pipe(takeWhile(() => !this.destroyed))
-        .subscribe(
-          balance => {
+    switch (type) {
+      case 'unspent_blind':
+        this._rpcState.observe('listunspentblind')
+          .pipe(takeWhile(() => !this.destroyed))
+          .subscribe(
+            txs => this.calculateUnspent(txs),
+            error => this.log.error('Failed to get balance, ', error));
+        break;
 
-            const tempBal = (
-              balance.unconfirmed_balance +
-              balance.unconfirmed_blind +
-              balance.unconfirmed_anon +
-              balance.immature_balance +
-              balance.immature_anon_balance
-            );
+      case 'pending_balance':
+        this._rpcState.observe('getwalletinfo', type)
+          .pipe(takeWhile(() => !this.destroyed))
+          .subscribe(
+            balance => {
 
-            this._balance = new Amount((tempBal) || 0, 8);
+              const tempBal = (
+                balance.unconfirmed_balance +
+                balance.unconfirmed_blind +
+                balance.unconfirmed_anon +
+                balance.immature_balance +
+                balance.immature_anon_balance
+              );
 
-          },
-          error => this.log.error('Failed to get balance, ', error));
+              this._balance = new Amount((tempBal) || 0, 8);
 
-    } else {
+            },
+            error => this.log.error('Failed to get balance, ', error));
+        break;
 
-      this._rpcState.observe('getwalletinfo', type)
-        .pipe(takeWhile(() => !this.destroyed))
-        .subscribe(
-          balance => this.listUnSpent(balance),
-          error => this.log.error('Failed to get balance, ', error)
-        );
-
+      default:
+        this._rpcState.observe('getwalletinfo', type)
+          .pipe(takeWhile(() => !this.destroyed))
+          .subscribe(
+            balance => this.listUnSpent(balance),
+            error => this.log.error('Failed to get balance, ', error));
     }
   }
 
@@ -78,6 +85,8 @@ export class BalanceComponent implements OnInit, OnDestroy {
         return 'Staking';
       case 'locked_balance':
         return 'Locked';
+      case 'unspent_blind':
+        return 'Unspent Blind (Private)';
     }
 
     return this.type;
@@ -104,6 +113,14 @@ export class BalanceComponent implements OnInit, OnDestroy {
         this._balance = new Amount((tempBal) || 0, 8)
       },
         error => this.log.error('Failed to get balance, ', error));
+  }
+
+  calculateUnspent(txs: Array<any>): void {
+    let balance = 0;
+    for (const tx of txs) {
+      balance += tx.confirmations ? tx.amount : 0;
+    }
+    this._balance = new Amount((balance), 8);
   }
 
   ngOnDestroy() {

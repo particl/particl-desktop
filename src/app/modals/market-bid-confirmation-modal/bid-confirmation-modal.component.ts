@@ -15,6 +15,8 @@ export class BidConfirmationModalComponent implements OnInit {
   public dialogContent: string;
   public bidItem: Bid;
   public country: string = '';
+  public processing: boolean = false;
+  contactDetails: any = {};
   isPrerelease: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<BidConfirmationModalComponent>) { }
@@ -25,7 +27,8 @@ export class BidConfirmationModalComponent implements OnInit {
   }
 
   confirm(): void {
-    this.isConfirmed.emit();
+    this.processing = true;
+    this.isConfirmed.emit(this.contactDetails);
     this.dialogClose();
   }
 

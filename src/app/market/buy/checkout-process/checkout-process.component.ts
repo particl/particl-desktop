@@ -141,7 +141,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city: ['', Validators.required],
-      state: [''],
+      state: ['', Validators.required],
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
@@ -156,7 +156,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   /* cart */
 
   goToListings(): void {
-    this.router.navigate(['/market/overview']);
+    this.router.navigate(['/wallet/main/market/listings']);
   }
 
   removeFromCart(shoppingCartId: number): void {
