@@ -4,7 +4,7 @@
 .balance-overview {
   display: flex;
   margin-top: $header-main-height;
-  padding: 24px 35px;
+  padding: 20px 35px;
   @include break(l) {
     padding: 24px 50px;
   }
@@ -19,7 +19,7 @@
       @extend %lighter;
       font-weight: 400;
       text-align: left;
-      line-height: 1.45;
+      line-height: 1.35;
     }
     td {
       text-align: right;

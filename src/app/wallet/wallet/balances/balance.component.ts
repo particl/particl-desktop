@@ -26,7 +26,6 @@ export class BalanceComponent implements OnInit, OnDestroy {
   }
 
   constructor(private _rpcState: RpcStateService) { }
-
   ngOnInit() {
     const type = this.type === 'locked_balance' ? 'balance' : this.type;
 
@@ -36,6 +35,26 @@ export class BalanceComponent implements OnInit, OnDestroy {
           .pipe(takeWhile(() => !this.destroyed))
           .subscribe(
             txs => this.calculateUnspent(txs),
+            error => this.log.error('Failed to get balance, ', error));
+        break;
+
+      case 'pending_balance':
+        this._rpcState.observe('getwalletinfo', type)
+          .pipe(takeWhile(() => !this.destroyed))
+          .subscribe(
+            balance => {
+
+              const tempBal = (
+                balance.unconfirmed_balance +
+                balance.unconfirmed_blind +
+                balance.unconfirmed_anon +
+                balance.immature_balance +
+                balance.immature_anon_balance
+              );
+
+              this._balance = new Amount((tempBal) || 0, 8);
+
+            },
             error => this.log.error('Failed to get balance, ', error));
         break;
 
@@ -77,22 +96,22 @@ export class BalanceComponent implements OnInit, OnDestroy {
     this._rpcState.observe('listunspent')
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(unspent => {
-          let tempBal = 0;
-          for (let ut = 0; ut < unspent.length; ut++) {
-            if ((!unspent[ut].coldstaking_address || unspent[ut].address) && unspent[ut].confirmations) {
-              tempBal += unspent[ut].amount;
-            };
-          }
+        let tempBal = 0;
+        for (let ut = 0; ut < unspent.length; ut++) {
+          if ((!unspent[ut].coldstaking_address || unspent[ut].address) && unspent[ut].confirmations) {
+            tempBal += unspent[ut].amount;
+          };
+        }
 
-          if (this.type === 'locked_balance') {
-            tempBal = balance - tempBal;
-          } else if (this.type !== 'actual_balance') {
-            tempBal = balance;
-          }
-          // else tempBal == 'actual balance'.
+        if (this.type === 'locked_balance') {
+          tempBal = balance - tempBal;
+        } else if (this.type !== 'actual_balance') {
+          tempBal = balance;
+        }
+        // else tempBal == 'actual balance'.
 
-          this._balance = new Amount((tempBal) || 0, 8)
-        },
+        this._balance = new Amount((tempBal) || 0, 8)
+      },
         error => this.log.error('Failed to get balance, ', error));
   }
 
