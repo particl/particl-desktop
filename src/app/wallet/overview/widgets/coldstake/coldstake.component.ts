@@ -11,7 +11,8 @@ import { RevertColdstakingComponent } from './revert-coldstaking/revert-coldstak
 @Component({
   selector: 'app-coldstake',
   templateUrl: './coldstake.component.html',
-  styleUrls: ['./coldstake.component.scss']
+  styleUrls: ['./coldstake.component.scss'],
+  providers: [ColdstakeService]
 })
 export class ColdstakeComponent {
 

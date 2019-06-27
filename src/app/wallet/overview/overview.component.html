@@ -13,16 +13,21 @@
   </div>
   <table class="balances by-status" cellspacing="0">
     <tr>
-      <th>Spendable</th>
-      <td><app-balance type="actual_balance" [inSidebar]="true"></app-balance></td>
+      <th matTooltip="Currently available for spending" matTooltipPosition="before">Spendable</th>
+      <td><app-balance type="actual_balance" [horizontal]="true"></app-balance></td>
     </tr>
     <tr>
-      <th>Locked</th>
-      <td><app-balance type="locked_balance" [inSidebar]="true"></app-balance></td>
+      <th matTooltip="Coins locked in escrow" matTooltipPosition="before">Locked</th>
+      <td><app-balance type="locked_balance" [horizontal]="true"></app-balance></td>
     </tr>
     <tr>
-      <th>Staking</th>
-      <td><app-balance type="staked_balance" [inSidebar]="true"></app-balance></td>
+      <th matTooltip="Incoming unconfirmed coins" matTooltipPosition="before">Pending</th>
+      <!-- FIXME! implement pending/immature balance -->
+      <td><app-balance type="pending_balance" [horizontal]="true"></app-balance></td>
+    </tr>
+    <tr>
+      <th matTooltip="Coins currently (locked in) staking" matTooltipPosition="before">Staking</th>
+      <td><app-balance type="staked_balance" [horizontal]="true"></app-balance></td>
     </tr>
   </table>
 </mat-card>

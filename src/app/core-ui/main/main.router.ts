@@ -54,6 +54,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   time: string = '5:00';
   showAnnouncements: boolean = false;
   public unlocked_until: number = 0;
+  public isMarketRoute: boolean = false;
 
   constructor(
     private _router: Router,
@@ -80,6 +81,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   ) {
     this.log.d('Main.Router constructed');
 
+    this.checkMarketRoute(this._router.url);
+
     if ((marketConfig.allowedWallets || []).find(
       (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
       ) !== undefined) {
@@ -105,7 +108,10 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .pipe(map(() => this._route))
+      .pipe(map((event: NavigationEnd) => {
+        this.checkMarketRoute(event.url);
+        return this._route;
+      }))
       .pipe(map(route => {
         while (route.firstChild) {
           route = route.firstChild;
@@ -218,6 +224,10 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       } catch (err) { }
     }
     this.unSubscribeTimer = null;
+  }
+
+  private checkMarketRoute(url: string) {
+    this.isMarketRoute = (url.indexOf('/market/') > -1);
   }
 
   // Paste Event Handle

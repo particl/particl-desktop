@@ -3,7 +3,7 @@
 .balance {
   @extend %enable-select;
   display: inline-block;
-  padding-top: 7px;
+  padding-top: 12px;
   & > .point {
     color: $color;
     margin: 0 2px;
@@ -26,8 +26,8 @@
     margin-top: 6px;
   }
 
-  // Balance preview in sidebar
-  &.in-sidebar {
+  // Horizontal balance (on one line, no big numbers)
+  &.horizontal {
     padding: 0;
     small {
       @extend %lighter;
