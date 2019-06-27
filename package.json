@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "branch": "develop",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
@@ -26,7 +26,7 @@
     "generate:versions": "node modules/clientBinaries/generateVersions.js",
     "generate:documentation": "",
     "checksum": "cd packages && checksum -a sha256 *.*",
-    "build:electron:prod": "ng build --aot --base-href=./ --prod --configuration=production",
+    "build:electron:prod": "ng build --aot --base-href=./ --prod --configuration=prod",
     "build:electron:fast": "ng build --aot --base-href=./ --sourceMap=false",
     "build:electron": "ng build --aot --base-href=./",
     "start:electron:dev": "electron . --dev",

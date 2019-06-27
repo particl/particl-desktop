@@ -35,7 +35,7 @@ exports.parse = function() {
 
   // make a copy of process.argv, because we'll be changing it
   // which messes with the map operator
-  const args = process.argv.slice(0); 
+  const args = process.argv.slice(0);
 
   args.map((arg, index) => {
     let nDashes = arg.lastIndexOf('-') + 1;
@@ -51,14 +51,14 @@ exports.parse = function() {
         return ;
       }
     } else if (nDashes === 1) { /* single-dash: core argument */
-      
+
       // MacOS / OSX likes to add a Process Serial Numbers
       // filter it out before being passed to particl-core.
       if (arg.startsWith("psn_")) {
         process.argv.splice(argIndex, 1);
       }
-      
-      
+
+
       if (arg.includes('=')) {
         arg = arg.split('=');
         options[arg[0]] = arg[1];

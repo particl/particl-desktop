@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, ElementRef, ViewChild, HostListener } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
@@ -24,13 +24,12 @@ import { SendConfirmationModalComponent } from 'app/modals/send-confirmation-mod
   // TODO merge / globalize styles
   styleUrls: ['./send.component.scss', '../../settings/settings.component.scss']
 })
-export class SendComponent implements OnInit {
+export class SendComponent {
 
 
   // General
   log: any = Log.create('send.component');
   private addressHelper: AddressHelper;
-  testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
@@ -61,11 +60,6 @@ export class SendComponent implements OnInit {
     this.send = new TransactionBuilder();
   }
 
-  ngOnInit() {
-    /* check if testnet -> Show/Hide Anon Balance */
-     this._rpcState.observe('getblockchaininfo', 'chain').take(1)
-     .subscribe(chain => this.testnet = chain === 'test');
-  }
   /** Select tab */
   selectTab(tabIndex: number): void {
     this.type = (tabIndex) ? 'balanceTransfer' : 'sendPayment';
