@@ -1,0 +1,38 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.page-intro {
+  @include gradient(rgba($color-white, 0.7), $bg);
+  margin: (-$padding) (-$padding) 0;
+  padding: $padding;
+  @include break(l) {
+    margin: (-$padding-l) (-$padding-l) 0;
+    padding: $padding-l;
+  }
+  .intro-toggle {
+    @extend %lighter;
+    float: right;
+    .mat-icon {
+      margin: 0;
+    }
+  }
+  h1 {
+    margin: 0;
+  }
+  .content {
+    margin-top: 16px;
+    p {
+      line-height: 1.5;
+    }
+  }
+  .widget-help {
+    margin-bottom: 0;
+  }
+}
+
+.page-toggle {
+  float: right; 
+}
+
+.hide-info {
+  display: none;
+}

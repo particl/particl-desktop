@@ -23,14 +23,12 @@
     </mat-toolbar><!-- .header-main -->
 
     <div class="container-block">
-      <div class="page-intro">
-        <h1>Terms &amp; Conditions</h1>
-        <div class="content">
-          <p>
-            In order to use Particl Desktop and Particl Open Marketplace, please accept the following Terms &amp; Conditions
-          </p>
-        </div>
-      </div><!-- .page-intro -->
+      <app-page-intro>
+        <ng-container page-title>Terms &amp; Conditions</ng-container>
+        <ng-container page-content>
+          In order to use Particl Desktop and Particl Open Marketplace, please accept the following Terms &amp; Conditions
+        </ng-container>
+      </app-page-intro>
 
       <div class="terms-text" [innerHTML]="text"></div>
     </div>
