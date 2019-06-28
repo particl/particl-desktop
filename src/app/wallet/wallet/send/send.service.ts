@@ -7,7 +7,7 @@ import { RpcService } from '../../../core/core.module';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 /* fix wallet */
-import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
+// import { FixWalletModalComponent } from 'app/wallet/wallet/send/fix-wallet-modal/fix-wallet-modal.component';
 import { TransactionBuilder } from './transaction-builder.model';
 
 /*
@@ -112,22 +112,22 @@ export class SendService {
 
     /* Detect bug in older wallets with Blind inputs */
     // AddBlindedInputs: GetBlind failed for
-    if (message.search('AddBlindedInput') !== -1) {
-      this.fixWallet();
-    }
+    // if (message.search('AddBlindedInput') !== -1) {
+    //   this.fixWallet();
+    // }
   }
 
   /*
     AddBlindedInput issue, open modal to fix it.
   */
-  fixWallet(): void {
-    const dialogRef = this.dialog.open(FixWalletModalComponent);
+  // fixWallet(): void {
+  //   const dialogRef = this.dialog.open(FixWalletModalComponent);
 
-    dialogRef.afterClosed().subscribe(
-      (result) => {
-        this.log.d('FixWalletModal closing');
-      }
-    );
-  }
+  //   dialogRef.afterClosed().subscribe(
+  //     (result) => {
+  //       this.log.d('FixWalletModal closing');
+  //     }
+  //   );
+  // }
 
 }
