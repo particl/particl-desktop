@@ -1,8 +1,13 @@
 <div class="page-intro" [ngClass]="{ 'collapsed': !this.showPageContent }">
-  <button mat-icon-button color="basic" class="page-toggle" *ngIf="hasPageContent" (click)="toggleInfo()">
-    <mat-icon fontSet="partIcon" fontIcon="part-cross" *ngIf="this.showPageContent" matTooltip="Hide help" matTooltipPosition="before"></mat-icon>
-    <mat-icon fontSet="partIcon" fontIcon="part-circle-question" *ngIf="!this.showPageContent" matTooltip="Show help" matTooltipPosition="before"></mat-icon>
+  
+  <button mat-button *ngIf="this.showPageContent && hasPageContent" color="basic" class="intro-toggle small" (click)="toggleInfo()" matTooltip="Hide help" matTooltipPosition="before">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
   </button>
+
+  <button mat-button *ngIf="!this.showPageContent && hasPageContent" color="accent" class="intro-toggle small" (click)="toggleInfo()" matTooltip="Show help" matTooltipPosition="before">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
+  </button>
+
   <h1><ng-content select="[page-title]"></ng-content></h1>
   <div class="content" [ngClass]="{'hide-info': !showPageContent}" #pageContent>
     <p><ng-content select="[page-content]"></ng-content></p>

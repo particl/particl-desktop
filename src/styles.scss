@@ -77,9 +77,12 @@ body {
 .with-tab-bar {
   margin-top: ($header-main-height + $tab-bar-height);
 }
-
 .without-tab-bar {
   margin-top: $header-main-height;
+}
+
+.with-control-bar {
+  margin-top: ($header-main-height + $control-bar-height);
 }
 
 // content offset from left, when sticky sidebar is present
