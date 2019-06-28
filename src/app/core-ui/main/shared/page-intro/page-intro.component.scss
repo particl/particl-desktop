@@ -30,7 +30,10 @@
 }
 
 .page-toggle {
-  float: right; 
+  float: right;
+  .mat-icon {
+    margin: 0;
+  }
 }
 
 .hide-info {
