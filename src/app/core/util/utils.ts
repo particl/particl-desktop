@@ -325,6 +325,10 @@ export function dataURItoBlob(dataURI: string) {
 
 export const OrderData = {
   'BIDDING': {
+    childBidStatus: {
+      name: 'MPA_BID',
+      order: 0
+    },
     filter: {
       query: 'MPA_BID',
       text: 'Bids',
@@ -373,6 +377,10 @@ export const OrderData = {
   },
 
   'REJECTED': {
+    childBidStatus: {
+      name: 'MPA_REJECT',
+      order: 0
+    },
     filter: {
       query: 'MPA_REJECT',
       text: 'Rejected',
@@ -413,6 +421,10 @@ export const OrderData = {
   },
 
   'PAYMENT': {
+    childBidStatus: {
+      name: 'MPA_ACCEPT',
+      order: 1
+    },
     filter: {
       query: 'AWAITING_ESCROW',
       text: 'Awaiting Payment',
@@ -453,6 +465,10 @@ export const OrderData = {
   },
 
   'ESCROW': {
+    childBidStatus: {
+      name: 'MPA_LOCK',
+      order: 2
+    },
     filter: {
       query: 'ESCROW_LOCKED',
       text: 'Escrow Lock',
@@ -493,6 +509,10 @@ export const OrderData = {
   },
 
   'PACKAGING': {
+    childBidStatus: {
+      name: 'MPA_COMPLETE',
+      order: 3
+    },
     filter: {
       query: 'ESCROW_COMPLETED',
       text: 'Packaging',
@@ -533,6 +553,10 @@ export const OrderData = {
   },
 
   'SHIPPING': {
+    childBidStatus: {
+      name: 'MPA_SHIP',
+      order: 4
+    },
     filter: {
       query: 'SHIPPING',
       text: 'Shipping',
@@ -573,6 +597,10 @@ export const OrderData = {
   },
 
   'COMPLETE': {
+    childBidStatus: {
+      name: 'MPA_RELEASE',
+      order: 5
+    },
     filter: {
       query: 'COMPLETE',
       text: 'Complete',
