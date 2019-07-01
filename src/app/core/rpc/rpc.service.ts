@@ -132,7 +132,7 @@ export class RpcService implements OnDestroy {
 
     let url = `http://${this.hostname}:${this.port}`;
     if (!['createwallet', 'loadwallet', 'listwalletdir',
-          'listwallet', 'smsgdisable', 'smsgenable'].includes(method)) {
+          'listwallet', 'smsgdisable', 'smsgenable', 'smsgsetwallet'].includes(method)) {
       url += `/wallet/${this.wallet}`
     }
 
