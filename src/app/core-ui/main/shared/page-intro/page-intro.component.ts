@@ -36,7 +36,7 @@ export class PageIntroComponent implements AfterViewInit {
   }
 
   private checkPageInfo() {
-    if (this.showPageContent) {
+    if (this.showPageContent && this.hasPageInfo) {
       this.hasPageInfo = this.pageInfoRef.nativeElement.textContent.trim() !== '';
     }
   }
