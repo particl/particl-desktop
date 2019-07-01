@@ -1,14 +1,46 @@
 import { OrderData, DateFormatter, PartoshiAmount } from 'app/core/util/utils';
 import { Product } from './product.model';
 
+const mappedData = Object.keys(OrderData).map( (key) => {
+  return {
+    orderStatus: OrderData[key].orderStatus,
+    bidStatus: OrderData[key].childBidStatus.name || '',
+    order: +OrderData[key].childBidStatus.order
+  }
+});
+
+const BidFilterMapping = mappedData.sort(
+  (a, b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0
+);
+
 export class Bid extends Product {
   activeBuySell: boolean;
   doNotify: boolean = false;
+  private _actualStatus: string = '';
+  private _orderActivity: any = {};
   constructor(private order: any, private ordType: string ) {
     super();
+    let highest = -1;
+    ((<any[]>this.order.ChildBids) || []).forEach((childBid) => {
+      if (childBid.type) {
+        const foundNum = BidFilterMapping.findIndex((filtered) => childBid.type === filtered.bidStatus);
+        if (foundNum > highest) {
+          highest = foundNum;
+        }
+      }
+    });
+
+    this._actualStatus = highest > -1 ?
+      BidFilterMapping[highest].orderStatus :
+      (this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'REJECTED' : 'BIDDED');
     const orderActivity = this.orderActivity;
     this.activeBuySell = (orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
     this.doNotify = Boolean(+orderActivity.notifyOnEntry);
+
+    const orderAction = Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus);
+    if (orderAction) {
+      this._orderActivity = OrderData[orderAction][this.ordType];
+    }
   }
 
   get id(): number {
@@ -36,11 +68,7 @@ export class Bid extends Product {
   }
 
   get orderActivity(): any {
-    const action = Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus);
-    if (action) {
-      return OrderData[action][this.ordType];
-    }
-    return {};
+    return this._orderActivity;
   }
 
   get OrderItem(): any {
@@ -56,7 +84,7 @@ export class Bid extends Product {
   }
 
   get allStatus(): string {
-    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'REJECTED' : 'BIDDED';
+    return this._actualStatus;
   }
 
   get createdAt(): number {

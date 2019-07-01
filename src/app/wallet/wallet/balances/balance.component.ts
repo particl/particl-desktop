@@ -46,11 +46,11 @@ export class BalanceComponent implements OnInit, OnDestroy {
               let tempBal = 0;
               if (balance) {
                 tempBal = (
-                  balance.unconfirmed_balance +
-                  balance.unconfirmed_blind +
-                  balance.unconfirmed_anon +
-                  balance.immature_balance +
-                  balance.immature_anon_balance
+                  +balance.unconfirmed_balance +
+                  +balance.unconfirmed_blind +
+                  +balance.unconfirmed_anon +
+                  +balance.immature_balance +
+                  +balance.immature_anon_balance
                 );
               }
               this._balance = new Amount((tempBal) || 0, 8);
