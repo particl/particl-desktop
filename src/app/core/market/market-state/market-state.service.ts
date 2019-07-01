@@ -20,7 +20,7 @@ export class MarketStateService extends StateService implements OnDestroy {
   start(): void {
     this._enableState = true;
     this.register('profile', 60 * 1000, ['list']);
-    this.register('bid', 15 * 1000, ['search', 0, 99999, 'ASC', '*', '*', ''])
+    this.register('bid', 15 * 1000, ['search', 0, 99999, 'ASC', '*', 'MPA_BID', ''])
   }
 
   stop() {

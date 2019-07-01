@@ -18,7 +18,7 @@
     <form [formGroup]="cartFormGroup" class="cart">
       <ng-template matStepLabel>Your cart</ng-template>
 
-      <div class="no-results" [hidden]="cart?.shoppingCartItems.length != 0">
+      <div class="no-results" [hidden]="cart?.countOfItems != 0">
         <p>
           Oh no, your cart is empty! Let's fix this:<br>
           <button mat-button (click)="goToListings()">
@@ -72,11 +72,11 @@
               </div>
             </td>
             <td class="price cell">
-              {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
+              {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
               PART
             </td>
             <td *ngIf="listCache?.selectedCountry" class="price cell">
-              {{ listing.shippingAmount(listCache?.selectedCountry?.iso)?.getIntegerPart()}}{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.dot()}}<small>{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.getFractionalPart()}}</small>
+              {{ listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringInteger()}}{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringSep()}}<small>{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringFraction()}}</small>
               PART
             </td>
             <!--<td class="quantity cell">1 &times;</td>-->
@@ -92,11 +92,11 @@
                </div>
              </td> -->
             <td *ngIf="!listCache?.selectedCountry" class="total cell">
-              {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
+              {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
               PART
             </td>
             <td *ngIf="listCache?.selectedCountry" class="total cell">
-              {{ listing.total(listCache?.selectedCountry?.iso)?.getIntegerPart()}}{{listing.total(listCache?.selectedCountry?.iso)?.dot()}}<small>{{listing.total(listCache?.selectedCountry?.iso)?.getFractionalPart()}}</small>
+              {{ listing.total(listCache?.selectedCountry?.iso)?.particlStringInteger()}}{{listing.total(listCache?.selectedCountry?.iso)?.particlStringSep()}}<small>{{listing.total(listCache?.selectedCountry?.iso)?.particlStringFraction()}}</small>
               PART
             </td>
             <td class="remove">
@@ -122,10 +122,10 @@
             <tr>
               <td class="desc total">Subtotal</td>
               <td *ngIf="!listCache?.selectedCountry" class="value total">
-                {{cart?.subTotal.amount}} PART
+                {{ cart?.getSubTotalWithoutShipping().particlsString() }} PART
               </td>
               <td *ngIf="listCache?.selectedCountry" class="value total">
-                {{cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.amount}} PART
+                {{ cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.particlsString() }} PART
               </td>
             </tr>
             <!--tr><td class="desc to-do">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
@@ -292,14 +292,14 @@
             </div>
           </td>
           <td class="price cell">
-            {{listing.basePrice?.getIntegerPart()}}{{listing.basePrice?.dot()}}<small>{{listing.basePrice?.getFractionalPart()}}</small>
+            {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
             PART
           </td>
-          <td class="shipping cell">{{listing?.shippingAmount(country)?.getIntegerPart()}}{{listing?.shippingAmount(country)?.dot()}}<small>{{listing?.shippingAmount(country)?.getFractionalPart()}}</small>
+          <td class="shipping cell">{{listing?.shippingAmount(country)?.particlStringInteger()}}{{listing?.shippingAmount(country)?.particlStringSep()}}<small>{{listing?.shippingAmount(country)?.particlStringFraction()}}</small>
             PART
           </td>
           <!--<td class="quantity cell">1 &times;</td>-->
-          <td class="total cell">{{listing?.total(country)?.getIntegerPart()}}{{listing?.total(country)?.dot()}}<small>{{listing?.total(country)?.getFractionalPart()}}</small>
+          <td class="total cell">{{listing?.total(country)?.particlStringInteger()}}{{listing?.total(country)?.particlStringSep()}}<small>{{listing?.total(country)?.particlStringFraction()}}</small>
             PART
           </td>
         </tr>
@@ -314,19 +314,19 @@
         <table class="subtotals" fxFlex="0 0 250px">
           <tr>
             <td class="desc">Subtotal</td>
-            <td class="value">{{cart?.subTotal.getAmountAsString()}} PART</td>
+            <td class="value">{{cart?.getSubTotalWithoutShipping().particlsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Shipping total</td>
-            <td class="value">{{cart?.getShippingTotal(country).getAmountAsString()}} PART</td>
+            <td class="value">{{cart?.getShippingTotal(country).particlsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc">Escrow</td>
-            <td class="value">{{cart?.getEscrowTotal(country).getAmountAsString()}} PART</td>
+            <td class="value">{{cart?.getEscrowTotal(country).particlsString()}} PART</td>
           </tr>
           <tr>
             <td class="desc total">Total</td>
-            <td class="value total">{{cart?.getTotal(country).getAmountAsString()}} PART</td>
+            <td class="value total">{{cart?.getTotal(country).particlsString()}} PART</td>
           </tr>
         </table>
 

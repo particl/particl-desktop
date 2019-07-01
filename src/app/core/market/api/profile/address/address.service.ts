@@ -9,7 +9,7 @@ import { Address } from './address.model';
 export class AddressService {
 
   constructor(
-    private market: MarketService,
+    private market: MarketService
   ) { }
 
   add(address: Address): Observable<any> {

@@ -4,16 +4,6 @@
 
 // ------ UI ELEMENTS ------ //
 
-/*
-.subtitle { // title
-  @extend %subtitle;
-  margin: 24px 0 14px;
-  &.first {
-    margin-top: 0;
-  }
-}
-*/
-
 .container-block {
   .content {
     width: 100%;
@@ -101,32 +91,11 @@
   }
 }
 
-// ------ SIDEBAR (left) ------ //
-/*
-.category-filter { // category expansion panel
-  margin-bottom: 4px !important;
-  &.mat-expanded {
-    .category-filter-header .title {
-      color: $color;
-    }
-  }
-  .category-filter-header {
-    .title {
-      font-weight: 500;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-  }
-  .category-items {
-    padding: 0 0 12px !important;
-    .category-item {
-      height: auto;
-    }
-  }
-}
-*/
+// ------ CONTENT  ------ //
 
-// ------ CONTENT (right) ------ //
+.page-intro {
+  width: 100%;
+}
 
 .no-results {
   width: 100%;

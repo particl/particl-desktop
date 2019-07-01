@@ -63,15 +63,21 @@ export class ProposalsNotificationsService implements OnDestroy {
             }
           }
           if (tempCount > 0) {
-            let needUpdating = false;
+            const newIndexes: number[] = [];
             for (let idx = proposals.length - tempCount; idx < proposals.length; idx++) {
               const proposal: Proposal = proposals[idx];
               if (proposal && +proposal.createdAt > this.notifcationTimestamp) {
-                needUpdating = true;
-                this.notifyNewProposal(proposal);
+                newIndexes.push(idx);
               }
             }
-            if (needUpdating) {
+
+            if (newIndexes.length) {
+              let message = `${newIndexes.length} new proposals are available`;
+              if (newIndexes.length === 1) {
+                const proposal: Proposal = proposals[newIndexes[0]];
+                message = `${proposal.title} newly arrived in you proposal list.`;
+              }
+              this.notifyNewProposal(message);
               this.notifcationTimestamp = Date.now();
 
               // restrict the notification for the unseen proposal at time time of GUI started.
@@ -100,8 +106,10 @@ export class ProposalsNotificationsService implements OnDestroy {
     localStorage.setItem(this.storageKeys.timestamp_view_proposals, String(this.lastUpdatedTimeStamp));
   }
 
-  notifyNewProposal(proposal: Proposal): void {
-    const message = `${proposal.title} newly arrived in you proposal list.`;
+  notifyNewProposal(message: string): void {
+    if (!message.length) {
+      return;
+    }
     this._notification.sendNotification(message);
   }
 

@@ -10,6 +10,7 @@ export class PlaceOrderComponent implements OnInit {
   public type: string = '';
   isPrerelease: boolean = false;
   trackingNumber: string = '';
+  public processing: boolean = false;
   @Output() isConfirmed: EventEmitter<string> = new EventEmitter();
   constructor(public _dialogRef: MatDialogRef<PlaceOrderComponent>) { }
 
@@ -18,6 +19,7 @@ export class PlaceOrderComponent implements OnInit {
   }
 
   placeOrder(): void {
+    this.processing = true;
     this._dialogRef.close();
     this.isConfirmed.emit();
   }

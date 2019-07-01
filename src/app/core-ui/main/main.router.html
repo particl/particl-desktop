@@ -7,22 +7,6 @@
     <div class="sidebar-menu">
       <div class="logo">
         <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
-        <div class="balances">
-          <div class="balance">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
-            <div class="text">
-              <div class="key">Locked</div>
-              <app-balance class="value" type="locked_balance" [inSidebar]="true"></app-balance>
-            </div>
-          </div>
-          <div class="balance">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cart"></mat-icon>
-            <div class="text">
-              <div class="key">Spendable</div>
-              <app-balance class="value" type="actual_balance" [inSidebar]="true"></app-balance>
-            </div>
-          </div>
-        </div><!-- .balances -->
       </div>
 
       <mat-divider></mat-divider>
@@ -96,7 +80,7 @@
                     <mat-list-item class="sidebar-item">
                       <mat-icon class="icon" fontSet="partIcon"
                         fontIcon="part-send"></mat-icon>
-                      <span class="text">Send</span>
+                      <span class="text">Send / Convert</span>
                     </mat-list-item>
                   </a>
 
@@ -146,16 +130,6 @@
           </mat-list><!-- .sidebar-item-group -->
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section">
-          <mat-list class="sidebar-item-group">
-            <a class="sidebar-item-link" routerLinkActive="active" routerLink="wallet/help">
-              <mat-list-item class="sidebar-item">
-                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
-                <span class="text">Help &amp; Support</span>
-              </mat-list-item>
-            </a>
-          </mat-list>
-        </mat-content>
       </div><!-- .menu-links -->
 
 
@@ -193,7 +167,7 @@
             <mat-list-item class="info sidebar-item" *ngIf="unlocked_until > 0">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
               <span class="text"
-                matTooltip="As a security measure, wallet auto-locks after 5 mins"
+                matTooltip="As a security measure, wallet auto-locks after the timer expires"
                 matTooltipPosition="above"><strong>Wallet unlocked</strong> for {{ time }}</span>
             </mat-list-item>
 
@@ -219,16 +193,25 @@
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
     <div class="left" fxFlex="1 1 40%">
-      <!--button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
-        <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-      </button-->
       <div class="title">
         {{ title }}
       </div>
     </div><!-- .left -->
+
     <div class="right" fxFlex="1 1 60%">
+
+      <!-- Spendable Blind balance (for Market) -->
+      <div class="spendable-balance" *ngIf="isMarketRoute" matTooltip="Available Blind balance for spending on Market" matTooltipPosition="before">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+        <app-balance type="unspent_blind" [horizontal]="true"></app-balance>
+      </div>
+
+      <!-- Cart overview -->
       <app-cart *ngIf="_market.isMarketStarted"></app-cart>
+
+      <!-- Status icons -->
       <app-status></app-status>
+
     </div><!-- .right -->
 
   </mat-toolbar><!-- .header-main -->

@@ -54,6 +54,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   time: string = '5:00';
   showAnnouncements: boolean = false;
   public unlocked_until: number = 0;
+  public isMarketRoute: boolean = false;
 
   constructor(
     private _router: Router,
@@ -80,7 +81,11 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   ) {
     this.log.d('Main.Router constructed');
 
-    if ((marketConfig.allowedWallets || []).includes(this._rpc.wallet)) {
+    this.checkMarketRoute(this._router.url);
+
+    if ((marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+      ) !== undefined) {
       // We recheck if the market is started here for live reload cases, and to start the various MP services
       this._market.startMarket(this._rpc.wallet).subscribe(
         () => {
@@ -103,7 +108,10 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
       .pipe(filter(event => event instanceof NavigationEnd))
-      .pipe(map(() => this._route))
+      .pipe(map((event: NavigationEnd) => {
+        this.checkMarketRoute(event.url);
+        return this._route;
+      }))
       .pipe(map(route => {
         while (route.firstChild) {
           route = route.firstChild;
@@ -134,11 +142,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       .subscribe(status => {
         this.unlocked_until = status;
         if (this.unlocked_until > 0) {
-          this.checkTimeDiff(status);
-        } else {
-          if (this.unSubscribeTimer) {
-            this.unSubscribeTimer.unsubscribe();
-          }
+          this.clearTimer();
+          this.checkTimeDiff();
         }
       });
 
@@ -175,6 +180,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.clearTimer();
     this._rpcState.stop();
 
     if (this._market.isMarketStarted) {
@@ -195,31 +201,33 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     this._modalsService.syncing();
   }
 
-  checkTimeDiff(time: number) {
+  checkTimeDiff() {
     const currentUtcTimeStamp = Math.floor((new Date()).getTime() / 1000);
-    const diff = Math.floor(time - currentUtcTimeStamp);
-    const minutes = Math.floor((diff % (60 * 60)) / 60);
-    const sec = Math.ceil((diff % (60 * 60) % 60));
-    this.startTimer(minutes, sec);
-  }
-
-  startTimer(min: number, sec: number): void {
-    sec = this.checkSecond(sec);
-    if (sec === 59) {
-      min = min - 1;
-    }
-    if (min >= 0 && sec >= 0) {
-      this.time = min + ':' + ('0' + sec).slice(-2);
-      this.unSubscribeTimer = timer(1000).
-        subscribe(() => this.startTimer(min, sec));
+    const diff = Math.floor(this.unlocked_until - currentUtcTimeStamp);
+    if ( (this.unlocked_until <= 0) || (diff < 0) ) {
+      this.clearTimer();
     } else {
-      this.unSubscribeTimer.unsubscribe();
+      const resetDate = new Date(null);
+      resetDate.setSeconds(diff);
+      const hours = Math.floor(diff / 3600);
+      const min = Math.floor((diff % 3600) / 60);
+      const sec = Math.ceil((diff % 3600 % 60) );
+      this.time = (hours > 0 ? `${hours}:` : '') + (hours > 0 && min < 10 ? `0${min}:` : `${min}:`) + ('0' + sec).slice(-2);
+      this.unSubscribeTimer = timer(1000).subscribe(() => this.checkTimeDiff());
     }
   }
 
-  checkSecond(sec: number): number {
-    sec = sec > 0 ? (sec - 1) : 59;
-    return sec;
+  private clearTimer() {
+    if (this.unSubscribeTimer !== null) {
+      try {
+        this.unSubscribeTimer.unsubscribe();
+      } catch (err) { }
+    }
+    this.unSubscribeTimer = null;
+  }
+
+  private checkMarketRoute(url: string) {
+    this.isMarketRoute = (url.indexOf('/market/') > -1);
   }
 
   // Paste Event Handle

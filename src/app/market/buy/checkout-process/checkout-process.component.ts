@@ -2,7 +2,6 @@ import {
   Component, EventEmitter, OnDestroy, OnInit, Output,
   ViewChild
 } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   FormBuilder,
@@ -21,7 +20,6 @@ import { CountryListService } from 'app/core/market/api/countrylist/countrylist.
 import { MarketService } from '../../../core/market/market.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 import { BidService } from 'app/core/market/api/bid/bid.service';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { MatDialog } from '@angular/material';
 import { PlaceOrderComponent } from '../../../modals/market-place-order/place-order.component';
@@ -72,7 +70,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     private router: Router,
     // core
     private snackbarService: SnackbarService,
-    private rpcState: RpcStateService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
@@ -107,7 +104,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         if (this.cart && cart.countOfItems === 0) {
           this.resetStepper();
         }
-        this.cart = cart
+        this.cart = cart;
         this.cartFormGroup.patchValue({ itemsInCart: this.cart.countOfItems });
       });
 
@@ -144,7 +141,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       addressLine1: ['', Validators.required],
       addressLine2: [''],
       city: ['', Validators.required],
-      state: [''],
+      state: ['', Validators.required],
       country: ['', Validators.required],
       zipCode: ['', Validators.required],
       newShipping: [''],
@@ -159,7 +156,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   /* cart */
 
   goToListings(): void {
-    this.router.navigate(['/market/overview']);
+    this.router.navigate(['/wallet/main/market/listings']);
   }
 
   removeFromCart(shoppingCartId: number): void {
@@ -184,7 +181,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       return;
     }
     this.country = this.shippingFormGroup.value.country || '';
-    this.allowGoingBack();
     this.storeCache();
   }
 
@@ -222,6 +218,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     this.shippingFormGroup.patchValue({
       country: (country ? country.iso : null)
     })
+    this.country = this.shippingFormGroup.value.country;
   }
 
   select(address: Address) {
@@ -287,7 +284,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   bidOrder() {
-    const addressId: number = this.selectedAddress && this.selectedAddress.id ? +this.selectedAddress.id : -1;
 
     // Extract the shipping address details here (always use the address entered by the user in this.shippingFormGroup)
     const shippingInfo: any = {
@@ -386,10 +382,6 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
     if (this.selectedAddress) {
       this.cache.address.id = this.selectedAddress.id
     }
-  }
-
-  allowGoingBack() {
-    this.stepper.linear = false;
   }
 
   openListing(listing: any) {

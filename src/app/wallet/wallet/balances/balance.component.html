@@ -1,6 +1,6 @@
 <!-- Balance on Overview page -->
 
-<div class="balance" *ngIf="!inSidebar">
+<div class="balance" *ngIf="!horizontal">
   <span class="number big">{{ balance.getIntegerPart() }}</span><!--
 --><span class="point big">{{ balance.dot() }}</span><!--
 --><span class="number small">{{ balance.getFractionalPart() || '' }}</span>
@@ -10,6 +10,6 @@
 
 
 <!-- Balance info in sidebar (behind logo) -->
-<span *ngIf="inSidebar" class="balance in-sidebar">
+<span *ngIf="horizontal" class="balance horizontal">
   {{ balance.getIntegerPart() }}<small>{{ balance.dot() }}{{ balance.getFractionalPart() || '' }}</small>
 </span>

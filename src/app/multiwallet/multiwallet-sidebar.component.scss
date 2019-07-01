@@ -49,13 +49,21 @@
     padding: $spacing 10px;
     .mat-button {
       width: 34px;
-      margin: 6px 0 0;
+      min-width: 0;
+      margin: 3px 0;
       padding: 0;
       text-align: center;
+      line-height: 28px;
       opacity: 0.25;
       &:hover {
         opacity: 1;
         color: $color-white;
+      }
+      &.active {
+        opacity: 1;
+        &.help-support {
+          color: $secondary;
+        }
       }
     }
   }
