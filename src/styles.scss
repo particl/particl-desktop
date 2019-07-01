@@ -77,9 +77,12 @@ body {
 .with-tab-bar {
   margin-top: ($header-main-height + $tab-bar-height);
 }
-
 .without-tab-bar {
   margin-top: $header-main-height;
+}
+
+.with-control-bar {
+  margin-top: ($header-main-height + $control-bar-height);
 }
 
 // content offset from left, when sticky sidebar is present
@@ -129,39 +132,6 @@ body {
   float: left;
   .without-tab-bar & {
     top: ($header-main-height + $padding);
-  }
-}
-
-
-// ------ 2.5. PAGE INTROS ------ //
-
-// descriptive page titles
-.page-intro {
-  @include gradient(rgba($color-white, 0.7), $bg);
-  margin: (-$padding) (-$padding) 0;
-  padding: $padding;
-  @include break(l) {
-    margin: (-$padding-l) (-$padding-l) 0;
-    padding: $padding-l;
-  }
-  .intro-toggle {
-    @extend %lighter;
-    float: right;
-    .mat-icon {
-      margin: 0;
-    }
-  }
-  h1 {
-    margin: 0;
-  }
-  .content {
-    margin-top: 16px;
-    p {
-      line-height: 1.5;
-    }
-  }
-  .widget-help {
-    margin-bottom: 0;
   }
 }
 

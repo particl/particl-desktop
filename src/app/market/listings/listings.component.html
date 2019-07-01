@@ -60,20 +60,17 @@
 </app-header>
 
 
-<div class="container-block with-tab-bar">
-
-  <div class="page-intro">
-    <h1>Particl Open Marketplace</h1>
-    <div class="content">
-      <p>
-        Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
-        Keep in mind, that you can buy Listings here only with your private Blind balance.
-      </p>
-      <p class="widget-help">
-        You can check your current Blind balance in top bar next to your Cart overview. If you need more Blind balance, convert it on Send / Convert &rarr; Convert page.
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+<div class="container-block with-control-bar">
+  <app-page-intro [canHideContent]="true">
+    <ng-container page-title>Particl Open Marketplace</ng-container>
+    <ng-container page-content>
+      Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
+      Keep in mind, that you can buy Listings here only with your private Blind balance.
+    </ng-container>
+    <ng-container page-help>
+      You can check your current Blind balance in top bar next to your Cart overview. If you need more Blind balance, convert it on Send / Convert &rarr; Convert page.
+    </ng-container>
+  </app-page-intro>
 
   <!-- Do not remove the below class it is using for test case -->
   <div class="content grid-container test-case-container"
