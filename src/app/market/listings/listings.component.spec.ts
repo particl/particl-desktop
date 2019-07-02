@@ -7,6 +7,7 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { ListingsComponent } from './listings.component';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ListingsComponent', () => {
   let component: ListingsComponent;
@@ -22,7 +23,8 @@ describe('ListingsComponent', () => {
         BrowserAnimationsModule,
         HttpClientTestingModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RouterTestingModule
       ]
     })
       .compileComponents();

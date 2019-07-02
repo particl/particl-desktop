@@ -37,18 +37,15 @@
 <!-- =========== ORDERS =========== -->
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
-
-  <div class="page-intro">
-    <h1>Buy Orders</h1>
-    <div class="content">
-      <p>
-        This is where you manage the orders you're in the process of buying from other vendors on the marketplace.
-      </p>
-      <p class="widget-help">
-        Each step of the purchasing process needs to be confirmed in this page (i.e. marking an order as "Delivered").
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro>
+    <ng-container page-title>Buy Orders</ng-container>
+    <ng-container page-content>
+      This is where you manage the orders you're in the process of buying from other vendors on the marketplace.
+    </ng-container>
+    <ng-container page-help>
+      Each step of the purchasing process needs to be confirmed in this page (i.e. marking an order as "Delivered").
+    </ng-container>
+  </app-page-intro>
 
   <app-orders type="buy"></app-orders>
 </div><!-- "Orders" tab -->
@@ -59,17 +56,15 @@
 <div class="favourites container-block with-tab-bar"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
 
-  <div class="page-intro">
-    <h1>Your Favourites</h1>
-    <div class="content">
-      <p>
-        Save your favourite listings to easily access them later on.
-      </p>
-      <p class="widget-help">
-        Note that marketplace listings have a limited lifetime (they expire after some time), so make sure to check back here often as they might not be available on the marketplace anymore.
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro>
+    <ng-container page-title>Your Favourites</ng-container>
+    <ng-container page-content>
+      Save your favourite listings to easily access them later on.
+    </ng-container>
+    <ng-container page-help>
+      Note that marketplace listings have a limited lifetime (they expire after some time), so make sure to check back here often as they might not be available on the marketplace anymore.
+    </ng-container>
+  </app-page-intro>
 
   <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
     <p>

@@ -83,14 +83,14 @@ export class OrderStatusNotifierService implements OnDestroy {
             }
 
             if (!_.isPlainObject(activeItems.data[type].items[orderHash])) {
-                const title = order.ListingItem
-                                && order.ListingItem.ItemInformation
-                                && (typeof order.ListingItem.ItemInformation.title === 'string') ?
-                                order.ListingItem.ItemInformation.title : orderHash;
-                activeItems.data[type].items[orderHash] = {
-                  title: title,
-                  notificationCount: 0
-                }
+              const title = order.ListingItem
+                              && order.ListingItem.ItemInformation
+                              && (typeof order.ListingItem.ItemInformation.title === 'string') ?
+                              order.ListingItem.ItemInformation.title : orderHash;
+              activeItems.data[type].items[orderHash] = {
+                title: title,
+                notificationCount: 0
+              }
             }
 
             if (order.activeBuySell) {

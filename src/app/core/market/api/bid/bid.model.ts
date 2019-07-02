@@ -33,14 +33,13 @@ export class Bid extends Product {
     this._actualStatus = highest > -1 ?
       BidFilterMapping[highest].orderStatus :
       (this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'REJECTED' : 'BIDDED');
-    const orderActivity = this.orderActivity;
-    this.activeBuySell = (orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
-    this.doNotify = Boolean(+orderActivity.notifyOnEntry);
 
     const orderAction = Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus);
     if (orderAction) {
       this._orderActivity = OrderData[orderAction][this.ordType];
     }
+    this.activeBuySell = (this._orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
+    this.doNotify = Boolean(+this._orderActivity.notifyOnEntry);
   }
 
   get id(): number {

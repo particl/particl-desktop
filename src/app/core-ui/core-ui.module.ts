@@ -18,12 +18,14 @@ import { LightboxModule } from '@ngx-gallery/lightbox';
 import { GallerizeModule } from '@ngx-gallery/gallerize';
 import 'hammerjs';
 import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
+import { PageIntroComponent } from './main/shared/page-intro/page-intro.component';
 
 
 @NgModule({
   declarations: [
     PaginatorComponent,
-    BalanceComponent
+    BalanceComponent,
+    PageIntroComponent
   ],
   imports: [
     CommonModule,
@@ -48,6 +50,7 @@ import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
     GalleryModule,
     LightboxModule,
     GallerizeModule,
+    PageIntroComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

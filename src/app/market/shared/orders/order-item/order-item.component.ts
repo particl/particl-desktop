@@ -28,6 +28,7 @@ export class OrderItemComponent implements OnInit {
     phone: '',
     email: ''
   };
+  showShippingInfo: boolean = false;
   private itemTitle: string = '';
   private purchaseMemo: string = '';
   private pricing: any = {
@@ -80,6 +81,8 @@ export class OrderItemComponent implements OnInit {
       }
     }
     this.purchaseMemo = _memo;
+
+    this.showShippingInfo = this.order.type === 'buy' && ['shipping', 'complete'].includes(this.order.step);
 
     const price = this.order.PricingInformation(this.country);
     this.pricing.separator = price.base.particlStringSep() || this.pricing.separator;
