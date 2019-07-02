@@ -1,7 +1,7 @@
 @import './src/assets/_config'; // import shared colors etc.
 
 .page-intro {
-  @extend %tfx;
+  //@extend %tfx;
   @include gradient(rgba($color-white, 0.7), $bg);
   margin: (-$padding) (-$padding) 0;
   padding: $padding;
@@ -38,7 +38,7 @@
 
   // page heading (always visible)
   h1 {
-    @extend %tfx;
+    //@extend %tfx;
     margin: 0;
   }
 

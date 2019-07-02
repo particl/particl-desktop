@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 })
 export class PageIntroComponent implements AfterViewInit {
 
-  @Input() canHideContent: boolean = false;
+  @Input() canHideContent: boolean = true;
   @ViewChild('pageContent') pageContentRef: ElementRef;
   @ViewChild('pageInfo') pageInfoRef: ElementRef;
   private viewKey: string;
