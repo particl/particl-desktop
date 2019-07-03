@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,29 +16,22 @@ export class PageIntroComponent implements AfterViewInit {
   public hasPageInfo: boolean = true;
   public showPageContent: boolean = false;
 
-  constructor(private _router: Router) {
+  constructor(
+    private _router: Router,
+    private cdRef:ChangeDetectorRef
+  ) {
     this.viewKey = this._router.url.replace(/\//g, '-').substring(1);
+    this.showPageContent = this.canHideContent ? this.getPageContentState() : true;
   }
 
   ngAfterViewInit() {
-    setTimeout(() => {
-      this.hasPageContent = this.pageContentRef.nativeElement.textContent.trim() !== '' && this.canHideContent;
-      this.showPageContent = this.canHideContent ? this.getPageContentState() : true;
-
-      this.checkPageInfo();
-    }, 0);
+    this.hasPageContent = this.pageContentRef.nativeElement.textContent.trim() !== '' && this.canHideContent;
+    this.cdRef.detectChanges();
   }
 
   toggleInfo() {
     this.showPageContent = !this.showPageContent;
-    this.checkPageInfo();
     this.setPageContentState();
-  }
-
-  private checkPageInfo() {
-    if (this.showPageContent && this.hasPageInfo) {
-      this.hasPageInfo = this.pageInfoRef.nativeElement.textContent.trim() !== '';
-    }
   }
 
   private getPageContentState() {

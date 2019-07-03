@@ -9,9 +9,9 @@
   </button>
 
   <h1><ng-content select="[page-title]"></ng-content></h1>
-  <div class="content" [ngClass]="{'hide-info': !showPageContent}" #pageContent>
+  <div class="content" #pageContent>
     <p><ng-content select="[page-content]"></ng-content></p>
-    <p class="info" *ngIf="hasPageInfo" #pageInfo>
+    <p class="info" #pageInfo>
       <ng-content select="[page-info]"></ng-content>
     </p>
     <p class="widget-help">

@@ -19,6 +19,9 @@
     h1 {
       font-size: 1.55em;
     }
+    > .content {
+      display: none;
+    }
   }
 
   // toggle button
@@ -45,14 +48,15 @@
   // content with help text (toggle-able)
   .content {
     margin-top: 16px;
-    &.hide-info {
-      display: none;
-    }
     p {
       line-height: 1.5;
     }
   }
   .widget-help {
     margin-bottom: 0;
+  }
+
+  .info:empty {
+    display: none
   }
 }
