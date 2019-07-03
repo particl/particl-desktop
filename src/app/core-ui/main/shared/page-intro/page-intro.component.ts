@@ -10,15 +10,13 @@ export class PageIntroComponent implements AfterViewInit {
 
   @Input() canHideContent: boolean = true;
   @ViewChild('pageContent') pageContentRef: ElementRef;
-  @ViewChild('pageInfo') pageInfoRef: ElementRef;
   private viewKey: string;
   public hasPageContent: boolean = false;
-  public hasPageInfo: boolean = true;
   public showPageContent: boolean = false;
 
   constructor(
     private _router: Router,
-    private cdRef:ChangeDetectorRef
+    private cdRef: ChangeDetectorRef
   ) {
     this.viewKey = this._router.url.replace(/\//g, '-').substring(1);
     this.showPageContent = this.canHideContent ? this.getPageContentState() : true;
