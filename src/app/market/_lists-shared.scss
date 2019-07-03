@@ -116,10 +116,13 @@
     &.bidding .dot {
       background: $color-warning;
     }
-    &.awaiting .dot {
+    &.payment .dot {
       background: mix($color-warning, $color-alert, 60%);
     }
     &.escrow .dot {
+      background: $color-alert;
+    }
+    &.packaging .dot {
       background: $color-alert;
     }
     &.shipping .dot {
@@ -139,8 +142,9 @@
     }
     // animated notifications in Order statuses
     &.sell.bidding,
-    &.buy.awaiting,
+    &.buy.payment,
     &.sell.escrow,
+    &.sell.packaging,
     &.buy.shipping {
       // + in Listing statuses..
       // @TODO we can use blink animation for own expired listing in future.
@@ -162,10 +166,13 @@
     &.sell.bidding .dot::after {
       border-color: $color-warning;
     }
-    &.buy.awaiting .dot::after {
+    &.buy.payment .dot::after {
       border-color: mix($color-warning, $color-alert, 60%);
     }
     &.sell.escrow .dot::after {
+      border-color: $color-alert;
+    }
+    &.sell.packaging .dot::after {
       border-color: $color-alert;
     }
     &.buy.shipping .dot::after {

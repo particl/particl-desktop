@@ -26,7 +26,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, place order
     </button>
@@ -62,7 +62,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, accept bid
     </button>
@@ -96,16 +96,45 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="warn" (click)="placeOrder()">
+    <button mat-raised-button color="warn" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, reject bid
     </button>
   </mat-dialog-actions>
 </div>
 
+<div *ngIf="type === 'complete_escrow'">
+  <div mat-dialog-title class="title">Fund Escrow</div>
 
+  <mat-dialog-content class="modal-content">
+    <div class="row" fxLayout>
+      <div class="image" fxFlex="0 0 120px">
+        <img src="./assets/icons/SVG/market/accept-bid.svg">
+      </div>
+      <div class="text" fxFlex="1 1 350px">
+        <p class="lead">
+          Are you certain that you want to finalize escrow payment for this item?
+        </p>
+        <p class="widget-help">
+          Once escrow is locked, the item can be shipped to the buyer.
+        </p>
+      </div>
+    </div>
+  </mat-dialog-content>
 
-<div *ngIf="type === 'escrow'">
+  <mat-dialog-actions fxLayoutAlign="end center">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      No, cancel
+    </button>
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Yes, lock escrow
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<div *ngIf="type === 'complete'">
   <div mat-dialog-title class="title">Confirm order delivery</div>
 
   <mat-dialog-content class="modal-content">
@@ -132,7 +161,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
       No, cancel
     </button>
-    <button mat-raised-button color="primary" (click)="placeOrder()">
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="placeOrder()" [disabled]="processing">
       <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
       Yes, I received the order
     </button>

@@ -15,7 +15,7 @@ export class OrderCountComponent {
 
   @Input() type: string;
   constructor(
-    private notify: OrderStatusNotifierService
+    public notify: OrderStatusNotifierService
   ) {}
 
 }

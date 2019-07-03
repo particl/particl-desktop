@@ -24,7 +24,7 @@
     </div>
 
     <div class="tx-amount">
-      <span  class="big">{{ bidItem?.listing?.totalAmount(country)?.getIntegerPart() }}</span><span class="point">{{ bidItem?.listing?.totalAmount(country)?.dot() }}</span><span class="small">{{ bidItem?.listing?.totalAmount(country)?.getFractionalPart() }}</span>&ensp;
+      <span  class="big">{{ bidItem?.PricingInformation(country)?.total?.particlStringInteger() }}</span><span class="point">{{ bidItem?.PricingInformation(country)?.total?.particlStringSep() }}</span><span class="small">{{ bidItem?.PricingInformation(country)?.total?.particlStringFraction() }}</span>&ensp;
       <span class="currency">PART</span>
       <!-- TODO: until fiat estimations are implemented, hide them -->
       <div class="fiat">&asymp; 3.42 USD</div>
@@ -32,19 +32,36 @@
     <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
     <div class="receiver-info">
-      <div class="label">{{ bidItem?.listing?.title }}</div>
+      <div class="label">{{ bidItem?.ListingItem?.ItemInformation?.title }}</div>
       <code class="address">{{ bidItem?.OrderItem?.Order?.seller }}</code>
+    </div>
+
+    <div class="contact-info">
+      <div class="subtitle">Shipping contact info</div>
+      <p>Seller's shipping method may need you to supply your contact information for successful delivery. If you are comfortable providing this information, please provide it below</p>
+      <div class="row" fxLayout fxLayoutGap="20px">
+        <div class="half" fxFlex="50%">
+          <mat-form-field class="full-width no-top-padding">
+            <input type="tel" matInput placeholder="Telephone number" name="phone" [(ngModel)]="contactDetails.phone" #phone="ngModel" maxlength="30">
+          </mat-form-field>
+        </div>
+        <div class="half" fxFlex="50%">
+          <mat-form-field class="full-width no-top-padding">
+            <input type="email" matInput placeholder="E-mail address" name="email" [(ngModel)]="contactDetails.email" #email="ngModel" email maxlength="255" />
+          </mat-form-field>
+        </div>
+      </div>
     </div>
 
     <p class="fee-info">
       <!-- Transaction fee:<span class="amount">11 PART</span><span class="fiat">&asymp; 0.05 USD</span><br> -->
-      Listing price:<span class="amount">{{ bidItem?.listing?.basePrice?.getIntegerPart() }}{{ bidItem?.listing?.basePrice?.dot() }}{{ bidItem?.listing?.basePrice?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Listing price:<span class="amount">{{ bidItem?.PricingInformation(country)?.base?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.base?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.base?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
 
-      Shipping:<span class="amount">{{ bidItem?.listing?.shippingAmount(country)?.getIntegerPart() }}{{ bidItem?.listing?.shippingAmount(country)?.dot() }}{{ bidItem?.listing?.shippingAmount(country)?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Shipping:<span class="amount">{{ bidItem?.PricingInformation(country)?.shipping?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.shipping?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.shipping?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
 
-      Escrow:<span class="amount">{{ bidItem?.listing?.escrowAmount(country)?.getIntegerPart() }}{{ bidItem?.listing?.escrowAmount(country)?.dot() }}{{ bidItem?.listing?.escrowAmount(country)?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
+      Escrow:<span class="amount">{{ bidItem?.PricingInformation(country)?.escrow?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.escrow?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.escrow?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
 
-      Total amount:<span class="amount">{{ bidItem?.listing?.totalAmount(country)?.getIntegerPart() }}{{ bidItem?.listing?.totalAmount(country)?.dot() }}{{ bidItem?.listing?.totalAmount(country)?.getFractionalPart() }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      Total amount:<span class="amount">{{ bidItem?.PricingInformation(country)?.total?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.total?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.total?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
     </p>
 
     <p class="escrow-info">
@@ -61,7 +78,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="confirm()" [disabled]="processing">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Buy
   </button>

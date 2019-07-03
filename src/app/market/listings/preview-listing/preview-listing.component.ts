@@ -7,7 +7,8 @@ import { ProcessingModalComponent } from 'app/modals/processing-modal/processing
 import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { ImageItem } from '@ngx-gallery/core';
+import { ImageItem, Gallery } from '@ngx-gallery/core';
+import { Lightbox } from '@ngx-gallery/lightbox';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { take, takeWhile } from 'rxjs/operators';
 
@@ -39,6 +40,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     private snackbarService: SnackbarService,
     private profileService: ProfileService,
     public countryListService: CountryListService,
+    public gallery: Gallery,
+    public lightbox: Lightbox,
     @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
@@ -52,6 +55,13 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     if (this.data.listing) {
       this.images = this.data.listing.imageCollection.imageUrls;
     }
+      // Get a lightbox gallery ref
+    const lightboxRef = this.gallery.ref('lightbox');
+
+    // Add custom gallery config to the lightbox (optional)
+    lightboxRef.setConfig({
+      loadingMode: 'indeterminate'
+    });
   }
 
   getVoteOfListing(): void {
