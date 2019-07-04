@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef, MatIconModule } from '@angular/material';
 
-import { ModalsModule, PassphraseService } from '../../modals.module';
+import { PassphraseService } from './passphrase.service';
 
 /* modules (own) */
 import { SharedModule } from '../../../wallet/shared/shared.module';
@@ -12,6 +12,7 @@ import { CoreUiModule } from '../../../core-ui/core-ui.module';
 
 /* components & directives (own) */
 import { PassphraseComponent } from './passphrase.component';
+import { DirectiveModule } from 'app/core-ui/directive/directive.module';
 
 /* delete any unused imports! */
 
@@ -26,17 +27,16 @@ describe('PassphraseComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot(),
         /* deps */
         BrowserAnimationsModule,
         MatIconModule,
+        DirectiveModule
        ],
       providers: [
         /* own */
-        PassphraseService,
-        /* deps */
-        { provide: MatDialogRef},
-      ]
+        PassphraseService
+      ],
+      declarations: [PassphraseComponent]
     })
     .compileComponents();
   }));

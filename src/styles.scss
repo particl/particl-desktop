@@ -168,8 +168,9 @@ body {
 // ------ 3.6. QR-CODE ------ //
 
 .qr-code {
-  canvas {
-    display: inline !important;
+  img {
+    display: block;
+    margin: 0 auto;
   }
 }
 

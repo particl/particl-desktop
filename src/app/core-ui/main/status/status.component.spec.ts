@@ -6,6 +6,7 @@ import { ModalsModule } from '../../../modals/modals.module';
 import { CoreUiModule } from '../../core-ui.module';
 
 import { StatusComponent } from './status.component';
+import { MainViewModule } from '../main-view.module';
 
 describe('StatusComponent', () => {
   let component: StatusComponent;
@@ -17,7 +18,8 @@ describe('StatusComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MainViewModule
       ]
     })
     .compileComponents();

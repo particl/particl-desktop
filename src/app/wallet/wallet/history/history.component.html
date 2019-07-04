@@ -1,6 +1,6 @@
 <app-header class="disable-select">
   <div class="container-fluid tab-bar">
-    <mat-tab-group (selectChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
+    <mat-tab-group (selectedTabChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
       <!-- [(selectedIndex)]="categories.indexOf(filters.category)"> -->
       <mat-tab *ngFor="let category of categories">
         <ng-template mat-tab-label>
@@ -34,7 +34,7 @@
         </mat-form-field-->
 
         <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
-          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (change)="filter()">
+          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
             <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
               {{ sorting.title }}
             </mat-option>
@@ -43,7 +43,7 @@
       </mat-card>
     </div>
 
-    <p class="widget-help">
+    <!-- <p class="widget-help">
       Transaction filter gives you the most granular control over displayed transactions.
     </p>
 
@@ -61,7 +61,7 @@
     <button mat-button color="warn" class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
-    </button>
+    </button> -->
 
   </div>
 

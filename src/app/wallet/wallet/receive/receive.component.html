@@ -1,6 +1,6 @@
 <app-header class="disable-select">
   <div class="tab-bar">
-    <mat-tab-group (selectChange)="changeTab($event.index)">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
@@ -32,16 +32,16 @@
           </qrcode>
         </div><!-- qrcode -->
       </div>
-  
+
       <div class="main" fxFlex="1 1 480px">
-  
+
         <!-- Address type (public/private)-->
         <div class="address-type">
           <mat-icon *ngIf="getAddressType() === 'public'" fontSet="partIcon" fontIcon="part-public"></mat-icon>
           <mat-icon *ngIf="getAddressType() === 'private'" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
           {{ getAddressType() }} address #{{ selected?.id }}
         </div>
-  
+
         <!-- Address label -->
         <div class="address-label">
 
@@ -68,21 +68,21 @@
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
           </button-->
         </div>
-  
+
         <!-- Address string -->
-        <div class="address address-string" fxLayoutWrap fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
+        <div class="address address-string" fxLayout="row wrap" fxLayoutAlign="start center" matTooltip="Click to copy" matTooltipPosition="after" ngxClipboard [cbContent]="selected?.address" (click)="copyToClipBoard()">
           <div *ngFor="let word of selected?.readable" class="address-word" fxFlex="11.111">
             {{ word }}
           </div>
         </div>
-  
+
         <p class="widget-help" *ngIf="getAddressType() === 'public'">
           This is your public address &ndash; its balance and transaction history is publicly visible on blockchain. If you would like to increase your privacy, use Private address instead.
         </p>
         <p class="widget-help" *ngIf="getAddressType() === 'private'">
           This is your private address &ndash; its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.
         </p>
-  
+
       </div><!-- .main -->
     </div><!-- .address-info -->
 

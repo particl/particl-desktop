@@ -57,10 +57,8 @@ export class UpdaterService {
   }
 
   public restart(): Promise<any> {
-    const data = {
-      type: 'restart'
-    };
-
-    return this._ipc.runCommand(this.DAEMON_CHANNEL, null, data).toPromise();
+    return Observable.create(observer => {
+      observer.complete(true);
+    }).toPromise();
   }
 }

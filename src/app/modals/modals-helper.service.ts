@@ -14,7 +14,6 @@ import { UnlockModalConfig } from './models/unlock.modal.config.interface';
 import { ColdstakeComponent } from 'app/modals/coldstake/coldstake.component';
 import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
-import { CreateWalletComponent } from 'app/modals/createwallet/createwallet.component';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -51,9 +50,6 @@ export class ModalsHelperService implements OnDestroy {
     this._blockStatusService.statusUpdates.asObservable().subscribe(status => {
       this.progress.next(status.syncPercentage);
     });
-
-    /* Hook wallet initialized -> open createwallet modal */
-    this.openInitialCreateWallet();
   }
 
   /**
@@ -62,6 +58,7 @@ export class ModalsHelperService implements OnDestroy {
     */
 
   unlock(data: UnlockModalConfig, callback?: Function) {
+    console.log(new Error().stack);
     if (this._rpcState.get('locked')) {
       const dialogRef = this._dialog.open(UnlockwalletComponent, this.modelSettings);
       if (data || callback) {
@@ -94,36 +91,11 @@ export class ModalsHelperService implements OnDestroy {
     });
   }
 
-  createWallet() {
-    const dialogRef = this._dialog.open(CreateWalletComponent, this.modelSettings);
-    dialogRef.afterClosed().subscribe(() => {
-      this.log.d('createWallet modal closed');
-    });
-  }
-
   encrypt() {
     const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
     });
-  }
-
-  /**
-    * Open the Createwallet modal if wallet is not initialized
-    */
-
-  openInitialCreateWallet(): void {
-    this._rpcState.observe('ui:walletInitialized')
-      .takeWhile(() => !this.destroyed)
-      .subscribe(
-        state => {
-          this.initializedWallet = state;
-          if (state) {
-            this.log.i('Wallet already initialized.');
-            return;
-          }
-          this.createWallet();
-        });
   }
 
   /**

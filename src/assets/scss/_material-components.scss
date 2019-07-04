@@ -22,12 +22,14 @@ Customizations and modifiers for default Material components
       2.5. Lists
       2.6. Modals
       2.7. Scrollbars
+      2.8. Sidenav (main menu)
 
     3. Forms
       3.1. Inputs
       3.2. Verification
       3.3. Selects
       3.4. Radios
+      3.7. Toggle buttons
 
 */
 
@@ -41,7 +43,7 @@ Customizations and modifiers for default Material components
 button,
 .mat-button,
 .mat-raised-button {
-  font-family: $font;
+  font-family: $font !important;
   font-weight: 600;
   .mat-icon {
     margin-right: 5px;
@@ -126,6 +128,7 @@ button,
 mat-card.mat-card {
   font-family: $font;
   box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+  padding: 24px;
 }
 
 
@@ -147,9 +150,7 @@ mat-card.mat-card {
     .mat-icon {
       @extend %tfx;
       font-size: 14px;
-      margin-right: 6px;
-      position: relative;
-      top: 2px;
+      margin-right: 9px;
       opacity: 0.5;
     }
   }
@@ -167,6 +168,7 @@ mat-card.mat-card {
   @extend mat-card.mat-card;
   margin-bottom: 9px !important;
   overflow: hidden;
+  padding: 0;
   .mat-expansion-panel-header {
     font-family: $font;
     font-size: 13px;
@@ -179,20 +181,13 @@ mat-card.mat-card {
     }
   }
   .mat-expansion-indicator {
+    @extend %tfx;
     position: relative;
-    top: -4px;
-    transform: none !important;
-    &::after {
-      transition: none !important;
-    }
+    top: -3px;
   }
   &.mat-expanded { // while expanded..
     .mat-expansion-indicator {
-      top: 0;
-      &::after {
-        position: relative;
-        transform: rotate(-135deg);
-      }
+      top: 3px;
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
@@ -235,12 +230,15 @@ mat-card.mat-card {
 // ------ 2.5. LISTS ------ //
 
 .mat-list {
+  mat-list-item.mat-list-item {
+    padding: 0;
+  }
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
     .mat-list-item {
       height: 42px;
       .mat-list-item-content {
-        padding: 0 10px;
+        padding: 0 24px;
       }
     }
   }
@@ -410,6 +408,18 @@ mat-card.mat-card {
 }
 
 
+// ------ 2.8. SIDENAV ------ //
+
+.mat-sidenav {
+  &.sidebar { // app's sidebar, dark main menu
+    .mat-drawer-inner-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+
 
 /* ------------------------------- *\
     3. FORMS
@@ -463,10 +473,10 @@ input {
 // ------ 3.3. SELECTS ------ //
 
 .mat-select {
-  font-family: $font;
-  .mat-option {
-    font-family: $font;
-  }
+  font-family: $font !important;
+}
+.mat-option {
+  font-family: $font !important;
 }
 .mat-select-panel {
   background: white;
@@ -503,6 +513,26 @@ input {
     .mat-radio-button .mat-radio-label,
     .mat-radio-button .mat-radio-label-content {
       width: 100%;
+    }
+  }
+}
+
+
+// ------ 3.7. TOGGLE BUTTONS ------ //
+
+mat-button-toggle {
+  .mat-button-toggle-group,
+  .mat-button-toggle-standalone {
+    @extend %tfx;
+    box-shadow: none !important;
+    border: 0;
+    &:hover,
+    &:focus {
+      background: darken($bg, 10%) !important;
+      color: $text;
+    }
+    .mat-button-toggle-focus-overlay {
+      opacity: 0 !important; // fixes weird behaviour of overlay layer
     }
   }
 }

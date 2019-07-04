@@ -78,7 +78,7 @@ export class RevertColdstakingComponent implements OnInit {
               subfee: true,
               address: this.address,
               amount: tx.amount
-            }], '', '', 4, 64, true, JSON.stringify({
+            }], '', '', 4, 32, true, JSON.stringify({
               inputs: tx.inputs
             })]).subscribe(res => {
 
@@ -121,7 +121,7 @@ export class RevertColdstakingComponent implements OnInit {
         subfee: true,
         address: this.address,
         amount: tx.amount
-      }], 'revert coldstaking', '', 4, 64, false, JSON.stringify({
+      }], 'revert coldstaking', '', 4, 32, false, JSON.stringify({
         inputs: tx.inputs
       })]).subscribe(res => {
 

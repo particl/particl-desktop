@@ -7,6 +7,7 @@ import { ModalsModule } from '../../../../../modals/modals.module';
 import { CoreUiModule } from '../../../../core-ui.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
+import { MainViewModule } from 'app/core-ui/main/main-view.module';
 
 describe('ConsoleModalComponent', () => {
   let component: ConsoleModalComponent;
@@ -25,7 +26,8 @@ describe('ConsoleModalComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         ModalsModule,
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MainViewModule
       ],
       providers: [
         /* deps */

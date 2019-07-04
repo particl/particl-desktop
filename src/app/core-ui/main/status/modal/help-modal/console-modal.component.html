@@ -4,9 +4,9 @@
   </button>
 
   <div mat-dialog-container>
-    <mat-tab-group (selectChange)="selectTab($event.index)">
+    <mat-tab-group (selectedTabChange)="selectTab($event.index)">
       <mat-tab label="Core console">
-        
+
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -42,7 +42,7 @@
     <mat-form-field fxFlex="1 1 100%" floatPlaceholder="never">
       <input matInput [(ngModel)]="command" placeholder="Enter 'help' for an overview of available commands" [appFocusTimeout]="true">
     </mat-form-field>
-    <button mat-raised-button color="primary" [disabled]="!command || !waitingForRPC" (click)="rpcCall()" fxFlex>
+    <button mat-raised-button color="primary" [disabled]="!command || !waitingForRPC" (click)="rpcCall()" fxFlex="0 1 110px">
       <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
       Enter
     </button>

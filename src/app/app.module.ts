@@ -10,6 +10,7 @@ import { DirectiveModule } from './core-ui/directive/directive.module';
 import { MultiwalletModule, TestComponent } from './multiwallet/multiwallet.module';
 // import { WalletViewsModule } from './wallet/wallet.module';
 
+import { InstallerModule } from 'app/installer/installer.module';
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
 
@@ -26,6 +27,7 @@ import { routing } from './app.routing';
     CoreModule.forRoot(),
     CoreUiModule.forRoot(),
     ModalsModule.forRoot(),
+    InstallerModule,
     // WalletViewsModule, // shouldn't be needed?
     MultiwalletModule,
   ],

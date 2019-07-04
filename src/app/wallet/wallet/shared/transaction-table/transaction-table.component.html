@@ -19,12 +19,12 @@
     <mat-expansion-panel-header fxLayout="row" fxLayoutGap="10px" (click)="showExpandedTransactionDetail(tx)" layout-padding>
 
       <!-- Date -->
-      <mat-panel-title fxFlex="0 0 85px" fxFlex.lt-md="100" *ngIf="display.date" class="history_date">
+      <mat-panel-title fxFlex="85px" *ngIf="display.date" class="history_date">
         {{ tx.getDate() }}
       </mat-panel-title>
 
       <!-- Confirmations -->
-      <mat-panel-title fxFlex="0 0 50px" fxFlex.lt-md="100" *ngIf="display.confirmations" class="history_confirmation"
+      <mat-panel-title fxFlex="50px" *ngIf="display.confirmations" class="history_confirmation"
                         [ngClass]="styleConfimations(tx.getConfirmationCount())">
         <span mat-line matTooltip="Confirmations" matTooltipPosition="before">
           <mat-icon fontSet="partIcon" fontIcon="part-circle-check" class="confirmations"></mat-icon>
@@ -33,7 +33,7 @@
       </mat-panel-title>
 
       <!-- Category icon -->
-      <mat-panel-title fxFlex="1 0 175px" fxFlex.lt-md="100" *ngIf="display.category" class="history_cat_icon"
+      <mat-panel-title fxFlex *ngIf="display.category" class="history_cat_icon"
                         [ngSwitch]="tx.getCategory()">
         <span *ngSwitchCase="'stake'" class="tx-type staked">
           <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
@@ -71,24 +71,8 @@
         </span>
       </mat-panel-title>
 
-      <!-- Address -->
-      <!--mat-panel-title fxFlex.lg="57" fxFlex.lt-md="100" *ngIf="display.senderAddress" class="history_longAddress">
-        {{ tx.getAddress() }}
-      </mat-panel-title-->
-
-      <mat-panel-title fxFlex="20" fxFlex.lt-md="100" *ngIf="display.txid" class="history_txt">
-        <span mat-line fxLayout.md="row" fxFlex="100%" fxLayout.lg="row">
-          <span fxFlex="10"><b>TxId</b></span>
-          <span fxFlex="80">{{ tx.txid }} </span>
-        </span>
-      </mat-panel-title>
-
-      <mat-panel-title fxFlex="20" fxFlex.lt-md="100" *ngIf="display.blockIndex" class="history_blockIndex">
-        <span mat-line>Blockindex {{ tx.blockindex }}</span>
-      </mat-panel-title>
-
       <!-- Amount -->
-      <mat-panel-title fxFlex="1 0 155px" fxFlex.lt-md="100" *ngIf="display.amount" class="history_amount">
+      <mat-panel-title fxFlex *ngIf="display.amount" class="history_amount">
         <span mat-line>
           <span class="amount"
                 [ngClass]="{'positive': tx.getAmountObject().getAmount() > 0, 'negative': tx.getAmountObject().getAmount() < 0 }">
@@ -103,41 +87,41 @@
     </mat-expansion-panel-header>
 
 
-    <div class="container history_container" fxLayoutWrap layout-padding>
+    <div class="container history_container" fxLayout="row wrap">
 
-      <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
+      <div fxFlex fxLayout="column">
         <!-- To/from (detail) -->
         <div class="tx-detail-item" fxFlex>
-          <span fxFlex="0 0 80px">To/from:</span>
-          <input fxFlex="1 1 calc(100% - 80px)" value="{{ tx.getAddress() }}" class="to-from-address input">
+          <span fxFlex="80px">To/from:</span>
+          <input fxFlex="240px" value="{{ tx.getAddress() }}" class="to-from-address input">
         </div>
         <!-- TX ID (detail) -->
         <div class="tx-detail-item" fxFlex>
-          <span fxFlex="0 0 80px">TXID:</span>
-          <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link"
+          <span fxFlex="80px">TXID:</span>
+          <a fxFlex="240px" class="tx-detail-link"
               href="https://explorer{{txService.testnet ? '-testnet' : ''}}.particl.io/tx/{{tx.txid}}"
               target="_blank" matTooltip="Show on Block Explorer">
             {{tx.txid}}</a>
         </div>
       </div>
 
-      <div fxFlex="0 0 260px" fxLayout="column">
+      <div fxFlex="260px" fxLayout="column">
         <!-- TX fee (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Fee:</span>
-          <span class="mat-right">{{tx.fee ? tx.fee : 0}} PART</span>
+          <span class="value">{{tx.fee ? tx.fee : 0}} PART</span>
         </div>
         <!-- Net amount (detail) -->
         <div class="tx-detail-item text-right" fxFlex>
           <span>Net amount:</span>
-          <span class="mat-right">{{ tx.getNetAmount()}} PART</span>
+          <span class="value">{{ tx.getNetAmount()}} PART</span>
         </div>
       </div>
 
       <!-- Narration -->
-      <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="tx.getNarration()">
-        <span fxFlex="0 0 80px">Narration:</span>
-        <input fxFlex="1 1 calc(100% - 80px)" value="{{tx.getNarration()}}" class="narration input">
+      <div class="tx-detail-item" fxFlex="100%" *ngIf="tx.getNarration()">
+        <span fxFlex="80px">Narration:</span>
+        <input fxFlex value="{{tx.getNarration()}}" class="narration input">
       </div>
 
     </div><!-- .history_cointainer -->

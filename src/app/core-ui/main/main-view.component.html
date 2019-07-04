@@ -13,7 +13,7 @@
     <mat-content class="sidebar-section">
       <mat-list class="sidebar-item-group">
         <a class="sidebar-item-link"
-          routerLinkActive="active" routerLink="/wallet/overview">
+          routerLinkActive="active" routerLink="./wallet/overview">
           <mat-list-item class="sidebar-item">
             <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
             <span class="text">Overview</span>
@@ -30,7 +30,7 @@
             <mat-list class="sidebar-item-group">
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/send'">
+                routerLinkActive="active" [routerLink]="'./wallet/send'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-send"></mat-icon>
@@ -39,7 +39,7 @@
               </a>
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/receive'">
+                routerLinkActive="active" [routerLink]="'./wallet/receive'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-receive"></mat-icon>
@@ -48,7 +48,7 @@
               </a>
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/history'">
+                routerLinkActive="active" [routerLink]="'./wallet/history'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon"
                     fontSet="partIcon" fontIcon="part-date"></mat-icon>
@@ -57,7 +57,7 @@
               </a>
 
               <a class="sidebar-item-link"
-                routerLinkActive="active" [routerLink]="'/wallet/address-book'">
+                routerLinkActive="active" [routerLink]="'./wallet/address-book'">
                 <mat-list-item class="sidebar-item">
                   <mat-icon class="icon" fontSet="partIcon"
                     fontIcon="part-people"></mat-icon>
@@ -191,9 +191,9 @@
   <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
 
     <div class="left" fxFlex="1 1 40%">
-      <button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
+      <!--button mat-button class="menu-toggle" (click)="sidenav.toggle()" fxHide>
         <mat-icon fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-      </button>
+      </button-->
       <div class="title">
         {{ title }}
       </div>
