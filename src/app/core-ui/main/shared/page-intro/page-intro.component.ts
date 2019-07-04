@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,9 +6,11 @@ import { Router } from '@angular/router';
   templateUrl: './page-intro.component.html',
   styleUrls: ['./page-intro.component.scss']
 })
-export class PageIntroComponent implements AfterViewInit {
+export class PageIntroComponent implements OnInit, AfterViewInit {
 
+  @Input() childPageAlias: string = '';
   @Input() canHideContent: boolean = true;
+
   @ViewChild('pageContent') pageContentRef: ElementRef;
   private viewKey: string;
   public hasPageContent: boolean = false;
@@ -17,9 +19,15 @@ export class PageIntroComponent implements AfterViewInit {
   constructor(
     private _router: Router,
     private cdRef: ChangeDetectorRef
-  ) {
-    this.viewKey = this._router.url.replace(/\//g, '-').substring(1);
-    this.showPageContent = this.canHideContent ? this.getPageContentState() : true;
+  ) {}
+
+  ngOnInit() {
+    if (this.canHideContent) {
+      this.viewKey = this._router.url.replace(/\//g, '-').substring(1) + (this.childPageAlias ? '-' + this.childPageAlias : '');
+      this.showPageContent = this.getPageContentState();
+    } else {
+      this.showPageContent = true;
+    }
   }
 
   ngAfterViewInit() {
