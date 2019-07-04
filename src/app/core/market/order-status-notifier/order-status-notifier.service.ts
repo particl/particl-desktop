@@ -101,8 +101,6 @@ export class OrderStatusNotifierService implements OnDestroy {
             }
           };
 
-          localStorage.setItem(this.notificationKey, String(Date.now()));
-
           this.processUpdates(activeItems);
           this.activeOrders = activeItems;
         })
@@ -112,15 +110,21 @@ export class OrderStatusNotifierService implements OnDestroy {
 
   private processUpdates(newOrders: OrderSummary) {
     const newTypeKeys = Object.keys(newOrders.data);
+    let hasUpdated = false;
 
     for (const typeKey of newTypeKeys) {
       const bidHashes = Object.keys(newOrders.data[typeKey].items);
 
       const count = bidHashes.reduce((total, hash) => total + +newOrders.data[typeKey].items[hash].notificationCount, 0);
       if (count > 0) {
+        hasUpdated = true;
         const msg = `${count} ${typeKey} order(s) have been updated.`
         this.sendNotification(msg);
       }
+    }
+
+    if (hasUpdated) {
+      localStorage.setItem(this.notificationKey, String(Date.now()));
     }
   }
 

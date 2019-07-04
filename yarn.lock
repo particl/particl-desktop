@@ -8067,10 +8067,10 @@ parseurl@~1.3.2, parseurl@~1.3.3:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@^0.0.67:
-  version "0.0.67"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.67.tgz#560cff4d6f38545a9c4ba9d1661bf3a7b2378680"
-  integrity sha512-DB6cdGigbOQ0F0HeAoQrbevIz2J0eRfuGs7HPsF6Gdq9z978CtzK0rasneKrgoqk2wJAkGRREg7zu8urEWE6+Q==
+particl-marketplace@^0.0.69:
+  version "0.0.69"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.69.tgz#a58a3e2aa6fbbaff0ce85eea9ca61937f9df6a1b"
+  integrity sha512-EsOniLspp0RJK8C1EAhlQtzkVX/fJvpJkFf/kvQNIUTvzpVUXh4f+VO287vV81vcWLJ4kVo92H6qXHO/7aEFSA==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
