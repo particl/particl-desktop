@@ -390,6 +390,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   validate() {
+    // Temporary validation for now
+    if (this.itemFormGroup.valid) {
+      const item = this.itemFormGroup.value;
+      const minShipping = Math.min(+item.domesticShippingPrice, +item.internationalShippingPrice);
+      if (+item.basePrice + minShipping < 0.0001) {
+        this.snackbar.open('Combined total cost (Listing Price + Lowest Shipping) cannot be less than 0.0001');
+        return false;
+      }
+    }
+
     return this.itemFormGroup.valid || this.snackbar.open('Invalid Listing');
   }
 

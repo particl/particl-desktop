@@ -12,10 +12,10 @@ describe('TermsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule,
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RouterTestingModule
        ],
       declarations: [ TermsComponent ],
       providers: []
