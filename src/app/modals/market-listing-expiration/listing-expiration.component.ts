@@ -23,6 +23,7 @@ export class ListingExpirationComponent {
   txFee: string = '';
   txError: string = '';
   expiration: number = 0;
+  estimateError: boolean = false;
 
   expiredList: Array<ListingExpiryIface> = [
     { title: '1 day', value: 1, estimateFee: new PartoshiAmount(0), isDisabled: false },
@@ -64,28 +65,15 @@ export class ListingExpirationComponent {
 
   setData(data: ListingExpiryConfig, callback: Function): void {
     this.callback = callback;
-    for (const expiredItem of this.expiredList) {
-      if (!expiredItem.isDisabled && expiredItem.value > 0) {
-        this.templateService
-          .post(data.template, 1, expiredItem.value, true)
-          .toPromise().then(
-            resp => {
-              if (+resp.fee > 0) {
-                expiredItem.estimateFee = new PartoshiAmount(+resp.fee * Math.pow(10, 8));
-                if (this.expiration === expiredItem.value) {
-                  this.loadTransactionFee();
-                }
-              }
-            }, err => {
-              expiredItem.error = 'Unable to obtain estimate';
-            }
-          ).catch(
-            err => {
-              // nothing to do, leave the estimate as not being set
-            }
-          );
-      }
-    }
+    this.getEstimateFor(data.template, this.expiredList[0])
+      .then(() => {
+        for (let i = 1; i < this.expiredList.length; i++) {
+          this.getEstimateFor(data.template, this.expiredList[i]);
+        }
+      },
+      () => {
+        this.estimateError = true;
+      });
   }
 
   loadTransactionFee() {
@@ -96,4 +84,30 @@ export class ListingExpirationComponent {
     this.txError = expiryItem ? (expiryItem.error || '') : 'unknown';
   }
 
+  private getEstimateFor(template: any, expiredItem: ListingExpiryIface): Promise<any> {
+    return new Promise ((resolve, reject) => {
+    if (!expiredItem.isDisabled && expiredItem.value > 0) {
+      this.templateService
+        .post(template, 1, expiredItem.value, true)
+        .toPromise().then(
+          resp => {
+            if (+resp.fee > 0) {
+              expiredItem.estimateFee = new PartoshiAmount(+resp.fee * Math.pow(10, 8));
+              if (this.expiration === expiredItem.value) {
+                this.loadTransactionFee();
+              }
+              resolve();
+            }
+          }, err => {
+            expiredItem.error = 'Insufficient funds';
+            reject();
+          }
+        ).catch(
+          err => {
+            // nothing to do, leave the estimate as not being set
+          }
+        );
+      }
+    });
+  }
 }
