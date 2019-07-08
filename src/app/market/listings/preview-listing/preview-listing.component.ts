@@ -102,11 +102,15 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     ];
     this.proposalsService.vote(params).subscribe((response) => {
       this.processModal.close();
-      this.snackbarService.open(`Successfully voted for ${this.data.listing.title}`, 'info');
-      this.data.listing.VoteDetails = new VoteDetails({
-        ProposalOption: option
-      });
-      this.reportListingFinished();
+      let msg = response.result;
+      if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
+        msg = `Successfully voted for ${this.data.listing.title}`;
+        this.data.listing.VoteDetails = new VoteDetails({
+          ProposalOption: option
+        });
+        this.reportListingFinished();
+      }
+      this.snackbarService.open(msg, 'info');
     }, (error) => {
       this.processModal.close();
       this.snackbarService.open(error);

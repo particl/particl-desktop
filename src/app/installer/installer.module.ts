@@ -12,6 +12,7 @@ import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { PassphraseComponent } from 'app/installer/create-wallet/passphrase/passphrase.component';
 import { TermsComponent } from './terms/terms.component';
 import { ErrorComponent } from './errors/error.component';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { ErrorComponent } from './errors/error.component';
     RouterModule,
     ClipboardModule,
     MaterialModule,
-    DirectiveModule
+    DirectiveModule,
+    CoreUiModule
   ],
   exports: [InstallerRouterComponent],
   declarations: [

@@ -131,11 +131,7 @@ export class OrdersComponent implements OnInit, OnDestroy {
           bids = this.doAdditionalBidFiltering(bids);
           // Only update if needed
           if (this.hasUpdatedOrders(bids)) {
-            if (statusStr === (this.order_filters.filters[0] || {}).value) {
-              this.order_filters = new OrderFilter(bids);
-            } else {
-              this.order_filters.setFilterCount(statusStr, totalCount);
-            }
+            this.order_filters = new OrderFilter(bids);
             this.orders = bids;
           }
         },

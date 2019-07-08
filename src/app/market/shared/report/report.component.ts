@@ -54,10 +54,14 @@ export class ReportComponent {
     this.openProcessingModal();
     this.reportService.post(this.listing).subscribe(report => {
       this.dialog.closeAll()
-      this.listing.isFlagged = !this.listing.isFlagged;
-      this.listing.VoteDetails = this.defaultVoteDetails;
-      this.snackbar.open(`${this.listing.title} has been reported successfully`);
-      this.complete.emit();
+      let msg = report.result;
+      if ( (Object.prototype.toString.call(report.msgids) === '[object Array]') && report.msgids ) {
+        msg = `${this.listing.title} has been reported successfully`;
+        this.listing.isFlagged = !this.listing.isFlagged;
+        this.listing.VoteDetails = this.defaultVoteDetails;
+        this.complete.emit();
+      }
+      this.snackbar.open(msg, 'info');
     }, err => {
       this.dialog.closeAll()
       this.snackbar.open(err);

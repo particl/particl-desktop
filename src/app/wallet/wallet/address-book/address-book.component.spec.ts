@@ -11,6 +11,7 @@ import { ModalsHelperService } from 'app/modals/modals-helper.service';
 
 import { AddressBookComponent } from './address-book.component';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('AddressBookComponent', () => {
   let component: AddressBookComponent;
@@ -25,7 +26,8 @@ describe('AddressBookComponent', () => {
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
         RpcWithStateModule.forRoot(),
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        RouterTestingModule
       ],
       declarations: [ ],
       providers: [ ModalsHelperService ]

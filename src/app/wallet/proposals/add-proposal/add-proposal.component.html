@@ -1,16 +1,14 @@
 <div class="container-block without-tab-bar">
-  <div class="page-intro">
-    <h1>New Community Proposal</h1>
-    <div class="content">
-      <p>
-        Submit a proposal on the Particl network for the community to vote on.<br>
-        Proposals can include: suggestions for features, community-led initiatives, partnership opportunities, protocol improvement ideas, and much more.
-      </p>
-      <p class="widget-help">
-        Keep in mind that each Proposal fee costs depends on the content size to submit and that voting results do not guarantee implementation from the Particl team.
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro>
+    <ng-container page-title>New Community Proposal</ng-container>
+    <ng-container page-content>
+      Submit a proposal on the Particl network for the community to vote on.<br>
+      Proposals can include: suggestions for features, community-led initiatives, partnership opportunities, protocol improvement ideas, and much more.
+    </ng-container>
+    <ng-container page-help>
+      Keep in mind that each Proposal fee costs depends on the content size to submit and that voting results do not guarantee implementation from the Particl team.
+    </ng-container>
+  </app-page-intro>
 
   <div class="row" [formGroup]="proposalFormGroup">
 

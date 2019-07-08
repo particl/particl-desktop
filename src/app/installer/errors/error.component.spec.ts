@@ -3,6 +3,7 @@ import { ErrorComponent } from './error.component';
 import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TermsComponent', () => {
   let component: ErrorComponent;
@@ -13,7 +14,8 @@ describe('TermsComponent', () => {
       imports: [
         SharedModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        RouterTestingModule
        ],
       declarations: [ ErrorComponent ],
       providers: []

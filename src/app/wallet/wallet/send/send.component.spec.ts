@@ -15,6 +15,7 @@ import { SendService } from 'app/wallet/wallet/send/send.service';
 import { RpcMockService } from '../../../_test/core-test/rpc-test/rpc-mock.service';
 import { RpcStateServiceMock } from '../../../_test/core-test/rpc-test/rpc-state-mock.service';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SendComponent', () => {
   let component: SendComponent;
@@ -30,7 +31,8 @@ describe('SendComponent', () => {
         ModalsModule.forRoot(),
         RpcWithStateModule.forRoot(),
         // WalletModule.forRoot(), // a bit circular here..
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        RouterTestingModule
       ],
       providers: [
         SendService,
