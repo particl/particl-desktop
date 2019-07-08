@@ -8387,6 +8387,19 @@ parseurl@~1.3.2, parseurl@~1.3.3:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
+particl-market-import-core@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/particl-market-import-core/-/particl-market-import-core-0.0.4.tgz#f5629ce35e9a2d45f7d47eafc457bee4d50737da"
+  integrity sha512-LWRILCMj+HdsZLkNGbuXSSkQTQJGggTqiNQ6Aei6yppPBCzqWsQYMxqnPMZUFw7CQa17SYxYsPzsKaSVlSushA==
+  dependencies:
+    cheerio "^1.0.0-rc.3"
+    csvtojson "^2.0.8"
+    form-data "^2.3.3"
+    got "^9.6.0"
+    jimp "^0.6.4"
+    lodash "^4.17.11"
+    rxjs "^6.5.2"
+
 particl-marketplace@^0.0.69:
   version "0.0.69"
   resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.69.tgz#a58a3e2aa6fbbaff0ce85eea9ca61937f9df6a1b"
