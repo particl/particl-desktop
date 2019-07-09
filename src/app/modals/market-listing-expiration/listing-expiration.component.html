@@ -35,11 +35,11 @@
 </div><!-- .dialog-content -->
 
 <div mat-dialog-content class="dialog-content" *ngIf="estimateError">
-  <p class="lead">
+  <p class="warning">
     There was an error fetching the fee estimate, please check that:
   </p>
-  <ul>
-    <li>You have a spendable public balance</li>
+  <ul class="checks">
+    <li>You have a <strong>spendable Public balance</strong></li>
     <li>You have a network connection</li>
     <li>The daemon is running</li>
     <li>You have peers connected</li>
