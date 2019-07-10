@@ -37,7 +37,7 @@
 <!-- =========== ORDERS =========== -->
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-page-intro>
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
     <ng-container page-title>Buy Orders</ng-container>
     <ng-container page-content>
       This is where you manage the orders you're in the process of buying from other vendors on the marketplace.
@@ -56,7 +56,7 @@
 <div class="favourites container-block with-tab-bar"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
 
-  <app-page-intro>
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
     <ng-container page-title>Your Favourites</ng-container>
     <ng-container page-content>
       Save your favourite listings to easily access them later on.
