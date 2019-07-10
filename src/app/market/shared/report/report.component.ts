@@ -52,19 +52,29 @@ export class ReportComponent {
 
   reportItem(): void {
     this.openProcessingModal();
+    let msg = `There was an error flagging this item`;
     this.reportService.post(this.listing).subscribe(report => {
-      this.dialog.closeAll()
-      let msg = report.result;
-      if ( (Object.prototype.toString.call(report.msgids) === '[object Array]') && report.msgids ) {
-        msg = `${this.listing.title} has been reported successfully`;
+      this.dialog.closeAll();
+      msg = report.result;
+      if ( (typeof report.error === 'string') && report.error.length) {
+        // error with creating a proposal to begin with
+      } else {
+        // proposal was created successfully
         this.listing.isFlagged = !this.listing.isFlagged;
         this.listing.VoteDetails = this.defaultVoteDetails;
         this.complete.emit();
+        if ( (Object.prototype.toString.call(report.msgids) === '[object Array]') && report.msgids ) {
+          // voting seems have occurred successfully as well
+          msg = `${this.listing.title} has been reported successfully`;
+        } else {
+          // voting failed... but proposal was created all right. MP issue with single available utxo for example.
+          msg = `This item was flagged but unfortunately, your vote was not weighted correctly, please try voting again`;
+        }
       }
       this.snackbar.open(msg, 'info');
     }, err => {
       this.dialog.closeAll()
-      this.snackbar.open(err);
+      this.snackbar.open(msg);
     })
   }
 
