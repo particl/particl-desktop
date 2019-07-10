@@ -108,7 +108,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.minBaseValue]],
+      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
       domesticShippingPrice:      ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
       internationalShippingPrice: ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]]
     });
