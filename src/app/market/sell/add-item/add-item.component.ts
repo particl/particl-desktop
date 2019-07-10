@@ -35,6 +35,18 @@ class CurrencyMinValidator {
     }
     return ({ validAmount: false });
   }
+
+  static minBaseValue(fc: FormControl) {
+    const validValue = CurrencyMinValidator.validValue(fc);
+    if (validValue !== null) {
+      return validValue;
+    }
+    const amount: number = +fc.value;
+    if ( amount <= 25 ) {
+      return (null);
+    }
+    return ({ validAmount: false });
+  }
 }
 
 
