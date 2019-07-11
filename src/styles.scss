@@ -320,8 +320,9 @@ p.info {
   background: $bg;
   padding: 16px 24px 16px 52px;
   position: relative;
-  mat-dialog-content & {
-    margin: 24px -24px;
+  .mat-dialog-content & {
+    margin: 24px -15px;
+    text-align: left;
   }
   &::before {
     font-family: 'part';
