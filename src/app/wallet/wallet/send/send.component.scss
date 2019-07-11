@@ -60,6 +60,7 @@
   .desc { // available balance
     color: $text-muted;
     font-size: 11px;
+    font-weight: 400;
     padding-left: 4px;
     .amount {
       @extend %tfx;
@@ -137,6 +138,10 @@ mat-card.to-balance-type { // 'convert to..'
   button {
     margin: 0 0 0 12px;
   }
+}
+
+mat-card.send-amount {
+  padding: 12px 24px;
 }
 
 
