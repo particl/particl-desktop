@@ -19,7 +19,9 @@
   <mat-list class="list-data">
 
     <div class="no-results" *ngIf="getSinglePage().length === 0">
-      <p>No matching addresses found</p>
+      <p>
+        No matching addresses found
+      </p>
     </div>
 
     <div *ngFor="let address of getSinglePage()">
