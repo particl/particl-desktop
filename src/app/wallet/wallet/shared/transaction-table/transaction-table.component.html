@@ -74,7 +74,7 @@
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>
-            <span class="name">Balance transfer</span>
+            <span class="name">Converted &rarr; {{tx.getTransferType()}}</span>
           </span>
           <span *ngSwitchCase="'listing_fee'" class="tx-type listing-fee">
             <mat-icon fontSet="partIcon" fontIcon="part-bag-buy"></mat-icon>

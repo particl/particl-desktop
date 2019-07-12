@@ -15,7 +15,7 @@ export class HistoryComponent implements OnInit {
     { title: 'Sent',               value: 'send',              icon: 'send'},
     { title: 'Received',           value: 'receive',           icon: 'receive'},
     { title: 'Staked',             value: 'stake',             icon: 'stake'},
-    { title: 'Balance Transfers',  value: 'internal_transfer', icon: 'transfer'},
+    { title: 'Converted',          value: 'internal_transfer', icon: 'transfer'},
     // { title: 'Immature',         value: 'immature'          },
     // { title: 'Coinbase',         value: 'coinbase'          },
     // { title: 'Orphan',           value: 'orphan'            },
@@ -33,7 +33,7 @@ export class HistoryComponent implements OnInit {
 
   types: Array<any> = [
     { title: 'All types', value: 'all'      },
-    { title: 'Public',  value: 'standard'   },
+    { title: 'Public',    value: 'standard' },
     { title: 'Blind',     value: 'blind'    },
     { title: 'Anonymous', value: 'anon'     },
   ];
