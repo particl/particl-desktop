@@ -13,7 +13,6 @@ import { SendService } from 'app/wallet/wallet/send/send.service';
 export class SendConfirmationModalComponent implements OnInit {
 
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
-  @Output() onCancel: EventEmitter<string> = new EventEmitter<string>();
 
   public dialogContent: string;
   public send: TransactionBuilder;
@@ -39,7 +38,6 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   dialogClose(): void {
-    this.onCancel.emit();
     this.dialogRef.close();
   }
 
