@@ -253,8 +253,7 @@ export class SendComponent implements OnInit, OnDestroy {
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
 
-    dialogRef.componentInstance.onCancel.subscribe(() => {
-      dialogRef.close();
+    dialogRef.afterClosed().subscribe(() => {
       if (this.type === 'balanceTransfer') {
         this.send.toAddress = '';
       }
