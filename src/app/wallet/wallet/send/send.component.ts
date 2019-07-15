@@ -158,10 +158,10 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
-    //   this.send.validAmount = false;
-    //   return;
-    // }
+    if ( ((this.send.amount + '').split('.')[1] || '').length > 8) {
+      this.send.validAmount = false;
+      return;
+    }
 
     if (+this.send.amount <= 1e-8) {
       this.send.validAmount = false;
@@ -248,6 +248,8 @@ export class SendComponent implements OnInit, OnDestroy {
       txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
     }
 
+    const sendAll = this.send.subtractFeeFromAmount;
+
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
 
@@ -256,6 +258,7 @@ export class SendComponent implements OnInit, OnDestroy {
       if (this.type === 'balanceTransfer') {
         this.send.toAddress = '';
       }
+      this.send.subtractFeeFromAmount = sendAll;
     });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
