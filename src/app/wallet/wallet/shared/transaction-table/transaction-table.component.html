@@ -156,7 +156,8 @@
           </div>
           <!-- Net amount (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
-            <span>Net amount:</span>
+            <span *ngIf="tx.getCategory() === 'internal_transfer'">Transferred amount:</span>
+            <span *ngIf="tx.getCategory() !== 'internal_transfer'">Net amount:</span>
             <span class="value">{{ tx.getNetAmount()}} PART</span>
           </div>
         </div>

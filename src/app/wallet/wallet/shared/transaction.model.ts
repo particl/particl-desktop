@@ -162,6 +162,8 @@ export class Transaction {
     if (this.fee === undefined) {
       return amount;
     /* sent */
+    } else if (this.category === 'internal_transfer') {
+      return new Amount(+amount).getAmount();
     } else if (amount < 0) {
       return new Amount(+amount + (+this.fee)).getAmount();
     } else {
@@ -173,7 +175,7 @@ export class Transaction {
     if (this.category !== 'internal_transfer') {
       return '';
     }
-    let transfer = 'unknown';
+    let transfer = 'tx split';
     for (const output of this.outputs) {
       if (typeof output.type === 'string' && output.type.length) {
         if (output.type === 'standard') {
