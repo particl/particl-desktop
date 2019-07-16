@@ -201,9 +201,9 @@
     <div class="right" fxFlex="1 1 60%">
 
       <!-- Spendable Blind balance (for Market) -->
-      <div class="spendable-balance" *ngIf="isMarketRoute" matTooltip="Available Blind balance for spending on Market" matTooltipPosition="before">
+      <div class="spendable-balance" *ngIf="isMarketRoute" matTooltip="Available (Anon) balance for spending on Market" matTooltipPosition="before">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-stake"></mat-icon>
-        <app-balance type="unspent_blind" [horizontal]="true"></app-balance>
+        <app-balance type="unspent_anon" [horizontal]="true"></app-balance>
       </div>
 
       <!-- Cart overview -->
