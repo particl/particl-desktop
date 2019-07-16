@@ -3,8 +3,9 @@ import { Log } from 'ng2-logger';
 
 import { RpcStateService } from '../../../core/core.module';
 
-import { Amount } from '../../../core/util/utils';
-import { takeWhile } from 'rxjs/operators';
+import { PartoshiAmount } from '../../../core/util/utils';
+import { takeWhile, map, startWith } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
 
 
 @Component({
@@ -19,17 +20,33 @@ export class BalanceComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create(`balance.component ${this.type}`);
   private destroyed: boolean = false;
-  private _balance: Amount = new Amount(0);
+  private _balanceWhole: string = '0';
+  private _balanceSep: string = '';
+  private _balanceFraction: string = '';
+  private _balanceType: string = '';
 
-  get balance() {
-    return this._balance;
+  get balanceWhole(): string {
+    return this._balanceWhole;
+  }
+
+  get balanceSep(): string {
+    return this._balanceSep;
+  }
+
+  get balanceFraction(): string {
+    return this._balanceFraction;
+  }
+
+  get balanceType(): string {
+    return this._balanceType;
   }
 
   constructor(private _rpcState: RpcStateService) { }
-  ngOnInit() {
-    const type = this.type === 'locked_balance' ? 'balance' : this.type;
 
-    switch (type) {
+  ngOnInit() {
+    this._balanceType = this.getTypeOfBalance();
+
+    switch (this.type) {
       case 'unspent_blind':
         this._rpcState.observe('listunspentblind')
           .pipe(takeWhile(() => !this.destroyed))
@@ -43,33 +60,75 @@ export class BalanceComponent implements OnInit, OnDestroy {
           .pipe(takeWhile(() => !this.destroyed))
           .subscribe(
             balance => {
-              let tempBal = 0;
+              const tempBal = new PartoshiAmount(0);
               if (balance) {
-                tempBal = (
-                  +balance.unconfirmed_balance +
-                  +balance.unconfirmed_blind +
-                  +balance.unconfirmed_anon +
-                  +balance.immature_balance +
-                  +balance.immature_anon_balance
-                );
+                tempBal
+                  .add( new PartoshiAmount(+balance.unconfirmed_balance * Math.pow(10, 8)) )
+                  .add( new PartoshiAmount(+balance.unconfirmed_blind * Math.pow(10, 8)) )
+                  .add( new PartoshiAmount(+balance.unconfirmed_anon * Math.pow(10, 8)) )
+                  .add( new PartoshiAmount(+balance.immature_balance * Math.pow(10, 8)) )
+                  .add( new PartoshiAmount(+balance.immature_anon_balance * Math.pow(10, 8)) )
               }
-              this._balance = new Amount((tempBal) || 0, 8);
-
+              this.setBalance(tempBal);
             },
             error => this.log.error('Failed to get balance, ', error));
         break;
 
+      case 'actual_balance':
+        combineLatest(
+          this.listSpendable('listunspent'),
+          this.listSpendable('listunspentblind'),
+          this.listSpendable('listunspentanon')
+        ).pipe(
+          takeWhile(() => !this.destroyed)
+        ).subscribe(
+          (amounts: PartoshiAmount[]) => {
+            const newBal = new PartoshiAmount(0);
+            for (const amount of amounts) {
+              newBal.add(amount);
+            }
+            this.setBalance(newBal);
+          }
+        );
+        break;
+
+      case 'locked_balance':
+        combineLatest(
+          this.walletBalance(['total_balance']),
+          this.walletBalance(['staked_balance']),
+          this.listSpendable('listunspent'),
+          this.listSpendable('listunspentblind'),
+          this.listSpendable('listunspentanon')
+        ).pipe(
+          takeWhile(() => !this.destroyed)
+        ).subscribe(
+          (amounts: PartoshiAmount[]) => {
+            const newBal = new PartoshiAmount(0);
+            for (let ii = 0; ii < amounts.length; ++ii) {
+              if (ii === 0) {
+                newBal.add(amounts[ii]);
+              } else {
+                newBal.subtract(amounts[ii]);
+              }
+            }
+            this.setBalance(newBal);
+          }
+        );
+        break;
+
       default:
-        this._rpcState.observe('getwalletinfo', type)
+        this._rpcState.observe('getwalletinfo', this.type)
           .pipe(takeWhile(() => !this.destroyed))
           .subscribe(
-            balance => this.listUnSpent(balance),
+            balance => {
+              this.setBalance(new PartoshiAmount(balance * Math.pow(10, 8)));
+            },
             error => this.log.error('Failed to get balance, ', error));
     }
   }
 
   /* UI */
-  getTypeOfBalance(): string {
+  private getTypeOfBalance(): string {
 
     switch (this.type) {
       case 'total_balance':
@@ -93,35 +152,52 @@ export class BalanceComponent implements OnInit, OnDestroy {
     return this.type;
   }
 
-  listUnSpent(balance: number): void {
-    this._rpcState.observe('listunspent')
-      .pipe(takeWhile(() => !this.destroyed))
-      .subscribe(unspent => {
-        let tempBal = 0;
-        for (let ut = 0; ut < unspent.length; ut++) {
-          if ((!unspent[ut].coldstaking_address || unspent[ut].address) && unspent[ut].confirmations) {
-            tempBal += unspent[ut].amount;
+  private listSpendable(unspentType: string): Observable<PartoshiAmount> {
+    return this._rpcState.observe(unspentType).pipe(
+      takeWhile(() => !this.destroyed),
+      map((utxos) => {
+        const tempBal = new PartoshiAmount(0);
+        for (let ii = 0; ii < utxos.length; ++ii) {
+          if ((!utxos[ii].coldstaking_address || utxos[ii].address) && utxos[ii].confirmations) {
+            const amount = new PartoshiAmount(utxos[ii].amount * Math.pow(10, 8));
+            tempBal.add(amount);
           };
         }
-
-        if (this.type === 'locked_balance') {
-          tempBal = balance - tempBal;
-        } else if (this.type !== 'actual_balance') {
-          tempBal = balance;
-        }
-        // else tempBal == 'actual balance'.
-
-        this._balance = new Amount((tempBal) || 0, 8)
-      },
-        error => this.log.error('Failed to get balance, ', error));
+        return tempBal;
+      }),
+      startWith(new PartoshiAmount(0))
+    );
   }
 
-  calculateUnspent(txs: Array<any>): void {
-    let balance = 0;
+  private walletBalance(balanceType: string[]): Observable<PartoshiAmount> {
+    return this._rpcState.observe('getwalletinfo').pipe(
+      takeWhile(() => !this.destroyed),
+      map((walletinfo: any) => {
+        const bal = new PartoshiAmount(0);
+        if (walletinfo) {
+          for (const type of balanceType) {
+            bal.add(new PartoshiAmount(+walletinfo[type] * Math.pow(10, 8)));
+          }
+        }
+        return bal;
+      }),
+      startWith(new PartoshiAmount(0))
+    );
+  }
+
+  private calculateUnspent(txs: Array<any>): void {
+    const balance = new PartoshiAmount(0);
     for (const tx of txs) {
-      balance += tx.confirmations ? tx.amount : 0;
+      const txBal = new PartoshiAmount( (tx.confirmations ? tx.amount : 0) * Math.pow(10, 8) );
+      balance.add(txBal);
     }
-    this._balance = new Amount((balance), 8);
+    this.setBalance(balance);
+  }
+
+  private setBalance(tempBal: PartoshiAmount): void {
+    this._balanceWhole = tempBal.particlStringInteger();
+    this._balanceSep = tempBal.particlStringSep();
+    this._balanceFraction = tempBal.particlStringFraction();
   }
 
   ngOnDestroy() {
