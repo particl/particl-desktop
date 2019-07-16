@@ -94,24 +94,32 @@ export class BalanceComponent implements OnInit, OnDestroy {
 
       case 'locked_balance':
         combineLatest(
-          this.walletBalance(['total_balance']),
-          this.walletBalance(['staked_balance']),
+          this.walletBalance(['total_balance', 'staked_balance']),
           this.listSpendable('listunspent'),
           this.listSpendable('listunspentblind'),
           this.listSpendable('listunspentanon')
         ).pipe(
           takeWhile(() => !this.destroyed)
         ).subscribe(
-          (amounts: PartoshiAmount[]) => {
+          (amounts: any[]) => {
             const newBal = new PartoshiAmount(0);
             for (let ii = 0; ii < amounts.length; ++ii) {
               if (ii === 0) {
-                newBal.add(amounts[ii]);
+                for (let jj = 0; jj < amounts[ii].length; ++jj) {
+                  if (jj === 0) {
+                    newBal.add(amounts[ii][jj]);
+                  } else {
+                    newBal.subtract(amounts[ii][jj]);
+                  }
+                }
               } else {
                 newBal.subtract(amounts[ii]);
               }
             }
-            this.setBalance(newBal);
+
+            if (newBal.particls() !== +`${this._balanceWhole}${this.balanceSep}${this.balanceFraction}`) {
+              this.setBalance(newBal);
+            }
           }
         );
         break;
@@ -169,19 +177,21 @@ export class BalanceComponent implements OnInit, OnDestroy {
     );
   }
 
-  private walletBalance(balanceType: string[]): Observable<PartoshiAmount> {
+  private walletBalance(balanceType: string[]): Observable<PartoshiAmount[]> {
+    const defaultStart: PartoshiAmount[] = [];
+    balanceType.forEach(() => defaultStart.push(new PartoshiAmount(0)));
     return this._rpcState.observe('getwalletinfo').pipe(
       takeWhile(() => !this.destroyed),
       map((walletinfo: any) => {
-        const bal = new PartoshiAmount(0);
+        const balItems: PartoshiAmount[] = [];
         if (walletinfo) {
           for (const type of balanceType) {
-            bal.add(new PartoshiAmount(+walletinfo[type] * Math.pow(10, 8)));
+            balItems.push(new PartoshiAmount(+walletinfo[type] * Math.pow(10, 8)))
           }
         }
-        return bal;
+        return balItems;
       }),
-      startWith(new PartoshiAmount(0))
+      startWith(defaultStart)
     );
   }
 

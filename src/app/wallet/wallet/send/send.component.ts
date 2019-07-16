@@ -33,7 +33,6 @@ export class SendComponent implements OnInit, OnDestroy {
   private addressHelper: AddressHelper;
   private destroyed: boolean = false;
 
-  testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
@@ -67,10 +66,6 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    /* check if testnet -> Show/Hide Anon Balance */
-    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
-      .subscribe(chain => this.testnet = chain === 'test');
-
     // Calculate Spendable balance
     this._rpcState.observe('listunspent')
       .pipe(takeWhile(() => !this.destroyed))
