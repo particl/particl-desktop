@@ -108,7 +108,7 @@ export class BidService {
   errorHandle(error: any) {
     if (error.includes('unspent')) {
       error = errorType.unspent;
-    } else if ((error.includes('broke') && !error.toLowerCase().includes('something')) || error.toLowerCase().includes('insufficient')){
+    } else if ((error.includes('broke') && !error.toLowerCase().includes('something')) || error.toLowerCase().includes('insufficient')) {
       error = errorType.broke;
     }
     return error;
