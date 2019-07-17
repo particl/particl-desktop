@@ -215,12 +215,6 @@ export class SendComponent {
       // pub->pub, blind->blind, priv-> priv
       this.send.output = this.send.input;
 
-      // Check if stealth address if output is private
-      if (this.send.output === TxType.ANON && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
-        this.flashNotification.open('Stealth address required for private transactions!');
-        return;
-      }
-
     // Balance transfer - validation
     } else if (this.type === 'balanceTransfer') {
 
@@ -237,7 +231,30 @@ export class SendComponent {
       }
 
     }
-    this.modals.unlock({timeout: 30}, (status) => this.sendTransaction());
+
+    // @TODO (zaSmilingIdiot 2019-07-17):
+    //    Technically, the requirement to validate the address is not needed, since verifyAddress() does the same thing
+    //    preventing the actionable button action to complete the payment if the address is wrong.
+    //    However, I'm including it because for now, there appears to be some need to perform additional validation on stealth addresses
+    //    if the transaction type is anonymous. This makes little sense, given that we're already verifying the address: might as well
+    //    verify the anon type there as well. So...
+    //    This entire component, or mor specifically, this verification and validation at the very least, needs to be refactored!!
+    this._rpc.call('validateaddress', [this.send.toAddress]).subscribe(
+      (resp) => {
+        if ( !(resp && resp.isvalid) ) {
+          this.flashNotification.open('Invalid address specified. Please confirm that the address is valid.');
+          return;
+        }
+        if (this.type === 'sendPayment' && this.send.output === TxType.ANON && !resp.isstealthaddress) {
+          this.flashNotification.open('Stealth address required for private transactions!');
+          return;
+        }
+        this.modals.unlock({ timeout: 30 }, () => this.sendTransaction());
+      },
+      () => {
+        this.flashNotification.open('Failed to validate the address. Please try again shortly');
+      }
+    )
   }
 
   private sendTransaction(): void {
