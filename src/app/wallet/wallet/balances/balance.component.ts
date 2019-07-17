@@ -47,12 +47,13 @@ export class BalanceComponent implements OnInit, OnDestroy {
     this._balanceType = this.getTypeOfBalance();
 
     switch (this.type) {
-      case 'unspent_blind':
-        this._rpcState.observe('listunspentblind')
-          .pipe(takeWhile(() => !this.destroyed))
-          .subscribe(
-            txs => this.calculateUnspent(txs),
-            error => this.log.error('Failed to get balance, ', error));
+      case 'unspent_anon':
+        this.listSpendable('listunspentanon').subscribe(
+          (amount: PartoshiAmount) => {
+            this.setBalance(amount);
+          },
+          error => this.log.error('Failed to get balance, ', error)
+        );
         break;
 
       case 'pending_balance':
@@ -153,8 +154,6 @@ export class BalanceComponent implements OnInit, OnDestroy {
         return 'Staking';
       case 'locked_balance':
         return 'Locked';
-      case 'unspent_blind':
-        return 'Unspent Blind (Private)';
     }
 
     return this.type;
