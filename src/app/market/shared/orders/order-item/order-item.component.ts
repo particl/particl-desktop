@@ -1,19 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
-
 import { Bid } from '../../../../core/market/api/bid/bid.model';
 import { BidService } from 'app/core/market/api/bid/bid.service';
-import { ListingService } from '../../../../core/market/api/listing/listing.service';
-
 import { ModalsHelperService } from 'app/modals/modals.module';
-import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
-
 import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { take } from 'rxjs/operators';
+import { OrderData } from 'app/core/util/utils';
+import { Image } from 'app/core/market/api/template/image/image.model';
 
 @Component({
   selector: 'app-order-item',
@@ -22,13 +19,32 @@ import { take } from 'rxjs/operators';
 })
 export class OrderItemComponent implements OnInit {
 
+  @Output() onOrderUpdated: EventEmitter<any> = new EventEmitter<any>();
   @Input() order: Bid;
   trackNumber: string;
   country: string = '';
+  orderActivity: any = {};
+  contactDetails: any = {
+    phone: '',
+    email: ''
+  };
+  showShippingInfo: boolean = false;
+  private itemTitle: string = '';
+  private purchaseMemo: string = '';
+  private pricing: any = {
+    separator: '.',
+    baseInt: 0,
+    baseFraction: 0,
+    shippingInt: 0,
+    shippingFraction: 0,
+    escrowInt: 0,
+    escrowFraction: 0,
+    totalInt: 0,
+    totalFraction: 0
+  };
+  private _featuredImage: any;
   constructor(
-    private listingService: ListingService,
     private bid: BidService,
-    private rpcState: RpcStateService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
@@ -37,154 +53,209 @@ export class OrderItemComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getItemDetails();
-  }
-
-  getItemDetails() {
-
     if (!this.order) {
       return;
     }
     this.country = this.order.ShippingAddress.country;
-    this.listingService.get(this.order.listingItemId).subscribe(response => {
-      this.order.listing = response;
-    });
+    this.itemTitle = this.order.ListingItem
+      && this.order.ListingItem.ItemInformation
+      && (typeof this.order.ListingItem.ItemInformation.title === 'string') ?
+      this.order.ListingItem.ItemInformation.title : '';
+
+    let _memo = '';
+    if (Object.prototype.toString.call(this.order.ChildBids) === '[object Array]' ) {
+      const shipBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_SHIP' );
+      if (shipBid) {
+        const memoDatas = shipBid.BidDatas.find((bd: any) => bd.key === 'shipping.memo');
+        if (memoDatas) {
+          _memo = String(memoDatas.value);
+        }
+      }
+      const lockBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_LOCK' );
+      if (lockBid) {
+        for (const data of (lockBid.BidDatas || []) ) {
+          if (data && data.key && (<string>data.key).startsWith('delivery.')) {
+            this.contactDetails[(<string>data.key).replace('delivery.', '')] = String(data.value);
+          }
+        }
+      }
+    }
+    this.purchaseMemo = _memo;
+
+    this.showShippingInfo = this.order.type === 'buy' && ['shipping', 'complete'].includes(this.order.step);
+
+    const price = this.order.PricingInformation(this.country);
+    this.pricing.separator = price.base.particlStringSep() || this.pricing.separator;
+    this.pricing.baseInt = price.base.particlStringInteger();
+    this.pricing.baseFraction = price.base.particlStringFraction();
+    this.pricing.shippingInt = price.shipping.particlStringInteger();
+    this.pricing.shippingFraction = price.shipping.particlStringFraction();
+    this.pricing.escrowInt = price.escrow.particlStringInteger();
+    this.pricing.escrowFraction = price.escrow.particlStringFraction();
+    this.pricing.totalInt = price.total.particlStringInteger();
+    this.pricing.totalFraction = price.total.particlStringFraction();
+    this.orderActivity = this.order.orderActivity;
+
+    const imageList: any[] = (this.order.ListingItem.ItemInformation || {}).ItemImages || [];
+    this._featuredImage = new Image(imageList.length ? imageList[0] : { ItemImageDatas: [] });
   }
 
-  // Testing of all the scenarios
-  order_action() {
-    switch (this.order.status) {
-      case 'bidding':
-        // run accept command for seller
-        if (this.order.type === 'sell') {
-          this.callBid('accept')
-        }
-        break;
+  get title(): string {
+    return this.itemTitle;
+  }
 
-      case 'awaiting':
-        // Escrow lock call with popup
-        if (this.order.type === 'buy') {
-          this.openPaymentConfirmationModal();
-          // this.escrowLock();
-        }
-        break;
+  get pricingInfo(): any {
+    return this.pricing;
+  }
 
-      case 'escrow':
-        if (this.order.type === 'sell') {
-          this.callBid('shipping');
-        }
-        break;
+  get listingImage(): string {
+    return (this._featuredImage && this._featuredImage.thumbnail) ? this._featuredImage.thumbnail : './assets/images/placeholder_1-1.jpg';
+  }
 
-      case 'shipping':
-        // escrow release call with popup
-        if (this.order.type === 'buy') {
-          this.callBid('escrow');
-        }
-        break;
+  get primaryActions(): any[] {
+    return this.orderActivity.buttons
+      ? this.orderActivity.buttons.filter((button: any) => button.primary) : [];
+  }
 
+  get secondaryActions(): any[] {
+    return this.orderActivity.buttons
+      ? this.orderActivity.buttons.filter((button: any) => !button.primary) : [];
+  }
+
+  get memo(): string {
+    return this.purchaseMemo;
+  }
+
+  executeAction(actionable: any) {
+    const actionType = actionable.action;
+    const valid = actionType &&
+      this.orderActivity.buttons &&
+      (this.orderActivity.buttons.findIndex((button: any) => !button.disabled && (button.action === actionType) ) !== -1);
+
+    if (valid) {
+      this.callBid(actionable);
+    }
+  }
+
+  private callBid(actionable: any) {
+    // Prevent double clicking of the button
+    actionable.locked = true;
+
+    const action = actionable.action;
+    // Open appropriate confirmation modal
+    let dialogRef;
+    switch (action) {
+      case 'LOCK_ESCROW':
+        dialogRef = this.dialog.open(BidConfirmationModalComponent);
+        dialogRef.componentInstance.bidItem = this.order;
+        break;
+      case 'SHIP_ITEM':
+        dialogRef = this.dialog.open(ShippingComponent);
+        // dialogRef.componentInstance.type = action.toLowerCase();
+        break;
       default:
-        break;
+        dialogRef = this.dialog.open(PlaceOrderComponent);
+        dialogRef.componentInstance.type = action.toLowerCase();
     }
-  }
 
-  // @TODO: refactor method for all calls
-  callBid(type: string) {
-    const dialogRef = this.dialog.open(type === 'shipping' ? ShippingComponent : PlaceOrderComponent);
-    dialogRef.componentInstance.type = type;
+    dialogRef.afterClosed().subscribe(() => {
+      actionable.locked = false;
+    });
+
     dialogRef.componentInstance.isConfirmed.subscribe((res: any) => {
-      this.trackNumber = res ? res : '';
-      this.checkForWallet(type);
-    });
-  }
 
-  checkForWallet(type: string) {
-    this.modals.unlock({timeout: 30}, (status) => {
-      this.openProcessingModal();
-      this.callAction(type)
-    });
-  }
+      // processing confirmed, take the correct action
 
-  callAction(type: string) {
-    if (type === 'accept') {
-      this.acceptBid();
-    } else if (type === 'reject') {
-      this.rejectBid();
-    } else {
-      // Escrow Release Command
-      this.escrowRelease(type);
-    }
-  }
-
-  acceptBid() {
-    this.bid.acceptBidCommand(this.order.id).pipe(take(1)).subscribe(() => {
-      this.snackbarService.open(`Order accepted ${this.order.listing.title}`);
-      // Reload same order without calling api
-      this.order.OrderItem.status = 'AWAITING_ESCROW';
-      this.order = new Bid(this.order, this.order.type);
-      this.dialog.closeAll();
-    }, (error) => {
-      this.dialog.closeAll();
-      this.snackbarService.open(`${error}`);
-    });
-  }
-
-  rejectBid() {
-    this.bid.rejectBidCommand(this.order.id).pipe(take(1)).subscribe(res => {
-      this.snackbarService.open(`Order rejected ${this.order.listing.title}`);
-      this.order.OrderItem.status = 'REJECTED';
-      this.order = new Bid(this.order, this.order.type);
-      this.dialog.closeAll();
-    }, (error) => {
-      this.dialog.closeAll();
-      this.snackbarService.open(`${error}`);
-    });
-
-  }
-
-  escrowRelease(ordStatus: string) {
-    this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).pipe(take(1)).subscribe(res => {
-      this.snackbarService.open(`Escrow of Order ${this.order.listing.title} has been released`);
-      this.order.OrderItem.status = ordStatus === 'shipping' ? 'SHIPPING' : 'COMPLETE';
-      this.order = new Bid(this.order, this.order.type)
-      this.dialog.closeAll();
-    }, (error) => {
-      this.dialog.closeAll();
-      this.snackbarService.open(`${error}`);
-    });
-
-  }
-
-  openPaymentConfirmationModal() {
-    // @TODO need to be sets trasaction fee.
-    const dialogRef = this.dialog.open(BidConfirmationModalComponent);
-
-    dialogRef.componentInstance.bidItem = this.order;
-    dialogRef.componentInstance.onConfirm.subscribe(() => {
-      // do other action after confirm
+      // unlock the wallet if applicable
       this.modals.unlock({timeout: 30}, (status) => {
         this.openProcessingModal();
-        this.escrowLock()
+
+        let resp: Promise<void>;
+        if (action === 'ACCEPT') {
+          resp = this.acceptBid();
+        } else if (action === 'REJECT') {
+          resp = this.rejectBid();
+        } else if (action === 'LOCK_ESCROW') {
+          resp = this.escrowLock(res);
+        } else if (action === 'COMPLETE_ESCROW') {
+          resp = this.escrowComplete();
+        } else if (action === 'SHIP_ITEM') {
+          resp = this.shipItem(res);
+        } else if (action === 'COMPLETE') {
+          resp = this.escrowRelease();
+        }
+
+        if (resp) {
+          resp.then(() => {
+            const nextStep = Object.keys(OrderData).find((key) => OrderData[key].from_action === action);
+            if (nextStep) {
+              const newStatus = String(OrderData[nextStep].orderStatus) || '';
+              this.order.OrderItem.status = newStatus;
+              this.order = new Bid(this.order, this.order.type);
+              this.orderActivity = this.order.orderActivity;
+            }
+            this.dialog.closeAll();
+            setTimeout(() => this.onOrderUpdated.emit({}), 300);
+          }).catch(error => {
+              this.dialog.closeAll();
+              this.snackbarService.open(`${error}`);
+          });
+        }
       });
     });
   }
 
-  escrowLock() {
-    // <orderItemId> <nonce> <memo> , @TODO send nonce ?
-    this.bid.escrowLockCommand(this.order.OrderItem.id, null, 'Release the funds').pipe(take(1)).subscribe(res => {
-      this.snackbarService.open(`Payment done for order ${this.order.listing.title}`);
-      this.order.OrderItem.status = 'ESCROW_LOCKED';
-      this.order = new Bid(this.order, this.order.type);
-      this.dialog.closeAll();
-    }, (error) => {
-      this.snackbarService.open(`${error}`);
+  private async acceptBid(): Promise<void> {
+    return this.bid.acceptBidCommand(this.order.id).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Order accepted ${this.itemTitle}`);
+    });
+  }
+
+  private async rejectBid(): Promise<void> {
+    return this.bid.rejectBidCommand(this.order.id).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Order rejected: ${this.itemTitle}`);
+    });
+  }
+
+  private async escrowLock(data: any): Promise<void> {
+    const contactDetails: string[] = [];
+    const deliveryDetails = ['phone', 'email'];
+    for (const deliveryKey of deliveryDetails) {
+      if (data && data[deliveryKey]) {
+        contactDetails.push(`delivery.${deliveryKey}`);
+        contactDetails.push( String(data[deliveryKey]) );
+      }
+    };
+
+    return this.bid.escrowLockCommand(this.order.OrderItem.id, contactDetails).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Payment made for order ${this.itemTitle}`);
+    });
+  }
+
+  private async escrowComplete(): Promise<void> {
+    return this.bid.escrowCompleteCommand(this.order.OrderItem.id).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Escrow has been completed for order ${this.itemTitle}`);
+    });
+  }
+
+  private async shipItem(data: any | string): Promise<void> {
+    const memo = typeof data === 'string' ? data : '';
+    return this.bid.shippingCommand(this.order.OrderItem.id, memo).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Escrow has been completed for order ${this.itemTitle}`);
+    });
+  }
+
+  private async escrowRelease(): Promise<void> {
+    return this.bid.escrowReleaseCommand(this.order.OrderItem.id, this.trackNumber).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Escrow of order ${this.itemTitle} has been released`);
     });
   }
 
   openProcessingModal() {
-    const dialog = this.dialog.open(ProcessingModalComponent, {
+    this.dialog.open(ProcessingModalComponent, {
       disableClose: true,
       data: {
-        message: 'Hang on, we are busy processing your action'
+        message: 'Please wait while your action is processed'
       }
     });
   }

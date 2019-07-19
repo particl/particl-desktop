@@ -28,28 +28,35 @@
 
 
 <div class="container-block with-tab-bar">
+  <app-page-intro *ngIf="type === 'sendPayment'" [childPageAlias]="type">
+    <ng-container page-title>Send payment</ng-container>
+    <ng-container page-content>
+      Send payments to anyone.<br>
+      You can adjust the level of privacy of your transactions by selecting balances listed in "Pay from".
+    </ng-container>
+    <ng-container page-help>
+      What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
+      <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
+        <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
+        Currency &amp; transaction types
+      </a>
+    </ng-container>
+  </app-page-intro>
 
-  <div class="page-intro">
-    <h1 *ngIf="type === 'sendPayment'">Send payment</h1>
-    <h1 *ngIf="type === 'balanceTransfer'">Convert balances</h1>
-    <div class="content">
-      <p *ngIf="type === 'sendPayment'">
-        Send payments to anyone.<br>
-        You can adjust the level of privacy of your transactions by selecting balances listed in "Pay from".
-      </p>
-      <p *ngIf="type === 'balanceTransfer'">
-        Convert your coins between public and private balances.<br>
-        To increase your level of privacy, it's recommended to always keep some of your coins in private balances (Blind &amp; Anon).
-      </p>
-      <p class="widget-help">
-        What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
-        <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
-          <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
-          Currency &amp; transaction types
-        </a>
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro *ngIf="type === 'balanceTransfer'" [childPageAlias]="type">
+    <ng-container page-title>Convert balances</ng-container>
+    <ng-container page-content>
+      Convert your coins between public and private balances.<br>
+      To increase your level of privacy, it's recommended to always keep some of your coins in private balances (Blind &amp; Anon).
+    </ng-container>
+    <ng-container page-help>
+      What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
+      <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
+        <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
+        Currency &amp; transaction types
+      </a>
+    </ng-container>
+  </app-page-intro>
 
   <div fxLayout="row" fxLayoutGap="35px">
 

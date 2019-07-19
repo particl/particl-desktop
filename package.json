@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "2.0.0-alpha-testnet",
+  "version": "2.0.0-alpha1-testnet",
   "branch": "market",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
@@ -48,7 +48,7 @@
   },
   "productName": "Particl Desktop Testnet",
   "build": {
-    "electronVersion": "4.0.3",
+    "electronVersion": "5.0.4",
     "appId": "io.particl.desktop",
     "npmRebuild": true,
     "directories": {
@@ -175,7 +175,7 @@
     "lodash": "^4.17.11",
     "ng2-nvd3": "^2.0.0",
     "node-unzip-2": "^0.2.1",
-    "particl-marketplace": "^0.0.58",
+    "particl-marketplace": "^0.0.69",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
@@ -206,7 +206,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
-    "electron": "4.0.3",
+    "electron": "5.0.4",
     "electron-builder": "^20.38.5",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",

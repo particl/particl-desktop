@@ -6,7 +6,7 @@
   <table class="info">
     <tr><th>Listing name</th><td><strong>{{templateToRemove?.title}}</strong></td></tr>
     <tr><th>Category</th><td>{{templateToRemove?.category?.name}}</td></tr>
-    <tr><th>Price</th><td>{{templateToRemove?.basePrice?.getAmount()}}</td></tr>
+    <tr><th>Price</th><td>{{templateToRemove?.basePrice?.particlsString() }}</td></tr>
   </table>
   <p class="widget-help">
     This will completely remove the listing, including all associated data (like photos, descriptions etc.) and nobody will be able to purchase it.

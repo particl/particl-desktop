@@ -6,9 +6,8 @@ import { MatDialogRef } from '@angular/material';
   styleUrls: ['./shipping.component.scss']
 })
 export class ShippingComponent implements OnInit {
-  public type: string = '';
+  public processing: boolean = false;
   trackingNumber: string = '';
-  isPrerelease: boolean = false;
   @Output() isConfirmed: EventEmitter<string> = new EventEmitter();
   constructor(public _dialogRef: MatDialogRef<ShippingComponent>) { }
 
@@ -16,6 +15,7 @@ export class ShippingComponent implements OnInit {
   }
 
   placeOrder(): void {
+    this.processing = false;
     this._dialogRef.close();
     this.isConfirmed.emit(this.trackingNumber);
   }

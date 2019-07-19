@@ -12,6 +12,7 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
+          <!-- <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count> -->
         </ng-template>
       </mat-tab>
     </mat-tab-group>
@@ -22,19 +23,16 @@
 <!-- =========== LISTINGS =========== -->
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'listings'">
-
-  <div class="page-intro">
-    <h1>Your Listings</h1>
-    <div class="content">
-      <p>
-        This is your dashboard for selling your products on the marketplace and manage their listings.<br>
-        Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
-      </p>
-      <p class="widget-help">
-        Note: All listings created here will be publicly available on the marketplace.
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Your Listings</ng-container>
+    <ng-container page-content>
+      This is your dashboard for selling your products on the marketplace and manage their listings.<br>
+      Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
+    </ng-container>
+    <ng-container page-help>
+      Note: All listings created here will be publicly available on the marketplace.
+    </ng-container>
+  </app-page-intro>
 
   <!-- Listings > Filter -->
   <div class="filter">
@@ -133,18 +131,15 @@
 <!-- =========== ORDERS =========== -->
 <!-- Do not remove the below class it is using for test case -->
 <div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
-
-  <div class="page-intro">
-    <h1>Sell Orders</h1>
-    <div class="content">
-      <p>
-        This is where you manage the orders you're in the process of selling to your customers.
-      </p>
-      <p class="widget-help">
-        Each step of the selling process needs to be confirmed in this page (i.e. marking an order as "Shipped").
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Sell Orders</ng-container>
+    <ng-container page-content>
+      This is where you manage the orders you're in the process of selling to your customers.
+    </ng-container>
+    <ng-container page-help>
+      Each step of the selling process needs to be confirmed in this page (i.e. marking an order as "Shipped").
+    </ng-container>
+  </app-page-intro>
 
   <app-orders type="sell"></app-orders>
 </div><!-- "Orders" tab -->

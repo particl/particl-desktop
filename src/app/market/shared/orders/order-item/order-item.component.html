@@ -2,27 +2,27 @@
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
       <div class="photo" fxFlex="0 0 80px">
-        <img src="{{order?.listing?.imageCollection?.featuredImage?.thumbnail}}">
+        <img src="{{ listingImage }}">
       </div>
       <div class="meta" fxFlex="1 1 100%">
-        <div class="name">{{ order?.listing?.title }}</div>
+        <div class="name">{{ title }}</div>
         <div class="hash" matTooltip="Order ID: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
         <div class="date">
           Added {{order?.added}} &bull; Updated {{order?.updated}}
         </div>
       </div>
-      <div class="status {{ order?.status }} {{ order?.type }}" fxFlex="0 0 120px"><span class="dot"></span>{{ order?.status }}</div>
+      <div class="status {{ order?.step }} {{ order?.type }}" fxFlex="0 0 140px"><span class="dot"></span>{{ order?.step }}</div>
     </div>
   </mat-expansion-panel-header>
 
   <div class="status-info">
-    <p>{{ order?.messages.status_info }}</p>
-    <div *ngIf="order?.type === 'buy' && order?.status === 'shipping'" class="additional-shipping-info">
-      <p *ngIf="order?.listing?.memo">
+    <p>{{ orderActivity?.status_info }}</p>
+    <div *ngIf="showShippingInfo" class="additional-shipping-info">
+      <p *ngIf="(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
-        <code class="more-info">{{ order?.listing?.memo}}</code>
+        <code class="more-info">{{ memo }}</code>
       </p>
-      <p *ngIf="!order?.listing?.memo">
+      <p *ngIf="!(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
         <em>No information provided</em>
       </p>
@@ -34,6 +34,19 @@
     <div class="buyer-info" fxFlex="65%">
       <div class="title">Shipping address</div>
       <app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address>
+      <ng-container *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)">
+        <div class="title">Contact information</div>
+        <table class="contact-info">
+          <tr *ngIf="(contactDetails.email.length > 0)">
+            <th>E-mail address</th>
+            <td>{{contactDetails.email}}</td>
+          </tr>
+          <tr *ngIf="(contactDetails.phone.length > 0)">
+            <th>Telephone number</th>
+            <td>{{contactDetails.phone}}</td>
+          </tr>
+        </table>
+      </ng-container>
     </div><!-- .buyer-info -->
 
     <div class="info" fxFlex="35%">
@@ -45,23 +58,23 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{order?.listing?.basePrice?.getIntegerPart()}}{{order?.listing?.basePrice?.dot()}}<small>{{order?.listing?.basePrice?.getFractionalPart()}}</small> PART
+          <td>{{ pricingInfo.baseInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.baseFraction }} </small> PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td >{{order?.listing?.shippingAmount(country).getIntegerPart()}}{{order?.listing?.shippingAmount(country).dot()}}<small>{{order?.listing?.shippingAmount(country).getFractionalPart()}}</small> PART
+          <td >{{ pricingInfo.shippingInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.shippingFraction }}</small> PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{order?.listing?.escrowAmount(country).getIntegerPart()}}{{order?.listing?.escrowAmount(country).dot()}}<small>{{order?.listing?.escrowAmount(country).getFractionalPart()}}</small> PART
+          <td>{{ pricingInfo.escrowInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.escrowFraction }}</small> PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{order?.listing?.totalAmount(country).getIntegerPart()}}{{order?.listing?.totalAmount(country).dot()}}<small>{{order?.listing?.totalAmount(country).getFractionalPart()}}</small> PART
+            {{ pricingInfo.totalInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.totalFraction }}</small> PART
           </td>
         </tr>
       </table>
@@ -71,36 +84,25 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
     <div class="left">
-      <button mat-button color="warn"
-              (click)="callBid('reject')"
-              *ngIf="order?.messages?.allow_reject_order"
+      <button *ngFor="let actionable of secondaryActions"
+              mat-button color="{{actionable.colour}}"
+              [disabled]="actionable.disabled || actionable.locked"
+              appDebounceClick
+              (debounceClick)="executeAction(actionable)"
               class="small">
-        <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-        Reject bid &amp; cancel order
+        <mat-icon fontSet="partIcon" fontIcon="{{actionable.icon}}"></mat-icon>
+        {{ actionable.text }}
       </button>
-      <!--button mat-button matTooltip="Edit order" class="small">
-        <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-        Edit
-      </button-->
-      <!-- TODO: link to TX ID on block explorer (if payment was made already) -->
-      <!-- <button mat-button matTooltip="Escrow TX details"
-              *ngIf="order?.show_escrow_txdetails" class="small">
-        <mat-icon fontSet="partIcon" fontIcon="part-document"></mat-icon>
-        View payment
-      </button>
-      -->
-      <!-- TODO: shortcut to e2e message to buyer -->
-      <!--button mat-button class="small">
-        <mat-icon fontSet="partIcon" fontIcon="part-person-edit"></mat-icon>
-        Contact buyer
-      </button-->
+
     </div>
     <div class="right">
-      <button mat-raised-button color="primary" matTooltip="{{ order?.messages?.tooltip }}"
-              [disabled]="order?.messages?.action_disabled"
-              (click)="order_action()">
-        <mat-icon fontSet="partIcon" fontIcon="{{ order?.messages?.action_icon }}"></mat-icon>
-        {{ order?.messages?.action_button }}
+      <button *ngFor="let actionable of primaryActions"
+              mat-raised-button color="{{actionable.colour}}" matTooltip="{{ actionable.tooltip }}"
+              [disabled]="actionable.disabled || actionable.locked"
+              appDebounceClick
+              (debounceClick)="executeAction(actionable)">
+        <mat-icon fontSet="partIcon" fontIcon="{{ actionable.icon }}"></mat-icon>
+        {{ actionable.text }}
       </button>
     </div>
   </mat-action-row>

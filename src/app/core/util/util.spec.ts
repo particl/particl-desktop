@@ -1,4 +1,6 @@
-import { AddressHelper, Amount, Duration, DateFormatter, Fee, isPrerelease, isMainnetRelease, dataURItoBlob } from './utils';
+import {
+  AddressHelper, Amount, PartoshiAmount, Duration, DateFormatter, Fee, isPrerelease, isMainnetRelease, dataURItoBlob
+} from './utils';
 
 describe('AddressHelper', () => {
 
@@ -82,6 +84,18 @@ describe('Amount', () => {
     expect(amount.ifDotExist()).toBe(true);
     expect(amount.dot()).toBe('.');
     expect(amount.getAmountWithFee(1.1)).toBe(1.700002);
+  });
+
+  it('should validate negative amounts correctly', () => {
+    const amount = new Amount(-1.1);
+    expect(amount.getAmount()).toBe(-1.1);
+    expect(amount.getAmountAsString()).toBe('-1.1');
+    expect(amount.getIntegerPart()).toBe(-1);
+    expect(amount.getIntegerPartAsString()).toBe('-1');
+    expect(amount.getFractionalPart()).toBe('1');
+    expect(amount.ifDotExist()).toBe(true);
+    expect(amount.dot()).toBe('.');
+    expect(amount.getAmountWithFee(1.1)).toBe(0);
   });
 
   it('with very small decimal positions should be correctly defined', () => {
@@ -177,7 +191,7 @@ describe('Duration', () => {
     expect(duration10.getShortReadableDuration()).toBe('12 minutes');
     expect(duration11.getShortReadableDuration()).toBe('1 minutes');
     expect(duration12.getShortReadableDuration()).toBe('< 1 minute');
-    expect(duration13.getShortReadableDuration()).toBe('< 1 minute');
+    expect(duration13.getShortReadableDuration()).toBe('unknown');
   });
 
 });
@@ -195,8 +209,6 @@ describe('DateFormatter', () => {
 });
 
 describe('Fee', () => {
-  const amount = 10;
-  const feeAmount = 1.2;
   let fee;
 
   it('should return the correct 0 value fee amounts ', () => {
@@ -241,4 +253,97 @@ describe('Util Functions', () => {
     expect(result.type).toBe('image/jpeg');
   });
 ;
+});
+
+
+describe('PartoshiAmount', () => {
+
+  it('should validate numbers correctly', () => {
+    let amount = new PartoshiAmount(100000000);
+    expect(amount.partoshisString()).toBe('100000000');
+    amount = new PartoshiAmount(12.5);
+    expect(amount.partoshisString()).toBe('12');
+    amount = new PartoshiAmount(-10);
+    expect(amount.partoshisString()).toBe('0');
+    amount = new PartoshiAmount(Number.MAX_SAFE_INTEGER);
+    expect(amount.partoshisString()).toBe(`${Number.MAX_SAFE_INTEGER}`);
+    amount = new PartoshiAmount(Number.MAX_SAFE_INTEGER + 1);
+    expect(amount.partoshisString()).toBe('0');
+    amount = new PartoshiAmount(1);
+    expect(amount.partoshisString()).toBe('1');
+    amount = new PartoshiAmount(0);
+    expect(amount.partoshisString()).toBe('0');
+  });
+
+  it('should render the correct 0 value data', () => {
+    const amount = new PartoshiAmount(0);
+    expect(amount.partoshis()).toBe(0);
+    expect(amount.partoshisString()).toBe('0');
+    expect(amount.particlsString()).toBe('0');
+    expect(amount.particls()).toBe(0);
+    expect(amount.particlStringInteger()).toBe('0');
+    expect(amount.particlStringFraction()).toBe('');
+    expect(amount.particlStringSep()).toBe('');
+  });
+
+  it('should be define correctly from calculation inputs', () => {
+    let amount = new PartoshiAmount(100 + 200);
+    expect(amount.partoshis()).toBe(300);
+    amount = new PartoshiAmount(99999999 + 1);
+    expect(amount.partoshis()).toBe(100000000);
+  });
+
+  it('should return the correct string representation of the values', () => {
+    let amount = new PartoshiAmount(1);
+    expect(amount.partoshisString()).toBe('1');
+    expect(amount.particlsString()).toBe('0.00000001');
+    expect(amount.particlStringInteger()).toBe('0');
+    expect(amount.particlStringFraction()).toBe('00000001');
+    expect(amount.particlStringSep()).toBe('.');
+
+    amount = new PartoshiAmount(100000000);
+    expect(amount.partoshisString()).toBe('100000000');
+    expect(amount.particlsString()).toBe('1');
+    expect(amount.particlStringInteger()).toBe('1');
+    expect(amount.particlStringFraction()).toBe('');
+    expect(amount.particlStringSep()).toBe('');
+
+    amount = new PartoshiAmount(100000001);
+    expect(amount.partoshisString()).toBe('100000001');
+    expect(amount.particlsString()).toBe('1.00000001');
+    expect(amount.particlStringInteger()).toBe('1');
+    expect(amount.particlStringFraction()).toBe('00000001');
+    expect(amount.particlStringSep()).toBe('.');
+
+    amount = new PartoshiAmount(12345678);
+    expect(amount.partoshisString()).toBe('12345678');
+    expect(amount.particlsString()).toBe('0.12345678');
+    expect(amount.particlStringInteger()).toBe('0');
+    expect(amount.particlStringFraction()).toBe('12345678');
+    expect(amount.particlStringSep()).toBe('.');
+
+    amount = new PartoshiAmount(1000);
+    expect(amount.partoshisString()).toBe('1000');
+    expect(amount.particlsString()).toBe('0.00001');
+    expect(amount.particlStringInteger()).toBe('0');
+    expect(amount.particlStringFraction()).toBe('00001');
+    expect(amount.particlStringSep()).toBe('.');
+
+    amount = new PartoshiAmount(110000000);
+    expect(amount.partoshisString()).toBe('110000000');
+    expect(amount.particlsString()).toBe('1.1');
+    expect(amount.particlStringInteger()).toBe('1');
+    expect(amount.particlStringFraction()).toBe('1');
+    expect(amount.particlStringSep()).toBe('.');
+  });
+
+  it('should add other PartoshiAmounts correctly', () => {
+    let amountBase = new PartoshiAmount(1);
+    let amountOther = new PartoshiAmount(1);
+    expect(amountBase.add(amountOther).partoshisString()).toBe('2');
+
+    amountBase = new PartoshiAmount(Number.MAX_SAFE_INTEGER - 100);
+    amountOther = new PartoshiAmount(101);
+    expect(amountBase.add(amountOther).partoshisString()).toBe(`${Number.MAX_SAFE_INTEGER - 100}`);
+  });
 });

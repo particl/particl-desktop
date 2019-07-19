@@ -1,12 +1,45 @@
-import { Messages, DateFormatter } from 'app/core/util/utils';
+import { OrderData, DateFormatter, PartoshiAmount } from 'app/core/util/utils';
 import { Product } from './product.model';
-import { Listing } from '../listing/listing.model';
+
+const mappedData = Object.keys(OrderData).map( (key) => {
+  return {
+    orderStatus: OrderData[key].orderStatus,
+    bidStatus: OrderData[key].childBidStatus.name || '',
+    order: +OrderData[key].childBidStatus.order
+  }
+});
+
+const BidFilterMapping = mappedData.sort(
+  (a, b) => a.order < b.order ? -1 : a.order > b.order ? 1 : 0
+);
 
 export class Bid extends Product {
   activeBuySell: boolean;
-  constructor(private order: any, public ordType: string ) {
+  doNotify: boolean = false;
+  private _actualStatus: string = '';
+  private _orderActivity: any = {};
+  constructor(private order: any, private ordType: string ) {
     super();
-    this.setActiveOrders();
+    let highest = -1;
+    ((<any[]>this.order.ChildBids) || []).forEach((childBid) => {
+      if (childBid.type) {
+        const foundNum = BidFilterMapping.findIndex((filtered) => childBid.type === filtered.bidStatus);
+        if (foundNum > highest) {
+          highest = foundNum;
+        }
+      }
+    });
+
+    this._actualStatus = highest > -1 ?
+      BidFilterMapping[highest].orderStatus :
+      (this.order.OrderItem.status ? this.order.OrderItem.status : this.order.type === 'MPA_REJECT' ? 'REJECTED' : 'BIDDED');
+
+    const orderAction = Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus);
+    if (orderAction) {
+      this._orderActivity = OrderData[orderAction][this.ordType];
+    }
+    this.activeBuySell = (this._orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
+    this.doNotify = Boolean(+this._orderActivity.notifyOnEntry);
   }
 
   get id(): number {
@@ -25,10 +58,6 @@ export class Bid extends Product {
     return this.order.ShippingAddress;
   }
 
-  get status(): string {
-    return Messages[this.allStatus].status;
-  }
-
   get added(): string {
     return new DateFormatter(new Date(this.createdAt)).dateFormatter(false);
   }
@@ -37,12 +66,16 @@ export class Bid extends Product {
     return new DateFormatter(new Date(this.updatedAt)).dateFormatter(false);
   }
 
-  get messages(): any {
-    return Messages[this.allStatus][this.type];
+  get orderActivity(): any {
+    return this._orderActivity;
   }
 
   get OrderItem(): any {
     return this.order.OrderItem;
+  }
+
+  get ChildBids(): any {
+    return this.order.ChildBids;
   }
 
   get ListingItem(): any {
@@ -50,7 +83,7 @@ export class Bid extends Product {
   }
 
   get allStatus(): string {
-    return this.order.OrderItem.status ? this.order.OrderItem.status : this.order.action === 'MPA_REJECT' ? 'REJECTED' : 'BIDDING';
+    return this._actualStatus;
   }
 
   get createdAt(): number {
@@ -61,9 +94,6 @@ export class Bid extends Product {
     return this.order.updatedAt;
   }
 
-  set listing(listing: Listing) {
-    this.order.listing = listing;
-  }
 
   get hash(): string {
     if (this.order.ListingItem && this.order.ListingItem.hash) {
@@ -79,13 +109,43 @@ export class Bid extends Product {
     return '';
   }
 
-  get listing(): Listing {
-    return this.order.listing;
+  get step(): string {
+    return (Object.keys(OrderData).find((key) => OrderData[key].orderStatus === this.allStatus) || '').replace('_', ' ').toLowerCase();
   }
 
-  setActiveOrders() {
-    this.activeBuySell = ['Accept bid', 'Mark as shipped', 'Mark as delivered', 'Make payment']
-                          .includes(this.messages.action_button);
+
+  PricingInformation(country: string): any {
+    const payment = this.order.ListingItem.PaymentInformation;
+    const itemPrice = payment.ItemPrice || {};
+    const escrow = payment.Escrow || {};
+
+    const isDomestic = this.isDomestic(country);
+    const basePrice = new PartoshiAmount (itemPrice.basePrice || 0);
+
+    // Calculate shipping
+    const shippingPrice = (new PartoshiAmount(itemPrice.ShippingPrice[isDomestic ? 'domestic' : 'international'])).partoshis();
+
+    // Calculate escrow
+    const ratio = escrow.Ratio || {};
+    const escrowPrice = basePrice.partoshis() + ((ratio.buyer || 0) / 100 * shippingPrice);
+
+    // Calculate total
+    const totalPrice = basePrice.partoshis() + shippingPrice + escrowPrice;
+
+    return {
+      base: basePrice,
+      shipping: new PartoshiAmount(shippingPrice || 0),
+      escrow: new PartoshiAmount(escrowPrice || 0),
+      total: new PartoshiAmount(totalPrice || 0)
+    };
+  }
+
+  private isDomestic(country: string): boolean {
+    const itemLocation = this.ListingItem.ItemInformation.ItemLocation;
+    if (itemLocation) {
+      return itemLocation.country === country;
+    }
+    return false;
   }
 
 }

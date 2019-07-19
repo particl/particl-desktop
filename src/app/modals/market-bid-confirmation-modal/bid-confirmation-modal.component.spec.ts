@@ -5,6 +5,7 @@ import { CoreModule } from '../../core/core.module';
 import { SharedModule } from '../../wallet/shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 
@@ -14,6 +15,7 @@ describe('BidConfirmationModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         SharedModule,
         ModalsModule,
         CoreModule.forRoot(),

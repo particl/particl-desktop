@@ -3,10 +3,10 @@
   <mat-icon fontSet="partIcon" fontIcon="part-cart"></mat-icon>
   <strong class="tag">{{ cart?.countOfItems }}</strong>
   <!-- cart total without shipping price -->
-  <span *ngIf="cart?.countOfItems > 0 && !listCache?.selectedCountry" class="amount">({{cart?.subTotal.getAmountAsString()}} PART)</span>
+  <span *ngIf="cart?.countOfItems > 0 && !listCache?.selectedCountry" class="amount">({{cart?.getSubTotalWithoutShipping().particlsString() }} PART)</span>
 
   <!-- cart total with shipping price -->
   <span *ngIf="cart?.countOfItems > 0 && listCache?.selectedCountry" class="amount">({{
-      cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.getAmount()
+      cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.particlsString()
     }} PART)</span>
 </div>

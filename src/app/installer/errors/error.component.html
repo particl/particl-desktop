@@ -23,14 +23,12 @@
     </mat-toolbar><!-- .header-main -->
 
     <div class="container-block">
-      <div class="page-intro">
-        <h1>An error occurred</h1>
-        <div class="content">
-          <p>
-            Please ensure that your Particl Core version is at least using protocol version 90008
-          </p>
-        </div>
-      </div><!-- .page-intro -->
+      <app-page-intro>
+        <ng-container page-title>An error occurred</ng-container>
+        <ng-container page-content>
+          Please ensure that your Particl Core version is at least using protocol version 90008
+        </ng-container>
+      </app-page-intro>
 
       <div class="terms-text">
         <p> We've detected that the Particl Core version currently running does not meet the minimum version requirement of v0.18.0.6</p>
