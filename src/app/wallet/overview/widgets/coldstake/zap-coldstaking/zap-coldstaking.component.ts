@@ -54,10 +54,10 @@ export class ZapColdstakingComponent {
             return false;
           }
           const coldstakingAddress = derived[0];
-          this.initializeZapForAddress(coldstakingAddress)
+          this.initializeZapForAddress(coldstakingAddress);
         });
       } else { // Coldstake pool
-        this.initializeZapForAddress(pkey)
+        this.initializeZapForAddress(pkey);
       }
 
     }, error => {
@@ -77,7 +77,7 @@ export class ZapColdstakingComponent {
           this.utxos.txs.push({
             address: utxo.address,
             amount: utxo.amount,
-            inputs: [{ tx: utxo.txid, n: utxo.vout }]
+            inputs: { tx: utxo.txid, n: utxo.vout }
           });
         };
       });
@@ -102,6 +102,8 @@ export class ZapColdstakingComponent {
           this.script = script.hex;
 
           const amount = new Amount(this.utxos.amount, 8);
+          const utxoInputs = [];
+          (<any[]>this.utxos.txs).forEach((tx) => utxoInputs.push(tx.inputs));
           this.log.d('amount', amount.getAmount());
 
           this._rpc.call('sendtypeto', ['part', 'part', [{
@@ -109,9 +111,9 @@ export class ZapColdstakingComponent {
             address: 'script',
             amount: amount.getAmount(),
             script: script.hex
-          }], '', '', 4, 32, true, JSON.stringify({
-            inputs: this.utxos.txs
-          })]).subscribe(tx => {
+          }], 'coldstaking zap', '', 4, 32, true, {
+            inputs: utxoInputs
+          }]).subscribe(tx => {
 
             this.log.d('fees', tx);
             this.fee = tx.fee;
@@ -128,20 +130,29 @@ export class ZapColdstakingComponent {
     this.log.d('zap tx', this.utxos.amount, this.script, this.utxos.txs);
 
     const amount = new Amount(this.utxos.amount, 8);
+    const utxoInputs = [];
+    (<any[]>this.utxos.txs).forEach((tx) => utxoInputs.push(tx.inputs));
+
     this._rpc.call('sendtypeto', ['part', 'part', [{
       subfee: true,
       address: 'script',
       amount: amount.getAmount(),
       script: this.script
-    }], 'coldstaking zap', '', 4, 32, false, JSON.stringify({
-      inputs: this.utxos.txs
-    })]).subscribe(info => {
+    }], 'coldstaking zap', '', 4, 32, false, {
+      inputs: utxoInputs
+    }]).subscribe(info => {
       this._rpcState.set('ui:coldstaking', true);
       this.log.d('zap', info);
 
       this.dialogRef.close();
       this.flashNotification.open(
         `Succesfully zapped ${this.utxos.amount} PART to cold staking`, 'warn');
+    },
+    err => {
+      this.log.d('error during zap!', err);
+      this.flashNotification.open(
+        `An error occurred while attempting to zap coins`, 'warn'
+      );
     });
 
   }
