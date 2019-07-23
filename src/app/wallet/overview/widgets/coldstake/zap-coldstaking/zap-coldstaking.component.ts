@@ -54,10 +54,10 @@ export class ZapColdstakingComponent {
             return false;
           }
           const coldstakingAddress = derived[0];
-          this.initializeZapForAddress(coldstakingAddress)
+          this.initializeZapForAddress(coldstakingAddress);
         });
       } else { // Coldstake pool
-        this.initializeZapForAddress(pkey)
+        this.initializeZapForAddress(pkey);
       }
 
     }, error => {
@@ -77,7 +77,7 @@ export class ZapColdstakingComponent {
           this.utxos.txs.push({
             address: utxo.address,
             amount: utxo.amount,
-            inputs: [{ tx: utxo.txid, n: utxo.vout }]
+            inputs: { tx: utxo.txid, n: utxo.vout }
           });
         };
       });
@@ -104,14 +104,30 @@ export class ZapColdstakingComponent {
           const amount = new Amount(this.utxos.amount, 8);
           this.log.d('amount', amount.getAmount());
 
-          this._rpc.call('sendtypeto', ['part', 'part', [{
-            subfee: true,
-            address: 'script',
-            amount: amount.getAmount(),
-            script: script.hex
-          }], '', '', 4, 64, true, JSON.stringify({
-            inputs: this.utxos.txs
-          })]).subscribe(tx => {
+          const utxoInputs = [];
+          (<any[]>this.utxos.txs).forEach( (tx) => utxoInputs.push(tx.inputs) );
+
+          this._rpc.call(
+            'sendtypeto',
+            [
+              'part',
+              'part',
+              [{
+                subfee: true,
+                address: 'script',
+                amount: amount.getAmount(),
+                script: script.hex
+              }],
+              'coldstaking zap',
+              '',
+              4,
+              32,
+              true,
+              {
+                inputs: utxoInputs
+              }
+            ]
+          ).subscribe(tx => {
 
             this.log.d('fees', tx);
             this.fee = tx.fee;
@@ -127,15 +143,31 @@ export class ZapColdstakingComponent {
 
     this.log.d('zap tx', this.utxos.amount, this.script, this.utxos.txs);
 
+    const utxoInputs = [];
+    (<any[]>this.utxos.txs).forEach( (tx) => utxoInputs.push(tx.inputs) );
+
     const amount = new Amount(this.utxos.amount, 8);
-    this._rpc.call('sendtypeto', ['part', 'part', [{
-      subfee: true,
-      address: 'script',
-      amount: amount.getAmount(),
-      script: this.script
-    }], 'coldstaking zap', '', 4, 64, false, JSON.stringify({
-      inputs: this.utxos.txs
-    })]).subscribe(info => {
+    this._rpc.call(
+      'sendtypeto',
+      [
+        'part',
+        'part',
+        [{
+          subfee: true,
+          address: 'script',
+          amount: amount.getAmount(),
+          script: this.script
+        }],
+        'coldstaking zap',
+        '',
+        4,
+        32,
+        false,
+        {
+          inputs: utxoInputs
+        }
+      ]
+    ).subscribe(info => {
       this.log.d('zap', info);
 
       this.dialogRef.close();
