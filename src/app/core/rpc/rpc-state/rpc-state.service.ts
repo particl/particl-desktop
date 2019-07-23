@@ -29,6 +29,7 @@ export class RpcStateService extends StateService implements OnDestroy {
     this.register('getwalletinfo', 5000);
     this.register('listunspent', 5000, [0]);
     this.register('listunspentblind', 5000, [0]);
+    this.register('listunspentanon', 5000, [0]);
     this.register('getblockchaininfo', 5000);
     this.register('getnetworkinfo', 10000);
     this.register('getstakinginfo', 10000);
