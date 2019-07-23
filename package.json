@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "branch": "1.4.0",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
@@ -10,6 +10,7 @@
     "angular2",
     "angular4",
     "angular5",
+    "angular7",
     "angular-cli",
     "electron",
     "webpack",
