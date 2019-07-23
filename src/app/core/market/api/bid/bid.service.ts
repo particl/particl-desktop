@@ -9,8 +9,8 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 import { take, catchError } from 'rxjs/operators';
 
 export enum errorType {
-  unspent = 'Zero unspent outputs - insufficient (blind) funds to place the order.',
-  broke = 'Insufficient (blind) funds to place the order.',
+  unspent = 'Zero unspent outputs - insufficient (anon) funds to place the order.',
+  broke = 'Insufficient (anon) funds to place the order.',
   itemExpired = 'An item in your basket has expired!',
   enough = 'Not enough spendable funds'
 }
@@ -109,7 +109,7 @@ export class BidService {
   errorHandle(error: any) {
     if (error.includes('unspent')) {
       error = errorType.unspent;
-    } else if (error.includes('broke') && !error.toLowerCase().includes('something')) {
+    } else if ((error.includes('broke') && !error.toLowerCase().includes('something')) || error.toLowerCase().includes('insufficient')) {
       error = errorType.broke;
     } else if (error.includes('enough')) {
       error = errorType.enough;

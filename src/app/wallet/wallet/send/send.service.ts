@@ -45,15 +45,19 @@ export class SendService {
           (stealthAddress: string) => {
             // set balance transfer stealth address
             tx.toAddress = stealthAddress;
-            this.send(tx).subscribe(fee => {
-              observer.next(fee);
-              observer.complete();
-            });
+            this.send(tx).subscribe(
+              (fee) => {
+                observer.next(fee);
+                observer.complete();
+              },
+              (err) => {
+                observer.error(err);
+              }
+            );
           });
       });
     } else {
-      return this.send(tx)
-      .pipe(map(fee => fee));
+      return this.send(tx);
     }
   }
 
@@ -107,7 +111,7 @@ export class SendService {
   }
 
   private rpc_send_failed(message: string, address?: string, amount?: number) {
-    const idx = message.indexOf(']'); // End brancket of string like '[wallet.dat] ...'
+    const idx = message.indexOf(']'); // End bracket of string like '[wallet.dat] ...'
     let msg = '';
     if (idx > -1) {
       msg = message.substring(idx + 1);
