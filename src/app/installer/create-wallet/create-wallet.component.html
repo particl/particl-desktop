@@ -46,7 +46,7 @@
     <!-- STEP 0: Choose action -->
     <ng-template [ngIf]="step === Steps.START">
       <div class="container-block">
-        <app-page-intro>
+        <app-page-intro [canHideContent]="false">
           <ng-container page-title>Create or restore wallet</ng-container>
           <ng-container page-content>
             In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already.
@@ -99,7 +99,7 @@
       <form #nameForm="ngForm" (ngSubmit)="nextStep()">
 
         <div class="container-block">
-          <app-page-intro>
+          <app-page-intro [canHideContent]="false">
             <ng-container page-title>Name your wallet</ng-container>
             <ng-container page-content>
               Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal and market funds.
@@ -148,7 +148,7 @@
     <!-- STEP 2: Encrypt wallet -->
     <ng-template [ngIf]="step === Steps.ENCRYPT">
       <div *ngIf="!isEncrypting" class="container-block">
-        <app-page-intro>
+        <app-page-intro [canHideContent]="false">
           <ng-container page-title>Encrypt your '{{ walletname || 'Default Wallet' }}' wallet</ng-container>
           <ng-container page-content>
             It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.<br>
@@ -211,7 +211,7 @@
     <!-- STEP: Create Wallet Flow -->
     <ng-template [ngIf]="isCreate && [Steps.MNEMONIC_INITIAL,Steps.MNEMONIC_VERIFY,Steps.PASSWORD].indexOf(step) != -1">
       <div class="container-block">
-        <app-page-intro *ngIf="step === Steps.MNEMONIC_INITIAL">
+        <app-page-intro *ngIf="step === Steps.MNEMONIC_INITIAL" [canHideContent]="false">
           <ng-container page-title>Recovery Phrase for '{{ walletname || 'Default Wallet' }}' wallet</ng-container>
           <ng-container page-content>
             Recovery Phrase (sometimes also called "wallet seed") is a backup key to your coins. Anyone with access to these 24 words can recover your wallet, so make sure they are safe and ideally backed-up on multiple locations.
@@ -221,7 +221,7 @@
           </ng-container>
         </app-page-intro>
 
-        <app-page-intro *ngIf="step === Steps.MNEMONIC_VERIFY">
+        <app-page-intro *ngIf="step === Steps.MNEMONIC_VERIFY" [canHideContent]="false">
           <ng-container page-title>Confirm Recovery Phrase</ng-container>
           <ng-container page-content>
             Confirm that you backed up your Recovery Phrase by filling in the missing words:
@@ -231,7 +231,7 @@
           </ng-container>
         </app-page-intro>
 
-        <app-page-intro *ngIf="step === Steps.PASSWORD">
+        <app-page-intro *ngIf="step === Steps.PASSWORD" [canHideContent]="false">
           <ng-container page-title>Choose a Recovery Password <small>(optional)</small></ng-container>
           <ng-container page-content>
             You can further increase your wallet protection by setting a Recovery Password.<br>
@@ -302,7 +302,7 @@
     <!-- STEP: Restore Wallet flow -->
     <ng-template [ngIf]="step === Steps.MNEMONIC_VERIFY && !isCreate">
       <div class="container-block">
-        <app-page-intro>
+        <app-page-intro [canHideContent]="false">
           <ng-container page-title>Restore existing '{{ walletname || 'Default Wallet' }}' wallet</ng-container>
           <ng-container page-content>
             For restoring your existing wallet, you will need its Recovery Phrase (and also Recovery Password if you have set it up):
@@ -376,7 +376,7 @@
     <!-- STEP 6: Gratz -->
     <ng-template [ngIf]="step === Steps.COMPLETED">
       <div class="container-block">
-        <app-page-intro>
+        <app-page-intro [canHideContent]="false">
           <ng-container page-title>Your wallet is ready</ng-container>
           <ng-container page-content>
             Congratulations &ndash; your new wallet was created successfully!

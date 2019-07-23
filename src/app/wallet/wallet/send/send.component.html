@@ -28,7 +28,7 @@
 
 
 <div class="container-block with-tab-bar">
-  <app-page-intro *ngIf="type === 'sendPayment'">
+  <app-page-intro *ngIf="type === 'sendPayment'" [childPageAlias]="type">
     <ng-container page-title>Send payment</ng-container>
     <ng-container page-content>
       Send payments to anyone.<br>
@@ -43,7 +43,7 @@
     </ng-container>
   </app-page-intro>
 
-  <app-page-intro *ngIf="type === 'balanceTransfer'">
+  <app-page-intro *ngIf="type === 'balanceTransfer'" [childPageAlias]="type">
     <ng-container page-title>Convert balances</ng-container>
     <ng-container page-content>
       Convert your coins between public and private balances.<br>
