@@ -9,14 +9,14 @@ import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node'
 export class ChecklistDatabaseService {
 
   dataChange: BehaviorSubject<ItemNode[]> = new BehaviorSubject<ItemNode[]>([]);
-  treeData: any;
+  // treeData: any;  // Re-enable when using filtering or dynamic categories, for example
   get data(): ItemNode[] { return this.dataChange.value; }
 
   constructor() { }
 
   initialize(TREE_DATA: Category[]) {
 
-    this.treeData = TREE_DATA;
+    // this.treeData = TREE_DATA;  // Re-enable when using filtering or dynamic categories, for example
     // Build the tree nodes from Json object. The result is a list of `ItemNode` with nested
     // file node as children.
     const data = this.buildCategoryTree(TREE_DATA, 0);

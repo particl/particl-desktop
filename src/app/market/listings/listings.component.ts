@@ -1,9 +1,7 @@
 import {
   Component,
   OnInit,
-  OnDestroy,
-  ElementRef,
-  ViewChild
+  OnDestroy
 } from '@angular/core';
 
 import { Log } from 'ng2-logger';
