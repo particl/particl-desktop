@@ -197,7 +197,7 @@ mat-card.mat-card {
   padding: 0;
   .mat-expansion-panel-header {
     font-family: $font;
-    font-size: 13px;
+    font-size: 100%;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
     }
@@ -482,6 +482,11 @@ mat-card.mat-card {
   &.no-top-padding { // remove top space reserved for floating placeholders (if disabled)
     .mat-input-infix {
       border-top: 0;
+    }
+  }
+  &.no-bottom-padding {
+    .mat-form-field-wrapper {
+      margin-bottom: -1.25em; // offset bottom padding
     }
   }
 }

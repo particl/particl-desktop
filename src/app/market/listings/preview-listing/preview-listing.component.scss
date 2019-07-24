@@ -19,37 +19,8 @@ table {
 
 // ------ UI ELEMENTS ------ //
 
-.image {
-  cursor: pointer;
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-}
-
 button.small .mat-icon {
   margin: 0; // remove margin from buttons with icons only
-}
-
-// Info/alert messages
-.message {
-  &.info {
-    padding: 16px 0;
-    background: $bg;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-    &:before {
-      content: none;
-    }
-  }
-  .mat-icon {
-    margin-right: 6px;
-    position: relative;
-    top: 3px;
-    color: $color;
-  }
 }
 
 // ------ LAYOUT ------ //
@@ -69,6 +40,10 @@ button.small .mat-icon {
       }
     }
     .listing-tabs {
+      position: sticky;
+      top: 0;
+      background: $color-white;
+      z-index: 20;
       .mat-tab-label {
         width: (100% / 2);
       }
@@ -77,10 +52,11 @@ button.small .mat-icon {
 }
 
 .dialog-content {
-  margin: 0 -24px !important;
+  margin: -24px -24px 0 !important;
   width: 950px;
-  height: 65vh;
+  height: 72vh;
   max-height: none;
+  background: $bg;
 }
 
 .product-gallery {
@@ -97,7 +73,9 @@ button.small .mat-icon {
 }
 
 .product-summary { // container for upper part (gallery, name, meta)
-  margin-bottom: 24px;
+  margin: 0 -24px;
+  padding: 24px;
+  background: $color-white;
 }
 
 .product-info {
@@ -192,14 +170,125 @@ p.description {
 }
 
 .product-details {
+  margin: 0 -24px;
 
   // Tabs' content
   .tab-content {
     min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
-    margin: 24px 8px;
+    padding: 24px 32px;
     line-height: 1.55;
+
+    .subtitle {
+      @extend %subtitle;
+      margin-top: 0;
+    }
+/*
     &.shipping {
-      margin: 24px 0; // make shipping table full-width
+      padding: 24px; // make shipping table full-width
+    }
+*/
+    // Questions & answers
+    &.comments {
+      .tag {
+        @extend %tag;
+        position: relative;
+        top: -2px;
+        background: mix($text-muted, $bg-shadow);
+        margin: 0;
+        &.seller {
+          background: $color;
+        }
+      }
+      // Single question box
+      .question-box {
+        &.mat-expanded {
+          .summary {
+            @extend %lighter;
+            font-weight: 400;
+          }
+        }
+        // header (trigger)
+        .mat-expansion-panel-header {
+          min-height: 48px;
+          max-height: 48px;
+        }
+        .no {
+          @extend %lighter;
+          flex: 0 0 45px;
+        }
+        .summary {
+          @extend %tfx;
+          text-transform: none;
+          font-weight: 500;
+          max-width: 460px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .seller-responded {
+          flex: 0 0 30px;
+          text-align: center;
+          margin-left: 16px;
+          .mat-icon {
+            color: $color;
+            font-size: 100%;
+            position: relative;
+            top: 1px;
+          }
+        }
+        .answers-no {
+          flex: 0 0 45px;
+          text-align: right;
+        }
+        // content
+        h3.question {
+          font-weight: 500;
+          line-height: 1.5;
+        }
+        .mat-divider {
+          margin: 0 -24px;
+        }
+        .answer { // Single answer line
+          padding: 12px 0;
+          display: flex;
+          &.by-user {
+            .message {
+              @extend %lighter;
+            }
+          }
+          .author {
+            flex: 1 0 60px;
+            padding-right: 8px;
+            text-align: right;
+          }
+          .message {
+            flex: 1 1 100%;
+            margin-left: 8px;
+          }
+          .date {
+            @extend %lighter;
+            flex: 0 0 120px;
+            font-size: 80%;
+            text-align: right;
+            margin-top: 1px;
+          }
+        }
+        mat-action-row {
+          display: flex;
+          align-items: center;
+          padding: 12px 16px 12px 24px;
+          .title {
+            display: block;
+            margin-right: 14px;
+          }
+          .reply-field {
+            flex: 1 0 250px;
+          }
+          .reply-button {
+            margin-left: 14px;
+          }
+        }
+      }
     }
   }
 
@@ -269,6 +358,10 @@ p.description {
 }
 
 mat-dialog-actions {
+  padding: 12px 24px;
+  margin: 0 -24px -24px;
+  border-top: 1px solid $bg-shadow;
+
   // Listing governance
   .reporting {
     display: inline-block;
