@@ -91,11 +91,8 @@
   }
 }
 
-// ------ CONTENT  ------ //
 
-.page-intro {
-  width: 100%;
-}
+// ------ CONTENT ------ //
 
 .no-results {
   width: 100%;
@@ -114,4 +111,10 @@ button.previous-page {
   position: fixed;
   bottom: 0;
   height: 8px;
+}
+
+
+.tree-with-search-single-selection {
+  max-height: 500px;
+  overflow-y: scroll;
 }

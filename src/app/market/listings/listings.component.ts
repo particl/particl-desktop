@@ -1,4 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
+
 import { Log } from 'ng2-logger';
 
 import { Category } from 'app/core/market/api/category/category.model';
@@ -7,12 +12,10 @@ import { Listing } from '../../core/market/api/listing/listing.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { FavoritesService } from '../../core/market/api/favorites/favorites.service';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { take, switchMap } from 'rxjs/operators';
 import { throttle } from 'lodash';
 import { range } from 'rxjs';
-
 
 interface ISorting {
   value: string;
@@ -31,6 +34,7 @@ interface IPage {
 })
 
 export class ListingsComponent implements OnInit, OnDestroy {
+
   // general
   log: any = Log.create('listing-item.component');
   private destroyed: boolean = false;
@@ -80,11 +84,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private firstListingHash: string = '';
   private timeoutNewListingCheck: any;
   newListArrived: boolean;
+  selectedCategory: any;
 
   constructor(
     private category: CategoryService,
     private listingService: ListingService,
-    private favoritesService: FavoritesService,
     public countryList: CountryListService
   ) {
     this.log.d('overview created');
@@ -106,9 +110,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
   loadCategories() {
     this.category.list()
       .subscribe(
-      list => {
-        this._rootCategoryList = list;
-      });
+        list => {
+          this._rootCategoryList = list;
+        });
   }
 
   private loadPage(pageNumber: number, clear: boolean, queryNewListings: boolean = false) {
@@ -158,7 +162,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
             listings: listings
           };
 
-          if ( (pageNumber === 0) && clear) {
+          if ((pageNumber === 0) && clear) {
             this.firstListingHash = listings.length ? (listings[0].hash || '') : '';
             this.newListArrived = false;
           }
@@ -188,13 +192,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
         }
       },
 
-      (error) => {
-        setTimeout(() => {
-          if (!this.destroyed) {
-            this.loadPage(0, clear, queryNewListings);
-          }
-        }, 5000);
-      }
+        (error) => {
+          setTimeout(() => {
+            if (!this.destroyed) {
+              this.loadPage(0, clear, queryNewListings);
+            }
+          }, 5000);
+        }
       )
   }
 
@@ -277,8 +281,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   onCategoryChange(category: any): void {
     if (!category || category.id) {
+      this.selectedCategory = category;
       this.filters.category = category ? category.id : undefined;
       this.clearAndLoadPage();
+    } else {
+      this.selectedCategory = null;
     }
 
   }
@@ -312,4 +319,5 @@ export class ListingsComponent implements OnInit, OnDestroy {
       window.removeEventListener('resize', this.resizeEventer);
     } catch (err) { }
   }
+
 }
