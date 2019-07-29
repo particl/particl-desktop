@@ -535,7 +535,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
 
   onCategoryChange(category: Category): void {
-    this.log.d('category', category);
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
