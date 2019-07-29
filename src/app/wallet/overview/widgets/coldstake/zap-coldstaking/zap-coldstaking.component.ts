@@ -4,8 +4,9 @@ import { MatDialogRef } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Amount } from '../../../../../core/util/utils';
 
-import { RpcService, RpcStateService } from 'app/core/core.module';
+import { RpcService } from 'app/core/core.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-zap-coldstaking',
@@ -23,8 +24,7 @@ export class ZapColdstakingComponent {
   constructor(
     private flashNotification: SnackbarService,
     private dialogRef: MatDialogRef<ZapColdstakingComponent>,
-    private _rpc: RpcService,
-    private _rpcState: RpcStateService
+    private _rpc: RpcService
   ) {
 
     /*
@@ -61,7 +61,7 @@ export class ZapColdstakingComponent {
       }
 
     }, error => {
-      this.log.er('errr');
+      this.log.er('walletsettings request error: ', error);
     });
   }
 
@@ -100,40 +100,10 @@ export class ZapColdstakingComponent {
             return false;
           }
           this.script = script.hex;
-
-          const amount = new Amount(this.utxos.amount, 8);
-          this.log.d('amount', amount.getAmount());
-
-          const utxoInputs = [];
-          (<any[]>this.utxos.txs).forEach( (tx) => utxoInputs.push(tx.inputs) );
-
-          this._rpc.call(
-            'sendtypeto',
-            [
-              'part',
-              'part',
-              [{
-                subfee: true,
-                address: 'script',
-                amount: amount.getAmount(),
-                script: script.hex
-              }],
-              'coldstaking zap',
-              '',
-              4,
-              32,
-              true,
-              {
-                inputs: utxoInputs
-              }
-            ]
-          ).subscribe(tx => {
-
+          this.sendTransaction(true).subscribe(tx => {
             this.log.d('fees', tx);
             this.fee = tx.fee;
-
           });
-
         });
       });
     });
@@ -143,11 +113,21 @@ export class ZapColdstakingComponent {
 
     this.log.d('zap tx', this.utxos.amount, this.script, this.utxos.txs);
 
+    this.sendTransaction(false).subscribe(info => {
+      this.log.d('zap', info);
+
+      this.dialogRef.close();
+      this.flashNotification.open(
+        `Succesfully zapped ${this.utxos.amount} PART to cold staking`, 'warn');
+    });
+  }
+
+  private sendTransaction(estimateFee: boolean = false): Observable<any> {
     const utxoInputs = [];
     (<any[]>this.utxos.txs).forEach( (tx) => utxoInputs.push(tx.inputs) );
-
     const amount = new Amount(this.utxos.amount, 8);
-    this._rpc.call(
+
+    return  this._rpc.call(
       'sendtypeto',
       [
         'part',
@@ -162,19 +142,12 @@ export class ZapColdstakingComponent {
         '',
         4,
         32,
-        false,
+        estimateFee,
         {
           inputs: utxoInputs
         }
       ]
-    ).subscribe(info => {
-      this.log.d('zap', info);
-
-      this.dialogRef.close();
-      this.flashNotification.open(
-        `Succesfully zapped ${this.utxos.amount} PART to cold staking`, 'warn');
-    });
-
+    )
   }
 
 }
