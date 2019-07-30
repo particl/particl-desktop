@@ -9,8 +9,8 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 import { take, catchError } from 'rxjs/operators';
 
 export enum errorType {
-  unspent = 'Zero unspent outputs - insufficient (anon) funds to place the order.',
-  broke = 'Insufficient (anon) funds to place the order.',
+  unspent = 'Insufficient spendable (anon) funds to place the order.',
+  broke = 'Not enough spendable (anon) funds available',
   itemExpired = 'An item in your basket has expired!',
   enough = 'Not enough spendable funds'
 }
