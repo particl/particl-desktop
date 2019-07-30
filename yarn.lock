@@ -8195,10 +8195,10 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@^0.0.77:
-  version "0.0.77"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.77.tgz#72f4c6ae45f6e35938015698fe89e0006ac2829e"
-  integrity sha512-2SPEMj2LQEdVaWwZw9GOu8nq0pn1fXGeJ/YywVeratjv+KM8ql5Q6Cr84i+zCDQrPWHoCAPAIgeAL9ZcxpmPog==
+particl-marketplace@^0.0.78:
+  version "0.0.78"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.0.78.tgz#a19d853eb7f786017997eb19585f3040d6c40a9f"
+  integrity sha512-Mx/f1Upcrnft+8YOUHVag2XZuZRlL3Fg7uxexlUiRowdh4ciFzrs4F4536knMd+QtFIZPNTKUO6IuwHJV7bGMw==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
