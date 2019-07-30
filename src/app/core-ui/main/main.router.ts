@@ -23,6 +23,7 @@ import { ReportService } from 'app/core/market/api/report/report.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
+import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 
 import * as marketConfig from '../../../../modules/market/config.js';
 
@@ -77,7 +78,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _favorite: FavoritesService,
     private _report: ReportService,
     private _proposal: ProposalsService,
-    private _addToCart: AddToCartCacheService
+    private _addToCart: AddToCartCacheService,
+    private _favCacheService: FavoriteCacheService
   ) {
     this.log.d('Main.Router constructed');
 
@@ -93,6 +95,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
           this._profile.start();
           this._cart.start();
           this._category.start();
+          this._favCacheService.start();
           this._favorite.start();
           this._report.start();
           this._proposal.start();
@@ -193,6 +196,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       this._report.stop();
       this._proposal.stop();
       this._addToCart.stop();
+      this._favCacheService.stop();
     }
   }
 
