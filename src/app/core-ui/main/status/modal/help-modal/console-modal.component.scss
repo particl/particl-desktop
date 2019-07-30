@@ -29,7 +29,7 @@
   padding: 10px 16px;
   background: $color-white;
   border-bottom: 1px solid $bg-shadow;
-
+  @extend %enable-select;
   // user input commands
   &.input {
     margin-bottom: 0;
