@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "2.0.0-alpha1-testnet",
+  "version": "2.0.0-alpha2-testnet",
   "branch": "market",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
@@ -140,7 +140,7 @@
           ]
         }
       ],
-      "executableName": "Particl Desktop",
+      "executableName": "Particl Desktop Testnet",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl-desktop",
