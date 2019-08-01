@@ -1,16 +1,14 @@
 <div class="container-block" [formGroup]="itemFormGroup">
 
-  <div class="page-intro">
-    <h1>Add new Product for sale</h1>
-    <div class="content">
-      <p>
-        Here you can add new Product for sale on Particl Open Marketplace.
-      </p>
-      <p class="widget-help">
-        This Product will be available for all users on Particl network.
-      </p>
-    </div>
-  </div><!-- .page-intro -->
+  <app-page-intro>
+    <ng-container page-title>Add new Product for sale</ng-container>
+    <ng-container page-content>
+      Here you can add new Product for sale on Particl Open Marketplace.
+    </ng-container>
+    <ng-container page-help>
+      This Product will be available for all users on Particl network.
+    </ng-container>
+  </app-page-intro>
 
   <div class="row" fxLayout="row" fxLayoutGap="30px">
 
