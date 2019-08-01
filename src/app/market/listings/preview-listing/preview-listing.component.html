@@ -215,103 +215,12 @@
       </mat-card>
     </div><!-- .tab-content.shipping-->
 
-    <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'questions'" fxLayoutGap="35px">
-      <div class="write-comment" fxFlex="1 1 250px">
-        <h2 class="subtitle">Ask a question</h2>
-        <mat-card>
-          <mat-form-field class="full-width no-top-padding">
-            <textarea matInput placeholder="Post a new question" rows="4"></textarea>
-          </mat-form-field>
-          <button mat-raised-button color="primary">
-            <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
-            Send question
-          </button>
-        </mat-card>
-        <p class="widget-help">
-          Are you missing some details from this product's description? Or maybe you have some requests on Seller? Questions let you contact Seller directly before making your order.
-        </p>
-      </div><!-- .write-comment -->
-
-      <div class="comments-list" fxFlex="0 1 100%">
-        <!-- FIXME: count number of all questions, output the amount in tag: -->
-        <h2 class="subtitle">All questions &amp; answers <span class="tag">1</span></h2>
-        <!-- FIXME: if no questions asked yet: -->
-        <!--div class="no-results">
-          No questions asked about this product yet
-        </div-->
-
-        <!-- FIXME: list all questions for this product (sorted by newest first): -->
-        <mat-expansion-panel class="question-box">
-          <mat-expansion-panel-header>
-            <mat-panel-title fxLayout>
-              <div class="no">#1</div>
-              <div class="summary">
-                How much does this product weight? I have a problem that my floors can hold just about 3 kg of stuff..
-              </div>
-              <!-- FIXME: display if seller answered the question: -->
-              <div class="seller-responded">
-                <mat-icon fontSet="partIcon" fontIcon="part-check" matTooltip="Seller responded"></mat-icon>
-              </div>
-              <!-- FIXME: calculate amount of answers to this question: -->
-              <div class="answers-no">
-                <span class="tag" matTooltip="3 answers">3</span>
-              </div>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-
-          <h3 class="question">
-            How much does this product weight? I have a problem that my floors can hold just about 3 kg of stuff..
-          </h3>
-          <!-- FIXME: list all answers to this question (sorted by oldest first): -->
-          <mat-divider></mat-divider>
-          <!-- FIXME: add `by-user` class if answered by non-seller (normal user): -->
-          <div class="answer by-user">
-            <div class="author">
-              <span class="tag user">User</span>
-            </div>
-            <span class="message">
-              I have the same problem!
-            </span>
-            <span class="date">2018-12-07 11:40</span>
-          </div>
-          <mat-divider></mat-divider>
-          <!-- FIXME: add `by-seller` class if answered by Seller: -->
-          <div class="answer by-seller">
-            <div class="author">
-              <span class="tag seller">Seller</span>
-            </div>
-            <span class="message">
-              I have no idea
-            </span>
-            <!-- FIXME: date in format year-month-day hours-minutes: -->
-            <span class="date">2018-12-09 19:24</span>
-          </div>
-          <mat-divider></mat-divider>
-          <!-- FIXME: add `by-user` class if answered by non-seller (normal user): -->
-          <div class="answer by-user">
-            <div class="author">
-              <span class="tag user">User</span>
-            </div>
-            <span class="message">
-              It's like 3.2 kg, sorry mate. Your floors have no chance. What are you doing on Particl Market with those floors anyways?!
-            </span>
-            <span class="date">2018-12-11 04:33</span>
-          </div>
-
-          <!-- FIXME: sending reply to this question only: -->
-          <mat-action-row>
-            <div class="title">Reply to this question:</div>
-            <mat-form-field class="reply-field no-top-padding no-bottom-padding" floatLabel="never">
-              <input matInput placeholder="Write a reply...">
-            </mat-form-field>
-            <button mat-raised-button color="primary" class="reply-button">
-              <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
-              Reply
-            </button>
-          </mat-action-row>
-        </mat-expansion-panel><!-- .question-box -->
-      </div><!-- .comments-list -->
-
+    <div class="tab-content" *ngIf="tabLabels[selectedTab] == 'questions'">
+      <app-comments 
+        type="LISTINGITEM_QUESTION_AND_ANSWERS"
+        [target]="this.data.listing.hash"
+        [sellerAddress]="this.data.listing.listing.seller">
+      </app-comments>
     </div><!-- .tab-content.comments -->
   </div><!-- .product-details -->
 

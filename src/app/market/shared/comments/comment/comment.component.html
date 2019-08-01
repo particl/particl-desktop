@@ -1,0 +1,46 @@
+<mat-expansion-panel class="question-box">
+  <mat-expansion-panel-header>
+    <mat-panel-title fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
+      <div class="no" fxFlex="0 0 20px">#{{ commentIndex }}</div>
+      <div class="summary" fxFlex="1 1 100%">
+        {{ comment.message }}
+      </div>
+      <div class="seller-responded" *ngIf="hasSellerResponded()" fxFlex="0 0 20px">
+        <mat-icon fontSet="partIcon" fontIcon="part-check" matTooltip="Seller responded"></mat-icon>
+      </div>
+      <div class="answers-no" fxFlex="0 0 20px">
+        <span class="tag" matTooltip="{{ comment.ChildComments.length }} answers">{{ comment.ChildComments.length }}</span>
+      </div>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <h3 class="question">
+    {{ comment.message }}
+  </h3>
+
+  <!-- We should look at paging the replies too potentially, not sure if its overkill for now -->
+  <ng-container *ngFor="let reply of comment.ChildComments">
+    <mat-divider></mat-divider>
+    <div class="answer" [ngClass]="isPosterSeller(reply.sender) ? 'by-user' : 'by-seller'">
+      <div class="author">
+        <span class="tag user" *ngIf="!isPosterSeller(reply.sender)">User</span>
+        <span class="tag seller" *ngIf="isPosterSeller(reply.sender)">Seller</span>
+      </div>
+      <span class="message">
+        {{ reply.message }}
+      </span>
+      <span class="date">{{ getPostedAtDate(reply) }}</span>
+    </div>
+  </ng-container>
+
+  <mat-action-row>
+    <div class="title">Reply to this question:</div>
+    <mat-form-field class="reply-field no-top-padding no-bottom-padding" floatLabel="never">
+      <input matInput placeholder="Write a reply..."  #reply>
+    </mat-form-field>
+    <button mat-raised-button color="primary" class="reply-button" (click)="postReply(reply)" [disabled]="reply.value === ''">
+      <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
+      Reply
+    </button>
+  </mat-action-row>
+</mat-expansion-panel><!-- .question-box -->
