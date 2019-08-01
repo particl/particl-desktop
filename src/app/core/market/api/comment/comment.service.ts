@@ -14,27 +14,29 @@ export class CommentService {
   ) {}
 
   watchCommentCount(type: string, target: string, parentCommentHash: string, manualRefresh?: Observable<any>): Observable<any> {
-    
+
     const params = [
       'count',
       type,
       target,
       parentCommentHash
     ];
-    
-    if (manualRefresh)
+
+    if (manualRefresh) {
       return manualRefresh.pipe(
         startWith(null),
         switchMap(() => timer(0, 5000)),
         switchMap(() => this.market.call('comment', params))
       );
-    else
+    } else {
       return timer(0, 5000).pipe(
         switchMap(() => this.market.call('comment', params))
       );
+    }
   }
 
-  watch(page: number, pageLimit: number, profileId: number | string, type: string, target: string, parentCommentHash: string, manualRefresh?: Observable<any>): 
+  watch(page: number, pageLimit: number, profileId: number | string, type: string, target: string,
+        parentCommentHash: string, manualRefresh?: Observable<any>):
     Observable<any> {
 
     const params = [
@@ -49,16 +51,17 @@ export class CommentService {
         true
         ];
 
-    if (manualRefresh)
+    if (manualRefresh) {
       return manualRefresh.pipe(
               startWith(null),
               switchMap(() => timer(0, 5000)),
               switchMap(() => this.market.call('comment', params))
             );
-    else
+    } else {
       return timer(0, 5000).pipe(
               switchMap(() => this.market.call('comment', params))
             );
+    }
   }
 
   get(id: number) {

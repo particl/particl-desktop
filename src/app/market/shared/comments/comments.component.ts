@@ -102,7 +102,7 @@ export class CommentsComponent implements OnDestroy, OnInit {
               pageSubscription: commentPage$,
               comments: comments
             };
-  
+
             this.pages.push(page);
           } else {
             commentPage$.unsubscribe();
@@ -112,7 +112,7 @@ export class CommentsComponent implements OnDestroy, OnInit {
   }
 
   loadNextPage() {
-    let nextPage = this.getLastPageCurrentlyLoaded(); 
+    let nextPage = this.getLastPageCurrentlyLoaded();
     nextPage++;
     this.loadPage(nextPage);
   }
@@ -122,7 +122,7 @@ export class CommentsComponent implements OnDestroy, OnInit {
     return this.pages.length > 0 && this.pages[this.pages.length - 1].pageNumber;
   }
 
-  trackByFn(index, item) {
+  trackByFn(index: number, item: any) {
     return item.id;
   }
 

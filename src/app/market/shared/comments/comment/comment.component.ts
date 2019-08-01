@@ -14,7 +14,6 @@ import { take } from 'rxjs/operators';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent {
-  
   private log: any = Log.create('comment.component id:' + Math.floor((Math.random() * 1000) + 1));
 
   @Input() comment: any;
@@ -47,7 +46,7 @@ export class CommentComponent {
   }
 
   getPostedAtDate(reply: any): string {
-    if (reply.postedAt === Number.MAX_SAFE_INTEGER){
+    if (reply.postedAt === Number.MAX_SAFE_INTEGER) {
       return new DateFormatter(new Date(reply.createdAt)).dateFormatter(false);
     } else {
       return new DateFormatter(new Date(reply.postedAt)).dateFormatter(false);
