@@ -372,18 +372,15 @@ export class ReceiveComponent implements OnInit {
     this.modals.unlock({timeout: 3}, (status) => this.newAddress());
   }
 
-  newAddress() {
-    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
-    const callParams = ['(No label)'];
-    const msg = `New ${this.type} address generated`;
-    this.rpcCallAndNotify(call, callParams, msg);
-  }
-
   editLabel(): void {
     const call = 'manageaddressbook';
     const callParams = ['newsend', this.address, this.label];
     const msg = `Label for ${this.address} updated`;
     this.rpcCallAndNotify(call, callParams, msg);
+  }
+
+  exitLabelEditingMode(): void {
+    this.addressInput = true;
   }
 
   rpcCallAndNotify(call: string, callParams: any, msg: string): void {
@@ -398,7 +395,31 @@ export class ReceiveComponent implements OnInit {
     }
   }
 
-  exitLabelEditingMode(): void {
-    this.addressInput = true;
+  newAddress() {
+    const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
+    const callParams = ['(No label)'];
+    const msg = `New ${this.type} address generated`;
+
+    this.rpc.call(call, callParams)
+    .subscribe(response => {
+      this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
+      this.flashNotificationService.open(msg)
+
+      if (this.type === 'private') {
+        // Scan the blockchain for previous transactions to the stealth address
+        this.rpc.call('rescanblockchain', [0])
+        .subscribe(
+          resp => this.log.d('rescanBlockchain: looked for previous transactions to this stealth address'),
+          error => this.log.er('rescanBlockchain: failed to scan for transactions to stealth address'));
+      }
+
+      this.rpc_update();
+    });
+  }
+
+
+  rpcLabelUpdate(msg: string): void {
+    this.flashNotificationService.open(msg)
+    this.rpc_update();
   }
 }
