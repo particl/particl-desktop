@@ -194,15 +194,6 @@ export class BalanceComponent implements OnInit, OnDestroy {
     );
   }
 
-  private calculateUnspent(txs: Array<any>): void {
-    const balance = new PartoshiAmount(0);
-    for (const tx of txs) {
-      const txBal = new PartoshiAmount( (tx.confirmations ? tx.amount : 0) * Math.pow(10, 8) );
-      balance.add(txBal);
-    }
-    this.setBalance(balance);
-  }
-
   private setBalance(tempBal: PartoshiAmount): void {
     this._balanceWhole = tempBal.particlStringInteger();
     this._balanceSep = tempBal.particlStringSep();
