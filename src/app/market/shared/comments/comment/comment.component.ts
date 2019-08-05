@@ -21,21 +21,23 @@ export class CommentComponent {
   @Input() sellerAddress: string;
   @Output() replied: EventEmitter<any> = new EventEmitter<any>();
 
+  /* tslint:disable:no-bitwise */
   get senderDetail(): string {
     if (this.comment && this.comment.sender) {
-      var hash = 0;
-      for (var i = 0; i < this.comment.sender.length; i++) {
+      let hash = 0;
+      for (let i = 0; i < this.comment.sender.length; i++) {
         hash = this.comment.sender.charCodeAt(i) + ((hash << 5) - hash);
       }
-      var colour = '#';
-      for (var i = 0; i < 3; i++) {
-        var value = (hash >> (i * 8)) & 0xFF;
+      let colour = '#';
+      for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 0xFF;
         colour += ('00' + value.toString(16)).substr(-2);
       }
       return colour;
     }
     return '';
   }
+  /* tslint:enable:no-bitwise */
 
   constructor(
     private commentService: CommentService,
