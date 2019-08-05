@@ -7,6 +7,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { take } from 'rxjs/operators';
+import { RpcStateService } from 'app/core/core.module';
 
 
 
@@ -19,6 +20,7 @@ export class BuyComponent implements OnInit {
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
+  public hasEncryptedWallet: boolean = false;
 
   public filters: any = {
     search: undefined,
@@ -37,12 +39,17 @@ export class BuyComponent implements OnInit {
   constructor(
     private listingService: ListingService,
     private favoritesService: FavoritesService,
-    public countryList: CountryListService
+    public countryList: CountryListService,
+    private rpcState: RpcStateService
   ) { }
 
   ngOnInit() {
     this.favoritesService.cache.update();
     this.load();
+    this.rpcState.observe('getwalletinfo').pipe(take(1))
+     .subscribe((walletinfo) => {
+      this.hasEncryptedWallet = (walletinfo.encryptionstatus === 'Locked') || (+walletinfo.unlocked_until > 0);
+     });
   }
 
   load() {

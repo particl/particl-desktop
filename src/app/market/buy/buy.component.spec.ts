@@ -11,6 +11,7 @@ import { MarketModule } from '../../core/market/market.module';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { BuyComponent } from './buy.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('BuyComponent', () => {
   let component: BuyComponent;
@@ -26,7 +27,8 @@ describe('BuyComponent', () => {
         BrowserAnimationsModule,
         RouterTestingModule,
         BrowserAnimationsModule,
-        MarketModule.forRoot()
+        MarketModule.forRoot(),
+        RpcWithStateModule.forRoot()
       ],
       providers: [ SnackbarService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

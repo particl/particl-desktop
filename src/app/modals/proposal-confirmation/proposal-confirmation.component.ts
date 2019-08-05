@@ -1,6 +1,5 @@
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { Amount } from 'app/core/util/utils';
 
 @Component({
   selector: 'app-proposal-confirmation',
@@ -9,6 +8,7 @@ import { Amount } from 'app/core/util/utils';
 })
 export class ProposalConfirmationComponent {
   public data: any;
+  public estimateError: boolean = true;
   private callback: any;
 
   constructor(private dialogRef: MatDialogRef<ProposalConfirmationComponent>) { }
@@ -27,6 +27,7 @@ export class ProposalConfirmationComponent {
 
   setData(data: any, callback: Function): void {
     this.data = data;
+    this.estimateError = data.error ? true : false;
     this.callback = callback;
   }
 

@@ -52,10 +52,17 @@
       <code class="address"> {{ sendAddress }} </code>
     </div>
 
-    <p class="fee-info">
+    <p class="widget-help" *ngIf="this.send.subtractFeeFromAmount">
+      The transaction fee will be subtracted from the amount requested.
+    </p>
+
+    <p class="fee-info" *ngIf="!this.estimateError">
       Transaction fee:<span class="amount">{{ transactionAmount.getFee() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
       Total amount:<span
-      class="amount">{{ transactionAmount.getAmountWithFee(sendAmount.getAmount()) }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+      class="amount">{{ transactionAmount.getAmountWithFee(sendAmount.getAmount(), !send.subtractFeeFromAmount ) }} PART</span><span class="fiat">&asymp; 3.47 USD</span>
+    </p>
+    <p class="fee-info" *ngIf="this.estimateError">
+      Could not accurately estimate this transaction fee. Please try again
     </p>
   </div><!-- TX confirmation -->
 

@@ -29,20 +29,14 @@ describe('BalanceComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should have been created', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should return a balance equal to 0 (getIntegerPart)', () => {
-    expect(component.balance.getIntegerPart()).toBe(0);
-  });
-
-  it('should return a balance equal to 0 (getFractionalPart)', () => {
-    expect(component.balance.getFractionalPart()).toBe('');
-  });
-
-  it('should not return a dot because its just 0, not 0.0 ', () => {
-    expect(component.balance.dot()).toBe('');
+  it('should return the correct default balance values', () => {
+    expect(component.balanceWhole).toBe('0');
+    expect(component.balanceSep).toBe('');
+    expect(component.balanceFraction).toBe('');
   });
 
 /*
