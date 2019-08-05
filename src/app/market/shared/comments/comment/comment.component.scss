@@ -67,6 +67,7 @@
         top: -2px;
         background: mix($text-muted, $bg-shadow);
         margin: 0;
+        white-space: nowrap;
         &.seller {
           background: $color;
         }
