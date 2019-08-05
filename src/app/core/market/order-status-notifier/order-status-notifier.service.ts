@@ -7,6 +7,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { take, takeWhile } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 
 class OrderSummary {
@@ -36,14 +37,23 @@ export class OrderStatusNotifierService implements OnDestroy {
   private profileAddress: string = '';
   private activeOrders: OrderSummary = new OrderSummary();
   private notificationKey: string = 'timestamp_notifcation_orders';
+  private orders$: Subscription;
 
   constructor(
     private _marketState: MarketStateService,
     private _notification: NotificationService,
     private profileService: ProfileService
-  ) {
-    this.log.d('order status notifier service running!');
+  ) {}
+
+  public start() {
+    this.log.d('order status notifier service started!');
     this.loadOrders();
+  }
+
+  public stop() {
+    if (this.orders$) {
+      this.orders$.unsubscribe();
+    }
   }
 
   public getActiveCount(type: string): number {
@@ -55,7 +65,7 @@ export class OrderStatusNotifierService implements OnDestroy {
       (profile: any) => {
         this.profileAddress = String(profile.address);
 
-        this._marketState.observe('bid')
+        this.orders$ = this._marketState.observe('bid')
         .pipe(takeWhile(() => !this.destroyed)) // why are we not waiting for distinct updates only?
         .subscribe(bids => {
           const notifcationTimestamp = +(localStorage.getItem(this.notificationKey) || 0);
