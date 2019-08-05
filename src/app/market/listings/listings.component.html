@@ -51,7 +51,7 @@
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
       </button>
 
-      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only filter-button icon-only" matTooltip="Show reported listings only" (change)="toggleFlag($event)">
+      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only filter-button icon-only" matTooltip="{{ this.flagged ? 'Show available listings' : 'Show reported listings only'}}" (change)="toggleFlag($event)">
         <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
 
@@ -66,10 +66,10 @@
     <ng-container page-title>Particl Open Marketplace</ng-container>
     <ng-container page-content>
       Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
-      Keep in mind, that you can buy Listings here only with your private Blind balance.
+      Keep in mind, that you can buy Listings here only with your private Anon balance.
     </ng-container>
     <ng-container page-help>
-      You can check your current Blind balance in top bar next to your Cart overview. If you need more Blind balance, convert it on Send / Convert &rarr; Convert page.
+      You can check your current Anon balance in top bar next to your Cart overview. If you need more Anon funds, convert it on Send / Convert &rarr; Convert page.
     </ng-container>
   </app-page-intro>
 

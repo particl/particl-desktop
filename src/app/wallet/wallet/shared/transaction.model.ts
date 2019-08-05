@@ -162,7 +162,7 @@ export class Transaction {
     if (this.fee === undefined) {
       return amount;
     /* sent */
-    } else if (this.category === 'internal_transfer') {
+    } else if (this.getCategory() === 'internal_transfer') {
       return new Amount(+amount).getAmount();
     } else if (amount < 0) {
       return new Amount(+amount + (+this.fee)).getAmount();

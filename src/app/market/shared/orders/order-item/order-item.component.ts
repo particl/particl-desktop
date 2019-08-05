@@ -85,15 +85,18 @@ export class OrderItemComponent implements OnInit {
     this.showShippingInfo = this.order.type === 'buy' && ['shipping', 'complete'].includes(this.order.step);
 
     const price = this.order.PricingInformation(this.country);
-    this.pricing.separator = price.base.particlStringSep() || this.pricing.separator;
     this.pricing.baseInt = price.base.particlStringInteger();
     this.pricing.baseFraction = price.base.particlStringFraction();
+    this.pricing.baseSep = price.base.particlStringSep();
     this.pricing.shippingInt = price.shipping.particlStringInteger();
     this.pricing.shippingFraction = price.shipping.particlStringFraction();
+    this.pricing.shippingSep = price.shipping.particlStringSep();
     this.pricing.escrowInt = price.escrow.particlStringInteger();
     this.pricing.escrowFraction = price.escrow.particlStringFraction();
+    this.pricing.escrowSep = price.escrow.particlStringSep();
     this.pricing.totalInt = price.total.particlStringInteger();
     this.pricing.totalFraction = price.total.particlStringFraction();
+    this.pricing.totalSep = price.total.particlStringSep();
     this.orderActivity = this.order.orderActivity;
 
     const imageList: any[] = (this.order.ListingItem.ItemInformation || {}).ItemImages || [];

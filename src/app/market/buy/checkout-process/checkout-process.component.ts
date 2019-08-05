@@ -277,7 +277,13 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   placeOrder() {
-    this.modals.unlock({timeout: 30}, (status) => {
+    // TODO: replace with proper unlock then lock-on-complete solution. This is temporary to cater for people with large quantity purchases
+    const initialBuffer = 5;
+    const minSecs = 30;
+    const requiredSecs = 15 * this.cart.listings.length;
+    const actualSecs = Math.max(minSecs, requiredSecs) + initialBuffer;
+
+    this.modals.unlock({timeout: actualSecs}, (status) => {
       this.openProcessingModal();
       this.bidOrder()
     });
