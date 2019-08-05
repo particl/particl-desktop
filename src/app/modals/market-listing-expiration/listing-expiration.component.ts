@@ -28,15 +28,8 @@ export class ListingExpirationComponent {
   expiredList: Array<ListingExpiryIface> = [
     { title: '1 day', value: 1, estimateFee: new PartoshiAmount(0), isDisabled: false },
     { title: '2 days', value: 2, estimateFee: new PartoshiAmount(0), isDisabled: false },
-
-    /**
-     * @TODO remove the 1 day and 2 days options and enable to other options.
-     * as corrently its gryed out for a while the commented code once smsg issue goes fixed.
-     *
-     */
-
-    { title: '4 days', value: 4, estimateFee: new PartoshiAmount(0), isDisabled: true },
-    { title: '1 week', value: 7, estimateFee: new PartoshiAmount(0), isDisabled: true },
+    { title: '4 days', value: 4, estimateFee: new PartoshiAmount(0), isDisabled: false },
+    { title: '1 week', value: 7, estimateFee: new PartoshiAmount(0), isDisabled: false },
     { title: '2 weeks', value: 14, estimateFee: new PartoshiAmount(0), isDisabled: true },
     { title: '3 weeks', value: 21, estimateFee: new PartoshiAmount(0), isDisabled: true },
     { title: '4 weeks', value: 28, estimateFee: new PartoshiAmount(0), isDisabled: true }
