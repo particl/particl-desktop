@@ -404,7 +404,7 @@ export class ReceiveComponent implements OnInit {
         // Scan the blockchain for previous transactions to the stealth address
         this.rpc.call('rescanblockchain', [0])
         .subscribe(
-          response => this.log.d('rescanBlockchain: looked for previous transactions to this stealth address'),
+          resp => this.log.d('rescanBlockchain: looked for previous transactions to this stealth address'),
           error => this.log.er('rescanBlockchain: failed to scan for transactions to stealth address'));
       }
 
