@@ -64,13 +64,13 @@ export class PassphraseService {
   /**
    * We need to do a scan of the blockchain with an unlocked wallet.
    * The stealth addresses are generated after the import, so they are not being looked for
-   * when extkeygenesisimport does the first scan. 
-   * 
+   * when extkeygenesisimport does the first scan.
+   *
    * Note: this will only catch transactions to the FIRST stealth address.
    * It's used a lot of balance transfers.
    */
   rescanBlockchain() {
-    this._rpc.call("rescanblockchain", [0]).subscribe(
+    this._rpc.call('rescanblockchain', [0]).subscribe(
       response => this.log.i('rescanBlockchain: scanning chain for transactions to stealth address'),
       error => this.log.er('rescanBlockchain: scanning the chain failed'));
   }
