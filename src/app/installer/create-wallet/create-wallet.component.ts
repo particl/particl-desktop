@@ -334,7 +334,7 @@ export class CreateWalletComponent implements OnInit {
       case Steps.WAITING:
         this.log.i('importMnemonic');
         if (this.isCrypted) {
-          this._rpc.call('walletpassphrase', [this.unlock, 10, false]).subscribe(
+          this._rpc.call('walletpassphrase', [this.unlock, 999999, false]).subscribe(
             () => {
               this.unlock = '';
               this.unlockVerify = '';
@@ -345,6 +345,9 @@ export class CreateWalletComponent implements OnInit {
                 err.message,
                 'warning'
               );
+              if (this.isCrypted) {
+                this.step = this.stepHistory.pop() || 0;
+              }
               this.prevStep();
             }
           );
@@ -444,6 +447,14 @@ export class CreateWalletComponent implements OnInit {
         this.prevStep();
         this.errorString = error.message;
         this.log.er('Mnemonic import failed', error);
+      },
+      () => {
+        if (this.isCrypted) {
+          this._rpc.call('walletlock').subscribe(
+            () => this.log.i('locking wallet after creation'),
+            () => this.log.er('failed to lock wallet after creation')
+          );
+        }
       });
   }
 

@@ -165,8 +165,13 @@ export class BalanceComponent implements OnInit, OnDestroy {
       map((utxos) => {
         const tempBal = new PartoshiAmount(0);
         for (let ii = 0; ii < utxos.length; ++ii) {
-          if ((!utxos[ii].coldstaking_address || utxos[ii].address) && utxos[ii].confirmations) {
-            const amount = new PartoshiAmount(utxos[ii].amount * Math.pow(10, 8));
+          const utxo = utxos[ii];
+          let spendable = true;
+          if ('spendable' in utxo) {
+            spendable = utxo.spendable;
+          }
+          if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
+            const amount = new PartoshiAmount(utxo.amount * Math.pow(10, 8));
             tempBal.add(amount);
           };
         }
