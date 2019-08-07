@@ -68,11 +68,11 @@ it('should create', () => {
     expect(component.pageChanged).toBeTruthy();
   });
 */
-  it('should get log', () => {
-    expect(component.log).toBeDefined();
-  });
+  // it('should get log', () => {
+  //   expect(component.log).toBeDefined();
+  // });
 
-  it('should get txService', () => {
-    expect(component.txService).toBeDefined();
-  });
+  // it('should get txService', () => {
+  //   expect(component.txService).toBeDefined();
+  // });
 });
