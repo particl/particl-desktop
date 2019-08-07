@@ -28,6 +28,9 @@ export class OrderItemComponent implements OnInit {
     phone: '',
     email: ''
   };
+  additionalInfo: any = {
+    transactionID: ''
+  };
   showShippingInfo: boolean = false;
   private itemTitle: string = '';
   private purchaseMemo: string = '';
@@ -76,6 +79,15 @@ export class OrderItemComponent implements OnInit {
         for (const data of (lockBid.BidDatas || []) ) {
           if (data && data.key && (<string>data.key).startsWith('delivery.')) {
             this.contactDetails[(<string>data.key).replace('delivery.', '')] = String(data.value);
+          }
+        }
+      }
+
+      const completeBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_COMPLETE' );
+      if (completeBid) {
+        for (const data of (completeBid.BidDatas || []) ) {
+          if (data && data.key && (<string>data.key) === 'txid.complete') {
+            this.additionalInfo.transactionID = String(data.value);
           }
         }
       }
