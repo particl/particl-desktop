@@ -96,7 +96,7 @@ export class VersionComponent implements OnInit, OnDestroy {
 
     if (isBNewer) {
       // Ensure that the targetVersion is not a pre-release version if currentVersion is not a pre-release version
-      if (!isPrerelease(sourceVersion) && isPrerelease(targetVersion)) {
+      if (!isPrerelease() && isPrerelease(targetVersion)) {
         isBNewer = false;
       }
     }

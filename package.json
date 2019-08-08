@@ -1,7 +1,8 @@
 {
   "name": "particl-desktop",
-  "version": "2.0.0-alpha3-testnet",
+  "version": "2.0.0-testnet",
   "branch": "market",
+  "preRelease": "beta",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "homepage": "https://particl.io",
