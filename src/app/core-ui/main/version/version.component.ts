@@ -27,6 +27,7 @@ export class VersionComponent implements OnInit, OnDestroy {
 
   @Input() daemonVersion: string = '';
   public clientVersion: string = environment.version;
+  public preReleaseStatus: string = environment.preRelease || '';
   public marketVersion: string = environment.marketVersion;
   public isClientLatest: boolean = true;
   public isUpdateProcessing: boolean = false;
