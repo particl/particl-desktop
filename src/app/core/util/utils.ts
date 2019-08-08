@@ -654,10 +654,10 @@ export const OrderData = {
 export const isPrerelease = (release?: string): boolean => {
   let version = release;
   let found = false;
-  if (!release) {
-    version = environment.version;
-  }
   const preParts = ['alpha', 'beta', 'RC'];
+  if (!release) {
+    version = environment.preRelease || environment.version;
+  }
 
   for (const part of preParts) {
     if (version.includes(part)) {
@@ -665,6 +665,7 @@ export const isPrerelease = (release?: string): boolean => {
       break;
     }
   }
+
   return found;
 }
 
