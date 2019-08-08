@@ -172,7 +172,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // TODO - find better location to perform this check...
     if (isMainnetRelease() && isPrerelease()) {
       const alphaMessage = {
-        text: 'The Particl Marketplace alpha is still in development and not 100% private yet - use it at your own risk!',
+        text: 'The Particl Marketplace is still in development - use it at your own risk!',
         dismissable: false,
         timeout: 0,
         messageType: UserMessageType.ALERT,
@@ -181,7 +181,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       } as UserMessage;
       this.messagesService.addMessage(alphaMessage);
     }
-
   }
 
   ngOnDestroy() {
