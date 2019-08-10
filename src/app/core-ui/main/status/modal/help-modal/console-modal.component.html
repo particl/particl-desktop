@@ -6,10 +6,8 @@
   <div mat-dialog-container>
     <mat-tab-group (selectedTabChange)="selectTab($event.index)">
       <mat-tab label="Core console">
-        
       </mat-tab>
-      <mat-tab label="Market console">
-        
+      <mat-tab label="Market console" *ngIf="this.marketTabEnabled">
       </mat-tab>
     </mat-tab-group>
   </div>
