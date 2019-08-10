@@ -27,6 +27,7 @@ export class VersionComponent implements OnInit, OnDestroy {
 
   @Input() daemonVersion: string = '';
   public clientVersion: string = environment.version;
+  public preReleaseStatus: string = environment.preRelease || '';
   public marketVersion: string = environment.marketVersion;
   public isClientLatest: boolean = true;
   public isUpdateProcessing: boolean = false;
@@ -96,7 +97,7 @@ export class VersionComponent implements OnInit, OnDestroy {
 
     if (isBNewer) {
       // Ensure that the targetVersion is not a pre-release version if currentVersion is not a pre-release version
-      if (!isPrerelease(sourceVersion) && isPrerelease(targetVersion)) {
+      if (!isPrerelease() && isPrerelease(targetVersion)) {
         isBNewer = false;
       }
     }

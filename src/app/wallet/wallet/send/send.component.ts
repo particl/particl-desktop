@@ -392,7 +392,11 @@ export class SendComponent implements OnInit, OnDestroy {
   calculateUnspent(unspent: Array<any>): number {
     let tempAmount = 0;
     for (let ut = 0; ut < unspent.length; ut++) {
-      if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+      let spendable = true;
+      if ('spendable' in unspent[ut]) {
+        spendable = unspent[ut].spendable;
+      }
+      if ( (!unspent[ut].coldstaking_address || unspent[ut].address) && unspent[ut].confirmations && spendable) {
         tempAmount += unspent[ut].amount;
       };
     }

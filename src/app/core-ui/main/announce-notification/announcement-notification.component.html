@@ -5,7 +5,7 @@
     <button *ngIf="message.action"
             class="button"
             mat-button color="{{message?.messageType === UserMessageType.INFO ? 'primary' : 'warn' }}"
-            (click)="message.action()">
+            (click)="callMessageAction()">
       <mat-icon fontSet="partIcon" fontIcon="part-alert" *ngIf="message.messageType === UserMessageType.ALERT"></mat-icon>
       {{ message.actionLabel || 'Click here' }}
     </button>
