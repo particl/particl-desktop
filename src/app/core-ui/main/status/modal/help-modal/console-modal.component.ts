@@ -14,6 +14,7 @@ import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
+import * as marketConfig from '../../../../../../../modules/market/config.js';
 
 @Component({
   selector: 'app-console-modal',
@@ -33,12 +34,16 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public waitingForRPC: boolean = true;
   public historyCount: number = 0;
   public activeTab: string = '_rpc';
+  public marketTabEnabled: boolean = false;
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
               private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
+    this.marketTabEnabled = (marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+    ) !== undefined;
   }
 
   ngOnInit() {
@@ -144,7 +149,14 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   selectTab(tabIndex: number) {
-    this.activeTab = tabIndex === 1 ? 'market' : '_rpc'
+    if (tabIndex === 1 && !this.marketTabEnabled) {
+      return;
+    }
+    const currentTab = this.activeTab;
+    this.activeTab = tabIndex === 1 ? 'market' : '_rpc';
+    if (this.activeTab === currentTab) {
+      return;
+    }
     this.commandList = [];
   }
 
