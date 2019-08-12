@@ -461,6 +461,11 @@ kbd {
         top: 160px;
       }
     }
+    app-listing {
+      .container-block.with-control-bar {
+        margin-top: 180px;
+      }
+    }
     app-send {
       .from-box {
         .sticky {
