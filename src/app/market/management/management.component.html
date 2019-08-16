@@ -1,0 +1,68 @@
+<!-- Do not remove the below class it is using for test case -->
+<app-header class="test-case-container">
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+          Available
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-handshake"></mat-icon>
+          Joined
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+<!-- =========== AVAILABLE MARKETS =========== -->
+
+<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'available'">
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Available Markets</ng-container>
+    <ng-container page-content>
+      Manage your Markets – browse and join available Markets on Particl platform.
+    </ng-container>
+    <ng-container page-help>
+      Find and join a Market to shop. Not all Markets are listed publicly; you will need their Market ID to join them. Sellers can sell on the default Open Marketplace (available to all users) or create their own public or storefront Markets.
+    </ng-container>
+  </app-page-intro>
+
+
+
+
+
+
+
+
+
+</div><!-- .container-block @ AVAILABLE MARKETS -->
+
+
+
+<!-- =========== JOINED MARKETS =========== -->
+
+<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'joined'">
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Joined Markets</ng-container>
+    <ng-container page-content>
+      Manage and browse all the Markets you have already joined or created.
+    </ng-container>
+    <ng-container page-help>
+      You can also create new Markets and/or share Storefront admin priviledges with others.
+    </ng-container>
+  </app-page-intro>
+
+
+
+
+
+
+
+
+
+</div><!-- .container-block @ JOINED MARKETS -->
