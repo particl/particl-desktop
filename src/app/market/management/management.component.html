@@ -19,10 +19,9 @@
 </app-header>
 
 
-<!-- =========== AVAILABLE MARKETS =========== -->
+<div class="container-block with-tab-bar">
 
-<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'available'">
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]" *ngIf="tabLabels[selectedTab] == 'available'">
     <ng-container page-title>Available Markets</ng-container>
     <ng-container page-content>
       Manage your Markets – browse and join available Markets on Particl platform.
@@ -32,22 +31,7 @@
     </ng-container>
   </app-page-intro>
 
-
-
-
-
-
-
-
-
-</div><!-- .container-block @ AVAILABLE MARKETS -->
-
-
-
-<!-- =========== JOINED MARKETS =========== -->
-
-<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'joined'">
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]" *ngIf="tabLabels[selectedTab] == 'joined'">
     <ng-container page-title>Joined Markets</ng-container>
     <ng-container page-content>
       Manage and browse all the Markets you have already joined or created.
@@ -58,11 +42,70 @@
   </app-page-intro>
 
 
+  <div class="filter">
+
+    <div class="sell-item">
+      <button mat-raised-button color="primary" class="full-width"
+              matTooltip="Join a new Market using its Market ID"
+              matTooltipPosition="above"><!-- (click)="addItem()" -->
+        <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
+        Join via Market ID
+      </button>
+    </div>
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search &amp; sort</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+          <input matInput type="text" class="header-input" placeholder="Search markets"><!-- [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()" -->
+          <!--mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
+                    (click)="filters.search=''; clearAndLoadPage()"></mat-icon>
+          <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
+                    (click)="clearAndLoadPage()"></mat-icon-->
+        </mat-form-field>
+        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+          <mat-select placeholder="Sort markets"><!-- [(ngModel)]="filters.sort" (selectionChange)="clearAndLoadPage()" -->
+            <mat-option *ngFor="let sorting of markets_sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by type</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group block-radio"><!-- [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()" -->
+          <mat-radio-button class="filter-option" *ngFor="let type of markets_filtering" value="{{ type.value }}" color="primary">
+            {{ type.title }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+
+    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
+
+  <!-- .loading-container -->
+  <div class="loading-container" *ngIf="isPageLoading">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        Hang on, we're loading the Markets
+      </p>
+      <p class="widget-help">
+        This might take a while
+      </p>
+    </div>
+  </div><!-- .loading-container -->
+
+</div><!-- .container-block -->
 
 
-
-
-
-
-
-</div><!-- .container-block @ JOINED MARKETS -->
