@@ -55,11 +55,6 @@
       button {
         min-width: 0;
         padding: 0 12px;
-        &.new-listings-available {
-          .mat-icon {
-            animation: 2s ease infinite green-pulse;
-          }
-        }
         .mat-icon {
           margin: 0;
         }
@@ -82,12 +77,20 @@
   }
 }
 
+button {
+  &.new-listings-available {
+    .mat-icon {
+      animation: 2s ease infinite green-pulse;
+    }
+  }
+}
+
 @keyframes green-pulse {
   0% {
     color: $text-muted;
   }
   50% {
-    color: $color;
+    color: $color-alert;
   }
 }
 

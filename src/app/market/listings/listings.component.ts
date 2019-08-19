@@ -42,6 +42,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // loading
   public isLoading: boolean = false; // small progress bars
   public isLoadingBig: boolean = true; // big animation
+  public isFiltering: boolean = false;
 
   // filters
   // countries: FormControl = new FormControl();
@@ -107,6 +108,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
     } catch (err) { }
   }
 
+  get isInitialState(): boolean {
+    return !this.isFiltering && (this.firstListingHash.length === 0);
+  }
+
+  get hasEmptySearch(): boolean {
+    return this.isFiltering && ( (this.pages.length === 0) || (this.pages[0].listings.length === 0) );
+  }
+
   loadCategories() {
     this.category.list()
       .subscribe(
@@ -124,6 +133,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const search = this.filters.search;
     const category = this.filters.category;
     const country = this.filters.country;
+
+    this.updateFilterToggle();
 
     /*
       We store the subscription each time, due to API delays.
@@ -309,6 +320,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
       this.loadNextPage();
     }
   }
+
+  private updateFilterToggle() {
+    const keys = Object.keys(this.filters);
+    let isApplied = false;
+    for (const key of keys) {
+      if (this.filters[key]) {
+        isApplied = true;
+        break;
+      }
+    }
+    this.isFiltering = isApplied;
+  };
 
   ngOnDestroy() {
     this.destroyed = true;
