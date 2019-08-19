@@ -47,7 +47,7 @@
 
     <div class="filter-by buttons" fxFlex="0 1 120px">
 
-      <button mat-button class="refresh-listings" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()" matTooltip="{{ (!newListArrived && !flagged) ? 'New listings available' : 'Refresh listings'}}">
+      <button mat-button class="refresh-listings" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()" matTooltip="{{ (newListArrived && !flagged) ? 'New listings available' : 'Refresh listings'}}">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
       </button>
 
@@ -119,7 +119,7 @@
       </p>
     </div>
 
-    <div class="no-results" *ngIf="isInitialState || (pages[0]?.listings.length !== 0)">
+    <div class="no-results" *ngIf="isInitialState">
       <p>
         It seems that there are either no listings on the marketplace or they are not yet loaded. Please wait a few minutes and try to refresh the page.
         <br>
