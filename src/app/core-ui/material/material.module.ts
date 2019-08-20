@@ -10,7 +10,8 @@ import {
   MatSnackBarModule, MatTabsModule, MatToolbarModule, MatRadioModule, MatInputModule,
   MatTooltipModule,
   MatSelectModule, MatPaginatorModule, MatProgressSpinnerModule, MatDialogModule,
-  MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule, MatTreeModule
+  MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule,
+  MatTableModule, MatTreeModule
 } from '@angular/material';
 
 import { A11yModule } from '@angular/cdk/a11y';
@@ -62,10 +63,11 @@ import { CategoryTreeComponent } from './category-tree/category-tree.component';
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatButtonToggleModule,
+    MatTableModule
     MatTreeModule,
     CdkTreeModule,
     OverlayModule,
-    PortalModule,
+    PortalModule
   ],
   exports: [
     FlexLayoutModule, /* Flex layout here too */
@@ -105,6 +107,7 @@ import { CategoryTreeComponent } from './category-tree/category-tree.component';
     // custom component.
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
+    MatTableModule
     TreeWithSearchSingleSelectionComponent,
     CategoryTreeComponent
   ],

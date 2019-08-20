@@ -66,7 +66,13 @@ window.ipc = new SafeIpcRenderer([
   'request-configuration',
 
   'rx-ipc-check-reply',
-  'rx-ipc-check-listener'
+  'rx-ipc-check-listener',
+
+  'importer-config',
+  'importer-load',
+  'importer-validate',
+  'importer-publish'
+  
 ]);
 
 window.electron = true;
