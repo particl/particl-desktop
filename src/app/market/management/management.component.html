@@ -44,13 +44,22 @@
 
   <div class="filter">
 
-    <div class="sell-item">
-      <button mat-raised-button color="primary" class="full-width"
+    <div class="join-via-id">
+      <!-- Join Market button -->
+      <button mat-raised-button color="primary" *ngIf="!showJoinMarketForm"
+              (click)="showJoinMarketForm = true"
+              class="join-button-toggle full-width"
               matTooltip="Join a new Market using its Market ID"
-              matTooltipPosition="above"><!-- (click)="addItem()" -->
+              matTooltipPosition="above">
         <mat-icon fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
         Join via Market ID
       </button>
+      <!-- Join Market form (replaces button on click) -->
+      <mat-card class="join-form" *ngIf="showJoinMarketForm">
+        <input type="text" placeholder="Enter Market ID"
+               (keyup.escape)="showJoinMarketForm = false">
+        <button mat-raised-button color="primary" class="join-button">Join</button>
+      </mat-card>
     </div>
 
     <div class="section search-sorting">

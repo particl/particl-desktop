@@ -11,6 +11,7 @@ export class ManagementComponent implements OnInit {
 
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['available', 'joined'];
+  public showJoinMarketForm: boolean = false;
 
   markets_sortings: Array<any> = [
     { title: 'By title', value: 'TITLE' },
