@@ -23,6 +23,8 @@ import { ReportService } from 'app/core/market/api/report/report.service';
 import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-cache.service';
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
+import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
+import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 
 import * as marketConfig from '../../../../modules/market/config.js';
 
@@ -77,7 +79,9 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _favorite: FavoritesService,
     private _report: ReportService,
     private _proposal: ProposalsService,
-    private _addToCart: AddToCartCacheService
+    private _addToCart: AddToCartCacheService,
+    private _favCacheService: FavoriteCacheService,
+    private _orderStatusNotifier: OrderStatusNotifierService
   ) {
     this.log.d('Main.Router constructed');
 
@@ -93,10 +97,12 @@ export class MainRouterComponent implements OnInit, OnDestroy {
           this._profile.start();
           this._cart.start();
           this._category.start();
+          this._favCacheService.start();
           this._favorite.start();
           this._report.start();
           this._proposal.start();
           this._addToCart.start();
+          this._orderStatusNotifier.start();
         }
       );
     }
@@ -166,7 +172,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // TODO - find better location to perform this check...
     if (isMainnetRelease() && isPrerelease()) {
       const alphaMessage = {
-        text: 'The Particl Marketplace alpha is still in development and not 100% private yet - use it at your own risk!',
+        text: 'The Particl Marketplace is still in development - use it at your own risk!',
         dismissable: false,
         timeout: 0,
         messageType: UserMessageType.ALERT,
@@ -175,7 +181,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       } as UserMessage;
       this.messagesService.addMessage(alphaMessage);
     }
-
   }
 
   ngOnDestroy() {
@@ -193,6 +198,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       this._report.stop();
       this._proposal.stop();
       this._addToCart.stop();
+      this._favCacheService.stop();
+      this._orderStatusNotifier.stop();
     }
   }
 

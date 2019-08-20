@@ -35,6 +35,18 @@ class CurrencyMinValidator {
     }
     return ({ validAmount: false });
   }
+
+  static minBaseValue(fc: FormControl) {
+    const validValue = CurrencyMinValidator.validValue(fc);
+    if (validValue !== null) {
+      return validValue;
+    }
+    const amount: number = +fc.value;
+    if ( amount <= 25 ) {
+      return (null);
+    }
+    return ({ validAmount: false });
+  }
 }
 
 
@@ -44,7 +56,6 @@ class CurrencyMinValidator {
   styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit, OnDestroy {
-
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
   // template id
@@ -521,9 +532,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.itemFormGroup.patchValue({ country: country ? country.name : '' })
   }
 
-
   onCategoryChange(category: Category): void {
-    this.log.d('category', category);
+    this.selectedCategory = category;
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
@@ -534,8 +544,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
 
   private initDragDropEl(elementID: string) {
     this.dropArea = document.getElementById(elementID);

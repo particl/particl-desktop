@@ -37,10 +37,13 @@
 <!-- =========== ORDERS =========== -->
 
 <div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-page-intro>
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
     <ng-container page-title>Buy Orders</ng-container>
     <ng-container page-content>
       This is where you manage the orders you're in the process of buying from other vendors on the marketplace.
+    </ng-container>
+    <ng-container page-info *ngIf="hasEncryptedWallet">
+      As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
     </ng-container>
     <ng-container page-help>
       Each step of the purchasing process needs to be confirmed in this page (i.e. marking an order as "Delivered").
@@ -56,7 +59,7 @@
 <div class="favourites container-block with-tab-bar"
      *ngIf="tabLabels[selectedTab] == 'favourites'">
 
-  <app-page-intro>
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
     <ng-container page-title>Your Favourites</ng-container>
     <ng-container page-content>
       Save your favourite listings to easily access them later on.

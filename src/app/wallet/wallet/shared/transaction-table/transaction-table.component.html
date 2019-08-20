@@ -29,7 +29,7 @@
         </div>
 
         <!-- Confirmations -->
-        <div fxFlex="0 0 70px" *ngIf="display.confirmations && tx.getConfirmationCount() <= 12" class="confirmations" [ngClass]="styleConfimations(tx.getConfirmationCount())">
+        <div fxFlex="0 0 70px" *ngIf="display.confirmations && tx.confirmations <= 12" class="confirmations" [ngClass]="styleConfimations(tx.confirmations)">
           <div class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
             <mat-icon fontSet="partIcon" fontIcon="part-date" class="confirmations"></mat-icon>
             {{ tx.getConfirmationCount() }}/12
@@ -74,7 +74,7 @@
           </span>
           <span *ngSwitchCase="'internal_transfer'" class="tx-type received">
             <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>
-            <span class="name">Balance transfer</span>
+            <span class="name">Converted &rarr; {{tx.getTransferType()}}</span>
           </span>
           <span *ngSwitchCase="'listing_fee'" class="tx-type listing-fee">
             <mat-icon fontSet="partIcon" fontIcon="part-bag-buy"></mat-icon>
@@ -156,7 +156,8 @@
           </div>
           <!-- Net amount (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
-            <span>Net amount:</span>
+            <span *ngIf="tx.getCategory() === 'internal_transfer'">Transferred amount:</span>
+            <span *ngIf="tx.getCategory() !== 'internal_transfer'">Net amount:</span>
             <span class="value">{{ tx.getNetAmount()}} PART</span>
           </div>
         </div>

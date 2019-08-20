@@ -14,6 +14,8 @@ import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
+import * as marketConfig from '../../../../../../../modules/market/config.js';
+import { isFinite } from 'lodash';
 
 @Component({
   selector: 'app-console-modal',
@@ -33,12 +35,16 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public waitingForRPC: boolean = true;
   public historyCount: number = 0;
   public activeTab: string = '_rpc';
+  public marketTabEnabled: boolean = false;
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
               private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
+    this.marketTabEnabled = (marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+    ) !== undefined;
   }
 
   ngOnInit() {
@@ -57,16 +63,22 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     let params = this.queryParser(this.command);
 
     if (params.length > 0) {
-      params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
+      params.splice(1, 0, '');
     }
+
+    let callableParams: (string|number)[] = params;
     if (this.activeTab === 'market') {
       commandString = params.shift();
       params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
+      callableParams = params.map((param) => isFinite(+param) ? +param : param);
     }
-    this[this.activeTab].call(commandString, params)
+    this[this.activeTab].call(commandString, callableParams)
       .subscribe(
-        response => this.formatSuccessResponse(response),
-        error => this.formatErrorResponse(error));
+        (response: any) => this.formatSuccessResponse(response),
+        (error: any) => {
+          this.formatErrorResponse(error)
+        }
+      );
   }
 
   formatSuccessResponse(response: any) {
@@ -85,8 +97,14 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       this.command = '';
       this.scrollToBottom();
     } else {
-      const erroMessage = (error.message) ? error.message : 'Method not found';
-      this.snackbar.open(erroMessage);
+      let errorMessage: string
+      if (this.activeTab === 'market') {
+        const errorStr = String(error).toLowerCase();
+        errorMessage = errorStr.includes('unknown command') || errorStr.includes('unknown subcommand') ? 'Invalid command' : error;
+      } else {
+        errorMessage = (error.message) ? error.message : 'Method not found'
+      }
+      this.snackbar.open(errorMessage);
     }
   }
 
@@ -144,7 +162,14 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   selectTab(tabIndex: number) {
-    this.activeTab = tabIndex === 1 ? 'market' : '_rpc'
+    if (tabIndex === 1 && !this.marketTabEnabled) {
+      return;
+    }
+    const currentTab = this.activeTab;
+    this.activeTab = tabIndex === 1 ? 'market' : '_rpc';
+    if (this.activeTab === currentTab) {
+      return;
+    }
     this.commandList = [];
   }
 

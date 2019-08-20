@@ -11,6 +11,16 @@
     </div>
 
     <!-- Filtering -->
+    <div class="filter-by category" fxFlex="1 1 25%">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
+      <app-category-tree
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        (onChange)="onCategoryChange($event)"
+        [options]="_rootCategoryList?.subCategoryList"
+        [selected]="selectedCategory">
+      </app-category-tree>
+    </div>
+
     <div class="filter-by seller-country" fxFlex="1 1 25%">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
       <mat-select-search
@@ -20,15 +30,6 @@
         [showValueOf]="'name'"
         (onChange)="onCountryChange($event)">
       </mat-select-search>
-    </div>
-
-    <div class="filter-by category" fxFlex="1 1 25%">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
-      <mat-otpgroup-select-search
-        [options]="_rootCategoryList?.subCategoryList"
-        [defaultOption]="'All categories'"
-        (change)="onCategoryChange($event)">
-      </mat-otpgroup-select-search>
     </div>
 
     <div class="filter-by buyer-country" fxFlex="1 1 25%">
@@ -46,11 +47,11 @@
 
     <div class="filter-by buttons" fxFlex="0 1 120px">
 
-      <button mat-button class="refresh-listings" [ngClass]="{'new-listings-available': newListArrived}" (click)="clearAndLoadPage()" matTooltip="{{ newListArrived ? 'New listings available' : 'Refresh listings'}}">
+      <button mat-button class="refresh-listings" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()" matTooltip="{{ (newListArrived && !flagged) ? 'New listings available' : 'Refresh listings'}}">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
       </button>
 
-      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only filter-button icon-only" matTooltip="Show reported listings only" (change)="toggleFlag($event)">
+      <mat-button-toggle type="checkbox" value="reported-only" class="reported-only filter-button icon-only" matTooltip="{{ flagged ? 'Show available listings' : 'Show reported listings only'}}" (change)="toggleFlag($event)">
         <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
 
@@ -61,14 +62,14 @@
 
 
 <div class="container-block with-control-bar">
-  <app-page-intro [canHideContent]="true">
+  <app-page-intro>
     <ng-container page-title>Particl Open Marketplace</ng-container>
     <ng-container page-content>
       Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
-      Keep in mind, that you can buy Listings here only with your private Blind balance.
+      Keep in mind, that you can buy Listings here only with your private Anon balance.
     </ng-container>
     <ng-container page-help>
-      You can check your current Blind balance in top bar next to your Cart overview. If you need more Blind balance, convert it on Send / Convert &rarr; Convert page.
+      You can check your current Anon balance in top bar next to your Cart overview. If you need more Anon funds, convert it on Send / Convert &rarr; Convert page.
     </ng-container>
   </app-page-intro>
 
@@ -102,12 +103,6 @@
       </div>
     </div><!-- .loading-container -->
 
-    <div class="no-results" [hidden]="pages[0]?.listings.length !== 0">
-      <p>
-        Sorry, no matching listings found
-      </p>
-    </div>
-
     <ng-container *ngFor="let page of pages;let pageIdx = index;">
       <ng-container *ngFor="let item of page.listings">
 
@@ -118,7 +113,24 @@
       </ng-container>
     </ng-container>
 
-    <div class="no-results" [hidden]="!noMoreListings">
+    <div class="no-results" *ngIf="hasEmptySearch">
+      <p>
+        Sorry, no matching listings found
+      </p>
+    </div>
+
+    <div class="no-results" *ngIf="isInitialState">
+      <p>
+        It seems that there are either no listings on the marketplace or they are not yet loaded. Please wait a few minutes and try to refresh the page.
+        <br>
+        <button mat-button class="refresh-listings" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+          Refresh Page
+        </button>
+      </p>
+    </div>
+
+    <div class="no-results" *ngIf="pages[0]?.listings.length !== 0">
       <p>
         That's all folks!
       </p>

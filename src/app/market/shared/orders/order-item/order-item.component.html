@@ -24,7 +24,15 @@
       </p>
       <p *ngIf="!(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
-        <em>No information provided</em>
+        <em>&nbsp; No information provided</em>
+      </p>
+    </div>
+    <div *ngIf="additionalInfo.transactionID.length > 0" class="additional-shipping-info">
+      <p>
+        <span class="title">Escrow tx ID:</span>
+      </p>
+      <p>
+        <code class="additional-extra-info">{{ additionalInfo.transactionID }}</code>
       </p>
     </div>
   </div>
@@ -58,23 +66,23 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{ pricingInfo.baseInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.baseFraction }} </small> PART
+          <td>{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }} </small> PART
           </td>
         </tr>
         <tr>
           <th>Shipping</th>
-          <td >{{ pricingInfo.shippingInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.shippingFraction }}</small> PART
+          <td >{{ pricingInfo.shippingInt }}{{ pricingInfo.shippingSep }}<small>{{ pricingInfo.shippingFraction }}</small> PART
           </td>
         </tr>
         <tr>
           <th>Escrow</th>
-          <td>{{ pricingInfo.escrowInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.escrowFraction }}</small> PART
+          <td>{{ pricingInfo.escrowInt }}{{ pricingInfo.escrowSep }}<small>{{ pricingInfo.escrowFraction }}</small> PART
           </td>
         </tr>
         <tr>
           <th>Total price</th>
           <td>
-            {{ pricingInfo.totalInt }}{{ pricingInfo.separator }}<small>{{ pricingInfo.totalFraction }}</small> PART
+            {{ pricingInfo.totalInt }}{{ pricingInfo.totalSep }}<small>{{ pricingInfo.totalFraction }}</small> PART
           </td>
         </tr>
       </table>

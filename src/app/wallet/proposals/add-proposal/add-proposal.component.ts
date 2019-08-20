@@ -26,7 +26,7 @@ export class AddProposalComponent implements OnInit {
   public isTnCAccepted: boolean = false;
   // form controls
   public proposalFormGroup: FormGroup;
-  expireIn: number = 2; // days.
+  expireIn: number = 7; // days.
 
   constructor(
     private router: Router,
@@ -105,19 +105,29 @@ export class AddProposalComponent implements OnInit {
       ... proposalOptions
     ];
 
-    this.proposalsService.post(params).subscribe((response) => {
-      const proposalTransactionFee = new Amount(response.fee);
-      const dialogRef = this.dialog.open(ProposalConfirmationComponent);
+    this.proposalsService.post(params).subscribe(
+      (response) => {
+        const proposalTransactionFee = new Amount(response.fee);
+        const dialogRef = this.dialog.open(ProposalConfirmationComponent);
 
-      dialogRef.componentInstance.setData({
-        title: this.proposalFormGroup.value.title,
-        proposalTransactionFee
+        dialogRef.componentInstance.setData({
+          title: this.proposalFormGroup.value.title,
+          proposalTransactionFee
+        },
+        () => this.addPost(proposalOptions)
+        );
       },
-      () => this.addPost(proposalOptions)
-      );
-    }, (error) => {
-      this.snackbarService.open(error, 'warn')
-    })
+      (error) => {
+        const dialogRef = this.dialog.open(ProposalConfirmationComponent);
+        dialogRef.componentInstance.setData(
+          {
+            title: this.proposalFormGroup.value.title,
+            error: true
+          },
+          null
+        );
+      }
+    );
   }
 
   addPost(proposalOptions: string[]): void {

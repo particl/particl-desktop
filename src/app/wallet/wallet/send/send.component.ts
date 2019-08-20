@@ -18,7 +18,7 @@ import { TransactionBuilder, TxType } from './transaction-builder.model';
 import {
   SendConfirmationModalComponent
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
-import { take, takeWhile } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 import { Amount } from 'app/core/util/utils';
 
 @Component({
@@ -33,7 +33,6 @@ export class SendComponent implements OnInit, OnDestroy {
   private addressHelper: AddressHelper;
   private destroyed: boolean = false;
 
-  testnet: boolean = false;
   // UI logic
   @ViewChild('address') address: ElementRef;
   type: string = 'sendPayment';
@@ -67,10 +66,6 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    /* check if testnet -> Show/Hide Anon Balance */
-    this._rpcState.observe('getblockchaininfo', 'chain').pipe(take(1))
-      .subscribe(chain => this.testnet = chain === 'test');
-
     // Calculate Spendable balance
     this._rpcState.observe('listunspent')
       .pipe(takeWhile(() => !this.destroyed))
@@ -158,10 +153,10 @@ export class SendComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // if ((this.send.amount + '').indexOf('.') >= 0 && (this.send.amount + '').split('.')[1].length > 8) {
-    //   this.send.validAmount = false;
-    //   return;
-    // }
+    if ( ((this.send.amount + '').split('.')[1] || '').length > 8) {
+      this.send.validAmount = false;
+      return;
+    }
 
     if (+this.send.amount <= 1e-8) {
       this.send.validAmount = false;
@@ -248,14 +243,16 @@ export class SendComponent implements OnInit, OnDestroy {
       txt = `Do you really want to transfer the following balance ${this.send.amount} ${this.send.currency.toUpperCase()}?`
     }
 
+    const sendAll = this.send.subtractFeeFromAmount;
+
     dialogRef.componentInstance.dialogContent = txt;
     dialogRef.componentInstance.send = this.send;
 
-    dialogRef.componentInstance.onCancel.subscribe(() => {
-      dialogRef.close();
+    dialogRef.afterClosed().subscribe(() => {
       if (this.type === 'balanceTransfer') {
         this.send.toAddress = '';
       }
+      this.send.subtractFeeFromAmount = sendAll;
     });
 
     dialogRef.componentInstance.onConfirm.subscribe(() => {
@@ -273,17 +270,33 @@ export class SendComponent implements OnInit, OnDestroy {
 
     // Send normal transaction - validation
     if (this.type === 'sendPayment') {
-
       // pub->pub, blind->blind, priv-> priv
       this.send.output = this.send.input;
-
-      // Check if stealth address if output is private
-      if (this.send.output === TxType.ANON && !this.addressHelper.testAddress(this.send.toAddress, 'private')) {
-        this.flashNotification.open('Stealth address required for private transactions!');
-        return;
-      }
     }
-    this.modals.unlock({ timeout: 30 }, (status) => this.sendTransaction());
+
+    // @TODO (zaSmilingIdiot 2019-07-17):
+    //    Technically, the requirement to validate the address is not needed, since verifyAddress() does the same thing
+    //    preventing the actionable button action to complete the payment if the address is wrong.
+    //    However, I'm including it because for now, there appears to be some need to perform additional validation on stealth addresses
+    //    if the transaction type is anonymous. This makes little sense, given that we're already verifying the address: might as well
+    //    verify the anon type there as well. So...
+    //    This entire component, or mor specifically, this verification and validation at the very least, needs to be refactored!!
+    this._rpc.call('validateaddress', [this.send.toAddress]).subscribe(
+      (resp) => {
+        if ( !(resp && resp.isvalid) ) {
+          this.flashNotification.open('Invalid address specified. Please confirm that the address is valid.');
+          return;
+        }
+        if (this.send.output === TxType.ANON && !resp.isstealthaddress) {
+          this.flashNotification.open('Stealth address required for private transactions!');
+          return;
+        }
+        this.modals.unlock({ timeout: 30 }, () => this.sendTransaction());
+      },
+      () => {
+        this.flashNotification.open('Failed to validate the address. Please try again shortly');
+      }
+    )
   }
 
   private sendTransaction(): void {
@@ -379,7 +392,11 @@ export class SendComponent implements OnInit, OnDestroy {
   calculateUnspent(unspent: Array<any>): number {
     let tempAmount = 0;
     for (let ut = 0; ut < unspent.length; ut++) {
-      if (!unspent[ut].coldstaking_address || unspent[ut].address) {
+      let spendable = true;
+      if ('spendable' in unspent[ut]) {
+        spendable = unspent[ut].spendable;
+      }
+      if ( (!unspent[ut].coldstaking_address || unspent[ut].address) && unspent[ut].confirmations && spendable) {
         tempAmount += unspent[ut].amount;
       };
     }

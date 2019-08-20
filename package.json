@@ -1,7 +1,8 @@
 {
   "name": "particl-desktop",
-  "version": "2.0.0-alpha1-testnet",
+  "version": "2.0.1-testnet",
   "branch": "market",
+  "preRelease": "",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "homepage": "https://particl.io",
@@ -140,7 +141,7 @@
           ]
         }
       ],
-      "executableName": "Particl Desktop",
+      "executableName": "Particl Desktop Testnet",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl-desktop",
@@ -176,7 +177,7 @@
     "ng2-nvd3": "^2.0.0",
     "ngx-material-file-input": "^1.1.1",
     "node-unzip-2": "^0.2.1",
-    "particl-marketplace": "^0.0.69",
+    "particl-marketplace": "^0.1.4",
     "particl-market-import-core": "^0.0.4",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.3.3",

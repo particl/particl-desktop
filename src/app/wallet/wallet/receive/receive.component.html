@@ -90,7 +90,9 @@
   <div class="with-filter" *ngIf="unUsedAddress">
 
     <div class="no-results" *ngIf="(getSinglePage().length === 0) && (inSearchMode() === true)">
-      No addresses found
+      <p>
+        No addresses found
+      </p>
     </div>
 
     <div *ngIf="getSinglePage().length" class="list-data">

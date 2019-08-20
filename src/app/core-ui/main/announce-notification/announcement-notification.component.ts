@@ -21,4 +21,10 @@ export class AnnouncementNotificationComponent implements OnInit {
     });
   }
 
+  callMessageAction() {
+    if (this.message.action) {
+      this.message.action();
+    }
+  }
+
 }

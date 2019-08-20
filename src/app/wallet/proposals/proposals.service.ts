@@ -51,7 +51,6 @@ export class ProposalsService {
   post(options: Array<any> = []) {
     /*
      * get poposal fee by passing the estimatedFee = true.
-     // tslint:disable-next-line
      * cmd ['proposal', ['post', submitterId, ttitle<string>, desc<string>, daysretention<number> (in days),
         expireTimeCount<number>, estimationFee<boolean>, option-1<string> ,..... option-N<string>
      * i.e.:

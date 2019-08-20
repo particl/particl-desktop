@@ -1,9 +1,10 @@
-<div mat-dialog-title>Choose Listing expiration</div>
+<div mat-dialog-title *ngIf="!estimateError">Choose Listing expiration</div>
+<div mat-dialog-title *ngIf="estimateError">Fee Estimate Error</div>
 <button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content">
+<div mat-dialog-content class="dialog-content" *ngIf="!estimateError">
 
   <p class="lead">
     For how long would you like to publish your Listing?
@@ -33,12 +34,25 @@
 
 </div><!-- .dialog-content -->
 
+<div mat-dialog-content class="dialog-content" *ngIf="estimateError">
+  <p class="warning">
+    There was an error fetching the fee estimate, please check that:
+  </p>
+  <ul class="checks">
+    <li>You have a <strong>spendable Public balance</strong></li>
+    <li>You have a network connection</li>
+    <li>The daemon is running</li>
+    <li>You have peers connected</li>
+    <li>Your wallet is unlocked</li>
+  </ul>
+</div><!-- .dialog-content -->
+
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button [disabled]="!expiration || (txError.length > 0 )" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button *ngIf="!estimateError" [disabled]="!expiration || (txError.length > 0 )" mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Publish
   </button>
