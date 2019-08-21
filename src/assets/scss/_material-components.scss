@@ -67,6 +67,11 @@ button,
   &.full-width {
     width: 100%;
   }
+  &.icon-only {
+    .mat-icon {
+      margin: 0;
+    }
+  }
 }
 
 

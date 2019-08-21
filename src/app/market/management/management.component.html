@@ -136,7 +136,8 @@
       </p>
     </div-->
 
-    <mat-expansion-panel class="market list-item no-padding">
+    <!-- Example: Available market (remove *ngIf below when implementing) -->
+    <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'available'">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo" fxFlex="0 0 90px">
@@ -144,9 +145,10 @@
           </div>
           <div class="info" fxFlex="1 1 100%">
             <div class="title">
-              <span class="name">Market title</span>
-              <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker" class="promoted"
-                        matTooltip="Promoted Market" matTooltipPosition="after"></mat-icon>
+              <span class="name">Available Market title</span>
+              <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
+              <!--mat-icon fontSet="partIcon" fontIcon="part-notification-speaker" class="promoted"
+                        matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
             </div>
             <div class="desc">
               <span class="tag">Storefront</span>
@@ -167,6 +169,61 @@
           <button mat-button color="basic" class="small">
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             Copy &amp; share Market ID
+          </button>
+        </div>
+        <div class="right">
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Join this Market
+          </button>
+        </div>
+      </mat-action-row>
+    </mat-expansion-panel><!-- .market -->
+
+
+    <!-- Example: Joined market (remove *ngIf below when implementing) -->
+    <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'joined'">
+      <mat-expansion-panel-header class="header">
+        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="photo" fxFlex="0 0 90px">
+            <img src="/assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="info" fxFlex="1 1 100%">
+            <div class="title">
+              <span class="name">Joined Market title</span>
+              <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
+              <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker" class="promoted"
+                        matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon>
+            </div>
+            <div class="desc">
+              <span class="tag">Market</span>
+            </div>
+          </div><!-- .meta -->
+        </div>
+      </mat-expansion-panel-header>
+
+      <div class="details">
+        <div class="subtitle">Market summary</div>
+        <p class="desc">
+          This is a summary/description of a joined Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
+        </p>
+      </div>
+
+      <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+        <div class="left">
+          <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Leave
+          </button>
+          <button mat-button color="basic" class="small icon-only" matTooltip="Report inappropriate Market">
+            <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+          </button>
+          <button mat-button color="basic" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            Copy Market ID
+          </button>
+          <button mat-button color="basic" class="small icon-only" matTooltip="Pin to top in Market browser">
+            <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
           </button>
         </div>
         <div class="right">
