@@ -44,7 +44,7 @@
 
   <div class="filter">
 
-    <div class="join-via-id">
+    <div class="buttons">
       <!-- Join Market button -->
       <button mat-raised-button color="primary" *ngIf="!showJoinMarketForm"
               (click)="showJoinMarketForm = true"
@@ -56,11 +56,17 @@
       </button>
       <!-- Join Market form (replaces button on click) -->
       <mat-card class="join-form" *ngIf="showJoinMarketForm">
+        <!-- TODO: can we make the input auto-focused after clicking on the button above? -->
         <input type="text" placeholder="Enter Market ID"
                (keyup.escape)="showJoinMarketForm = false">
         <button mat-raised-button color="primary" class="join-button">Join</button>
       </mat-card>
-    </div>
+
+      <button mat-raised-button color="accent" class="full-width">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Create new Market
+      </button>
+    </div><!-- .buttons -->
 
     <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
@@ -98,7 +104,7 @@
       Clear all filters
     </button>
 
-  </div><!-- .filter -->
+  </div><!-- .filter (sidebar) -->
 
   <!-- .loading-container -->
   <div class="loading-container" *ngIf="isPageLoading">
@@ -115,6 +121,64 @@
     </div>
   </div><!-- .loading-container -->
 
+
+  <!-- Management > Market list -->
+  <div class="markets section with-filter"><!-- infiniteScroll
+    [infiniteScrollContainer]="pagination.infinityScrollSelector"
+    [fromRoot]="true"
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="loadNextPage()" -->
+
+    <!--div class="no-results" [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)">
+      <p>
+        Sorry, no Markets found
+      </p>
+    </div-->
+
+    <mat-expansion-panel class="market list-item no-padding">
+      <mat-expansion-panel-header class="header">
+        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="photo" fxFlex="0 0 90px">
+            <img src="/assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="info" fxFlex="1 1 100%">
+            <div class="title">
+              <span class="name">Market title</span>
+              <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker" class="promoted"
+                        matTooltip="Promoted Market" matTooltipPosition="after"></mat-icon>
+            </div>
+            <div class="desc">
+              <span class="tag">Storefront</span>
+            </div>
+          </div><!-- .meta -->
+        </div>
+      </mat-expansion-panel-header>
+
+      <div class="details">
+        <div class="subtitle">Market summary</div>
+        <p class="desc">
+          Small summary/description of this Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
+        </p>
+      </div>
+
+      <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+        <div class="left">
+          <button mat-button color="basic" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            Copy &amp; share Market ID
+          </button>
+        </div>
+        <div class="right">
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Join this Market
+          </button>
+        </div>
+      </mat-action-row>
+    </mat-expansion-panel><!-- .market -->
+
+  </div><!-- .markets (content) -->
 </div><!-- .container-block -->
 
 

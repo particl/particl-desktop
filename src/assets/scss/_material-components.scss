@@ -211,6 +211,9 @@ mat-card.mat-card {
     position: relative;
     top: -3px;
   }
+  .mat-expansion-panel-content {
+    font-family: $font;
+  }
   &.mat-expanded { // while expanded..
     .mat-expansion-indicator {
       top: 3px;
