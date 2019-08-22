@@ -25,6 +25,7 @@ Customizations and modifiers for default Material components
       2.6. Modals
       2.7. Scrollbars
       2.8. Sidenav (main menu)
+      2.9. Menus (contextual)
 
     3. Forms
       3.1. Inputs
@@ -449,6 +450,32 @@ mat-card.mat-card {
     .mat-drawer-inner-container {
       display: flex;
       flex-direction: row;
+    }
+  }
+}
+
+
+// ------ 2.9. MENUS (CONTEXTUAL) ------ //
+
+.mat-menu-panel {
+  .heading { // heading for contextual menus (explaining the options)
+    padding: 8px 16px;
+    .title {
+      margin: 0;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 100%;
+    }
+    .widget-help {
+      margin: 6px 0 4px;
+    }
+  }
+  .mat-menu-item {
+    .right { // align items to right (prices etc.)
+      float: right;
+    }
+    .muted {
+      color: $text-muted;
     }
   }
 }

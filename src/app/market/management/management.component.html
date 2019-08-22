@@ -222,7 +222,8 @@
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             Copy Market ID
           </button>
-          <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser">
+          <button mat-button color="basic" class="small icon-only"
+                  [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
             <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
           </button>
         </div>
@@ -306,7 +307,8 @@
             <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
             Edit Market
           </button>
-          <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser">
+          <button mat-button color="basic" class="small icon-only"
+                  [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
             <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
           </button>
         </div>
@@ -322,4 +324,33 @@
   </div><!-- .markets (content) -->
 </div><!-- .container-block -->
 
+
+
+<!-- // ------ CONTEXTUAL MENUS ------ // -->
+
+<!-- Promote Market -->
+<mat-menu #promote="matMenu" class="promote">
+  <div class="heading">
+    <h3 class="title">Promote Market</h3>
+    <p class="widget-help">Market will be pinned to top in Market browser</p>
+  </div>
+  <button mat-menu-item>
+    <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+    <span>for 1 day</span><span class="muted right">1.01 PART</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+    <span>for 3 days</span><span class="muted right">3.03 PART</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+    <span>for 5 days</span><span class="muted right">5.05 PART</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+    <span>for 1 week</span><span class="muted right">7.07 PART</span>
+  </button>
+</mat-menu>
+
+<!-- Report Market -->
 
