@@ -215,7 +215,8 @@
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             Leave
           </button>
-          <button mat-button color="basic" class="small icon-only" matTooltip="Report inappropriate Market">
+          <button mat-button color="basic" class="small icon-only"
+                  [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
             <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
           </button>
           <button mat-button color="basic" class="small">
@@ -300,7 +301,8 @@
             <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
             Leave
           </button>
-          <button mat-button color="basic" class="small icon-only" matTooltip="Report inappropriate Market">
+          <button mat-button color="basic" class="small icon-only"
+                  [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
             <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
           </button>
           <button mat-button color="basic" class="small">
@@ -353,4 +355,17 @@
 </mat-menu>
 
 <!-- Report Market -->
-
+<mat-menu #report="matMenu" class="report">
+  <div class="heading">
+    <h3 class="title">Report Market</h3>
+    <p class="widget-help">Mark this Market is inappropriate (or not)</p>
+  </div>
+  <button mat-menu-item>
+    <mat-icon fontSet="partIcon" fontIcon="part-thumb-up" color="primary"></mat-icon>
+    <span>Market is OK</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon fontSet="partIcon" fontIcon="part-thumb-down" color="warn"></mat-icon>
+    <span>Report as inappropriate</span>
+  </button>
+</mat-menu>
