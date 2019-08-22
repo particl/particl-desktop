@@ -82,13 +82,39 @@
     border-top: 1px dashed $bg-shadow;
     padding: 12px 24px;
     .subtitle {
+      @extend %reset;
       margin: 12px 0 6px;
+      color: $text-muted;
       font-size: 90%;
       font-weight: 500;
     }
     p.desc {
       line-height: 1.5;
       margin: 0 0 12px;
+    }
+    .keys {
+      .public {
+        .key {
+          color: darken($color, 10%);
+          background: rgba($color, 0.15);
+        }
+      }
+      .private {
+        .key {
+          color: darken($color-alert, 5%);
+          background: rgba($color-alert, 0.1);
+        }
+      }
+      .key {
+        @extend %enable-select;
+        font-family: monospace;
+        font-size: 90%;
+        text-align: center;
+        word-break: break-all;
+        background: #eee;
+        padding: 6px 14px;
+        border-radius: 4px;
+      }
     }
   }
   .action-buttons {

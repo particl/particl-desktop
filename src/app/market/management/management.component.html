@@ -196,7 +196,7 @@
                         matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon>
             </div>
             <div class="desc">
-              <span class="tag">Market</span>
+              <span class="tag">Community Market</span>
             </div>
           </div><!-- .meta -->
         </div>
@@ -222,14 +222,98 @@
             <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
             Copy Market ID
           </button>
-          <button mat-button color="basic" class="small icon-only" matTooltip="Pin to top in Market browser">
+          <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser">
             <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
           </button>
         </div>
         <div class="right">
           <button mat-raised-button color="primary">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-            Join this Market
+            <mat-icon fontSet="partIcon" fontIcon="part-bag"></mat-icon>
+            Browse Market
+          </button>
+        </div>
+      </mat-action-row>
+    </mat-expansion-panel><!-- .market -->
+
+
+    <!-- Example: Own storefront (remove *ngIf below when implementing) -->
+    <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'joined'">
+      <mat-expansion-panel-header class="header">
+        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="photo" fxFlex="0 0 90px">
+            <img src="/assets/images/placeholder_1-1.jpg">
+          </div>
+          <div class="info" fxFlex="1 1 100%">
+            <div class="title">
+              <span class="name">My Storefront title</span>
+              <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
+              <!--mat-icon fontSet="partIcon" fontIcon="part-notification-speaker" class="promoted"
+                        matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
+            </div>
+            <div class="desc">
+              <span class="tag">Storefront</span>
+            </div>
+          </div><!-- .meta -->
+        </div>
+      </mat-expansion-panel-header>
+
+      <div class="details">
+        <div class="subtitle">Storefront summary</div>
+        <p class="desc">
+          Some intro to Storefront that I've either created or got its Admin key.
+        </p>
+        <!-- TODO: Show these `.keys` only when user has "admin/publishing" rights for Storefront-type Market: -->
+        <div class="keys" fxLayout fxLayoutGap="30px">
+          <div class="public" fxFlex="50%">
+            <div class="subtitle">
+              Market ID
+              <button mat-button color="primary" class="small" matTooltip="Copy Market ID">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+                Copy
+              </button>
+            </div>
+            <div class="key">P4H1drJsX9sP4ek2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5W</div>
+            <p class="widget-help">
+              Key required to join this Market. You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
+            </p>
+          </div>
+          <div class="private" fxFlex="50%">
+            <div class="subtitle">
+              Admin key
+              <button mat-button color="warn" class="small" matTooltip="Copy Admin key">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+                Copy
+              </button>
+            </div>
+            <div class="key">2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek</div>
+            <p class="widget-help">
+              Whoever has this Private key will have access for selling on your Market. Share it with trusted people only (e.g. colleagues from your Store)!
+            </p>
+          </div>
+        </div><!-- .keys -->
+      </div><!-- .details -->
+
+      <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+        <div class="left">
+          <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Leave
+          </button>
+          <button mat-button color="basic" class="small icon-only" matTooltip="Report inappropriate Market">
+            <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+          </button>
+          <button mat-button color="basic" class="small">
+            <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+            Edit Market
+          </button>
+          <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser">
+            <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+          </button>
+        </div>
+        <div class="right">
+          <button mat-raised-button color="primary">
+            <mat-icon fontSet="partIcon" fontIcon="part-bag"></mat-icon>
+            Browse Storefront
           </button>
         </div>
       </mat-action-row>
