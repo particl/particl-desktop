@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-create-market',
@@ -7,7 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateMarketComponent implements OnInit {
 
-  constructor() { }
+  // stepper form data
+  public marketDetailsFormGroup: FormGroup;
+
+  constructor(
+    private formBuilder: FormBuilder) {
+  }
 
   ngOnInit() {
   }

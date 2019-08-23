@@ -251,9 +251,16 @@ mat-card.mat-card {
 // ------ 2.4. STEPPER ------ //
 
 .mat-stepper-horizontal {
-  font-family: $font;
+  font-family: $font !important;
   .mat-step-label-selected {
     font-weight: 700;
+  }
+  custom-icon { // overwrite of Material Stepper's step icons
+    .mat-icon {
+      font-size: 13px;
+      line-height: 1.6;
+      text-align: center;
+    }
   }
   // buy/cart-shipping: remove white background
   &.no-bg {

@@ -10,4 +10,43 @@
     </ng-container>
   </app-page-intro>
 
+
+  <mat-horizontal-stepper #createMarket class="create-market no-bg">
+    <ng-template matStepperIcon="edit">
+      <custom-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      </custom-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <custom-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+      </custom-icon>
+    </ng-template>
+    
+    <mat-step [stepControl]="marketDetailsFormGroup">
+      <form [formGroup]="marketDetailsFormGroup">
+        <ng-template matStepLabel>Market details</ng-template>
+        <mat-form-field>
+          <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Confirm &amp; Create Market</ng-template>
+        <mat-form-field>
+          <input matInput placeholder="Address" formControlName="secondCtrl" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+
+
 </div><!-- .container-block -->
