@@ -20,6 +20,7 @@ import { AddToCartComponent } from './shared/addtocart/add-to-cart.component';
 import { ShippingAddressComponent } from './shared/shipping-address/shipping-address.component';
 import { market_routing } from './market.routing';
 import { ManagementComponent } from './management/management.component';
+import { CreateMarketComponent } from './management/create-market/create-market.component';
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import { ManagementComponent } from './management/management.component';
     AddToCartComponent,
     ShippingAddressComponent,
     ReportComponent,
-    ManagementComponent
+    ManagementComponent,
+    CreateMarketComponent
   ],
   entryComponents: [
     PreviewListingComponent

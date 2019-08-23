@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-management',
@@ -24,9 +25,19 @@ export class ManagementComponent implements OnInit {
     { title: 'Storefronts',       value: 'storefronts' }
   ];
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+  ) { }
 
   ngOnInit() {
+  }
+
+  createMarket(id?: number, clone?: boolean) {
+    this.router.navigate(['../create-market'], {
+      relativeTo: this.route,
+      queryParams: {'id': id, 'clone': clone }
+    });
   }
 
   changeTab(index: number): void {
