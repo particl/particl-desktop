@@ -23,30 +23,62 @@
       </custom-icon>
     </ng-template>
     
-    <mat-step [stepControl]="marketDetailsFormGroup">
-      <form [formGroup]="marketDetailsFormGroup">
-        <ng-template matStepLabel>Market details</ng-template>
-        <mat-form-field>
-          <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-        </mat-form-field>
-        <div>
-          <button mat-button matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-    <mat-step [stepControl]="secondFormGroup">
-      <form [formGroup]="secondFormGroup">
-        <ng-template matStepLabel>Confirm &amp; Create Market</ng-template>
-        <mat-form-field>
-          <input matInput placeholder="Address" formControlName="secondCtrl" required>
-        </mat-form-field>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button matStepperNext>Next</button>
-        </div>
-      </form>
-    </mat-step>
-  </mat-horizontal-stepper>
+    <!-- // -------------- 1. MARKET DETAILS -------------- // -->
 
+    <mat-step [stepControl]="marketDetailsFormGroup">
+      <form [formGroup]="marketDetailsFormGroup" class="market-form">
+        <ng-template matStepLabel>Market details</ng-template>
+
+        <h2 class="subtitle">Market details</h2>
+        <mat-card>
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Market name" formControlName="firstCtrl" required>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Short summary or description of your Market" formControlName="firstCtrl" required>
+          </mat-form-field>
+        </mat-card>
+
+        <h2 class="subtitle">Market type</h2>
+        <mat-card>
+          Storefront / Community Market
+        </mat-card>
+
+        <div class="actions" fxLayoutAlign="end center">
+          <button mat-raised-button matStepperNext color="primary">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+            Continue to Confirmation
+          </button>
+        </div>
+
+      </form>
+    </mat-step><!-- step 1 -->
+
+
+    <!-- // -------------- 2. CONFIRM & CREATE -------------- // -->
+
+    <mat-step [stepControl]="summaryFormGroup">
+      <form [formGroup]="summaryFormGroup" class="market-form">
+        <ng-template matStepLabel>Confirm &amp; Create Market</ng-template>
+
+        <h2 class="subtitle">Market preview &ndash; Looking good!</h2>
+        
+        ...
+
+        <div class="actions" fxLayoutAlign="space-between center">
+          <button mat-button matStepperPrevious>
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-left"></mat-icon>
+            Back to editing
+          </button>
+          <button mat-raised-button matStepperNext color="primary">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+            Confirm &amp; Create Market
+          </button>
+        </div>
+
+      </form>
+    </mat-step><!-- step 2 -->
+
+  </mat-horizontal-stepper><!-- .create-market -->
 
 </div><!-- .container-block -->

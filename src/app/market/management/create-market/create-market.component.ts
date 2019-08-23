@@ -10,6 +10,7 @@ export class CreateMarketComponent implements OnInit {
 
   // stepper form data
   public marketDetailsFormGroup: FormGroup;
+  public summaryFormGroup: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder) {

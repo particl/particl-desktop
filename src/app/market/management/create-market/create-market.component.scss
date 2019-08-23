@@ -2,9 +2,26 @@
 
 // ------ UI ------ //
 
+.subtitle {
+  @extend %subtitle;
+}
+
 
 // ------ LAYOUT ------ //
 
-.create-market { // stepper
+.create-market { // stepper container (padding offset)
   margin: -24px -24px 0;
+}
+
+form.market-form { // form = stepper content (centered)
+  max-width: 40rem;
+  margin: 0 auto;
+
+  .actions { // next/prev buttons
+    margin-top: 36px;
+    button {
+      margin: 0;
+    }
+  }
+
 }
