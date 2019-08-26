@@ -5,10 +5,10 @@
 
 /*
 
-___  ____ ____ ___     ___  ____ ____ _  _ ___ ____ ___  
-|__] |__| |__/  |      |  \ |___ [__  |_/   |  |  | |__] 
-|    |  | |  \  |  .   |__/ |___ ___] | \_  |  |__| |    
-                                                         
+___  ____ ____ ___     ___  ____ ____ _  _ ___ ____ ___
+|__] |__| |__/  |      |  \ |___ [__  |_/   |  |  | |__]
+|    |  | |  \  |  .   |__/ |___ ___] | \_  |  |__| |
+
 Main stylesheet for Particl Desktop app
 What you can't find here will be probably in `/src/assets/scss/material-components.scss`
 
@@ -283,7 +283,7 @@ body {
         color: $bg-shadow;
       }
     }
-    &[aria-expanded="true"] { // toggled category
+    &[aria-expanded='true'] { // toggled category
       .mat-icon {
         color: $secondary;
       }

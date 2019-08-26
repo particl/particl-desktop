@@ -1,24 +1,27 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Input, Output, OnInit, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, OnInit, EventEmitter, AfterViewInit, OnDestroy } from '@angular/core';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { Log } from 'ng2-logger';
 import { ItemFlatNode } from 'app/core-ui/material/tree-with-search/model/item-flat-node';
 import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node';
 import { ChecklistDatabaseService } from 'app/core-ui/material/tree-with-search/checklist-database.service';
+import { takeWhile } from 'rxjs/operators';
+import { Category } from 'app/core/market/api/category/category.model';
 
 @Component({
   selector: 'app-tree-with-search-single-selection',
   templateUrl: './tree-with-search-single-selection.component.html',
   styleUrls: ['./tree-with-search-single-selection.component.scss']
 })
-export class TreeWithSearchSingleSelectionComponent implements OnInit, AfterViewInit {
+export class TreeWithSearchSingleSelectionComponent implements OnInit, AfterViewInit, OnDestroy {
+  private destroyed: boolean = false;
 
   log: any = Log.create('tree-with-search-single-selection');
   @Input() options: any = [];
-  @Input() selected: ItemFlatNode;
+  @Input() selected: ItemFlatNode | Category;
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
-  defaultSelected: ItemFlatNode;
+  defaultSelected: ItemFlatNode | Category;
   /** Map from flat node to nested node. This helps us finding the nested node to be modified */
   flatNodeMap: any = new Map<ItemFlatNode, ItemNode>();
 
@@ -46,7 +49,7 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit, AfterView
     this.treeControl = new FlatTreeControl<ItemFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    database.dataChange.subscribe(data => {
+    database.dataChange.pipe(takeWhile(() => !this.destroyed)).subscribe(data => {
       this.dataSource.data = data;
     });
 
@@ -62,12 +65,14 @@ export class TreeWithSearchSingleSelectionComponent implements OnInit, AfterView
   }
 
   ngAfterViewInit() {
-
     if (this.selected) {
       // open the parent node from which the child is selected if any.
       document.getElementById(`node-${this.selected['parent']['id']}`).click();
     }
+  }
 
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
   getLevel = (node: ItemFlatNode) => node.level;

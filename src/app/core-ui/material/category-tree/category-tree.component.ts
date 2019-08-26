@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { OverlayConfig, OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { TemplatePortalDirective } from '@angular/cdk/portal';
+import { ItemFlatNode } from '../tree-with-search/model/item-flat-node';
+import { Category } from 'app/core/market/api/category/category.model';
 
 @Component({
   selector: 'app-category-tree',
@@ -15,7 +17,7 @@ export class CategoryTreeComponent {
   public contentTemplate: TemplatePortalDirective;
 
   @Input() options: any[];
-  @Input() selected: any;
+  @Input() selected: ItemFlatNode | Category;
   @Output() onChange: EventEmitter<any> = new EventEmitter();
 
   constructor(public overlay: Overlay) { }

@@ -53,7 +53,6 @@
     "no-switch-case-fall-through": true,
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
@@ -87,7 +86,6 @@
         "variable-declaration": "nospace"
       }
     ],
-    "typeof-compare": true,
     "unified-signatures": true,
     "variable-name": false,
     "whitespace": [
@@ -113,9 +111,6 @@
     "use-pipe-transform-interface": true,
 
     "component-class-suffix": [true, "Component"],
-    "directive-class-suffix": [true, "Directive"],
-    "templates-use-public": true,
-    "no-access-missing-member": true,
-    "invoke-injectable": true
+    "directive-class-suffix": [true, "Directive"]
   }
 }

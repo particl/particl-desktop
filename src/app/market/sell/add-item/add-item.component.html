@@ -36,9 +36,8 @@
 
         <app-category-tree
           class="category-overlay"
-          *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+          *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
           (onChange)="onCategoryChange($event)"
-
           [options]="_rootCategoryList?.subCategoryList"
           [selected]="selectedCategory">
         </app-category-tree>
@@ -97,6 +96,21 @@
           Upload photos of your Product (first photo will be set as main, featured image). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2 MB.
         </p>
         <div class="gallery" fxLayout="row wrap">
+
+          <div *ngFor="let image of images"
+              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+            <div class="photo" fxFLex>
+              <img src="{{image.thumbnail}}">
+              <div class="icons">
+                <mat-icon class="delete" fontSet="partIcon" fontIcon="part-cross"
+                          matTooltip="Remove image" (click)="removeExistingImage(image)">
+                </mat-icon>
+                <!--mat-icon class="featured" fontSet="partIcon" fontIcon="part-check"
+                          matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon-->
+              </div>
+            </div>
+          </div>
 
           <div *ngFor="let picture of picturesToUpload ; index as i" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
             <!-- TODO: maybe not gif, but removing is 'unsafe' -->

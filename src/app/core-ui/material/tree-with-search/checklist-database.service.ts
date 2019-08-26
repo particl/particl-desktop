@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Category } from 'app/core/market/api/category/category.model';
 import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node';
@@ -6,7 +6,7 @@ import { ItemNode } from 'app/core-ui/material/tree-with-search/model/item-node'
 @Injectable({
   providedIn: 'root'
 })
-export class ChecklistDatabaseService {
+export class ChecklistDatabaseService implements OnDestroy {
 
   dataChange: BehaviorSubject<ItemNode[]> = new BehaviorSubject<ItemNode[]>([]);
   // treeData: any;  // Re-enable when using filtering or dynamic categories, for example
@@ -41,6 +41,10 @@ export class ChecklistDatabaseService {
 
       return accumulator.concat(node);
     }, [])
+  }
+
+  ngOnDestroy() {
+    this.dataChange.complete();
   }
 
   /**
