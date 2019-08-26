@@ -31,11 +31,15 @@
 
         <h2 class="subtitle">Market details</h2>
         <mat-card>
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Market name" formControlName="firstCtrl" required>
+          <mat-form-field class="full-width larger">
+            <input matInput placeholder="Market name" #name formControlName="firstCtrl" maxlength="35" required>
+            <mat-hint align="end">{{ name.value?.length || 0 }}/35</mat-hint>
           </mat-form-field>
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Short summary or description of your Market" formControlName="firstCtrl" required>
+          <mat-form-field class="full-width larger">
+            <textarea matInput #description rows="4" placeholder="Market description" #description
+                      formControlName="firstCtrl" maxlength="150" required></textarea>
+            <mat-hint align="start">Describe your Market in short, so that users will know what they'll find there</mat-hint>
+            <mat-hint align="end">{{ description.value?.length || 0 }}/150</mat-hint>
           </mat-form-field>
         </mat-card>
 
