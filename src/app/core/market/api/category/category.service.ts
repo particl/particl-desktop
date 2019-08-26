@@ -32,6 +32,7 @@ export class CategoryService {
 
   stop() {
     this.category$.unsubscribe();
+    this.categories.complete();
   }
 
   list() {

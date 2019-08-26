@@ -17,7 +17,7 @@ exports.init = function() {
     importConfig.push(config);
     importers[config.id] = transformer;
   }
-  
+
   rxIpc.registerListener('importer-config', () => getImportConfig());
   rxIpc.registerListener('importer-load', importLoad);
   rxIpc.registerListener('importer-validate', validateListings);

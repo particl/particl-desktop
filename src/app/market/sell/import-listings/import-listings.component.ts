@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MatStepper } from '@angular/material';
@@ -23,7 +23,7 @@ import * as _ from 'lodash';
   templateUrl: './import-listings.component.html',
   styleUrls: ['./import-listings.component.scss']
 })
-export class ImportListingsComponent implements OnInit, OnDestroy {
+export class ImportListingsComponent {
 
   /* Stepper stuff */
   @ViewChild('stepper') stepper: MatStepper;
@@ -41,8 +41,8 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
      *
      */
 
-    { title: '4 days', value: 4, estimateFee: new Amount(0), isDisabled: true },
-    { title: '1 week', value: 7, estimateFee: new Amount(0), isDisabled: true },
+    { title: '4 days', value: 4, estimateFee: new Amount(0), isDisabled: false },
+    { title: '1 week', value: 7, estimateFee: new Amount(0), isDisabled: false },
     { title: '2 weeks', value: 14, estimateFee: new Amount(0), isDisabled: true },
     { title: '3 weeks', value: 21, estimateFee: new Amount(0), isDisabled: true },
     { title: '4 weeks', value: 28, estimateFee: new Amount(0), isDisabled: true }
@@ -314,11 +314,5 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
     if (!valid) {
       return false;
     }
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
   }
 }

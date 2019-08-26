@@ -72,7 +72,7 @@ window.ipc = new SafeIpcRenderer([
   'importer-load',
   'importer-validate',
   'importer-publish'
-  
+
 ]);
 
 window.electron = true;

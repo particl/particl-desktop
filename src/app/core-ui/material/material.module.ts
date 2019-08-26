@@ -63,7 +63,7 @@ import { CategoryTreeComponent } from './category-tree/category-tree.component';
     MatSlideToggleModule,
     MatAutocompleteModule,
     MatButtonToggleModule,
-    MatTableModule
+    MatTableModule,
     MatTreeModule,
     CdkTreeModule,
     OverlayModule,
@@ -107,7 +107,7 @@ import { CategoryTreeComponent } from './category-tree/category-tree.component';
     // custom component.
     MatSelectSearchComponent,
     MatOtpGroupSelectSearchComponent,
-    MatTableModule
+    MatTableModule,
     TreeWithSearchSingleSelectionComponent,
     CategoryTreeComponent
   ],
