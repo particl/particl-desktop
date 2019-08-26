@@ -7,7 +7,7 @@
     class="header-input"
     id="category-search"
     placeholder="Choose category"
-    [value]="(selected ? selected?.item : '' )"
+    [value]="(selected ? selected?.item || '' : '' )"
     (focus)="show(); categoryInput.blur()">
 </mat-form-field>
 
