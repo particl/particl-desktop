@@ -6,6 +6,28 @@
   @extend %subtitle;
 }
 
+.drag-n-drop {
+  border: 2px dashed $bg-shadow;
+  border-radius: 4px;
+  background: $bg;
+  height: 130px;
+  margin: 0 24px 0 0;
+  padding: 32px 4px 25px;
+  text-align: center;
+  .mat-icon {
+    display: block;
+    margin-bottom: 16px;
+    font-size: 24px;
+    color: $bg-shadow;
+  }
+  p {
+    margin: 6px 0 0;
+    color: $text-muted;
+  }
+  .hide-file {
+    @extend %hide;
+  }
+}
 
 // ------ LAYOUT ------ //
 
@@ -16,49 +38,37 @@
 form.market-form { // form = stepper content (centered)
   max-width: 40rem;
   margin: 0 auto;
+}
 
+.market-details {
   .market-image {
     margin-top: 36px;
-  }
-
-  .drag-n-drop {
-    border: 2px dashed $bg-shadow;
-    border-radius: 4px;
-    background: $bg;
-    height: 130px;
-    margin: 0 24px 0 0;
-    padding: 32px 4px 25px;
-    text-align: center;
-    .mat-icon {
-      display: block;
-      margin-bottom: 16px;
-      font-size: 24px;
-      color: $bg-shadow;
-    }
-    p {
-      margin: 6px 0 0;
-      color: $text-muted;
-    }
-    .hide-file {
-      @extend %hide;
+    .desc {
+      p,
+      ul {
+        @extend %lighter;
+      }
+      ul {
+        padding-left: 24px;
+      }
     }
   }
-
-  .desc {
-    p,
-    ul {
-      @extend %lighter;
-    }
-    ul {
-      padding-left: 24px;
-    }
-  }
-
-  .actions { // next/prev buttons
-    margin-top: 36px;
-    button {
-      margin: 0;
-    }
-  }
-
 }
+
+.market-type {
+  .mat-divider {
+    margin-top: -24px;
+    margin-bottom: -24px;
+  }
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.actions { // next/prev buttons
+  margin-top: 36px;
+  button {
+    margin: 0;
+  }
+}
+

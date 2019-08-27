@@ -26,6 +26,7 @@ Customizations and modifiers for default Material components
       2.7. Scrollbars
       2.8. Sidenav (main menu)
       2.9. Menus (contextual)
+      2.10. Divider
 
     3. Forms
       3.1. Inputs
@@ -488,6 +489,31 @@ mat-card.mat-card {
 }
 
 
+// ------ 2.10. DIVIDER ------ //
+
+.mat-divider {
+  &.thicker {
+    $thickness: 2px;
+    &.mat-divider-horizontal {
+      border-top-width: $thickness;
+    }
+    &.mat-divider-vertical {
+      border-right-width: $thickness;
+    }
+  }
+  &.dashed {
+    &.mat-divider-horizontal {
+      border-top-style: dashed;
+    }
+    &.mat-divider-vertical {
+      border-right-style: dashed;
+    }
+  }
+  &.lighter {
+    opacity: 0.67;
+  }
+}
+
 
 /* ------------------------------- *\
     3. FORMS
@@ -577,6 +603,9 @@ input {
   font-family: $font;
   &.mat-radio-checked {
     font-weight: 500;
+  }
+  &.larger {
+    font-size: 115%;
   }
 }
 

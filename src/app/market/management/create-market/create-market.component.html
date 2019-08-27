@@ -29,7 +29,7 @@
         <ng-template matStepLabel>Market details</ng-template>
 
         <h2 class="subtitle">Market details</h2>
-        <mat-card>
+        <mat-card class="market-details">
 
           <mat-form-field class="full-width larger">
             <input matInput placeholder="Market name" #name formControlName="firstCtrl" maxlength="35" required>
@@ -64,8 +64,24 @@
         </mat-card><!-- market details -->
 
         <h2 class="subtitle">Market type</h2>
-        <mat-card>
-          Storefront / Community Market
+        <mat-card fxLayout fxLayoutGap="30px" class="market-type">
+          <div class="half" fxFlex="50%">
+            <mat-radio-button name="market-type" value="storefront" class="larger" color="primary">
+              Storefront
+            </mat-radio-button>
+            <p class="widget-help">
+              With Storefront, only you (and those you appoint) are in control of the Market &ndash; nobody else can sell on it
+            </p>
+          </div>
+          <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
+          <div class="half" fxFlex="50%">
+            <mat-radio-button name="market-type" value="community-market" class="larger" color="primary">
+              Community Market
+            </mat-radio-button>
+            <p class="widget-help">
+              Community Markets give all rights and permissions to all its members &ndash; everybody on the Market can sell on it
+            </p>
+          </div>
         </mat-card><!-- market type -->
 
         <div class="actions" fxLayoutAlign="end center">
