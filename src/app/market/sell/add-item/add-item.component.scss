@@ -126,5 +126,5 @@ p.warning {
 }
 
 .hide-file {
-  display: none;
+  @extend %hide;
 }
