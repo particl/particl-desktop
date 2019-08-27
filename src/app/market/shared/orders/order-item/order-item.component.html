@@ -17,7 +17,7 @@
 
   <div class="status-info">
     <p>{{ orderActivity?.status_info }}</p>
-    <div *ngIf="showShippingInfo" class="additional-shipping-info">
+    <div *ngIf="showShippingInfo" class="additional-info">
       <p *ngIf="(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
         <code class="more-info">{{ memo }}</code>
@@ -27,12 +27,18 @@
         <em>&nbsp; No information provided</em>
       </p>
     </div>
-    <div *ngIf="additionalInfo.transactionID.length > 0" class="additional-shipping-info">
+    <div *ngIf="additionalInfo.transactionID.length > 0" class="additional-info">
       <p>
         <span class="title">Escrow tx ID:</span>
       </p>
       <p>
         <code class="additional-extra-info">{{ additionalInfo.transactionID }}</code>
+      </p>
+    </div>
+    <div *ngIf="additionalInfo.rejectMessage.length > 0" class="additional-info">
+      <p>
+        <span class="title">Reason for rejection</span>
+        <code class="more-info">{{ additionalInfo.rejectMessage }}</code>
       </p>
     </div>
   </div>
