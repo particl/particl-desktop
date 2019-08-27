@@ -1,8 +1,8 @@
 <div mat-dialog-title class="title">Unlock your wallet</div>
 
 <mat-dialog-content class="modal-content">
-  <p>
-    Please enter your password to unlock your wallet
+  <p class="lead">
+    Please enter your password to unlock the wallet:
   </p>
   <app-password
     label="Enter your password"
@@ -11,6 +11,7 @@
     [unlockTimeout]="timeout"
     [showStakeOnly]="showStakeOnly"
     [stakeOnly]="stakeOnly"
+    [showEditableTimeout]="showEditableTimeout"
     [emitUnlock]="true">
   </app-password>
 </mat-dialog-content>
@@ -20,9 +21,4 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <!-- TODO: can we move the main action button here? (in this case "unlock wallet" button) -->
-  <!--button mat-raised-button color="primary">
-    <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-    Unlock wallet
-  </button-->
 </mat-dialog-actions>
