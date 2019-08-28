@@ -104,7 +104,109 @@
 
         <h2 class="subtitle">Market preview &ndash; Looking good!</h2>
         
-        ...
+        <!-- TODO: include "Market listing item" as it will be seen in Market browser, for preview; only remove/disable bottom action buttons -->
+        <mat-expansion-panel class="market list-item no-padding">
+          <mat-expansion-panel-header class="header">
+            <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+              <div class="photo" fxFlex="0 0 90px">
+                <img src="/assets/images/placeholder_1-1.jpg">
+              </div>
+              <div class="info" fxFlex="1 1 100%">
+                <div class="title">
+                  <span class="name">Joined Market title</span>
+                  <!-- Note: "Promoted" Markets don't make sense here > hide -->
+                  <!--mat-icon fontSet="partIcon" fontIcon="part-notification-speaker" class="promoted"
+                            matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
+                </div>
+                <div class="desc">
+                  <span class="tag">Community Market</span>
+                </div>
+              </div><!-- .meta -->
+            </div>
+          </mat-expansion-panel-header>
+    
+          <div class="details">
+            <div class="subtitle">Market summary</div>
+            <p class="desc">
+              This is a summary/description of a joined Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
+            </p>
+          </div>
+    
+          <!--mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+            <div class="left">
+              <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market">
+                <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+                Leave
+              </button>
+              <button mat-button color="basic" class="small icon-only"
+                      [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
+                <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+              </button>
+              <button mat-button color="basic" class="small">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+                Copy Market ID
+              </button>
+              <button mat-button color="basic" class="small icon-only"
+                      [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
+                <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+              </button>
+            </div>
+            <div class="right">
+              <button mat-raised-button color="primary">
+                <mat-icon fontSet="partIcon" fontIcon="part-bag"></mat-icon>
+                Browse Market
+              </button>
+            </div>
+          </mat-action-row-->
+        </mat-expansion-panel><!-- .market -->
+
+
+        <h2 class="subtitle">Optional steps</h2>
+
+        <mat-expansion-panel class="promote list-item no-padding">
+          <mat-expansion-panel-header class="header">
+            <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+            Promote your Market
+          </mat-expansion-panel-header>
+          <div class="details" fxLayout fxLayoutGap="30px">
+            <div class="desc" fxFlex="60%">
+              <p>
+                All Markets are listed in the Market browser by default.
+              </p>
+              <p>
+                You can choose to further promote your Market for a few days to highlight its existence and onboard more potential Buyers.
+              </p>
+              <p class="widget-help">
+                This fee goes back to the stakers on Particl network for their support.
+              </p>
+            </div>
+            <div class="form" fxFlex="40%">
+              <div class="subtitle">Days to promote</div>
+              <mat-form-field class="full-width">
+                <mat-label>Select duration</mat-label>
+                <mat-select [(value)]="promoDuration">
+                  <mat-option>Select duration</mat-option>
+                  <mat-option value="1 day">1 day</mat-option>
+                  <mat-option value="3 days">3 days</mat-option>
+                  <mat-option value="5 days">5 days</mat-option>
+                  <mat-option value="7 days">1 week</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <table class="full-width">
+                <tr>
+                  <th>Promo duration</th>
+                  <td>{{ promoDuration }}</td>
+                </tr>
+                <tr>
+                  <th>Total promo fee</th>
+                  <!-- FIXME: implement dynamic fee -->
+                  <td>2.1428 PART</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </mat-expansion-panel><!-- .promote -->
+
 
         <div class="actions" fxLayoutAlign="space-between center">
           <button mat-button matStepperPrevious>

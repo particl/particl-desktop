@@ -12,6 +12,9 @@ export class CreateMarketComponent implements OnInit {
   public marketDetailsFormGroup: FormGroup;
   public summaryFormGroup: FormGroup;
 
+  // Create Market > Promote
+  public promoDuration = '';
+
   constructor(
     private formBuilder: FormBuilder) {
   }
