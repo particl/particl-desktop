@@ -7,8 +7,9 @@
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ title }}</div>
         <div class="hash" matTooltip="Order ID: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
-        <div class="date">
-          Added {{order?.added}} &bull; Updated {{order?.updated}}
+        <div class="origin-market">
+          <!-- TODO: implement display of Market where item was bought -->
+          Particl Open Marketplace
         </div>
       </div>
       <div class="status {{ order?.step }} {{ order?.type }}" fxFlex="0 0 140px"><span class="dot"></span>{{ order?.step }}</div>
@@ -29,7 +30,7 @@
     </div>
     <div *ngIf="additionalInfo.transactionID.length > 0" class="additional-shipping-info">
       <p>
-        <span class="title">Escrow tx ID:</span>
+        <span class="title">Escrow TX ID</span>
       </p>
       <p>
         <code class="additional-extra-info">{{ additionalInfo.transactionID }}</code>
@@ -58,6 +59,17 @@
     </div><!-- .buyer-info -->
 
     <div class="info" fxFlex="35%">
+      <div class="title">Order progress</div>
+      <table class="progress">
+        <tr>
+          <th>Created</th>
+          <td>{{order?.added}}</td>
+        </tr>
+        <tr>
+          <th>Updated</th>
+          <td>{{order?.updated}}</td>
+        </tr>
+      </table>
       <div class="title">Price<!-- & Qty--></div>
       <table class="prices">
         <!--tr>
@@ -66,7 +78,7 @@
         </tr-->
         <tr>
           <th>Listing price</th>
-          <td>{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }} </small> PART
+          <td>{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }}</small> PART
           </td>
         </tr>
         <tr>
