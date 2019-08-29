@@ -205,6 +205,13 @@
       <div class="title">
         {{ title }}
       </div>
+      <!-- TODO: better to show this ONLY on Listings page instead -->
+      <div class="market-selector" *ngIf="isMarketRoute">
+        <button mat-button [matMenuTriggerFor]="markets">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+          Current Market Name
+        </button>
+      </div>
     </div><!-- .left -->
 
     <div class="right" fxFlex="1 1 60%">
@@ -228,3 +235,54 @@
   <router-outlet></router-outlet>
 
 </mat-sidenav-container>
+
+
+<mat-menu #markets="matMenu" class="smaller with-images">
+  <!-- I'd highlight Open Market here, as a default choice -->
+  <button mat-menu-item>
+    <img class="image" src="/assets/open-marketplace-logo.svg">
+    Open Marketplace
+  </button>
+  <button mat-menu-item [matMenuTriggerFor]="storefronts">Storefronts</button>
+  <button mat-menu-item [matMenuTriggerFor]="communityMarkets">Community Markets</button>
+</mat-menu>
+
+<mat-menu #storefronts="matMenu" class="smaller with-images">
+  <!-- TODO: list joined Storefronts, alphabetically -->
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Trezor Official Store
+  </button>
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Ledger Wallet HQ
+  </button>
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Raspberry Pi Retail Store
+  </button>
+</mat-menu>
+
+<mat-menu #communityMarkets="matMenu" class="smaller with-images">
+  <!-- TODO: list joined Community Markets, alphabetically -->
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Allien's Exquisite Spices
+  </button>
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Ceci n'est pas un Commerce
+  </button>
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Decentralizement
+  </button>
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Running out of Fantasy
+  </button>
+  <button mat-menu-item>
+    <img class="image" src="/assets/images/placeholder_1-1.jpg">
+    Yet another Market Name
+  </button>
+</mat-menu>

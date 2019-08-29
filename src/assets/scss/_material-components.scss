@@ -482,11 +482,29 @@ mat-card.mat-card {
     }
   }
   .mat-menu-item {
+    &.mat-menu-item-submenu-trigger { // option with submenu
+      font-weight: 500;
+    }
     .right { // align items to right (prices etc.)
       float: right;
     }
     .muted {
       color: $text-muted;
+    }
+  }
+  &.smaller { // smaller line height for menu items
+    .mat-menu-item {
+      height: 36px;
+      line-height: 36px;
+    }
+  }
+  &.with-images { // menu options with images (e.g. Logos in Market selector)
+    .image {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+      border-radius: 50%;
+      margin: 0 7px 0 -3px;
     }
   }
 }
