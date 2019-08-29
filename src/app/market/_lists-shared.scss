@@ -62,13 +62,17 @@
         word-wrap: break-word;
       }
     }
-    table.prices {
+    table {
       color: $text-muted;
       border-collapse: collapse;
       th {
+        vertical-align: top;
         text-align: right;
         font-weight: 600;
         padding-right: 7px;
+      }
+      td {
+        vertical-align: top;
       }
     }
   }
