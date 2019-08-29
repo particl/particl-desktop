@@ -34,6 +34,7 @@
           <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
         </mat-form-field>
 
+        <!-- FIXME: category field doesn't show up! -->
         <app-category-tree
           class="category-overlay"
           *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
@@ -45,36 +46,26 @@
       </mat-card><!-- .details -->
 
 
-      <h2 class="subtitle">Pricing <!--&amp; Quantity--></h2>
-      <mat-card class="pricing">
-
-        <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            <!-- TODO: add another input for fiat value and inter-connect the two: -->
-            <mat-form-field class="full-width">
-              <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price" formControlName="basePrice" type="text">
-              <span matSuffix>PART</span>
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="widget-help">
-              Price per 1 item
-            </p>
-          </div>
+      <h2 class="subtitle">Publish to</h2>
+      <mat-card class="publish-to">
+        <p class="widget-help">
+          Select at least 1 Market where the Product will be published. You can publish to as many Markets you want, but there's a listing fee for each of them.
+        </p>
+        <div class="scrollable checkbox-group full-width with-hover padded">
+          <!-- TODO: list connected Markets - Particl Open Marketplace first, the rest alphabetically -->
+          <mat-checkbox>Particl Open Marketplace (default)</mat-checkbox>
+          <mat-checkbox>Allien's Exquisite Spices</mat-checkbox>
+          <mat-checkbox>BIO FOODS</mat-checkbox>
+          <mat-checkbox>Ceci n'est pas un Commerce</mat-checkbox>
+          <mat-checkbox>Decentralizement</mat-checkbox>
+          <mat-checkbox>Hardware Crypto Secrets</mat-checkbox>
+          <mat-checkbox>Particl Community Market</mat-checkbox>
+          <mat-checkbox>Running out of Fantasy</mat-checkbox>
+          <mat-checkbox>Yet another Market Name</mat-checkbox>
         </div>
-
-        <!--div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            // FIXME: implement quantity functionality:
-            <mat-form-field class="auto-width">
-              <input matInput type="number" placeholder="Quantity in stock" min="1" formControlName="quantity">
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="widget-help TO_DO">Enter amount of items in stock. This will help you manage your inventory. In other words: how many items are you selling?</p>
-          </div>
-        </div-->
+        <p class="widget-help">
+          Product will be published to: 2 Markets
+        </p>
       </mat-card><!-- .pricing -->
 
     </div><!-- .left -->
@@ -129,6 +120,39 @@
 
         </div><!-- .gallery -->
       </mat-card><!-- .photos -->
+
+
+      <h2 class="subtitle">Pricing <!--&amp; Quantity--></h2>
+      <mat-card class="pricing">
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            <!-- TODO: add another input for fiat value and inter-connect the two: -->
+            <mat-form-field class="full-width">
+              <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price" formControlName="basePrice" type="text">
+              <span matSuffix>PART</span>
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="widget-help">
+              Price per 1 item
+            </p>
+          </div>
+        </div>
+
+        <!--div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            // FIXME: implement quantity functionality:
+            <mat-form-field class="auto-width">
+              <input matInput type="number" placeholder="Quantity in stock" min="1" formControlName="quantity">
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="widget-help TO_DO">Enter amount of items in stock. This will help you manage your inventory. In other words: how many items are you selling?</p>
+          </div>
+        </div-->
+      </mat-card><!-- .pricing -->
 
 
       <h2 class="subtitle">Shipping</h2>

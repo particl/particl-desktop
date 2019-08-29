@@ -646,6 +646,26 @@ mat-option.mat-option {
   font-family: $font !important;
 }
 
+.checkbox-group { // Material doesn't have this natively, so we bring out own
+  &.full-width {
+    .mat-checkbox-layout {
+      display: block;
+    }
+  }
+  &.with-hover {
+    .mat-checkbox:hover {
+      .mat-checkbox-layout {
+        background: $bg-hover;
+      }
+    }
+  }
+  &.padded {
+    .mat-checkbox-layout {
+      padding: 3px 24px;
+    }
+  }
+}
+
 
 // ------ 3.7. TOGGLE BUTTONS ------ //
 

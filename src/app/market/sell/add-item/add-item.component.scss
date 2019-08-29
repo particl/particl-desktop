@@ -117,6 +117,22 @@ mat-card.category {
   }
 }
 
+.publish-to {
+  .scrollable {
+    margin: 0 -24px;
+    height: 120px;
+    overflow-y: scroll;
+    border-top: 1px dashed $bg-shadow;
+    border-bottom: 1px dashed $bg-shadow;
+    background: mix($bg, $color-white);
+    padding: 8px 0;
+    .mat-checkbox {
+      .mat-checkbox-layout {
+        padding: 3px 24px;
+      }
+    }
+  }
+}
 
 // ------ BUTTONS ------ //
 
