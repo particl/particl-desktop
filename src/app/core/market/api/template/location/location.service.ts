@@ -16,17 +16,19 @@ export class LocationService {
   }
 
   execute(method: Command, itemTemplateId: number, region: Country, address: string, gps: GpsMarker): Observable<any> {
-    return this.market.call('template',
-      [
-        'location',
-        method,
-        itemTemplateId,
-        region ? region.iso : null,
-        address || 'a',
-        gps ? gps.title : null,
-        gps ? gps.description : null,
-        gps ? gps.lat : null,
-        gps ? gps.long : null
-      ]);
+    const params = [
+      'location',
+      method,
+      itemTemplateId,
+      region ? region.iso : null,
+      address || 'a'
+    ];
+    if (gps) {
+      params.push(gps.title ? gps.title : null);
+      params.push(gps.description ? gps.description : null);
+      params.push(gps.lat ? gps.lat : null);
+      params.push(gps.long ? gps.long : null);
+    }
+    return this.market.call('template', params);
   }
 }
