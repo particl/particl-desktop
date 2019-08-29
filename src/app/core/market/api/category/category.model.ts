@@ -3,6 +3,10 @@ export class Category {
   get name() { return this.category.name };
   get id() { return this.category.id };
 
+  // Cheap hacky fixes to get the new category dropdown selections working correctly with existing category types.
+  get parent(): Category | null { return this.category.ParentItemCategory; }
+  get item(): string { return this.category.name; }
+
   constructor(private category: any) {
     if (category.ChildItemCategories) {
       this.setSubCategoryList();

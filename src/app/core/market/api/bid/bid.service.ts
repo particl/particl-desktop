@@ -11,7 +11,8 @@ import { take, catchError } from 'rxjs/operators';
 export enum errorType {
   unspent = 'Insufficient spendable (anon) funds to place the order.',
   broke = 'Not enough spendable (anon) funds available',
-  itemExpired = 'An item in your basket has expired!'
+  itemExpired = 'An item in your basket has expired!',
+  enough = 'Not enough spendable funds'
 }
 
 @Injectable()
@@ -77,8 +78,11 @@ export class BidService {
     }));
   }
 
-  rejectBidCommand(id: number): Observable<any> {
+  rejectBidCommand(id: number, reason: string = ''): Observable<any> {
     const params = ['reject', id];
+    if (reason) {
+      params.push(reason);
+    }
     return this.market.call('bid', params);
   }
 
@@ -110,6 +114,8 @@ export class BidService {
       error = errorType.unspent;
     } else if ((error.includes('broke') && !error.toLowerCase().includes('something')) || error.toLowerCase().includes('insufficient')) {
       error = errorType.broke;
+    } else if (error.includes('enough')) {
+      error = errorType.enough;
     }
     return error;
   }

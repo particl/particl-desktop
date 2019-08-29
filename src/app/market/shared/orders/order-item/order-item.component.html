@@ -6,7 +6,8 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ title }}</div>
-        <div class="hash" matTooltip="Order ID: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
+        <div class="hash" matTooltip="Order ID" matTooltipPosition="right">{{ order?.OrderItem?.id }}</div>
+        <div class="hash" matTooltip="Order Hash: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
         <div class="origin-market">
           <!-- TODO: implement display of Market where item was bought -->
           Particl Open Marketplace
@@ -18,7 +19,7 @@
 
   <div class="status-info">
     <p>{{ orderActivity?.status_info }}</p>
-    <div *ngIf="showShippingInfo" class="additional-shipping-info">
+    <div *ngIf="showShippingInfo" class="additional-info">
       <p *ngIf="(memo.length > 0)">
         <span class="title">Shipping info from Seller</span>
         <code class="more-info">{{ memo }}</code>
@@ -28,12 +29,18 @@
         <em>&nbsp; No information provided</em>
       </p>
     </div>
-    <div *ngIf="additionalInfo.transactionID.length > 0" class="additional-shipping-info">
+    <div *ngIf="additionalInfo.transactionID.length > 0" class="additional-info">
       <p>
         <span class="title">Escrow TX ID</span>
       </p>
       <p>
         <code class="additional-extra-info">{{ additionalInfo.transactionID }}</code>
+      </p>
+    </div>
+    <div *ngIf="additionalInfo.rejectMessage.length > 0" class="additional-info">
+      <p>
+        <span class="title">Reason for rejection</span>
+        <code class="more-info">{{ additionalInfo.rejectMessage }}</code>
       </p>
     </div>
   </div>

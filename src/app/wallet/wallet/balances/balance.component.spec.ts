@@ -5,7 +5,10 @@ import { WalletModule } from '../wallet.module';
 
 import { BalanceComponent } from './balance.component';
 import { CoreModule } from 'app/core/core.module';
-import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { RpcMockService } from 'app/_test/core-test/rpc-test/rpc-mock.service';
+import { RpcStateServiceMock } from 'app/_test/core-test/rpc-test/rpc-state-mock.service';
+import { RpcStateService } from 'app/core/rpc/rpc.module';
+import { RpcService } from 'app/core/rpc/rpc.service';
 
 describe('BalanceComponent', () => {
   let component: BalanceComponent;
@@ -16,8 +19,11 @@ describe('BalanceComponent', () => {
       imports: [
         SharedModule,
         WalletModule.forRoot(),
-        CoreModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        CoreModule.forRoot()
+      ],
+      providers: [
+        { provide: RpcStateService, useClass: RpcStateServiceMock },
+        { provide: RpcService, useClass: RpcMockService }
       ]
     })
     .compileComponents();
@@ -39,20 +45,4 @@ describe('BalanceComponent', () => {
     expect(component.balanceFraction).toBe('');
   });
 
-/*
-  it('should get balance point', () => {
-    component.getBalancePoint();
-    expect(component.getBalancePoint).toBeTruthy();
-  });
-
-  it('should get balance after point', () => {
-    component.getBalanceAfterPoint(true)
-    expect(component.getBalanceAfterPoint).toBeTruthy();
-  });
-
-  it('should get type of balance', () => {
-    component.getTypeOfBalance();
-    expect(component.getTypeOfBalance).toBeTruthy();
-  });
-*/
 });

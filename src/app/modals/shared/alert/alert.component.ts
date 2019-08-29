@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 
-import { Log } from 'ng2-logger';
+import { MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-alert',
@@ -11,18 +11,16 @@ export class AlertComponent {
 
   public title: string;
   public text: string;
-  log: any = Log.create('alertbox.component');
 
-  constructor() { }
-
-  open(text: string, title?: string): void {
-    if (text) {
-      this.text = text;
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    if (data.title) {
+      this.title = data.title;
     }
 
-    if (title) {
-      this.title = title;
+    if (data.text) {
+      this.text = data.text;
     }
   }
-
 }

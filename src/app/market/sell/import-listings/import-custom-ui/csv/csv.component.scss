@@ -1,0 +1,14 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../_import-listings-shared'; // import shared colors etc.
+
+a {
+  color: $color;
+  &:hover {
+    text-decoration: none;
+    color: darken($color, 10%);
+  }
+}
+
+ul {
+  line-height: 1.45;
+}
