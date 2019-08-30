@@ -3,20 +3,22 @@
 
 // ------ ORDERS ------ //
 
+$photo-size: 80px;
+
 .list-item {
   .header-wrapper {
     .photo { // crop orders's image to square
-      min-height: 80px;
-      max-height: 80px;
-      height: 80px;
+      min-height: $photo-size;
+      max-height: $photo-size;
+      height: $photo-size;
     }
   }
 }
 
 .order {
   .header {
-    min-height: 80px !important;
-    max-height: 80px !important;
+    min-height: $photo-size !important;
+    max-height: $photo-size !important;
     padding: 0 24px 0 0;
   }
   .hash { // order 'ID'
@@ -41,105 +43,6 @@
   }
   .origin-market {
     display: inline-block;
-  }
-
-  // Display progress (steps) of Order and in which stage it is
-  .progress-graph {
-    margin: 4px 0 -11px;
-    .step {
-      $dot-size: 11px;
-      text-align: center;
-      // finished step
-      &.done {
-        position: relative;
-        &::after { // draw the progress line to next step (which has to be either finished as well or active)
-          content: "";
-          position: absolute;
-          bottom: 10px;
-          left: 50.5%;
-          width: 100%;
-          height: 1px;
-          background: $color;
-          display: block;
-          box-shadow: 0 0 2px 0 $color;
-        }
-        .dot {
-          background: $color;
-        }
-      }
-      // current, active step
-      &.active {
-        .dot {
-          background: $color;
-          position: relative;
-          &::before { // highlight current "dot" to indicate active step
-            content: "";
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: $dot-size;
-            height: $dot-size;
-            transform: scale(1.7);
-            background: rgba($color, 0.35);
-            border-radius: 50%;
-          }
-        }
-        .value {
-          font-weight: 500;
-        }
-        &.completed { // when Order is done, no need to highlight "Completed" step anymore
-          .dot {
-            &::before {
-              content: none;
-            }
-          }
-        }
-      }
-      // upcoming steps
-      &.upcoming {
-        .value {
-          color: $text-muted;
-        }
-      }
-      // rejected bid scenario
-      &.rejected {
-        &.bidding {
-          position: relative;
-          &::after { // recolor the progress bar from "bid => rejected" to red
-            content: "";
-            position: absolute;
-            bottom: 10px;
-            left: 50.5%;
-            width: 100%;
-            height: 1px;
-            background: $color-alert;
-            display: block;
-            box-shadow: 0 0 2px 0 $color-alert;
-          }
-        }
-        .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
-          background: $color-alert;
-          &::before {
-            content: none;
-          }
-        }
-      }
-      .value { // name of step
-        font-size: 90%;
-        margin-bottom: 2px;
-      }
-      .dot { // step indicator "dot"
-        width: $dot-size;
-        height: $dot-size;
-        background: $bg-shadow;
-        border-radius: 50%;
-        display: inline-block;
-      }
-    }
-    & + .detail {
-      padding: 30px 30px 24px;
-    }
   }
   .status-info {
     text-align: center;
@@ -168,3 +71,99 @@
   }
 }
 
+
+// ------ PROGRESS GRAPH ------ //
+
+$dot-size: 11px;
+
+%progress-dot { // progress step indicator "dot"
+  width: $dot-size;
+  height: $dot-size;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@mixin progress-line($color) { // "done" progress between two Order steps
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 50.5%;
+  width: 100%;
+  height: 1px;
+  display: block;
+  background: $color;
+  box-shadow: 0 0 2px 0 $color;
+}
+
+// Display progress (steps) of Order and in which stage it is
+.progress-graph {
+  margin: 4px 0 -11px;
+  .step {
+    text-align: center;
+    // finished step
+    &.done {
+      position: relative;
+      &::after { // draw the progress line to next step (which has to be either finished as well or active)
+        @include progress-line($color);
+      }
+      .dot {
+        background: $color;
+      }
+    }
+    // current, active step
+    &.active {
+      .dot {
+        background: $color;
+        position: relative;
+        &::before { // highlight current "dot" to indicate active step
+          @extend %progress-dot;
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: scale(1.7);
+          background: rgba($color, 0.35);
+        }
+      }
+      .value {
+        font-weight: 500;
+      }
+      &.completed { // when Order is done, no need to highlight "Completed" step anymore
+        .dot {
+          &::before {
+            content: none;
+          }
+        }
+      }
+    }
+    // upcoming steps
+    &.upcoming {
+      .value {
+        color: $text-muted;
+      }
+    }
+    // rejected bid scenario
+    &.rejected {
+      &.bidding {
+        position: relative;
+        &::after { // recolor the progress bar from "bid => rejected" to red
+          @include progress-line($color-alert);
+        }
+      }
+      .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
+        background: $color-alert;
+      }
+    }
+    .value { // name of step
+      font-size: 90%;
+      margin-bottom: 2px;
+    }
+    .dot { // step indicator "dot"
+      @extend %progress-dot;
+      background: $bg-shadow;
+    }
+  }
+  & + .detail {
+    padding: 30px 30px 24px;
+  }
+}
