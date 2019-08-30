@@ -31,9 +31,118 @@
     display: inline-block;
     padding: 1px 8px;
     margin-right: 10px;
+    &.id {
+      margin: 0 -5px 0 0;
+      background: $bg;
+      color: $text-muted;
+      padding: 1px 12px 1px 8px;
+      font-weight: 400;
+    }
   }
   .origin-market {
     display: inline-block;
+  }
+
+  // Display progress (steps) of Order and in which stage it is
+  .progress-graph {
+    margin: 4px 0 -11px;
+    .step {
+      $dot-size: 11px;
+      text-align: center;
+      // finished step
+      &.done {
+        position: relative;
+        &::after { // draw the progress line to next step (which has to be either finished as well or active)
+          content: "";
+          position: absolute;
+          bottom: 10px;
+          left: 50.5%;
+          width: 100%;
+          height: 1px;
+          background: $color;
+          display: block;
+          box-shadow: 0 0 2px 0 $color;
+        }
+        .dot {
+          background: $color;
+        }
+      }
+      // current, active step
+      &.active {
+        .dot {
+          background: $color;
+          position: relative;
+          &::before { // highlight current "dot" to indicate active step
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: $dot-size;
+            height: $dot-size;
+            transform: scale(1.7);
+            background: rgba($color, 0.35);
+            border-radius: 50%;
+          }
+        }
+        .value {
+          font-weight: 500;
+        }
+        &.completed { // when Order is done, no need to highlight "Completed" step anymore
+          .dot {
+            &::before {
+              content: none;
+            }
+          }
+        }
+      }
+      // upcoming steps
+      &.upcoming {
+        .value {
+          color: $text-muted;
+        }
+      }
+      // rejected bid scenario
+      &.rejected {
+        &.bidding {
+          position: relative;
+          &::after { // recolor the progress bar from "bid => rejected" to red
+            content: "";
+            position: absolute;
+            bottom: 10px;
+            left: 50.5%;
+            width: 100%;
+            height: 1px;
+            background: $color-alert;
+            display: block;
+            box-shadow: 0 0 2px 0 $color-alert;
+          }
+        }
+        .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
+          background: $color-alert;
+          &::before {
+            content: none;
+          }
+        }
+      }
+      .value { // name of step
+        font-size: 90%;
+        margin-bottom: 2px;
+      }
+      .dot { // step indicator "dot"
+        width: $dot-size;
+        height: $dot-size;
+        background: $bg-shadow;
+        border-radius: 50%;
+        display: inline-block;
+      }
+    }
+    & + .detail {
+      padding: 30px 30px 24px;
+    }
+  }
+  .status-info {
+    text-align: center;
   }
   .additional-info {
     margin-top: 8px;
@@ -58,3 +167,4 @@
     }
   }
 }
+

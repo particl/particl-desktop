@@ -6,7 +6,7 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ title }}</div>
-        <div class="hash" matTooltip="Order ID" matTooltipPosition="right">{{ order?.OrderItem?.id }}</div>
+        <div class="hash id">{{ order?.OrderItem?.id }}</div>
         <div class="hash" matTooltip="Order Hash: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
         <div class="origin-market">
           <!-- TODO: implement display of Market where item was bought -->
@@ -44,6 +44,49 @@
       </p>
     </div>
   </div>
+
+  <div class="progress-graph" fxLayout>
+    <!-- TODO: finished steps as `.done` -->
+    <div class="bidding step done" fxFlex>
+      <div class="value">Bidding</div>
+      <div class="dot"></div>
+    </div>
+    <div class="payment step done" fxFlex>
+      <div class="value">Payment</div>
+      <div class="dot"></div>
+    </div>
+    <!-- TODO: active steps as `.active` -->
+    <div class="escrow step active" fxFlex>
+      <div class="value">Escrow Lock</div>
+      <div class="dot"></div>
+    </div>
+    <!-- TODO: future steps as `.upcoming` -->
+    <div class="packaging step upcoming" fxFlex>
+      <div class="value">Packaging</div>
+      <div class="dot"></div>
+    </div>
+    <div class="shipping step upcoming" fxFlex>
+      <div class="value">Shipping</div>
+      <div class="dot"></div>
+    </div>
+    <!-- TODO: when order is completed, keep this Completed step as `.active` -->
+    <div class="completed step upcoming" fxFlex>
+      <div class="value">Completed</div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  
+  <!-- TODO: when rejected, mark Bidding as `.rejected` (obviously show only Bidding & Rejected steps) -->
+  <!--div class="progress-graph" fxLayout>
+    <div class="bidding step rejected" fxFlex>
+      <div class="value">Bidding</div>
+      <div class="dot"></div>
+    </div>
+    <div class="rejected step" fxFlex>
+      <div class="value">Rejected</div>
+      <div class="dot"></div>
+    </div>
+  </div-->
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
 
