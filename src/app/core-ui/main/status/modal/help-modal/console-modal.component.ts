@@ -15,7 +15,7 @@ import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 import * as marketConfig from '../../../../../../../modules/market/config.js';
-import { isFinite, isString } from 'lodash';
+import { isFinite, isPlainObject, isArray } from 'lodash';
 
 @Component({
   selector: 'app-console-modal',
@@ -79,6 +79,10 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       }
     } else {
       const params = this.queryParserCommand(this.command);
+      if (!params.length) {
+        this.formatErrorResponse({message: 'There appears to be a formatting error'});
+        return;
+      }
       commandString = String(params.shift());
       callableParams = params;
     }
@@ -119,60 +123,126 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  private queryParserRunstrings(com: string): Array<string> {
+  queryParserRunstrings(com: string): Array<string> {
     return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
           .filter(cmd => cmd.trim() !== '')
   }
 
-  private queryParserCommand(com: string): Array<string | number | boolean | null> {
-    let newToken = -1;
-    let lastToken = newToken;
-    let currentDelim = '';
+  queryParserCommand(com: string): Array<string | number | boolean | null> {
+    let parseError = false;
+    let newTokenStart = -1;
+    let lastTokenPos = newTokenStart;
+    const delimStack: string[] = [];
     let escaped = false;
     const tokens: string[] = [];
+    let braceStart = '';
+    let braceEnd = '';
     for (let ii = 0; ii < com.length; ++ii) {
       const currentChar = com[ii];
+
+      // Mark next character as being escaped if necessary
       if (currentChar === '\\') {
         escaped = !escaped;
         continue;
       }
-      if (![`"`, `'`].includes(currentChar)) {
+
+      // If character is not a 'token delimiting' character...
+      if (![`"`, `'`, `{`, `}`, '[', ']'].includes(currentChar)) {
         escaped = false;
 
-        if (currentChar === ' ' && newToken === -1) {
-          const tempCurrent = com.substring(lastToken + 1, ii).trim();
+        // ... if we hit a space character while not already involved in a token extraction,
+        //      then the previous string was likely a token by itself (only if its length was greater than 0)
+        if (currentChar === ' ' && newTokenStart === -1) {
+          const tempCurrent = com.substring(lastTokenPos + 1, ii).trim();
           if (tempCurrent.length) {
             tokens.push(tempCurrent);
           }
-          lastToken = ii;
+          lastTokenPos = ii;
         }
         continue;
       }
 
-      if (currentDelim === '') {
-        if (!escaped) {
-          currentDelim = currentChar;
-        } else {
+      // PROCESS A DELIMITER CHARACTER
+
+      // Except if it has been escaped
+      if (escaped) {
+        continue;
+      }
+
+      // No tokens being extracted currently
+      if (delimStack.length === 0) {
+        if ([`}`, ']'].includes(currentChar)) {
+          parseError = true;
+          break;
+        }
+        delimStack.push(currentChar);
+
+        // if not already busy with a token extraction,
+        //    then any previous string was likely a token on its own
+        if ( (lastTokenPos + 1) < ii ) {
+          const tempCurrent = com.substring(lastTokenPos + 1, ii).trim();
+          if (tempCurrent.length) {
+            tokens.push(tempCurrent);
+          }
+        }
+
+        // set the token start markers
+        newTokenStart = ii;
+        lastTokenPos = ii;
+        continue;
+      }
+
+      const isQuoteMark = [`"`, `'`].includes(currentChar);
+
+      // Process possible quotation marks being included in an existing string
+      const quoteIdx = delimStack.findIndex((delim) => delim === `'` || delim === `"`);
+      if (isQuoteMark) {
+        if (quoteIdx !== -1 && delimStack[quoteIdx] !== currentChar) {
           continue;
-        }
-      } else if ( (currentDelim !== currentChar) || escaped) {
-        continue;
+        };
       }
 
-      if (newToken === -1) {
-        if (!tokens.length) {
-          tokens.push(com.substring(newToken + 1, ii).trim());
+      // Process possible validation issues
+      const lastDelim = delimStack[delimStack.length - 1];
+      if ( (currentChar === '}' && lastDelim !== '{') ||
+            (currentChar === ']' && lastDelim !== '[') ||
+            (isQuoteMark && (quoteIdx !== -1) && (currentChar !== lastDelim) )) {
+        parseError = true;
+        break;
+      }
+
+      // Now add or remove a delimiter and process possible token accordingly
+      if ([`}`, `]`].includes(currentChar) || (lastDelim === currentChar) ) {
+        if (delimStack.length === 1) {
+          if (isQuoteMark) {
+            braceStart = '';
+            braceEnd = '';
+          } else {
+            braceStart = delimStack[0];
+            braceEnd = currentChar;
+          }
         }
-        newToken = ii;
-        lastToken = ii;
+        delimStack.pop();
       } else {
-        tokens.push(com.substring(newToken + 1, ii).trim());
-        newToken = -1;
-        lastToken = ii;
+        delimStack.push(currentChar);
+      }
+
+      if (delimStack.length === 0) {
+        tokens.push(`${braceStart}${com.substring(newTokenStart + 1, ii).trim()}${braceEnd}`);
+        newTokenStart = -1;
+        lastTokenPos = ii;
       }
     }
 
-    const finalToken = com.substring(lastToken + 1, com.length).trim();
+    if (delimStack.length) {
+      parseError = true;
+    }
+
+    if (parseError) {
+      return [];
+    }
+
+    const finalToken = com.substring(lastTokenPos + 1, com.length).trim();
     if (finalToken.length) {
       tokens.push(finalToken);
     }
@@ -197,7 +267,19 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       } else if (['undefined', 'null'].includes(String(token).toLowerCase())) {
         value = null;
       } else {
-        value = token;
+        if (token.includes('{') || token.includes('[')) {
+          try {
+            const z = JSON.parse(token);
+            if (isPlainObject(z) || isArray(z)) {
+              value = z;
+            }
+          } catch (err) {
+            // nothing to do... will be set to the stringified value
+          }
+        }
+        if (value === undefined) {
+          value = token;
+        }
       }
       correctedTokens.push(value);
     }

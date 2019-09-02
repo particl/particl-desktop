@@ -17,7 +17,7 @@ describe('ConsoleModalComponent', () => {
   const cmds = [
     'help',
     'getaddressbalance rSoZtLcT1RySGgVKFchkwBXowFjJzufScc',
-    'walletpassphrase "passphrase" 9999',
+    'walletpassphrase "passphrase" 9999 false',
     'sendtypeto "part" "blind" [{ address: "rSoZtLcT1RySGgVKFchkwBXowFjJzufScc" }]',
     'somecommand [ test1,  test2]',
     'somecommand { test1: "testests",  testes2 : "testest1232"}'
@@ -52,18 +52,21 @@ describe('ConsoleModalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should parse mutiple commands', () => {
-    let mockParse = component.queryParser(cmds[0]);
+  it('should parse correctly using runstrings command parsing', () => {
+    let mockParse = component.queryParserRunstrings(cmds[0]);
     expect(mockParse.length).toEqual(1);
-    mockParse = component.queryParser(cmds[1]);
+    mockParse = component.queryParserRunstrings(cmds[1]);
     expect(mockParse[1]).toEqual('rSoZtLcT1RySGgVKFchkwBXowFjJzufScc');
-    mockParse = component.queryParser(cmds[2]);
+    mockParse = component.queryParserRunstrings(cmds[2]);
+    expect(mockParse[1]).toEqual('"passphrase"');
     expect(mockParse[2]).toEqual('9999');
-    mockParse = component.queryParser(cmds[3]);
+    mockParse = component.queryParserRunstrings(cmds[3]);
+    expect(mockParse[1]).toEqual('"part"');
+    expect(mockParse[2]).toEqual('"blind"');
     expect(mockParse[3]).toEqual('[{address:"rSoZtLcT1RySGgVKFchkwBXowFjJzufScc"}]');
-    mockParse = component.queryParser(cmds[4]);
+    mockParse = component.queryParserRunstrings(cmds[4]);
     expect(mockParse[1]).toEqual('[test1,test2]');
-    mockParse = component.queryParser(cmds[5]);
+    mockParse = component.queryParserRunstrings(cmds[5]);
     expect(mockParse[1]).toEqual('{test1:"testests",testes2:"testest1232"}');
   });
 
