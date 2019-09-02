@@ -15,7 +15,7 @@ import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
 import * as marketConfig from '../../../../../../../modules/market/config.js';
-import { isFinite } from 'lodash';
+import { isFinite, isString } from 'lodash';
 
 @Component({
   selector: 'app-console-modal',
@@ -36,6 +36,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public historyCount: number = 0;
   public activeTab: string = '_rpc';
   public marketTabEnabled: boolean = false;
+  public useRunstringsParser: boolean = false;
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
@@ -56,22 +57,32 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
-    let commandString = 'runstrings'
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
-    let params = this.queryParser(this.command);
+    let commandString: string;
+    let callableParams: (string|number|boolean|null)[];
 
-    if (params.length > 0) {
-      params.splice(1, 0, '');
+    if (this.useRunstringsParser) {
+      let params = this.queryParserRunstrings(this.command);
+      commandString = 'runstrings';
+      if (params.length > 0) {
+        params.splice(1, 0, '');
+      }
+
+      callableParams = params;
+
+      if (this.activeTab === 'market') {
+        commandString = params.shift();
+        params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
+        callableParams = params.map((param) => isFinite(+param) ? +param : param);
+      }
+    } else {
+      const params = this.queryParserCommand(this.command);
+      commandString = String(params.shift());
+      callableParams = params;
     }
 
-    let callableParams: (string|number)[] = params;
-    if (this.activeTab === 'market') {
-      commandString = params.shift();
-      params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
-      callableParams = params.map((param) => isFinite(+param) ? +param : param);
-    }
     this[this.activeTab].call(commandString, callableParams)
       .subscribe(
         (response: any) => this.formatSuccessResponse(response),
@@ -97,7 +108,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       this.command = '';
       this.scrollToBottom();
     } else {
-      let errorMessage: string
+      let errorMessage: string;
       if (this.activeTab === 'market') {
         const errorStr = String(error).toLowerCase();
         errorMessage = errorStr.includes('unknown command') || errorStr.includes('unknown subcommand') ? 'Invalid command' : error;
@@ -108,9 +119,90 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  queryParser(com: string): Array<string> {
+  private queryParserRunstrings(com: string): Array<string> {
     return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
           .filter(cmd => cmd.trim() !== '')
+  }
+
+  private queryParserCommand(com: string): Array<string | number | boolean | null> {
+    let newToken = -1;
+    let lastToken = newToken;
+    let currentDelim = '';
+    let escaped = false;
+    const tokens: string[] = [];
+    for (let ii = 0; ii < com.length; ++ii) {
+      const currentChar = com[ii];
+      if (currentChar === '\\') {
+        escaped = !escaped;
+        continue;
+      }
+      if (![`"`, `'`].includes(currentChar)) {
+        escaped = false;
+
+        if (currentChar === ' ' && newToken === -1) {
+          const tempCurrent = com.substring(lastToken + 1, ii).trim();
+          if (tempCurrent.length) {
+            tokens.push(tempCurrent);
+          }
+          lastToken = ii;
+        }
+        continue;
+      }
+
+      if (currentDelim === '') {
+        if (!escaped) {
+          currentDelim = currentChar;
+        } else {
+          continue;
+        }
+      } else if ( (currentDelim !== currentChar) || escaped) {
+        continue;
+      }
+
+      if (newToken === -1) {
+        if (!tokens.length) {
+          tokens.push(com.substring(newToken + 1, ii).trim());
+        }
+        newToken = ii;
+        lastToken = ii;
+      } else {
+        tokens.push(com.substring(newToken + 1, ii).trim());
+        newToken = -1;
+        lastToken = ii;
+      }
+    }
+
+    const finalToken = com.substring(lastToken + 1, com.length).trim();
+    if (finalToken.length) {
+      tokens.push(finalToken);
+    }
+
+    if (tokens[0]) {
+      const cmdParts = (<string>tokens[0]).split(' ');
+      if (cmdParts.length > 1) {
+        const cmd = cmdParts.splice(0, 1);
+        tokens.splice(0, 1, cmd[0], cmdParts.join(' '));
+      }
+    }
+
+    const correctedTokens: (string|number|boolean|null)[] = [];
+
+    for (let ii = 0; ii < tokens.length; ++ii) {
+      const token = tokens[ii];
+      let value: any;
+      if (token.length && isFinite(+token)) {
+        value = +token;
+      } else if (['false', 'true'].includes( String(token).toLowerCase() )) {
+        value = String(token).toLowerCase() === 'true';
+      } else if (['undefined', 'null'].includes(String(token).toLowerCase())) {
+        value = null;
+      } else {
+        value = token;
+      }
+      correctedTokens.push(value);
+    }
+
+    return correctedTokens;
   }
 
   isJson(text: any) {
