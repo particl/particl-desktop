@@ -117,14 +117,23 @@
           </mat-accordion>
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section" *ngIf="_market.isMarketStarted">
+        <mat-content class="sidebar-section">
           <mat-list class="sidebar-item-group">
             <a class="sidebar-item-link"
-              routerLinkActive="active" routerLink="wallet/proposals">
+              routerLinkActive="active" routerLink="wallet/proposals" *ngIf="_market.isMarketStarted">
               <mat-list-item class="sidebar-item">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
                 <span class="text">Proposals</span>
                 <app-count-badge class="tag" [count]="proposalsNotificationsService?.proposalsCountRequiredVoteAction"></app-count-badge>
+              </mat-list-item>
+            </a>
+
+            <a class="sidebar-item-link"
+              routerLinkActive="active" routerLink="wallet/settings">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon"
+                  fontIcon="part-cog"></mat-icon>
+                <span class="text">Settings</span>
               </mat-list-item>
             </a>
           </mat-list><!-- .sidebar-item-group -->

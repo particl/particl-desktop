@@ -1,0 +1,17 @@
+@import './src/assets/config'; // import shared colors etc.
+
+// ------ UI ------ //
+
+.subtitle {
+  @extend %subtitle;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+
+
+
+// ------ LAYOUT ------ //
+
+
