@@ -128,10 +128,9 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
           .filter(cmd => cmd.trim() !== '')
   }
 
-  queryParserCommand(com: string): Array<string | number | boolean | null> {
+  queryParserCommand(com: string): Array<any> {
     let parseError = false;
-    let newTokenStart = -1;
-    let lastTokenPos = newTokenStart;
+    let lastTokenPos = -1;
     const delimStack: string[] = [];
     let escaped = false;
     const tokens: string[] = [];
@@ -152,7 +151,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
         // ... if we hit a space character while not already involved in a token extraction,
         //      then the previous string was likely a token by itself (only if its length was greater than 0)
-        if (currentChar === ' ' && newTokenStart === -1) {
+        if (currentChar === ' ' && delimStack.length === 0) {
           const tempCurrent = com.substring(lastTokenPos + 1, ii).trim();
           if (tempCurrent.length) {
             tokens.push(tempCurrent);
@@ -166,6 +165,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
       // Except if it has been escaped
       if (escaped) {
+        escaped = false;
         continue;
       }
 
@@ -187,7 +187,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
         }
 
         // set the token start markers
-        newTokenStart = ii;
         lastTokenPos = ii;
         continue;
       }
@@ -228,8 +227,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       }
 
       if (delimStack.length === 0) {
-        tokens.push(`${braceStart}${com.substring(newTokenStart + 1, ii).trim()}${braceEnd}`);
-        newTokenStart = -1;
+        tokens.push(`${braceStart}${com.substring(lastTokenPos + 1, ii).trim()}${braceEnd}`);
         lastTokenPos = ii;
       }
     }
@@ -255,7 +253,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       }
     }
 
-    const correctedTokens: (string|number|boolean|null)[] = [];
+    const correctedTokens: any[] = [];
 
     for (let ii = 0; ii < tokens.length; ++ii) {
       const token = tokens[ii];
@@ -266,20 +264,18 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
         value = String(token).toLowerCase() === 'true';
       } else if (['undefined', 'null'].includes(String(token).toLowerCase())) {
         value = null;
-      } else {
-        if (token.includes('{') || token.includes('[')) {
-          try {
-            const z = JSON.parse(token);
-            if (isPlainObject(z) || isArray(z)) {
-              value = z;
-            }
-          } catch (err) {
-            // nothing to do... will be set to the stringified value
+      } else if (token.includes('{') || token.includes('[')) {
+        try {
+          const z = JSON.parse(token);
+          if (isPlainObject(z) || isArray(z)) {
+            value = z;
           }
+        } catch (err) {
+          // nothing to do... will be set to the stringified value
         }
-        if (value === undefined) {
-          value = token;
-        }
+      }
+      if (value === undefined) {
+        value = token;
       }
       correctedTokens.push(value);
     }
