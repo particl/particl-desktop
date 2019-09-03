@@ -9,7 +9,7 @@ import { ImportListingsComponent } from './import-listings.component';
 import { ImportListingComponent } from './import-listing/import-listing.component';
 import { ImportCustomUiCsvComponent } from './import-custom-ui/csv/csv.component';
 import { ImportCustomUiWoocommerceComponent } from './import-custom-ui/woocommerce/woocommerce.component';
-import { ImportCustomUiEbayComponent } from './import-custom-ui/ebay-scraper/ebay-scraper.component';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 @NgModule({
   imports: [
@@ -18,13 +18,13 @@ import { ImportCustomUiEbayComponent } from './import-custom-ui/ebay-scraper/eba
     MaterialModule,
     MaterialFileInputModule,
     DirectiveModule,
+    CoreUiModule,
   ],
   declarations: [
     ImportListingsComponent,
     ImportListingComponent,
     ImportCustomUiCsvComponent,
-    ImportCustomUiWoocommerceComponent,
-    ImportCustomUiEbayComponent
+    ImportCustomUiWoocommerceComponent
   ],
   entryComponents: [],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

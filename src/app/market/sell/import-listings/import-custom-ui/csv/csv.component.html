@@ -15,6 +15,19 @@
 
 </div>
 
+<div class="row" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="30px">
+
+  <mat-form-field class="full-width" [formGroup]="import.form" fxFlex="1 1 30%">
+    <input matInput type="text" formControlName="delimiter" placeholder="CSV file delimiter">
+  </mat-form-field>
+
+  <div class="desc" fxFlex="1 1 70%">
+    <p>
+      Delimiter for your CSV product export file
+    </p>
+  </div>
+</div>
+
 <p>
   These columns must be defined in your CSV file for successful import:
 </p>
