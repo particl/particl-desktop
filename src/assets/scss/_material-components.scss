@@ -573,6 +573,17 @@ mat-option.mat-option {
 
 .mat-checkbox {
   font-family: $font !important;
+  &.align-top { // settings: don't center checkbox vertically
+    .mat-checkbox-inner-container {
+      margin: 0 12px 0 0;
+      top: 5px;
+    }
+  }
+  &.wrap { // Settings: wrap long checkbox labels
+    .mat-checkbox-layout {
+      white-space: normal;
+    }
+  }
 }
 
 

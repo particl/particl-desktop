@@ -40,23 +40,56 @@
     </ng-container>
   </app-page-intro>
 
+
   <div class="row" fxLayout fxLayoutGap="30px">
-
     <div class="half" fxFlex="50">
-      <h2 class="subtitle">Section name</h2>
+
+      <h2 class="subtitle">Group name</h2>
+      <mat-card>
+
+        <div class="item">
+          <mat-checkbox class="checkbox align-top wrap">
+            <h4 class="option">Example checkbox</h4>
+            <p class="desc">With some nice explanatory description</p>
+          </mat-checkbox>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="item">
+          <mat-checkbox class="checkbox align-top wrap">
+            <h4 class="option">Example checkbox</h4>
+            <p class="desc">With some nice explanatory description</p>
+          </mat-checkbox>
+        </div>
+
+      </mat-card>
+
+    </div><!-- .half -->
+    <div class="half" fxFlex="50">
+
+      <h2 class="subtitle">Group name</h2>
       <mat-card>
         option
       </mat-card>
-    </div><!-- .half -->
 
-    <div class="half" fxFlex="50">
-      <h2 class="subtitle">Section name</h2>
-      <mat-card>
-        option
-      </mat-card>
     </div><!-- .half -->
-
   </div><!-- .row -->
 
+
+  <div class="actions">
+    <div class="left">
+      <button mat-button color="basic">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        Reset all to defaults
+      </button>
+    </div>
+    <div class="right">
+      <button mat-raised-button color="primary" class="validate">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        Save changes
+      </button>
+    </div>
+  </div><!-- .actions -->
 
 </div><!-- .container-block -->

@@ -110,6 +110,12 @@ $break-xhd: 2200px;
   font-size: 15px;
 }
 
+%help-text { // small help texts & small descriptions (for form elements)
+  color: $text-muted;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
 
 // ------ 3.2. UI ELEMENTS ------ //
 
