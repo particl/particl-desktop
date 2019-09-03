@@ -20,12 +20,15 @@ p.info {
   background: rgba($secondary, 0.1);
 }
 
+.error {
+  color: $color-alert;
+}
+
 
 // ------ LAYOUT ------ //
 
-.page-intro {
-  margin: 64px 0 0;
-  padding-bottom: 12px;
+.container-block {
+  margin-top: $header-main-height;
 }
 
 .mat-stepper-horizontal {

@@ -12,8 +12,6 @@ const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
-const importer      = require('./importer/importer');
-
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
@@ -21,7 +19,6 @@ exports.start = function (mainWindow) {
   closeGui.init();
   daemon.init();
   market.init();
-  importer.init();
 
   /* Initialize ZMQ */
   zmq.init(mainWindow);
@@ -109,7 +106,6 @@ electron.app.on('before-quit', async function beforeQuit(event) {
   daemonConfig.destroy();
   notification.destroy();
   closeGui.destroy();
-  importer.destroy();
 
   daemonManager.shutdown();
   market.stop()
