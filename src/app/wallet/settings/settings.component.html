@@ -46,23 +46,37 @@
 
       <h2 class="subtitle">Group name</h2>
       <mat-card>
-
         <div class="item">
           <mat-checkbox class="checkbox align-top wrap">
             <h4 class="option">Example checkbox</h4>
             <p class="desc">With some nice explanatory description</p>
           </mat-checkbox>
         </div>
-
-        <mat-divider></mat-divider>
-
+        <hr class="divider">
         <div class="item">
           <mat-checkbox class="checkbox align-top wrap">
-            <h4 class="option">Example checkbox</h4>
+            <h4 class="option">Example checkbox<span class="tag">Optional tag</span></h4>
             <p class="desc">With some nice explanatory description</p>
           </mat-checkbox>
         </div>
+      </mat-card>
 
+      <h2 class="subtitle">Group name</h2>
+      <mat-card>
+        <div class="item">
+          <h4 class="option">TX fees</h4>
+          <p class="desc">Some nice explanation</p>
+          <mat-form-field floatLabel="never">
+            <input matInput type="number" min="0.0001" step="0.0001" value="0.01">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select>
+              <mat-option value="xx">
+                PART
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </mat-card>
 
     </div><!-- .half -->
@@ -70,7 +84,26 @@
 
       <h2 class="subtitle">Group name</h2>
       <mat-card>
-        option
+        <div class="row" fxLayout fxLayoutGap="20px">
+          <div class="half" fxFlex="50">
+            <h4 class="option">Min. Ring size</h4>
+            <p class="desc">Some nice explanation</p>
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Example input">
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <h4 class="option">Max. Ring size</h4>
+            <p class="desc">Some nice explanation</p>
+            <mat-form-field>
+              <mat-select>
+                <mat-option value="xx">
+                  Example select
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
       </mat-card>
 
     </div><!-- .half -->

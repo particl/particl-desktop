@@ -9,6 +9,11 @@
   }
 }
 
+hr.divider {
+  margin: 24px -24px;
+  border: 0;
+  border-bottom: 1px solid $bg-shadow;
+}
 
 // ------ LAYOUT ------ //
 
@@ -83,4 +88,10 @@
 
 mat-slider {
   width: 100%;
+}
+
+.mat-form-field {
+  & + .mat-form-field {
+    margin-left: 12px;
+  }
 }
