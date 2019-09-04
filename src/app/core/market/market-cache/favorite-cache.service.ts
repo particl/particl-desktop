@@ -1,26 +1,36 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import * as _ from 'lodash';
 import { Log } from 'ng2-logger';
 
-import { FavoritesService } from '../api/favorites/favorites.service';
+// import { FavoritesService } from '../api/favorites/favorites.service';
 import { Favorite } from '../api/favorites/favorite.model';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
+import { takeWhile } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Injectable()
-export class FavoriteCacheService {
+export class FavoriteCacheService implements OnDestroy {
 
   private log: any = Log.create('favorite-cache.service id:' + Math.floor((Math.random() * 1000) + 1));
   public favorites: Favorite[];
+  private destroyed: boolean = false;
+  private profile$: Subscription;
 
   constructor(
     private marketState: MarketStateService,
-  ) {
+  ) {}
+
+  start() {
     // subscribe to changes
-    this.getFavorites().subscribe((favorite: Favorite[]) => {
+    this.profile$ = this.getFavorites().pipe(takeWhile(() => !this.destroyed)).subscribe((favorite: Favorite[]) => {
       this.favorites = favorite;
     });
-   }
+  }
+
+  stop() {
+    this.profile$.unsubscribe();
+  }
 
   isFavorited(listing: Listing): boolean {
     const listingItemId = listing.id;
@@ -36,6 +46,10 @@ export class FavoriteCacheService {
 
   getFavorites() {
     return this.marketState.observe('favorite');
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
   }
 
 }

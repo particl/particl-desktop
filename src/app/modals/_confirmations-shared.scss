@@ -19,6 +19,10 @@
   width: 25rem;
   padding: 20px 15px 10px;
   text-align: center;
+  p.info,
+  p.warning {
+    margin: 24px -15px;
+  }
 }
 
 .tx-info { // info about public/blind/anon TX

@@ -209,7 +209,7 @@ describe('DateFormatter', () => {
 });
 
 describe('Fee', () => {
-  let fee;
+  let fee: Fee;
 
   it('should return the correct 0 value fee amounts ', () => {
     fee = new Fee(0);

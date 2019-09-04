@@ -25,3 +25,11 @@ table.contact-info {
     word-break: break-word;
   }
 }
+
+.additional-extra-info {
+  @extend %enable-select;
+  // color: darken($color, 7%);
+  // background: rgba($color, 0.1);
+  padding: 3px 8px;
+  border-radius: $radius;
+}

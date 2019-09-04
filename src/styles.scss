@@ -5,10 +5,10 @@
 
 /*
 
-___  ____ ____ ___     ___  ____ ____ _  _ ___ ____ ___  
-|__] |__| |__/  |      |  \ |___ [__  |_/   |  |  | |__] 
-|    |  | |  \  |  .   |__/ |___ ___] | \_  |  |__| |    
-                                                         
+___  ____ ____ ___     ___  ____ ____ _  _ ___ ____ ___
+|__] |__| |__/  |      |  \ |___ [__  |_/   |  |  | |__]
+|    |  | |  \  |  .   |__/ |___ ___] | \_  |  |__| |
+
 Main stylesheet for Particl Desktop app
 What you can't find here will be probably in `/src/assets/scss/material-components.scss`
 
@@ -27,6 +27,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
+      3.7. Tree browser
     4. Typography
       4.1. Page subtitles
       4.2. Paragraph styles
@@ -271,6 +272,33 @@ body {
 }
 
 
+// ------ 3.7. TREE BORWSER ------ //
+
+.mat-tree {
+  .category { // 1st level
+    min-height: 0;
+    .mat-button {
+      font-size: 13px;
+      .mat-icon {
+        color: $bg-shadow;
+      }
+    }
+    &[aria-expanded='true'] { // toggled category
+      .mat-icon {
+        color: $secondary;
+      }
+    }
+  }
+  .subcategory { // 2nd level
+    min-height: 0;
+    padding: 4px 40px;
+    .mat-checkbox {
+      font-size: 13px;
+    }
+  }
+}
+
+
 /* ------------------------------- *\
     4. TYPOGRAPHY
 \* ------------------------------- */
@@ -320,8 +348,9 @@ p.info {
   background: $bg;
   padding: 16px 24px 16px 52px;
   position: relative;
-  mat-dialog-content & {
+  .mat-dialog-content & {
     margin: 24px -24px;
+    text-align: left;
   }
   &::before {
     font-family: 'part';
@@ -458,6 +487,11 @@ kbd {
       margin-top: 125px;
       .filter {
         top: 160px;
+      }
+    }
+    app-listing {
+      .container-block.with-control-bar {
+        margin-top: 180px;
       }
     }
     app-send {

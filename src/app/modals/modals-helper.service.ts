@@ -15,6 +15,7 @@ import { SyncingComponent } from 'app/modals/syncing/syncing.component';
 import { EncryptwalletComponent } from 'app/modals/encryptwallet/encryptwallet.component';
 import { ListingExpirationComponent } from 'app/modals/market-listing-expiration/listing-expiration.component';
 import { take } from 'rxjs/operators';
+import { AlertComponent } from './shared/alert/alert.component';
 
 interface ModalsSettings {
   disableClose: boolean;
@@ -103,6 +104,15 @@ export class ModalsHelperService implements OnDestroy {
     const dialogRef = this._dialog.open(EncryptwalletComponent, this.modelSettings);
     dialogRef.afterClosed().subscribe(() => {
       this.log.d('encrypt modal closed');
+    });
+  }
+
+  showAlert(text: string, title?: string) {
+    const dialogRef = this._dialog.open(AlertComponent, {
+      data: {text, title}
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.log.d('alert modal closed');
     });
   }
 

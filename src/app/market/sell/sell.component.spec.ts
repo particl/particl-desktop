@@ -8,11 +8,8 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { CoreModule } from 'app/core/core.module';
 import { ModalsModule } from 'app/modals/modals.module';
 
-import { TemplateService } from '../../core/market/api/template/template.service';
-import { MarketService } from '../../core/market/market.service';
-import { RpcStateService } from '../../core/rpc/rpc-state/rpc-state.service';
-
 import { SellComponent } from './sell.component';
+import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 describe('SellComponent', () => {
   let component: SellComponent;
@@ -27,7 +24,8 @@ describe('SellComponent', () => {
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
         RouterTestingModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        RpcWithStateModule.forRoot()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })

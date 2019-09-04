@@ -2,6 +2,9 @@
 
 // ------ GENERAL ------ //
 
+.subtitle {
+  @extend %subtitle;
+}
 
 // ------ LAYOUT ------ //
 
@@ -9,7 +12,16 @@
   margin-top: $header-main-height;
 }
 
+.column {
+  .subtitle {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+}
+
 .mat-card {
+  margin-bottom: 24px;
   & > .title {
     text-transform: uppercase;
     font-size: 13px;
@@ -22,21 +34,15 @@
 // ------ GALLERY ------ //
 
 .drag-n-drop {
-  border: 1px dashed $bg-shadow;
+  border: 2px dashed $bg-shadow;
   border-radius: 4px;
   background: $bg;
   margin-bottom: 16px;
-  padding: 50px 24px 45px;
+  padding: 30px 24px;
   text-align: center;
-  .mat-icon {
-    display: block;
-    margin-bottom: 16px;
-    font-size: 42px;
-    color: $bg-shadow;
-  }
   p {
+    @extend %lighter;
     margin: 6px 0 0;
-    color: $text-muted;
   }
 }
 
@@ -57,8 +63,11 @@
     box-shadow: 0 0 0 2px $color;
   }
   img {
-    width: 100%;
+    width: 150px;
+    height: 150px;
     display: block;
+    object-fit: cover;
+    object-position: center center;
   }
   .icons {
     @extend %tfx;
@@ -98,6 +107,15 @@
   }
 }
 
+mat-card.category {
+  padding-bottom: 0;
+  .category-tree {
+    height: 200px;
+    overflow-y: scroll;
+    margin: 0 -24px -24px;
+    padding: 0 12px;
+  }
+}
 
 
 // ------ BUTTONS ------ //

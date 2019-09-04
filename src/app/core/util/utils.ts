@@ -144,6 +144,17 @@ export class PartoshiAmount {
     return this;
   }
 
+  public subtract(other: PartoshiAmount): PartoshiAmount {
+    const total = this.partoshis() - other.partoshis();
+
+    if ( this.isValid(total)) {
+      this.amount = `${total}`;
+    } else {
+      this.amount = '0';
+    }
+    return this;
+  }
+
   public particlStringInteger(): string {
     return this.amount.length > this.MAX_DECIMALS ? this.amount.substr(0, this.amount.length - this.MAX_DECIMALS) : '0';
   }
@@ -176,22 +187,21 @@ export class PartoshiAmount {
 }
 
 export class Fee {
+  private _fee: PartoshiAmount;
   constructor(private fee: number) {
-    this.fee = this.truncateToDecimals(fee, 8);
+    this._fee = new PartoshiAmount(fee * Math.pow(10, 8));
   }
 
   public getFee(): number {
-    return this.fee;
+    return this._fee.particls();
   }
 
-  public getAmountWithFee(amount: number): number {
-    const total = this.fee + amount;
-    return this.truncateToDecimals(total, 8);
-  }
-
-  private truncateToDecimals(int: number, dec: number): number {
-    const calcDec = Math.pow(10, dec);
-    return Math.trunc(int * calcDec) / calcDec;
+  public getAmountWithFee(amount: number, isAddition: boolean = true): number {
+    const total = new PartoshiAmount(amount * Math.pow(10, 8));
+    if (isAddition) {
+      return total.add(this._fee).particls();
+    }
+    return total.subtract(this._fee).particls();
   }
 }
 
@@ -644,10 +654,10 @@ export const OrderData = {
 export const isPrerelease = (release?: string): boolean => {
   let version = release;
   let found = false;
-  if (!release) {
-    version = environment.version;
-  }
   const preParts = ['alpha', 'beta', 'RC'];
+  if (!release) {
+    version = environment.preRelease || environment.version;
+  }
 
   for (const part of preParts) {
     if (version.includes(part)) {
@@ -655,6 +665,7 @@ export const isPrerelease = (release?: string): boolean => {
       break;
     }
   }
+
   return found;
 }
 
