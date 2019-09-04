@@ -41,7 +41,7 @@
   </app-page-intro>
 
 
-  <div class="row" fxLayout fxLayoutGap="30px">
+  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="tabLabels[selectedTab] == 'one'">
     <div class="half" fxFlex="50">
 
       <h2 class="subtitle">Group name</h2>
@@ -107,7 +107,59 @@
       </mat-card>
 
     </div><!-- .half -->
-  </div><!-- .row -->
+  </div><!-- .row (1st tab) -->
+
+
+  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="tabLabels[selectedTab] == 'two'">
+    <div class="half" fxFlex="50">
+
+      <h2 class="subtitle">2nd tab Group name</h2>
+      <mat-card>
+        <div class="item">
+          <h4 class="option">TX fees</h4>
+          <p class="desc">Some nice explanation</p>
+          <mat-form-field floatLabel="never">
+            <input matInput type="number" min="0.0001" step="0.0001" value="0.01">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select>
+              <mat-option value="xx">
+                PART
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card>
+
+    </div><!-- .half -->
+    <div class="half" fxFlex="50">
+
+      <h2 class="subtitle">2nd tab Group name</h2>
+      <mat-card>
+        <div class="row" fxLayout fxLayoutGap="20px">
+          <div class="half" fxFlex="50">
+            <h4 class="option">Min. Ring size</h4>
+            <p class="desc">Some nice explanation</p>
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Example input">
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <h4 class="option">Max. Ring size</h4>
+            <p class="desc">Some nice explanation</p>
+            <mat-form-field>
+              <mat-select>
+                <mat-option value="xx">
+                  Example select
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card>
+
+    </div><!-- .half -->
+  </div><!-- .row (2nd tab) -->
 
 
   <div class="actions">

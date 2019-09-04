@@ -15,4 +15,8 @@ export class SettingsComponent implements OnInit {
   ngOnInit() {
   }
 
+  changeTab(index: number): void {
+    this.selectedTab = index;
+  }
+  
 }
