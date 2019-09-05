@@ -63,6 +63,8 @@ export class CommentsComponent implements OnDestroy, OnInit {
         page.pageSubscription.unsubscribe();
       }
     }
+
+    this.refresh.complete();
   }
 
   postQuestion(question: any) {
@@ -72,7 +74,6 @@ export class CommentsComponent implements OnDestroy, OnInit {
         .subscribe(
           (comment) => {
             this.refresh.next();
-            console.log('comment', comment);
             question.value = '';
             this.snackbar.open('Question successfully posted');
           },
@@ -87,7 +88,6 @@ export class CommentsComponent implements OnDestroy, OnInit {
   loadPage(pageNumber: number) {
     const commentPage$ = this.commentService.watch(pageNumber, this.pagination.maxPerPage, 1, this.type, this.target, '', this.refresh)
       .subscribe((comments: Array<any>) => {
-        console.log('Loading comments for page ', pageNumber);
         this.isLoading = false;
 
         const existingPage = _.find(this.pages, (page) => page.pageNumber === pageNumber);

@@ -5,7 +5,7 @@
       <mat-form-field class="full-width no-top-padding">
         <textarea matInput placeholder="Post a new question" rows="4" #question></textarea>
       </mat-form-field>
-      <button mat-raised-button color="primary" (click)="postQuestion(question)" [disabled]="question.value === ''">
+      <button mat-raised-button color="primary" (click)="postQuestion(question)" [disabled]="question.value.trim() === ''">
         <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
         Send question
       </button>
