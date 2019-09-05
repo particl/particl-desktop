@@ -1,8 +1,8 @@
 /*
 
-        __       ___    ___       ___        ___ 
-|    | / _` |__|  |      |  |__| |__   |\/| |__  
-|___ | \__> |  |  |      |  |  | |___  |  | |___ 
+        __       ___    ___       ___        ___
+|    | / _` |__|  |      |  |__| |__   |\/| |__
+|___ | \__> |  |  |      |  |  | |___  |  | |___
 
 Default Particl light theme
 
@@ -17,7 +17,7 @@ $theme-background: (
   status-bar:               $color-white,
   app-bar:                  $color-white,
   background:               $bg,
-  hover:                    rgba($bg-shadow, 0.25), 
+  hover:                    rgba($bg-shadow, 0.25),
   card:                     $color-white,
   dialog:                   $color-white,
   disabled-button:          rgba(mix($text-muted, $bg-shadow), 0.2),
@@ -25,9 +25,9 @@ $theme-background: (
   focused-button:           $white-6-opacity,
   selected-button:          $color-alert,
   selected-disabled-button: $color-warning,
-  disabled-button-toggle: black,
+  disabled-button-toggle: #000,
   unselected-chip:          $color-info,
-  disabled-list-option:   black,
+  disabled-list-option:   #000,
 );
 
 // Define custom foreground colors

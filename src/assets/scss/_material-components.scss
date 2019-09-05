@@ -67,6 +67,9 @@ button,
   &.full-width {
     width: 100%;
   }
+  &.not-round {
+    border-radius: 0;
+  }
 }
 
 
@@ -515,8 +518,14 @@ input {
 .mat-select {
   font-family: $font !important;
 }
-.mat-option {
+mat-option.mat-option {
+  $height: 36px;
   font-family: $font !important;
+  line-height: $height;
+  height: $height;
+  .mat-option-text {
+    font-size: 13px;
+  }
 }
 .mat-select-panel {
   background: $color-white;
@@ -532,6 +541,7 @@ input {
 
 .mat-autocomplete-panel {
   min-width: 280px !important; // prevent cropped text in select's options
+  max-height: 420px !important; // let's make it a bit higher
 }
 
 // ------ 3.5. RADIOS ------ //

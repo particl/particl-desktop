@@ -13,7 +13,6 @@ import { SendService } from 'app/wallet/wallet/send/send.service';
 export class SendConfirmationModalComponent implements OnInit {
 
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
-  @Output() onCancel: EventEmitter<string> = new EventEmitter<string>();
 
   public dialogContent: string;
   public send: TransactionBuilder;
@@ -23,6 +22,7 @@ export class SendConfirmationModalComponent implements OnInit {
   sendAddress: string = '';
   receiverName: string = '';
   transactionAmount: Fee = new Fee(0);
+  estimateError: boolean = false;
 
   constructor(private dialogRef: MatDialogRef<SendConfirmationModalComponent>,
               private sendService: SendService) {
@@ -38,7 +38,6 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   dialogClose(): void {
-    this.onCancel.emit();
     this.dialogRef.close();
   }
 
@@ -55,9 +54,33 @@ export class SendConfirmationModalComponent implements OnInit {
   }
 
   getTransactionFee() {
-    this.sendService.getTransactionFee(this.send).subscribe(fee => {
-      this.transactionAmount = new Fee(fee.fee);
-    });
+    this.sendService.getTransactionFee(this.send).subscribe(
+      (fee) => {
+        this.transactionAmount = new Fee(fee.fee);
+      },
+      (err) => {
+        const noFunds = ((typeof err.message === 'string') && (<string>err.message).toLowerCase().includes('insufficient funds') );
+        // const txTotal = this.transactionAmount.getAmountWithFee(this.sendAmount.getAmount(), !this.send.subtractFeeFromAmount );
+        // const denom = Math.max(txTotal, this.sendAmount.getAmount());
+        // const tenPercentThreshold = Math.abs(
+        //   (txTotal - this.sendAmount.getAmount()) / (denom > 0 ? denom : 1) * 100
+        // ) <= 10;
+
+        if (noFunds && !this.send.subtractFeeFromAmount) {
+          this.send.subtractFeeFromAmount = true;
+
+          this.sendService.getTransactionFee(this.send).subscribe(
+            (fee) => {
+              this.transactionAmount = new Fee(fee.fee);
+            },
+            () => {
+              this.estimateError = true;
+            }
+          );
+        } else {
+          this.estimateError = true;
+        }
+      });
   }
 
 }

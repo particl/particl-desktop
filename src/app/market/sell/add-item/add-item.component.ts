@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
+import { take } from 'rxjs/operators';
 
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
@@ -18,7 +19,6 @@ import { EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { Country } from 'app/core/market/api/countrylist/country.model';
 import { PaymentService } from 'app/core/market/api/template/payment/payment.service';
-import { take } from 'rxjs/operators';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { MatDialog } from '@angular/material';
 import { PartoshiAmount } from 'app/core/util/utils';
@@ -56,7 +56,6 @@ class CurrencyMinValidator {
   styleUrls: ['./add-item.component.scss']
 })
 export class AddItemComponent implements OnInit, OnDestroy {
-
   log: any = Log.create('add-item.component');
   private destroyed: boolean = false;
   // template id
@@ -74,6 +73,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
   featuredPicture: number = 0;
   selectedCountry: Country;
   selectedCategory: Category;
+  readyCategorySelect: boolean = false;
   canPublish: boolean = true;
 
   constructor(
@@ -98,8 +98,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.picturesToUpload = new Array();
 
-    this.subToCategories();
-
     this.itemFormGroup = this.formBuilder.group({
       title:                      ['', Validators.compose([Validators.required, Validators.maxLength(50)])],
       shortDescription:           ['', [Validators.required,
@@ -121,14 +119,23 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
       const id = params['id'];
 
-      // Determine whether template is a clone or not
-      const clone: boolean = params['clone'];
-      if (+id) {
-        this.templateId = +id;
-        this.preload(clone);
-      } else {
-        this.canPublish = true;
-      }
+      this.category.list().pipe(take(1)).subscribe(
+        (list) => {
+          this.updateCategories(list);
+        },
+        () => {},
+        () => {
+          // Determine whether template is a clone or not
+          const clone: boolean = params['clone'];
+          if (+id) {
+            this.templateId = +id;
+            this.preload(clone);
+          } else {
+            this.canPublish = true;
+            this.readyCategorySelect = true;
+          }
+        }
+      );
     });
   }
 
@@ -222,11 +229,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.featuredPicture = index;
   }
 
-  private subToCategories() {
-    this.category.list()
-      .subscribe(list => this.updateCategories(list));
-  }
-
   updateCategories(list: Category) {
     this.log.d('Updating category list');
     this._rootCategoryList = list;
@@ -271,12 +273,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
       // set default value as selected.
       this.setDefaultCountry(country);
-      this.setDefaultCategory(template.category);
 
       t.basePrice = template.basePrice.particlsString();
       t.domesticShippingPrice = template.domesticShippingPrice.particlsString();
       t.internationalShippingPrice = template.internationalShippingPrice.particlsString();
       this.itemFormGroup.patchValue(t);
+      this.selectedCategory = template.category;
 
       if (isCloned) {
         this.picturesToUpload = template.imageCollection.images.map(img => img.originalEncoding).filter(img => img.length);
@@ -290,15 +292,12 @@ export class AddItemComponent implements OnInit, OnDestroy {
           return this.canPublish;
         });
       }
+      this.readyCategorySelect = true;
     });
   }
 
   setDefaultCountry(country: Country) {
     this.selectedCountry = country;
-  }
-
-  setDefaultCategory(category: Category) {
-    this.selectedCategory = category;
   }
 
   private async save(): Promise<Template> {
@@ -397,7 +396,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
       this.preloadedTemplate.title !== item.title ||
       this.preloadedTemplate.shortDescription !== item.shortDescription ||
       this.preloadedTemplate.longDescription !== item.longDescription ||
-      this.category !== item.category
+      this.preloadedTemplate.category.id !== item.category
     );
   }
 
@@ -533,9 +532,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.itemFormGroup.patchValue({ country: country ? country.name : '' })
   }
 
-
   onCategoryChange(category: Category): void {
-    this.log.d('category', category);
+    this.selectedCategory = category;
     this.itemFormGroup.patchValue({ category: (category ? category.id : undefined) })
   }
 
@@ -546,8 +544,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-
 
   private initDragDropEl(elementID: string) {
     this.dropArea = document.getElementById(elementID);

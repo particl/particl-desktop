@@ -103,7 +103,7 @@ export class StatusComponent implements OnInit, OnDestroy {
             error => this.log.er('walletlock error'));
         break;
       case 'Locked':
-        this._modals.unlock({showStakeOnly: true});
+        this._modals.unlock({showStakeOnly: true, showEditableTimeout: true});
         break;
       default:
         break;

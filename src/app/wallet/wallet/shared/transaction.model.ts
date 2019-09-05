@@ -120,31 +120,32 @@ export class Transaction {
 
   /* Amount stuff */
   public getAmount(): number {
-   if (this.getCategory() === 'internal_transfer') {
-      // add all elements in output array ( but exclude vout === 65535)
-      // todo: check assumption that we own all outputs?
-      /*
-      const add = function (a: any, b: any) { return a + (b.vout === 65535 ? 0 : b.amount); }
-      return this.outputs.reduce(add, 0);
-      */
+//    if (this.getCategory() === 'internal_transfer') {
+//       // add all elements in output array ( but exclude vout === 65535)
+//       // todo: check assumption that we own all outputs?
+//       /*
+//       const add = function (a: any, b: any) { return a + (b.vout === 65535 ? 0 : b.amount); }
+//       return this.outputs.reduce(add, 0);
+//       */
 
-/*
-      const blindStealthOutputCount = this.outputs.reduce(function (a: any, b: any) {
-        return a + (b.vout !== 65535 ? (b.stealth_address !== undefined ? 1 : 0) : 0);
-      }, 0);
+// /*
+//       const blindStealthOutputCount = this.outputs.reduce(function (a: any, b: any) {
+//         return a + (b.vout !== 65535 ? (b.stealth_address !== undefined ? 1 : 0) : 0);
+//       }, 0);
 
-      // blind -> blind (own)
-      if(blindStealthOutputCount === 1) {
-        const add = function (a: any, b: any) { return a + (b.stealth_address !== undefined ? b.amount : 0); }
-        return this.outputs.reduce(add, 0);
-      } */
+//       // blind -> blind (own)
+//       if(blindStealthOutputCount === 1) {
+//         const add = function (a: any, b: any) { return a + (b.stealth_address !== undefined ? b.amount : 0); }
+//         return this.outputs.reduce(add, 0);
+//       } */
 
-      // only use fake output to determine internal transfer
-      const fakeOutput = function (a: any, b: any) { return a - (b.vout === 65535 ? b.amount : 0); }
-      return this.outputs.reduce(fakeOutput, 0);
-    } else {
-      return +this.amount;
-    }
+//       // only use fake output to determine internal transfer
+//       const fakeOutput = function (a: any, b: any) { return a - (b.vout === 65535 ? b.amount : 0); }
+//       return this.outputs.reduce(fakeOutput, 0);
+//     } else {
+//       return +this.amount;
+//     }
+    return +this.amount;
   }
 
   /** Turns amount into an Amount Object */
@@ -161,11 +162,31 @@ export class Transaction {
     if (this.fee === undefined) {
       return amount;
     /* sent */
+    } else if (this.getCategory() === 'internal_transfer') {
+      return new Amount(+amount).getAmount();
     } else if (amount < 0) {
       return new Amount(+amount + (+this.fee)).getAmount();
     } else {
       return new Amount(+amount - (+this.fee)).getAmount();
     }
+  }
+
+  public getTransferType(): string {
+    if (this.category !== 'internal_transfer') {
+      return '';
+    }
+    let transfer = 'tx split';
+    for (const output of this.outputs) {
+      if (typeof output.type === 'string' && output.type.length) {
+        if (output.type === 'standard') {
+          transfer = 'public';
+        } else {
+          transfer = output.type; // 'blind' or 'anon'
+        }
+        break;
+      }
+    }
+    return transfer;
   }
 
 

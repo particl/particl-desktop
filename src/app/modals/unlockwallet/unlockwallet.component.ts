@@ -12,7 +12,6 @@ import { UnlockModalConfig } from 'app/modals/models/unlock.modal.config.interfa
 export class UnlockwalletComponent {
 
   // constants
-  // DEFAULT_TIMEOUT: number = 60;
   DEFAULT_TIMEOUT: number = 300;
   log: any = Log.create('unlockwallet.component');
 
@@ -23,6 +22,7 @@ export class UnlockwalletComponent {
   timeout: number = this.DEFAULT_TIMEOUT;
   showStakeOnly: boolean = false;
   stakeOnly: boolean = false;
+  showEditableTimeout: boolean = false;
   constructor(
     public _dialogRef: MatDialogRef<UnlockwalletComponent>) {
   }
@@ -59,8 +59,9 @@ export class UnlockwalletComponent {
       this.timeout = data.timeout;
     }
     this.showStakeOnly = Boolean(data.showStakeOnly);
-    this.stakeOnly = Boolean(data.stakeOnly)
-    this.autoClose = (data.autoClose !== false)
+    this.stakeOnly = Boolean(data.stakeOnly);
+    this.autoClose = (data.autoClose !== false);
+    this.showEditableTimeout = Boolean(data.showEditableTimeout);
   }
 
   closeModal(): void {

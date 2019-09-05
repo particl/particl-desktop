@@ -44,6 +44,13 @@
         Add new listing
       </button>
     </div>
+    <div class="import-item">
+      <button mat-raised-button color="accent" (click)="importListings()" class="full-width"
+              matTooltip="Import listings into the market" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-image-upload"></mat-icon>
+        Import listings
+      </button>
+    </div>
 
     <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
@@ -135,6 +142,9 @@
     <ng-container page-title>Sell Orders</ng-container>
     <ng-container page-content>
       This is where you manage the orders you're in the process of selling to your customers.
+    </ng-container>
+    <ng-container page-info *ngIf="hasEncryptedWallet">
+      As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
     </ng-container>
     <ng-container page-help>
       Each step of the selling process needs to be confirmed in this page (i.e. marking an order as "Shipped").

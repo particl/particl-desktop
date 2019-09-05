@@ -109,7 +109,7 @@ export class ProposalDetailsComponent implements OnInit, OnDestroy {
   }
 
   vote(): void {
-    this._balance = this._rpcState.get('getwalletinfo').total_balance;
+    this._balance = this._rpcState.get('getwalletinfo').balance;
     const previousVote = this.voteDetails ? this.voteDetails.ProposalOption : null;
     if (previousVote && previousVote.optionId === this.selectedOption.optionId) {
       this.snackbarService.open(

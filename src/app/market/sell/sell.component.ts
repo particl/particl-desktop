@@ -8,6 +8,7 @@ import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
+import { RpcStateService } from 'app/core/core.module';
 
 interface IPage {
   pageNumber: number,
@@ -59,6 +60,7 @@ export class SellComponent implements OnInit, OnDestroy {
   // public listings: Array<any>;
   pages: Array<IPage> = [];
   noMoreListings: boolean = false;
+  hasEncryptedWallet: boolean = false;
 
   // pagination
   pagination: any = {
@@ -77,6 +79,7 @@ export class SellComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private template: TemplateService,
     private listingService: ListingService,
+    private rpcState: RpcStateService
   ) {
     this.getScreenSize();
   }
@@ -88,12 +91,22 @@ export class SellComponent implements OnInit, OnDestroy {
     try {
       window.addEventListener('resize', this.resizeEventer);
     } catch (err) { }
+    this.rpcState.observe('getwalletinfo').pipe(take(1))
+     .subscribe((walletinfo) => {
+      this.hasEncryptedWallet = (walletinfo.encryptionstatus === 'Locked') || (+walletinfo.unlocked_until > 0);
+     });
   }
 
   addItem(id?: number, clone?: boolean) {
     this.router.navigate(['../template'], {
       relativeTo: this.route,
       queryParams: {'id': id, 'clone': clone }
+    });
+  }
+
+  importListings() {
+    this.router.navigate(['../import'], {
+      relativeTo: this.route
     });
   }
 

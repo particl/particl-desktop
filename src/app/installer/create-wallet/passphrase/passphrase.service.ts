@@ -44,7 +44,10 @@ export class PassphraseService {
     if (!password) {
       params.pop();
     }
-    return this._rpc.call('extkeygenesisimport', params).pipe(tap(() => this.generateDefaultAddresses()));
+    return this._rpc.call('extkeygenesisimport', params).pipe(
+      tap(() => this.generateDefaultAddresses()),
+      tap(() => this.rescanBlockchain())
+    );
   }
 
   generateDefaultAddresses() {
@@ -57,5 +60,19 @@ export class PassphraseService {
     this._rpc.call('getnewaddress', ['initial address']).subscribe(
       (response: any) => this.log.i('generateDefaultAddresses(): generated initial address'),
       error => this.log.er('generateDefaultAddresses: getnewaddress failed'));
+  }
+
+    /**
+   * We need to do a scan of the blockchain with an unlocked wallet.
+   * The stealth addresses are generated after the import, so they are not being looked for
+   * when extkeygenesisimport does the first scan.
+   *
+   * Note: this will only catch transactions to the FIRST stealth address.
+   * It's used a lot of balance transfers.
+   */
+  private rescanBlockchain() {
+    this._rpc.call('rescanblockchain', [0]).subscribe(
+      response => this.log.i('rescanBlockchain: scanning chain for transactions to stealth address'),
+      error => this.log.er('rescanBlockchain: scanning the chain failed'));
   }
 }

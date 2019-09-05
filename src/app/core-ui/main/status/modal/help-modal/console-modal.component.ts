@@ -14,6 +14,8 @@ import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
+import * as marketConfig from '../../../../../../../modules/market/config.js';
+import { isFinite, isPlainObject, isArray } from 'lodash';
 
 @Component({
   selector: 'app-console-modal',
@@ -33,12 +35,17 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   public waitingForRPC: boolean = true;
   public historyCount: number = 0;
   public activeTab: string = '_rpc';
+  public marketTabEnabled: boolean = false;
+  public useRunstringsParser: boolean = false;
 
   constructor(private _rpc: RpcService,
               private _rpcState: RpcStateService,
               private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
+    this.marketTabEnabled = (marketConfig.allowedWallets || []).find(
+      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+    ) !== undefined;
   }
 
   ngOnInit() {
@@ -50,23 +57,43 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   rpcCall() {
-    let commandString = 'runstrings'
     this.waitingForRPC = false;
     this.commandHistory.push(this.command);
     this.historyCount = this.commandHistory.length;
-    let params = this.queryParser(this.command);
+    let commandString: string;
+    let callableParams: (string|number|boolean|null)[];
 
-    if (params.length > 0) {
-      params.splice(1, 0, ''); // TODO: Add wallet name here for multiwallet
+    if (this.useRunstringsParser) {
+      let params = this.queryParserRunstrings(this.command);
+      commandString = 'runstrings';
+      if (params.length > 0) {
+        params.splice(1, 0, '');
+      }
+
+      callableParams = params;
+
+      if (this.activeTab === 'market') {
+        commandString = params.shift();
+        params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
+        callableParams = params.map((param) => isFinite(+param) ? +param : param);
+      }
+    } else {
+      const params = this.queryParserCommand(this.command);
+      if (!params.length) {
+        this.formatErrorResponse({message: 'There appears to be a formatting error'});
+        return;
+      }
+      commandString = String(params.shift());
+      callableParams = params;
     }
-    if (this.activeTab === 'market') {
-      commandString = params.shift();
-      params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
-    }
-    this[this.activeTab].call(commandString, params)
+
+    this[this.activeTab].call(commandString, callableParams)
       .subscribe(
-        response => this.formatSuccessResponse(response),
-        error => this.formatErrorResponse(error));
+        (response: any) => this.formatSuccessResponse(response),
+        (error: any) => {
+          this.formatErrorResponse(error)
+        }
+      );
   }
 
   formatSuccessResponse(response: any) {
@@ -85,14 +112,175 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
       this.command = '';
       this.scrollToBottom();
     } else {
-      const erroMessage = (error.message) ? error.message : 'Method not found';
-      this.snackbar.open(erroMessage);
+      let errorMessage: string;
+      if (this.activeTab === 'market') {
+        const errorStr = String(error).toLowerCase();
+        errorMessage = errorStr.includes('unknown command') || errorStr.includes('unknown subcommand') ? 'Invalid command' : error;
+      } else {
+        errorMessage = (error.message) ? error.message : 'Method not found'
+      }
+      this.snackbar.open(errorMessage);
     }
   }
 
-  queryParser(com: string): Array<string> {
+  queryParserRunstrings(com: string): Array<string> {
     return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
           .filter(cmd => cmd.trim() !== '')
+  }
+
+  queryParserCommand(com: string): Array<any> {
+    let parseError = false;
+    let lastTokenPos = -1;
+    const delimStack: string[] = [];
+    let escaped = false;
+    const tokens: string[] = [];
+    let braceStart = '';
+    let braceEnd = '';
+    for (let ii = 0; ii < com.length; ++ii) {
+      const currentChar = com[ii];
+
+      // Mark next character as being escaped if necessary
+      if (currentChar === '\\') {
+        escaped = !escaped;
+        continue;
+      }
+
+      // If character is not a 'token delimiting' character...
+      if (![`"`, `'`, `{`, `}`, '[', ']'].includes(currentChar)) {
+        escaped = false;
+
+        // ... if we hit a space character while not already involved in a token extraction,
+        //      then the previous string was likely a token by itself (only if its length was greater than 0)
+        if (currentChar === ' ' && delimStack.length === 0) {
+          const tempCurrent = com.substring(lastTokenPos + 1, ii).trim();
+          if (tempCurrent.length) {
+            tokens.push(tempCurrent);
+          }
+          lastTokenPos = ii;
+        }
+        continue;
+      }
+
+      // PROCESS A DELIMITER CHARACTER
+
+      // Except if it has been escaped
+      if (escaped) {
+        escaped = false;
+        continue;
+      }
+
+      // No tokens being extracted currently
+      if (delimStack.length === 0) {
+        if ([`}`, ']'].includes(currentChar)) {
+          parseError = true;
+          break;
+        }
+        delimStack.push(currentChar);
+
+        // if not already busy with a token extraction,
+        //    then any previous string was likely a token on its own
+        if ( (lastTokenPos + 1) < ii ) {
+          const tempCurrent = com.substring(lastTokenPos + 1, ii).trim();
+          if (tempCurrent.length) {
+            tokens.push(tempCurrent);
+          }
+        }
+
+        // set the token start markers
+        lastTokenPos = ii;
+        continue;
+      }
+
+      const isQuoteMark = [`"`, `'`].includes(currentChar);
+
+      // Process possible quotation marks being included in an existing string
+      const quoteIdx = delimStack.findIndex((delim) => delim === `'` || delim === `"`);
+      if (isQuoteMark) {
+        if (quoteIdx !== -1 && delimStack[quoteIdx] !== currentChar) {
+          continue;
+        };
+      }
+
+      // Process possible validation issues
+      const lastDelim = delimStack[delimStack.length - 1];
+      if ( (currentChar === '}' && lastDelim !== '{') ||
+            (currentChar === ']' && lastDelim !== '[') ||
+            (isQuoteMark && (quoteIdx !== -1) && (currentChar !== lastDelim) )) {
+        parseError = true;
+        break;
+      }
+
+      // Now add or remove a delimiter and process possible token accordingly
+      if ([`}`, `]`].includes(currentChar) || (lastDelim === currentChar) ) {
+        if (delimStack.length === 1) {
+          if (isQuoteMark) {
+            braceStart = '';
+            braceEnd = '';
+          } else {
+            braceStart = delimStack[0];
+            braceEnd = currentChar;
+          }
+        }
+        delimStack.pop();
+      } else {
+        delimStack.push(currentChar);
+      }
+
+      if (delimStack.length === 0) {
+        tokens.push(`${braceStart}${com.substring(lastTokenPos + 1, ii).trim()}${braceEnd}`);
+        lastTokenPos = ii;
+      }
+    }
+
+    if (delimStack.length) {
+      parseError = true;
+    }
+
+    if (parseError) {
+      return [];
+    }
+
+    const finalToken = com.substring(lastTokenPos + 1, com.length).trim();
+    if (finalToken.length) {
+      tokens.push(finalToken);
+    }
+
+    if (tokens[0]) {
+      const cmdParts = (<string>tokens[0]).split(' ');
+      if (cmdParts.length > 1) {
+        const cmd = cmdParts.splice(0, 1);
+        tokens.splice(0, 1, cmd[0], cmdParts.join(' '));
+      }
+    }
+
+    const correctedTokens: any[] = [];
+
+    for (let ii = 0; ii < tokens.length; ++ii) {
+      const token = tokens[ii];
+      let value: any;
+      if (token.length && isFinite(+token)) {
+        value = +token;
+      } else if (['false', 'true'].includes( String(token).toLowerCase() )) {
+        value = String(token).toLowerCase() === 'true';
+      } else if (['undefined', 'null'].includes(String(token).toLowerCase())) {
+        value = null;
+      } else if (token.includes('{') || token.includes('[')) {
+        try {
+          const z = JSON.parse(token);
+          if (isPlainObject(z) || isArray(z)) {
+            value = z;
+          }
+        } catch (err) {
+          // nothing to do... will be set to the stringified value
+        }
+      }
+      if (value === undefined) {
+        value = token;
+      }
+      correctedTokens.push(value);
+    }
+
+    return correctedTokens;
   }
 
   isJson(text: any) {
@@ -144,7 +332,14 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   selectTab(tabIndex: number) {
-    this.activeTab = tabIndex === 1 ? 'market' : '_rpc'
+    if (tabIndex === 1 && !this.marketTabEnabled) {
+      return;
+    }
+    const currentTab = this.activeTab;
+    this.activeTab = tabIndex === 1 ? 'market' : '_rpc';
+    if (this.activeTab === currentTab) {
+      return;
+    }
     this.commandList = [];
   }
 

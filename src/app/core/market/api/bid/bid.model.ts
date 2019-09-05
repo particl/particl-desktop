@@ -63,7 +63,9 @@ export class Bid extends Product {
   }
 
   get updated(): string {
-    return new DateFormatter(new Date(this.updatedAt)).dateFormatter(false);
+    return this.order && this.order.OrderItem && this.order.OrderItem.updatedAt ?
+      new DateFormatter(new Date(this.order.OrderItem.updatedAt)).dateFormatter(false) :
+      '';
   }
 
   get orderActivity(): any {

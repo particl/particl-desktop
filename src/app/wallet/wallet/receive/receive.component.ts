@@ -394,18 +394,22 @@ export class ReceiveComponent implements OnInit {
     const call = (this.type === 'public' ? 'getnewaddress' : (this.type === 'private' ? 'getnewstealthaddress' : ''));
     const callParams = ['(No label)'];
     const msg = `New ${this.type} address generated`;
-    this.rpcCallAndNotify(call, callParams, msg);
-  }
 
-  rpcCallAndNotify(call: string, callParams: any, msg: string): void {
-    if (call) {
-      this.rpc.call(call, callParams)
-        .subscribe(response => {
-          this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
-          this.flashNotificationService.open(msg)
-          this.rpc_update();
-        });
-    }
+    this.rpc.call(call, callParams)
+    .subscribe(response => {
+      this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
+      this.flashNotificationService.open(msg)
+
+      if (this.type === 'private') {
+        // Scan the blockchain for previous transactions to the stealth address
+        this.rpc.call('rescanblockchain', [0])
+        .subscribe(
+          rescanResp => this.log.d('rescanBlockchain: looked for previous transactions to this stealth address'),
+          error => this.log.er('rescanBlockchain: failed to scan for transactions to stealth address:', error));
+      }
+
+      this.rpc_update();
+    });
   }
 
   rpcLabelUpdate(msg: string): void {

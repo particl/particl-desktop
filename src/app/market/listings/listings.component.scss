@@ -55,11 +55,6 @@
       button {
         min-width: 0;
         padding: 0 12px;
-        &.new-listings-available {
-          .mat-icon {
-            animation: 2s ease infinite green-pulse;
-          }
-        }
         .mat-icon {
           margin: 0;
         }
@@ -82,20 +77,25 @@
   }
 }
 
+button {
+  &.new-listings-available {
+    .mat-icon {
+      animation: 2s ease infinite green-pulse;
+    }
+  }
+}
+
 @keyframes green-pulse {
   0% {
     color: $text-muted;
   }
   50% {
-    color: $color;
+    color: $color-alert;
   }
 }
 
-// ------ CONTENT  ------ //
 
-.page-intro {
-  width: 100%;
-}
+// ------ CONTENT ------ //
 
 .no-results {
   width: 100%;
@@ -114,4 +114,10 @@ button.previous-page {
   position: fixed;
   bottom: 0;
   height: 8px;
+}
+
+
+.tree-with-search-single-selection {
+  max-height: 500px;
+  overflow-y: scroll;
 }

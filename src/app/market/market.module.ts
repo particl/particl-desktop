@@ -21,12 +21,14 @@ import { ShippingAddressComponent } from './shared/shipping-address/shipping-add
 import { market_routing } from './market.routing';
 import { CommentsComponent } from './shared/comments/comments.component';
 import { CommentComponent } from './shared/comments/comment/comment.component';
+import { ImportListingsModule } from './sell/import-listings/import-listings.module';
 
 @NgModule({
   imports: [
     CommonModule,
     CoreUiModule,
     WalletModule,
+    ImportListingsModule,
     market_routing
   ],
   declarations: [

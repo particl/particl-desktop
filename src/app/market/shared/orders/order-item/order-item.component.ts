@@ -6,11 +6,14 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 import { PlaceOrderComponent } from '../../../../modals/market-place-order/place-order.component';
 import { ShippingComponent } from '../../../../modals/market-shipping/shipping.component';
+import { BidRejectComponent } from '../../../../modals/bid-reject/bid-reject.component';
+import { BID_REJECT_MESSAGES } from '../../../../modals/bid-reject/bid-reject-messages';
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { take } from 'rxjs/operators';
 import { OrderData } from 'app/core/util/utils';
 import { Image } from 'app/core/market/api/template/image/image.model';
+import { isPlainObject } from 'lodash';
 
 @Component({
   selector: 'app-order-item',
@@ -27,6 +30,10 @@ export class OrderItemComponent implements OnInit {
   contactDetails: any = {
     phone: '',
     email: ''
+  };
+  additionalInfo: any = {
+    transactionID: '',
+    rejectMessage: ''
   };
   showShippingInfo: boolean = false;
   private itemTitle: string = '';
@@ -79,21 +86,46 @@ export class OrderItemComponent implements OnInit {
           }
         }
       }
+
+      const completeBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_COMPLETE' );
+      if (completeBid) {
+        for (const data of (completeBid.BidDatas || []) ) {
+          if (data && data.key && (<string>data.key) === 'txid.complete') {
+            this.additionalInfo.transactionID = String(data.value);
+          }
+        }
+      }
+
+      const rejectBid = this.order.ChildBids.find((fb: any) => fb.type === 'MPA_REJECT' );
+      if (rejectBid) {
+        const datas = rejectBid.BidDatas.find((bd: any) => bd.key === 'reject.reason');
+        if (datas) {
+          if (BID_REJECT_MESSAGES[String(datas.value)]) {
+            this.additionalInfo.rejectMessage = BID_REJECT_MESSAGES[String(datas.value)].text || '';
+          }
+        }
+        if (!this.additionalInfo.rejectMessage.length) {
+          this.additionalInfo.rejectMessage = 'Unspecified Reason'
+        }
+      }
     }
     this.purchaseMemo = _memo;
 
     this.showShippingInfo = this.order.type === 'buy' && ['shipping', 'complete'].includes(this.order.step);
 
     const price = this.order.PricingInformation(this.country);
-    this.pricing.separator = price.base.particlStringSep() || this.pricing.separator;
     this.pricing.baseInt = price.base.particlStringInteger();
     this.pricing.baseFraction = price.base.particlStringFraction();
+    this.pricing.baseSep = price.base.particlStringSep();
     this.pricing.shippingInt = price.shipping.particlStringInteger();
     this.pricing.shippingFraction = price.shipping.particlStringFraction();
+    this.pricing.shippingSep = price.shipping.particlStringSep();
     this.pricing.escrowInt = price.escrow.particlStringInteger();
     this.pricing.escrowFraction = price.escrow.particlStringFraction();
+    this.pricing.escrowSep = price.escrow.particlStringSep();
     this.pricing.totalInt = price.total.particlStringInteger();
     this.pricing.totalFraction = price.total.particlStringFraction();
+    this.pricing.totalSep = price.total.particlStringSep();
     this.orderActivity = this.order.orderActivity;
 
     const imageList: any[] = (this.order.ListingItem.ItemInformation || {}).ItemImages || [];
@@ -151,7 +183,9 @@ export class OrderItemComponent implements OnInit {
         break;
       case 'SHIP_ITEM':
         dialogRef = this.dialog.open(ShippingComponent);
-        // dialogRef.componentInstance.type = action.toLowerCase();
+        break;
+      case 'REJECT':
+        dialogRef = this.dialog.open(BidRejectComponent);
         break;
       default:
         dialogRef = this.dialog.open(PlaceOrderComponent);
@@ -174,7 +208,7 @@ export class OrderItemComponent implements OnInit {
         if (action === 'ACCEPT') {
           resp = this.acceptBid();
         } else if (action === 'REJECT') {
-          resp = this.rejectBid();
+          resp = this.rejectBid(res);
         } else if (action === 'LOCK_ESCROW') {
           resp = this.escrowLock(res);
         } else if (action === 'COMPLETE_ESCROW') {
@@ -211,8 +245,12 @@ export class OrderItemComponent implements OnInit {
     });
   }
 
-  private async rejectBid(): Promise<void> {
-    return this.bid.rejectBidCommand(this.order.id).pipe(take(1)).toPromise().then(() => {
+  private async rejectBid(data: any): Promise<void> {
+    let reason: string | null = null;
+    if (typeof data === 'string' && isPlainObject(BID_REJECT_MESSAGES[data])) {
+      reason = String(data);
+    }
+    return this.bid.rejectBidCommand(this.order.id, reason).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Order rejected: ${this.itemTitle}`);
     });
   }

@@ -26,6 +26,7 @@ import { ShippingService } from 'app/core/market/api/template/shipping/shipping.
 import { UserMessageService } from './user-messages/user-message.service';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 import { CommentService } from './api/comment/comment.service';
+import { MarketImportService } from './market-import/market-import.service';
 
 @NgModule({
   imports: [
@@ -63,7 +64,8 @@ export class MarketModule {
         ShippingService,
         UserMessageService,
         ProposalsNotificationsService,
-        CommentService
+        CommentService,
+        MarketImportService
       ]
     };
   }

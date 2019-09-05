@@ -35,19 +35,24 @@ exports.start = function(walletName) {
 
     const marketOptions = {
       ELECTRON_VERSION: process.versions.electron,
-      WALLET: String(walletName) || '',
+      DEFAULT_WALLET: String(walletName) || '',
+      DEFAULT_MARKETPLACE_NAME: 'DEFAULT',
       RPCHOSTNAME: _options.rpcbind || 'localhost',
       RPC_PORT: _options.port,
       TESTNET: isTestnet,
-      RPCCOOKIEFILE: cookieFile
+      RPCCOOKIEFILE: cookieFile,
+      STANDALONE: true
     };
 
     if (isTestnet) {
       marketOptions.TESTNET_PORT = _options.port;
+      marketOptions.DEFAULT_MARKETPLACE_PRIVATE_KEY = '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek';
+      marketOptions.DEFAULT_MARKETPLACE_ADDRESS = 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA';
     } else {
       marketOptions.MAINNET_PORT = _options.port;
       marketOptions.NODE_ENV = 'PRODUCTION';
       marketOptions.SWAGGER_ENABLED = false;
+      // DEFAULT_MARKETPLACE_PRIVATE_KEY and DEFAULT_MARKETPLACE_ADDRESS for now are extracted from the default MP environment
     }
 
     if (_options.rpcuser) {

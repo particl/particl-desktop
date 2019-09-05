@@ -18,3 +18,13 @@
 .icon.arrow {
   margin: 6px 0 24px;
 }
+
+.dialog-content.error {
+  text-align: left;
+  ul.checks {
+    padding-left: 27px;
+    li {
+      margin-bottom: 5px;
+    }
+  }
+}
