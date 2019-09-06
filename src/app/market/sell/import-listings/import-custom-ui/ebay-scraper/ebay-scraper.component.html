@@ -1,7 +1,0 @@
-<h3 class="box-title">{{import.description}}</h3>
-<div>
-  <mat-form-field class="full-width" [formGroup]="import.form">
-    <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)"
-          formControlName="listings_to_scrape" placeholder="Number of products to scrape" (change)="emitClear()" type="text">
-  </mat-form-field>
-</div>

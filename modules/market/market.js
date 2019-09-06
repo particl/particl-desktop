@@ -4,6 +4,7 @@ const cookie = require('../rpc/cookie');
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
+const importer = require('./importer/importer');
 
 // Stores the child process
 let child = undefined;
@@ -70,6 +71,8 @@ exports.start = function(walletName) {
 
     child.stdout.on('data', data => console.log(data.toString('utf8')));
     child.stderr.on('data', data => console.log(data.toString('utf8')));
+
+    importer.init();
   }
 }
 
@@ -78,5 +81,7 @@ exports.stop = async function() {
     log.info('market process stopping.');
     market.stop();
     child = null;
+
+    importer.destroy();
   }
 }

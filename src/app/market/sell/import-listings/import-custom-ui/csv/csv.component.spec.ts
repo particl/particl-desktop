@@ -30,7 +30,8 @@ describe('ImportCustomUiCsvComponent', () => {
     component = fixture.componentInstance;
     component.import = {
       form: new FormGroup({
-        file: new FormControl('', Validators.required)
+        file: new FormControl('', Validators.required),
+        delimiter: new FormControl('', Validators.required)
       })
     };
     fixture.detectChanges();

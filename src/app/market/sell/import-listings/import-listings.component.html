@@ -1,15 +1,16 @@
-<div class="page-intro">
-  <h1>Import Listings</h1>
-  <div class="content">
-    <p>
+<div class="container-block without-tab-bar">
+  <app-page-intro>
+    <ng-container page-title>Import Listings</ng-container>
+    <ng-container page-content>
       Already selling elsewhere? Do you want to import dozens of Listings at once? We've got you covered!<br>
       Choose your preferred Product import method below, specify import settings and tweak the result.
-    </p>
-    <p class="widget-help">
-      Some of the attributes of imported products might be missing or lost during import (due to not standardized formats),<br>so you'll likely need to update few of them manually in 2nd step.
-    </p>
-  </div>
-</div><!-- .page-intro -->
+    </ng-container>
+    <ng-container page-help>
+      Some of the attributes of imported products might be missing or lost during import (due to not standardized formats),<br>
+      so you'll likely need to update few of them manually in 2nd step.
+    </ng-container>
+  </app-page-intro>
+</div>
 
 <mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg" #stepper>
   <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
@@ -26,7 +27,7 @@
 
 
   <!-- ======= 1. SELECT IMPORT ======= -->
-
+  
   <mat-step [completed]="stepper.selectedIndex >= 1">
     <ng-template matStepLabel>Select Import</ng-template>
     <div class="stepper-content select-import" fxLayout fxLayoutGap="35px">
@@ -35,7 +36,7 @@
         <h2 class="subtitle">Select import source</h2>
         <mat-card class="filter-card">
           <mat-radio-group class="radio-group block-radio" [(ngModel)]="selectedImport">
-            <mat-radio-button *ngFor="let import of filterImportsByNetwork" class="filter-option"
+            <mat-radio-button *ngFor="let import of filterImportsByNetwork" class="filter-option" 
                               color="primary" [value]="import"
                               (change)="radioChange($event)">{{ import.name }}</mat-radio-button>
           </mat-radio-group>
@@ -49,17 +50,12 @@
           <ng-container *ngSwitchCase="'csv-import'">
             <app-import-custom-ui-csv [import]="selectedImport" (clear)="clearOldValues()"></app-import-custom-ui-csv>
           </ng-container>
-
+  
           <!-- Customized Woocommerce UI -->
           <ng-container *ngSwitchCase="'woocommerce-import'">
             <app-import-custom-ui-woocommerce [import]="selectedImport" (clear)="clearOldValues()"></app-import-custom-ui-woocommerce>
           </ng-container>
-
-          <!-- Customized Ebay Scraper UI -->
-          <ng-container *ngSwitchCase="'ebay-testnet-scraper'">
-            <app-import-custom-ui-ebay-scraper [import]="selectedImport" (clear)="clearOldValues()"></app-import-custom-ui-ebay-scraper>
-          </ng-container>
-
+  
           <!-- Dynamic Fallback UI -->
           <ng-container *ngSwitchDefault>
             <h3 class="box-title">{{selectedImport.description}}</h3>
@@ -68,22 +64,21 @@
                               [formGroup]="selectedImport.form">
                 <input matInput [formControlName]="param.name" [placeholder]="param.message" [type]="param.type" (change)="clearOldValues()">
               </mat-form-field>
-
+  
               <mat-form-field *ngSwitchCase="'number'"
                               [formGroup]="selectedImport.form">
-                <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)"
+                <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" 
                       [formControlName]="param.name" [placeholder]="param.message" (change)="clearOldValues()"
                       type="text">
               </mat-form-field>
-
+  
               <mat-form-field *ngSwitchCase="'file'"
                               [formGroup]="selectedImport.form">
                 <ngx-mat-file-input [formControlName]="param.name" [placeholder]="param.message" [accept]="param.fileType" (change)="clearOldValues()"></ngx-mat-file-input>
               </mat-form-field>
             </div>
           </ng-container>
-
-          <span *ngIf="importError">{{ importError }}</span>
+          <p class="warning" *ngIf="importError">{{ importError }}</p>
         </mat-card>
 
         <div class="action-buttons" fxLayoutAlign="end center" fxLayoutGap="8px">
@@ -99,7 +94,7 @@
 
 
   <!-- ======= 2. REVIEW IMPORT DATA ======= -->
-
+  
   <mat-step [completed]="stepper.selectedIndex >= 2">
     <ng-template matStepLabel>Review Import Data</ng-template>
     <div class="stepper-content review-import-data">
@@ -110,7 +105,7 @@
           Based on your product file, we've found these Products for import. Review and update their missing information, if any.
         </p>
         <app-import-listing *ngFor="let listing of listings" [listing]="listing" (onChange)="clearEstimate()"></app-import-listing>
-      </mat-accordion>
+      </mat-accordion> 
 
       <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
         <button mat-button matStepperPrevious>
@@ -128,7 +123,7 @@
 
 
   <!-- ======= 3. SHIPPING & EXPIRATION ======= -->
-
+  
   <mat-step [completed]="stepper.selectedIndex >= 3">
     <ng-template matStepLabel>Shipping & Expiration</ng-template>
     <div class="stepper-content shipping-expiration">
@@ -137,7 +132,7 @@
       <mat-card>
         <h3 class="box-title">Shipping</h3>
         <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="30px">
-
+    
           <mat-select-search
             fxFlex="1 1 30%"
             class="full-width"
@@ -157,12 +152,12 @@
               Domestic shipping rate will apply for selected country. For all other countries, international shipping rates will be applied.
             </p>
           </div><!-- .desc -->
-
+    
         </div>
-
+    
         <h3 class="box-title">Listing expiration &amp; fees</h3>
         <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="30px">
-
+    
           <mat-form-field class="full-width" fxFlex="1 1 30%">
             <mat-label>Select expiry time</mat-label>
             <mat-select [(value)]="selectedExpiration" (selectionChange)="clearEstimate()">
@@ -180,11 +175,11 @@
               Listing(s) publishing fee increases linearly for each published day. After this period, Listings will expire and you will need to re-publish them again.
             </p>
           </div><!-- .desc -->
-
+    
         </div>
       </mat-card>
-
-
+    
+    
       <div class="action-buttons" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between center">
         <button mat-button matStepperPrevious>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
@@ -201,7 +196,7 @@
 
 
   <!-- ======= 4. CONFIRM & PUBLISH ======= -->
-
+  
   <mat-step [completed]="stepper.selectedIndex >= 4">
     <ng-template matStepLabel>Confirm & Publish</ng-template>
     <div class="stepper-content confirm-publish">
@@ -248,7 +243,7 @@
           <th mat-header-cell *matHeaderCellDef>Publishing fee</th>
           <td mat-cell *matCellDef="let listing"> {{listing.fee}} </td>
         </ng-container>
-
+      
         <tr mat-header-row *matHeaderRowDef="['title', 'basePrice', 'domesticShippingPrice', 'internationalShippingPrice', 'fee']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['title', 'basePrice', 'domesticShippingPrice', 'internationalShippingPrice', 'fee'];"></tr>
       </table>
