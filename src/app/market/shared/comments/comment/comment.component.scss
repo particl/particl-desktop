@@ -1,0 +1,103 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// Single question box
+.question-box {
+  &.mat-expanded {
+    .summary {
+      @extend %lighter;
+      font-weight: 400;
+    }
+  }
+  // header (trigger)
+  .mat-expansion-panel-header {
+    min-height: 48px;
+    max-height: 48px;
+  }
+  .no {
+    @extend %lighter;
+    flex: 0 0 45px;
+  }
+  .summary {
+    @extend %tfx;
+    text-transform: none;
+    font-weight: 500;
+    max-width: 460px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .seller-responded {
+    flex: 0 0 30px;
+    text-align: center;
+    margin-left: 16px;
+    .mat-icon {
+      color: $color;
+      font-size: 100%;
+      position: relative;
+      top: 1px;
+    }
+  }
+  .answers-no {
+    flex: 0 0 45px;
+    text-align: right;
+  }
+  // content
+  h3.question {
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .mat-divider {
+    margin: 0 -24px;
+  }
+  .answer { // Single answer line
+    padding: 12px 0;
+    display: flex;
+    &.by-user {
+      .message {
+        @extend %lighter;
+      }
+    }
+    .author {
+      flex: 1 0 60px;
+      padding-right: 8px;
+      text-align: right;
+      .tag {
+        @extend %tag;
+        position: relative;
+        top: -2px;
+        background: mix($text-muted, $bg-shadow);
+        margin: 0;
+        white-space: nowrap;
+        &.seller {
+          background: $color;
+        }
+      }
+    }
+    .message {
+      flex: 1 1 100%;
+      margin-left: 8px;
+    }
+    .date {
+      @extend %lighter;
+      flex: 0 0 120px;
+      font-size: 80%;
+      text-align: right;
+      margin-top: 1px;
+    }
+  }
+  mat-action-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px 12px 24px;
+    .title {
+      display: block;
+      margin-right: 14px;
+    }
+    .reply-field {
+      flex: 1 0 250px;
+    }
+    .reply-button {
+      margin-left: 14px;
+    }
+  }
+}

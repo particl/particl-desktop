@@ -109,113 +109,119 @@
     <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)">
       <mat-tab label="Details"></mat-tab>
       <mat-tab label="Shipping &amp; Escrow"></mat-tab>
-      <mat-tab label="Comments" *ngIf="!data.buyPage"></mat-tab>
+      <mat-tab label="Questions &amp; Answers" *ngIf="!data.buyPage"></mat-tab>
     </mat-tab-group><!-- .listing-tabs -->
 
     <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
-      <p class="detailed description">{{ data?.listing?.longDescription }}</p>
+      <h2 class="subtitle">Product info</h2>
+      <mat-card>
+        <p class="detailed description">{{ data?.listing?.longDescription }}</p>
+      </mat-card>
     </div><!-- .tab-content.details -->
 
     <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
-      <table class="shipping-escrow">
-        <thead>
-          <tr>
-            <th>Shipping to</th>
-            <th>Shipping</th>
-            <th>Escrow</th>
-            <th>Total needed for order</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>
-              {{ countryListService?.getCountryByRegion(data?.listing?.country)?.name }}
-              <small>Shipping carrier</small>
-            </th>
-            <!-- domestic shipping -->
-            <td>
-              <span class="part price">
-                <strong>{{ data?.listing?.domesticShippingPrice.particlsString() }}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-            <!-- domestic escrow -->
-            <td>
-              <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceDomestic?.particlsString() }}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-            <!-- domestic total -->
-            <td>
-              <span class="part price">
-                <strong>{{data?.listing?.totalAmountDomestic?.particlsString()}}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              Worldwide
-              <small>Shipping carrier</small>
-            </th>
-            <!-- international shipping -->
-            <td>
-              <span class="part price">
-                <strong>{{ data?.listing?.internationalShippingPrice.particlsString() }}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-            <!-- international escrow -->
-            <td>
-              <span class="part price">
-                <strong>{{ data?.listing?.escrowPriceInternational?.particlsString() }}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-            <!-- international total -->
-            <td>
-              <span class="part price">
-                <strong>{{data?.listing?.totalAmountInternaltional?.particlsString()}}</strong> <small class="currency">PART</small>
-              </span>
-              <span class="fiat price">
-                &asymp; 0.41 <small class="currency">EUR</small>
-              </span>
-            </td>
-          </tr>
-          <tr class="help-text">
-            <td></td>
-            <td>
-              <small>Shipping price for 1 item</small>
-            </td>
-            <td>
-              <small>Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered</small>
-            </td>
-            <td>
-              <small>Amount of funds needed in total for this trade (incl. the refundable escrow)</small>
-            </td>
-          </tr>
-        </tbody>
-      </table><!-- .shipping-escrow -->
+      <h2 class="subtitle">Pricing details</h2>
+      <mat-card>
+        <table class="shipping-escrow">
+          <thead>
+            <tr>
+              <th>Shipping to</th>
+              <th>Shipping</th>
+              <th>Escrow</th>
+              <th>Total needed for order</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>
+                {{ countryListService?.getCountryByRegion(data?.listing?.country)?.name }}
+                <small>Shipping carrier</small>
+              </th>
+              <!-- domestic shipping -->
+              <td>
+                <span class="part price">
+                  <strong>{{ data?.listing?.domesticShippingPrice.particlsString() }}</strong> <small class="currency">PART</small>
+                </span>
+                <span class="fiat price">
+                  &asymp; 0.41 <small class="currency">EUR</small>
+                </span>
+              </td>
+              <!-- domestic escrow -->
+              <td>
+                <span class="part price">
+                  <strong>{{ data?.listing?.escrowPriceDomestic?.particlsString() }}</strong> <small class="currency">PART</small>
+                </span>
+                <span class="fiat price">
+                  &asymp; 0.41 <small class="currency">EUR</small>
+                </span>
+              </td>
+              <!-- domestic total -->
+              <td>
+                <span class="part price">
+                  <strong>{{data?.listing?.totalAmountDomestic?.particlsString()}}</strong> <small class="currency">PART</small>
+                </span>
+                <span class="fiat price">
+                  &asymp; 0.41 <small class="currency">EUR</small>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                Worldwide 
+                <small>Shipping carrier</small>
+              </th>
+              <!-- international shipping -->
+              <td>
+                <span class="part price">
+                  <strong>{{ data?.listing?.internationalShippingPrice.particlsString() }}</strong> <small class="currency">PART</small>
+                </span>
+                <span class="fiat price">
+                  &asymp; 0.41 <small class="currency">EUR</small>
+                </span>
+              </td>
+              <!-- international escrow -->
+              <td>
+                <span class="part price">
+                  <strong>{{ data?.listing?.escrowPriceInternational?.particlsString() }}</strong> <small class="currency">PART</small>
+                </span>
+                <span class="fiat price">
+                  &asymp; 0.41 <small class="currency">EUR</small>
+                </span>
+              </td>
+              <!-- international total -->
+              <td>
+                <span class="part price">
+                  <strong>{{data?.listing?.totalAmountInternaltional?.particlsString()}}</strong> <small class="currency">PART</small>
+                </span>
+                <span class="fiat price">
+                  &asymp; 0.41 <small class="currency">EUR</small>
+                </span>
+              </td>
+            </tr>
+            <tr class="help-text">
+              <td></td>
+              <td>
+                <small>Shipping price for 1 item</small>
+              </td>
+              <td>
+                <small>Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered</small>
+              </td>
+              <td>
+                <small>Amount of funds needed in total for this trade (incl. the refundable escrow)</small>
+              </td>
+            </tr>
+          </tbody>
+        </table><!-- .shipping-escrow -->
+      </mat-card>
     </div><!-- .tab-content.shipping-->
 
-    <div class="tab-content comments" *ngIf="tabLabels[selectedTab] == 'comments'">
-      <div class="no-results">
-        <p>
-          Comments coming soon™
-        </p>
-      </div>
-    </div>
+    <div class="tab-content" *ngIf="tabLabels[selectedTab] == 'questions'">
+      <app-comments 
+        type="LISTINGITEM_QUESTION_AND_ANSWERS"
+        [target]="this.data.listing.hash"
+        [sellerAddress]="this.data.listing.listing.seller">
+      </app-comments>
+    </div><!-- .tab-content.comments -->
   </div><!-- .product-details -->
 
 </div><!-- .dialog-content -->

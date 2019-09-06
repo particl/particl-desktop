@@ -19,37 +19,8 @@ table {
 
 // ------ UI ELEMENTS ------ //
 
-.image {
-  cursor: pointer;
-  img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-}
-
 button.small .mat-icon {
   margin: 0; // remove margin from buttons with icons only
-}
-
-// Info/alert messages
-.message {
-  &.info {
-    padding: 16px 0;
-    background: $bg;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-    &:before {
-      content: none;
-    }
-  }
-  .mat-icon {
-    margin-right: 6px;
-    position: relative;
-    top: 3px;
-    color: $color;
-  }
 }
 
 // ------ LAYOUT ------ //
@@ -69,6 +40,10 @@ button.small .mat-icon {
       }
     }
     .listing-tabs {
+      position: sticky;
+      top: 0;
+      background: $color-white;
+      z-index: 20;
       .mat-tab-label {
         width: (100% / 2);
       }
@@ -77,10 +52,11 @@ button.small .mat-icon {
 }
 
 .dialog-content {
-  margin: 0 -24px !important;
+  margin: -24px -24px 0 !important;
   width: 950px;
-  height: 65vh;
+  height: 72vh;
   max-height: none;
+  background: $bg;
 }
 
 .product-gallery {
@@ -97,7 +73,9 @@ button.small .mat-icon {
 }
 
 .product-summary { // container for upper part (gallery, name, meta)
-  margin-bottom: 24px;
+  margin: 0 -24px;
+  padding: 24px;
+  background: $color-white;
 }
 
 .product-info {
@@ -192,15 +170,23 @@ p.description {
 }
 
 .product-details {
+  margin: 0 -24px;
 
   // Tabs' content
   .tab-content {
     min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
-    margin: 24px 8px;
+    padding: 24px 32px;
     line-height: 1.55;
-    &.shipping {
-      margin: 24px 0; // make shipping table full-width
+
+    .subtitle {
+      @extend %subtitle;
+      margin-top: 0;
     }
+/*
+    &.shipping {
+      padding: 24px; // make shipping table full-width
+    }
+*/
   }
 
   // Shipping & escrow
@@ -269,6 +255,10 @@ p.description {
 }
 
 mat-dialog-actions {
+  padding: 12px 24px;
+  margin: 0 -24px -24px;
+  border-top: 1px solid $bg-shadow;
+
   // Listing governance
   .reporting {
     display: inline-block;

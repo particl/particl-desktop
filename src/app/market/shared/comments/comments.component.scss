@@ -1,0 +1,25 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// Questions & answers
+.comments {
+  .tag {
+    @extend %tag;
+    position: relative;
+    top: -2px;
+    background: mix($text-muted, $bg-shadow);
+    margin: 0;
+  }
+
+  .subtitle {
+    @extend %subtitle;
+    margin-top: 0;
+  }
+}
+
+// ------ LAYOUT ------ //
+
+.loading-container {
+  position: static;
+  padding: 64px;
+  margin: -24px;
+}
