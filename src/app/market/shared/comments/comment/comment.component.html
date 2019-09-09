@@ -23,8 +23,8 @@
     <mat-divider></mat-divider>
     <div class="answer" [ngClass]="isPosterSeller(reply.sender) ? 'by-user' : 'by-seller'">
       <div class="author">
-        <span class="tag user" *ngIf="!isPosterSeller(reply.sender)" [matTooltip]="comment.sender" [ngStyle]="{'background-color': senderDetail}">
-          User {{comment.sender.substring(0,4)}}
+        <span class="tag user" *ngIf="!isPosterSeller(reply.sender)" [matTooltip]="reply.sender" [ngStyle]="{'background-color': senderDetail}">
+          User {{reply.sender.substring(0,4)}}
         </span>
         <span class="tag seller" *ngIf="isPosterSeller(reply.sender)">Seller</span>
       </div>

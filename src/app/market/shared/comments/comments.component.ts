@@ -68,6 +68,10 @@ export class CommentsComponent implements OnDestroy, OnInit {
     this.refresh.complete();
   }
 
+  public doRefresh() {
+    this.refresh.next();
+  }
+
   postQuestion(question: any) {
     this.modals.unlock({ timeout: 30 }, () => {
       this.commentService.post(1, '', 'LISTINGITEM_QUESTION_AND_ANSWERS', this.target, question.value)
