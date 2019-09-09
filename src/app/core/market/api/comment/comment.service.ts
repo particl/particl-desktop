@@ -44,7 +44,7 @@ export class CommentService {
         page,
         pageLimit,
         'DESC',
-        'id',
+        'created_at',
         type,
         target,
         parentCommentHash,
