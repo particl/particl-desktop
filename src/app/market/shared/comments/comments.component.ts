@@ -27,10 +27,11 @@ export class CommentsComponent implements OnDestroy, OnInit {
   @Input() target: string;
   @Input() sellerAddress: string;
 
+  public commentCount: any;
+
   private refresh: Subject<any> = new Subject<any>();
 
   private commentCount$: Subscription;
-  private commentCount: any;
 
   public isLoading: boolean = true;
   public pages: Array<IPage> = [];
