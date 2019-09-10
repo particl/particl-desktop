@@ -25,7 +25,7 @@ export class ImportListingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._rootCategoryList = this.category.list().getValue();
+    this.subToCategories();
   }
 
   async editItem(listing: any, editing: boolean) {
