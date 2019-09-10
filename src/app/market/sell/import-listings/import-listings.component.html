@@ -114,7 +114,7 @@
         </button>
         <button mat-raised-button color="primary" [disabled]="!canShip" (click)="nextStep()">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-          Continue to shipping
+          Continue
         </button>
       </div>
 
@@ -204,13 +204,9 @@
       <p class="info" *ngIf="!!currentestimateFee">
         Publishing fee for {{ filterListingsByPublished.length }} Listings / {{ selectedExpiration }} day(s):
         <strong>
-          <span class="big">{{ currentestimateFee.getIntegerPart() }}</span>
-          <span *ngIf="currentestimateFee.ifDotExist()">
-            <span class="point">.</span>
-            <span class="small">{{ currentestimateFee.getFractionalPart() }}</span>
-          </span>
+          {{ currentestimateFee | partoshiAmount }}
         </strong>
-        <span class="currency">PART</span>
+        <span class="currency"> PART</span>
       </p>
 
       <table mat-table [dataSource]="filterListingsByPublished" class="table-full-width">
@@ -223,25 +219,25 @@
         <!-- Price Column -->
         <ng-container matColumnDef="basePrice">
           <th mat-header-cell *matHeaderCellDef>Price</th>
-          <td mat-cell *matCellDef="let listing"> {{listing.basePrice}} </td>
+          <td mat-cell *matCellDef="let listing"> {{listing.basePrice | partoshiAmount}} </td>
         </ng-container>
 
         <!-- Shipping Column -->
         <ng-container matColumnDef="domesticShippingPrice">
           <th mat-header-cell *matHeaderCellDef>Domestic Shipping</th>
-          <td mat-cell *matCellDef="let listing"> {{listing.domesticShippingPrice}} </td>
+          <td mat-cell *matCellDef="let listing"> {{listing.domesticShippingPrice | partoshiAmount}} </td>
         </ng-container>
 
         <!-- Intl Shipping Column -->
         <ng-container matColumnDef="internationalShippingPrice">
           <th mat-header-cell *matHeaderCellDef>International Shipping</th>
-          <td mat-cell *matCellDef="let listing"> {{listing.internationalShippingPrice}} </td>
+          <td mat-cell *matCellDef="let listing"> {{listing.internationalShippingPrice | partoshiAmount}} </td>
         </ng-container>
 
         <!-- Fee Column -->
         <ng-container matColumnDef="fee">
           <th mat-header-cell *matHeaderCellDef>Publishing fee</th>
-          <td mat-cell *matCellDef="let listing"> {{listing.fee}} </td>
+          <td mat-cell *matCellDef="let listing"> {{listing.fee | partoshiAmount}} </td>
         </ng-container>
       
         <tr mat-header-row *matHeaderRowDef="['title', 'basePrice', 'domesticShippingPrice', 'internationalShippingPrice', 'fee']"></tr>

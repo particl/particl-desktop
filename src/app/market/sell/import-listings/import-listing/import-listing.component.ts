@@ -14,6 +14,7 @@ export class ImportListingComponent implements OnInit {
   @Input() listing: any;
   @Output() onChange: EventEmitter<any> = new EventEmitter<any>();
   _rootCategoryList: Category = new Category({});
+  readyCategorySelect: boolean = false;
   dropArea: any;
   fileInput: any;
 
@@ -106,11 +107,23 @@ export class ImportListingComponent implements OnInit {
   }
 
   onCategoryChange(category: Category): void {
-    this.listing.category = category ? { id: category.id, name: category.name } : undefined;
+    this.listing.category = category;
   }
 
   publishChanged($event: any) {
     this.onChange.emit($event);
+  }
+
+  private subToCategories() {
+    this.category.list()
+      .subscribe(list => {
+        this.updateCategories(list);
+        this.readyCategorySelect = true;
+      });
+  }
+
+  private updateCategories(list: Category) {
+    this._rootCategoryList = list;
   }
 
   numericValidator(event: any) {
