@@ -67,10 +67,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // pagination
   pagination: any = {
-    maxPages: 3,
     maxPerPage: 24,
     // hooks into the scroll bar of the main page..
-    infinityScrollSelector: '.mat-drawer-content' // .mat-drawer-content
+    infinityScrollSelector: '.mat-drawer-content'
   };
 
   filters: any = {
@@ -96,13 +95,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
     if (this.listingService.cache.selectedCountry) {
       this.selectedCountry = this.listingService.cache.selectedCountry
     }
-    this.getScreenSize();
   }
 
   ngOnInit() {
     this._rootCategoryList = this.category.list().getValue();
     this.loadPage(0, true);
-    this.resizeEventer = throttle(() => this.getScreenSize(), 400, { leading: false, trailing: true });
+    this.resizeEventer = throttle(() => this.checkIfShouldLoadMore(), 400, { leading: false, trailing: true });
     try {
       window.addEventListener('resize', this.resizeEventer);
     } catch (err) { }
@@ -176,10 +174,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
             this.noMoreListings = false;
           } else { // infinite scroll
             if (listings.length > 0) {
-              this.pushNewPage(page);
-            } else {
+              this.log.d('adding page to bottom');
+              this.pages.push(page);
+            }
+
+            if (listings.length < max) {
               this.noMoreListings = true;
             }
+          }
+
+          if (listings.length > 0) {
+            setTimeout(() => this.checkIfShouldLoadMore(), 500);
           }
         }
 
@@ -205,30 +210,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
       )
   }
 
-  pushNewPage(page: IPage) {
-    const newPageNumber = page.pageNumber;
-    let goingDown = true; // direction
-
-    // previous page
-    if (this.pages[0] && this.pages[0].pageNumber > newPageNumber) {
-      this.log.d('adding page to top');
-      this.pages.unshift(page);
-      goingDown = false;
-    } else { // next page
-      this.log.d('adding page to bottom');
-      this.pages.push(page);
-    }
-
-    // if exceeding max length, delete a page of the other direction
-    if (this.pages.length > this.pagination.maxPages) {
-      if (goingDown) {
-        this.pages.shift(); // delete first page
-      } else {
-        this.pages.pop(); // going up, delete last page
-      }
-    }
-  }
-
   clearAndLoadPage() {
     this.loadPage(0, true);
   }
@@ -249,19 +230,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.pages[pageIndex].listings = listings;
         pageIndex++;
       });
-    }
-  }
-
-  // TODO: fix scroll up!
-  loadPreviousPage() {
-    this.log.d('prev page trigered');
-    if (this.pages.length) {
-      let previousPage = this.pages[0].pageNumber;
-      previousPage--;
-      this.log.d('loading prev page' + previousPage);
-      if (previousPage > -1) {
-        this.loadPage(previousPage, false);
-      }
     }
   }
 
@@ -298,17 +266,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.loadPage(0, true);
   }
 
-  getScreenSize() {
-    const currentMaxPerPage = this.pagination.maxPerPage;
-    const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
-    const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;
-
-    if (isLarger) {
-      // Load more pages to fill the screen
-      // maxPages 2 -> 3, ensure no pages are deleted when loading
-      // the next page.
-      this.pagination.maxPages = 3;
-      this.pagination.maxPerPage = newMaxPerPage;
+  private checkIfShouldLoadMore() {
+    const scrollContainer = document.querySelector(this.pagination.infinityScrollSelector);
+    // If the scroll bar isn't showing, try load another page
+    if (scrollContainer && scrollContainer.scrollHeight <= scrollContainer.clientHeight) {
       this.loadNextPage();
     }
   }
