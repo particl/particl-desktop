@@ -119,23 +119,16 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
       const id = params['id'];
 
-      this.category.list().pipe(take(1)).subscribe(
-        (list) => {
-          this.updateCategories(list);
-        },
-        () => {},
-        () => {
-          // Determine whether template is a clone or not
-          const clone: boolean = params['clone'];
-          if (+id) {
-            this.templateId = +id;
-            this.preload(clone);
-          } else {
-            this.canPublish = true;
-            this.readyCategorySelect = true;
-          }
-        }
-      );
+      this.log.d('Updating category list');
+      this._rootCategoryList = this.category.list().getValue();
+      const clone: boolean = params['clone'];
+      if (+id) {
+        this.templateId = +id;
+        this.preload(clone);
+      } else {
+        this.canPublish = true;
+        this.readyCategorySelect = true;
+      }
     });
   }
 
@@ -227,11 +220,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
 
   featurePicture(index: number) {
     this.featuredPicture = index;
-  }
-
-  updateCategories(list: Category) {
-    this.log.d('Updating category list');
-    this._rootCategoryList = list;
   }
 
   backToSell() {

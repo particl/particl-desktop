@@ -100,7 +100,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loadCategories();
+    this._rootCategoryList = this.category.list().getValue();
     this.loadPage(0, true);
     this.resizeEventer = throttle(() => this.getScreenSize(), 400, { leading: false, trailing: true });
     try {
@@ -114,14 +114,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   get hasEmptySearch(): boolean {
     return this.isFiltering && ( (this.pages.length === 0) || (this.pages[0].listings.length === 0) );
-  }
-
-  loadCategories() {
-    this.category.list()
-      .subscribe(
-        list => {
-          this._rootCategoryList = list;
-        });
   }
 
   private loadPage(pageNumber: number, clear: boolean, queryNewListings: boolean = false) {
