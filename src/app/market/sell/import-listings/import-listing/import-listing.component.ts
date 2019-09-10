@@ -24,7 +24,7 @@ export class ImportListingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.subToCategories();
+    this._rootCategoryList = this.category.list().getValue();
   }
 
   async editItem(listing: any, editing: boolean) {
@@ -111,15 +111,6 @@ export class ImportListingComponent implements OnInit {
 
   publishChanged($event: any) {
     this.onChange.emit($event);
-  }
-
-  private subToCategories() {
-    this.category.list()
-      .subscribe(list => this.updateCategories(list));
-  }
-
-  private updateCategories(list: Category) {
-    this._rootCategoryList = list;
   }
 
   numericValidator(event: any) {
