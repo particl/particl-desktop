@@ -106,7 +106,7 @@ export class ImportListingComponent implements OnInit {
   }
 
   onCategoryChange(category: Category): void {
-    this.listing.category = category ? { id: category.id, name: category.name } : undefined;
+    this.listing.category = category;
   }
 
   publishChanged($event: any) {

@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { MatStepper } from '@angular/material';
 
-import { isMainnetRelease, Amount } from 'app/core/util/utils';
+import { isMainnetRelease, PartoshiAmount } from 'app/core/util/utils';
 import { MarketImportService } from 'app/core/market/market-import/market-import.service';
 
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
@@ -17,6 +17,7 @@ import { TemplateService } from 'app/core/market/api/template/template.service';
 import { Router } from '@angular/router';
 
 import * as _ from 'lodash';
+import { Category } from 'app/core/market/api/category/category.model';
 
 @Component({
   selector: 'app-import-listings',
@@ -32,25 +33,18 @@ export class ImportListingsComponent {
   public availableImports: any[] = [];
   public listings: any[] = [];
   public expiredList: Array<any> = [
-    { title: '1 day', value: 1, estimateFee: new Amount(0), isDisabled: false },
-    { title: '2 days', value: 2, estimateFee: new Amount(0), isDisabled: false },
-
-    /**
-     * @TODO remove the 1 day and 2 days options and enable to other options.
-     * as corrently its gryed out for a while the commented code once smsg issue goes fixed.
-     *
-     */
-
-    { title: '4 days', value: 4, estimateFee: new Amount(0), isDisabled: false },
-    { title: '1 week', value: 7, estimateFee: new Amount(0), isDisabled: false },
-    { title: '2 weeks', value: 14, estimateFee: new Amount(0), isDisabled: true },
-    { title: '3 weeks', value: 21, estimateFee: new Amount(0), isDisabled: true },
-    { title: '4 weeks', value: 28, estimateFee: new Amount(0), isDisabled: true }
+    { title: '1 day', value: 1, estimateFee: new PartoshiAmount(0), isDisabled: false },
+    { title: '2 days', value: 2, estimateFee: new PartoshiAmount(0), isDisabled: false },
+    { title: '4 days', value: 4, estimateFee: new PartoshiAmount(0), isDisabled: false },
+    { title: '1 week', value: 7, estimateFee: new PartoshiAmount(0), isDisabled: false },
+    { title: '2 weeks', value: 14, estimateFee: new PartoshiAmount(0), isDisabled: true },
+    { title: '3 weeks', value: 21, estimateFee: new PartoshiAmount(0), isDisabled: true },
+    { title: '4 weeks', value: 28, estimateFee: new PartoshiAmount(0), isDisabled: true }
   ];
   public selectedImport: any;
   public selectedExpiration: number;
   public selectedCountry: Country;
-  public currentestimateFee: Amount = null;
+  public currentestimateFee: PartoshiAmount = null;
   public network: string = isMainnetRelease() ? 'mainnet' : 'testnet';
 
   get filterImportsByNetwork() {
@@ -149,6 +143,7 @@ export class ImportListingsComponent {
               }
 
               if (data.result) {
+                data.result = this.fixImportedData(data.result);
                 setTimeout(() => this.listings = data.result, 1);
 
                 this._dialog.closeAll();
@@ -179,7 +174,8 @@ export class ImportListingsComponent {
           message: `Hang on, we are busy calculating the publishing fee for ${listingsToEstimate} listings`
         }
       });
-      this._marketImportService.validateListings(this.listings, this.selectedCountry.iso, this.selectedExpiration).subscribe(
+      const estimateListings = this.convertFromCategories(this.listings);
+      this._marketImportService.validateListings(estimateListings, this.selectedCountry.iso, this.selectedExpiration).subscribe(
         (data) => {
           if (data.status) {
             estimateDialog.componentInstance.data.message = data.status;
@@ -187,7 +183,7 @@ export class ImportListingsComponent {
           if (data.result) {
             setTimeout(() => {
               this.listings = data.result;
-              let fee = 0;
+              this.currentestimateFee = new PartoshiAmount(0);
 
               if (this.hasValidationError) {
                 this._dialog.closeAll();
@@ -198,10 +194,11 @@ export class ImportListingsComponent {
               } else {
                 for (const listing of this.listings) {
                   if (listing.publish) {
-                    fee += listing.fee;
+                    const listingFee = new PartoshiAmount(listing.fee * Math.pow(10, 8));
+                    this.currentestimateFee.add(listingFee);
                   }
                 }
-                this.currentestimateFee = new Amount(fee);
+
                 this._dialog.closeAll();
                 this.nextStep();
               }
@@ -229,7 +226,8 @@ export class ImportListingsComponent {
           message: `Hang on, we are busy publishing ${listingsToPublish} listings`
         }
       });
-      this._marketImportService.publishListings(this.listings, this.selectedCountry.iso, this.selectedExpiration).subscribe(
+      const publishListings = this.convertFromCategories(this.listings);
+      this._marketImportService.publishListings(publishListings, this.selectedCountry.iso, this.selectedExpiration).subscribe(
         (data) => {
           if (data.status) {
             publishingDialog.componentInstance.data.message = data.status;
@@ -315,4 +313,28 @@ export class ImportListingsComponent {
       return false;
     }
   }
+
+  private convertFromCategories(listings: any) {
+    for (const listing of listings) {
+      if (listing.category instanceof Category) {
+        listing.category = {
+          id: listing.category.id,
+          name: listing.category.name,
+          item: listing.category.item
+        }
+      }
+    }
+    return listings;
+  }
+
+  private fixImportedData(listings: any) {
+    for (const listing of listings) {
+      listing.category = listing.category ? new Category(listing.category) : listing.category;
+      listing.basePrice = new PartoshiAmount(listing.basePrice * Math.pow(10, 8)).particls();
+      listing.domesticShippingPrice = new PartoshiAmount(listing.domesticShippingPrice * Math.pow(10, 8)).particls();
+      listing.internationalShippingPrice = new PartoshiAmount(listing.internationalShippingPrice * Math.pow(10, 8)).particls();
+    }
+    return listings;
+  }
+
 }

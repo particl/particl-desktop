@@ -6,8 +6,8 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ listing?.title }}</div>
-        <div class="category">{{ listing?.category?.name }}</div>
-        <span class="error">{{ listing?.validationError || '' }}</span>
+        <div class="category">{{ listing?.category?.item }}</div>
+        <pre class="error">{{ listing?.validationError || '' }}</pre>
       </div>
       <div class="publish" fxFlex="2 2 80px">
         <mat-checkbox [(ngModel)]="listing.publish" (click)="$event.stopPropagation()" (change)="publishChanged($event)">Publish</mat-checkbox>
@@ -29,21 +29,21 @@
         <tr>
           <th>Price per item</th>
           <td>
-            {{ listing?.basePrice }}
+            {{ listing?.basePrice | partoshiAmount }}
             PART
           </td>
         </tr>
         <tr>
           <th>Domestic shipping</th>
           <td>
-            {{ listing?.domesticShippingPrice }}
+            {{ listing?.domesticShippingPrice | partoshiAmount }}
             PART
           </td>
         </tr>
         <tr>
           <th>International shipping</th>
           <td>
-            {{ listing?.internationalShippingPrice }}
+            {{ listing?.internationalShippingPrice | partoshiAmount }}
             PART
           </td>
         </tr>
@@ -111,13 +111,13 @@
         <mat-hint align="end">{{ listing.longDescription?.length || 0 }}/1000</mat-hint>
       </mat-form-field>
 
-      <mat-otpgroup-select-search
+      <app-category-tree
+        class="category-overlay"
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        (onChange)="onCategoryChange($event)"
         [options]="_rootCategoryList?.subCategoryList"
-        [placeHolder]="'Select category'"
-        [isRequired]="'true'"
-        [defaultSelectedValue]="listing.category"
-        (change)="onCategoryChange($event)">
-      </mat-otpgroup-select-search>
+        [selected]="listing.category">
+      </app-category-tree>
 
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
@@ -144,7 +144,8 @@
   </div>
 
   <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
-    <div class="left">
+    <div class="left"></div>
+    <div class="right">
       <button mat-button matTooltip="Edit listing details" *ngIf="!listing?.editing" (click)="editItem(listing, true)" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
         Edit listing
