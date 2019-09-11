@@ -400,13 +400,13 @@ export class ReceiveComponent implements OnInit {
       this.log.d(call, `addNewLabel: successfully executed ${call} ${callParams}`);
       this.flashNotificationService.open(msg)
 
-      if (this.type === 'private') {
-        // Scan the blockchain for previous transactions to the stealth address
-        this.rpc.call('rescanblockchain', [0])
-        .subscribe(
-          rescanResp => this.log.d('rescanBlockchain: looked for previous transactions to this stealth address'),
-          error => this.log.er('rescanBlockchain: failed to scan for transactions to stealth address:', error));
-      }
+      // if (this.type === 'private') {
+      //   // Scan the blockchain for previous transactions to the stealth address
+      //   this.rpc.call('rescanblockchain', [0])
+      //   .subscribe(
+      //     rescanResp => this.log.d('rescanBlockchain: looked for previous transactions to this stealth address'),
+      //     error => this.log.er('rescanBlockchain: failed to scan for transactions to stealth address:', error));
+      // }
 
       this.rpc_update();
     });

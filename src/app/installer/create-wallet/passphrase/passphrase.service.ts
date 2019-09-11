@@ -46,7 +46,7 @@ export class PassphraseService {
     }
     return this._rpc.call('extkeygenesisimport', params).pipe(
       tap(() => this.generateDefaultAddresses()),
-      tap(() => this.rescanBlockchain())
+      // tap(() => this.rescanBlockchain())
     );
   }
 
@@ -70,9 +70,9 @@ export class PassphraseService {
    * Note: this will only catch transactions to the FIRST stealth address.
    * It's used a lot of balance transfers.
    */
-  private rescanBlockchain() {
-    this._rpc.call('rescanblockchain', [0]).subscribe(
-      response => this.log.i('rescanBlockchain: scanning chain for transactions to stealth address'),
-      error => this.log.er('rescanBlockchain: scanning the chain failed'));
-  }
+  // private rescanBlockchain() {
+  //   this._rpc.call('rescanblockchain', [0]).subscribe(
+  //     response => this.log.i('rescanBlockchain: scanning chain for transactions to stealth address'),
+  //     error => this.log.er('rescanBlockchain: scanning the chain failed'));
+  // }
 }
