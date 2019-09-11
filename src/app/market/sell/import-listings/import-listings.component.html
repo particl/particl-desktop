@@ -204,7 +204,7 @@
       <p class="info" *ngIf="!!currentestimateFee">
         Publishing fee for {{ filterListingsByPublished.length }} Listings / {{ selectedExpiration }} day(s):
         <strong>
-          {{ currentestimateFee | partoshiAmount }}
+          {{ currentestimateFee.particlsString() }}
         </strong>
         <span class="currency"> PART</span>
       </p>

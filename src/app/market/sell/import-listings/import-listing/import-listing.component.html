@@ -113,7 +113,7 @@
 
       <app-category-tree
         class="category-overlay"
-        *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
         (onChange)="onCategoryChange($event)"
         [options]="_rootCategoryList?.subCategoryList"
         [selected]="listing.category">

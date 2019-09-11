@@ -44,7 +44,7 @@ export class ImportListingsComponent {
   public selectedImport: any;
   public selectedExpiration: number;
   public selectedCountry: Country;
-  public currentestimateFee: number = null;
+  public currentestimateFee: PartoshiAmount = null;
   public network: string = isMainnetRelease() ? 'mainnet' : 'testnet';
 
   get filterImportsByNetwork() {
@@ -183,7 +183,7 @@ export class ImportListingsComponent {
           if (data.result) {
             setTimeout(() => {
               this.listings = data.result;
-              let fee = 0;
+              this.currentestimateFee = new PartoshiAmount(0);
 
               if (this.hasValidationError) {
                 this._dialog.closeAll();
@@ -194,10 +194,11 @@ export class ImportListingsComponent {
               } else {
                 for (const listing of this.listings) {
                   if (listing.publish) {
-                    fee += listing.fee;
+                    const listingFee = new PartoshiAmount(listing.fee * Math.pow(10, 8));
+                    this.currentestimateFee.add(listingFee);
                   }
                 }
-                this.currentestimateFee = fee;
+
                 this._dialog.closeAll();
                 this.nextStep();
               }
