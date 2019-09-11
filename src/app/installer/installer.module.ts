@@ -11,7 +11,6 @@ import { InstallerRouterComponent } from './installer.router';
 import { CreateWalletComponent } from './create-wallet/create-wallet.component';
 import { PassphraseComponent } from 'app/installer/create-wallet/passphrase/passphrase.component';
 import { TermsComponent } from './terms/terms.component';
-import { ErrorComponent } from './errors/error.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 @NgModule({
@@ -28,8 +27,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
     InstallerRouterComponent,
     CreateWalletComponent,
     PassphraseComponent,
-    TermsComponent,
-    ErrorComponent
+    TermsComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

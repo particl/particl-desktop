@@ -67,26 +67,65 @@ export class LoadingComponent implements OnInit {
           .whenRpcIsResponding()
           .subscribe(
             async getwalletinfo => {
-              if (!this.rpc.daemonProtocol) {
-                await this.rpc.call('getnetworkinfo').toPromise().then(networkinfo => {
-                  if (networkinfo && +networkinfo.protocolversion) {
-                    this.rpc.daemonProtocol = +networkinfo.protocolversion;
-                  }
-                }).catch(rpcErr => {
-                  // do nothing, mostly just prevents an error from not being handled in case of an issue
-                });
-              }
               this.multi.refreshWalletList();
-              // Swap smsg to the new wallet
-              this.rpc.call('smsgdisable').subscribe(
-                () => {
-                  this.activateWallet(getwalletinfo, true);
-                },
-                (err) => {
-                  this.log.er('smsgdisable failed: may already be stopped: ', err);
-                  this.activateWallet(getwalletinfo, false);
-                }
+              // Get smsg service status
+              const smsgInfo: any = await this.rpc.call('smsggetinfo').toPromise().then(
+                smsgState => smsgState || {},
+                err => { return {}; }
               );
+
+              // Check the terms and conditions
+              const termsVersion = this.getTerms();
+              if (!environment.isTesting && (!termsVersion || (termsVersion && termsVersion.createdAt !== termsObj.createdAt
+                && termsVersion.text !== termsObj.text))) {
+                this.goToTerms();
+              } else {
+                // Check the actual wallet status
+                this.log.d('Where are we going next?', getwalletinfo);
+                if ('hdseedid' in getwalletinfo) {
+                  // Wallet has been created correctly
+                  const selectedIWallet = wallets.find(w => w.name === this.rpc.wallet);
+                  const isMarketWallet = selectedIWallet && selectedIWallet.isMarketEnabled === true;
+                  let smsgActive = (smsgInfo && smsgInfo.enabled === true);
+
+                  if (!smsgActive && isMarketWallet) {
+                    // Attempt to enable smsg if not already enabled but this wallet is a marketplace enabled wallet
+                    smsgActive = await this.rpc.call('smsgenable', [this.rpc.wallet]).toPromise().then(
+                      resp => true
+                    ).catch(err => {
+                      this.log.er(`FAILED to activate SMSG"`);
+                      return false;
+                    });
+                  }
+
+                  if (smsgActive && (smsgInfo && smsgInfo.active_wallet !== this.rpc.wallet)) {
+                    // Set the smsg active wallet if necessary
+                    await this.rpc.call('smsgsetwallet', [this.rpc.wallet]).toPromise().catch(err => {
+                      this.log.er(`FAILED to set SMSG active wallet to "${this.rpc.wallet}"`);
+                    });
+                  }
+
+                  if (isMarketWallet) {
+                    // Now start the marketplace services if this is a marketplace enabled wallet
+                    this._market.startMarket(this.rpc.wallet).subscribe(
+                      () => {
+                        // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
+                        // It can help for first load after a Market wallet has been created though, or for an unecrypted wallet...
+                        //   so not removing it just yet.
+                        this.rpc.call('smsgscanbuckets').subscribe();
+                      },
+                      (err) => this.log.er('Request to start market failed!', err),
+                      () => this.goToWallet()
+                    )
+                  } else {
+                    this.goToWallet();
+                  }
+                } else {
+                  // Wallet needs to be created first
+                  this.goToInstaller(getwalletinfo);
+                }
+              }
+
             },
             error => this.log.d('whenRpcIsResponding errored')
           );
@@ -94,33 +133,7 @@ export class LoadingComponent implements OnInit {
     });
   }
 
-  decideWhereToGoTo(getwalletinfo: any) {
-    // Check the terms and conditions
-    const termsVersion = this.getVersion();
-    if (!environment.isTesting && (!termsVersion || (termsVersion && termsVersion.createdAt !== termsObj.createdAt
-      && termsVersion.text !== termsObj.text))) {
-      this.goToTerms();
-    } else if (this.rpc.daemonProtocol < 90008) {
-      this.goToStartupError();
-    } else {
-
-      this.log.d('Where are we going next?', getwalletinfo);
-      if ('hdseedid' in getwalletinfo) {
-        const isMarketWallet = (marketConfig.allowedWallets || []).find(
-          (wname: string) => wname.toLowerCase() === this.rpc.wallet.toLowerCase()
-        ) !== undefined;
-        if (isMarketWallet) {
-          this.startMarketService();
-        } else {
-          this.goToWallet();
-        }
-      } else {
-        this.goToInstaller(getwalletinfo);
-      }
-    }
-  }
-
-  goToInstaller(getwalletinfo: any) {
+  private goToInstaller(getwalletinfo: any) {
     this.log.d('Going to installer');
     this.router.navigate(['installer'], {
       queryParams: {
@@ -130,49 +143,17 @@ export class LoadingComponent implements OnInit {
     });
   }
 
-  goToWallet() {
+  private goToWallet() {
     this.log.d('MainModule: moving to new wallet', this.rpc.wallet);
     this.router.navigate(['wallet', 'main', 'wallet']);
   }
 
-  goToTerms() {
+  private goToTerms() {
     this.log.d('Going to terms');
     this.router.navigate(['installer', 'terms']);
   }
 
-  goToStartupError() {
-    this.log.d('Going to startup error');
-    this.router.navigate(['installer', 'error']);
-  }
-
-  private startMarketService() {
-    this._market.startMarket(this.rpc.wallet).subscribe(
-      () => {
-        // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
-        // It can help for first load after a Market wallet has been created though, so not removing it just yet.
-        this.rpc.call('smsgscanbuckets').subscribe();
-      },
-      (err) => this.log.er('Request to start market failed!'),
-      () => this.goToWallet()
-    )
-  }
-
-  private activateWallet(getwalletinfo: any, startSmsg: boolean = true) {
-    const isMarketWallet = (marketConfig.allowedWallets || []).find(
-      (wname: string) => wname.toLowerCase() === this.rpc.wallet.toLowerCase()
-    ) !== undefined;
-    if (startSmsg || isMarketWallet) {
-      this.rpc.call('smsgenable', [this.rpc.wallet]).subscribe(
-        () => {},
-        (err) => this.log.er('smsgenable failed: ', err),
-        () => this.decideWhereToGoTo(getwalletinfo)
-      )
-    } else {
-      this.decideWhereToGoTo(getwalletinfo);
-    }
-  }
-
-  private getVersion(): any {
+  private getTerms(): any {
     return JSON.parse(localStorage.getItem('terms'));
   }
 }
