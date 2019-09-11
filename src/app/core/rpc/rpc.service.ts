@@ -67,22 +67,6 @@ export class RpcService implements OnDestroy {
     return this.isInitialized;
   }
 
-  set daemonProtocol(protocol: number) {
-    /*
-      @TODO (zaSmilingIdiot 2019-05-03):
-        This shouldn't be set externally, but since we are doing a connection check elsewhere,
-        but need to store this on a singleton instance, this is the quickest (dirtiest) place to put this.
-        Fix this!!
-    */
-   if (!this.daemonProto) {
-    this.daemonProto = +protocol;
-   }
-  }
-
-  get daemonProtocol(): number {
-    return this.daemonProto;
-  }
-
   /**
    * Set the wallet to execute commands against.
    * @param w the wallet filename .
