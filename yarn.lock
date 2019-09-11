@@ -8651,10 +8651,10 @@ particl-market-import-core@^0.0.6:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.2.0.tgz#7476e1173ebd8223a20cd4575dc2ba873c7a04e0"
-  integrity sha512-kzTFwjxuqqQ0IqxVFON7+H/uSL8H717SYPifwStWnPD6UsAfgim+VUYJDexjfkxblH3DxyrcKGd6XqhIKE+Ndw==
+particl-marketplace@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.2.1.tgz#d3c1ffdeac145c4215f42c1b3ee37a6923e246fc"
+  integrity sha512-zrJnIn2K4sa3XPGGtmkva6FeGOds6xsr+xhY5DNGCj6GX0D0sw0nMDinWIibeW9dk2jEGHenATV0c60eOvbKDw==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
