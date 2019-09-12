@@ -8639,10 +8639,10 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-market-import-core@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/particl-market-import-core/-/particl-market-import-core-0.0.6.tgz#1c67b646e6f125f1dbe3beafa991ba14f02bae0b"
-  integrity sha512-0i1i8AXkUgEnapCCkLGZHjEUA0IRYtgaN6t1kQHvAW9c5j8J0cKOKxH7da5NzAd/TYscuEvbYcBGWRZjlWs9XA==
+particl-market-import-core@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/particl-market-import-core/-/particl-market-import-core-0.0.8.tgz#1d10e8827865dd3e9ee3fce08220ebcd6f66b139"
+  integrity sha512-rcIlR7lFiWP8JLIfrXD9tnPkBu7qtalhzfuaZrqru09jQ2JhFV/LiPBHgfe8+v7J6V/nBnE/2yz9QMeWTmeE7A==
   dependencies:
     csvtojson "^2.0.8"
     form-data "^2.3.3"

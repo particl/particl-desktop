@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 
-import { PartoshiAmountPipe } from './common.pipes';
+import { PartoshiAmountPipe, ParticlAmountPipe } from './common.pipes';
 
 
 @NgModule({
   imports: [],
   declarations: [
-    PartoshiAmountPipe
+    PartoshiAmountPipe,
+    ParticlAmountPipe
   ],
   exports: [
-    PartoshiAmountPipe
+    PartoshiAmountPipe,
+    ParticlAmountPipe
   ],
 })
 export class PipeModule { }
