@@ -237,7 +237,7 @@
         <!-- Fee Column -->
         <ng-container matColumnDef="fee">
           <th mat-header-cell *matHeaderCellDef>Publishing fee</th>
-          <td mat-cell *matCellDef="let listing"> {{listing.fee | partoshiAmount}} </td>
+          <td mat-cell *matCellDef="let listing"> {{listing.fee | particlAmount}} </td>
         </ng-container>
       
         <tr mat-header-row *matHeaderRowDef="['title', 'basePrice', 'domesticShippingPrice', 'internationalShippingPrice', 'fee']"></tr>

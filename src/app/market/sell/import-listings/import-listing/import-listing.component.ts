@@ -3,6 +3,7 @@ import { SnackbarService } from 'app/core/core.module';
 import { Category } from 'app/core/market/api/category/category.model';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { MarketImportService } from 'app/core/market/market-import/market-import.service';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 @Component({
   selector: 'app-import-listing',
@@ -17,6 +18,10 @@ export class ImportListingComponent implements OnInit {
   dropArea: any;
   fileInput: any;
 
+  tempBasePrice: number;
+  tempDomesticShippingPrice: number;
+  tempInternationalShippingPrice: number;
+
   constructor(
     private category: CategoryService,
     private _marketImportService: MarketImportService,
@@ -28,16 +33,29 @@ export class ImportListingComponent implements OnInit {
   }
 
   async editItem(listing: any, editing: boolean) {
-    listing['editing'] = editing;
 
-    if (editing) {
+    if (!listing['editing'] && editing) {
+      listing['editing'] = editing;
+
+      this.tempBasePrice = this.convertToParticls(this.listing.basePrice);
+      this.tempDomesticShippingPrice = this.convertToParticls(this.listing.domesticShippingPrice);
+      this.tempInternationalShippingPrice = this.convertToParticls(this.listing.internationalShippingPrice);
+
       setTimeout(() => {
         // Initialize drag-n-drop
         this.initDragDropEl('drag-n-drop');
         this.fileInput = document.getElementById('fileInput');
         this.fileInput.onchange = this.processPictures.bind(this);
       }, 250);
-    } else {
+    }
+
+    if (listing['editing'] && !editing) {
+      listing['editing'] = editing;
+
+      listing.basePrice = this.convertToPartoshi(this.tempBasePrice);
+      listing.domesticShippingPrice = this.convertToPartoshi(this.tempDomesticShippingPrice);
+      listing.internationalShippingPrice = this.convertToPartoshi(this.tempInternationalShippingPrice);
+
       this._marketImportService.validateListings([listing]).subscribe(
         (data) => {
           if (data.result) {
@@ -161,5 +179,13 @@ export class ImportListingComponent implements OnInit {
         this.processPictures(e, true);
         return false;
     };
+  }
+
+  private convertToParticls(partoshi: number) {
+    return new PartoshiAmount(partoshi).particls();
+  }
+
+  private convertToPartoshi(particls: number) {
+    return new PartoshiAmount(particls * Math.pow(10, 8)).partoshis();
   }
 }

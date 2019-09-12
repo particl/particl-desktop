@@ -136,6 +136,16 @@ export class ImportListingsComponent {
           loadDialog.componentInstance.data.message = loadData.status;
         }
         if (loadData.result) {
+          // Convert PART to PARTOSHI to prevent rounding errors
+          loadData.result = this.convertAmountsToPartoshi(loadData.result);
+
+          // Preserve import error and only validate successfully imported items.
+          // The items with import errors will be revalidated when they are edited
+          loadData.result = loadData.result.map(l => {
+            l.publish = l.validationError === '';
+            return l;
+          });
+
           this._marketImportService.validateListings(loadData.result).subscribe(
             (data) => {
               if (data.status) {
@@ -143,7 +153,12 @@ export class ImportListingsComponent {
               }
 
               if (data.result) {
-                data.result = this.fixImportedData(data.result);
+                // Restore publish flag
+                data.result = data.result.map(l => {
+                  l.publish = true;
+                  return l;
+                });
+                data.result = this.convertToCategories(data.result);
                 setTimeout(() => this.listings = data.result, 1);
 
                 this._dialog.closeAll();
@@ -327,12 +342,18 @@ export class ImportListingsComponent {
     return listings;
   }
 
-  private fixImportedData(listings: any) {
+  private convertToCategories(listings: any) {
     for (const listing of listings) {
       listing.category = listing.category ? new Category(listing.category) : listing.category;
-      listing.basePrice = new PartoshiAmount(listing.basePrice * Math.pow(10, 8)).particls();
-      listing.domesticShippingPrice = new PartoshiAmount(listing.domesticShippingPrice * Math.pow(10, 8)).particls();
-      listing.internationalShippingPrice = new PartoshiAmount(listing.internationalShippingPrice * Math.pow(10, 8)).particls();
+    }
+    return listings;
+  }
+
+  private convertAmountsToPartoshi(listings: any) {
+    for (const listing of listings) {
+      listing.basePrice = new PartoshiAmount(listing.basePrice * Math.pow(10, 8)).partoshis();
+      listing.domesticShippingPrice = new PartoshiAmount(listing.domesticShippingPrice * Math.pow(10, 8)).partoshis();
+      listing.internationalShippingPrice = new PartoshiAmount(listing.internationalShippingPrice * Math.pow(10, 8)).partoshis();
     }
     return listings;
   }

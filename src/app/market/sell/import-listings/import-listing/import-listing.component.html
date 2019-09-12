@@ -121,17 +121,17 @@
 
       <mat-form-field class="full-width">
         <mat-icon matPrefix class="icon" fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" type="text" [(ngModel)]="listing.basePrice">
+        <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Price per item *" type="text" [(ngModel)]="tempBasePrice">
         <span matSuffix>PART</span>
       </mat-form-field>
 
       <div class="row" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="25px">
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *"  [(ngModel)]="listing.domesticShippingPrice" type="text">
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price *"  [(ngModel)]="tempDomesticShippingPrice" type="text">
           <span matSuffix>PART</span>
         </mat-form-field>
         <mat-form-field fxFlex="50%" class="auto-width">
-          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *"  [(ngModel)]="listing.internationalShippingPrice"
+          <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price *"  [(ngModel)]="tempInternationalShippingPrice"
                   type="text">
           <span matSuffix>PART</span>
         </mat-form-field>
