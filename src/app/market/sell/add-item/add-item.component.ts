@@ -42,7 +42,7 @@ class CurrencyMinValidator {
       return validValue;
     }
     const amount: number = +fc.value;
-    if ( amount <= 25 ) {
+    if ( amount > 0 ) {
       return (null);
     }
     return ({ validAmount: false });
@@ -106,7 +106,7 @@ export class AddItemComponent implements OnInit, OnDestroy {
                                         Validators.maxLength(1000)]],
       category:                   ['', [Validators.required]],
       country:                    ['', [Validators.required]],
-      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
+      basePrice:                  ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.minBaseValue]],
       domesticShippingPrice:      ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]],
       internationalShippingPrice: ['', [Validators.required, Validators.minLength(1), CurrencyMinValidator.validValue]]
     });
