@@ -6,7 +6,8 @@ $listing-size: 75px;
 .listing {
   .header {
     min-height: $listing-size !important;
-    max-height: $listing-size !important;
+    max-height: none !important;
+    height: auto !important;
   }
 
   .detail.editing {
