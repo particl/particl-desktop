@@ -25,7 +25,7 @@ export class SellComponent implements OnInit, OnDestroy {
   public isPageLoading: boolean = false;
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
+  public tabLabels: Array<string> = ['orders', 'listings', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
   private resizeEventer: any;
 
   filters: any = {
