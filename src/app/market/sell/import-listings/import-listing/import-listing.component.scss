@@ -98,6 +98,8 @@ $listing-size: 75px;
 .error {
   color: $color-alert;
   font-family: $font;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .mat-form-field {
