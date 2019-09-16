@@ -348,11 +348,11 @@ export const OrderData = {
     buy: {
       buttons: [
         {
-          'tooltip': 'Cancel the order request',
+          'tooltip': 'Cancel the bid request',
           'colour': 'warn',
           'disabled': false,
           'icon': 'part-cross',
-          'text': 'Cancel order',
+          'text': 'Cancel bid',
           'action': 'CANCEL',
           'primary': false
         },
@@ -655,6 +655,50 @@ export const OrderData = {
         }
       ],
       status_info: 'Order delivery confirmed by Buyer - order successfully finalized',
+      notifyOnEntry: true
+    }
+  },
+
+  'CANCELLED': {
+    childBidStatus: {
+      name: 'MPA_CANCEL',
+      order: 7
+    },
+    filter: {
+      query: 'BID_CANCELLED',
+      text: 'Cancelled',
+      order: 11
+    },
+    from_action: 'BID_CANCELLED',
+    orderStatus: 'BID_CANCELLED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order Cancelled',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Successfully cancelled order',
+      notifyOnEntry: false
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order Cancelled',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order successfully cancelled',
       notifyOnEntry: true
     }
   }
