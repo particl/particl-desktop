@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
@@ -42,14 +43,25 @@ export class BuyComponent implements OnInit {
     private favoritesService: FavoritesService,
     public countryList: CountryListService,
     private rpcState: RpcStateService,
-    private cartService: CartService
+    private cartService: CartService,
+    private _route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.cartService.list().pipe(take(1)).subscribe(
-      cart => this.selectedTab = +cart.countOfItems > 1 ? 0 : 1,
-      err => this.selectedTab = 0
-    );
+    const tab = this._route.snapshot.paramMap.get('tab');
+    if (tab) {
+      const tabIdx = this.tabLabels.findIndex((tl) => tl === tab);
+      if (tabIdx > -1) {
+        this.selectedTab = tabIdx;
+      }
+    } else {
+      this.cartService.list().pipe(take(1)).subscribe(
+        cart => {
+          this.selectedTab = +cart.countOfItems > 0 ? 0 : 1
+        },
+        err => this.selectedTab = 0
+      );
+    }
     this.favoritesService.cache.update();
     this.load();
     this.rpcState.observe('getwalletinfo').pipe(take(1))
