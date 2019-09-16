@@ -454,6 +454,15 @@ export const OrderData = {
     buy: {
       buttons: [
         {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
+        {
           'tooltip': 'Pay for your order and escrow',
           'colour': 'primary',
           'disabled': false,
@@ -468,6 +477,15 @@ export const OrderData = {
     },
     sell: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': 'Waiting for Buyer\'s Payment',
           'colour': 'primary',
