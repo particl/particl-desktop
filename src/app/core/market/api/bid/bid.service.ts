@@ -22,7 +22,7 @@ export class BidService {
   private log: any = Log.create('bid.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   constructor(
-    private market: MarketService, 
+    private market: MarketService,
     private cartService: CartService,
     private profileService: ProfileService
   ) {}

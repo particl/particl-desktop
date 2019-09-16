@@ -516,15 +516,6 @@ export const OrderData = {
     buy: {
       buttons: [
         {
-          'tooltip': 'Cancel the bid request',
-          'colour': 'warn',
-          'disabled': false,
-          'icon': 'part-cross',
-          'text': 'Cancel bid',
-          'action': 'CANCEL',
-          'primary': false
-        },
-        {
           'tooltip': '',
           'colour': 'primary',
           'disabled': true,
