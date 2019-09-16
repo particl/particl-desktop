@@ -3,7 +3,11 @@
 
   <div class="multiwallet">
 
-    <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.displayname.toUpperCase()}}" matTooltipPosition="after">{{wallet.displayname.toUpperCase()[0]}}</button>
+    <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.displayname.toUpperCase()}}" matTooltipPosition="after">
+      <!-- If this is market wallet, show "market icon"; if not, show first letter of wallet's name: -->
+      <span *ngIf="!wallet.isMarketEnabled">{{wallet.displayname.toUpperCase()[0]}}</span>
+      <mat-icon fontSet="partIcon" fontIcon="part-cart" *ngIf="wallet.isMarketEnabled"></mat-icon>
+    </button>
 
     <button mat-raised-button color="primary" routerLink="/installer/create" routerLinkActive="active" matTooltip="Add new wallet" matTooltipPosition="after">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>

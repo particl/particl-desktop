@@ -51,12 +51,12 @@ $theme-foreground: (
 // instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
 @function create-part-theme($primary, $accent, $warn) {
   @return (
-    primary: $primary,
-    accent: $accent,
-    warn: $warn,
-    is-dark: false,
-    foreground: $theme-foreground,
-    background: $theme-background,
+  primary: $primary,
+  accent: $accent,
+  warn: $warn,
+  is-dark: false,
+  foreground: $theme-foreground,
+  background: $theme-background,
   );
 }
 

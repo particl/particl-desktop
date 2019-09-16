@@ -6,8 +6,8 @@ const particl_market_import_core = require('particl-market-import-core');
 const Transformers = particl_market_import_core.Transformers;
 const ListingManager = particl_market_import_core.ListingManager;
 
-const importConfig = [];
-const importers = {};
+let importConfig = [];
+let importers = {};
 
 exports.init = function() {
 
@@ -26,10 +26,13 @@ exports.init = function() {
 }
 
 exports.destroy = function() {
-    rxIpc.removeListeners('importer-config');
-    rxIpc.removeListeners('importer-load');
-    rxIpc.removeListeners('importer-validate');
-    rxIpc.removeListeners('importer-publish');
+  importConfig = [];
+  importers = {};
+
+  rxIpc.removeListeners('importer-config');
+  rxIpc.removeListeners('importer-load');
+  rxIpc.removeListeners('importer-validate');
+  rxIpc.removeListeners('importer-publish');
 }
 
 

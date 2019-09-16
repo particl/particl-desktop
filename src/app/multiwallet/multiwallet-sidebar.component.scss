@@ -33,6 +33,9 @@
       &:last-of-type {
         margin-bottom: 0;
       }
+      .part-cart { // icon for Market wallet
+        font-size: 15px;
+      }
     }
     &::-webkit-scrollbar-thumb {
       background: darken($bg-black, 10%);

@@ -82,6 +82,12 @@ function initMainWindow() {
   } else {
     electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate([
       {
+        label: app.getName(),
+        submenu: [
+          { label: 'Quit', role: 'quit' }
+        ]
+      },
+      {
         label: 'Edit',
         submenu: [
           { role: 'undo' },

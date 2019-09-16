@@ -1,11 +1,11 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { MarketModule } from '../../market.module';
+import { CommentService } from 'app/core/market/api/comment/comment.service';
 import { SharedModule } from 'app/wallet/shared/shared.module';
 import { CoreModule } from 'app/core/core.module';
-import { BidService } from './bid.service';
+import { MarketModule } from '../../market.module';
 
-describe('BidService', () => {
+describe('CommentService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -13,11 +13,12 @@ describe('BidService', () => {
         CoreModule.forRoot(),
         MarketModule.forRoot()
       ],
-      providers: [BidService]
+      providers: [CommentService]
     });
   });
 
-  it('should be created', inject([BidService], (service: BidService) => {
+  it('should be created', inject([CommentService], (service: CommentService) => {
     expect(service).toBeTruthy();
   }));
+
 });

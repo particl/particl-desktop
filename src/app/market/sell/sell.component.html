@@ -4,15 +4,15 @@
     <mat-tab-group (selectedTabChange)="changeTab($event.index)">
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
-          Listings
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+          Orders
+          <!-- <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count> -->
         </ng-template>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-          Orders
-          <!-- <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count> -->
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
+          Listings
         </ng-template>
       </mat-tab>
     </mat-tab-group>

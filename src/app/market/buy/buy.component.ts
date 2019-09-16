@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { FavoritesService } from 'app/core/market/api/favorites/favorites.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
@@ -6,6 +7,7 @@ import { Listing } from 'app/core/market/api/listing/listing.model';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
+import { CartService } from 'app/core/market/api/cart/cart.service';
 import { take } from 'rxjs/operators';
 import { RpcStateService } from 'app/core/core.module';
 
@@ -40,10 +42,26 @@ export class BuyComponent implements OnInit {
     private listingService: ListingService,
     private favoritesService: FavoritesService,
     public countryList: CountryListService,
-    private rpcState: RpcStateService
+    private rpcState: RpcStateService,
+    private cartService: CartService,
+    private _route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    const tab = this._route.snapshot.paramMap.get('tab');
+    if (tab) {
+      const tabIdx = this.tabLabels.findIndex((tl) => tl === tab);
+      if (tabIdx > -1) {
+        this.selectedTab = tabIdx;
+      }
+    } else {
+      this.cartService.list().pipe(take(1)).subscribe(
+        cart => {
+          this.selectedTab = +cart.countOfItems > 0 ? 0 : 1
+        },
+        err => this.selectedTab = 0
+      );
+    }
     this.favoritesService.cache.update();
     this.load();
     this.rpcState.observe('getwalletinfo').pipe(take(1))

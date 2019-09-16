@@ -20,16 +20,21 @@ p.info {
   background: rgba($secondary, 0.1);
 }
 
+p.warning {
+  margin: 0 -24px -24px !important;
+  background: rgba($color-alert, 0.1);
+}
+
 
 // ------ LAYOUT ------ //
 
-.page-intro {
-  margin: 64px 0 0;
-  padding-bottom: 12px;
+.container-block {
+  padding-bottom: 0;
 }
 
 .mat-stepper-horizontal {
-  padding: 11px; // TODO: unify with Cart styles?
+  padding: 0 11px; // TODO: unify with Cart styles?
+  margin-top: -12px;
 }
 
 .stepper-content {

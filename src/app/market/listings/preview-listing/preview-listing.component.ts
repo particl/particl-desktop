@@ -30,7 +30,7 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
   images: ImageItem[] = [];
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['details', 'shipping', 'comments'];
+  public tabLabels: Array<string> = ['details', 'shipping', 'questions'];
 
   constructor(
     private dialogRef: MatDialogRef<PreviewListingComponent>,
