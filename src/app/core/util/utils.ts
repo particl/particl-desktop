@@ -348,6 +348,15 @@ export const OrderData = {
     buy: {
       buttons: [
         {
+          'tooltip': 'Cancel the order request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel order',
+          'action': 'CANCEL',
+          'primary': false
+        },
+        {
           'tooltip': '',
           'colour': 'primary',
           'disabled': true,

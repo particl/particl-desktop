@@ -86,6 +86,12 @@ export class BidService {
     return this.market.call('bid', params);
   }
 
+  cancelBidCommand(id: number): Observable<any> {
+    const params = ['cancel', id];
+
+    return this.market.call('bid', params);
+  }
+
   escrowCompleteCommand(id: number): Observable<any> {
     const params = ['complete', id];
     return this.market.call('escrow', params);
