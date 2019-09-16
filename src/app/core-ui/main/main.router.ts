@@ -57,6 +57,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   showAnnouncements: boolean = false;
   public unlocked_until: number = 0;
   public isMarketRoute: boolean = false;
+  public displaySettings: boolean = false;
 
   constructor(
     private _router: Router,
@@ -113,19 +114,23 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .pipe(map((event: NavigationEnd) => {
-        this.checkMarketRoute(event.url);
-        return this._route;
-      }))
-      .pipe(map(route => {
-        while (route.firstChild) {
-          route = route.firstChild;
-        }
-        return route;
-      }))
-      .pipe(filter(route => route.outlet === 'primary'))
-      .pipe(flatMap(route => route.data))
+      .pipe(
+        takeWhile(() => !this.destroyed),
+        filter(event => event instanceof NavigationEnd),
+        map((event: NavigationEnd) => {
+          this.checkMarketRoute(event.url);
+          this.displaySettings = this.isSettingsActivated(event.urlAfterRedirects);
+          return this._route;
+        }),
+        map(route => {
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+        filter(route => route.outlet === 'primary'),
+        flatMap(route => route.data)
+      )
       .subscribe(data => (this.title = data['title']));
 
     /* errors */
@@ -235,6 +240,10 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   private checkMarketRoute(url: string) {
     this.isMarketRoute = (url.indexOf('/market/') > -1);
+  }
+
+  private isSettingsActivated(url: string): boolean {
+    return (url.indexOf('/settings') > -1);
   }
 
   // Paste Event Handle

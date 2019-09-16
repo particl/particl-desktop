@@ -4,7 +4,7 @@
 
     <multiwallet-sidebar class="sidebar-multiwallet"></multiwallet-sidebar>
 
-    <div class="sidebar-menu">
+    <div class="sidebar-menu" *ngIf="!displaySettings">
       <div class="logo">
         <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
       </div>
