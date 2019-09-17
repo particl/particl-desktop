@@ -696,7 +696,7 @@ export const OrderData = {
       text: 'Cancelled',
       order: 11
     },
-    from_action: 'BID_CANCELLED',
+    from_action: 'CANCEL',
     orderStatus: 'BID_CANCELLED',
     buy: {
       buttons: [
