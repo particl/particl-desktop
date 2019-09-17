@@ -2,23 +2,10 @@
 <app-header class="test-case-container">
   <div class="tab-bar">
     <mat-tab-group (selectedTabChange)="changeTab($event.index)">
-      <mat-tab>
+      <mat-tab *ngFor="let tab of settingTabs">
         <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-          <!-- TODO: tabs as settings categories (ie. General, Display, Network etc.) -->
-          Uno
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-          Dos
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-          Tres
+          <mat-icon *ngIf="tab.icon.length" class="icon" fontSet="partIcon" fontIcon="{{tab.icon}}"></mat-icon>
+          {{tab.title}}
         </ng-template>
       </mat-tab>
     </mat-tab-group>
@@ -30,18 +17,18 @@
 
 <div class="container-block with-tab-bar">
   <app-page-intro>
-    <ng-container page-title>[Tab name] settings</ng-container>
+    <ng-container page-title>{{ walletName }} settings</ng-container>
     <ng-container page-content>
       <!-- TODO: replace MARKET_NAME with the name of currently active wallet -->
-      Adjust settings for the currently active <strong>MARKET_NAME</strong> wallet.
+      Adjust settings and configuration for the currently active wallet: <strong>{{ walletName }}</strong>
     </ng-container>
     <ng-container page-help>
-      To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page.<br>To change global settings for Particl Desktop, click the <button mat-button color="basic" class="small"><mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>Global Settings</button> button in the bottom left of the multiwallet sidebar.
+      To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.
     </ng-container>
   </app-page-intro>
 
 
-  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="tabLabels[selectedTab] == 'one'">
+  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="selectedTabIdx === 0">
     <div class="half" fxFlex="50">
 
       <h2 class="subtitle">Group name</h2>
@@ -110,7 +97,7 @@
   </div><!-- .row (1st tab) -->
 
 
-  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="tabLabels[selectedTab] == 'two'">
+  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="selectedTabIdx === 1">
     <div class="half" fxFlex="50">
 
       <h2 class="subtitle">2nd tab Group name</h2>

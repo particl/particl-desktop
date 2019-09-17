@@ -1,0 +1,48 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+/* ------------------------------- *\
+    LAYOUT
+\* ------------------------------- */
+
+// ------ SIDEBAR (main menu) ------ //
+
+.sidebar { // AKA .mat-sidenav
+  width: calc(54px + #{$scrollbar-width});
+  background-color: $bg-black;
+  color: $color-white;
+  display: flex;
+  .sidebar-multiwallet {
+    flex: 0 0 54px;
+    position: sticky;
+    top: 0;
+  }
+}
+
+/* ----------------------------------- *\
+    Page header (with status icons)
+\* ----------------------------------- */
+
+.header-main {
+  border-bottom: 1px solid $bg-shadow;
+  width: calc(100% - 54px - #{$scrollbar-width});
+  padding-left: 35px;
+  padding-right: 26px;
+  font-family: $font;
+  font-size: 15px;
+  text-transform: uppercase;
+  position: fixed;
+  top: 0;
+  left: 54px;
+  right: 0;
+  z-index: 100;
+  @include break(l) {
+    padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;
+  }
+  .title {
+    font-weight: 700;
+  }
+  .right {
+    text-align: right;
+  }
+}

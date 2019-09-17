@@ -4,7 +4,7 @@
 
     <multiwallet-sidebar class="sidebar-multiwallet"></multiwallet-sidebar>
 
-    <div class="sidebar-menu" *ngIf="!displaySettings">
+    <div class="sidebar-menu">
       <div class="logo">
         <img src="./assets/particl-logo{{testnet ? '-testnet' : ''}}.svg" alt="Particl">
       </div>
@@ -125,15 +125,6 @@
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
                 <span class="text">Proposals</span>
                 <app-count-badge class="tag" [count]="proposalsNotificationsService?.proposalsCountRequiredVoteAction"></app-count-badge>
-              </mat-list-item>
-            </a>
-
-            <a class="sidebar-item-link"
-              routerLinkActive="active" routerLink="wallet/settings">
-              <mat-list-item class="sidebar-item">
-                <mat-icon class="icon" fontSet="partIcon"
-                  fontIcon="part-cog"></mat-icon>
-                <span class="text">Settings</span>
               </mat-list-item>
             </a>
           </mat-list><!-- .sidebar-item-group -->

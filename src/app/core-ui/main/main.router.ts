@@ -57,7 +57,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   showAnnouncements: boolean = false;
   public unlocked_until: number = 0;
   public isMarketRoute: boolean = false;
-  public displaySettings: boolean = false;
 
   constructor(
     private _router: Router,
@@ -119,7 +118,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
         filter(event => event instanceof NavigationEnd),
         map((event: NavigationEnd) => {
           this.checkMarketRoute(event.url);
-          this.displaySettings = this.isSettingsActivated(event.urlAfterRedirects);
           return this._route;
         }),
         map(route => {
@@ -240,10 +238,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   private checkMarketRoute(url: string) {
     this.isMarketRoute = (url.indexOf('/market/') > -1);
-  }
-
-  private isSettingsActivated(url: string): boolean {
-    return (url.indexOf('/settings') > -1);
   }
 
   // Paste Event Handle

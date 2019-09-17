@@ -10,6 +10,7 @@ import { app_routing } from './app.routing';
 import { LoadingComponent } from 'app/loading/loading.component';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 import { InstallerModule } from 'app/installer/installer.module';
+import { SettingsModule } from 'app/settings/settings.module';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 import { CoreModule } from './core/core.module';
 
@@ -24,6 +25,7 @@ import { CoreModule } from './core/core.module';
     BrowserAnimationsModule,
     app_routing,
     InstallerModule,
+    SettingsModule,
     MultiwalletModule.forRoot(),
     RpcWithStateModule.forRoot(),
     CoreModule.forRoot(),

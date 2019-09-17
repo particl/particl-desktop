@@ -6,7 +6,6 @@ import { HelpComponent } from './help/help.component';
 import { AddProposalComponent } from './proposals/add-proposal/add-proposal.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
-import { SettingsComponent } from './settings/settings.component';
 
 //   { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
 const routes: Routes = [
@@ -18,8 +17,7 @@ const routes: Routes = [
   { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } },
   { path: 'help', component: HelpComponent, data: { title: 'Help & Support' } },
   { path: 'proposals', component: ProposalsComponent, data: { title: 'Proposals' } },
-  { path: 'proposal', component: AddProposalComponent, data: { title: 'Proposals › Submit new' } },
-  { path: 'settings', component: SettingsComponent, data: { title: 'Settings' } }
+  { path: 'proposal', component: AddProposalComponent, data: { title: 'Proposals › Submit new' } }
 ];
 
 export const wallet_routing: ModuleWithProviders = RouterModule.forChild(routes);

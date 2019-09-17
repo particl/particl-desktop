@@ -57,7 +57,9 @@ export class MultiwalletService implements OnDestroy {
   get list(): Observable<Array<IWallet>> {
     return this._list
       .asObservable()
-      .pipe(distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
+      .pipe(
+        takeWhile(() => !this.destroyed),
+        distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
   }
 
   /**
@@ -73,6 +75,7 @@ export class MultiwalletService implements OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this._list.complete();
   }
 
   private findAvailableWallets() {

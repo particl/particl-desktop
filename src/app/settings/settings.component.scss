@@ -17,6 +17,10 @@ hr.divider {
 
 // ------ LAYOUT ------ //
 
+.tab-bar {
+  left: calc(54px + #{$scrollbar-width});
+}
+
 
 .mat-card {
   margin-bottom: 16px;
