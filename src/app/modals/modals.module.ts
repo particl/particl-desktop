@@ -38,7 +38,6 @@ import {
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
-import { ProcessingModalComponent } from './processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 
 @NgModule({
@@ -69,7 +68,6 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent,
     AlphaMainnetWarningComponent,
     BidRejectComponent
   ],
@@ -98,7 +96,6 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent,
     AlphaMainnetWarningComponent,
     BidRejectComponent
   ],

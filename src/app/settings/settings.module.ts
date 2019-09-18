@@ -11,7 +11,6 @@ import { SettingsRouterComponent } from './settings.router';
 import { SettingsComponent } from './settings.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
-import { HeaderComponent } from 'app/wallet/shared/header/header.component';
 
 @NgModule({
   imports: [

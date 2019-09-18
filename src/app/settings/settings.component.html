@@ -2,10 +2,10 @@
 <app-header class="test-case-container">
   <div class="tab-bar">
     <mat-tab-group (selectedTabChange)="changeTab($event.index)">
-      <mat-tab *ngFor="let tab of settingTabs">
+      <mat-tab *ngFor="let page of settingPages">
         <ng-template mat-tab-label>
-          <mat-icon *ngIf="tab.icon.length" class="icon" fontSet="partIcon" fontIcon="{{tab.icon}}"></mat-icon>
-          {{tab.title}}
+          <mat-icon *ngIf="page.icon.length" class="icon" fontSet="partIcon" fontIcon="{{page.icon}}"></mat-icon>
+          {{page.header}}
         </ng-template>
       </mat-tab>
     </mat-tab-group>
@@ -13,22 +13,34 @@
 </app-header>
 
 
-<!-- =========== LISTINGS =========== -->
-
-<div class="container-block with-tab-bar">
-  <app-page-intro>
-    <ng-container page-title>{{ walletName }} settings</ng-container>
+<div class="container-block with-tab-bar"  *ngIf="pageIdx !== -1">
+  <app-page-intro childPageAlias="{{settingPages[pageIdx].header}}">
+    <ng-container page-title>{{ currentPage.info.title }}</ng-container>
     <ng-container page-content>
-      <!-- TODO: replace MARKET_NAME with the name of currently active wallet -->
-      Adjust settings and configuration for the currently active wallet: <strong>{{ walletName }}</strong>
+        {{ currentPage.info.description }}
     </ng-container>
     <ng-container page-help>
-      To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.
+        {{ currentPage.info.help }}
     </ng-container>
   </app-page-intro>
 
+  <ng-container *ngTemplateOutlet="isLoading ? pageloader : content"></ng-container>
 
-  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="selectedTabIdx === 0">
+</div>
+
+
+<ng-template #pageloader>
+  <div class="no-results">
+    <p>
+      Requesting configuration values
+    </p>
+  </div>
+</ng-template>
+
+
+<ng-template #content>
+
+  <div class="row" fxLayout fxLayoutGap="30px">
     <div class="half" fxFlex="50">
 
       <h2 class="subtitle">Group name</h2>
@@ -96,8 +108,58 @@
     </div><!-- .half -->
   </div><!-- .row (1st tab) -->
 
+  <div class="row" fxLayout fxLayoutGap="30px">
 
-  <div class="row" fxLayout fxLayoutGap="30px" *ngIf="selectedTabIdx === 1">
+    <div class="half" fxFlex="50">
+      <h2 class="subtitle">2nd tab Group name</h2>
+      <mat-card>
+        <div class="item">
+          <h4 class="option">TX fees</h4>
+          <p class="desc">Some nice explanation</p>
+          <mat-form-field floatLabel="never">
+            <input matInput type="number" min="0.0001" step="0.0001" value="0.01">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-select>
+              <mat-option value="xx">
+                PART
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </mat-card>
+
+    </div><!-- .half -->
+    <div class="half" fxFlex="50">
+
+      <h2 class="subtitle">2nd tab Group name</h2>
+      <mat-card>
+        <div class="row" fxLayout fxLayoutGap="20px">
+          <div class="half" fxFlex="50">
+            <h4 class="option">Min. Ring size</h4>
+            <p class="desc">Some nice explanation</p>
+            <mat-form-field class="full-width">
+              <input matInput placeholder="Example input">
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <h4 class="option">Max. Ring size</h4>
+            <p class="desc">Some nice explanation</p>
+            <mat-form-field>
+              <mat-select>
+                <mat-option value="xx">
+                  Example select
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </mat-card>
+
+    </div><!-- .half -->
+  </div><!-- .row (2nd tab) -->
+
+  <div class="row" fxLayout fxLayoutGap="30px">
     <div class="half" fxFlex="50">
 
       <h2 class="subtitle">2nd tab Group name</h2>
@@ -151,9 +213,14 @@
 
   <div class="actions">
     <div class="left">
-      <button mat-button color="basic">
+      <button mat-button
+        color="basic"
+        [disabled]="!currentPage.isChanged"
+        appDebounceClick
+        (debounceClick)="clearChanges()"
+      >
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-        Reset all to defaults
+        Reset unsaved changes
       </button>
     </div>
     <div class="right">
@@ -162,6 +229,5 @@
         Save changes
       </button>
     </div>
-  </div><!-- .actions -->
-
-</div><!-- .container-block -->
+  </div>
+</ng-template>
