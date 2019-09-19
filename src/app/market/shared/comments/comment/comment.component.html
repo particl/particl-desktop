@@ -1,5 +1,5 @@
-<mat-expansion-panel class="question-box">
-  <mat-expansion-panel-header>
+<mat-expansion-panel class="question-box" (opened)="clearUnreadNotifications()">
+  <mat-expansion-panel-header [ngClass]="{'new': hasUnreadComments}">
     <mat-panel-title fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start">
       <div class="no" fxFlex="0 0 20px">#{{ commentIndex }}</div>
       <div class="summary" fxFlex="1 1 100%">

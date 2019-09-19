@@ -48,7 +48,8 @@
         [comment]="comment"
         [commentIndex]="commentIndex + 1 + (pageIndex * 10)"
         [sellerAddress]="sellerAddress"
-        (replied)="doRefresh()">
+        [targetComments]="targetComments"
+        (refresh)="doRefresh($event)">
       </app-comment>
     </ng-container>
   </div><!-- .comments-list -->

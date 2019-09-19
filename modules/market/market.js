@@ -42,7 +42,8 @@ exports.start = function(walletName) {
       RPC_PORT: _options.port,
       TESTNET: isTestnet,
       RPCCOOKIEFILE: cookieFile,
-      STANDALONE: true
+      STANDALONE: true,
+      SOCKETIO_ENABLED: true
     };
 
     if (isTestnet) {
