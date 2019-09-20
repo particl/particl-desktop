@@ -83,7 +83,7 @@ export class CommentsComponent implements OnDestroy, OnInit {
             this.snackbar.open('Question successfully posted');
           },
           (error) => {
-            this.snackbar.open('Error posting question');
+            this.snackbar.open('Error posting question, ' + error);
             this.log.error(error);
           }
         );
