@@ -13,8 +13,8 @@
 </app-header>
 
 
-<div class="container-block with-tab-bar"  *ngIf="pageIdx !== -1">
-  <app-page-intro childPageAlias="{{settingPages[pageIdx].header}}">
+<div class="container-block with-tab-bar"  *ngIf="currentPage">
+  <app-page-intro [childPageAlias]="currentPage.header">
     <ng-container page-title>{{ currentPage.info.title }}</ng-container>
     <ng-container page-content>
         {{ currentPage.info.description }}
@@ -40,194 +40,117 @@
 
 <ng-template #content>
 
-  <div class="row" fxLayout fxLayoutGap="30px">
-    <div class="half" fxFlex="50">
+  <div class="row" fxLayout fxLayoutGap="30px" *ngFor="let rowIdx of groupIdxs">
+    <div class="half" fxFlex="50" *ngFor="let colIdx of colIdxs">
+        <h2 class="subtitle"> {{ (currentPage.settingGroups[rowIdx + colIdx])?.name }} </h2>
+        <mat-card>
+          <ng-container *ngFor="let setting of (currentPage.settingGroups[rowIdx + colIdx])?.settings; let settingIdx = index;">
+            <div class="item" [ngSwitch]="setting.type">
 
-      <h2 class="subtitle">Group name</h2>
-      <mat-card>
-        <div class="item">
-          <mat-checkbox class="checkbox align-top wrap">
-            <h4 class="option">Example checkbox</h4>
-            <p class="desc">With some nice explanatory description</p>
-          </mat-checkbox>
-        </div>
-        <hr class="divider">
-        <div class="item">
-          <mat-checkbox class="checkbox align-top wrap">
-            <h4 class="option">Example checkbox<span class="tag">Optional tag</span></h4>
-            <p class="desc">With some nice explanatory description</p>
-          </mat-checkbox>
-        </div>
-      </mat-card>
+              <ng-container *ngSwitchCase="settingType.BOOLEAN">
+                  <mat-checkbox class="checkbox align-top wrap" [disabled]="setting.isDisabled">
+                    <h4 class="option">{{ setting.title }}</h4>
+                    <p class="option">
+                      <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                      <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
+                    </p>
+                    <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  </mat-checkbox>
+                  <div class="error message" *ngIf="true">
+                    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                    {{ setting.errorMsg }}
+                  </div>
+              </ng-container>
 
-      <h2 class="subtitle">Group name</h2>
-      <mat-card>
-        <div class="item">
-          <h4 class="option">TX fees</h4>
-          <p class="desc">Some nice explanation</p>
-          <mat-form-field floatLabel="never">
-            <input matInput type="number" min="0.0001" step="0.0001" value="0.01">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select>
-              <mat-option value="xx">
-                PART
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </mat-card>
+              <ng-container *ngSwitchCase="settingType.NUMBER">
+                  <h4 class="option">{{ setting.title }}</h4>
+                  <p class="option">
+                    <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
+                  </p>
+                  <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  <mat-form-field floatLabel="never">
+                    <input matInput type="number" *ngIf="!setting.limits" [disabled]="setting.isDisabled">
+                    <input matInput type="number" *ngIf="setting.limits"
+                      [min]="setting.limits.min"
+                      [step]="setting.limits.step"
+                      [max]="setting.limits.max"
+                      [disabled]="setting.isDisabled">
+                  </mat-form-field>
+                  <div class="error message" *ngIf="setting.errorMsg">
+                    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                    {{setting.errorMsg}}
+                  </div>
+              </ng-container>
 
-    </div><!-- .half -->
-    <div class="half" fxFlex="50">
+              <ng-container *ngSwitchCase="settingType.STRING">
+                  <h4 class="option">{{ setting.title }}</h4>
+                  <p class="option">
+                    <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
+                  </p>
+                  <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  <mat-form-field class="full-width">
+                    <input matInput
+                      [placeholder]="setting?.limits?.placeholder"
+                      [disabled]="setting.isDisabled">
+                  </mat-form-field>
+                  <div class="error message" *ngIf="setting.errorMsg">
+                    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                    {{setting.errorMsg}}
+                  </div>
+              </ng-container>
 
-      <h2 class="subtitle">Group name</h2>
-      <mat-card>
-        <div class="row" fxLayout fxLayoutGap="20px">
-          <div class="half" fxFlex="50">
-            <h4 class="option">Min. Ring size</h4>
-            <p class="desc">Some nice explanation</p>
-            <mat-form-field class="full-width">
-              <input matInput placeholder="Example input">
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <h4 class="option">Max. Ring size</h4>
-            <p class="desc">Some nice explanation</p>
-            <mat-form-field>
-              <mat-select>
-                <mat-option value="xx">
-                  Example select
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-card>
+              <ng-container *ngSwitchCase="settingType.SELECT">
+                  <h4 class="option">{{ setting.title }}</h4>
+                  <p class="option">
+                    <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
+                  </p>
+                  <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  <mat-form-field>
+                    <mat-select [disabled]="setting.isDisabled">
+                      <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
+                        {{ option.text }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <div class="error message" *ngIf="setting.errorMsg">
+                    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                    {{setting.errorMsg}}
+                  </div>
+              </ng-container>
 
-    </div><!-- .half -->
-  </div><!-- .row (1st tab) -->
+              <ng-container *ngSwitchCase="settingType.BUTTON">
+                <div class="half" fxFlex="50">
+                  <h4 class="option">{{ setting.title }}</h4>
+                  <p class="option">
+                    <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
+                  </p>
+                  <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                </div>
+                <div class="half" fxFlex="50">
+                  <button mat-raised-button
+                    color="{{ setting.limits ? setting.limits.color || 'primary' : 'primary' }}"
+                    class="validate"
+                    [disabled]="setting.isDisabled"
+                  >
+                    <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" fontSet="partIcon" [fontIcon]="setting.limits.icon"></mat-icon>
+                    {{ setting.title }}
+                  </button>
+                </div>
+                <p class="error message" *ngIf="setting.errorMsg">
+                  <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+                  {{ setting.errorMsg }}
+                </p>
+              </ng-container>
+            </div>
 
-  <div class="row" fxLayout fxLayoutGap="30px">
-
-    <div class="half" fxFlex="50">
-      <h2 class="subtitle">2nd tab Group name</h2>
-      <mat-card>
-        <div class="item">
-          <h4 class="option">TX fees</h4>
-          <p class="desc">Some nice explanation</p>
-          <mat-form-field floatLabel="never">
-            <input matInput type="number" min="0.0001" step="0.0001" value="0.01">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select>
-              <mat-option value="xx">
-                PART
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </mat-card>
-
-    </div><!-- .half -->
-    <div class="half" fxFlex="50">
-
-      <h2 class="subtitle">2nd tab Group name</h2>
-      <mat-card>
-        <div class="row" fxLayout fxLayoutGap="20px">
-          <div class="half" fxFlex="50">
-            <h4 class="option">Min. Ring size</h4>
-            <p class="desc">Some nice explanation</p>
-            <mat-form-field class="full-width">
-              <input matInput placeholder="Example input">
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <h4 class="option">Max. Ring size</h4>
-            <p class="desc">Some nice explanation</p>
-            <mat-form-field>
-              <mat-select>
-                <mat-option value="xx">
-                  Example select
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-card>
-
-    </div><!-- .half -->
-  </div><!-- .row (2nd tab) -->
-
-  <div class="row" fxLayout fxLayoutGap="30px">
-    <div class="half" fxFlex="50">
-
-      <h2 class="subtitle">2nd tab Group name</h2>
-      <mat-card>
-        <div class="item">
-          <h4 class="option">TX fees</h4>
-          <p class="desc">Some nice explanation</p>
-          <mat-form-field floatLabel="never">
-            <input matInput type="number" min="0.0001" step="0.0001" value="0.01">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-select>
-              <mat-option value="xx">
-                PART
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-      </mat-card>
-
-    </div><!-- .half -->
-    <div class="half" fxFlex="50">
-
-      <h2 class="subtitle">2nd tab Group name</h2>
-      <mat-card>
-        <div class="row" fxLayout fxLayoutGap="20px">
-          <div class="half" fxFlex="50">
-            <h4 class="option">Min. Ring size</h4>
-            <p class="desc">Some nice explanation</p>
-            <mat-form-field class="full-width">
-              <input matInput placeholder="Example input">
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <h4 class="option">Max. Ring size</h4>
-            <p class="desc">Some nice explanation</p>
-            <mat-form-field>
-              <mat-select>
-                <mat-option value="xx">
-                  Example select
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </mat-card>
-
-    </div><!-- .half -->
-  </div><!-- .row (2nd tab) -->
-
-
-  <div class="actions">
-    <div class="left">
-      <button mat-button
-        color="basic"
-        [disabled]="!currentPage.isChanged"
-        appDebounceClick
-        (debounceClick)="clearChanges()"
-      >
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-        Reset unsaved changes
-      </button>
-    </div>
-    <div class="right">
-      <button mat-raised-button color="primary" class="validate">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        Save changes
-      </button>
+            <hr class="divider" *ngIf="settingIdx !== ((currentPage.settingGroups[rowIdx + colIdx]).settings.length - 1)">
+          </ng-container>
+        </mat-card>
     </div>
   </div>
+
 </ng-template>
