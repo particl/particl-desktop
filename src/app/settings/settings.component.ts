@@ -6,6 +6,9 @@ import { range } from 'lodash';
 
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
+type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
+type ValidationFunction = (value: any, setting: Setting) => string | void;
+
 enum SettingType {
   STRING = 0,
   NUMBER = 1,
@@ -47,9 +50,8 @@ class Setting {
   newValue: any;                  // Ignored for SettingType.BUTTON
   tags: string[];
   restartRequired: boolean;
-  validate?: Function;
-  onChange?: Function;
-  fn?: Function;            // Currently only applicable for SettingType.BUTTON
+  validate?: ValidationFunction;
+  onChange?: ValidationFunction;
 };
 
 class SettingGroup {
@@ -68,14 +70,14 @@ class Page {
   icon: string;                   // tab icon
   info: PageInfo;                 // general information about the page (tab)
   settingGroups: SettingGroup[];  // a group of similar settings... all displayed close to each other
-  isChanged: boolean;             // indicates that a setting has been changed (UI control use)
-  load: Function;                 // executed when the page (tab) is loaded
+  load: PageLoadFunction;         // executed when the page (tab) is loaded
+  hasErrors: boolean;
 };
 
 enum ProcessingMessages {
   LOADING = 'Loading applicable settings',
-  SAVING = 'Attempting to save configuration changes',
-  RESET = 'Processing your request to cleear unsaved changes'
+  SAVING = 'Performing requested updates',
+  RESET = 'Resetting unsaved changes'
 }
 
 @Component({
@@ -85,7 +87,9 @@ enum ProcessingMessages {
 })
 export class SettingsComponent implements OnInit {
   public settingPages: Array<Page> = [];
-  public isLoading: boolean = true;
+  public isLoading: boolean = true;       // Change of page
+  public isProcessing: boolean = false;   // 'Busy' indicator on the current displayed page
+  public currentChanges: number[][] = [];
 
   public settingType: (typeof SettingType) = SettingType;
 
@@ -95,14 +99,12 @@ export class SettingsComponent implements OnInit {
   public groupIdxs: number[] = [];
 
   // Internal (private) vars
-  private isProcessing: boolean = false;
-  private pageIdx: number = -1;
+  private pageIdx: number = -1;   // Tracks the current displayed page
 
   constructor(
     private _rpc: RpcService,
     private _dialog: MatDialog
-  ) {
-  };
+  ) { };
 
   ngOnInit() {
     // Create the pages (tabs) used here
@@ -116,8 +118,7 @@ export class SettingsComponent implements OnInit {
         help: 'To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.'
       } as PageInfo,
       settingGroups: [],
-      isChanged: false,
-      load: this.loadWalletSettings,
+      load: (<PageLoadFunction>this.loadWalletSettings),
     } as Page;
     const globalSettings = {
       header: 'Global Settings',
@@ -128,8 +129,7 @@ export class SettingsComponent implements OnInit {
         help: 'Please take note of setting changes that require a service restart.'
       } as PageInfo,
       settingGroups: [],
-      isChanged: false,
-      load: this.loadGlobalSettings,
+      load: (<PageLoadFunction>this.loadGlobalSettings),
     } as Page;
 
     this.settingPages.push(walletSettings);
@@ -153,10 +153,55 @@ export class SettingsComponent implements OnInit {
       return;
     }
     this.isLoading = true;
+    this.isProcessing = false;
     this.disableUI(ProcessingMessages.LOADING);
     this.pageIdx = idx;
-    // this.resetPageChanges(idx);  // Perform this step only if NOT requesting settings on page load
     this.loadPageSettings(idx);
+  }
+
+  settingChangedValue(groupIdx: number, settingIdx: number) {
+    if (this.isLoading ||
+      !(groupIdx >= 0 && groupIdx < this.currentPage.settingGroups.length) ||
+      !(settingIdx >= 0 && settingIdx < this.currentPage.settingGroups[groupIdx].settings.length)) {
+        return;
+    }
+
+    this.isProcessing = true;
+    const setting = this.currentPage.settingGroups[groupIdx].settings[settingIdx];
+
+    if (setting.type === SettingType.BUTTON) {
+      this.disableUI(ProcessingMessages.SAVING);
+    }
+
+    if (setting.validate) {
+      const response = setting.validate(setting.newValue, setting);
+      if (response) {
+        setting.errorMsg = response;
+      }
+    }
+    if (setting.onChange) {
+      const response = setting.onChange(setting.newValue, setting);
+      if (response) {
+        setting.errorMsg = response;
+      }
+    }
+    if (setting.errorMsg) {
+      this.currentPage.hasErrors = true;
+    }
+
+    const changeIdx = this.currentChanges.findIndex((change) => change[0] === groupIdx && change[1] === settingIdx);
+
+    if ((setting.currentValue !== setting.newValue) && (changeIdx === -1)) {
+      this.currentChanges.push([groupIdx, settingIdx]);
+    } else if ((setting.currentValue === setting.newValue) && (changeIdx !== -1)) {
+      this.currentChanges.splice(changeIdx, 1);
+    }
+
+    if (setting.type === SettingType.BUTTON) {
+      this.enableUI();
+    }
+
+    this.isProcessing = false;
   }
 
   clearChanges() {
@@ -164,10 +209,10 @@ export class SettingsComponent implements OnInit {
       return;
     }
     this.isProcessing = true;
-    this.disableUI(ProcessingMessages.RESET);
+    // this.disableUI(ProcessingMessages.RESET);
     this.resetPageChanges(this.pageIdx);
     this.isProcessing = false;
-    this.enableUI();
+    // this.enableUI();
   }
 
   private resetPageChanges(pageIndex: number) {
@@ -180,34 +225,63 @@ export class SettingsComponent implements OnInit {
         setting.errorMsg = '';
       })
     });
-    this.settingPages[pageIndex].isChanged = false;
+    this.currentChanges = [];
   }
 
-  private async loadPageSettings(pageIndex: number) {
-    const selectedPage = this.settingPages[pageIndex];
-
-    if (selectedPage.settingGroups.length) {
-      this.resetPageChanges(pageIndex);
-      this.groupIdxs = range(0, selectedPage.settingGroups.length, this.columnCount);
-      this.isLoading = false;
-      this.enableUI();
+  saveChanges() {
+    if (this.isLoading) {
+      return;
+    }
+    if (this.isProcessing) {
+      // TODO: Add a snackbar message here indicating an issue
       return;
     }
 
-    this.groupIdxs = [];
+    this.isProcessing = true;
+    this.disableUI(ProcessingMessages.SAVING);
 
-    let fn: Function;
-    if (selectedPage && (typeof selectedPage.load === 'function')) {
-      fn = selectedPage.load.bind(this);
+    // TODO: save function from page should return an observable, to which we subscribe.
+    //  In complete() of subscription, perform following:
+    // this.isProcessing = false;
+    // this.enableUI();
+  }
+
+  private async loadPageSettings(pageIndex: number, isActivePage: boolean = true) {
+    const selectedPage = this.settingPages[pageIndex];
+
+    if (isActivePage) {
+      this.groupIdxs = [];
     }
 
-    if (fn !== undefined) {
-      await fn(selectedPage).catch(() => {}).then(() => {
-        this.resetPageChanges(pageIndex);
-        this.groupIdxs = range(0, selectedPage.settingGroups.length, this.columnCount);
-        this.isLoading = false;
-        this.enableUI();
-      });
+    if (selectedPage.settingGroups.length <= 0) {
+      let fn: Function;
+      if (selectedPage && (typeof selectedPage.load === 'function')) {
+        fn = selectedPage.load.bind(this);
+      }
+
+      if (fn !== undefined) {
+        await fn(selectedPage.settingGroups).catch(() => {});
+      }
+    }
+
+    this.resetPageChanges(pageIndex);
+
+    selectedPage.settingGroups.forEach(group => {
+      group.settings.forEach(setting => {
+        if (setting.validate) {
+          setting.validate = setting.validate.bind(this);
+        }
+        if (setting.onChange) {
+          setting.onChange = setting.onChange.bind(this);
+        }
+        setting.errorMsg = '';
+      })
+    });
+
+    if (isActivePage) {
+      this.groupIdxs = range(0, selectedPage.settingGroups.length, this.columnCount);
+      this.isLoading = false;
+      this.enableUI();
     }
   }
 
@@ -224,8 +298,7 @@ export class SettingsComponent implements OnInit {
     this._dialog.closeAll();
   }
 
-  private async loadWalletSettings() {
-    const settingGroups: SettingGroup[] = [];
+  private async loadWalletSettings(group: SettingGroup[]) {
     const group1 = {
       name: 'Test Group',
       settings: []
@@ -254,7 +327,7 @@ export class SettingsComponent implements OnInit {
     const testNum = {
       title: 'testing Number input',
       description: 'number description goes here',
-      isDisabled: true,
+      isDisabled: false,
       type: SettingType.NUMBER,
       errorMsg: '',
       currentValue: 12,
@@ -304,18 +377,23 @@ export class SettingsComponent implements OnInit {
     const testString2 = {
       title: 'testing 2nd input type input',
       description: 'regular text description goes here',
-      isDisabled: true,
+      isDisabled: false,
       type: SettingType.STRING,
       errorMsg: '',
       currentValue: 'another value',
       tags: ['tag', 'tag2'],
-      restartRequired: false
+      restartRequired: false,
+      validate: (val, setting) => {
+        if (val.length > 5) {
+          return 'Invalid field length'
+        }
+      }
     } as Setting;
 
     const testButton = {
       title: 'test a button here',
       description: 'does the button text even count',
-      isDisabled: true,
+      isDisabled: false,
       type: SettingType.BUTTON,
       errorMsg: '',
       tags: [],
@@ -330,7 +408,11 @@ export class SettingsComponent implements OnInit {
       errorMsg: 'example error message',
       tags: [],
       restartRequired: true,
-      limits: { icon: 'part-check', color: 'primary' }
+      limits: { icon: 'part-check', color: 'primary' },
+      onChange: (val, setting) => {
+        console.log('Button clicked');
+        return this.buttonClicked();
+      }
     } as Setting;
 
     const testString3 = {
@@ -348,12 +430,13 @@ export class SettingsComponent implements OnInit {
     const testBool1 = {
       title: 'testing checkboxes',
       description: 'a checkbox test',
-      isDisabled: true,
+      isDisabled: false,
       type: SettingType.BOOLEAN,
       errorMsg: 'example error message',
       currentValue: true,
       tags: ['yay'],
       restartRequired: true,
+      onChange: this.checkboxupdated
     } as Setting;
 
     group1.settings.push(testNum);
@@ -370,16 +453,22 @@ export class SettingsComponent implements OnInit {
 
     group5.settings.push(testNum2);
 
-    settingGroups.push(group1);
-    settingGroups.push(group2);
-    settingGroups.push(group3);
-    settingGroups.push(group4);
-    settingGroups.push(group5);
+    group.push(group1);
+    group.push(group2);
+    group.push(group3);
+    group.push(group4);
+    group.push(group5);
 
-    this.settingPages[this.pageIdx].settingGroups = settingGroups;
   }
 
   private async loadGlobalSettings() {
-    console.log('@@@@ loading global settings');
+  }
+
+  private buttonClicked() {
+    console.log('inside buttonClicked() handler');
+  }
+
+  private checkboxupdated(value: number, setting: Setting) {
+    console.log('inside checkboxupdated() handler', JSON.stringify(value), setting);
   }
 }
