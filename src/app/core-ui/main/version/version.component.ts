@@ -77,7 +77,7 @@ export class VersionComponent implements OnInit, OnDestroy {
 
   private isNewerVersion(sourceVersion: string, targetVersion: string): boolean {
     const averParts = sourceVersion.split('-');
-    const bverParts = targetVersion.split('-');
+    const bverParts = (targetVersion.startsWith('v') ? targetVersion.substring(1) : targetVersion).split('-');
 
     const aVerNums = String(averParts[0] || '').split('.');
     const bVerNums = String(bverParts[0] || '').split('.');
