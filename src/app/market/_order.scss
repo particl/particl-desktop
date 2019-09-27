@@ -3,36 +3,49 @@
 
 // ------ ORDERS ------ //
 
+$photo-size: 80px;
+
 .list-item {
   .header-wrapper {
     .photo { // crop orders's image to square
-      min-height: 80px;
-      max-height: 80px;
-      height: 80px;
+      min-height: $photo-size;
+      max-height: $photo-size;
+      height: $photo-size;
     }
   }
 }
 
 .order {
   .header {
-    min-height: 80px !important;
-    max-height: 80px !important;
+    min-height: $photo-size !important;
+    max-height: $photo-size !important;
     padding: 0 24px 0 0;
   }
   .hash { // order 'ID'
+    font-size: 90%;
     font-family: monospace;
     font-weight: 600;
     color: $color-white;
-    line-height: 1.3;
+    line-height: 1.4;
     text-transform: uppercase;
     background: $text-muted;
     border-radius: 4px;
     display: inline-block;
-    padding: 0 6px;
-    margin-right: 8px;
+    padding: 1px 8px;
+    margin-right: 10px;
+    &.id {
+      margin: 0 -5px 0 0;
+      background: $bg;
+      color: $text-muted;
+      padding: 1px 12px 1px 8px;
+      font-weight: 400;
+    }
   }
-  .date {
+  .origin-market {
     display: inline-block;
+  }
+  .status-info {
+    text-align: center;
   }
   .additional-info {
     margin-top: 8px;

@@ -110,6 +110,12 @@ $break-xhd: 2200px;
   font-size: 15px;
 }
 
+%text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 
 // ------ 3.2. UI ELEMENTS ------ //
 
@@ -165,4 +171,8 @@ $break-xhd: 2200px;
 // Transition effects
 %tfx {
   transition: all 0.17s;
+}
+
+%hide {
+  display: none;
 }
