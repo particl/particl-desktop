@@ -6,7 +6,6 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
-          <!-- <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count> -->
         </ng-template>
       </mat-tab>
       <mat-tab>
@@ -37,20 +36,17 @@
   <!-- Listings > Filter -->
   <div class="filter">
 
-    <div class="sell-item">
-      <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
-              matTooltip="Enter a new item for sale" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-        Add new listing
-      </button>
-    </div>
-    <div class="import-item">
-      <button mat-raised-button color="accent" (click)="importListings()" class="full-width"
-              matTooltip="Import listings into the market" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-image-upload"></mat-icon>
-        Import listings
-      </button>
-    </div>
+    <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
+            matTooltip="Enter a new item for sale" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+      Add new listing
+    </button>
+
+    <button mat-raised-button color="accent" (click)="importListings()" class="full-width"
+            matTooltip="Import listings into the market" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-image-upload"></mat-icon>
+      Import listings
+    </button>
 
     <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
