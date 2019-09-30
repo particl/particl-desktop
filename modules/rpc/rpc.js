@@ -1,9 +1,5 @@
 const log         = require('electron-log');
 const http        = require('http');
-const rxIpc       = require('rx-ipc-electron/lib/main').default;
-const Observable  = require('rxjs/Observable').Observable;
-
-const cookie      = require('./cookie');
 const _options    = require('../daemon/daemonConfig');
 
 /* spyOnRpc will output all RPC calls being made */
@@ -20,7 +16,7 @@ exports.init = function() {
 
   HOSTNAME = options.rpcbind || 'localhost';
   PORT     = options.port;
-  auth     = cookie.getAuth(options);
+  auth     = options.auth;
 }
 
 exports.destroy = function() {

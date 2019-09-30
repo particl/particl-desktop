@@ -6,6 +6,7 @@ const log           = require('electron-log');
 const iniParser     = require('@jedmao/ini-parser').default;
 const cookie        = require('../rpc/cookie');
 const _processOpts  = require('../options');
+const _auth         = require('../webrequest/http-auth');
 
 let _options = _processOpts.get();
 
@@ -231,11 +232,13 @@ const saveSettings = function(networkOpt) {
 }
 
 
-const getConfiguration = () => {
-  let settings;
-  if (Object.keys(STORED_CONFIGURATION).length > 0) {
-    settings = STORED_CONFIGURATION;
-  } else {
+const getConfiguration = (reloadConfig, loadAuth) => {
+  let settings = STORED_CONFIGURATION;
+
+  let doLoad = (typeof reloadConfig === 'boolean' ? reloadConfig : false) ? true : (Object.keys(STORED_CONFIGURATION).length <= 0);
+  const doLoadAuth = typeof loadAuth === 'boolean' ? loadAuth : false;
+
+  if (doLoad) {
     const config = getSettings();
     settings = config.global || {};
 
@@ -248,11 +251,14 @@ const getConfiguration = () => {
     STORED_CONFIGURATION = settings;
   }
 
-  if (!settings.auth) {
-    const cookieAuth = cookie.getAuth(_options);
+  if (doLoadAuth) {
+    const cookieAuth = cookie.getAuth(settings);
     if (cookieAuth) {
-      settings.auth = cookieAuth;
-      STORED_CONFIGURATION = settings;
+      if (!settings.auth || (settings.auth !== cookieAuth)) {
+        settings.auth = cookieAuth;
+        STORED_CONFIGURATION = settings;
+        _auth.reloadConfig(settings);
+      }
     }
   }
 
@@ -261,7 +267,7 @@ const getConfiguration = () => {
 
 
 const emitConfiguration = () => {
-  let settings = getConfiguration();
+  let settings = getConfiguration(false, true);
 
   try {
     rxIpc.runCommand(IPC_CHANNEL_PUB, mainWindowRef.webContents, settings)
@@ -309,23 +315,9 @@ const initializeIpcChannels = (mainWindow) => {
 }
 
 
-const deleteAuthFile = () => {
-  let settings = getConfiguration();
-  cookie.clearCookieFilePath(settings);
-  if ('auth' in STORED_CONFIGURATION) {
-    try {
-      delete STORED_CONFIGURATION.auth;
-    } catch (err) {
-      STORED_CONFIGURATION.auth = null;
-    }
-  }
-}
-
-
 exports.getConfiguration = getConfiguration;
 exports.init = initializeIpcChannels;
 exports.destroy = destroyIpcChannels;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;
 exports.send = emitConfiguration;
-exports.deleteAuthFile = deleteAuthFile;
