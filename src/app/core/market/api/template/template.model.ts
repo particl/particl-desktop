@@ -178,7 +178,7 @@ export class Template {
   }
 
   get expiredAt(): any {
-    return  this.checkListingItems ? 'Expires ' + new DateFormatter(
+    return this.checkListingItems ? new DateFormatter(
       new Date(this.object.ListingItems[0].expiredAt)
       ).dateFormatter(false).substr(0, 16) : '';
   }

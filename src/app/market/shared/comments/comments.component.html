@@ -3,7 +3,8 @@
     <h2 class="subtitle">Ask a question</h2>
     <mat-card>
       <mat-form-field class="full-width no-top-padding">
-        <textarea matInput placeholder="Post a new question" rows="4" #question></textarea>
+        <textarea matInput maxlength="1000" placeholder="Post a new question" rows="4" #question></textarea>
+        <mat-hint align="end">{{question.value.length}} / 1000</mat-hint>
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="postQuestion(question)" [disabled]="question.value.trim() === ''">
         <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>

@@ -4,7 +4,7 @@
   <div class="section search-sorting">
     <div class="subtitle first">Search &amp; sort</div>
     <mat-card class="filter-card">
-      <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+      <mat-form-field class="icon-input filter-input" floatLabel="never">
         <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
             (keyup.enter)="loadOrders()" (keyup.escape)="filters.search = '' ">
         <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"

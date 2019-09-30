@@ -304,7 +304,7 @@ class DaemonManager extends EventEmitter {
     // TODO: emit to GUI
 
   _emit(status, msg) {
-    log.debug(`Status: ${status} - ${msg}`);
+    log.debug(`Status: ${status} - ${_.isPlainObject(msg) ? JSON.stringify(msg) : msg}`);
     this.emit('status', status, msg);
   }
 

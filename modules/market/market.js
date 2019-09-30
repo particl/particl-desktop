@@ -9,7 +9,7 @@ const importer = require('./importer/importer');
 // Stores the child process
 let child = undefined;
 
-const _options = config.getConfiguration();
+let _options = {};
 
 exports.init = function() {
   rxIpc.registerListener('start-market', function(walletName) {
@@ -28,6 +28,8 @@ exports.init = function() {
 }
 
 exports.start = function(walletName) {
+  _options = config.getConfiguration();
+
   if (!_options.skipmarket && !child) {
     log.info('market process starting.');
 
