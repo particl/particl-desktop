@@ -18,7 +18,7 @@ import * as marketConfig from '../../../modules/market/config.js';
   encapsulation: ViewEncapsulation.None,
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  providers: [ConnectionCheckerService]
+  providers: [ConnectionCheckerService, UpdaterService]
 })
 export class LoadingComponent implements OnInit {
   log: any = Log.create('loading.component');

@@ -12,7 +12,6 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { PassphraseService } from './passphrase/passphrase.service';
-import { UpdaterService } from 'app/loading/updater.service';
 import { take } from 'rxjs/operators';
 import { isMainnetRelease } from 'app/core/util/utils';
 
@@ -73,8 +72,7 @@ export class CreateWalletComponent implements OnInit {
     private _rpc: RpcService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private flashNotification: SnackbarService,
-    private _daemon: UpdaterService
+    private flashNotification: SnackbarService
   ) {
     this.reset();
   }
@@ -185,18 +183,16 @@ export class CreateWalletComponent implements OnInit {
           this._rpc.call('encryptwallet', [this.encrypt])
             .pipe(take(1))
             .subscribe(() => {
-              this._daemon.restart().then(() => {
-                this.isCrypted = true;
-                // Dont remember history for the encypt step, once encrypted we done here
-                if (this.isCreate) {
-                  this.goToStep(Steps.MNEMONIC_INITIAL, false);
-                } else {
-                  this.goToStep(Steps.MNEMONIC_VERIFY, false);
-                }
-                this.isEncrypting = false;
-                this.encrypt = '';
-                this.encryptVerify = '';
-              });
+              this.isCrypted = true;
+              // Dont remember history for the encypt step, once encrypted we done here
+              if (this.isCreate) {
+                this.goToStep(Steps.MNEMONIC_INITIAL, false);
+              } else {
+                this.goToStep(Steps.MNEMONIC_VERIFY, false);
+              }
+              this.isEncrypting = false;
+              this.encrypt = '';
+              this.encryptVerify = '';
             },
             (err) => {
               this.encrypt = '';
@@ -416,6 +412,8 @@ export class CreateWalletComponent implements OnInit {
   closeAndReturnToDefault(): void {
     // move to the default wallet
     this.closeAndReturn('');
+    // const walletName = this._rpc.wallet !== null ? this._rpc.wallet.name : '';
+    // this.closeAndReturn(walletName);
   }
 
   private closeAndReturn(walletName: string): void {

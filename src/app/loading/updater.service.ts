@@ -50,10 +50,4 @@ export class UpdaterService {
       this.status.complete();
     }
   }
-
-  public restart(): Promise<any> {
-    return Observable.create(observer => {
-      observer.complete(true);
-    }).toPromise();
-  }
 }
