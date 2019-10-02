@@ -211,7 +211,7 @@
                           color="warn" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
               </span>
             </div>
-            <mat-form-field class="full-width larger no-top-padding" floatPlaceholder="never">
+            <mat-form-field class="full-width larger no-top-padding" floatLabel="never">
               <input name="toLabel" matInput type="text" placeholder="Receiver's name (optional)"
                     [(ngModel)]="send.toLabel">
             </mat-form-field>
@@ -222,7 +222,7 @@
 
           <!-- Narrations -->
           <div class="section narration advanced" *ngIf="advanced">
-            <mat-form-field class="full-width larger" floatPlaceholder="never">
+            <mat-form-field class="full-width larger" floatLabel="never">
               <input #narration type="text" matInput name="sendNote" placeholder="Narration (optional)" maxlength="24"
                     [(ngModel)]="send.narration">
               <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
