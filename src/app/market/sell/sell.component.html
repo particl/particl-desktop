@@ -4,15 +4,14 @@
     <mat-tab-group (selectedTabChange)="changeTab($event.index)">
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
-          Listings
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+          Orders
         </ng-template>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
-          Orders
-          <!-- <app-order-count [type]="'sell'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count> -->
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-listings"></mat-icon>
+          Listings
         </ng-template>
       </mat-tab>
     </mat-tab-group>
@@ -37,25 +36,22 @@
   <!-- Listings > Filter -->
   <div class="filter">
 
-    <div class="sell-item">
-      <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
-              matTooltip="Enter a new item for sale" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-        Add new listing
-      </button>
-    </div>
-    <div class="import-item">
-      <button mat-raised-button color="accent" (click)="importListings()" class="full-width"
-              matTooltip="Import listings into the market" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-image-upload"></mat-icon>
-        Import listings
-      </button>
-    </div>
+    <button mat-raised-button color="primary" (click)="addItem()" class="full-width"
+            matTooltip="Enter a new item for sale" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+      Add new listing
+    </button>
+
+    <button mat-raised-button color="accent" (click)="importListings()" class="full-width"
+            matTooltip="Import listings into the market" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-image-upload"></mat-icon>
+      Import listings
+    </button>
 
     <div class="section search-sorting">
       <div class="subtitle">Search &amp; sort</div>
       <mat-card class="filter-card">
-        <mat-form-field class="icon-input filter-input" floatPlaceholder="never">
+        <mat-form-field class="icon-input filter-input" floatLabel="never">
           <input matInput type="text" class="header-input" placeholder="Search listings" [(ngModel)]="filters.search"
                  (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
           <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
@@ -63,7 +59,7 @@
           <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                     (click)="clearAndLoadPage()"></mat-icon>
         </mat-form-field>
-        <mat-form-field class="sort-by filter-input" floatPlaceholder="never">
+        <mat-form-field class="sort-by filter-input" floatLabel="never">
           <mat-select placeholder="Sort listings" [(ngModel)]="filters.sort" (selectionChange)="clearAndLoadPage()">
             <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
               {{ sorting.title }}

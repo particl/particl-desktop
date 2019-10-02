@@ -273,7 +273,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   placeOrderModal(): void {
     const dialogRef = this.dialog.open(PlaceOrderComponent);
     dialogRef.componentInstance.type = 'place';
-    dialogRef.componentInstance.isConfirmed.subscribe(() => this.placeOrder());
+    dialogRef.componentInstance.isConfirmed.pipe(take(1)).subscribe(() => this.placeOrder());
   }
 
   placeOrder() {
@@ -285,7 +285,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
 
     this.modals.unlock({timeout: actualSecs}, (status) => {
       this.openProcessingModal();
-      this.bidOrder()
+      this.bidOrder();
     });
   }
 
@@ -318,12 +318,12 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.dialog.closeAll();
       this.onOrderPlaced.emit(1);
     }, (error) => {
-    if (error === errorType.itemExpired) {
-      this.resetStepper();
-      this.shippingFormGroup.value.id = this.cache.address.id;
-      this.setDefaultCountry(this.cache.address.country);
-      this.shippingFormGroup.patchValue(this.cache.address);
-    }
+      if (error === errorType.itemExpired) {
+        this.resetStepper();
+        this.shippingFormGroup.value.id = this.cache.address.id;
+        this.setDefaultCountry(this.cache.address.country);
+        this.shippingFormGroup.patchValue(this.cache.address);
+      }
       this.snackbarService.open(error, 'warn');
       this.dialog.closeAll();
       this.log.d(`Error while placing an order`);

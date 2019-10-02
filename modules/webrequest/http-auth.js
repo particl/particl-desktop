@@ -1,11 +1,9 @@
 const log = require('electron-log');
 const { session } = require('electron')
 const { URL } = require('url')
-
-const config = require('../daemon/daemonConfig');
 const cookie = require('../rpc/cookie');
 
-const OPTIONS = config.getConfiguration();
+let OPTIONS = {};
 
 // Modify the user agent for all requests to the following urls.
 const filter = {
@@ -14,11 +12,8 @@ const filter = {
 
 let whitelist = new Map();
 
-exports.init = function () {
-    loadDev();
-    loadMarketAuthentication();
-    loadWalletAuthentication();
-    loadGithub();
+exports.init = function (_options) {
+    exports.reloadConfig(_options);
 
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         // clone it
@@ -50,8 +45,17 @@ exports.init = function () {
             log.error('Not whitelisted: ' + u);
             callback({ cancel: true });
         }
-    })
+    });
+}
 
+
+exports.reloadConfig = function(_options) {
+  OPTIONS = _options;
+  whitelist.clear();
+  loadDev();
+  loadMarketAuthentication();
+  loadWalletAuthentication();
+  loadGithub();
 }
 
 function isWhitelisted(url) {
@@ -91,12 +95,6 @@ function loadWalletAuthentication() {
     }
 
     whitelist.set(key, value);
-}
-
-// when restarting, delete authentication
-exports.removeWalletAuthentication = () => {
-    let key = (OPTIONS.rpcbind || 'localhost') + ":" + OPTIONS.port;
-    whitelist.get(key).auth = undefined;
 }
 
 function loadDev() {

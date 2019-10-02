@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DirectiveModule } from './directive/directive.module';
-
+import { PipeModule } from './pipe/pipe.module';
 import { MaterialModule } from './material/material.module';
 // TODO: move to material
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -38,7 +38,8 @@ import { PageIntroComponent } from './main/shared/page-intro/page-intro.componen
     GalleryModule, // GalleryModule.forRoot(galleryConfig?),
     LightboxModule, // GalleryLightbox.forRoot(lightboxConfig?),
     GallerizeModule,
-    DirectiveModule
+    DirectiveModule,
+    PipeModule
   ],
   exports: [
     MaterialModule,
@@ -50,7 +51,8 @@ import { PageIntroComponent } from './main/shared/page-intro/page-intro.componen
     GalleryModule,
     LightboxModule,
     GallerizeModule,
-    PageIntroComponent
+    PageIntroComponent,
+    PipeModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

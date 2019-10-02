@@ -6,11 +6,14 @@ import * as _ from 'lodash';
 import { distinctUntilChanged, map, takeWhile, take } from 'rxjs/operators';
 import { RpcService } from 'app/core/rpc/rpc.service';
 
+import * as marketConfig from '../../../modules/market/config.js';
+
 export interface IWallet {
   name: string;
   fakename: string;
   displayname: string;
   alreadyLoaded?: boolean;
+  isMarketEnabled?: boolean;
 }
 
 @Injectable()
@@ -78,13 +81,19 @@ export class MultiwalletService implements OnDestroy {
         map((response: any) => {
           response.wallets.forEach(wallet => {
             wallet.displayname = !wallet.name ? 'Default Wallet' : wallet.name;
+            wallet.isMarketEnabled = (marketConfig.allowedWallets || []).find(
+              (wname: string) => wname.toLowerCase() === wallet.name.toLowerCase()
+            ) !== undefined;
           });
           return _.orderBy(response.wallets, 'name', 'asc');
         })
       )
       .subscribe(
         (wallets: IWallet[]) => {
-          this._list.next(wallets);
+          const filteredWallets = wallets.filter(
+            (w: IWallet) => !(w.name.toLowerCase().startsWith('testnet/'))
+          );
+          this._list.next(filteredWallets);
           this.hasList = true;
         },
         (error) => this.log.er('listwalletdir: ', error)

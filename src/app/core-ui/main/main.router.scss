@@ -70,7 +70,7 @@
     opacity: 0.6;
   }
   &:hover {
-    background: darken($bg-black, 1.5%);
+    background: darken($bg-black, 2.25%);
     .icon {
       color: lighten($bg-black, 30%);
     }

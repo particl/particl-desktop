@@ -21,6 +21,8 @@ import { ShippingAddressComponent } from './shared/shipping-address/shipping-add
 import { market_routing } from './market.routing';
 import { ManagementComponent } from './management/management.component';
 import { CreateMarketComponent } from './management/create-market/create-market.component';
+import { CommentsComponent } from './shared/comments/comments.component';
+import { CommentComponent } from './shared/comments/comment/comment.component';
 import { ImportListingsModule } from './sell/import-listings/import-listings.module';
 
 @NgModule({
@@ -47,7 +49,9 @@ import { ImportListingsModule } from './sell/import-listings/import-listings.mod
     ShippingAddressComponent,
     ReportComponent,
     ManagementComponent,
-    CreateMarketComponent
+    CreateMarketComponent,
+    CommentsComponent,
+    CommentComponent
   ],
   entryComponents: [
     PreviewListingComponent

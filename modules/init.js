@@ -2,18 +2,15 @@ const electron      = require('electron');
 const log           = require('electron-log');
 
 const rpc           = require('./rpc/rpc');
-const zmq           = require('./zmq/zmq');
+// const zmq           = require('./zmq/zmq');
 
 const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
 const daemonManager = require('./daemon/daemonManager');
 const daemonConfig  = require('./daemon/daemonConfig');
-const multiwallet   = require('./multiwallet');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
-const importer      = require('./importer/importer');
-
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
@@ -21,22 +18,25 @@ exports.start = function (mainWindow) {
   closeGui.init();
   daemon.init();
   market.init();
-  importer.init();
-
-  /* Initialize ZMQ */
-  zmq.init(mainWindow);
-  // zmq.test(); // loop, will send tests
-
   /* Initialize daemonWarner */
   daemonWarner.init(mainWindow);
 
   exports.startDaemonManager();
+
+  /* Initialize ZMQ */
+  // zmq.init(mainWindow); // Should be moved to main.js#initMainWindow -> prevents mainWindow null reference errors when mainWindow is detroyed and recreated on OSX
+  // zmq.test(); // loop, will send tests
 }
 
 exports.startDaemonManager = function() {
   daemon.check()
-    .then(()            => log.info('daemon already started'))
-    .catch(()           => daemonManager.init(daemonConfig.getConfiguration()))
+    .then(()            => {
+      log.info('daemon already started');
+      daemonManager.emit('done', null);
+    })
+    .catch(()           => {
+      daemonManager.init(daemonConfig.getConfiguration());
+    })
     .catch((error)      => log.error(error));
 }
 
@@ -57,20 +57,7 @@ daemonManager.on('status', (status, msg) => {
   if (status === 'done') {
     log.debug('daemonManager returned successfully, starting daemon!');
     daemonManager.shutdown();
-    multiwallet.get()
-    // TODO: activate for prompting wallet
-    .then(chosenWallets => {
-      daemon.start().then(() => {
-        rpc.init();
-      });
-    })
-    .then(() => {
-      daemonConfig.send();
-    })
-    .catch(err          => log.error(err));
-    // TODO: activate for daemon ready IPC message to RPCService
-
-
+    daemon.start(false).catch(err => log.error('daemon start error: ', err));
   } else if (status === 'error') {
     // Failed to get clientBinaries.json => connection issues?
     if (msg === 'Request timed out') {
@@ -109,7 +96,6 @@ electron.app.on('before-quit', async function beforeQuit(event) {
   daemonConfig.destroy();
   notification.destroy();
   closeGui.destroy();
-  importer.destroy();
 
   daemonManager.shutdown();
   market.stop()

@@ -4,11 +4,12 @@ const cookie = require('../rpc/cookie');
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs/Observable').Observable;
+const importer = require('./importer/importer');
 
 // Stores the child process
 let child = undefined;
 
-const _options = config.getConfiguration();
+let _options = {};
 
 exports.init = function() {
   rxIpc.registerListener('start-market', function(walletName) {
@@ -27,6 +28,8 @@ exports.init = function() {
 }
 
 exports.start = function(walletName) {
+  _options = config.getConfiguration();
+
   if (!_options.skipmarket && !child) {
     log.info('market process starting.');
 
@@ -70,6 +73,8 @@ exports.start = function(walletName) {
 
     child.stdout.on('data', data => console.log(data.toString('utf8')));
     child.stderr.on('data', data => console.log(data.toString('utf8')));
+
+    importer.init();
   }
 }
 
@@ -78,5 +83,7 @@ exports.stop = async function() {
     log.info('market process stopping.');
     market.stop();
     child = null;
+
+    importer.destroy();
   }
 }

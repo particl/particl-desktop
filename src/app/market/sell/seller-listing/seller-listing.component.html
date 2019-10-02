@@ -11,7 +11,11 @@
         <span class="category">{{ listing?.category.name }}</span>
       </div>
       <div *ngFor="let status of getStatus(listing?.status)">
-        <div class="status {{ status?.class }}" fxFlex="0 0 140px"><span class="dot"></span>{{ status?.status }}</div>
+        <div class="status-wrap" fxFlex="0 0 140px">
+          <div class="status {{ status?.class }}">
+            <span class="dot"></span>{{ status?.status }}
+          </div>
+        </div>
       </div>
     </div>
   </mat-expansion-panel-header>

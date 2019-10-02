@@ -1,14 +1,14 @@
-const electron = require('electron');
-const log = require('electron-log');
-const fs   = require('fs');
-const spawn = require('child_process').spawn;
-const rxIpc = require('rx-ipc-electron/lib/main').default;
-const Observable = require('rxjs/Observable').Observable;
+const electron      = require('electron');
+const log           = require('electron-log');
+const fs            = require('fs');
+const spawn         = require('child_process').spawn;
+const rxIpc         = require('rx-ipc-electron/lib/main').default;
+const Observable    = require('rxjs/Observable').Observable;
 
-const _options = require('../options');
-const rpc = require('../rpc/rpc');
+const _options      = require('../options');
+const rpc           = require('../rpc/rpc');
 const daemonManager = require('../daemon/daemonManager');
-const daemonConfig = require('./daemonConfig');
+const daemonConfig  = require('./daemonConfig');
 
 let daemon = undefined;
 
@@ -22,12 +22,12 @@ exports.init = function () {
   rxIpc.registerListener('daemon', (data) => {
     return Observable.create(observer => {
       console.log('got data on daemon channel!');
-      if (data && data.type === 'restart') {
-        exports.restart(true);
+      // if (data && data.type === 'restart') {
+      //   exports.restart(true);
+      //   observer.complete(true);
+      // } else {
         observer.complete(true);
-      } else {
-        observer.complete(true);
-      }
+      // }
     });
   });
 }
@@ -126,7 +126,6 @@ exports.start = function (doReindex = false) {
 
 exports.check = function () {
   return new Promise((resolve, reject) => {
-
     const _timeout = rpc.getTimeoutDelay();
     rpc.call('getnetworkinfo', null, (error, response) => {
       if (error) {

@@ -36,7 +36,7 @@
     </ng-container>
     <ng-container page-help>
       What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
-      <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
+      <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
         Currency &amp; transaction types
       </a>
@@ -51,7 +51,7 @@
     </ng-container>
     <ng-container page-help>
       What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
-      <a mat-button  target = "_blank" href="https://particl.wiki/currency-types" class="small">
+      <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
         Currency &amp; transaction types
       </a>
@@ -211,7 +211,7 @@
                           color="warn" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
               </span>
             </div>
-            <mat-form-field class="full-width larger no-top-padding" floatPlaceholder="never">
+            <mat-form-field class="full-width larger no-top-padding" floatLabel="never">
               <input name="toLabel" matInput type="text" placeholder="Receiver's name (optional)"
                     [(ngModel)]="send.toLabel">
             </mat-form-field>
@@ -222,7 +222,7 @@
 
           <!-- Narrations -->
           <div class="section narration advanced" *ngIf="advanced">
-            <mat-form-field class="full-width larger" floatPlaceholder="never">
+            <mat-form-field class="full-width larger" floatLabel="never">
               <input #narration type="text" matInput name="sendNote" placeholder="Narration (optional)" maxlength="24"
                     [(ngModel)]="send.narration">
               <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>

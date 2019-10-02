@@ -6,7 +6,8 @@ $listing-size: 75px;
 .listing {
   .header {
     min-height: $listing-size !important;
-    max-height: $listing-size !important;
+    max-height: none !important;
+    height: auto !important;
   }
 
   .detail.editing {
@@ -96,6 +97,9 @@ $listing-size: 75px;
 
 .error {
   color: $color-alert;
+  font-family: $font;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .mat-form-field {
