@@ -29,6 +29,7 @@ export class RpcService implements OnDestroy {
   private destroyed: boolean = false;
   private isInitialized: boolean = false;
   private DAEMON_CHANNEL: string = 'rpc-configuration';
+  private _currentWallet: string;
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -73,10 +74,12 @@ export class RpcService implements OnDestroy {
    */
   set wallet(w: string) {
     localStorage.setItem('wallet', w);
+    this._currentWallet = w;
   }
 
   get wallet(): string {
-    return localStorage.getItem('wallet') || '';
+    // needed, because during dev, if Angular hot reloads the page, then the loading component is not triggered
+    return this._currentWallet === undefined ? localStorage.getItem('wallet') : this._currentWallet;
   }
 
   /**
@@ -94,7 +97,7 @@ export class RpcService implements OnDestroy {
    *              error => ...);
    * ```
    */
-  call(method: string, params?: Array<any> | null): Observable<any> {
+  call(method: string, params?: Array<any> | null, walletName?: string): Observable<any> {
 
     if (!this.isInitialized) {
       return observableThrowError('Initializing...');
@@ -116,8 +119,12 @@ export class RpcService implements OnDestroy {
 
     let url = `http://${this.hostname}:${this.port}`;
     if (!['createwallet', 'loadwallet', 'listwalletdir',
-          'listwallet', 'smsgdisable', 'smsgenable', 'smsgsetwallet'].includes(method)) {
-      url += `/wallet/${this.wallet}`
+          'listwallets', 'smsgdisable', 'smsgenable', 'smsgsetwallet'].includes(method)) {
+      let targetWallet = this.wallet;
+      if (typeof walletName === 'string') {
+        targetWallet = walletName;
+      }
+      url += `/wallet/${targetWallet}`;
     }
 
     return this._http

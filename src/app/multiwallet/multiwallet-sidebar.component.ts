@@ -39,27 +39,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
 
   async switchToWallet(wallet: IWallet) {
     this.log.d('setting wallet to ', wallet);
-
-    await this.walletRpc.call('listwallets', []).subscribe(
-      walletList => {
-        if (walletList.includes(wallet.name)) {
-          // Wallet is already loaded, so just requires switching to it
-          this.navigateToLoading(wallet.name);
-        } else {
-          // load the wallet, even possible with the wrong active rpc.
-          this.walletRpc.call('loadwallet', [wallet.name]).subscribe(
-            w => {
-              this.navigateToLoading(wallet.name);
-            },
-            (err) => {
-              this.log.er('Switch to wallet failed: ', err);
-              this.flashNotification.open(`Error loading wallet ${wallet.name}`, 'warning');
-            }
-          )
-        }
-      },
-      error => this.log.er('failed loading wallet', error)
-    );
+    this.navigateToLoading(wallet.name);
   }
 
   private navigateToLoading(walletName: string) {
