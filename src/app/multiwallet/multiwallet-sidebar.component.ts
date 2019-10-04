@@ -5,7 +5,6 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { Log } from 'ng2-logger';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
-import { SnackbarService } from 'app/core/core.module';
 
 @Component({
   selector: 'multiwallet-sidebar',
@@ -24,8 +23,7 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
   constructor(
     private walletRpc: RpcService,
     private router: Router,
-    private multi: MultiwalletService,
-    private flashNotification: SnackbarService
+    private multi: MultiwalletService
   ) {
     // get wallet list
     this.multi.list.pipe(takeWhile(() => !this.destroyed)).subscribe(list => {
@@ -37,13 +35,18 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
     return this.walletRpc.wallet === w.name;
   }
 
-  async switchToWallet(wallet: IWallet) {
+  switchToWallet(wallet: IWallet) {
     this.log.d('setting wallet to ', wallet);
     this.navigateToLoading(wallet.name);
   }
 
+  goToWalletCreation() {
+    this.router.navigate(['/installer/create'], {
+      queryParams: { previouswallet: this.walletRpc.wallet }
+    });
+  }
+
   private navigateToLoading(walletName: string) {
-    this.walletRpc.wallet = walletName;
     this.router.navigate(['/loading'], {
       queryParams: { wallet: walletName }
     });

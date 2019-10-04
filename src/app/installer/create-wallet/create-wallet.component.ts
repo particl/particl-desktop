@@ -12,7 +12,6 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { PassphraseService } from './passphrase/passphrase.service';
-import { UpdaterService } from 'app/loading/updater.service';
 import { take } from 'rxjs/operators';
 import { isMainnetRelease } from 'app/core/util/utils';
 
@@ -68,13 +67,15 @@ export class CreateWalletComponent implements OnInit {
   encrypt: string = '';
   encryptVerify: string = '';
 
+  // where to go back to (on cancellation)
+  private previousWallet: string;
+
   constructor(
     private _passphraseService: PassphraseService,
     private _rpc: RpcService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private flashNotification: SnackbarService,
-    private _daemon: UpdaterService
+    private flashNotification: SnackbarService
   ) {
     this.reset();
   }
@@ -96,8 +97,13 @@ export class CreateWalletComponent implements OnInit {
   }
 
   ngOnInit() {
-    const walletname = this._route.snapshot.queryParamMap.get('walletname');
-    const encryptionstatus = this._route.snapshot.queryParamMap.get('encryptionstatus');
+    const paramsMap = this._route.snapshot.queryParamMap;
+    const walletname = paramsMap.get('walletname');
+    const encryptionstatus = paramsMap.get('encryptionstatus');
+    const prevWalletName = paramsMap.get('previouswallet');
+    if (prevWalletName !== walletname) {
+      this.previousWallet = prevWalletName;
+    }
     this.isDefaultWallet = walletname === '';
 
     // if we have an encryption status getwalletinfo must have succeeded
@@ -185,18 +191,16 @@ export class CreateWalletComponent implements OnInit {
           this._rpc.call('encryptwallet', [this.encrypt])
             .pipe(take(1))
             .subscribe(() => {
-              this._daemon.restart().then(() => {
-                this.isCrypted = true;
-                // Dont remember history for the encypt step, once encrypted we done here
-                if (this.isCreate) {
-                  this.goToStep(Steps.MNEMONIC_INITIAL, false);
-                } else {
-                  this.goToStep(Steps.MNEMONIC_VERIFY, false);
-                }
-                this.isEncrypting = false;
-                this.encrypt = '';
-                this.encryptVerify = '';
-              });
+              this.isCrypted = true;
+              // Dont remember history for the encypt step, once encrypted we done here
+              if (this.isCreate) {
+                this.goToStep(Steps.MNEMONIC_INITIAL, false);
+              } else {
+                this.goToStep(Steps.MNEMONIC_VERIFY, false);
+              }
+              this.isEncrypting = false;
+              this.encrypt = '';
+              this.encryptVerify = '';
             },
             (err) => {
               this.encrypt = '';
@@ -414,14 +418,20 @@ export class CreateWalletComponent implements OnInit {
   }
 
   closeAndReturnToDefault(): void {
-    // move to the default wallet
-    this.closeAndReturn('');
+    // move back to previous loaded wallet
+    let walletName: string;
+    if (typeof this.previousWallet === 'string') {
+      walletName = this.previousWallet;
+    }
+    this.closeAndReturn(walletName);
   }
 
-  private closeAndReturn(walletName: string): void {
-    this._router.navigate(['/loading'], {
-      queryParams: { wallet: walletName }
-    });
+  private closeAndReturn(walletName?: string): void {
+    const queryParams = {};
+    if (typeof walletName === 'string') {
+      queryParams['wallet'] = walletName;
+    }
+    this._router.navigate(['/loading'], { queryParams });
     this.reset();
   }
 

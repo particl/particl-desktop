@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
-import { Router, ParamMap, ActivatedRoute, NavigationExtras } from '@angular/router';
+import { Router, ParamMap, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
@@ -24,6 +24,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   private isDestroyed: boolean = false;
   private daemonChecker$: Subject<any> = new Subject<any>();
+
+  private currentWalletName: string;
 
   constructor(
     private router: Router,
@@ -74,12 +76,16 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   private goToInstaller(getwalletinfo: any) {
     this.log.d('Going to installer');
-    this.router.navigate(['installer'], {
-      queryParams: {
-        walletname: getwalletinfo.walletname,
-        encryptionstatus: getwalletinfo.encryptionstatus
-      }
-    });
+    const queryParams = {
+      walletname: getwalletinfo.walletname,
+      encryptionstatus: getwalletinfo.encryptionstatus
+    };
+
+    if (typeof this.currentWalletName === 'string') {
+      queryParams['previouswallet'] = this.currentWalletName;
+    }
+
+    this.router.navigate(['installer'], { queryParams });
   }
 
   private goToWallet(notification?: string) {
@@ -87,7 +93,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     const queryParams = {
       notification: notification || ''
     };
-    this.router.navigate(['wallet', 'main', 'wallet'], queryParams as NavigationExtras);
+    this.router.navigate(['wallet', 'main', 'wallet'], { queryParams });
   }
 
   private goToTerms() {
@@ -141,6 +147,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   private async checkNavigation(loadedWallets: string[]): Promise<void> {
+    this.currentWalletName = typeof this.rpc.wallet === 'string' ? this.rpc.wallet : undefined;
     // Ensure that the list of displayed wallets is updated
     this.multi.refreshWalletList();
 
@@ -164,7 +171,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.log.d('existing wallets:', allWallets);
+    this.log.d('found existing wallets:', allWallets);
 
     let targetWalletName = params.get('wallet');
 
@@ -206,14 +213,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.navigateToLoaded(targetWalletName);
     } else {
       this.log.d(`Wallet "${targetWalletName}" not loaded... attempting to load wallet`);
-      const foundWallet = allWallets.find(w => w.name === targetWalletName);
       this.rpc.call('loadwallet', [targetWalletName]).subscribe(
         () => {
           this.navigateToLoaded(targetWalletName);
         },
         err => {
-          this.log.er(`Failed to load wallet "${targetWalletName}" !!`);
-          this.navigateToCurrent(loadedWallets[0]);
+          this.log.er(`Failed to load wallet "${targetWalletName}" -> `, err);
+          this.navigateToLoaded(loadedWallets[0]);
         }
       );
     }
@@ -226,6 +232,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
     }).subscribe(
       async (walletinfo: any) => {
         this.log.d('wallet info found: ', walletinfo);
+
+        this.rpc.wallet = wallet;
+
         if (!('hdseedid' in walletinfo)) {
           this.goToInstaller(walletinfo);
           return;
@@ -237,7 +246,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
         //   return;
         // }
 
-        this.rpc.wallet = wallet;
         const allWallets = await this.multi.list.pipe(take(1)).toPromise();
         const selectedIWallet = allWallets.find(w => w.name === this.rpc.wallet);
         const isMarketWallet = selectedIWallet && selectedIWallet.isMarketEnabled === true;
@@ -285,11 +293,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     );
   }
 
-  private navigateToCurrent(wallet: string) {
-    this.navigateToLoaded(this.rpc.wallet, `Failed to navigate to wallet "${wallet}"`);
-  }
-
   private displayError() {
-    this.loadingMessage = `ERROR!! Unable to determine wallets`;
+    this.loadingMessage = `ERROR!! Unable to connect to core to obtain wallet information`;
   }
 }
