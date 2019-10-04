@@ -73,12 +73,11 @@ export class RpcService implements OnDestroy {
    * @param w the wallet filename .
    */
   set wallet(w: string) {
-    localStorage.setItem('wallet', w);
     this._currentWallet = w;
   }
 
   get wallet(): string {
-    // needed, because during dev, if Angular hot reloads the page, then the loading component is not triggered
+    // needed to reference localStorage, because during dev, if Angular hot reloads the page, then the loading component is not triggered
     return this._currentWallet === undefined ? localStorage.getItem('wallet') : this._currentWallet;
   }
 

@@ -67,11 +67,16 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   get fallbackWallet(): string | undefined {
-    return localStorage.getItem('wallet');
+    // TODO: allow user to customize this
+    return this.defaultWallet;
   }
 
   get defaultWallet(): string {
     return '';
+  }
+
+  get lastUsedWallet(): string {
+    return localStorage.getItem('wallet');
   }
 
   private goToInstaller(getwalletinfo: any) {
@@ -174,35 +179,32 @@ export class LoadingComponent implements OnInit, OnDestroy {
     this.log.d('found existing wallets:', allWallets);
 
     let targetWalletName = params.get('wallet');
+    const currentWallet = this.rpc.wallet;
 
-    if (typeof targetWalletName === 'string') {
-      if (!allWalletsNames.includes(targetWalletName)) {
-        // requested wallet does not exist -> check if current rpc wallet exists to fail back to
-        if (typeof this.rpc.wallet === 'string' && allWalletsNames.includes(this.rpc.wallet)) {
-          targetWalletName = this.rpc.wallet;
-        } else {
-          targetWalletName = undefined;
-        }
+    if (typeof targetWalletName === 'string' && !allWalletsNames.includes(targetWalletName)) {
+      // Requested wallet does not exist -> check if current rpc wallet exists to fail back to
+      if (typeof currentWallet === 'string' && allWalletsNames.includes(currentWallet)) {
+        targetWalletName = currentWallet;
+      } else {
+        targetWalletName = undefined;
       }
     }
 
     if (typeof targetWalletName !== 'string') {
-      // Wallet name not specified; Application likely starting up (or invalid wallet specified)... get fallback or default wallet to load
+      targetWalletName = loadedWallets.length ? loadedWallets[0] : allWallets[0].name;
 
-      const fallback = this.fallbackWallet;
-      if ( (typeof fallback === 'string') && allWalletsNames.includes(fallback)) {
-        // fallback wallet does exist
-        targetWalletName = fallback;
+      if (allWalletsNames.includes(this.defaultWallet)) {
+        targetWalletName = this.defaultWallet;
       }
 
-      if (typeof targetWalletName !== 'string') {
-        if (allWalletsNames.includes(this.defaultWallet)) {
-          // default wallet exists
-          targetWalletName = this.defaultWallet;
-        } else {
-          // As a last resort, try the first loaded wallet, or first unloaded wallet if none are loaded
-          targetWalletName = loadedWallets.length ? loadedWallets[0] : allWallets[0].name;
-        }
+      const fallbackName = this.fallbackWallet;
+      if (typeof fallbackName === 'string' && allWalletsNames.includes(fallbackName)) {
+        targetWalletName = fallbackName;
+      }
+
+      const lastUsedName = this.lastUsedWallet;
+      if (typeof lastUsedName === 'string' && allWalletsNames.includes(lastUsedName)) {
+        targetWalletName = lastUsedName;
       }
     }
 
@@ -240,11 +242,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
           return;
         }
 
-        // if (this.rpc.wallet === wallet) {
-        //   this.log.d('Wallet is current active wallet! Returning to current wallet');
-        //   this.goToWallet(message);
-        //   return;
-        // }
+        // Set the last used wallet name
+        localStorage.setItem('wallet', wallet);
 
         const allWallets = await this.multi.list.pipe(take(1)).toPromise();
         const selectedIWallet = allWallets.find(w => w.name === this.rpc.wallet);

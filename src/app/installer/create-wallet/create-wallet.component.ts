@@ -359,6 +359,10 @@ export class CreateWalletComponent implements OnInit {
           this.importMnemoic();
         }
         break;
+
+      case Steps.COMPLETED:
+          localStorage.setItem('wallet', this.walletname);
+        break;
     }
   }
 
