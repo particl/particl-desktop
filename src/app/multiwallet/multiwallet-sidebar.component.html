@@ -9,7 +9,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cart" *ngIf="wallet.isMarketEnabled"></mat-icon>
     </button>
 
-    <button mat-raised-button color="primary" routerLink="/installer/create" routerLinkActive="active" matTooltip="Add new wallet" matTooltipPosition="after">
+    <button mat-raised-button color="primary" (click)="goToWalletCreation()" matTooltip="Add new wallet" matTooltipPosition="after">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
     </button>
 
