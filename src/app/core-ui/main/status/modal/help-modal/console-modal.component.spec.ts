@@ -40,7 +40,8 @@ describe('ConsoleModalComponent', () => {
     `somecommand "some string ["`,
     `somecommand {}`,
     `somecommand { test1, test2`,
-    `"somecommand " 12`
+    `"somecommand " 12`,
+    `walletpassphrase "1{ !" 0`
   ];
 
   beforeEach(async(() => {
@@ -164,7 +165,9 @@ describe('ConsoleModalComponent', () => {
     expect(mockParse[1]).toEqual(`this is a quotations mark's test`);
 
     mockParse = component.queryParserCommand(cmds_commands[13]);
-    expect(mockParse.length).toEqual(0);
+    expect(mockParse.length).toEqual(2);
+    expect(mockParse[0]).toEqual('somecommand');
+    expect(mockParse[1]).toEqual(`some string [`);
 
     mockParse = component.queryParserCommand(cmds_commands[14]);
     expect(mockParse[0]).toEqual('somecommand');
@@ -177,6 +180,11 @@ describe('ConsoleModalComponent', () => {
     mockParse = component.queryParserCommand(cmds_commands[16]);
     expect(mockParse[0]).toEqual('somecommand');
     expect(mockParse[1]).toEqual(12);
+
+    mockParse = component.queryParserCommand(cmds_commands[17]);
+    expect(mockParse[0]).toEqual('walletpassphrase');
+    expect(mockParse[1]).toEqual('1{ !');
+    expect(mockParse[2]).toEqual(0);
   });
 
 });

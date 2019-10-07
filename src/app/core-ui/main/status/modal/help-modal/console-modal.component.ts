@@ -44,7 +44,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
               private dialog: MatDialogRef<ConsoleModalComponent>,
               private snackbar: SnackbarService) {
     this.marketTabEnabled = (marketConfig.allowedWallets || []).find(
-      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
+      (wname: string) => (typeof this._rpc.wallet === 'string') && (wname.toLowerCase() === this._rpc.wallet.toLowerCase())
     ) !== undefined;
   }
 
@@ -203,15 +203,21 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
       // Process possible validation issues
       const lastDelim = delimStack[delimStack.length - 1];
-      if ( (currentChar === '}' && lastDelim !== '{') ||
-            (currentChar === ']' && lastDelim !== '[') ||
-            (isQuoteMark && (quoteIdx !== -1) && (currentChar !== lastDelim) )) {
+      if ( (  ( (currentChar === '}' && lastDelim !== '{') ||
+                (currentChar === ']' && lastDelim !== '[')
+              ) &&
+              ![`'`, `"`].includes(lastDelim)
+           ) ||
+            (isQuoteMark && (quoteIdx !== -1) && (currentChar !== lastDelim) )
+      ) {
         parseError = true;
         break;
       }
 
       // Now add or remove a delimiter and process possible token accordingly
-      if ([`}`, `]`].includes(currentChar) || (lastDelim === currentChar) ) {
+      if (!isQuoteMark && [`'`, `"`].includes(lastDelim) && (delimStack.length > 0)) {
+        // do nothing
+      } else if ([`}`, `]`].includes(currentChar) || (lastDelim === currentChar) ) {
         if (delimStack.length === 1) {
           if (isQuoteMark) {
             braceStart = '';
@@ -264,7 +270,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
         value = String(token).toLowerCase() === 'true';
       } else if (['undefined', 'null'].includes(String(token).toLowerCase())) {
         value = null;
-      } else if (token.includes('{') || token.includes('[')) {
+      } else if ( (token.includes('{') && token.includes('}')) || (token.includes('[') && token.includes(']')) ) {
         try {
           const z = JSON.parse(token);
           if (isPlainObject(z) || isArray(z)) {
