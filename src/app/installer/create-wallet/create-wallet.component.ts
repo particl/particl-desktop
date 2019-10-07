@@ -67,6 +67,9 @@ export class CreateWalletComponent implements OnInit {
   encrypt: string = '';
   encryptVerify: string = '';
 
+  // where to go back to (on cancellation)
+  private previousWallet: string;
+
   constructor(
     private _passphraseService: PassphraseService,
     private _rpc: RpcService,
@@ -94,8 +97,13 @@ export class CreateWalletComponent implements OnInit {
   }
 
   ngOnInit() {
-    const walletname = this._route.snapshot.queryParamMap.get('walletname');
-    const encryptionstatus = this._route.snapshot.queryParamMap.get('encryptionstatus');
+    const paramsMap = this._route.snapshot.queryParamMap;
+    const walletname = paramsMap.get('walletname');
+    const encryptionstatus = paramsMap.get('encryptionstatus');
+    const prevWalletName = paramsMap.get('previouswallet');
+    if (prevWalletName !== walletname) {
+      this.previousWallet = prevWalletName;
+    }
     this.isDefaultWallet = walletname === '';
 
     // if we have an encryption status getwalletinfo must have succeeded
@@ -351,6 +359,10 @@ export class CreateWalletComponent implements OnInit {
           this.importMnemoic();
         }
         break;
+
+      case Steps.COMPLETED:
+          localStorage.setItem('wallet', this.walletname);
+        break;
     }
   }
 
@@ -410,16 +422,20 @@ export class CreateWalletComponent implements OnInit {
   }
 
   closeAndReturnToDefault(): void {
-    // move to the default wallet
-    this.closeAndReturn('');
-    // const walletName = this._rpc.wallet !== null ? this._rpc.wallet.name : '';
-    // this.closeAndReturn(walletName);
+    // move back to previous loaded wallet
+    let walletName: string;
+    if (typeof this.previousWallet === 'string') {
+      walletName = this.previousWallet;
+    }
+    this.closeAndReturn(walletName);
   }
 
-  private closeAndReturn(walletName: string): void {
-    this._router.navigate(['/loading'], {
-      queryParams: { wallet: walletName }
-    });
+  private closeAndReturn(walletName?: string): void {
+    const queryParams = {};
+    if (typeof walletName === 'string') {
+      queryParams['wallet'] = walletName;
+    }
+    this._router.navigate(['/loading'], { queryParams });
     this.reset();
   }
 
