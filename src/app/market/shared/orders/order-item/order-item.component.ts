@@ -14,6 +14,7 @@ import { take } from 'rxjs/operators';
 import { OrderData } from 'app/core/util/utils';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { isPlainObject } from 'lodash';
+import { BidCancelComponent } from 'app/modals/bid-cancel/bid-cancel.component';
 
 @Component({
   selector: 'app-order-item',
@@ -187,6 +188,9 @@ export class OrderItemComponent implements OnInit {
       case 'REJECT':
         dialogRef = this.dialog.open(BidRejectComponent);
         break;
+      case 'CANCEL':
+        dialogRef = this.dialog.open(BidCancelComponent);
+        break;
       default:
         dialogRef = this.dialog.open(PlaceOrderComponent);
         dialogRef.componentInstance.type = action.toLowerCase();
@@ -217,6 +221,8 @@ export class OrderItemComponent implements OnInit {
           resp = this.shipItem(res);
         } else if (action === 'COMPLETE') {
           resp = this.escrowRelease();
+        } else if (action === 'CANCEL') {
+          resp = this.cancelBid();
         }
 
         if (resp) {
@@ -252,6 +258,12 @@ export class OrderItemComponent implements OnInit {
     }
     return this.bid.rejectBidCommand(this.order.id, reason).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Order rejected: ${this.itemTitle}`);
+    });
+  }
+
+  private async cancelBid(): Promise<void> {
+    return this.bid.cancelBidCommand(this.order.id).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Order cancelled ${this.itemTitle}`);
     });
   }
 

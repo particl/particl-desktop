@@ -16,6 +16,7 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
 import { AlertComponent } from './shared/alert/alert.component';
 import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 import { BidRejectComponent } from './bid-reject/bid-reject.component';
+import { BidCancelComponent } from './bid-cancel/bid-cancel.component';
 
 /* shared in modals */
 import { PasswordComponent } from './shared/password/password.component';
@@ -71,7 +72,8 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ListingExpirationComponent,
     ProcessingModalComponent,
     AlphaMainnetWarningComponent,
-    BidRejectComponent
+    BidRejectComponent,
+    BidCancelComponent
   ],
   exports: [
     ClipboardModule
@@ -100,7 +102,8 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ListingExpirationComponent,
     ProcessingModalComponent,
     AlphaMainnetWarningComponent,
-    BidRejectComponent
+    BidRejectComponent,
+    BidCancelComponent
   ],
 })
 export class ModalsModule {
