@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MarketModule } from './market/market.module';
 import { ZmqService } from './zmq/zmq.service';
+import { UpdaterService } from 'app/loading/updater.service';
 import { IpcService } from './ipc/ipc.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 import { NotificationService } from './notification/notification.service';
@@ -24,6 +25,7 @@ export class CoreModule {
       providers: [
         IpcService,
         ZmqService,
+        UpdaterService,
         SnackbarService,
         NotificationService,
         CloseGuiService
