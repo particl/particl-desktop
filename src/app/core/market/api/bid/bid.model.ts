@@ -38,7 +38,9 @@ export class Bid extends Product {
     if (orderAction) {
       this._orderActivity = OrderData[orderAction][this.ordType];
     }
-    this.activeBuySell = (this._orderActivity.buttons || []).findIndex( (button: any) => button.action && !button.disabled) !== -1;
+    this.activeBuySell = (this._orderActivity.buttons || []).findIndex(
+      (button: any) => button.action && !button.disabled && button.primary
+    ) !== -1;
     this.doNotify = Boolean(+this._orderActivity.notifyOnEntry);
   }
 

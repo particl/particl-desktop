@@ -710,7 +710,7 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Successfully cancelled order',
+      status_info: 'Order has been cancelled',
       notifyOnEntry: false
     },
     sell: {
@@ -725,7 +725,7 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Order successfully cancelled',
+      status_info: 'Order has been cancelled',
       notifyOnEntry: true
     }
   }
