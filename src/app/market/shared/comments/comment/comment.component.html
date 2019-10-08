@@ -38,7 +38,8 @@
   <mat-action-row>
     <div class="title">Reply to this question:</div>
     <mat-form-field class="reply-field no-top-padding no-bottom-padding" floatLabel="never">
-      <input matInput placeholder="Write a reply..."  #reply>
+      <input matInput maxlength="1000" placeholder="Write a reply..."  #reply>
+      <mat-hint align="end">{{reply.value.length}} / 1000</mat-hint>
     </mat-form-field>
     <button mat-raised-button color="primary" class="reply-button" (click)="postReply(reply)" [disabled]="reply.value === ''">
       <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>

@@ -22,7 +22,7 @@
     }
     .meta {
       color: $text-muted;
-      font-size: 11px;
+      font-size: 95%;
       line-height: 1.8;
       .name {
         color: $text;
@@ -62,13 +62,17 @@
         word-wrap: break-word;
       }
     }
-    table.prices {
+    table {
       color: $text-muted;
       border-collapse: collapse;
       th {
+        vertical-align: top;
         text-align: right;
         font-weight: 600;
         padding-right: 7px;
+      }
+      td {
+        vertical-align: top;
       }
     }
   }
@@ -81,15 +85,32 @@
       }
     }
   }
+  .status-wrap {
+    text-align: right;
+  }
   .status {
-    background: mix($bg, $bg-shadow, 85%);
+    $status-bg: mix($bg, $bg-shadow, 85%);
+    background: $status-bg;
     border-radius: 4px;
     text-align: center;
     color: $text;
     text-transform: uppercase;
     font-weight: 500;
-    padding: 6px 15px;
+    padding: 7px 18px 7px 10px;
+    display: inline-block;
     margin-top: 0;
+    position: relative;
+    &::before { // status' "arrow" shape
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      top: 0;
+      left: -27px;
+      border: 14.5px solid $status-bg;
+      border-color: transparent $status-bg transparent transparent;
+      position: absolute;
+    }
     .dot { // status indicator
       display: inline-block;
       width: 7px;
@@ -134,7 +155,7 @@
         background: rgba($color-info, 0.5);
       }
     }
-    &.rejected {
+    &.rejected, &.cancelled {
       color: rgba($text, 0.5);
       .dot {
         background: $bg-shadow;

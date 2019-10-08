@@ -1,47 +1,60 @@
 <mat-expansion-panel class="listing list-item no-padding">
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-      <div class="photo" fxFlex="0 0 110px">
+      <div class="photo" fxFlex="0 0 90px">
         <img src="{{ listing?.imageCollection?.featuredImage?.medium}}">
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{ listing?.title }}</div>
-        <div class="categories">{{ listing?.category.name }}</div>
-        <div class="date">
-          Added {{ listing?.createdAt }}
-          <br>
-          {{ listing?.expiredAt }}
-        </div>
+        <div class="category">{{ listing?.category.name }}</div>
       </div>
       <div *ngFor="let status of getStatus(listing?.status)">
-        <div class="status {{ status?.class }}" fxFlex="0 0 140px"><span class="dot"></span>{{ status?.status }}</div>
+        <div class="status-wrap" fxFlex="0 0 140px">
+          <div class="status {{ status?.class }}">
+            <span class="dot"></span>{{ status?.status }}
+          </div>
+        </div>
       </div>
     </div>
   </mat-expansion-panel-header>
 
-  <!--div class="status-info">
-    <p>{{ listing.status_info }}</p>
-  </div-->
+  <div class="status-info">
+    <p>{{ listing?.shortDescription }}</p>
+  </div>
 
   <div class="detail" fxLayout="row" fxLayoutGap="30px">
-    <div class="description" fxFlex="65%">
-      <div class="title">Listing description</div>
-      <p>
-        {{ listing?.longDescription }}
-      </p>
+    <div class="description" fxFlex="55%">
+      <div class="title">Listing info</div>
+      <table class="listing-info">
+        <tr>
+          <th>Category</th>
+          <td>{{ listing?.category.name }}</td>
+        </tr>
+        <tr>
+          <th>Created</th>
+          <td>{{ listing?.createdAt }}</td>
+        </tr>
+        <tr>
+          <th>Expires</th>
+          <td>{{ listing?.expiredAt }}</td>
+        </tr>
+      </table>
     </div><!-- .description -->
-    <div class="info" fxFlex="35%">
+    <div class="info" fxFlex="45%">
       <div class="title">Price</div>
       <table class="prices">
         <!--tr><th>Quantity</th><td>2</td></tr-->
         <tr>
           <th>Price per item</th>
+          <td>{{ listing?.basePrice.particlsString() }} <small>PART</small></td>
+        </tr>
+        <tr>
+          <th>Shipping price</th>
           <td>
-            {{ listing?.basePrice.particlStringInteger() }}{{ listing?.basePrice.particlStringSep() }}<small>{{ listing?.basePrice.particlStringFraction() }}</small>
-            PART
+            Local in {{ listing?.country }} &ndash; {{ listing?.domesticShippingPrice.particlsString() }} <small>PART</small><br>
+            Worldwide &ndash; {{ listing?.internationalShippingPrice.particlsString() }} <small>PART</small>
           </td>
         </tr>
-        <!--tr><th>Total price</th><td>46.<small>257</small> PART</td></tr-->
       </table>
     </div>
   </div>

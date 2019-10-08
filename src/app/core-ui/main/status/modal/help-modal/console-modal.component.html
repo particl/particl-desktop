@@ -1,7 +1,7 @@
 <div class="console-modal">
-  <button class="small-close-button" (click)="close()">
+  <!--button class="small-close-button" (click)="close()">
     <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-  </button>
+  </button-->
 
   <div mat-dialog-container>
     <mat-tab-group (selectedTabChange)="selectTab($event.index)">
@@ -13,14 +13,14 @@
   </div>
   <div #debug class="console-modal-form" (scroll)="onScroll()">
     <div class="intro-text">
-      <p class="console-info" *ngIf="activeTab !== 'market'">
-        Welcome to the <strong>Particl Core RPC</strong> console (for interacting with wallet).<br>
-        <!--Use up and down arrows to navigate history, and Ctrl-L to clear screen.-->
-        Type <code>help</code> for an overview of available commands.
-      </p>
-      <p class="console-info" *ngIf="activeTab === 'market'">
-        Welcome to the <strong>Particl Marketplace</strong> console.<br>
-        <!--Use up and down arrows to navigate history, and Ctrl-L to clear screen.-->
+      <p class="console-info">
+        <span *ngIf="activeTab !== 'market'">
+          Welcome to the <strong>Particl Core RPC</strong> console (for interacting with wallet).
+        </span>
+        <span *ngIf="activeTab === 'market'">
+          Welcome to the <strong>Particl Marketplace</strong> console.
+        </span>
+        <br>
         Type <code>help</code> for an overview of available commands.
       </p>
       <p class="warn-text">
@@ -40,8 +40,8 @@
   </div>
 
   <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
-    <mat-form-field fxFlex="1 1 100%" floatPlaceholder="never">
-      <input matInput [(ngModel)]="command" placeholder="Enter 'help' for an overview of available commands" [appFocusTimeout]="true">
+    <mat-form-field fxFlex="1 1 100%" floatLabel="never">
+      <input matInput [(ngModel)]="command" placeholder="Enter command" [appFocusTimeout]="true">
     </mat-form-field>
     <mat-checkbox [(ngModel)]="useRunstringsParser" class="confirmation-checkbox" fxFlex="0 1 200px">
       <small>Use runstrings (deprecated)</small>

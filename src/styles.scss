@@ -134,6 +134,12 @@ body {
   .without-tab-bar & {
     top: ($header-main-height + $padding);
   }
+  button.full-width {
+    margin-top: 10px;
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
 }
 
 

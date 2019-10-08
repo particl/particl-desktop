@@ -41,8 +41,14 @@ export class MultiwalletService implements OnDestroy {
     // subscribe to server side stream
     // and load the wallets in _list.
     this.timer.pipe(takeWhile(() => this.destroyed ? false : !this.hasList)).subscribe(() => {
-      this.findAvailableWallets();
+      if (this._rpc.enabled) {
+        this.findAvailableWallets();
+      }
     });
+  }
+
+  get initComplete(): boolean {
+    return this.hasList;
   }
 
   refreshWalletList() {
