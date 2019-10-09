@@ -25,6 +25,7 @@ import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 import * as marketConfig from '../../../../modules/market/config.js';
 
@@ -81,31 +82,39 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _proposal: ProposalsService,
     private _addToCart: AddToCartCacheService,
     private _favCacheService: FavoriteCacheService,
-    private _orderStatusNotifier: OrderStatusNotifierService
+    private _orderStatusNotifier: OrderStatusNotifierService,
+    private _settingsService: SettingsStateService
   ) {
     this.log.d('Main.Router constructed');
 
     this.checkMarketRoute(this._router.url);
 
-    if ((marketConfig.allowedWallets || []).find(
-      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
-      ) !== undefined) {
-      // We recheck if the market is started here for live reload cases, and to start the various MP services
-      this._market.startMarket(this._rpc.wallet).subscribe(
-        () => {
-          this._marketState.start();
-          this._profile.start();
-          this._cart.start();
-          this._category.start();
-          this._favCacheService.start();
-          this._favorite.start();
-          this._report.start();
-          this._proposal.start();
-          this._addToCart.start();
-          this._orderStatusNotifier.start();
+    let continueListening = true;
+    this._settingsService.currentWallet().pipe(takeWhile(() => continueListening)).subscribe(
+      (wallet) => {
+        if (wallet === null) {
+          return;
         }
-      );
-    }
+        if (wallet.isMarketEnabled) {
+          // We recheck if the market is started here for live reload cases, and to start the various MP services
+          this._market.startMarket(wallet.name).subscribe(
+            () => {
+              this._marketState.start();
+              this._profile.start();
+              this._cart.start();
+              this._category.start();
+              this._favCacheService.start();
+              this._favorite.start();
+              this._report.start();
+              this._proposal.start();
+              this._addToCart.start();
+              this._orderStatusNotifier.start();
+            }
+          )
+        }
+        continueListening = false;
+      }
+    );
   }
 
   ngOnInit() {

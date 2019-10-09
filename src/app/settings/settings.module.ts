@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ClipboardModule } from 'ngx-clipboard';
@@ -11,6 +11,7 @@ import { SettingsRouterComponent } from './settings.router';
 import { SettingsComponent } from './settings.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+import { SettingsStateService } from './settings-state.service';
 
 @NgModule({
   imports: [
@@ -30,4 +31,13 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SettingsModule {}
+export class SettingsModule {
+  static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: SettingsModule,
+      providers: [
+        SettingsStateService
+      ]
+    };
+  }
+}

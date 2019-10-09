@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { take, takeWhile } from 'rxjs/operators';
 import { range } from 'lodash';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
+import { SettingsStateService } from './settings-state.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+
+import { IWallet } from 'app/multiwallet/multiwallet.service';
 
 type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
 type PageSaveFunction = () => Observable<string | void>;
@@ -42,6 +45,7 @@ class ParamsButton {
 }
 
 class Setting {
+  id: string;                    // Easy identification of the setting (eg: when saving)
   title: string;
   description: string;
   isDisabled: boolean;
@@ -58,6 +62,7 @@ class Setting {
 };
 
 class SettingGroup {
+  id?: string;                    // Easy identification of the setting group (eg: when saving)
   name: string;
   settings: Setting[];
 };
@@ -94,11 +99,12 @@ enum TextContent {
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
   public settingPages: Array<Page> = [];
   public isLoading: boolean = true;       // Change of page indicator
   public isProcessing: boolean = false;   // 'Busy' indicator on the current displayed page
-  public currentChanges: number[][] = [];
+  public currentChanges: number[][] = []; // Tracks which setting items ont he current page have changed
+  public currentWallet: IWallet = null;
 
   public settingType: (typeof SettingType) = SettingType;
 
@@ -109,21 +115,23 @@ export class SettingsComponent implements OnInit {
 
   // Internal (private) vars
   private pageIdx: number = -1;   // Tracks the current displayed page
+  private isDestroyed: boolean = false;
 
   constructor(
     private _rpc: RpcService,
     private _snackbar: SnackbarService,
+    private _settingState: SettingsStateService,
     private _dialog: MatDialog
   ) { };
 
   ngOnInit() {
     // Create the pages (tabs) used here
-    const walletName = this._rpc.wallet === '' ? 'Default' : this._rpc.wallet;
+
     const walletSettings = {
       header: 'Wallet Settings',
       icon: 'part-hamburger',
       info: {
-        title: 'Settings for wallet ' + walletName,
+        title: '',
         description: 'Adjust settings and configuration for the currently active wallet',
         help: 'To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.'
       } as PageInfo,
@@ -147,10 +155,39 @@ export class SettingsComponent implements OnInit {
     this.settingPages.push(walletSettings);
     this.settingPages.push(globalSettings);
 
+    this._settingState.currentWallet().pipe(
+      takeWhile(() => !this.isDestroyed)
+    ).subscribe(
+      (wallet: IWallet) => {
+
+        if ( (wallet === null && this.currentWallet !== null) ||
+        (this.currentWallet === null && wallet !== null) ||
+        (this.currentWallet !== null && wallet !== null && this.currentWallet.name !== wallet.name)) {
+
+          const walletPageIdx = this.settingPages.findIndex((page) => page.header === 'Wallet Settings');
+          if (walletPageIdx > -1) {
+            const walletPage = this.settingPages[walletPageIdx];
+            walletPage.info.title = 'Settings for wallet ' + (wallet === null ? '<unknown>' : wallet.displayname);
+            walletPage.settingGroups = [];
+
+            if (walletPageIdx === this.pageIdx) {
+              this.isLoading = true;
+              this.disableUI(TextContent.LOADING);
+              this.loadPageSettings(walletPageIdx);
+            }
+          }
+        }
+      }
+    );
+
     setTimeout(() => {
       this.disableUI(TextContent.LOADING);
       this.changeTab(0);
     }, 0);
+  }
+
+  ngOnDestroy() {
+    this.isDestroyed = true;
   }
 
   get currentPage(): Page | null {
@@ -329,8 +366,9 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  private async loadPageSettings(pageIndex: number, isActivePage: boolean = true) {
+  private async loadPageSettings(pageIndex: number) {
     const selectedPage = this.settingPages[pageIndex];
+    const isActivePage = pageIndex === this.pageIdx;
 
     if (isActivePage) {
       this.groupIdxs = [];
@@ -382,171 +420,102 @@ export class SettingsComponent implements OnInit {
 
   private pageSaveWalletSettings(): Observable<string | void> {
     return new Observable((observer) => {
-      observer.next();
+
+      const settingChanges: any[] = [];
+
+      this.settingPages[this.pageIdx].settingGroups.forEach(group => {
+        group.settings.forEach((setting) => {
+          if ( !(setting.type === SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
+            settingChanges.push({label: setting.id, value: setting.newValue});
+          }
+        });
+      });
+
+      const errors = this._settingState.saveAll(settingChanges);
+      if (errors.length) {
+        this.settingPages[this.pageIdx].settingGroups.forEach(group => {
+          group.settings.forEach((setting) => {
+            if (errors.includes(setting.id)) {
+              setting.errorMsg = 'An error occurred validating this setting';
+            }
+          });
+        });
+
+        observer.error(null);
+      } else {
+        observer.next();
+      }
       observer.complete();
     });
   }
 
   private async pageLoadWalletSettings(group: SettingGroup[]) {
-    // const group1 = {
-    //   name: 'Test Group',
-    //   settings: []
-    // } as SettingGroup;
 
-    // const group2 = {
-    //   name: 'Test Group 2',
-    //   settings: []
-    // } as SettingGroup;
+    const notificationsWallet = {
+      name: 'Wallet Notifications',
+      settings: []
+    } as SettingGroup;
 
-    // const group3 = {
-    //   name: 'Test Group 3',
-    //   settings: []
-    // } as SettingGroup;
+    notificationsWallet.settings.push({
+      id: 'settings.wallet.notifications.payment_received',
+      title: 'Payment Received',
+      description: 'Display a system notification message when a wallet payment has been received',
+      isDisabled: false,
+      type: SettingType.BOOLEAN,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.wallet.notifications.payment_received'),
+      tags: [],
+      restartRequired: false
+    } as Setting);
 
-    // const group4 = {
-    //   name: 'Test Group 4',
-    //   settings: []
-    // } as SettingGroup;
+    notificationsWallet.settings.push({
+      id: 'settings.wallet.notifications.staking_reward',
+      title: 'Staking Rewards',
+      description: 'Indicates when a stake has been found on this wallet',
+      isDisabled: false,
+      type: SettingType.BOOLEAN,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.wallet.notifications.staking_reward'),
+      tags: ['Staking'],
+      restartRequired: false
+    } as Setting);
 
-    // const group5 = {
-    //   name: 'Test Group 5',
-    //   settings: []
-    // } as SettingGroup;
+    group.push(notificationsWallet);
 
-    // const testNum = {
-    //   title: 'testing Number input',
-    //   description: 'number description goes here',
-    //   isDisabled: false,
-    //   type: SettingType.NUMBER,
-    //   errorMsg: '',
-    //   currentValue: 12,
-    //   tags: ['tag1', 'tag2'],
-    //   restartRequired: false
-    // } as Setting;
+    if (this.currentWallet && this.currentWallet.isMarketEnabled) {
+      const notificationsMarket = {
+        id: 'market-notifications',
+        name: 'Marketplace Notifications',
+        settings: []
+      } as SettingGroup;
 
-    // const testNum2 = {
-    //   title: 'testing other input',
-    //   description: 'number description goes here',
-    //   isDisabled: false,
-    //   type: SettingType.NUMBER,
-    //   errorMsg: '',
-    //   currentValue: 12,
-    //   tags: ['tag1', 'tag2'],
-    //   restartRequired: true,
-    //   limits: { min: 5, max: 50, step: 5} as ParamsNumber
-    // } as Setting;
+      notificationsMarket.settings.push({
+        id: 'settings.wallet.notifications.order_updated',
+        title: 'Pending orders',
+        description: 'Display a system notification message when an order requires action',
+        isDisabled: !(this.currentWallet || {} as IWallet).isMarketEnabled,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: this._settingState.get('settings.wallet.notifications.order_updated'),
+        tags: [],
+        restartRequired: false
+      } as Setting);
 
-    // const testSelect = {
-    //   title: 'testing Selectable input',
-    //   description: 'select with some options description goes here',
-    //   isDisabled: false,
-    //   type: SettingType.SELECT,
-    //   options: [
-    //     {text: 'option 1', value: 1, isDisabled: false},
-    //     {text: 'option 2', value: 2, isDisabled: true},
-    //     {text: 'option 3', value: 3, isDisabled: false},
-    //   ],
-    //   errorMsg: '',
-    //   currentValue: 1,
-    //   tags: ['tag1'],
-    //   restartRequired: true
-    // } as Setting;
+      notificationsMarket.settings.push({
+        id: 'settings.wallet.notifications.proposal_arrived',
+        title: 'New Proposals',
+        description: 'Indicate via a system notification message when a new proposal is received',
+        isDisabled: !(this.currentWallet || {} as IWallet).isMarketEnabled,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: this._settingState.get('settings.wallet.notifications.proposal_arrived'),
+        tags: [],
+        restartRequired: false
+      } as Setting);
 
-    // const testString = {
-    //   title: 'testing input type input',
-    //   description: 'regular text description goes here',
-    //   isDisabled: false,
-    //   type: SettingType.STRING,
-    //   errorMsg: 'example error message',
-    //   currentValue: 'some value',
-    //   tags: [],
-    //   restartRequired: true
-    // } as Setting;
+      group.push(notificationsMarket);
 
-    // const testString2 = {
-    //   title: 'testing 2nd input type input',
-    //   description: 'regular text description goes here',
-    //   isDisabled: false,
-    //   type: SettingType.STRING,
-    //   errorMsg: '',
-    //   currentValue: 'another value',
-    //   tags: ['tag', 'tag2'],
-    //   restartRequired: false,
-    //   validate: (val, setting) => {
-    //     if (val.length > 5) {
-    //       return 'Invalid field length'
-    //     }
-    //   }
-    // } as Setting;
-
-    // const testButton = {
-    //   title: 'test a button here',
-    //   description: 'does the button text even count',
-    //   isDisabled: false,
-    //   type: SettingType.BUTTON,
-    //   errorMsg: '',
-    //   tags: [],
-    //   restartRequired: true
-    // } as Setting;
-
-    // const testButton2 = {
-    //   title: 'test a button here',
-    //   description: '',
-    //   isDisabled: false,
-    //   type: SettingType.BUTTON,
-    //   errorMsg: 'example error message',
-    //   tags: [],
-    //   restartRequired: true,
-    //   limits: { icon: 'part-check', color: 'primary' },
-    //   onChange: (val, setting) => {
-    //     console.log('Button clicked');
-    //     return this.buttonClicked();
-    //   }
-    // } as Setting;
-
-    // const testString3 = {
-    //   title: 'testing input type input',
-    //   description: 'regular text description goes here',
-    //   isDisabled: false,
-    //   type: SettingType.STRING,
-    //   errorMsg: '',
-    //   currentValue: 'some value',
-    //   tags: [],
-    //   restartRequired: true,
-    //   limits: { placeholder: 'test string 3 input' }
-    // } as Setting;
-
-    // const testBool1 = {
-    //   title: 'testing checkboxes',
-    //   description: 'a checkbox test',
-    //   isDisabled: false,
-    //   type: SettingType.BOOLEAN,
-    //   errorMsg: 'example error message',
-    //   currentValue: true,
-    //   tags: ['yay'],
-    //   restartRequired: true,
-    //   onChange: this.checkboxupdated
-    // } as Setting;
-
-    // group1.settings.push(testNum);
-    // group1.settings.push(testSelect);
-    // group1.settings.push(testString);
-    // group1.settings.push(testBool1);
-
-    // group2.settings.push(testString2);
-    // group2.settings.push(testButton);
-
-    // group3.settings.push(testString3);
-
-    // group4.settings.push(testButton2);
-
-    // group5.settings.push(testNum2);
-
-    // group.push(group1);
-    // group.push(group2);
-    // group.push(group3);
-    // group.push(group4);
-    // group.push(group5);
+    }
 
   }
 

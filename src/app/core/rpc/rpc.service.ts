@@ -29,7 +29,7 @@ export class RpcService implements OnDestroy {
   private destroyed: boolean = false;
   private isInitialized: boolean = false;
   private DAEMON_CHANNEL: string = 'rpc-configuration';
-  private _currentWallet: string;
+  private _wallet: string;
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -72,13 +72,10 @@ export class RpcService implements OnDestroy {
    * Set the wallet to execute commands against.
    * @param w the wallet filename .
    */
-  set wallet(w: string) {
-    this._currentWallet = w;
-  }
-
-  get wallet(): string {
-    // needed to reference localStorage, because during dev, if Angular hot reloads the page, then the loading component is not triggered
-    return this._currentWallet === undefined ? localStorage.getItem('wallet') : this._currentWallet;
+  setWalletName(w: string) {
+    if (typeof w === 'string') {
+      this._wallet = w;
+    }
   }
 
   /**
@@ -119,10 +116,14 @@ export class RpcService implements OnDestroy {
     let url = `http://${this.hostname}:${this.port}`;
     if (!['createwallet', 'loadwallet', 'listwalletdir',
           'listwallets', 'smsgdisable', 'smsgenable', 'smsgsetwallet'].includes(method)) {
-      let targetWallet = this.wallet;
+      let targetWallet = this._wallet;
       if (typeof walletName === 'string') {
         targetWallet = walletName;
       }
+      if (typeof targetWallet !== 'string') {
+        return observableThrowError('Wallet has not been set');
+      }
+
       url += `/wallet/${targetWallet}`;
     }
 

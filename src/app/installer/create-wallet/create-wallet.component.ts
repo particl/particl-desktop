@@ -3,7 +3,8 @@ import {
   ViewChild,
   ElementRef,
   HostListener,
-  OnInit
+  OnInit,
+  OnDestroy
 } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,8 +13,10 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { PassphraseService } from './passphrase/passphrase.service';
+import { Observer, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { isMainnetRelease } from 'app/core/util/utils';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 export enum Steps {
   START = 0,
@@ -32,7 +35,7 @@ export enum Steps {
   styleUrls: ['./create-wallet.component.scss'],
   providers: [PassphraseService]
 })
-export class CreateWalletComponent implements OnInit {
+export class CreateWalletComponent implements OnInit, OnDestroy {
   public log: any = Log.create('createwallet.component');
 
   public Steps: any = Steps; // so we can use it in HTML
@@ -70,12 +73,15 @@ export class CreateWalletComponent implements OnInit {
   // where to go back to (on cancellation)
   private previousWallet: string;
 
+  private isDestroyed: boolean = false;
+
   constructor(
     private _passphraseService: PassphraseService,
     private _rpc: RpcService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private flashNotification: SnackbarService
+    private flashNotification: SnackbarService,
+    private _settingsService: SettingsStateService
   ) {
     this.reset();
   }
@@ -104,7 +110,19 @@ export class CreateWalletComponent implements OnInit {
     if (prevWalletName !== walletname) {
       this.previousWallet = prevWalletName;
     }
+
     this.isDefaultWallet = walletname === '';
+
+    if (walletname !== null) {
+      // The only reason this is here is as a guard for live reload.
+      new Observable((observer) => {
+        this.initializeComponent(observer);
+      }).subscribe(
+        () => {
+          this._settingsService.changeRpcWalletOnly(walletname);
+        }
+      );
+    }
 
     // if we have an encryption status getwalletinfo must have succeeded
     if (encryptionstatus) {
@@ -112,6 +130,10 @@ export class CreateWalletComponent implements OnInit {
       this.isExistingWallet = true;
       this.isCrypted = encryptionstatus !== 'Unencrypted';
     }
+  }
+
+  ngOnDestroy() {
+    this.isDestroyed = true;
   }
 
   initialize(type: number): void {
@@ -163,7 +185,7 @@ export class CreateWalletComponent implements OnInit {
           wallet => {
             this.log.d('createwallet: ', wallet);
             this.errorString = '';
-            this._rpc.wallet = this.walletname;
+            this._settingsService.changeRpcWalletOnly(this.walletname);
             this.isExistingWallet = true;
 
             if (this.isCrypted) {
@@ -361,7 +383,7 @@ export class CreateWalletComponent implements OnInit {
         break;
 
       case Steps.COMPLETED:
-          localStorage.setItem('wallet', this.walletname);
+          this._settingsService.save({label: 'settings.global.selectedWallet', value: this.walletname});
         break;
     }
   }
@@ -496,5 +518,19 @@ export class CreateWalletComponent implements OnInit {
           .generateMnemonic()
           .pipe(take(1))
           .subscribe(mnemonic => this.setMnemonicWords(mnemonic));
+  }
+
+  private initializeComponent(observer: Observer<any>) {
+    if (this.isDestroyed) {
+      return;
+    }
+
+    if (!this._rpc.enabled || !this._settingsService.initialized) {
+      setTimeout(this.initializeComponent.bind(this), 500, observer);
+      return;
+    }
+
+    observer.next(null);
+    observer.complete();
   }
 }

@@ -18,6 +18,7 @@ export class ProposalsNotificationsService implements OnDestroy {
   private notifcationTimestamp: number = 0;
   private lastKnownBlockCount: number = 0;
   private canUpdateProposalCount: boolean = true;
+  private doNotify: boolean = true;
   private storageKeys: any = {
     timestamp_view_proposals: 'timestamp_view_proposals',
     timestamp_notifcation: 'timestamp_notifcation'
@@ -72,12 +73,14 @@ export class ProposalsNotificationsService implements OnDestroy {
             }
 
             if (newIndexes.length) {
-              let message = `${newIndexes.length} new proposals are available`;
-              if (newIndexes.length === 1) {
-                const proposal: Proposal = proposals[newIndexes[0]];
-                message = `${proposal.title} newly arrived in you proposal list.`;
+              if (this.doNotify) {
+                let message = `${newIndexes.length} new proposals are available`;
+                if (newIndexes.length === 1) {
+                  const proposal: Proposal = proposals[newIndexes[0]];
+                  message = `${proposal.title} newly arrived in you proposal list.`;
+                }
+                this.notifyNewProposal(message);
               }
-              this.notifyNewProposal(message);
               this.notifcationTimestamp = Date.now();
 
               // restrict the notification for the unseen proposal at time time of GUI started.
