@@ -22,23 +22,13 @@ enum SaveLocation {
 };
 
 class Setting {
-  private _value: any;
-  private _label: string = '';
   constructor(private _location: SaveLocation, private _type: SettingType, private _default: any) {
      if (typeof _default !== _type) {
         this._default = null;
      }
-     this._value = this._default;
   }
 
-  set value(val: any) {
-    if (typeof val === this._type) {
-      this._value = val;
-    }
-  }
-  get value(): any { return this._value; };
-  set label(l: string) { this._label = l; };
-  get label(): string { return this._label; };
+  get defaultValue(): any { return this._default; };
   get location(): SaveLocation { return this._location; };
   get type(): SettingType { return this._type; };
 };
@@ -75,8 +65,8 @@ export class SettingsStateService extends StateService implements OnDestroy {
 
   // Define global settings: prefixed with 'settings.global'
   private settingsGlobal: SettingStructure = {
-    'selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'fallbackWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
+    'selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, '')
   }
 
@@ -101,10 +91,16 @@ export class SettingsStateService extends StateService implements OnDestroy {
     this._loadedWallet.complete();
   }
 
+  /**
+   * Indicates whether the settings have been loaded and initialized
+   */
   get initialized(): boolean {
     return this._isInitialized;
   }
 
+  /**
+   * Provides an observable reference to the current selected IWallet wallet
+   */
   currentWallet(): Observable<IWallet> {
     return this._loadedWallet
       .asObservable()
@@ -113,21 +109,42 @@ export class SettingsStateService extends StateService implements OnDestroy {
       );
   }
 
+  /**
+   * Change to a named wallet. If the wallet does not exist, then no changes occur.
+   * Note: if successfully changed, both the 'global.activeWallet' and the 'global.selectedWallet' wallet settings are updated.
+   *
+   * @param name The name of the wallet to attempt to change to
+   */
   async changeToWallet(name: string) {
     await this.changeWallet(name);
   }
 
+  /**
+   * Allows for changing the wallet the rpc calls are made against, without changing the current selected wallet.
+   * This is only useful when needing to "change" to run calls against a different walelt to the currently selected wallet.
+   * Actually only practical at the moment for the wallet creation process, where if the user closes the application then
+   *  the create wallet process is not started on the next application launch attempt because the 'global.selectedWallet'
+   *  setting was updated.
+   * @param name The name of the wallet
+   */
   changeRpcWalletOnly(name: string) {
     this.save({label: 'settings.global.activeWallet', value: name});
     this._rpc.setWalletName(name);
   }
 
-  saveAll(settings: KeyValue[]): string[] {
+  /**
+   * Saves all the settings indicated.
+   * Saving only occurs if all of the settings are valid (ie: are actual setting and have the correct data type values)
+   * @param updates The list of settings to be saved
+   * @returns A list of invalid settings provided. If a non-empty list is returned then none of the settings have been saved.
+   */
+  saveAll(updates: KeyValue[]): string[] {
     const failures: string[] = [];
-    // Ensure all settings are actual valid settings
-    settings.forEach((setting, idx) => {
-      if (!(setting.label in this.settings)) {
-        failures.push(setting.label);
+
+    // Ensure all settings being updated are actual known settings
+    updates.forEach((update) => {
+      if (!(update.label in this.settings)) {
+        failures.push(update.label);
       }
     });
 
@@ -135,23 +152,24 @@ export class SettingsStateService extends StateService implements OnDestroy {
       return failures;
     }
 
+    // Group the settings by where they are going to be saved (should, in most cases, be better to set all the changes together).
     const settingGroups = {};
-    for (const newSetting of settings) {
-      const setting = <Setting>this.settings[newSetting.label];
+    for (const update of updates) {
+      const actualSetting = <Setting>this.settings[update.label];
       let isValid = false;
 
-      if (typeof newSetting.value === setting.type) {
-        const storageType = setting.location.toString();
+      if (typeof update.value === actualSetting.type) {
+        const storageType = actualSetting.location.toString();
 
         if (!settingGroups[storageType]) {
           settingGroups[storageType] = [];
         }
         isValid = true;
-        settingGroups[storageType].push(newSetting);
+        settingGroups[storageType].push(update);
       }
 
       if (!isValid) {
-        failures.push(newSetting.label);
+        failures.push(update.label);
       }
     }
 
@@ -166,10 +184,20 @@ export class SettingsStateService extends StateService implements OnDestroy {
     return [];
   };
 
+  /**
+   * Same as saveAll() but provides a convenience single setting save method
+   * @param setting the setting to be saved
+   * @returns A list of invalid settings provided. If a non-empty list is returned then none of the settings have been saved.
+   */
   save(setting: KeyValue): string[] {
     return this.saveAll([setting]);
   };
 
+  /**
+   * (PRIVATE)
+   * Waits for the rpc service and multiwallet service to initialize and become available,
+   *  as the initialization of this service depends on the availability of those 2 services.
+   */
   private initializeComponent(observer: Observer<any>) {
     if (this.isDestroyed) {
       return;
@@ -184,6 +212,10 @@ export class SettingsStateService extends StateService implements OnDestroy {
     observer.complete();
   }
 
+  /**
+   * (PRIVATE)
+   * Performs the actual initialization (first setup) of this service.
+   */
   private async start(): Promise<void> {
 
     // Extract localStorage settings data
@@ -198,30 +230,39 @@ export class SettingsStateService extends StateService implements OnDestroy {
     // Set the settings values
     this.initializeSettings('settings.global', this.settingsGlobal, globalSettings);
 
-    // Set the initial wallet
+    // Get the initial wallet to be loaded
     const allWallets = await this._multi.list.pipe(take(1)).toPromise();
     const allWalletsNames = allWallets.map(w => w.name);
 
-    const fallbackWS = (<Setting>this.settings['settings.global.fallbackWallet']);
-    const lastUsedWS = (<Setting>this.settings['settings.global.selectedWallet']);
+    const savedfallbackWalletName = this.get('settings.global.fallbackWallet');
+    const savedLastUsedWalletName = this.get('settings.global.selectedWallet');
 
     let targetWalletName = allWalletsNames[0];
-    const fallbackWalletName = allWalletsNames.find((w) => w === fallbackWS.value);
+    const fallbackWalletName = allWalletsNames.find((w) => w === savedfallbackWalletName);
     if (typeof fallbackWalletName === 'string') {
       targetWalletName = fallbackWalletName;
     }
 
-    const lastUsedWalletName = allWalletsNames.find((w) => w === lastUsedWS.value);
+    const lastUsedWalletName = allWalletsNames.find((w) => w === savedLastUsedWalletName);
     if (lastUsedWalletName) {
       targetWalletName = lastUsedWalletName;
     }
 
+    // Attempt to set and load the extracted wallet name
     await this.changeWallet(targetWalletName);
 
     this._isInitialized = true;
   }
 
+  /**
+   * (PRIVATE)
+   * Performs the actual steps necessary to switch to a different wallet.
+   * If the wallet does not exist then it is ignored
+   *
+   * @param name Name of the wallet to change to.
+   */
   private async changeWallet(name: string) {
+    // Check that the requested wallet name actually exists
     const allWallets = await this._multi.list.pipe(take(1)).toPromise();
     const foundWallet = allWallets.find((w) => w.name === name);
 
@@ -229,29 +270,43 @@ export class SettingsStateService extends StateService implements OnDestroy {
       return;
     }
 
+    // Find the saved stored settings for the requested wallet
     let walletSettings = {};
     try {
       const localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
-      const settingsWalletGroup = localStorageSettings.wallets || {};
+      const storedWalletSettings = localStorageSettings['wallet'] || {};
+      let settingsWalletGroup = {};
+      if (Object.prototype.toString.call(settingsWalletGroup) === '[object Object]') {
+        settingsWalletGroup = storedWalletSettings;
+      }
       const walletKey = Object.keys(settingsWalletGroup).find((wKey) => wKey === `wallet_${name}`);
 
       if (walletKey !== undefined) {
         walletSettings = settingsWalletGroup[walletKey];
       }
-    } catch (err) {
+    } catch (_err) {
       // nothing to do: walletSettings is invalid so set to default
     }
 
+    // Load any saved stored settings, and change the current wallet
     this.initializeSettings('settings.wallet', this.settingsWallet, walletSettings);
     this._loadedWallet.next(foundWallet);
-    const storedActiveWallet = this.get('settings.global.selectedWallet');
 
+    const storedActiveWallet = this.get('settings.global.selectedWallet');
     if (storedActiveWallet !== name) {
       this.save({label: 'settings.global.selectedWallet', value: name});
     }
     this.changeRpcWalletOnly(name);
   }
 
+  /**
+   * (PRIVATE)
+   * Extracts settings from a SettingsStructure object, saving the period joined keys in a flat object (this.settings)
+   *
+   * @param label The label to save the setting as (called from another method, this should be the setting prefix)
+   * @param structure The SettingStructure object containing the actual settings to create/update
+   * @param storedValue An object representing the values to load
+   */
   private initializeSettings(label: string, structure: Setting | SettingStructure, storedValue: any) {
     if (!((<SettingStructure>structure) instanceof Setting)) {
       if (Object.prototype.toString.call(structure) === '[object Object]') {
@@ -262,15 +317,21 @@ export class SettingsStateService extends StateService implements OnDestroy {
         }
       }
     } else {
-      structure.label = label;
-      if ( !(storedValue === null || storedValue === undefined) ) {
-        structure.value = storedValue;
+      let actualValue = structure.defaultValue;
+      if (typeof storedValue === structure.type) {
+        actualValue = storedValue;
       }
       this.settings[label] = structure;
-      this.set(structure.label, structure.value);
+      this.set(label, actualValue);
     }
   }
 
+  /**
+   * (PRIVATE)
+   * Performs the actual persistence of a group of settings, according to where they are going to be persisted to.
+   * @param saveLocation The persistence mechanism
+   * @param newSettings The list of settings to be persisted in the particular storage location.
+   */
   private writeValues(saveLocation: SaveLocation, newSettings: KeyValue[]) {
 
     // Write to persistent storage
@@ -312,17 +373,15 @@ export class SettingsStateService extends StateService implements OnDestroy {
 
           try {
             localStorage.setItem('settings', JSON.stringify(localStorageSettings));
-          } catch(_err) {
-            // well, I guess that blows...
+          } catch (_err) {
+            // well, I guess that might a bit of a problem
           }
         }
         break;
     }
 
-    // Write to the in-memory values and broadcast the changes
+    // Update this.settings and broadcast the changes
     for (const newSetting of newSettings) {
-      const setting = <Setting>this.settings[newSetting.label];
-      setting.value = newSetting.value;
       this.set(newSetting.label, newSetting.value);
     }
   }
