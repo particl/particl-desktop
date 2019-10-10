@@ -4,6 +4,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NewTxNotifierService } from './new-tx-notifier.service';
 import { CoreModule } from 'app/core/core.module';
 import { RpcWithStateModule } from '../rpc.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+import { SettingsModule } from 'app/settings/settings.module';
 
 describe('NewTxNotifierService', () => {
   beforeEach(() => {
@@ -11,7 +13,9 @@ describe('NewTxNotifierService', () => {
       imports: [
         HttpClientModule,
         RpcWithStateModule.forRoot(),
-        CoreModule.forRoot()
+        CoreModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [NewTxNotifierService]
     });
