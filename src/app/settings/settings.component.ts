@@ -15,6 +15,8 @@ type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
 type PageSaveFunction = () => Observable<string | void>;
 type ValidationFunction = (value: any, setting: Setting) => string | void;
 
+// Indicates the distinct type of the setting. Impacts the visual rendering of the setting, as well
+//  as functionality (eg: BUTTON types are ignored when performing save functionality)
 enum SettingType {
   STRING = 0,
   NUMBER = 1,
@@ -23,66 +25,79 @@ enum SettingType {
   BUTTON = 4
 };
 
+// Details needed to render <option> elements
 class SelectableOption {
   text: string;
   value: any;
   isDisabled: boolean;
 }
 
+// Render options for the SettingType.NUMBER type
 class ParamsNumber {
   min: number;
   max: number;
   step: number;
 }
 
+// Render options for the SettingType.STRING type
 class ParamsString {
   placeholder: string;
 }
 
+// Render options for the SettingType.BUTTON type
 class ParamsButton {
   icon: string;
   color: string;
 }
 
+// Defines a Setting item
 class Setting {
-  id: string;                    // Easy identification of the setting (eg: when saving)
-  title: string;
-  description: string;
-  isDisabled: boolean;
-  type: SettingType;
-  limits: null | ParamsNumber | ParamsString | ParamsButton;
-  errorMsg?: string;
-  options?: SelectableOption[];   // Only applicable if type === SettingType.SELECT
-  currentValue: any;              // Ignored for SettingType.BUTTON
-  newValue: any;                  // Ignored for SettingType.BUTTON
-  tags: string[];
-  restartRequired: boolean;
-  validate?: ValidationFunction;
-  onChange?: ValidationFunction;
+  id: string;                     // Easy identification of the setting (typically the SettingState service id, useful for when saving)
+  title: string;                  // the primary text displayed to the user (or the button text for SettingType.BUTTON items)
+  description: string;            // Additional help/description tex tfor this particular setting
+  isDisabled: boolean;            // Where to render the setting as disabled
+  type: SettingType;              // The specific type of the setting
+  limits: null | ParamsNumber | ParamsString | ParamsButton;  // Additional (optional) type specific render options
+  errorMsg?: string;              // Error message text indicating an error with this particular setting
+  options?: SelectableOption[];   // Only applicable if type === SettingType.SELECT : the options for the select item
+  currentValue: any;              // The current saved value for this setting. Ignored for SettingType.BUTTON
+  newValue: any;                  // The new, unsaved value that the user wants. Otherwise contains the same value as the current value.
+  tags: string[];                 // A list of tags to display for the setting. Typically draws attention to additional, useful info.
+  restartRequired: boolean;       // Indicates whether a restart of a particular service or the applicaiton as a whole is required.
+  validate?: ValidationFunction;  // Optional validation function that is executed when the user changes the value.
+                                  //  The validation function gets a copy of the new value.
+                                  //  Executed when the page save function is called to ensure the changed 'newvalue' is actually valid.
+  onChange?: ValidationFunction;  // Optional function executed when the setting is changed.
+                                  //  Similar to the validation function, but run after validation.
+                                  //  NOT executed when the page save function is called.
 };
 
+// Provides a means to group together similar settings.
 class SettingGroup {
   id?: string;                    // Easy identification of the setting group (eg: when saving)
   name: string;
-  settings: Setting[];
+  settings: Setting[];            // The settings in this group
 };
 
+// Additional information applicable to the content of the page (rendered as a tab on the Settings page)
 class PageInfo {
   title: string;
   description: string;
   help: string;
 };
 
+// Defines a page (rendered as a tab on the Settings page) of groups of settings
 class Page {
   header: string;                 // tab name
   icon: string;                   // tab icon
-  info: PageInfo;                 // general information about the page (tab)
+  info: PageInfo;                 // general information about the page (tab), displayed in the tab
   settingGroups: SettingGroup[];  // a group of similar settings... all displayed close to each other
   load: PageLoadFunction;         // executed when the page (tab) is loaded
-  save: PageSaveFunction;
+  save: PageSaveFunction;         // executed when the page (tab) is saved
   hasErrors: boolean;
 };
 
+// Convenience means for defining text content for loading/waiting/error messages
 enum TextContent {
   LOADING = 'Loading applicable settings',
   SAVING = 'Performing requested updates',
@@ -101,10 +116,10 @@ enum TextContent {
 })
 export class SettingsComponent implements OnInit, OnDestroy {
   public settingPages: Array<Page> = [];
-  public isLoading: boolean = true;       // Change of page indicator
-  public isProcessing: boolean = false;   // 'Busy' indicator on the current displayed page
-  public currentChanges: number[][] = []; // Tracks which setting items ont he current page have changed
-  public currentWallet: IWallet = null;
+  public isLoading: boolean = true;       // Indicates current tab is loading
+  public isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
+  public currentChanges: number[][] = []; // Tracks which setting items on the current page have changed
+  public currentWallet: IWallet = null;   // Convient reference to the current wallet (for wallet specific settings)
 
   public settingType: (typeof SettingType) = SettingType;
 
@@ -133,7 +148,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         this.currentWallet = await this._settingState.currentWallet().pipe(take(1)).toPromise();
 
-        // Create the pages (tabs) to be available here
+        // Create the pages (tabs) to be available
 
         this.settingPages.push({
           header: 'Wallet Settings',
@@ -206,10 +221,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.isDestroyed = true;
   }
 
+  /**
+   * Extracts the current rendered page
+   */
   get currentPage(): Page | null {
     return this.pageIdx >= 0 ? this.settingPages[this.pageIdx] : null;
   }
 
+  /**
+   * Changes the currently loaded tab
+   * @param idx The index of the page/tab (from this.settingPages) to be loaded
+   */
   changeTab(idx: number): void {
     if (this.isProcessing) {
       return;
@@ -224,6 +246,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.loadPageSettings(idx);
   }
 
+  /**
+   * Called when a setting value has been changed. This executes the specific settings 'validate' function,
+   *  if available, and the executes the setting's 'onChange' function if its been provided.
+   *
+   * Applies to the currently loaded page
+   * @param groupIdx the index of the group on the current page that the setting belongs to
+   * @param settingIdx the index of the setting in the group
+   */
   settingChangedValue(groupIdx: number, settingIdx: number) {
     if (this.isLoading ||
       !(groupIdx >= 0 && groupIdx < this.currentPage.settingGroups.length) ||
@@ -269,6 +299,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.isProcessing = false;
   }
 
+  /**
+   * Resets changes to any settings on the currently loaded page.
+   */
   clearChanges() {
     if (this.isLoading) {
       return;
@@ -281,19 +314,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     // this.enableUI();
   }
 
-  private resetPageChanges(pageIndex: number) {
-    // Reset each setting for the indicated page to the last saved value;
-    this.settingPages[pageIndex].settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          setting.newValue = setting.currentValue;
-        }
-        setting.errorMsg = '';
-      })
-    });
-    this.settingPages[pageIndex].hasErrors = false;
-  }
-
+  /**
+   * Saves all modified changes on the current displayed page/tab.
+   * Validates each modified setting if a validate function is specified.
+   * If no setting validation errors occur, then the SettingPages's "save" function is invoked.
+   */
   saveChanges() {
     if (this.isLoading) {
       return;
@@ -382,6 +407,30 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * (PRIVATE)
+   * Performs the resetting of values on an indicates page.
+   * Resetting in this context means updating the setting's "newValue" value with its "currentValue" value.
+   * @param pageIndex The index of the page which needs to be reset
+   */
+  private resetPageChanges(pageIndex: number) {
+    // Reset each setting for the indicated page to the last saved value;
+    this.settingPages[pageIndex].settingGroups.forEach(group => {
+      group.settings.forEach(setting => {
+        if ( !(setting.type === SettingType.BUTTON)) {
+          setting.newValue = setting.currentValue;
+        }
+        setting.errorMsg = '';
+      })
+    });
+    this.settingPages[pageIndex].hasErrors = false;
+  }
+
+  /**
+   * (PRIVATE)
+   * Helper method to determine whether the settings service that this component depends on has been loaded.
+   * This is used here to ensure that the component loads with the correct details when invoking Angular's live reload (during dev work)
+   */
   private initializeComponent(observer: Observer<any>) {
     if (this.isDestroyed) {
       return;
@@ -396,6 +445,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     observer.complete();
   }
 
+  /**
+   * (PRIVATE)
+   * Invokes a specific page's load function, if it has not been previously loaded.
+   * @param pageIndex The index of the page that should be loaded
+   */
   private async loadPageSettings(pageIndex: number) {
     const selectedPage = this.settingPages[pageIndex];
     const isActivePage = pageIndex === this.pageIdx;
@@ -435,6 +489,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * (PRIVATE)
+   * Displays a busy indicator overlay preventing the user from interacting with the page
+   * @param message the text to be displayed in the loading overlay
+   */
   private disableUI(message: string) {
     this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
@@ -444,10 +503,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * (PRIVATE)
+   * Closes any open busy indicator overlay
+   */
   private enableUI() {
     this._dialog.closeAll();
   }
 
+  /**
+   * The specific page save function for the "Wallet Settings" tab
+   */
   private pageSaveWalletSettings(): Observable<string | void> {
     return new Observable((observer) => {
 
@@ -479,6 +545,22 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  /**
+   * ***********************************************************************
+   * ***********************************************************************
+   *
+   *    PAGE SPECIFIC FUNCTIONALITY (LOAD AND SAVE FUNCTION DEFINITIONS,
+   *      SETTING SPECIFIC VALIDATION/CHANGE FUNCTIONS) OCCURS BELOW
+   *
+   * ***********************************************************************
+   * ***********************************************************************
+   */
+
+
+  /**
+   * The specific page load function for the "Wallet Settings" tab
+   */
   private async pageLoadWalletSettings(group: SettingGroup[]) {
 
     const notificationsWallet = {
@@ -549,21 +631,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * The specific page load function for the "Global" tab
+   */
   private async pageLoadGlobalSettings() {
   }
 
+  /**
+   * The specific page save function for the "Global" tab
+   */
   private pageSaveGlobalSettings(): Observable<string | void> {
     return new Observable((observer) => {
       observer.next();
       observer.complete();
     });
   }
-
-  // private buttonClicked() {
-  //   console.log('inside buttonClicked() handler');
-  // }
-
-  // private checkboxupdated(value: number, setting: Setting) {
-  //   console.log('inside checkboxupdated() handler', JSON.stringify(value), setting);
-  // }
 }
