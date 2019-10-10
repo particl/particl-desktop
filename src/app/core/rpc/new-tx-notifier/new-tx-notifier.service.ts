@@ -5,6 +5,7 @@ import { NotificationService } from 'app/core/notification/notification.service'
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { takeWhile } from 'rxjs/operators';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 @Injectable()
 export class NewTxNotifierService implements OnDestroy {
@@ -14,25 +15,44 @@ export class NewTxNotifierService implements OnDestroy {
 
   private lastTxId: string = undefined;
 
+  private doNotifyTxRecieved: boolean = true;
+  private doNotifyStakeReceived: boolean = true;
 
   constructor(
     private _rpc: RpcService,
     private _rpcState: RpcStateService,
-    private _notification: NotificationService
+    private _notification: NotificationService,
+    private _settings: SettingsStateService
   ) {
 
     this.log.d('tx notifier service running!');
     this._rpcState.observe('getwalletinfo', 'txcount')
       .pipe(takeWhile(() => !this.destroyed))
       .subscribe(txcount => {
-        this.log.d(`--- update by txcount${txcount} ---`);
+        this.log.d(`--- update by txcount ${txcount} ---`);
         this.checkForNewTransaction();
       });
+
+    this._settings.observe('settings.wallet.notifications.payment_received').pipe(
+      takeWhile(() => !this.destroyed)
+    ).subscribe(
+      (isSubscribed) => {
+        this.doNotifyTxRecieved = Boolean(+isSubscribed);
+      }
+    );
+
+    this._settings.observe('settings.wallet.notifications.staking_reward').pipe(
+      takeWhile(() => !this.destroyed)
+    ).subscribe(
+      (isSubscribed) => {
+        this.doNotifyStakeReceived = Boolean(+isSubscribed);
+      }
+    );
   }
 
   // TODO: trigger by ZMQ in the future
   checkForNewTransaction(): void {
-    this.log.d('newTransaction()');
+    this.log.d('check for new Transaction');
 
     const options = {
       'count': 10
@@ -67,10 +87,10 @@ export class NewTxNotifierService implements OnDestroy {
 
   private notifyNewTransaction(tx: any) {
     this.log.d('notify new tx: ' + tx);
-    if (tx.category === 'receive') {
+    if ( (tx.category === 'receive') && this.doNotifyTxRecieved) {
       this._notification.sendNotification(tx.requires_unlock ? 'Incoming private transaction' : 'Incoming transaction',
         tx.requires_unlock ? 'unlock your wallet to see details' : (tx.amount + ' PART received'));
-    } else if (tx.category === 'stake') {
+    } else if ( (tx.category === 'stake') && this.doNotifyStakeReceived) {
       this._notification.sendNotification('New stake reward', tx.amount + ' PART received');
     }
   }

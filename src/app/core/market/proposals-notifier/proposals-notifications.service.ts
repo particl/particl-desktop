@@ -7,6 +7,7 @@ import { PeerService } from 'app/core/rpc/peer/peer.service';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { Proposal } from 'app/wallet/proposals/models/proposal.model';
 import { take, takeWhile } from 'rxjs/operators';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 @Injectable()
 export class ProposalsNotificationsService implements OnDestroy {
@@ -28,6 +29,7 @@ export class ProposalsNotificationsService implements OnDestroy {
     private proposalsService: ProposalsService,
     private peerService: PeerService,
     private _notification: NotificationService,
+    private _settings: SettingsStateService
   ) {
     this.log.d('creating service');
 
@@ -44,6 +46,14 @@ export class ProposalsNotificationsService implements OnDestroy {
           }
         }
       });
+
+    this._settings.observe('settings.wallet.notifications.proposal_arrived').pipe(
+      takeWhile(() => !this.destroyed)
+    ).subscribe(
+      (isSubscribed) => {
+        this.doNotify = Boolean(+isSubscribed);
+      }
+    )
   }
 
   get proposalsCountRequiredVoteAction(): number {

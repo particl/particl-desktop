@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Observable } from 'rxjs';
+import { Observable, Observer } from 'rxjs';
 import { take, takeWhile } from 'rxjs/operators';
 import { range } from 'lodash';
 
@@ -125,65 +125,81 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ) { };
 
   ngOnInit() {
-    // Create the pages (tabs) used here
+    // Ensures that the settings service is initialized and available (currently mostly as a guard for live reload cases).
+    new Observable((observer) => {
+      this.initializeComponent(observer);
+    }).subscribe(
+      async () => {
 
-    const walletSettings = {
-      header: 'Wallet Settings',
-      icon: 'part-hamburger',
-      info: {
-        title: '',
-        description: 'Adjust settings and configuration for the currently active wallet',
-        help: 'To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.'
-      } as PageInfo,
-      settingGroups: [],
-      load: (<PageLoadFunction>this.pageLoadWalletSettings),
-      save: this.pageSaveWalletSettings
-    } as Page;
-    const globalSettings = {
-      header: 'Global Settings',
-      icon: 'part-hamburger',
-      info: {
-        title: 'Global Application Settings',
-        description: 'Adjust settings and configuration that apply to the application (rather than an individual wallet)',
-        help: 'Please take note of setting changes that require a service restart.'
-      } as PageInfo,
-      settingGroups: [],
-      load: (<PageLoadFunction>this.pageLoadGlobalSettings),
-      save: this.pageSaveGlobalSettings
-    } as Page;
+        this.currentWallet = await this._settingState.currentWallet().pipe(take(1)).toPromise();
 
-    this.settingPages.push(walletSettings);
-    this.settingPages.push(globalSettings);
+        // Create the pages (tabs) to be available here
 
-    this._settingState.currentWallet().pipe(
-      takeWhile(() => !this.isDestroyed)
-    ).subscribe(
-      (wallet: IWallet) => {
+        this.settingPages.push({
+          header: 'Wallet Settings',
+          icon: 'part-hamburger',
+          info: {
+            title: '',
+            description: 'Adjust settings and configuration for the currently active wallet',
+            help: 'To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.'
+          } as PageInfo,
+          settingGroups: [],
+          load: (<PageLoadFunction>this.pageLoadWalletSettings),
+          save: this.pageSaveWalletSettings
+        } as Page);
 
-        if ( (wallet === null && this.currentWallet !== null) ||
-        (this.currentWallet === null && wallet !== null) ||
-        (this.currentWallet !== null && wallet !== null && this.currentWallet.name !== wallet.name)) {
+        this.settingPages.push({
+          header: 'Global Settings',
+          icon: 'part-hamburger',
+          info: {
+            title: 'Global Application Settings',
+            description: 'Adjust settings and configuration that apply to the application (rather than an individual wallet)',
+            help: 'Please take note of setting changes that require a service restart.'
+          } as PageInfo,
+          settingGroups: [],
+          load: (<PageLoadFunction>this.pageLoadGlobalSettings),
+          save: this.pageSaveGlobalSettings
+        } as Page);
 
-          const walletPageIdx = this.settingPages.findIndex((page) => page.header === 'Wallet Settings');
-          if (walletPageIdx > -1) {
-            const walletPage = this.settingPages[walletPageIdx];
-            walletPage.info.title = 'Settings for wallet ' + (wallet === null ? '<unknown>' : wallet.displayname);
-            walletPage.settingGroups = [];
+        // this.disableUI(TextContent.LOADING);
+        this.changeTab(0);
+        // setTimeout(() => {
+        //   this.disableUI(TextContent.LOADING);
+        //   this.changeTab(0);
+        // }, 0);
 
-            if (walletPageIdx === this.pageIdx) {
-              this.isLoading = true;
-              this.disableUI(TextContent.LOADING);
-              this.loadPageSettings(walletPageIdx);
+      },
+      (_err) => {},
+      () => {
+        // Set up wallet change listener -> in case the wallet changes while this component is loaded.
+        this._settingState.currentWallet().pipe(
+          takeWhile(() => !this.isDestroyed)
+        ).subscribe(
+          (wallet: IWallet) => {
+            // Only necessary to force a change if changed to a different wallet
+            if ( (wallet === null && this.currentWallet !== null) ||
+            (this.currentWallet === null && wallet !== null) ||
+            (this.currentWallet !== null && wallet !== null && this.currentWallet.name !== wallet.name)) {
+
+              this.currentWallet = wallet;
+
+              const walletPageIdx = this.settingPages.findIndex((page) => page.header === 'Wallet Settings');
+              if (walletPageIdx > -1) {
+                const walletPage = this.settingPages[walletPageIdx];
+                walletPage.info.title = 'Settings for wallet ' + (wallet === null ? '<unknown>' : wallet.displayname);
+                walletPage.settingGroups = [];
+
+                if (walletPageIdx === this.pageIdx) {
+                  this.isLoading = true;
+                  this.disableUI(TextContent.LOADING);
+                  this.loadPageSettings(walletPageIdx);
+                }
+              }
             }
           }
-        }
+        );
       }
     );
-
-    setTimeout(() => {
-      this.disableUI(TextContent.LOADING);
-      this.changeTab(0);
-    }, 0);
   }
 
   ngOnDestroy() {
@@ -364,6 +380,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.isProcessing = false;
       this.enableUI();
     }
+  }
+
+  private initializeComponent(observer: Observer<any>) {
+    if (this.isDestroyed) {
+      return;
+    }
+
+    if (!this._settingState.initialized) {
+      setTimeout(this.initializeComponent.bind(this), 500, observer);
+      return;
+    }
+
+    observer.next(null);
+    observer.complete();
   }
 
   private async loadPageSettings(pageIndex: number) {
