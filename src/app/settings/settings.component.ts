@@ -92,7 +92,7 @@ class Page {
   info: PageInfo;                 // general information about the page (tab), displayed in the tab
   settingGroups: SettingGroup[];  // a group of similar settings... all displayed close to each other
   load: PageLoadFunction;         // executed when the page (tab) is loaded
-  hasErrors: boolean;
+  settingErrors: any[];
 };
 
 // Convenience means for defining text content for loading/waiting/error messages
@@ -121,7 +121,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   public settingType: (typeof SettingType) = SettingType;
 
-  // Convenience properties for assisting the template in laying out columns of setting groups
+  // Convenience properties for assisting the template in laying out columns of setting groups for the current page/tab
   public columnCount: number = 2;
   public colIdxs: number[] = range(0, this.columnCount);
   public groupIdxs: number[] = [];
@@ -275,8 +275,12 @@ export class SettingsComponent implements OnInit, OnDestroy {
         setting.errorMsg = '';
       }
     }
-    if (setting.errorMsg) {
-      this.currentPage.hasErrors = true;
+    const listedError = this.currentPage.settingErrors.findIndex(errItem => (errItem.grpIdx === groupIdx) && (errItem.setIdx === settingIdx));
+
+    if (setting.errorMsg && (listedError === -1)) {
+      this.currentPage.settingErrors.push({grpIdx: groupIdx, setIdx: settingIdx});
+    } else if (!setting.errorMsg && (listedError > -1)) {
+      this.currentPage.settingErrors.splice(listedError, 1);
     }
 
     const changeIdx = this.currentChanges.findIndex((change) => change[0] === groupIdx && change[1] === settingIdx);
@@ -361,7 +365,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     ).subscribe(
       (resp: string | void) => {
         if (resp) {
-          this.settingPages[this.pageIdx].hasErrors = true;
           this._snackbar.open(resp);
           return;
         }
@@ -382,7 +385,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
       },
       (err) => {
-        this.settingPages[this.pageIdx].hasErrors = true;
         this._snackbar.open(TextContent.SAVE_FAILED);
       },
       () => {
@@ -408,7 +410,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         setting.errorMsg = '';
       })
     });
-    this.settingPages[pageIndex].hasErrors = false;
+    this.settingPages[pageIndex].settingErrors = [];
   }
 
   /**
@@ -672,7 +674,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const strVal = String(value);
     const parts = strVal.split(':');
     const octs = String(parts[0]).split('.');
-    let isValid = ( (octs.length === 4) && (octs.find(oct => (+oct > 255) || (+oct < 1) ) === undefined) );
+    let isValid = ( (octs.length === 4) && (octs.find(oct => !isFinite(+oct) || (+oct > 255) || (+oct < 1) ) === undefined) );
 
     if (parts[1]) {
       const port = +(String(parts[1]));

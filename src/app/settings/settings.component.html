@@ -171,7 +171,7 @@
       <button mat-raised-button
         color="primary"
         class="validate"
-        [disabled]="(currentChanges.length === 0) || currentPage.hasErrors || isProcessing"
+        [disabled]="(currentChanges.length === 0) || (currentPage.settingErrors.length > 0) || isProcessing"
         (click)="saveChanges()">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
         Save changes
