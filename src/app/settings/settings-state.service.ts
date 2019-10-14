@@ -7,6 +7,7 @@ import { take, takeWhile } from 'rxjs/operators';
 import { StateService } from 'app/core/state/state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService, IWallet } from 'app/multiwallet/multiwallet.service';
+import { IpcService } from 'app/core/ipc/ipc.service';
 
 enum SettingType {
   STRING = 'string',
@@ -23,10 +24,13 @@ enum SettingType {
  *      = which returns an object that contains
  *          the setting label as a key,
  *          an appropriate value to be loaded as the startup value for the setting label
- *  -> Adjust writeValues() to perform some logic to persist values to the storage location
+ *  -> Add a method to this component named saveSettingsToXXXXXX
+ *      = where XXXXXX is the enum label
+ *      = accepts a KeyValue[] containing the settings (label and new value) to be saved
  */
 enum SaveLocation {
-  LOCALSTORAGE = 0
+  LOCALSTORAGE = 0,
+  CORECONFIG = 1
 };
 
 class Setting {
@@ -58,11 +62,13 @@ export class SettingsStateService extends StateService implements OnDestroy {
   private _isInitialized: boolean = false;
   private _loadedWallet: BehaviorSubject<IWallet> = new BehaviorSubject<IWallet>(null);
 
-  // Keep settings as a reference to the loaded values for validation
+  // The defined settings
   private settings: SettingStructure = {
     'settings.global.fallbackWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'settings.global.selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
-    'settings.global.activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, '')
+    'settings.global.activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
+    'settings.global.language': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, 'en_us'),
+    'settings.core.network.proxy': new Setting(SaveLocation.CORECONFIG, SettingType.STRING, '')
   };
 
   // Define wallet specific settings: prefixed with 'settings.wallet'.
@@ -78,6 +84,7 @@ export class SettingsStateService extends StateService implements OnDestroy {
 
   constructor(
     private _rpc: RpcService,
+    private _ipc: IpcService,
     private _multi: MultiwalletService) {
     super();
 
@@ -283,43 +290,6 @@ export class SettingsStateService extends StateService implements OnDestroy {
 
   /**
    * (PRIVATE)
-   * A SaveLocation load function, loads settings saved in window.localStorage.
-   * @param keys Array of setting labels for which values may be loaded from this location
-   * @returns Object containing string:any key/value combinations of settings labels and their initial values to be loaded
-   */
-  private loadSettingsFromLOCALSTORAGE(keys: string[]): any {
-    const settingValues = {};
-    let localStorageSettings = {};
-    try {
-      localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
-    } catch (_err) {
-      // nothing to do
-    }
-    for (const key of keys) {
-      const storageKeys = key.split('.');
-      let currentRef = localStorageSettings;
-
-      for (let ii = 1; ii < storageKeys.length; ++ii) {
-        const storageKey = storageKeys[ii];
-
-        if (ii === (storageKeys.length - 1)) {
-          if (currentRef[storageKey] !== undefined) {
-            settingValues[key] = currentRef[storageKey];
-          }
-        } else {
-          if (Object.prototype.toString.call(currentRef[storageKey]) !== '[object Object]') {
-            currentRef[storageKey] = {};
-          }
-          currentRef = currentRef[storageKey];
-        }
-      }
-    }
-
-    return settingValues;
-  }
-
-  /**
-   * (PRIVATE)
    * Performs the actual steps necessary to switch to a different wallet.
    * If the wallet does not exist then it is ignored
    *
@@ -398,56 +368,134 @@ export class SettingsStateService extends StateService implements OnDestroy {
    */
   private writeValues(saveLocation: SaveLocation, newSettings: KeyValue[]) {
 
-    // Write to persistent storage
-    switch (saveLocation) {
-      case SaveLocation.LOCALSTORAGE:
-        let localStorageSettings = {};
-        try {
-          localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
-        } catch (_err) {
-          // nothing to do
-        }
-        for (const newSetting of newSettings) {
-          const storageKeys = newSetting.label.split('.');
-          let currentRef = localStorageSettings;
+    const locationName = `saveSettingsTo${SaveLocation[+saveLocation]}`;
+    if (typeof this[locationName] === 'function') {
+      this[locationName](newSettings);
 
-          for (let ii = 1; ii < storageKeys.length; ++ii) {
-
-            const storageKey = storageKeys[ii];
-
-            if (ii === (storageKeys.length - 1)) {
-              currentRef[storageKey] = newSetting.value;
-            } else {
-              if (Object.prototype.toString.call(currentRef[storageKey]) !== '[object Object]') {
-                currentRef[storageKey] = {};
-              }
-              currentRef = currentRef[storageKey];
-            }
-
-            if (ii === 1) {
-              if (storageKey === 'wallet') {
-                const walletName = `wallet_${this._loadedWallet.getValue().name}`;
-                if (Object.prototype.toString.call(currentRef[walletName]) !== '[object Object]') {
-                  currentRef[walletName] = {};
-                }
-                currentRef = currentRef[walletName];
-              }
-            }
-          }
-
-          try {
-            localStorage.setItem('settings', JSON.stringify(localStorageSettings));
-          } catch (_err) {
-            // well, I guess that might a bit of a problem
-          }
-        }
-        break;
-    }
-
-    // Update this.settings and broadcast the changes
-    for (const newSetting of newSettings) {
-      this.set(newSetting.label, newSetting.value);
+      // Update this.settings and broadcast the changes
+      for (const newSetting of newSettings) {
+        this.set(newSetting.label, newSetting.value);
+      }
     }
   }
 
+  /**
+   * (PRIVATE)
+   * A SaveLocation save function, saves settings to window.localStorage.
+   * @param newSettings Array of setting labels and their values to be saved
+   *
+   */
+  private saveSettingsToLOCALSTORAGE(newSettings: KeyValue[]) {
+    let localStorageSettings = {};
+    try {
+      localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    } catch (_err) {
+      // nothing to do
+    }
+    for (const newSetting of newSettings) {
+      const storageKeys = newSetting.label.split('.');
+      let currentRef = localStorageSettings;
+
+      for (let ii = 1; ii < storageKeys.length; ++ii) {
+
+        const storageKey = storageKeys[ii];
+
+        if (ii === (storageKeys.length - 1)) {
+          currentRef[storageKey] = newSetting.value;
+        } else {
+          if (Object.prototype.toString.call(currentRef[storageKey]) !== '[object Object]') {
+            currentRef[storageKey] = {};
+          }
+          currentRef = currentRef[storageKey];
+        }
+
+        if (ii === 1) {
+          if (storageKey === 'wallet') {
+            const walletName = `wallet_${this._loadedWallet.getValue().name}`;
+            if (Object.prototype.toString.call(currentRef[walletName]) !== '[object Object]') {
+              currentRef[walletName] = {};
+            }
+            currentRef = currentRef[walletName];
+          }
+        }
+      }
+
+      try {
+        localStorage.setItem('settings', JSON.stringify(localStorageSettings));
+      } catch (_err) {
+        // well, I guess that might a bit of a problem
+      }
+    }
+  }
+
+  /**
+   * (PRIVATE)
+   * A SaveLocation save function, saves settings to particl.conf.
+   * @param newSettings Array of setting labels and their new values to be saved
+   *
+   */
+  private saveSettingsToCORECONFIG(newSettings: KeyValue[]) {
+    const saveSettings = {};
+    for (const setting of newSettings) {
+      if (setting.label === 'settings.core.network.proxy') {
+        saveSettings['proxy'] = setting.value;
+      }
+    }
+    if (Object.keys(saveSettings).length > 0) {
+      this._ipc.runCommand('write-core-config', null, saveSettings);
+    }
+  }
+
+  /**
+   * (PRIVATE)
+   * A SaveLocation load function, loads settings saved in window.localStorage.
+   * @param keys Array of setting labels for which values may be loaded from this location
+   * @returns Object containing string:any key/value combinations of settings labels and their initial values to be loaded
+   */
+  private loadSettingsFromLOCALSTORAGE(keys: string[]): any {
+    const settingValues = {};
+    let localStorageSettings = {};
+    try {
+      localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    } catch (_err) {
+      // nothing to do
+    }
+    for (const key of keys) {
+      const storageKeys = key.split('.');
+      let currentRef = localStorageSettings;
+
+      for (let ii = 1; ii < storageKeys.length; ++ii) {
+        const storageKey = storageKeys[ii];
+
+        if (ii === (storageKeys.length - 1)) {
+          if (currentRef[storageKey] !== undefined) {
+            settingValues[key] = currentRef[storageKey];
+          }
+        } else {
+          if (Object.prototype.toString.call(currentRef[storageKey]) !== '[object Object]') {
+            currentRef[storageKey] = {};
+          }
+          currentRef = currentRef[storageKey];
+        }
+      }
+    }
+
+    return settingValues;
+  }
+
+  /**
+   * (PRIVATE)
+   * A SaveLocation load function, loads settings saved in particl.conf.
+   * @param keys Array of setting labels for which values may be loaded from this location
+   * @returns Object containing string:any key/value combinations of settings labels and their initial values to be loaded
+   */
+  private loadSettingsFromCORECONFIG(keys: string[]): any {
+    const settingValues = {};
+    const userConfig = this._rpc.coreConfig;
+
+    if (userConfig.proxy) {
+      settingValues['settings.core.network.proxy'] = userConfig.proxy;
+    }
+    return settingValues;
+  }
 }

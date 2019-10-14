@@ -17,8 +17,9 @@ if (isEmptyObject(_options)) {
 const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
 const IPC_CHANNEL_PUB = 'rpc-configuration';
 const IPC_CHANNEL_LISTEN = 'request-configuration';
+const IPC_CHANNEL_WRITE = 'write-core-config';
 
-const SAFE_KEYS = ['addressindex'];
+const SAFE_KEYS = ['addressindex', 'proxy'];
 
 let STORED_CONFIGURATION = {};
 let mainWindowRef = null;
@@ -291,6 +292,7 @@ const emitConfiguration = () => {
 const destroyIpcChannels = () => {
   rxIpc.removeListeners(IPC_CHANNEL_PUB);
   rxIpc.removeListeners(IPC_CHANNEL_LISTEN);
+  rxIpc.removeListeners(IPC_CHANNEL_WRITE);
 }
 
 
@@ -309,6 +311,13 @@ const initializeIpcChannels = (mainWindow) => {
   rxIpc.registerListener(IPC_CHANNEL_LISTEN, () => {
     emitConfiguration();
     return Observable.create(observer => {
+      observer.complete(true);
+    });
+  });
+
+  rxIpc.registerListener(IPC_CHANNEL_WRITE, function(settings) {
+    return Observable.create(observer => {
+      saveSettings(settings);
       observer.complete(true);
     });
   });

@@ -12,7 +12,6 @@ import { ProcessingModalComponent } from 'app/modals/processing-modal/processing
 import { IWallet } from 'app/multiwallet/multiwallet.service';
 
 type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
-type PageSaveFunction = () => Observable<string | void>;
 type ValidationFunction = (value: any, setting: Setting) => string | void;
 
 // Indicates the distinct type of the setting. Impacts the visual rendering of the setting, as well
@@ -93,7 +92,6 @@ class Page {
   info: PageInfo;                 // general information about the page (tab), displayed in the tab
   settingGroups: SettingGroup[];  // a group of similar settings... all displayed close to each other
   load: PageLoadFunction;         // executed when the page (tab) is loaded
-  save: PageSaveFunction;         // executed when the page (tab) is saved
   hasErrors: boolean;
 };
 
@@ -159,8 +157,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
             help: 'To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.'
           } as PageInfo,
           settingGroups: [],
-          load: (<PageLoadFunction>this.pageLoadWalletSettings),
-          save: this.pageSaveWalletSettings
+          load: (<PageLoadFunction>this.pageLoadWalletSettings)
         } as Page);
 
         this.settingPages.push({
@@ -172,16 +169,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
             help: 'Please take note of setting changes that require a service restart.'
           } as PageInfo,
           settingGroups: [],
-          load: (<PageLoadFunction>this.pageLoadGlobalSettings),
-          save: this.pageSaveGlobalSettings
+          load: (<PageLoadFunction>this.pageLoadGlobalSettings)
         } as Page);
 
-        // this.disableUI(TextContent.LOADING);
         this.changeTab(0);
-        // setTimeout(() => {
-        //   this.disableUI(TextContent.LOADING);
-        //   this.changeTab(0);
-        // }, 0);
 
       },
       (_err) => {},
@@ -272,12 +263,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
       const response = setting.validate(setting.newValue, setting);
       if (response) {
         setting.errorMsg = response;
+      } else {
+        setting.errorMsg = '';
       }
     }
     if (setting.onChange) {
       const response = setting.onChange(setting.newValue, setting);
       if (response) {
         setting.errorMsg = response;
+      } else {
+        setting.errorMsg = '';
       }
     }
     if (setting.errorMsg) {
@@ -361,50 +356,40 @@ export class SettingsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Request the page save function
-    let fn: Function;
-    if (this.settingPages[this.pageIdx].save && (typeof this.settingPages[this.pageIdx].save === 'function')) {
-      fn = this.settingPages[this.pageIdx].save.bind(this);
-    }
-
-    if (fn !== undefined) {
-
-      fn().pipe(take(1)).subscribe(
-        (resp: string | void) => {
-          if (resp) {
-            this.settingPages[this.pageIdx].hasErrors = true;
-            this._snackbar.open(resp);
-            return;
-          }
-
-          // Change current settings in case it has not been done
-          this.settingPages[this.pageIdx].settingGroups.forEach(group => {
-            group.settings.forEach(setting => {
-              if ( !(setting.type === SettingType.BUTTON)) {
-                setting.currentValue = setting.newValue;
-              }
-              setting.errorMsg = '';
-            });
-          });
-
-          // reset the list of current changes
-          this.currentChanges = [];
-
-          this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
-        },
-        (err) => {
+    this.saveCurrentPageSettings().pipe(
+      take(1)
+    ).subscribe(
+      (resp: string | void) => {
+        if (resp) {
           this.settingPages[this.pageIdx].hasErrors = true;
-          this._snackbar.open(TextContent.SAVE_FAILED);
-        },
-        () => {
-          this.isProcessing = false;
-          this.enableUI();
+          this._snackbar.open(resp);
+          return;
         }
-      );
-    } else {
-      this.isProcessing = false;
-      this.enableUI();
-    }
+
+        // Change current settings in case it has not been done
+        this.settingPages[this.pageIdx].settingGroups.forEach(group => {
+          group.settings.forEach(setting => {
+            if ( !(setting.type === SettingType.BUTTON)) {
+              setting.currentValue = setting.newValue;
+            }
+            setting.errorMsg = '';
+          });
+        });
+
+        // reset the list of current changes
+        this.currentChanges = [];
+
+        this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
+      },
+      (err) => {
+        this.settingPages[this.pageIdx].hasErrors = true;
+        this._snackbar.open(TextContent.SAVE_FAILED);
+      },
+      () => {
+        this.isProcessing = false;
+        this.enableUI();
+      }
+    );
   }
 
   /**
@@ -512,9 +497,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * The specific page save function for the "Wallet Settings" tab
+   * Extracts the changed settings on the current page for persisting the changes
    */
-  private pageSaveWalletSettings(): Observable<string | void> {
+  private saveCurrentPageSettings(): Observable<string | void> {
     return new Observable((observer) => {
 
       const settingChanges: any[] = [];
@@ -550,7 +535,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
    * ***********************************************************************
    * ***********************************************************************
    *
-   *    PAGE SPECIFIC FUNCTIONALITY (LOAD AND SAVE FUNCTION DEFINITIONS,
+   *    PAGE SPECIFIC FUNCTIONALITY (LOAD FUNCTION DEFINITIONS,
    *      SETTING SPECIFIC VALIDATION/CHANGE FUNCTIONS) OCCURS BELOW
    *
    * ***********************************************************************
@@ -635,6 +620,32 @@ export class SettingsComponent implements OnInit, OnDestroy {
    * The specific page load function for the "Global" tab
    */
   private async pageLoadGlobalSettings(group: SettingGroup[]) {
+
+    const langGroup = {
+      name: 'Current Language',
+      settings: []
+    } as SettingGroup;
+
+    langGroup.settings.push({
+      id: 'settings.global.language',
+      title: 'Change Language',
+      description: 'Change the application language',
+      isDisabled: true,
+      type: SettingType.SELECT,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.global.language'),
+      tags: [],
+      options: [
+        {
+          text: 'English (US)',
+          value: 'en_us',
+          isDisabled: false
+        } as SelectableOption
+      ],
+      restartRequired: false
+    } as Setting);
+
+
     const coreNetConfig = {
       name: 'Core network connection',
       settings: []
@@ -642,26 +653,36 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     coreNetConfig.settings.push({
       id: 'settings.core.network.proxy',
-      title: 'Payment Received',
-      description: 'Display a system notification message when a wallet payment has been received',
+      title: 'Proxy',
+      description: 'Directs core to connect via a socks5 proxy. Example value would be: 127.0.0.1:9050',
       isDisabled: false,
       type: SettingType.STRING,
       errorMsg: '',
       currentValue: this._settingState.get('settings.core.network.proxy'),
       tags: [],
-      restartRequired: true
+      restartRequired: true,
+      validate: this.validateIPAddressPort
     } as Setting);
 
+    group.push(langGroup);
     group.push(coreNetConfig);
   }
 
-  /**
-   * The specific page save function for the "Global" tab
-   */
-  private pageSaveGlobalSettings(): Observable<string | void> {
-    return new Observable((observer) => {
-      observer.next();
-      observer.complete();
-    });
+  private validateIPAddressPort(value: any, setting: Setting): string | null {
+    const strVal = String(value);
+    const parts = strVal.split(':');
+    const octs = String(parts[0]).split('.');
+    let isValid = ( (octs.length === 4) && (octs.find(oct => (+oct > 255) || (+oct < 1) ) === undefined) );
+
+    if (parts[1]) {
+      const port = +(String(parts[1]));
+      isValid = isValid && (port > 0) && (port <= 65535);
+    }
+
+    if (!isValid) {
+      return 'Invalid IPv4 address and/or port';
+    }
+
+    return null;
   }
 }

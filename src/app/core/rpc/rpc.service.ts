@@ -30,6 +30,7 @@ export class RpcService implements OnDestroy {
   private isInitialized: boolean = false;
   private DAEMON_CHANNEL: string = 'rpc-configuration';
   private _wallet: string;
+  private _coreConfig: any;
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -66,6 +67,13 @@ export class RpcService implements OnDestroy {
 
   get enabled(): boolean {
     return this.isInitialized;
+  }
+
+  get coreConfig(): any {
+    if (!this._coreConfig) {
+      return {};
+    }
+    return JSON.parse(JSON.stringify(this._coreConfig));
   }
 
   /**
@@ -146,6 +154,10 @@ export class RpcService implements OnDestroy {
   private daemonListener(config: any): Observable<any> {
     return Observable.create(observer => {
       const isValid = config.auth && (config.auth !== this.authorization);
+      if (Object.prototype.toString.call(config) === '[object Object]') {
+        this._coreConfig = config;
+      }
+
       this.log.d(`Received RPC configuration: details are valid: ${isValid}`);
       if (isValid) {
         this.hostname = config.rpcbind || 'localhost';
