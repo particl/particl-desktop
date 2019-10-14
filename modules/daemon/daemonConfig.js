@@ -268,8 +268,7 @@ const getConfiguration = (reloadConfig, loadAuth) => {
 
 
 const emitConfiguration = () => {
-  let settings = getConfiguration(false, true);
-
+  let settings = getConfiguration(true, true);
   try {
     rxIpc.runCommand(IPC_CHANNEL_PUB, mainWindowRef.webContents, settings)
       .subscribe(

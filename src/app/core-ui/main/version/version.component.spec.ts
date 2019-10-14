@@ -7,6 +7,7 @@ import { RpcService } from 'app/core/rpc/rpc.service';
 import { MockRpcService } from 'app/core/rpc/rpc.mockservice';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 import { SettingsModule } from 'app/settings/settings.module';
+import { IpcService } from 'app/core/ipc/ipc.service';
 
 describe('VersionComponent', () => {
   let component: VersionComponent;
@@ -21,7 +22,8 @@ describe('VersionComponent', () => {
         SettingsModule.forRoot()
       ],
       providers: [
-        { provide: RpcService, useClass: MockRpcService }
+        { provide: RpcService, useClass: MockRpcService },
+        IpcService
       ]
     })
     .compileComponents();

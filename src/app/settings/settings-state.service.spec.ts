@@ -5,6 +5,7 @@ import { CoreModule } from 'app/core/core.module';
 import { SettingsStateService } from './settings-state.service';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+import { IpcService } from 'app/core/ipc/ipc.service';
 
 describe('SettingsStateService', () => {
   beforeEach(() => {
@@ -14,7 +15,7 @@ describe('SettingsStateService', () => {
         CoreModule.forRoot(),
         MultiwalletModule.forRoot()
       ],
-      providers: [SettingsStateService]
+      providers: [SettingsStateService, IpcService]
     });
   });
 
