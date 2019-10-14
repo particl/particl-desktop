@@ -14,9 +14,17 @@ enum SettingType {
   BOOLEAN = 'boolean'
 };
 
-// Where various settings are saved. Adding a new value here likely requires:
-//  -> Update start() to extract values
-//  -> Update writeValues() to persist the data to the storage means
+/**
+ * Indicates the location where various settings are saved
+ * Adding a new value here requires:
+ *  -> Add a method to this component named loadSettingsFromXXXXXX
+ *      = where XXXXXX is the enum label
+ *      = accepts a string[] containing the settings labels to be loaded,
+ *      = which returns an object that contains
+ *          the setting label as a key,
+ *          an appropriate value to be loaded as the startup value for the setting label
+ *  -> Adjust writeValues() to perform some logic to persist values to the storage location
+ */
 enum SaveLocation {
   LOCALSTORAGE = 0
 };
@@ -51,9 +59,14 @@ export class SettingsStateService extends StateService implements OnDestroy {
   private _loadedWallet: BehaviorSubject<IWallet> = new BehaviorSubject<IWallet>(null);
 
   // Keep settings as a reference to the loaded values for validation
-  private settings: SettingStructure = {};
+  private settings: SettingStructure = {
+    'settings.global.fallbackWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
+    'settings.global.selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
+    'settings.global.activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, '')
+  };
 
-  // Define wallet specific settings: prefixed with 'settings.wallet'
+  // Define wallet specific settings: prefixed with 'settings.wallet'.
+  //  Separate as this content is dynamically loaded as the wallet is changed in the application.
   private settingsWallet: SettingStructure = {
     notifications: {
        'payment_received': new Setting(SaveLocation.LOCALSTORAGE, SettingType.BOOLEAN, true),
@@ -62,13 +75,6 @@ export class SettingsStateService extends StateService implements OnDestroy {
        'proposal_arrived': new Setting(SaveLocation.LOCALSTORAGE, SettingType.BOOLEAN, true),
     } as SettingStructure
   };
-
-  // Define global settings: prefixed with 'settings.global'
-  private settingsGlobal: SettingStructure = {
-    'fallbackWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
-    'selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
-    'activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, '')
-  }
 
   constructor(
     private _rpc: RpcService,
@@ -218,19 +224,40 @@ export class SettingsStateService extends StateService implements OnDestroy {
    */
   private async start(): Promise<void> {
 
-    // Extract localStorage settings data
-    let localStorageSettings = {};
-    try {
-      localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
-    } catch (_err) {
-      // nothing to do
+    const locationGroups = {};
+    const settingKeys = Object.keys(this.settings);
+
+    for (const settingKey of settingKeys) {
+      const actualSetting = <Setting>this.settings[settingKey];
+      const location = String(actualSetting.location);
+      if ( !locationGroups[location] ) {
+        locationGroups[location] = [];
+      }
+      locationGroups[location].push(settingKey);
     }
-    const globalSettings = localStorageSettings['global'] || {};
 
-    // Set the settings values
-    this.initializeSettings('settings.global', this.settingsGlobal, globalSettings);
+    const groups = Object.keys(locationGroups);
 
-    // Get the initial wallet to be loaded
+    for (const group of groups) {
+      const locationName = `loadSettingsFrom${SaveLocation[+group]}`;
+      let values = {};
+      if (typeof this[locationName] === 'function') {
+        values = this[locationName](locationGroups[group]);
+      }
+
+      for (const settingLabel of locationGroups[group]) {
+        const extractedValue = typeof values === 'object' ? values[settingLabel] : null;
+        const setting = <Setting>this.settings[settingLabel];
+
+        let startValue = setting.defaultValue;
+        if (typeof extractedValue === setting.type) {
+          startValue = extractedValue;
+        }
+        this.set(settingLabel, startValue);
+      }
+    }
+
+    // Load the dynamically defined starting wallet
     const allWallets = await this._multi.list.pipe(take(1)).toPromise();
     const allWalletsNames = allWallets.map(w => w.name);
 
@@ -252,6 +279,43 @@ export class SettingsStateService extends StateService implements OnDestroy {
     await this.changeWallet(targetWalletName);
 
     this._isInitialized = true;
+  }
+
+  /**
+   * (PRIVATE)
+   * A SaveLocation load function, loads settings saved in window.localStorage.
+   * @param keys Array of setting labels for which values may be loaded from this location
+   * @returns Object containing string:any key/value combinations of settings labels and their initial values to be loaded
+   */
+  private loadSettingsFromLOCALSTORAGE(keys: string[]): any {
+    const settingValues = {};
+    let localStorageSettings = {};
+    try {
+      localStorageSettings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    } catch (_err) {
+      // nothing to do
+    }
+    for (const key of keys) {
+      const storageKeys = key.split('.');
+      let currentRef = localStorageSettings;
+
+      for (let ii = 1; ii < storageKeys.length; ++ii) {
+        const storageKey = storageKeys[ii];
+
+        if (ii === (storageKeys.length - 1)) {
+          if (currentRef[storageKey] !== undefined) {
+            settingValues[key] = currentRef[storageKey];
+          }
+        } else {
+          if (Object.prototype.toString.call(currentRef[storageKey]) !== '[object Object]') {
+            currentRef[storageKey] = {};
+          }
+          currentRef = currentRef[storageKey];
+        }
+      }
+    }
+
+    return settingValues;
   }
 
   /**

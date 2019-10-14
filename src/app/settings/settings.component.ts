@@ -634,7 +634,25 @@ export class SettingsComponent implements OnInit, OnDestroy {
   /**
    * The specific page load function for the "Global" tab
    */
-  private async pageLoadGlobalSettings() {
+  private async pageLoadGlobalSettings(group: SettingGroup[]) {
+    const coreNetConfig = {
+      name: 'Core network connection',
+      settings: []
+    } as SettingGroup;
+
+    coreNetConfig.settings.push({
+      id: 'settings.core.network.proxy',
+      title: 'Payment Received',
+      description: 'Display a system notification message when a wallet payment has been received',
+      isDisabled: false,
+      type: SettingType.STRING,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.core.network.proxy'),
+      tags: [],
+      restartRequired: true
+    } as Setting);
+
+    group.push(coreNetConfig);
   }
 
   /**
