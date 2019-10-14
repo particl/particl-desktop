@@ -275,7 +275,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
         setting.errorMsg = '';
       }
     }
-    const listedError = this.currentPage.settingErrors.findIndex(errItem => (errItem.grpIdx === groupIdx) && (errItem.setIdx === settingIdx));
+    const listedError = this.currentPage.settingErrors.findIndex(
+      errItem => (errItem.grpIdx === groupIdx) && (errItem.setIdx === settingIdx)
+    );
 
     if (setting.errorMsg && (listedError === -1)) {
       this.currentPage.settingErrors.push({grpIdx: groupIdx, setIdx: settingIdx});
