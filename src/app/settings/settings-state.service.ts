@@ -68,7 +68,8 @@ export class SettingsStateService extends StateService implements OnDestroy {
     'settings.global.selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'settings.global.activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'settings.global.language': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, 'en_us'),
-    'settings.core.network.proxy': new Setting(SaveLocation.CORECONFIG, SettingType.STRING, '')
+    'settings.core.network.proxy': new Setting(SaveLocation.CORECONFIG, SettingType.STRING, ''),
+    'settings.core.network.upnp': new Setting(SaveLocation.CORECONFIG, SettingType.BOOLEAN, false)
   };
 
   // Define wallet specific settings: prefixed with 'settings.wallet'.
@@ -496,6 +497,7 @@ export class SettingsStateService extends StateService implements OnDestroy {
     if (userConfig.proxy) {
       settingValues['settings.core.network.proxy'] = userConfig.proxy;
     }
+    settingValues['settings.core.network.upnp'] = Boolean(+userConfig.upnp);
     return settingValues;
   }
 }

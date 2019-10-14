@@ -654,8 +654,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
     } as SettingGroup;
 
     coreNetConfig.settings.push({
+      id: 'settings.core.network.upnp',
+      title: 'Enable UPnP',
+      description: 'Use UPnP to map the listening port',
+      isDisabled: false,
+      type: SettingType.BOOLEAN,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.core.network.upnp'),
+      tags: [],
+      restartRequired: true
+    } as Setting);
+
+    coreNetConfig.settings.push({
       id: 'settings.core.network.proxy',
-      title: 'Proxy',
+      title: 'Connect via Proxy',
       description: 'Directs core to connect via a socks5 proxy. Example value would be: 127.0.0.1:9050',
       isDisabled: false,
       type: SettingType.STRING,
