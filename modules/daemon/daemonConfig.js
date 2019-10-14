@@ -19,7 +19,7 @@ const IPC_CHANNEL_PUB = 'rpc-configuration';
 const IPC_CHANNEL_LISTEN = 'request-configuration';
 const IPC_CHANNEL_WRITE = 'write-core-config';
 
-const SAFE_KEYS = ['addressindex', 'proxy'];
+const SAFE_KEYS = ['addressindex', 'proxy', 'upnp'];
 
 let STORED_CONFIGURATION = {};
 let mainWindowRef = null;
