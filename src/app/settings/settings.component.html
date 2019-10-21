@@ -55,22 +55,22 @@
                   [(ngModel)]="setting.newValue"
                   (change)="settingChangedValue(rowIdx + colIdx, settingIdx)"
                 >
-                  <h4 class="option">{{ setting.title }}</h4>
-                  <p class="option">
+                  <h4 class="option">
+                    {{ setting.title }}
                     <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                    <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
-                  </p>
+                    <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                  </h4>
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                 </mat-checkbox>
                 <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
               </ng-container>
 
               <ng-container *ngSwitchCase="settingType.NUMBER">
-                <h4 class="option">{{ setting.title }}</h4>
-                <p class="option">
+                <h4 class="option">
+                  {{ setting.title }}
                   <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                  <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
-                </p>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
                 <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                 <mat-form-field floatLabel="never">
                   <input matInput type="number" *ngIf="!setting.limits"
@@ -89,11 +89,11 @@
               </ng-container>
 
               <ng-container *ngSwitchCase="settingType.STRING">
-                <h4 class="option">{{ setting.title }}</h4>
-                <p class="option">
+                <h4 class="option">
+                  {{ setting.title }}
                   <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                  <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
-                </p>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
                 <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                 <mat-form-field class="full-width">
                   <input matInput
@@ -106,11 +106,11 @@
               </ng-container>
 
               <ng-container *ngSwitchCase="settingType.SELECT">
-                <h4 class="option">{{ setting.title }}</h4>
-                <p class="option">
+                <h4 class="option">
+                  {{ setting.title }}
                   <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                  <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
-                </p>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
                 <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                 <mat-form-field>
                   <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(rowIdx + colIdx, settingIdx)">
@@ -125,11 +125,11 @@
               <ng-container *ngSwitchCase="settingType.BUTTON">
                 <div>
                   <div class="half" fxFlex="50">
-                    <h4 class="option">{{ setting.title }}</h4>
-                    <p class="option">
+                    <h4 class="option">
+                      {{ setting.title }}
                       <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag" *ngIf="setting.restartRequired">Requires restart</span>
-                    </p>
+                      <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                    </h4>
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                   </div>
                   <div class="half" fxFlex="50">

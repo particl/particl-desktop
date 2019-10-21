@@ -152,7 +152,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         this.settingPages.push({
           header: 'Wallet-specific',
-          icon: 'part-hamburger',
+          icon: 'part-check-in-a-box',
           info: {
             title: walletTabHeaderInit + this.currentWallet.displayname,
             description: 'Adjust settings and configuration for the currently active wallet',
@@ -164,7 +164,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         this.settingPages.push({
           header: 'Global',
-          icon: 'part-hamburger',
+          icon: 'part-cog',
           info: {
             title: 'Global Application Settings',
             description: 'Adjust settings and configuration that apply to the application (rather than an individual wallet)',
