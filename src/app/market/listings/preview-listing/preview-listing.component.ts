@@ -100,29 +100,30 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       this.data.listing.proposalHash,
       option.optionId
     ];
-    this.proposalsService.vote(params).subscribe((response) => {
-      this.processModal.close();
-      let msg = String(response.result);
-      if (msg.toLowerCase().includes('no usable addresses')) {
-        msg = 'Insufficient (public) funds to submit this vote';
+    this.proposalsService.vote(params).subscribe(
+      (response) => {
+        this.processModal.close();
+        let msg = String(response.result);
+        if (msg.toLowerCase().includes('no usable addresses')) {
+          msg = 'Insufficient (public) funds to submit this vote';
+        }
+        if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
+          msg = `Successfully voted for ${this.data.listing.title}`;
+          this.data.listing.VoteDetails = new VoteDetails({
+            ProposalOption: option
+          });
+          this.data.reportListingComplete.emit();
+        }
+        this.snackbarService.open(msg, 'info');
+      },
+      (error) => {
+        this.processModal.close();
+        this.snackbarService.open(error);
+      },
+      () => {
+        this.dialogClose();
       }
-      if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
-        msg = `Successfully voted for ${this.data.listing.title}`;
-        this.data.listing.VoteDetails = new VoteDetails({
-          ProposalOption: option
-        });
-        this.reportListingFinished();
-      }
-      this.snackbarService.open(msg, 'info');
-    }, (error) => {
-      this.processModal.close();
-      this.snackbarService.open(error);
-    })
-  }
-
-  reportListingFinished() {
-    this.data.reportListingComplete.emit();
-    this.dialogClose();
+    );
   }
 
   dialogClose(): void {
