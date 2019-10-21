@@ -27,8 +27,6 @@ import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cach
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { SettingsStateService } from 'app/settings/settings-state.service';
 
-import * as marketConfig from '../../../../modules/market/config.js';
-
 /*
  * The MainView is basically:
  * sidebar + router-outlet.
@@ -96,8 +94,9 @@ export class MainRouterComponent implements OnInit, OnDestroy {
           return;
         }
         if (wallet.isMarketEnabled) {
+          const marketPort = this._settingsService.get('settings.market.env.port');
           // We recheck if the market is started here for live reload cases, and to start the various MP services
-          this._market.startMarket(wallet.name).subscribe(
+          this._market.startMarket(wallet.name, marketPort).subscribe(
             () => {
               this._marketState.start();
               this._profile.start();

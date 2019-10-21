@@ -10,9 +10,7 @@ import * as marketConfig from '../../../modules/market/config.js';
 
 export interface IWallet {
   name: string;
-  fakename: string;
   displayname: string;
-  alreadyLoaded?: boolean;
   isMarketEnabled?: boolean;
 }
 

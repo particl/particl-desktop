@@ -12,9 +12,9 @@ let child = undefined;
 let _options = {};
 
 exports.init = function() {
-  rxIpc.registerListener('start-market', function(walletName) {
+  rxIpc.registerListener('start-market', function(walletName, portNum) {
     return Observable.create(observer => {
-      exports.start(walletName);
+      exports.start(walletName, portNum);
       observer.complete(true);
     });
   });
@@ -27,7 +27,7 @@ exports.init = function() {
   });
 }
 
-exports.start = function(walletName) {
+exports.start = function(walletName, portNum) {
   _options = config.getConfiguration();
 
   if (!_options.skipmarket && !child) {
@@ -46,6 +46,10 @@ exports.start = function(walletName) {
       RPCCOOKIEFILE: cookieFile,
       STANDALONE: true
     };
+
+    if ( (typeof portNum === 'number') && (portNum > 0)) {
+      marketOptions.APP_PORT = portNum;
+    }
 
     if (isTestnet) {
       marketOptions.TESTNET_PORT = _options.port;

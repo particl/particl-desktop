@@ -249,8 +249,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
         }
 
         if (isMarketWallet) {
+          const marketPort = this._settings.get('settings.market.env.port');
           // Now start the marketplace services if this is a marketplace enabled wallet
-          this._market.startMarket(this.currentWalletName).subscribe(
+          this._market.startMarket(this.currentWalletName, marketPort).subscribe(
             () => {
               // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
               // It can help for first load after a Market wallet has been created though, or for an unecrypted wallet...

@@ -68,6 +68,9 @@ export class SettingsStateService extends StateService implements OnDestroy {
     'settings.global.selectedWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'settings.global.activeWallet': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, ''),
     'settings.global.language': new Setting(SaveLocation.LOCALSTORAGE, SettingType.STRING, 'en_us'),
+
+    'settings.market.env.port': new Setting(SaveLocation.LOCALSTORAGE, SettingType.NUMBER, 3000),
+
     'settings.core.network.proxy': new Setting(SaveLocation.CORECONFIG, SettingType.STRING, ''),
     'settings.core.network.upnp': new Setting(SaveLocation.CORECONFIG, SettingType.BOOLEAN, false)
   };

@@ -138,6 +138,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   ) { };
 
   ngOnInit() {
+
+    const walletTabHeaderInit = 'Wallet Settings for: ';
     // Ensures that the settings service is initialized and available (currently mostly as a guard for live reload cases).
     new Observable((observer) => {
       this.initializeComponent(observer);
@@ -152,7 +154,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
           header: 'Wallet Settings',
           icon: 'part-hamburger',
           info: {
-            title: '',
+            title: walletTabHeaderInit + this.currentWallet.displayname,
             description: 'Adjust settings and configuration for the currently active wallet',
             help: 'To change settings for other wallets, switch to them first in the multiwallet sidebar and visit this page again.'
           } as PageInfo,
@@ -192,7 +194,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
               const walletPageIdx = this.settingPages.findIndex((page) => page.header === 'Wallet Settings');
               if (walletPageIdx > -1) {
                 const walletPage = this.settingPages[walletPageIdx];
-                walletPage.info.title = 'Settings for wallet ' + (wallet === null ? '<unknown>' : wallet.displayname);
+                walletPage.info.title = walletTabHeaderInit + wallet.displayname;
                 walletPage.settingGroups = [];
 
                 if (walletPageIdx === this.pageIdx) {
@@ -618,6 +620,43 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     }
 
+    const dangerZone = {
+      name: 'Danger Zone',
+      settings: []
+    } as SettingGroup;
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Backup Wallet',
+      description: 'Create a wallet file backup in a different location',
+      isDisabled: true,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: null,
+      onChange: this.actionBackupWallet
+    } as Setting);
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Delete Wallet',
+      description: 'Deletes this wallet (NB: cannot be restored)',
+      isDisabled: true,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: ['Danger Zone'],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: null,
+      onChange: this.actionDeleteWallet
+    } as Setting);
+
+    group.push(dangerZone);
+
   }
 
   /**
@@ -680,12 +719,35 @@ export class SettingsComponent implements OnInit, OnDestroy {
       validate: this.validateIPAddressPort
     } as Setting);
 
+    const marketplaceConfig = {
+      name: 'Marketplace General Configuration',
+      settings: []
+    } as SettingGroup;
+
+    marketplaceConfig.settings.push({
+      id: 'settings.market.env.port',
+      title: 'Port number',
+      description: 'The local port that the marketplace is started on (default: 3000)',
+      isDisabled: false,
+      type: SettingType.NUMBER,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.market.env.port'),
+      tags: [],
+      restartRequired: true,
+      limits: {min: 1024, max: 65535, step: 1},
+      validate: this.validatePortNumber
+    } as Setting);
+
     group.push(langGroup);
     group.push(coreNetConfig);
+    group.push(marketplaceConfig);
   }
 
   private validateIPAddressPort(value: any, setting: Setting): string | null {
     const strVal = String(value);
+    if (strVal.length === 0) {
+      return null;
+    }
     const parts = strVal.split(':');
     const octs = String(parts[0]).split('.');
     let isValid = ( (octs.length === 4) && (octs.find(oct => !isFinite(+oct) || (+oct > 255) || (+oct < 1) ) === undefined) );
@@ -693,6 +755,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     if (parts[1]) {
       const port = +(String(parts[1]));
       isValid = isValid && (port > 0) && (port <= 65535);
+    } else if (!parts[1] && strVal.includes(':')) {
+      isValid = false;
     }
 
     if (!isValid) {
@@ -700,5 +764,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
 
     return null;
+  }
+
+  private validatePortNumber(value: any, setting: Setting): string | null {
+    const port = +value;
+    return port > 0 && port <= 65535 ? null : 'Invalid port number';
+  }
+
+  private actionBackupWallet() {
+
+  }
+
+  private actionDeleteWallet() {
+
   }
 }
