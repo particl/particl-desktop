@@ -3,10 +3,11 @@ import { Observable } from 'rxjs';
 import { Log } from 'ng2-logger';
 import { MarketService } from 'app/core/market/market.service';
 import { CartService } from 'app/core/market/api/cart/cart.service';
+import { ProfileService } from '../profile/profile.service';
 
 import { Cart } from 'app/core/market/api/cart/cart.model';
 import { Listing } from 'app/core/market/api/listing/listing.model';
-import { take, catchError } from 'rxjs/operators';
+import { take, catchError, switchMap } from 'rxjs/operators';
 
 export enum errorType {
   unspent = 'Insufficient spendable (anon) funds to place the order.',
@@ -20,8 +21,11 @@ export class BidService {
 
   private log: any = Log.create('bid.service id:' + Math.floor((Math.random() * 1000) + 1));
 
-  constructor(private market: MarketService, private cartService: CartService) {
-  }
+  constructor(
+    private market: MarketService,
+    private cartService: CartService,
+    private profileService: ProfileService
+  ) {}
 
   public async order(cart: Cart, profile: any, shippingAddress: any): Promise<string> {
     let isValid = true;
@@ -84,6 +88,17 @@ export class BidService {
       params.push(reason);
     }
     return this.market.call('bid', params);
+  }
+
+  cancelBidCommand(id: number): Observable<any> {
+    return this.profileService.default().pipe(
+      take(1),
+      switchMap((profile: any) => {
+        const params = ['cancel', id, profile.id];
+
+        return this.market.call('bid', params);
+      })
+    )
   }
 
   escrowCompleteCommand(id: number): Observable<any> {
