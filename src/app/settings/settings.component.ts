@@ -151,7 +151,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         // Create the pages (tabs) to be available
 
         this.settingPages.push({
-          header: 'Wallet Settings',
+          header: 'Wallet-specific',
           icon: 'part-hamburger',
           info: {
             title: walletTabHeaderInit + this.currentWallet.displayname,
@@ -163,7 +163,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         } as Page);
 
         this.settingPages.push({
-          header: 'Global Settings',
+          header: 'Global',
           icon: 'part-hamburger',
           info: {
             title: 'Global Application Settings',

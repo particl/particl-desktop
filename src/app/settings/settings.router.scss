@@ -8,12 +8,13 @@
 // ------ SIDEBAR (main menu) ------ //
 
 .sidebar { // AKA .mat-sidenav
-  width: calc(54px + #{$scrollbar-width});
-  background-color: $bg-black;
+  width: $multiwallet-width;
+  background: $bg-black;
+  border: 0;
   color: $color-white;
   display: flex;
   .sidebar-multiwallet {
-    flex: 0 0 54px;
+    flex: 0 0 $multiwallet-width;
     position: sticky;
     top: 0;
   }
@@ -25,19 +26,19 @@
 
 .header-main {
   border-bottom: 1px solid $bg-shadow;
-  width: calc(100% - 54px - #{$scrollbar-width});
-  padding-left: 35px;
+  width: calc(100% - $multiwallet-width - #{$scrollbar-width});
+  padding-left: $padding;
   padding-right: 26px;
   font-family: $font;
   font-size: 15px;
   text-transform: uppercase;
   position: fixed;
   top: 0;
-  left: 54px;
+  left: $multiwallet-width;
   right: 0;
   z-index: 100;
   @include break(l) {
-    padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;
+    padding: 0 calc($padding-l - #{$scrollbar-width}) 0 $padding-l;
   }
   .title {
     font-weight: 700;
