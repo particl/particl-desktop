@@ -39,11 +39,6 @@ export class AddToCartCacheService implements OnDestroy {
     return false;
   }
 
-  // Removing as marketstate already has 'bid search' registered.
-  // update() {
-  //   this.marketState.register('bid', null, ['search', 0, 9999, 'ASC'])
-  // }
-
   getBids() {
     return this.marketState.observe('bid');
   }

@@ -8,9 +8,10 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { ImageItem, Gallery } from '@ngx-gallery/core';
+import { Image } from 'app/core/market/api/template/image/image.model';
 import { Lightbox } from '@ngx-gallery/lightbox';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { take, takeWhile } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-preview-listing',
@@ -52,8 +53,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     //     this.currencyprice = price[0].price;
     //   });
     this.getVoteOfListing();
-    if (this.data.listing) {
-      this.images = this.data.listing.imageCollection.imageUrls;
+    if (this.data.listing && Object.prototype.toString.call(this.data.listing.imageCollection.images) === '[object Array]') {
+      this.images = this.data.listing.imageCollection.images.map((img: Image) => new ImageItem({src: img.large, thumb: img.thumbnail}));
     }
       // Get a lightbox gallery ref
     const lightboxRef = this.gallery.ref('lightbox');
