@@ -126,6 +126,18 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     );
   }
 
+  reportListingFinished() {
+    this.data.reportListingComplete.emit();
+    if (this.processModal) {
+      try {
+        this.processModal.close();
+      } catch (err) {
+        // do nothing
+      }
+    }
+    this.dialogClose();
+  }
+
   dialogClose(): void {
     this.dialogRef.close();
   }
