@@ -1,9 +1,23 @@
-<div mat-dialog-title>Confirm transaction</div>
-<button class="small-close-button pull-right" (click)="dialogClose()">
+<mat-tab-group class="payment-method-tabs" (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
+      Pay with PART
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-bitcoin"></mat-icon>
+      Pay with BTC/alts
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
+
+<button class="small-close-button in-tab-bar pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content">
+<div mat-dialog-content class="dialog-content" *ngIf="tabLabels[selectedTab] === 'pay-with-part'">
 
   <!-- TODO: show on alpha mainnet only: -->
   <p class="alpha warning" *ngIf="isPrerelease">
@@ -78,7 +92,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="confirm()" [disabled]="processing">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="confirm()" [disabled]="processing" *ngIf="tabLabels[selectedTab] === 'pay-with-part'">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Buy
   </button>

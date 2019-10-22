@@ -15,6 +15,11 @@
 
 // ------ LAYOUT ------ //
 
+// tab group on top (pay with PART or BTC/alts)
+.payment-method-tabs {
+  margin: -24px -24px 0 -24px;
+}
+
 .dialog-content {
   width: 25rem;
   padding: 20px 15px 10px;
