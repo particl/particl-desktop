@@ -17,6 +17,8 @@
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
+
+<!-- Pay with Particl -->
 <div mat-dialog-content class="dialog-content" *ngIf="tabLabels[selectedTab] === 'pay-with-part'">
 
   <!-- TODO: show on alpha mainnet only: -->
@@ -85,7 +87,7 @@
   </div>
 
 
-</div><!-- .dialog-content -->
+</div><!-- .dialog-content (pay with PART) -->
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
@@ -97,3 +99,85 @@
     Confirm &amp; Buy
   </button>
 </mat-dialog-actions>
+
+
+<!-- Pay with BTC/alts -->
+<div mat-dialog-content class="dialog-content exchange" *ngIf="tabLabels[selectedTab] === 'pay-with-btc-alts'">
+  <mat-horizontal-stepper labelPosition="bottom" #stepper>
+    <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
+    <!--ng-template matStepperIcon="edit">
+      <custom-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      </custom-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <custom-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+      </custom-icon>
+    </ng-template-->
+    
+    <mat-step><!-- [stepControl]="firstFormGroup" -->
+      <form><!-- [formGroup]="firstFormGroup" -->
+        <ng-template matStepLabel>Currency</ng-template>
+        <div class="title">Select your currency</div>
+        <p class="widget-help">
+          Pay your order effortlessly with your favourite cryptocurrencies &ndash; select a coin for payment:
+        </p>
+        <mat-dialog-actions fxLayoutAlign="space-between center">
+          <button mat-button mat-dialog-close (click)="dialogClose()">
+            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" matStepperNext>
+            <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+            Next
+          </button>
+        </mat-dialog-actions>
+      </form>
+    </mat-step>
+
+    <mat-step><!-- [stepControl]="secondFormGroup" -->
+      <form><!-- [formGroup]="secondFormGroup" -->
+        <ng-template matStepLabel>Exchange</ng-template>
+        <div class="title">Choose an exchange</div>
+        <p class="widget-help">
+          Payment in Bitcoin can be processed on multiple exchanges &ndash; select the one you prefer:
+        </p>
+        <mat-dialog-actions fxLayoutAlign="space-between center">
+          <button mat-button matStepperPrevious>
+            <mat-icon fontSet="partIcon" fontIcon="part-arrow-left"></mat-icon>
+            Back
+          </button>
+          <button mat-raised-button color="primary" matStepperNext>
+            <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+            Next
+          </button>
+        </mat-dialog-actions>
+      </form>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>Pay</ng-template>
+      <div class="title">Pay with Bitcoin</div>
+      <p class="widget-help">
+        Send your BTC to the following address to automatically convert it to PART and pay for your order
+      </p>
+      <mat-dialog-actions fxLayoutAlign="space-between center">
+        <button mat-button matStepperPrevious>
+          <mat-icon fontSet="partIcon" fontIcon="part-arrow-left"></mat-icon>
+          Back
+        </button>
+        <!-- by default, button is disabled as "waiting for payment"; when payment and exchange goes through, it will change to "Paid" and become active - clicking it will close the modal -->
+        <button mat-raised-button color="primary" disabled>
+          <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+          Waiting for payment
+        </button>
+        <!--button mat-raised-button color="primary">
+          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+          Paid
+        </button-->
+      </mat-dialog-actions>
+    </mat-step>
+
+  </mat-horizontal-stepper>
+</div><!-- .dialog-content (pay with BTC/alts) -->
