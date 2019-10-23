@@ -9,6 +9,7 @@ import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { SettingsStateService } from './settings-state.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { DeleteWalletModalComponent } from 'app/settings/delete-wallet-modal/delete-wallet-modal.component';
+import { WalletBackupModalComponent } from 'app/settings/wallet-backup-modal/wallet-backup-modal.component';
 
 import { IWallet } from 'app/multiwallet/multiwallet.service';
 
@@ -594,8 +595,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     dangerZone.settings.push({
       id: '',
       title: 'Backup Wallet',
-      description: 'Create a wallet file backup in a different location',
-      isDisabled: true,
+      description: 'Create a wallet file backup (the wallet.dat file for the current wallet) in a different folder location',
+      isDisabled: false,
       type: SettingType.BUTTON,
       errorMsg: '',
       tags: [],
@@ -773,7 +774,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private actionBackupWallet() {
-
+    const dialogRef = this._dialog.open(WalletBackupModalComponent);
+    dialogRef.componentInstance.onConfirmation.subscribe(async (folderPath: string) => {
+      this.disableUI(TextContent.SAVING);
+      const success = await this._settingState.backupWallet(folderPath);
+      this.enableUI();
+      const message = success ? TextContent.SAVE_SUCCESSFUL : TextContent.SAVE_FAILED;
+      this._snackbar.open(message);
+    });
   }
 
   private actionDeleteWallet() {

@@ -12,7 +12,7 @@ import { SettingsComponent } from './settings.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 import { SettingsStateService } from './settings-state.service';
-// import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
+import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
 import { DeleteWalletModalComponent } from './delete-wallet-modal/delete-wallet-modal.component';
 
 @NgModule({
@@ -30,11 +30,11 @@ import { DeleteWalletModalComponent } from './delete-wallet-modal/delete-wallet-
   declarations: [
     SettingsRouterComponent,
     SettingsComponent,
-    // WalletBackupModalComponent,
+    WalletBackupModalComponent,
     DeleteWalletModalComponent
   ],
   entryComponents: [
-    // WalletBackupModalComponent,
+    WalletBackupModalComponent,
     DeleteWalletModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

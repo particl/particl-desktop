@@ -1,4 +1,4 @@
-<div mat-dialog-title>{{ dialogTitle }}</div>
+<div mat-dialog-title>Backup wallet {{ walletName }}</div>
 <button class="small-close-button" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
@@ -7,10 +7,15 @@
 <div mat-dialog-content class="dialog-content">
   <p class="lead">
     Select a location where the backup of the wallet should be made. It is strongly recommended to not leave the backup on the same machine as the primary wallet.
+    Note that this creates a file named wallet.dat in the selected folder.
   </p>
-  <mat-form-field class="full-width" [formGroup]="import.form" fxFlex="1 1 30%">
-    <ngx-mat-file-input formControlName="file" placeholder="CSV file to import" accept=".csv" (change)="emitClear()"></ngx-mat-file-input>
-  </mat-form-field>
+  <button mat-button class="small"
+          (click)="selectBackupPath()">
+          Select Folder
+    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-info-2"></mat-icon>
+  </button>
+  &nbsp;&nbsp;
+  <span>{{ filePath }}</span>
 </div>
 
 
