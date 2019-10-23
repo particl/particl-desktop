@@ -12,6 +12,7 @@ import { DeleteWalletModalComponent } from 'app/settings/delete-wallet-modal/del
 import { WalletBackupModalComponent } from 'app/settings/wallet-backup-modal/wallet-backup-modal.component';
 
 import { IWallet } from 'app/multiwallet/multiwallet.service';
+import { ApplicationRestartModalComponent } from './application-restart-modal/application-restart-modal.component';
 
 type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
 type ValidationFunction = (value: any, setting: Setting) => string | void;
@@ -106,7 +107,8 @@ enum TextContent {
   ERROR_INVALID_ITEMS = 'Please correct errors before attempting to save',
   SAVE_SUCCESSFUL = 'Successfully applied changes',
   SAVE_FAILED = 'Failed to apply selected changes',
-  SAVE_NOT_NEEDED = 'Aborting save as no changes have been made'
+  SAVE_NOT_NEEDED = 'Aborting save as no changes have been made',
+  RESTARTING_APPLICATION = 'Please wait while the application restarts'
 }
 
 @Component({
@@ -136,7 +138,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _snackbar: SnackbarService,
     private _settingState: SettingsStateService,
-    private _dialog: MatDialog,
+    private _dialog: MatDialog
   ) { };
 
   ngOnInit() {
@@ -369,11 +371,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.saveCurrentPageSettings().pipe(
       take(1)
     ).subscribe(
-      (resp: string | void) => {
-        if (resp) {
-          this._snackbar.open(resp);
-          return;
-        }
+      (doRestart: boolean) => {
 
         // Change current settings in case it has not been done
         this.settingPages[this.pageIdx].settingGroups.forEach(group => {
@@ -387,15 +385,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         // reset the list of current changes
         this.currentChanges = [];
-
-        this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
-      },
-      (err) => {
-        this._snackbar.open(TextContent.SAVE_FAILED);
-      },
-      () => {
         this.isProcessing = false;
         this.enableUI();
+        this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
+
+        if (doRestart) {
+          this.actionRestartApplication();
+        }
+      },
+      (err) => {
+        this.isProcessing = false;
+        this.enableUI();
+        this._snackbar.open(TextContent.SAVE_FAILED);
       }
     );
   }
@@ -507,15 +508,19 @@ export class SettingsComponent implements OnInit, OnDestroy {
   /**
    * Extracts the changed settings on the current page for persisting the changes
    */
-  private saveCurrentPageSettings(): Observable<string | void> {
+  private saveCurrentPageSettings(): Observable<boolean> {
     return new Observable((observer) => {
 
       const settingChanges: any[] = [];
+      let restartRequired = false;
 
       this.settingPages[this.pageIdx].settingGroups.forEach(group => {
         group.settings.forEach((setting) => {
           if ( !(setting.type === SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
             settingChanges.push({label: setting.id, value: setting.newValue});
+            if (setting.restartRequired) {
+              restartRequired = true;
+            }
           }
         });
       });
@@ -532,7 +537,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         observer.error(null);
       } else {
-        observer.next();
+        observer.next(restartRequired);
       }
       observer.complete();
     });
@@ -795,6 +800,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
       if (success) {
         this._router.navigate(['loading']);
       }
+    });
+  }
+
+  private actionRestartApplication() {
+    const dialogRef = this._dialog.open(ApplicationRestartModalComponent);
+    dialogRef.componentInstance.onConfirmation.subscribe(() => {
+      this.disableUI(TextContent.RESTARTING_APPLICATION);
     });
   }
 }

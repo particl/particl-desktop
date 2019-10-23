@@ -1,0 +1,26 @@
+<div mat-dialog-title>Restart</div>
+<button class="small-close-button" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+
+<div mat-dialog-content class="dialog-content">
+  <p class="lead">
+    Due to a change in application state, the application needs to restart.
+  </p>
+  <p class="widget-help">
+    Would you like to restart now?
+  </p>
+</div>
+
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" mat-dialog-close (click)="doRestart()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+    Restart now
+  </button>
+</mat-dialog-actions>

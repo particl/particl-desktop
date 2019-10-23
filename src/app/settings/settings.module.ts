@@ -14,6 +14,7 @@ import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 import { SettingsStateService } from './settings-state.service';
 import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
 import { DeleteWalletModalComponent } from './delete-wallet-modal/delete-wallet-modal.component';
+import { ApplicationRestartModalComponent } from './application-restart-modal/application-restart-modal.component';
 
 @NgModule({
   imports: [
@@ -31,11 +32,13 @@ import { DeleteWalletModalComponent } from './delete-wallet-modal/delete-wallet-
     SettingsRouterComponent,
     SettingsComponent,
     WalletBackupModalComponent,
-    DeleteWalletModalComponent
+    DeleteWalletModalComponent,
+    ApplicationRestartModalComponent
   ],
   entryComponents: [
     WalletBackupModalComponent,
-    DeleteWalletModalComponent
+    DeleteWalletModalComponent,
+    ApplicationRestartModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
