@@ -2,6 +2,7 @@ const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
 const fs            = require('fs');
 const path          = require('path');
+const _del          = require('del');
 const log           = require('electron-log');
 const iniParser     = require('@jedmao/ini-parser').default;
 const cookie        = require('../rpc/cookie');
@@ -18,6 +19,7 @@ const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
 const IPC_CHANNEL_PUB = 'rpc-configuration';
 const IPC_CHANNEL_LISTEN = 'request-configuration';
 const IPC_CHANNEL_WRITE = 'write-core-config';
+const IPC_DELETE_WALLET = 'ipc-delete-wallet';
 
 const SAFE_KEYS = ['addressindex', 'proxy', 'upnp'];
 
@@ -292,6 +294,7 @@ const destroyIpcChannels = () => {
   rxIpc.removeListeners(IPC_CHANNEL_PUB);
   rxIpc.removeListeners(IPC_CHANNEL_LISTEN);
   rxIpc.removeListeners(IPC_CHANNEL_WRITE);
+  rxIpc.removeListeners(IPC_DELETE_WALLET);
 }
 
 
@@ -318,6 +321,39 @@ const initializeIpcChannels = (mainWindow) => {
     return Observable.create(observer => {
       saveSettings(settings);
       observer.complete(true);
+    });
+  });
+
+  rxIpc.registerListener(IPC_DELETE_WALLET, function(walletName) {
+    return Observable.create(observer => {
+      let success = false;
+      let walletPath = cookie.getParticlPath(_options);
+      if (_options.testnet) {
+        walletPath = path.join(walletPath, 'testnet');
+      }
+      if (walletName !== '') {
+        // Prevents deleting the default wallet
+        walletPath = path.join(walletPath, walletName);
+
+        log.info('requested deletion of wallet folder: ' + walletPath);
+        if (
+          walletPath.endsWith(walletName) &&
+          fs.existsSync(walletPath) &&
+          fs.lstatSync(walletPath).isDirectory()
+        ) {
+          log.info('DELETED WALLET FOLDER: ' + delPaths);
+          try {
+            const delPaths = _del.sync([walletPath], {force: true});
+            log.info('Sucessfully deleted wallet folder: ' + delPaths);
+            success = delPaths.length > 0;
+          } catch (err) {
+            log.error('Failed to delete wallet folder: ', err);
+          }
+        }
+      }
+
+      observer.next(success);
+      observer.complete();
     });
   });
 }

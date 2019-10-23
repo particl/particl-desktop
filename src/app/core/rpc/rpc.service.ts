@@ -123,7 +123,7 @@ export class RpcService implements OnDestroy {
 
     let url = `http://${this.hostname}:${this.port}`;
     if (!['createwallet', 'loadwallet', 'listwalletdir',
-          'listwallets', 'smsgdisable', 'smsgenable', 'smsgsetwallet'].includes(method)) {
+          'listwallets', 'smsgdisable', 'smsgenable', 'smsgsetwallet', 'unloadwallet'].includes(method)) {
       let targetWallet = this._wallet;
       if (typeof walletName === 'string') {
         targetWallet = walletName;

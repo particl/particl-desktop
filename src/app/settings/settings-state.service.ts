@@ -210,6 +210,30 @@ export class SettingsStateService extends StateService implements OnDestroy {
     return this.saveAll([setting]);
   };
 
+  async deleteWallet(walletName: string, switchToWallet: string): Promise<boolean> {
+    await this.changeToWallet(switchToWallet);
+    if (this.get('settings.global.selectedWallet') === walletName) {
+      return false;
+    }
+
+    const unloaded = await this._rpc.call('unloadwallet', [walletName]).toPromise().then(() => {
+      return true;
+    }).catch(() => {
+      return false;
+    });
+
+    if (!unloaded) {
+      await this.changeToWallet(walletName);
+      return false;
+    }
+
+    const success = await this._ipc.runCommand('ipc-delete-wallet', null, walletName).toPromise();
+    if (!success) {
+      await this.changeToWallet(walletName);
+    }
+    return success;
+  }
+
   /**
    * (PRIVATE)
    * Waits for the rpc service and multiwallet service to initialize and become available,

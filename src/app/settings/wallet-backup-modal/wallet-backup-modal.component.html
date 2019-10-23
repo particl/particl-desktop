@@ -1,0 +1,26 @@
+<div mat-dialog-title>{{ dialogTitle }}</div>
+<button class="small-close-button" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+
+<div mat-dialog-content class="dialog-content">
+  <p class="lead">
+    Select a location where the backup of the wallet should be made. It is strongly recommended to not leave the backup on the same machine as the primary wallet.
+  </p>
+  <mat-form-field class="full-width" [formGroup]="import.form" fxFlex="1 1 30%">
+    <ngx-mat-file-input formControlName="file" placeholder="CSV file to import" accept=".csv" (change)="emitClear()"></ngx-mat-file-input>
+  </mat-form-field>
+</div>
+
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" mat-dialog-close (click)="doConfirmed()" [disabled]="isActionDisabled">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+    Perform Backup
+  </button>
+</mat-dialog-actions>

@@ -12,6 +12,8 @@ import { SettingsComponent } from './settings.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 import { SettingsStateService } from './settings-state.service';
+// import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
+import { DeleteWalletModalComponent } from './delete-wallet-modal/delete-wallet-modal.component';
 
 @NgModule({
   imports: [
@@ -27,7 +29,13 @@ import { SettingsStateService } from './settings-state.service';
   exports: [SettingsRouterComponent],
   declarations: [
     SettingsRouterComponent,
-    SettingsComponent
+    SettingsComponent,
+    // WalletBackupModalComponent,
+    DeleteWalletModalComponent
+  ],
+  entryComponents: [
+    // WalletBackupModalComponent,
+    DeleteWalletModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

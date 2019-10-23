@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { Observable, Observer } from 'rxjs';
 import { take, takeWhile } from 'rxjs/operators';
 import { range } from 'lodash';
 
-import { RpcService } from 'app/core/rpc/rpc.service';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 import { SettingsStateService } from './settings-state.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { DeleteWalletModalComponent } from 'app/settings/delete-wallet-modal/delete-wallet-modal.component';
 
 import { IWallet } from 'app/multiwallet/multiwallet.service';
 
@@ -102,8 +103,8 @@ enum TextContent {
   RESET = 'Resetting unsaved changes',
   ERROR_BUSY_PROCESSING = 'Changes not saved!',
   ERROR_INVALID_ITEMS = 'Please correct errors before attempting to save',
-  SAVE_SUCCESSFUL = 'Successfully saved changes',
-  SAVE_FAILED = 'Failed to properly save all changes',
+  SAVE_SUCCESSFUL = 'Successfully applied changes',
+  SAVE_FAILED = 'Failed to apply selected changes',
   SAVE_NOT_NEEDED = 'Aborting save as no changes have been made'
 }
 
@@ -131,10 +132,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   private isDestroyed: boolean = false;
 
   constructor(
-    private _rpc: RpcService,
+    private _router: Router,
     private _snackbar: SnackbarService,
     private _settingState: SettingsStateService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
   ) { };
 
   ngOnInit() {
@@ -258,7 +259,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const setting = this.currentPage.settingGroups[groupIdx].settings[settingIdx];
 
     if (setting.type === SettingType.BUTTON) {
-      this.disableUI(TextContent.SAVING);
+      // this.disableUI(TextContent.SAVING);
     }
 
     if (setting.validate) {
@@ -296,7 +297,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
 
     if (setting.type === SettingType.BUTTON) {
-      this.enableUI();
+      // this.enableUI();
     }
 
     this.isProcessing = false;
@@ -585,6 +586,43 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     group.push(notificationsWallet);
 
+    const dangerZone = {
+      name: 'Danger Zone',
+      settings: []
+    } as SettingGroup;
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Backup Wallet',
+      description: 'Create a wallet file backup in a different location',
+      isDisabled: true,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: null,
+      onChange: this.actionBackupWallet
+    } as Setting);
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Delete Wallet',
+      description: 'Deletes this wallet (NB: cannot be reverted). Please note that this option is not currently available on the Default Wallet or on a marketplace-enabled wallet',
+      isDisabled: ((this.currentWallet || {} as IWallet).name === '') || ((this.currentWallet || {} as IWallet).isMarketEnabled === true),
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: ['Danger Zone'],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: null,
+      onChange: this.actionDeleteWallet
+    } as Setting);
+
+    group.push(dangerZone);
+
     if (this.currentWallet && this.currentWallet.isMarketEnabled) {
       const notificationsMarket = {
         id: 'market-notifications',
@@ -619,43 +657,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
       group.push(notificationsMarket);
 
     }
-
-    const dangerZone = {
-      name: 'Danger Zone',
-      settings: []
-    } as SettingGroup;
-
-    dangerZone.settings.push({
-      id: '',
-      title: 'Backup Wallet',
-      description: 'Create a wallet file backup in a different location',
-      isDisabled: true,
-      type: SettingType.BUTTON,
-      errorMsg: '',
-      tags: [],
-      restartRequired: false,
-      currentValue: '',
-      newValue: '',
-      limits: null,
-      onChange: this.actionBackupWallet
-    } as Setting);
-
-    dangerZone.settings.push({
-      id: '',
-      title: 'Delete Wallet',
-      description: 'Deletes this wallet (NB: cannot be restored)',
-      isDisabled: true,
-      type: SettingType.BUTTON,
-      errorMsg: '',
-      tags: ['Danger Zone'],
-      restartRequired: false,
-      currentValue: '',
-      newValue: '',
-      limits: null,
-      onChange: this.actionDeleteWallet
-    } as Setting);
-
-    group.push(dangerZone);
 
   }
 
@@ -726,8 +727,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     marketplaceConfig.settings.push({
       id: 'settings.market.env.port',
-      title: 'Port number',
-      description: 'The local port that the marketplace is started on (default: 3000)',
+      title: 'Local Port Number',
+      description: 'The local port that the marketplace is started on (default: 3000). Note that in order to start the marketplace services, a wallet named "market" (any capitalization) is required.',
       isDisabled: false,
       type: SettingType.NUMBER,
       errorMsg: '',
@@ -739,8 +740,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
     } as Setting);
 
     group.push(langGroup);
-    group.push(coreNetConfig);
     group.push(marketplaceConfig);
+    group.push(coreNetConfig);
   }
 
   private validateIPAddressPort(value: any, setting: Setting): string | null {
@@ -776,6 +777,16 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   private actionDeleteWallet() {
-
+    const dialogRef = this._dialog.open(DeleteWalletModalComponent);
+    dialogRef.componentInstance.onConfirmation.subscribe(async (walletName) => {
+      this.disableUI(TextContent.SAVING);
+      const success = await this._settingState.deleteWallet(this.currentWallet.name, walletName);
+      this.enableUI();
+      const message = success ? TextContent.SAVE_SUCCESSFUL : TextContent.SAVE_FAILED;
+      this._snackbar.open(message);
+      if (success) {
+        this._router.navigate(['loading']);
+      }
+    });
   }
 }

@@ -1,0 +1,49 @@
+<div mat-dialog-title>Delete wallet {{ walletName }}</div>
+<button class="small-close-button" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+
+<div mat-dialog-content class="dialog-content" *ngIf="!isInvalidRequest">
+  <p class="lead">
+    Make 100% certain that any relevant backups have been made before confirming (this action cannot be undone)
+  </p>
+
+
+  <div class="row" fxLayout fxLayoutAlign="center center">
+    <mat-form-field class="full-width" fxFlex="50%">
+      <mat-label>Select a wallet to return to:</mat-label>
+      <mat-select [(value)]="returnWalletName">
+        <mat-option *ngFor="let wallet of wallets" [value]="wallet.value">
+          {{ wallet.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+
+  <code class="address-details">
+    Are you certain you wish to delete wallet {{ walletName }} ?
+  </code>
+</div>
+
+<div mat-dialog-content class="dialog-content" *ngIf="isInvalidRequest">
+  <p class="warning">
+    The requested wallet cannot be deleted, likely because of one of the following reasons
+  </p>
+  <ul class="checks">
+    <li>The wallet is the default wallet</li>
+    <li>The wallet is used on the marketplace (please deregister the wallet from the marketplace first)</li>
+  </ul>
+</div><!-- .dialog-content -->
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" [disabled]="isInvalidRequest || (returnWalletName === undefined)" mat-dialog-close (click)="doConfirmation()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+    Yes, delete
+  </button>
+</mat-dialog-actions>

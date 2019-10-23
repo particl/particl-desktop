@@ -65,6 +65,7 @@ window.ipc = new SafeIpcRenderer([
   'rpc-configuration',
   'request-configuration',
   'write-core-config',
+  'ipc-delete-wallet',
 
   'rx-ipc-check-reply',
   'rx-ipc-check-listener',

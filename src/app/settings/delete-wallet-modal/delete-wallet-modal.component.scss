@@ -1,0 +1,13 @@
+@import './src/assets/config'; // import shared colors etc.
+
+.address-details { // address details to be deleted
+  display: block;
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.4;
+  color: $color-alert;
+  background: rgba($color-alert, 0.12);
+  border-radius: 3px;
+  word-wrap: break-word;
+}
