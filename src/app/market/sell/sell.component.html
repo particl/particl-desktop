@@ -1,7 +1,7 @@
 <!-- Do not remove the below class it is using for test case -->
 <app-header class="test-case-container">
   <div class="tab-bar">
-    <mat-tab-group (selectedTabChange)="changeTab($event.index)">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
