@@ -61,6 +61,7 @@ export class NewTxNotifierService implements OnDestroy {
 
   stop() {
     this.log.d('tx notifier service stopped!');
+    this.lastTxId = undefined;
     if (this.rpcState$ !== undefined) {
       this.rpcState$.unsubscribe();
     }

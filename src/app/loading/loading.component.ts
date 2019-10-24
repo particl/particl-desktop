@@ -122,6 +122,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   private getWalletInfo(wallet: string, observer: Observer<any>) {
     if (this.isDestroyed) {
+      observer.complete();
       return;
     }
     if (!this.rpc.enabled) {

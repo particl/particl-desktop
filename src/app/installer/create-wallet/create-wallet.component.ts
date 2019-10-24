@@ -522,6 +522,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
   private initializeComponent(observer: Observer<any>) {
     if (this.isDestroyed) {
+      observer.complete();
       return;
     }
 
