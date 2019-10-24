@@ -72,7 +72,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     public _market: MarketService,
 
     private _marketState: MarketStateService,
-    private txNotify: NewTxNotifierService,
+    private _txNotify: NewTxNotifierService,
     private _profile: ProfileService,
     private _cart: CartService,
     private _category: CategoryService,
@@ -110,6 +110,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._rpcState.start();
+    this._txNotify.start();
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
@@ -186,6 +187,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed = true;
     this.clearTimer();
+    this._txNotify.stop();
     this._rpcState.stop();
 
     if (this._market.isMarketStarted) {
