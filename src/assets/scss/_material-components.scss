@@ -517,6 +517,9 @@ input {
 
 .mat-select {
   font-family: $font !important;
+  .mat-select-trigger {
+    height: 1.2em; // fix overflow:hidden for our custom font
+  }
 }
 mat-option.mat-option {
   $height: 36px;

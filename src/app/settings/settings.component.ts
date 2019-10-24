@@ -126,7 +126,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   public settingType: (typeof SettingType) = SettingType;
 
   // Convenience properties for assisting the template in laying out columns of setting groups for the current page/tab
-  public columnCount: number = 2;
+  public columnCount: number = 3;
   public colIdxs: number[] = range(0, this.columnCount);
   public groupIdxs: number[] = [];
 
@@ -170,9 +170,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
           header: 'Global',
           icon: 'part-cog',
           info: {
-            title: 'Global Application Settings',
+            title: 'Application Settings',
             description: 'Adjust settings and configuration that apply to the application (rather than an individual wallet)',
-            help: 'Please take note of setting changes that require a service restart.'
+            help: 'Please take note of setting changes that require a restart of Particl Desktop application.'
           } as PageInfo,
           settingGroups: [],
           load: (<PageLoadFunction>this.pageLoadGlobalSettings)
@@ -593,43 +593,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     group.push(notificationsWallet);
 
-    const dangerZone = {
-      name: 'Danger Zone',
-      settings: []
-    } as SettingGroup;
-
-    dangerZone.settings.push({
-      id: '',
-      title: 'Backup Wallet',
-      description: 'Create a wallet file backup (the wallet.dat file for the current wallet) in a different folder location',
-      isDisabled: false,
-      type: SettingType.BUTTON,
-      errorMsg: '',
-      tags: [],
-      restartRequired: false,
-      currentValue: '',
-      newValue: '',
-      limits: null,
-      onChange: this.actionBackupWallet
-    } as Setting);
-
-    dangerZone.settings.push({
-      id: '',
-      title: 'Delete Wallet',
-      description: 'Deletes this wallet (NB: cannot be reverted). Please note that this option is not currently available on the Default Wallet or on a marketplace-enabled wallet',
-      isDisabled: ((this.currentWallet || {} as IWallet).name === '') || ((this.currentWallet || {} as IWallet).isMarketEnabled === true),
-      type: SettingType.BUTTON,
-      errorMsg: '',
-      tags: ['Danger Zone'],
-      restartRequired: false,
-      currentValue: '',
-      newValue: '',
-      limits: null,
-      onChange: this.actionDeleteWallet
-    } as Setting);
-
-    group.push(dangerZone);
-
     if (this.currentWallet && this.currentWallet.isMarketEnabled) {
       const notificationsMarket = {
         id: 'market-notifications',
@@ -663,6 +626,43 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
       group.push(notificationsMarket);
 
+      const dangerZone = {
+        name: 'Danger Zone',
+        settings: []
+      } as SettingGroup;
+  
+      dangerZone.settings.push({
+        id: '',
+        title: 'Backup Wallet',
+        description: 'Create a wallet file backup (the wallet.dat file for the current wallet) in a different folder location',
+        isDisabled: false,
+        type: SettingType.BUTTON,
+        errorMsg: '',
+        tags: [],
+        restartRequired: false,
+        currentValue: '',
+        newValue: '',
+        limits: null,
+        onChange: this.actionBackupWallet
+      } as Setting);
+  
+      dangerZone.settings.push({
+        id: '',
+        title: 'Delete Wallet',
+        description: 'Deletes this wallet (NB: cannot be reverted). Please note that this option is not currently available on the Default Wallet or on a marketplace-enabled wallet',
+        isDisabled: ((this.currentWallet || {} as IWallet).name === '') || ((this.currentWallet || {} as IWallet).isMarketEnabled === true),
+        type: SettingType.BUTTON,
+        errorMsg: '',
+        tags: ['Danger Zone'],
+        restartRequired: false,
+        currentValue: '',
+        newValue: '',
+        limits: null,
+        onChange: this.actionDeleteWallet
+      } as Setting);
+  
+      group.push(dangerZone);
+
     }
 
   }
@@ -672,14 +672,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
    */
   private async pageLoadGlobalSettings(group: SettingGroup[]) {
 
-    const langGroup = {
-      name: 'Current Language',
+    const userInterface = {
+      name: 'User Interface',
       settings: []
     } as SettingGroup;
 
-    langGroup.settings.push({
+    userInterface.settings.push({
       id: 'settings.global.language',
-      title: 'Change Language',
+      title: 'Language',
       description: 'Change the application language',
       isDisabled: true,
       type: SettingType.SELECT,
@@ -746,7 +746,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       validate: this.validatePortNumber
     } as Setting);
 
-    group.push(langGroup);
+    group.push(userInterface);
     group.push(marketplaceConfig);
     group.push(coreNetConfig);
   }

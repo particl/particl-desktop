@@ -41,7 +41,7 @@
 <ng-template #content>
 
   <div class="row" fxLayout fxLayoutGap="30px" *ngFor="let rowIdx of groupIdxs">
-    <div class="half" fxFlex="50" *ngFor="let colIdx of colIdxs">
+    <div class="third" fxFlex="33" *ngFor="let colIdx of colIdxs">
       <ng-container *ngIf="(currentPage.settingGroups[rowIdx + colIdx])?.settings.length > 0">
         <h2 class="subtitle"> {{ (currentPage.settingGroups[rowIdx + colIdx])?.name }} </h2>
         <mat-card>
