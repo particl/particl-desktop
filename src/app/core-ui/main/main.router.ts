@@ -25,6 +25,7 @@ import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
+import { BotService } from 'app/core/bot/bot.module.js';
 
 import * as marketConfig from '../../../../modules/market/config.js';
 
@@ -70,6 +71,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // get the singleton up and running
     public proposalsNotificationsService: ProposalsNotificationsService,
     public _market: MarketService,
+    public _bot: BotService,
 
     private _marketState: MarketStateService,
     private txNotify: NewTxNotifierService,
@@ -86,6 +88,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     this.log.d('Main.Router constructed');
 
     this.checkMarketRoute(this._router.url);
+
+    _bot.startBotManager(this._rpc.wallet);
 
     if ((marketConfig.allowedWallets || []).find(
       (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
@@ -187,6 +191,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     this.destroyed = true;
     this.clearTimer();
     this._rpcState.stop();
+
+    this._bot.stopBotManager();
 
     if (this._market.isMarketStarted) {
       this._market.stopMarket();

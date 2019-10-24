@@ -1,0 +1,20 @@
+<div class="item">
+  <div class="image">
+    <img src="{{bot?.image}}">
+  </div>
+
+  <div class="info">
+    <div class="title">{{ bot?.name }}  <span class="description">( {{bot?.type}} )</span></div>
+    <div class="description">{{bot?.description}}</div>
+  </div>
+
+  <div>
+    <button mat-button color="primary" *ngIf="!bot.enabled" fxFlex (click)="enable()">
+      Enable Bot
+    </button>
+    <button mat-button color="warn" *ngIf="bot.enabled" fxFlex (click)="disable()">
+      Disable Bot
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,67 @@
+<!-- Do not remove the below class it is using for test case -->
+<app-header class="test-case-container">
+  <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between center">
+
+    <!-- Search-->
+    <div class="icon-input search-listings" fxFlex="1 1 25%">
+      <input type="text" class="header-input" id="searchbar" placeholder="Search bots..."
+             [(ngModel)]="search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
+             (keyup.escape)="filters.search = ''; clearAndLoadPage()">
+      <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+    </div>
+  </div>
+</app-header>
+
+<div class="container-block with-control-bar">
+  <app-page-intro>
+    <ng-container page-title>Particl Bot Management</ng-container>
+    <ng-container page-content>
+      Here you will find all available bots to enable or disable from this wallet... something something
+    </ng-container>
+    <ng-container page-help>
+      Some help.
+    </ng-container>
+  </app-page-intro>
+
+  <!-- Do not remove the below class it is using for test case -->
+  <div class="content grid-container test-case-container"
+       infiniteScroll
+       [infiniteScrollContainer]="pagination.infinityScrollSelector"
+       [fromRoot]="true"
+       (scrolled)="loadNextPage()">
+
+    <div class="loading-container" *ngIf="isLoadingBig">
+      <div class="loading-info">
+        <div class="loading-image">
+          <img src="./assets/particl-logo-symbol.svg">
+        </div>
+        <p class="title">
+          Hang on, we're loading the bots
+        </p>
+        <p class="widget-help">
+          This might take a while
+        </p>
+      </div>
+    </div><!-- .loading-container -->
+
+    <ng-container *ngFor="let page of pages">
+      <ng-container *ngFor="let bot of page.bots">
+        <mat-card class="bot">
+          <app-bot-item [bot]="bot"></app-bot-item>
+        </mat-card>
+      </ng-container>
+    </ng-container>
+
+    <div class="no-results" *ngIf="hasEmptySearch">
+      <p>
+        Sorry, no matching bots found
+      </p>
+    </div>
+
+    <div class="no-results" *ngIf="noMoreListings">
+      <p>
+        That's all folks!
+      </p>
+    </div>
+  </div><!-- .content -->
+</div> <!-- container-block -->

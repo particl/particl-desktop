@@ -55,6 +55,7 @@ exports.reloadConfig = function(_options) {
   loadDev();
   loadMarketAuthentication();
   loadWalletAuthentication();
+  loadBotAuthentication();
   loadGithub();
 }
 
@@ -80,6 +81,17 @@ function loadMarketAuthentication() {
     let key = "localhost:3000";
     let value = {
         name: "market",
+        auth: "test:test"
+    }
+
+    whitelist.set(key, value);
+}
+
+function loadBotAuthentication() {
+    // let key = "dev1.particl.xyz:";
+    let key = "localhost:3001";
+    let value = {
+        name: "bot",
         auth: "test:test"
     }
 

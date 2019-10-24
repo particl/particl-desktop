@@ -11,5 +11,7 @@ export const environment = {
   marketVersion: 'UNKNOWN',
   marketHost: 'localhost',
   marketPort: 3100,
+  botHost: 'localhost',
+  botPort: 3001,
   isTesting: false
 };

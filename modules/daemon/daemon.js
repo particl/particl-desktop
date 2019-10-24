@@ -83,7 +83,9 @@ exports.start = function (doReindex = false) {
         : daemonManager.getPath();
 
 
-      const addedArgs = [];
+      const addedArgs = [
+        "-zmqpubsmsg=tcp://127.0.0.1:36750"
+      ];
 
       if (doReindex) {
         log.info('Adding reindex flag to daemon startup');
