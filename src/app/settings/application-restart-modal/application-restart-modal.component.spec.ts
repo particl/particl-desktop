@@ -5,7 +5,7 @@ import { MatDialogModule, MatDialogRef, MatIconModule } from '@angular/material'
 import { ApplicationRestartModalComponent } from './application-restart-modal.component';
 import { IpcService } from 'app/core/ipc/ipc.service';
 
-describe('DeleteConfirmationModalComponent', () => {
+describe('ApplicationRestartModalComponent', () => {
   let component: ApplicationRestartModalComponent;
   let fixture: ComponentFixture<ApplicationRestartModalComponent>;
 

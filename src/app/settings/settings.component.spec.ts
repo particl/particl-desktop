@@ -1,5 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { SettingsComponent } from './settings.component';
 import { SharedModule } from 'app/wallet/shared/shared.module';
@@ -22,6 +23,7 @@ describe('SettingsComponent', () => {
         SharedModule,
         MaterialModule,
         CoreModule.forRoot(),
+        RouterTestingModule,
         RpcWithStateModule.forRoot(),
         MultiwalletModule.forRoot()
        ],
