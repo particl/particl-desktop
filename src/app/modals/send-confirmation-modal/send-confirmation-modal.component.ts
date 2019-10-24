@@ -14,6 +14,10 @@ export class SendConfirmationModalComponent implements OnInit {
 
   @Output() onConfirm: EventEmitter<string> = new EventEmitter<string>();
 
+  // tabs
+  public selectedTab: number = 0;
+  public tabLabels: Array<string> = ['pay-with-part', 'pay-with-btc-alts'];
+
   public dialogContent: string;
   public send: TransactionBuilder;
 
@@ -39,6 +43,10 @@ export class SendConfirmationModalComponent implements OnInit {
 
   dialogClose(): void {
     this.dialogRef.close();
+  }
+
+  changeTab(index: number): void {
+    this.selectedTab = index;
   }
 
   /**
