@@ -123,27 +123,23 @@
               </ng-container>
 
               <ng-container *ngSwitchCase="settingType.BUTTON">
-                <div>
-                  <div class="half" fxFlex="50">
-                    <h4 class="option">
-                      {{ setting.title }}
-                      <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
-                    </h4>
-                    <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                  </div>
-                  <div class="half" fxFlex="50">
-                    <button mat-raised-button
-                      color="{{ setting.limits ? setting.limits.color || 'primary' : 'primary' }}"
-                      class="validate"
-                      [disabled]="setting.isDisabled"
-                      (click)="settingChangedValue(rowIdx + colIdx, settingIdx)"
-                    >
-                      <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" fontSet="partIcon" [fontIcon]="setting.limits.icon"></mat-icon>
-                      {{ setting.title }}
-                    </button>
-                  </div>
-                </div>
+                <h4 class="option">
+                  {{ setting.title }}
+                  <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
+                <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                <p class="buttons">
+                  <button mat-raised-button
+                    color="{{ setting.limits ? setting.limits.color || 'primary' : 'primary' }}"
+                    class="validate"
+                    [disabled]="setting.isDisabled"
+                    (click)="settingChangedValue(rowIdx + colIdx, settingIdx)"
+                  >
+                    <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" fontSet="partIcon" [fontIcon]="setting.limits.icon"></mat-icon>
+                  {{ setting.title }}
+                  </button>
+                </p>
                 <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
               </ng-container>
             </div>

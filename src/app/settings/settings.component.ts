@@ -642,7 +642,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         restartRequired: false,
         currentValue: '',
         newValue: '',
-        limits: null,
+        limits: {color: 'primary', icon: 'part-archive'},
         onChange: this.actionBackupWallet
       } as Setting);
   
@@ -657,7 +657,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         restartRequired: false,
         currentValue: '',
         newValue: '',
-        limits: null,
+        limits: {color: 'warn', icon: 'part-alert'},
         onChange: this.actionDeleteWallet
       } as Setting);
   
