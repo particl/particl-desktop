@@ -326,22 +326,28 @@ const initializeIpcChannels = (mainWindow) => {
 
   rxIpc.registerListener(IPC_DELETE_WALLET, function(walletName) {
     return Observable.create(observer => {
+      log.info(`Requested deletion of wallet named "${walletName}"`);
       let success = false;
-      let walletPath = cookie.getParticlPath(_options);
-      if (_options.testnet) {
-        walletPath = path.join(walletPath, 'testnet');
-      }
+
       if (walletName !== '') {
         // Prevents deleting the default wallet
-        walletPath = path.join(walletPath, walletName);
 
-        log.info('requested deletion of wallet folder: ' + walletPath);
-        if (
-          walletPath.endsWith(walletName) &&
-          fs.existsSync(walletPath) &&
-          fs.lstatSync(walletPath).isDirectory()
-        ) {
-          log.info('DELETED WALLET FOLDER: ' + delPaths);
+        let walletPath = cookie.getParticlPath(_options);
+        if (_options.testnet) {
+          walletPath = path.join(walletPath, 'testnet');
+        }
+
+        let pathExists = false;
+        if (fs.existsSync(path.join(walletPath, 'wallets', walletName))) {
+          pathExists = true;
+          walletPath = path.join(walletPath, 'wallets', walletName);
+        } else if (fs.existsSync(path.join(walletPath, walletName))) {
+          pathExists = true;
+          walletPath = path.join(walletPath, walletName);
+        }
+
+        if (pathExists && walletPath.endsWith(walletName) && fs.lstatSync(walletPath).isDirectory()) {
+          log.info('Found wallet folder to be deleted: ' + walletPath);
           try {
             const delPaths = _del.sync([walletPath], {force: true});
             log.info('Sucessfully deleted wallet folder: ' + delPaths);
