@@ -470,8 +470,8 @@ export class SettingsStateService extends StateService implements OnDestroy {
   private saveSettingsToCORECONFIG(newSettings: KeyValue[]) {
     const saveSettings = {};
     for (const setting of newSettings) {
-      if (setting.label === 'settings.core.network.proxy') {
-        saveSettings['proxy'] = setting.value;
+      if (setting.label.startsWith('settings.core.network.') ) {
+        saveSettings[setting.label.replace('settings.core.network.', '')] = setting.value;
       }
     }
     if (Object.keys(saveSettings).length > 0) {

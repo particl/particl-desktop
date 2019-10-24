@@ -757,7 +757,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
     const parts = strVal.split(':');
     const octs = String(parts[0]).split('.');
-    let isValid = ( (octs.length === 4) && (octs.find(oct => !isFinite(+oct) || (+oct > 255) || (+oct < 1) ) === undefined) );
+    let isValid = (
+      (octs.length === 4) &&
+      (octs.find(oct => !isFinite(+oct) || (+oct > 255) || (+oct < 0) || (oct.length === 0)
+    ) === undefined) );
 
     if (parts[1]) {
       const port = +(String(parts[1]));
