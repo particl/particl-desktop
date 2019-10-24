@@ -234,7 +234,7 @@ export class SettingsStateService extends StateService implements OnDestroy {
     return success;
   }
 
-  async backupWallet(folderPath: string): Promise<boolean>{
+  async backupWallet(folderPath: string): Promise<boolean> {
     const success = await this._rpc.call('backupwallet', [folderPath]).toPromise().then(() => true).catch(() => false);
     return success;
   }
