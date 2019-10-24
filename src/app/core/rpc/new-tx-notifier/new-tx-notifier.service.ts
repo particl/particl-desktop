@@ -4,6 +4,7 @@ import { Log } from 'ng2-logger';
 import { NotificationService } from 'app/core/notification/notification.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
+import { Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { SettingsStateService } from 'app/settings/settings-state.service';
 
@@ -17,6 +18,7 @@ export class NewTxNotifierService implements OnDestroy {
 
   private doNotifyTxRecieved: boolean = true;
   private doNotifyStakeReceived: boolean = true;
+  private rpcState$: Subscription;
 
   constructor(
     private _rpc: RpcService,
@@ -26,12 +28,6 @@ export class NewTxNotifierService implements OnDestroy {
   ) {
 
     this.log.d('tx notifier service running!');
-    this._rpcState.observe('getwalletinfo', 'txcount')
-      .pipe(takeWhile(() => !this.destroyed))
-      .subscribe(txcount => {
-        this.log.d(`--- update by txcount ${txcount} ---`);
-        this.checkForNewTransaction();
-      });
 
     this._settings.observe('settings.wallet.notifications.payment_received').pipe(
       takeWhile(() => !this.destroyed)
@@ -48,6 +44,26 @@ export class NewTxNotifierService implements OnDestroy {
         this.doNotifyStakeReceived = Boolean(+isSubscribed);
       }
     );
+  }
+
+  start() {
+    this.log.d('tx notifier service started!');
+    this.rpcState$ = this._rpcState.observe('getwalletinfo', 'txcount')
+    .pipe(
+      takeWhile(() => !this.destroyed)
+    ).subscribe(
+      txcount => {
+        this.log.d(`--- update by txcount${txcount} ---`);
+        this.checkForNewTransaction();
+      }
+    );
+  }
+
+  stop() {
+    this.log.d('tx notifier service stopped!');
+    if (this.rpcState$ !== undefined) {
+      this.rpcState$.unsubscribe();
+    }
   }
 
   // TODO: trigger by ZMQ in the future
