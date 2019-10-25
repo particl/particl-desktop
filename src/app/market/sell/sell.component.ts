@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
@@ -79,7 +80,8 @@ export class SellComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private template: TemplateService,
     private listingService: ListingService,
-    private rpcState: RpcStateService
+    private rpcState: RpcStateService,
+    private _notify: OrderStatusNotifierService
   ) {
     this.getScreenSize();
   }
@@ -105,6 +107,10 @@ export class SellComponent implements OnInit, OnDestroy {
     .subscribe((walletinfo) => {
       this.hasEncryptedWallet = (walletinfo.encryptionstatus === 'Locked') || (+walletinfo.unlocked_until > 0);
     });
+  }
+
+  get orderCount(): number {
+    return this._notify.getActiveCount('sell');
   }
 
   addItem(id?: number, clone?: boolean) {
