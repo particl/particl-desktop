@@ -1,4 +1,4 @@
-<div mat-dialog-title>Delete wallet {{ walletName }}</div>
+<div mat-dialog-title>Delete <code>{{ walletName }}</code> wallet</div>
 <button class="small-close-button" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
@@ -6,9 +6,15 @@
 
 <div mat-dialog-content class="dialog-content" *ngIf="!isInvalidRequest">
   <p class="lead">
-    Make 100% certain that any relevant backups have been made before confirming (this action cannot be undone)
+    You are about to <strong>delete your wallet</strong> &ndash; make absolutely sure that you have a backup of your wallet before proceeding further!
   </p>
-
+  <p class="warning message">
+    This action cannot be undone and Particl can't restore deleted wallets.<br>
+    Do this on your own risk!
+  </p>
+  <p>
+    If you delete this wallet, Particl Desktop will need to switch to another one &ndash; please select which wallet should be activated after the deletion:
+  </p>
 
   <div class="row" fxLayout fxLayoutAlign="center center">
     <mat-form-field class="full-width" fxFlex="50%">
@@ -21,15 +27,14 @@
     </mat-form-field>
   </div>
 
-
-  <code class="address-details">
-    Are you certain you wish to delete wallet {{ walletName }} ?
-  </code>
+  <p class="warning message">
+    Are you certain you wish to delete <code>{{ walletName }}</code> wallet?
+  </p>
 </div>
 
 <div mat-dialog-content class="dialog-content" *ngIf="isInvalidRequest">
   <p class="warning">
-    The requested wallet cannot be deleted, likely because of one of the following reasons
+    The {{ walletName }} wallet cannot be deleted, likely because of one of the following reasons:
   </p>
   <ul class="checks">
     <li>The wallet is the default wallet</li>
@@ -37,13 +42,13 @@
   </ul>
 </div><!-- .dialog-content -->
 
-<mat-dialog-actions fxLayoutAlign="end center">
+<mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
   <button mat-raised-button color="warn" [disabled]="isInvalidRequest || (returnWalletName === undefined)" mat-dialog-close (click)="doConfirmation()">
     <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
-    Yes, delete
+    Yes, delete {{ walletName }}
   </button>
 </mat-dialog-actions>

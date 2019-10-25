@@ -1,5 +1,9 @@
 @import './src/assets/config'; // import shared colors etc.
 
+.dialog-content {
+  max-width: 40rem;
+}
+
 .address-details { // address details to be deleted
   display: block;
   padding: 16px 32px;
