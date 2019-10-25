@@ -10,6 +10,7 @@ import { HeaderComponent } from './header/header.component';
 import {
   DeleteConfirmationModalComponent
 } from './delete-confirmation-modal/delete-confirmation-modal.component';
+import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import {
   ],
   declarations: [
     HeaderComponent,
-    DeleteConfirmationModalComponent
+    DeleteConfirmationModalComponent,
+    ProcessingModalComponent
   ],
   exports: [
     CommonModule,
@@ -30,7 +32,8 @@ import {
     HttpClientModule
   ],
   entryComponents: [
-    DeleteConfirmationModalComponent
+    DeleteConfirmationModalComponent,
+    ProcessingModalComponent
   ],
 })
 export class SharedModule { }

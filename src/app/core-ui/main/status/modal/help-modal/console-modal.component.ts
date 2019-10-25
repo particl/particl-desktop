@@ -14,8 +14,9 @@ import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
-import * as marketConfig from '../../../../../../../modules/market/config.js';
 import { isFinite, isPlainObject, isArray } from 'lodash';
+import { SettingsStateService } from 'app/settings/settings-state.service';
+import { takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-console-modal',
@@ -42,13 +43,23 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
               private _rpcState: RpcStateService,
               private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
-              private snackbar: SnackbarService) {
-    this.marketTabEnabled = (marketConfig.allowedWallets || []).find(
-      (wname: string) => (typeof this._rpc.wallet === 'string') && (wname.toLowerCase() === this._rpc.wallet.toLowerCase())
-    ) !== undefined;
+              private snackbar: SnackbarService,
+              private _settingsService: SettingsStateService) {
   }
 
   ngOnInit() {
+    let continueListening = true;
+    this._settingsService.currentWallet().pipe(takeWhile(() => continueListening)).subscribe(
+      (wallet) => {
+        // Primary purpose of the null check is to cater for live reload...
+        //  this should not typically be needed otherwise
+        if (wallet === null) {
+          return;
+        }
+        this.marketTabEnabled = wallet.isMarketEnabled === true;
+        continueListening = false;
+      }
+    );
     this.getCurrentTime();
   }
 

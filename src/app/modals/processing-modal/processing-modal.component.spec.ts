@@ -16,7 +16,7 @@ describe('ProcessingModalComponent', () => {
       declarations: [ ProcessingModalComponent ],
       imports: [
         BrowserAnimationsModule,
-        SharedModule,
+        // SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
       ],

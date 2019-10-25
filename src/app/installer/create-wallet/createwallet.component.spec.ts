@@ -10,6 +10,8 @@ import { CoreUiModule } from '../../core-ui/core-ui.module';
 
 import { CreateWalletComponent } from './create-wallet.component';
 import { ModalsModule } from 'app/modals/modals.module';
+import { SettingsModule } from 'app/settings/settings.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 
 describe('CreateWalletComponent', () => {
@@ -25,7 +27,9 @@ describe('CreateWalletComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        ModalsModule.forRoot()
+        ModalsModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [
         { provide: MatDialogRef}

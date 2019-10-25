@@ -37,13 +37,34 @@ export class ListingService {
     ];
 
     return this.market.call('item', params)
-    .pipe(map(
-      (listings: Array<Listing>) => {
-        return listings.map(t => new Listing(t));
-      }
-    )).pipe(tap(
-      listings => this.log.d('Listings', listings)
-    ));
+    .pipe(
+      map(
+        (listings: Array<Listing>) => {
+          return listings.map(t => new Listing(t));
+        }
+      ),
+      tap(
+        // @TODO: zaSmilingIdiot: 2019-10-22
+        // This is a sucky way of doing this. But the image datas for each image stored in the MP DB have a data_id field, which stores
+        //  the entire URL to request the specific image from the marketplace. Which creates an issue if the marketplace hostname/port
+        //  changes after images are stored. Using the url stated for an image would be an invalid path in such a case.
+        // This bit attempts to "fix" this...
+        (listings: Listing[])  => {
+          listings.forEach(listing => {
+            (listing.imageCollection.images || []).forEach(image => {
+              (image.itemImageDatas || []).forEach(datas => {
+                const pathparts = String(datas.dataId).split(':');
+                const newPath = `http://${this.market.hostname}:${this.market.port}/${pathparts[pathparts.length - 1].split('/').slice(1).join('/')}`;
+                datas.dataId = newPath;
+              })
+            })
+          })
+        }
+      ),
+      tap(
+        listings => this.log.d('Listings', listings)
+      )
+    );
   }
 
   get(id: number) {
