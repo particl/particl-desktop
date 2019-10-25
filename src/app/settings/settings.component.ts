@@ -625,45 +625,44 @@ export class SettingsComponent implements OnInit, OnDestroy {
       } as Setting);
 
       group.push(notificationsMarket);
-
-      const dangerZone = {
-        name: 'Danger Zone',
-        settings: []
-      } as SettingGroup;
-  
-      dangerZone.settings.push({
-        id: '',
-        title: 'Backup Wallet',
-        description: 'Create a wallet file backup (the wallet.dat file for the current wallet) in a different folder location',
-        isDisabled: false,
-        type: SettingType.BUTTON,
-        errorMsg: '',
-        tags: [],
-        restartRequired: false,
-        currentValue: '',
-        newValue: '',
-        limits: {color: 'primary', icon: 'part-archive'},
-        onChange: this.actionBackupWallet
-      } as Setting);
-  
-      dangerZone.settings.push({
-        id: '',
-        title: 'Delete Wallet',
-        description: 'Deletes this wallet (NB: cannot be reverted). Please note that this option is not currently available on the Default Wallet or on a marketplace-enabled wallet',
-        isDisabled: ((this.currentWallet || {} as IWallet).name === '') || ((this.currentWallet || {} as IWallet).isMarketEnabled === true),
-        type: SettingType.BUTTON,
-        errorMsg: '',
-        tags: ['Danger Zone'],
-        restartRequired: false,
-        currentValue: '',
-        newValue: '',
-        limits: {color: 'warn', icon: 'part-alert'},
-        onChange: this.actionDeleteWallet
-      } as Setting);
-  
-      group.push(dangerZone);
-
     }
+
+    const dangerZone = {
+      name: 'Danger Zone',
+      settings: []
+    } as SettingGroup;
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Backup Wallet',
+      description: 'Create a wallet file backup (the wallet.dat file for the current wallet) in a different folder location',
+      isDisabled: false,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: {color: 'primary', icon: 'part-archive'},
+      onChange: this.actionBackupWallet
+    } as Setting);
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Delete Wallet',
+      description: 'Deletes this wallet (NB: cannot be reverted). Please note that this option is not currently available on the Default Wallet or on a marketplace-enabled wallet',
+      isDisabled: ((this.currentWallet || {} as IWallet).name === '') || ((this.currentWallet || {} as IWallet).isMarketEnabled === true),
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: ['Danger Zone'],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: {color: 'warn', icon: 'part-alert'},
+      onChange: this.actionDeleteWallet
+    } as Setting);
+
+    group.push(dangerZone);
 
   }
 
