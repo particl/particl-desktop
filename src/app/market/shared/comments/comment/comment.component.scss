@@ -21,7 +21,7 @@
     @extend %tfx;
     text-transform: none;
     font-weight: 500;
-    max-width: 460px !important;
+    max-width: 360px !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -45,6 +45,8 @@
   h3.question {
     font-weight: 500;
     line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
   }
   .mat-divider {
     margin: 0 -24px;
@@ -76,6 +78,8 @@
     .message {
       flex: 1 1 100%;
       margin-left: 8px;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     .date {
       @extend %lighter;
@@ -88,7 +92,7 @@
   mat-action-row {
     display: flex;
     align-items: center;
-    padding: 12px 16px 12px 24px;
+    padding: 12px 16px 18px 24px;
     .title {
       display: block;
       margin-right: 14px;

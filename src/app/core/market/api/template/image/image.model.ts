@@ -28,6 +28,10 @@ export class Image {
     return (image && image.dataId) || './assets/images/placeholder_1-1.jpg'
   }
 
+  get itemImageDatas(): any[] {
+    return this.image.ItemImageDatas;
+  }
+
   get originalEncoding(): string {
     const image = this.image.ItemImageDatas.find(o => o.imageVersion === 'ORIGINAL');
     let data = '';

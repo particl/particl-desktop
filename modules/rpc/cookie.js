@@ -110,27 +110,6 @@ function getAuth(options) {
 }
 
 
-function clearCookieFilePath(options) {
-  let success = true;
-  log.info('Checking if cookie file exists (from incorrect shutdown)...');
-  const cookiePath = getCookiePath(options);
-  try {
-    if (fs.existsSync(cookiePath)) {
-      fs.unlinkSync(cookiePath);
-      log.info('Cleared existing cookie file...');
-    }
-  } catch (err) {
-    if (err && err.code !== 'ENOENT') {
-      log.error('Failed to remove existing cookie file!!');
-      success = false;
-    }
-  }
-  if (success) {
-    log.info('Cookie file check completed successfully');
-  }
-
-}
-
 function getParticlPath(options) {
   return options.datadir ? options.datadir : findCookiePath();
 }
@@ -152,4 +131,3 @@ function getCookiePath(options) {
 exports.getAuth = getAuth;
 exports.getParticlPath = getParticlPath;
 exports.getCookieName = getCookieName;
-exports.clearCookieFilePath = clearCookieFilePath;

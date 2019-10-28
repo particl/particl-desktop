@@ -1,0 +1,27 @@
+<div mat-dialog-title>Restart now?</div>
+<button class="small-close-button" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+
+<div mat-dialog-content class="dialog-content">
+  <p class="lead">
+    Particl Desktop needs to be restarted in order to apply some of the new settings changes.
+  </p>
+  <p class="widget-help">
+    Would you like to restart now?<br>
+    Particl Desktop will relaunch automatically.
+  </p>
+</div>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    No, I will restart manually later
+  </button>
+  <button mat-raised-button color="primary" mat-dialog-close (click)="doRestart()">
+    <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+    Yes, restart now
+  </button>
+</mat-dialog-actions>

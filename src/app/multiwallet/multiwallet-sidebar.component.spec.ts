@@ -6,6 +6,7 @@ import { MultiwalletSidebarComponent } from './multiwallet-sidebar.component';
 import { CoreModule } from '../core/core.module';
 import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MultiwalletModule } from './multiwallet.module'
+import { SettingsModule } from 'app/settings/settings.module';
 
 describe('MultiwalletSidebarComponent', () => {
   let component: MultiwalletSidebarComponent;
@@ -17,7 +18,8 @@ describe('MultiwalletSidebarComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        MultiwalletModule.forTest()
+        MultiwalletModule.forTest(),
+        SettingsModule.forRoot()
       ]
     })
     .compileComponents();

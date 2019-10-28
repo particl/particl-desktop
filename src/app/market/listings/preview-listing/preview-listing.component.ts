@@ -8,9 +8,10 @@ import { VoteDetails } from 'app/wallet/proposals/models/vote-details.model';
 import { VoteOption } from 'app/wallet/proposals/models/vote-option.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { ImageItem, Gallery } from '@ngx-gallery/core';
+import { Image } from 'app/core/market/api/template/image/image.model';
 import { Lightbox } from '@ngx-gallery/lightbox';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
-import { take, takeWhile } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-preview-listing',
@@ -52,8 +53,8 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
     //     this.currencyprice = price[0].price;
     //   });
     this.getVoteOfListing();
-    if (this.data.listing) {
-      this.images = this.data.listing.imageCollection.imageUrls;
+    if (this.data.listing && Object.prototype.toString.call(this.data.listing.imageCollection.images) === '[object Array]') {
+      this.images = this.data.listing.imageCollection.images.map((img: Image) => new ImageItem({src: img.large, thumb: img.thumbnail}));
     }
       // Get a lightbox gallery ref
     const lightboxRef = this.gallery.ref('lightbox');
@@ -100,28 +101,41 @@ export class PreviewListingComponent implements OnInit, OnDestroy {
       this.data.listing.proposalHash,
       option.optionId
     ];
-    this.proposalsService.vote(params).subscribe((response) => {
-      this.processModal.close();
-      let msg = String(response.result);
-      if (msg.toLowerCase().includes('no usable addresses')) {
-        msg = 'Insufficient (public) funds to submit this vote';
+    this.proposalsService.vote(params).subscribe(
+      (response) => {
+        this.processModal.close();
+        let msg = String(response.result);
+        if (msg.toLowerCase().includes('no usable addresses')) {
+          msg = 'Insufficient (public) funds to submit this vote';
+        }
+        if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
+          msg = `Successfully voted for ${this.data.listing.title}`;
+          this.data.listing.VoteDetails = new VoteDetails({
+            ProposalOption: option
+          });
+          this.data.reportListingComplete.emit();
+        }
+        this.snackbarService.open(msg, 'info');
+      },
+      (error) => {
+        this.processModal.close();
+        this.snackbarService.open(error);
+      },
+      () => {
+        this.dialogClose();
       }
-      if ( (Object.prototype.toString.call(response.msgids) === '[object Array]') && response.msgids ) {
-        msg = `Successfully voted for ${this.data.listing.title}`;
-        this.data.listing.VoteDetails = new VoteDetails({
-          ProposalOption: option
-        });
-        this.reportListingFinished();
-      }
-      this.snackbarService.open(msg, 'info');
-    }, (error) => {
-      this.processModal.close();
-      this.snackbarService.open(error);
-    })
+    );
   }
 
   reportListingFinished() {
     this.data.reportListingComplete.emit();
+    if (this.processModal) {
+      try {
+        this.processModal.close();
+      } catch (err) {
+        // do nothing
+      }
+    }
     this.dialogClose();
   }
 

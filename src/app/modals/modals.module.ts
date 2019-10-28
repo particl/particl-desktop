@@ -16,6 +16,7 @@ import { EncryptwalletComponent } from './encryptwallet/encryptwallet.component'
 import { AlertComponent } from './shared/alert/alert.component';
 import { DeleteListingComponent } from './delete-listing/delete-listing.component';
 import { BidRejectComponent } from './bid-reject/bid-reject.component';
+import { BidCancelComponent } from './bid-cancel/bid-cancel.component';
 
 /* shared in modals */
 import { PasswordComponent } from './shared/password/password.component';
@@ -38,7 +39,6 @@ import {
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
-import { ProcessingModalComponent } from './processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 
 @NgModule({
@@ -69,9 +69,9 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent,
     AlphaMainnetWarningComponent,
-    BidRejectComponent
+    BidRejectComponent,
+    BidCancelComponent
   ],
   exports: [
     ClipboardModule
@@ -98,9 +98,9 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent,
     AlphaMainnetWarningComponent,
-    BidRejectComponent
+    BidRejectComponent,
+    BidCancelComponent
   ],
 })
 export class ModalsModule {
