@@ -20,7 +20,9 @@ export class ListingItemComponent {
   ) {}
 
   get hasNewComments() {
-    return this.notification.targetHasUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.listing.hash);
+    return this.listing && this.listing.hash
+      ? this.notification.targetHasUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.listing.hash)
+      : false;
   }
 
   openListing() {
