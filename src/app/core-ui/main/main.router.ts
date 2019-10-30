@@ -25,6 +25,7 @@ import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
+import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 import { SettingsStateService } from 'app/settings/settings-state.service';
 
 /*
@@ -81,6 +82,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _addToCart: AddToCartCacheService,
     private _favCacheService: FavoriteCacheService,
     private _orderStatusNotifier: OrderStatusNotifierService,
+    private _notificationService: MarketNotificationService,
     private _settingsService: SettingsStateService
   ) {
     this.log.d('Main.Router constructed');
@@ -108,6 +110,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
               this._proposal.start();
               this._addToCart.start();
               this._orderStatusNotifier.start();
+              this._notificationService.start();
             }
           )
         }
@@ -213,6 +216,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       this._addToCart.stop();
       this._favCacheService.stop();
       this._orderStatusNotifier.stop();
+      this._notificationService.stop();
     }
   }
 

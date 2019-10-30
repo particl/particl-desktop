@@ -67,7 +67,7 @@ export class ListingService {
     );
   }
 
-  get(id: number) {
+  get(id: number | string) {
     return this.market.call('item', ['get', id]).pipe(map(listing => new Listing(listing)));
   }
 

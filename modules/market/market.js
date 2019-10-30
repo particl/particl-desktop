@@ -44,7 +44,8 @@ exports.start = function(walletName, portNum) {
       RPC_PORT: _options.port,
       TESTNET: isTestnet,
       RPCCOOKIEFILE: cookieFile,
-      STANDALONE: true
+      STANDALONE: true,
+      SOCKETIO_ENABLED: true
     };
 
     if ( (typeof portNum === 'number') && (portNum > 0)) {
