@@ -45,7 +45,8 @@
     "travis:win64": "electron-builder --win --x64 && yarn run checksum",
     "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
     "travis:test": "ng test --watch=false --code-coverage",
-    "start": "yarn run start:electron:fast"
+    "start": "yarn run start:electron:fast",
+    "postinstall": "./node_modules/.bin/electron-rebuild"
   },
   "productName": "Particl Desktop Testnet",
   "build": {
@@ -177,6 +178,7 @@
     "ng2-nvd3": "^2.0.0",
     "ngx-material-file-input": "^1.1.1",
     "node-unzip-2": "^0.2.1",
+    "particl-bot-manager": "^0.0.4",
     "particl-market-import-core": "^0.0.11",
     "particl-marketplace": "^0.2.4",
     "rx-ipc-electron": "^0.1.2",
@@ -211,6 +213,7 @@
     "coveralls": "^3.0.0",
     "electron": "5.0.4",
     "electron-builder": "^20.38.5",
+    "electron-rebuild": "^1.8.6",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^3.3.0",

@@ -34,6 +34,7 @@ exports.start = function(walletName) {
     const isTestnet = Boolean(+_options.testnet);
 
     const botOptions = {
+      ELECTRON_VERSION: process.versions.electron,
       NETWORK: isTestnet ? 'testnet' : 'mainnet',
       BOT_USER: 'test',
       BOT_PASSWORD: 'test',

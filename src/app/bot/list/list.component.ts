@@ -22,7 +22,9 @@ export class ListComponent implements OnInit, OnDestroy {
   public isLoadingBig: boolean = true; // big animation
   public noMoreListings: boolean = false;
 
-  private botServiceSubcription: Subscription;
+  public search: string = '';
+  public type: string = '';
+  public enabled: boolean = false;
 
   pages: Array<IPage> = [];
 
@@ -43,7 +45,16 @@ export class ListComponent implements OnInit, OnDestroy {
     this.destroyed = true;
   }
 
-  private async loadPage(pageNumber: number, clear: boolean) {
+  clearAndLoadPage() {
+    this.loadPage(0, true);
+  }
+
+  toggleEnabled(event: any): void {
+    this.enabled = event.source.checked;
+    this.clearAndLoadPage();
+  }
+
+  private async loadPage(pageNumber: number, clear: boolean = false) {
     // set loading aninmation
     this.isLoading = true;
 
@@ -51,7 +62,7 @@ export class ListComponent implements OnInit, OnDestroy {
     const max = this.pagination.maxPerPage;
     
     try{
-      const bots: Array<Bot> = await this.botService.search(pageNumber, max, '', '', null);
+      const bots: Array<Bot> = await this.botService.search(pageNumber, max, this.type, this.search, this.enabled);
 
       this.isLoading = false;
       this.isLoadingBig = false;

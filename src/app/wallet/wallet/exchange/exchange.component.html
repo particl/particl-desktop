@@ -1,0 +1,346 @@
+<app-header>
+  <div class="tab-bar" fxLayout fxLayoutAlign="space-between stretch">
+
+    <mat-tab-group (selectedTabChange)="selectTab($event.index)" fxFlex="1 1 100%">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-bitcoin"></mat-icon>
+          Convert BTC/alts
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+          Exchange History
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+
+  </div><!-- .tab-bar -->
+</app-header>
+
+<div class="container-block with-tab-bar">
+  <app-page-intro *ngIf="tab === 'exchange'" [childPageAlias]="tab">
+    <ng-container page-title>Exchange BTC/alts</ng-container>
+    <ng-container page-content>
+      Exchange your BTC/alts effortlessly for PART &ndash; select a coin for exchange
+    </ng-container>
+    <ng-container page-help>
+      TODO, some help text
+    </ng-container>
+  </app-page-intro>
+
+  <app-page-intro *ngIf="tab === 'exchangeHistory'" [childPageAlias]="tab">
+    <ng-container page-title>Exchange History</ng-container>
+    <ng-container page-content>
+      Previous Exchanges
+    </ng-container>
+    <ng-container page-help>
+      TODO, some help text
+    </ng-container>
+  </app-page-intro>
+
+  <div class="container-flex" *ngIf="tab === 'exchange'">
+    <mat-card class="exchange">
+      <div class="tx-confirmation" *ngIf="!exchange">
+        <div class="tx-info">
+          <div class="title">Create a new exchange</div>
+          <p class="widget-help">
+            Convert your favourite cryptocurrencies to Particl
+          </p>
+          <button mat-raised-button color="primary" (click)="startNewExchange()">
+            <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
+            Start Exchange
+          </button>
+        </div>
+      </div>
+
+      <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper  *ngIf="exchange">
+        <ng-template matStepperIcon="edit">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        </ng-template>
+        <ng-template matStepperIcon="done">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+        </ng-template>
+        
+        <mat-step label="Currency" [completed]="stepper.selectedIndex >= 1">
+          <div class="tx-confirmation">
+            <div class="tx-info">
+              <div class="title">Select your currency</div>
+              <p class="widget-help">
+                Pay your order effortlessly with your favourite cryptocurrencies &ndash; select the amount of PART and a coin for exchange:
+              </p>
+            </div>
+
+            <div class="amount">
+              <mat-form-field>
+                <input matInput min="0" placeholder="Required Particl *" [(ngModel)]="exchange.requiredParticls" type="text">
+                <span matSuffix>PART</span>
+              </mat-form-field>
+            </div>
+
+            <mat-list class="currencies">
+              <mat-list-item *ngFor="let currency of exchange.availableCurrencies">
+                <img matListAvatar src="assets/images/currencies/{{currency.symbol.toLowerCase()}}.png" default="assets/images/currencies/unknown.jpg">
+                <h3 matLine>{{currency.name}}</h3>
+                <p matLine>{{currency.symbol.toUpperCase()}}</p>
+                <mat-radio-button [value]="currency" [checked]="exchange.selectedCurrency === currency" color="primary" (change)="exchange.selectedCurrency = $event.value"></mat-radio-button>
+              </mat-list-item>
+            </mat-list>
+
+            <div *ngIf="exchange.loading">
+              <p class="widget-help" style="width: 100%; text-align: center;">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+              <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+            </div>
+            <div *ngIf="exchange.noBots">
+              <span>No exchange bots avaliable, please add one under bot management</span>
+            </div>
+            <div *ngIf="exchange.noResponse">
+              <span>No exchange bots responded</span>
+            </div>
+          </div>
+        </mat-step>
+
+        <mat-step label="Exchange" [completed]="stepper.selectedIndex >= 2">
+          <div class="tx-confirmation">
+            <div class="tx-info">
+              <div class="title">Choose an exchange bot</div>
+              <p class="widget-help">
+                Payment in {{exchange.selectedCurrency?.symbol}} can be processed on multiple bots &ndash; select the one you prefer:
+              </p>
+            </div>
+
+            <div class="tx-amount">
+              <span  class="big">Requested Amount </span>
+              <span  class="big">{{ exchange.requirePartoshiAmount.particlStringInteger() }}</span>
+              <span class="point">{{ exchange.requirePartoshiAmount.particlStringSep() }}</span>
+              <span class="small">{{ exchange.requirePartoshiAmount.particlStringFraction() }}</span>
+              &ensp;
+              <span class="currency">PART</span>
+            </div>
+            <div class="tx-amount" *ngIf="exchange.selectedOffer">
+              <span  class="big">Offered Amount </span>
+              <span  class="big">~{{ exchange.offerAmount?.particlStringInteger() }}</span>
+              <span class="point">{{ exchange.offerAmount?.particlStringSep() }}</span>
+              <span class="small">{{ exchange.offerAmount?.particlStringFraction() }}</span>
+              &ensp;
+              <span class="currency">PART</span>
+            </div>
+            <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-up"></mat-icon>
+          </div>
+          <mat-list class="offers">
+            <mat-list-item *ngFor="let offer of exchange.availableOffers">
+              <img matListAvatar src="{{offer.bot.image}}">
+              <h3 matLine> {{offer.bot.name}} </h3>
+              <p matLine>~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</p>
+              <p class="widget-help rate" matLine>@ ~{{offer.amount_to / offer.amount_from | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</p>
+              <mat-radio-button [value]="offer" [checked]="exchange.selectedOffer === offer" color="primary" (change)="exchange.selectedOffer = $event.value"></mat-radio-button>
+            </mat-list-item>
+          </mat-list>
+
+          <div *ngIf="exchange.loading">
+            <p class="widget-help" style="width: 100%; text-align: center;">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+            <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+          </div>
+          <div *ngIf="exchange.noBots">
+            <span>No exchange bots avaliable, please add one under bot management</span>
+          </div>
+          <div *ngIf="exchange.noResponse">
+            <span>No exchange bots responded</span>
+          </div>
+        </mat-step>
+
+        <mat-step label="Pay" [completed]="stepper.selectedIndex >= 3">
+          <div class="tx-confirmation" *ngIf="!exchange.isComplete && !exchange.status">
+            <div class="tx-info">
+              <div class="title">Pay with {{exchange.selectedCurrency?.name}}</div>
+              <p class="widget-help">
+                Send your {{exchange.selectedCurrency?.symbol}} to the following address to automatically convert it to PART
+              </p>
+            </div>
+            <div class="tx-amount">
+              <span  class="big">{{ exchange.payAmount?.particlStringInteger() }}</span>
+              <span class="point">{{ exchange.payAmount?.particlStringSep() }}</span>
+              <span class="small">{{ exchange.payAmount?.particlStringFraction() }}</span>
+              <span class="currency">{{exchange?.selectedCurrency?.symbol}}</span>
+            </div>
+
+            <div *ngIf="exchange.loading">
+              <p class="widget-help" style="width: 100%; text-align: center;">Requesting exchange address...</p>
+              <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+            </div>
+            <div *ngIf="exchange.exchangeData">
+              <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
+
+              <div class="receiver-info">
+                <qrcode size="200" [level]="'H'" qrdata="{{exchange.selectedCurrency?.name.toLowerCase()}}:{{exchange.exchangeData.address_from}}?amount={{exchange.exchangeData.amount_from}}"></qrcode>
+                <br>
+                <code class="address"> {{exchange.exchangeData.address_from}} </code>
+              </div>
+            </div>
+          </div>
+          <div class="tx-confirmation" *ngIf="!exchange.isComplete && exchange.status">
+            <div class="tx-info">
+              <div class="title">Exchange Status</div>
+              <p class="widget-help">
+                {{exchange.status.status }}
+              </p>
+              Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
+              From Address: <code>{{ exchange?.status.address_from }}</code><br>
+              To Address: <code>{{ exchange?.status.address_to }}</code><br>
+              From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
+            </div>
+          </div>
+          <div class="tx-confirmation" *ngIf="exchange.isComplete">
+            <div class="tx-info">
+              <div class="title">Done</div>
+              <p class="widget-help">
+                Please go to overview to see new funds
+              </p>
+              Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
+              From Address: <code>{{ exchange?.status.address_from }}</code><br>
+              To Address: <code>{{ exchange?.status.address_to }}</code><br>
+              From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
+            </div>
+            <button mat-raised-button color="primary" (click)="startNewExchange()">
+              <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
+              Start Exchange
+            </button>
+          </div>
+        </mat-step>
+
+      </mat-horizontal-stepper>
+    </mat-card><!-- .exchange -->
+
+    <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px" *ngIf="stepper">
+      <button mat-button (click)="cancelExchange()" *ngIf="stepper?.selectedIndex === 0">
+        <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+        Cancel
+      </button>
+      <button mat-button *ngIf="stepper?.selectedIndex > 0 && stepper?.selectedIndex < 3 && !exchange.isComplete  && !exchange.status" (click)="prevStep()">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+        Back
+      </button>
+      <button mat-raised-button color="primary" *ngIf="exchange && stepper?.selectedIndex >= 0 && stepper?.selectedIndex < 2" (click)="nextStep()"
+        [disabled]="!(stepper?.selectedIndex === 0 && exchange.selectedCurrency && exchange.requiredParticls || stepper?.selectedIndex === 1 && exchange.selectedOffer)">
+        <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+        Next
+      </button>
+    </div>
+  </div>
+
+  <div class="container-flex" *ngIf="tab === 'exchangeHistory'">
+    <!-- Orders > Filter -->
+    <div class="filter">
+      <div class="section search-sorting">
+        <div class="subtitle first">Search</div>
+        <mat-card class="filter-card">
+          <mat-form-field class="icon-input filter-input" floatLabel="never">
+            <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
+                (keyup.enter)="search()" (keyup.escape)="filters.search = '' ">
+            <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
+                      (click)="filters.search=''; search()"></mat-icon>
+            <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
+                      (click)="search()"></mat-icon>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-select [(ngModel)]="filters.bot" placeholder="Bot" (selectionChange)="search()">
+              <mat-option [value]=""></mat-option>
+              <mat-option *ngFor="let bot of exchangeData.bots" [value]="bot.address">
+                {{bot.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-select [(ngModel)]="filters.from" placeholder="From Currency" (selectionChange)="search()">
+              <mat-option [value]=""></mat-option>
+              <mat-option *ngFor="let currency_from of exchangeData.currency_from" [value]="currency_from">
+                {{currency_from}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-select [(ngModel)]="filters.to" placeholder="To Currency" (selectionChange)="search()">
+              <mat-option [value]=""></mat-option>
+              <mat-option *ngFor="let currency_to of exchangeData.currency_to" [value]="currency_to">
+                {{currency_to}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-card>
+      </div>
+    
+      <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+        <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+        Clear all filters
+      </button>
+    
+    </div><!-- .filter -->
+
+    <!-- Orders > list -->
+    <div class="orders section with-filter">
+
+      <div class="exchange-list" fxFlex="0 1 100%"
+        infiniteScroll
+        [infiniteScrollContainer]="pagination.infinityScrollSelector"
+        [fromRoot]="true"
+        [infiniteScrollDistance]="2"
+        [infiniteScrollThrottle]="50"
+        (scrolled)="loadNextPage()">
+
+        <!-- .loading-container -->
+        <div class="loading-container" *ngIf="isLoading">
+          <div class="loading-info">
+            <div class="loading-image">
+              <img src="./assets/particl-logo-symbol.svg">
+            </div>
+            <p class="title">
+              Hang on, we're loading the exchanges
+            </p>
+            <p class="widget-help">
+              This might take a while
+            </p>
+          </div>
+        </div><!-- .loading-container -->
+
+        <div class="no-results" *ngIf="pages[0]?.exchanges.length === 0">
+          <p>
+            No exchange history found
+          </p>
+        </div>
+
+        <ng-container *ngFor="let page of pages; let pageIndex = index;">
+          <mat-expansion-panel class="order list-item no-padding" *ngFor="let exchange of page.exchanges; trackBy: trackByFn">
+            <mat-expansion-panel-header class="header">
+              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="photo" fxFlex="0 0 80px">
+                  <img src="{{ exchange.bot.image }}">
+                </div>
+                <div class="meta" fxFlex="1 1 100%">
+                  <div class="name">{{ exchange.bot.name }}</div>
+                  <div class="">{{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from }} -> ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to }}</div>
+                  <div class="">{{ exchange?.status }}</div>
+                </div>
+                <div class="status-wrap" fxFlex="0 0 40px" *ngIf="!exchange?.tx_to">
+                  <button mat-button class="refresh-status" (click)="requestUpdate($event, exchange, pageIndex)" [disabled]="updateInProgress[exchange.track_id]"
+                          matTooltip="Request status update" *ngIf="!updateInProgress[exchange.track_id]">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                  </button>
+                  <mat-spinner class="loading-spinner" [diameter]="20" *ngIf="updateInProgress[exchange.track_id]"></mat-spinner>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+          
+            <div>
+              Exchange ID: <code>{{ exchange?.track_id }}</code><br>
+              From Address: <code>{{ exchange?.address_from }}</code><br>
+              To Address: <code>{{ exchange?.address_to }}</code><br>
+              From Tx: <code>{{ exchange?.tx_from }}</code><br>
+              To Tx: <code>{{ exchange?.tx_to }}</code><br>
+            </div>        
+          </mat-expansion-panel>
+        </ng-container>
+      </div>
+    </div><!-- .orders.list -->
+  </div>
+</div> <!-- container-block -->

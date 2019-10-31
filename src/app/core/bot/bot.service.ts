@@ -6,7 +6,7 @@ import { Log } from 'ng2-logger';
 
 import { environment } from '../../../environments/environment';
 import { IpcService } from 'app/core/ipc/ipc.service';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { Bot } from './bot.model';
 
 @Injectable()
@@ -55,6 +55,18 @@ export class BotService {
     ).toPromise();
   }
 
+  command(address: string, command: string, ...args): Observable<any> {
+
+    const params = [
+      address,
+      command,
+    ].concat(args);
+
+    return this.call('command', params).pipe(
+      take(1)
+    );
+  }
+
   enable(botAddress: string): Promise<Bot> {
     return this.call('enable', [botAddress]).pipe(
       map(bot => new Bot(bot))
@@ -65,6 +77,23 @@ export class BotService {
     return this.call('disable', [botAddress]).pipe(
       map(bot => new Bot(bot))
     ).toPromise();
+  }
+
+  searchExchanges(page: number, pageLimit: number, bot: string, from: string, to: string, search: string): Promise<any> {
+    const params = [
+      page,
+      pageLimit,
+      bot,
+      from,
+      to,
+      search
+    ];
+
+    return this.call('exchanges', params).toPromise();
+  }
+
+  uniqueExchangeData(): Promise<any> {
+    return this.call('uniqueExchangeData', []).toPromise();
   }
 
   startBotManager(wallet: string) {

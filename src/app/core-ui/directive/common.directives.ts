@@ -67,3 +67,19 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
     this.clicks.next(event);
   }
 }
+
+@Directive({
+  selector: 'img[default]',
+  host: {
+    '(error)':'updateUrl()',
+    '[src]':'src'
+   }
+})
+export class ImagePreloadDirective {
+  @Input() src:string;
+  @Input() default:string;
+
+  updateUrl() {
+    this.src = this.default;
+  }
+}

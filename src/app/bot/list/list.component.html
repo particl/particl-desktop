@@ -6,9 +6,32 @@
     <div class="icon-input search-listings" fxFlex="1 1 25%">
       <input type="text" class="header-input" id="searchbar" placeholder="Search bots..."
              [(ngModel)]="search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
-             (keyup.escape)="filters.search = ''; clearAndLoadPage()">
+             (keyup.escape)="search = ''; clearAndLoadPage()">
       <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
     </div>
+
+    <div class="filter-by type" fxFlex="1 1 25%">
+      <mat-form-field class="full-width">
+        <mat-select [(ngModel)]="type" placeholder="Type" (selectionChange)="clearAndLoadPage()">
+          <mat-option [value]=""></mat-option>
+          <mat-option [value]="'EXCHANGE'">Exchange</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="1 1 50%"></div>
+
+    <div class="filter-by buttons" fxFlex="0 1 120px">
+
+        <button mat-button class="refresh-listings" (click)="clearAndLoadPage()" matTooltip="Refresh Bots">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        </button>
+  
+        <mat-button-toggle type="checkbox" class="reported-only filter-button icon-only" matTooltip="{{ enabled ? 'Show all bots' : 'Show enabled bots'}}" (change)="toggleEnabled($event)">
+          <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+        </mat-button-toggle>
+  
+      </div> <!-- .buttons -->
   </div>
 </app-header>
 

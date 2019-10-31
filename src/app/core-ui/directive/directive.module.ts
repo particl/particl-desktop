@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FocusDirective, FocusTimeoutDirective, DebounceClickDirective } from './common.directives';
+import { FocusDirective, FocusTimeoutDirective, DebounceClickDirective, ImagePreloadDirective } from './common.directives';
 
 
 @NgModule({
@@ -11,12 +11,14 @@ import { FocusDirective, FocusTimeoutDirective, DebounceClickDirective } from '.
   declarations: [
     FocusDirective,
     FocusTimeoutDirective,
-    DebounceClickDirective
+    DebounceClickDirective,
+    ImagePreloadDirective
   ],
   exports: [
     FocusDirective,
     FocusTimeoutDirective,
-    DebounceClickDirective
+    DebounceClickDirective,
+    ImagePreloadDirective
   ],
 })
 export class DirectiveModule { }
