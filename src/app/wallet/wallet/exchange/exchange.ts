@@ -15,15 +15,15 @@ export class Exchange {
   };
 
   get requirePartoshiAmount() {
-    return new PartoshiAmount(this.partoshi); 
+    return new PartoshiAmount(this.partoshi);
   }
 
   get payAmount() {
-    return new PartoshiAmount(this.selectedOffer ? this.selectedOffer.amount_from * Math.pow(10, 8) : 0); 
+    return new PartoshiAmount(this.selectedOffer ? this.selectedOffer.amount_from * Math.pow(10, 8) : 0);
   }
 
   get offerAmount() {
-    return new PartoshiAmount(this.selectedOffer ? this.selectedOffer.amount_to * Math.pow(10, 8) : 0); 
+    return new PartoshiAmount(this.selectedOffer ? this.selectedOffer.amount_to * Math.pow(10, 8) : 0);
   }
 
   // Currencies
@@ -46,7 +46,7 @@ export class Exchange {
   public noBots: boolean;
   public status: any;
   public exchangeStatus$: Subscription;
-  
+
   constructor (
     private botService: BotService,
     private rpc: RpcService
@@ -69,7 +69,6 @@ export class Exchange {
     }
   }
 
-  
   private async getSupportedCurrencies() {
     this.loading = true;
     this.availableCurrencies = [];
@@ -171,31 +170,31 @@ export class Exchange {
   async getExchangeAddress() {
     this.loading = true;
     this.exchangeData = null;
-    
+
     try {
       const address = await this.rpc.call('getnewaddress', ['Exchange']).toPromise();
-      const result = await this.botService.command(this.selectedOffer.bot.address, 'EXCHANGE', address, this.selectedOffer.currency_from, this.selectedOffer.currency_to, this.selectedOffer.amount_from).toPromise();
-      
+      const result = await this.botService.command(this.selectedOffer.bot.address, 'EXCHANGE', address, this.selectedOffer.currency_from,
+          this.selectedOffer.currency_to, this.selectedOffer.amount_from).toPromise();
+
       this.loading = false;
-      
+
       if (result.error) {
         return console.error(result.error);
       }
-      
+
       this.exchangeData = result.data;
 
-      // const status = interval(60000);
       this.exchangeStatus$ = timer(0, 60000).pipe(
         switchMap(() => this.botService.command(this.selectedOffer.bot.address, 'EXCHANGE_STATUS', this.exchangeData.track_id))
-      ).subscribe((result) => {
-        if (result.error) {
-          this.status['status'] = result.error;
-          return console.error(result.error);
+      ).subscribe((status) => {
+        if (status.error) {
+          this.status['status'] = status.error;
+          return console.error(status.error);
         }
-        if (result.data.tx_from) {
-          this.status = result.data;
+        if (status.data.tx_from) {
+          this.status = status.data;
         }
-        if (result.data.tx_to) {
+        if (status.data.tx_to) {
           this.isComplete = true;
           this.exchangeStatus$.unsubscribe();
         }

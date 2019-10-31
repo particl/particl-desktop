@@ -35,7 +35,7 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
   };
   public exchangeData: any = {};
 
-  public filters = {
+  public filters: any = {
     search: '',
     bot: '',
     from: '',
@@ -75,6 +75,7 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
       from: '',
       to: ''
     };
+    this.search();
   }
 
   startNewExchange() {
@@ -97,7 +98,7 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
 
     this.exchange.clearRequests();
 
-    switch(this.stepper.selectedIndex) {
+    switch (this.stepper.selectedIndex) {
       case 1:
         this.exchange.getExchangeOffers();
         break;
@@ -117,7 +118,8 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
   }
 
   async loadPage(pageNumber: number, clear: boolean = false) {
-    const exchanges = await this.botService.searchExchanges(pageNumber, 10, this.filters.bot, this.filters.from, this.filters.to, this.filters.search);
+    const exchanges = await this.botService.searchExchanges(pageNumber, 10, this.filters.bot,
+       this.filters.from, this.filters.to, this.filters.search);
 
     this.isLoading = false;
 
@@ -157,7 +159,7 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     return this.pages.length > 0 && this.pages[this.pages.length - 1].pageNumber;
   }
 
-  async requestUpdate(e, exchange, pageIndex) {
+  async requestUpdate(e: any, exchange: any, pageIndex: number) {
     e.stopPropagation();
     this.updateInProgress[exchange.track_id] = true;
     const update = await this.botService.command(exchange.bot.address, 'EXCHANGE_STATUS', exchange.track_id).toPromise();

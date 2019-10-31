@@ -60,8 +60,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
     // params
     const max = this.pagination.maxPerPage;
-    
-    try{
+
+    try {
       const bots: Array<Bot> = await this.botService.search(pageNumber, max, this.type, this.search, this.enabled);
 
       this.isLoading = false;

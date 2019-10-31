@@ -55,7 +55,7 @@ export class BotService {
     ).toPromise();
   }
 
-  command(address: string, command: string, ...args): Observable<any> {
+  command(address: string, command: string, ...args: any[]): Observable<any> {
 
     const params = [
       address,

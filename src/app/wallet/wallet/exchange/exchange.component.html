@@ -89,7 +89,7 @@
             </mat-list>
 
             <div *ngIf="exchange.loading">
-              <p class="widget-help" style="width: 100%; text-align: center;">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+              <p class="widget-help exchange-status">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
               <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
             </div>
             <div *ngIf="exchange.noBots">
@@ -139,7 +139,7 @@
           </mat-list>
 
           <div *ngIf="exchange.loading">
-            <p class="widget-help" style="width: 100%; text-align: center;">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+            <p class="widget-help exchange-status">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
             <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
           </div>
           <div *ngIf="exchange.noBots">
@@ -166,7 +166,7 @@
             </div>
 
             <div *ngIf="exchange.loading">
-              <p class="widget-help" style="width: 100%; text-align: center;">Requesting exchange address...</p>
+              <p class="widget-help exchange-status">Requesting exchange address...</p>
               <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
             </div>
             <div *ngIf="exchange.exchangeData">
@@ -318,7 +318,7 @@
                 </div>
                 <div class="meta" fxFlex="1 1 100%">
                   <div class="name">{{ exchange.bot.name }}</div>
-                  <div class="">{{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from }} -> ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to }}</div>
+                  <div class="">{{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from }} -&gt; ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to }}</div>
                   <div class="">{{ exchange?.status }}</div>
                 </div>
                 <div class="status-wrap" fxFlex="0 0 40px" *ngIf="!exchange?.tx_to">

@@ -8,7 +8,7 @@ import { BotService } from 'app/core/bot/bot.module';
   styleUrls: ['./bot.component.scss']
 })
 export class BotComponent {
-  
+
   @Input() bot: Bot;
 
   constructor(
