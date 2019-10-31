@@ -8,7 +8,7 @@ import { BidService } from 'app/core/market/api/bid/bid.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { OrderFilter } from './order-filter.model';
 import { ProfileService } from 'app/core/market/api/profile/profile.service';
-import { take, takeWhile, map, filter } from 'rxjs/operators';
+import { take, takeWhile, map } from 'rxjs/operators';
 import { MarketStateService } from 'app/core/market/market-state/market-state.service';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 

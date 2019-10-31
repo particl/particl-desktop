@@ -11,6 +11,8 @@ import { ProposalsService } from 'app/wallet/proposals/proposals.service';
 import { ProposalsComponent } from './proposals.component';
 import { ProposalDetailsComponent } from 'app/wallet/proposals/proposal-details/proposal-details.component';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
+import { SettingsModule } from 'app/settings/settings.module';
 
 describe('ProposalsComponent', () => {
   let component: ProposalsComponent;
@@ -24,7 +26,9 @@ describe('ProposalsComponent', () => {
         SharedModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        RpcWithStateModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [
         ProposalsService,

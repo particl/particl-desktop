@@ -27,6 +27,7 @@ import { UserMessageService } from './user-messages/user-message.service';
 import { ProposalsNotificationsService } from 'app/core/market/proposals-notifier/proposals-notifications.service';
 import { CommentService } from './api/comment/comment.service';
 import { MarketImportService } from './market-import/market-import.service';
+import { MarketNotificationService } from './market-notification/market-notification.service';
 
 @NgModule({
   imports: [
@@ -65,7 +66,8 @@ export class MarketModule {
         UserMessageService,
         ProposalsNotificationsService,
         CommentService,
-        MarketImportService
+        MarketImportService,
+        MarketNotificationService
       ]
     };
   }

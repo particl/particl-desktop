@@ -22,9 +22,6 @@ export class MarketService {
   hostname: string = environment.marketHost;
   port: number = environment.marketPort;
 
-  url: string = `http://${this.hostname}:${this.port}/api/rpc`;
-  imageUrl: string = `http://${this.hostname}:${this.port}/api/item-images/template/`;
-
   constructor(
     private _http: HttpClient,
     private _ipc: IpcService
@@ -39,6 +36,8 @@ export class MarketService {
       jsonrpc: '2.0'
     });
 
+    const url = `http://${this.hostname}:${this.port}/api/rpc`;
+
     const headerJson = {
       'Content-Type': 'application/json',
       // 'Authorization': 'Basic ' + btoa(`${this.username}:${this.password}`), // we hijack the http request in electron
@@ -46,7 +45,7 @@ export class MarketService {
     };
     const headers = new HttpHeaders(headerJson);
 
-    return this._http.post(this.url, postData, { headers: headers })
+    return this._http.post(url, postData, { headers: headers })
         .pipe(map((response: any) => response.result))
         .pipe(catchError((error: any) => {
           this.log.d('Market threw an error!');
@@ -77,8 +76,9 @@ export class MarketService {
       // 'Content-Type': 'multipart/form-data'
     };
     const headers = new HttpHeaders(headerJson);
+    const imageUrl = `http://${this.hostname}:${this.port}/api/item-images/template/${templateId}`;
 
-    return this._http.post(this.imageUrl + templateId, form, { headers: headers })
+    return this._http.post(imageUrl, form, { headers: headers })
       .pipe(catchError((error: any) => {
           return observableThrowError(this.extractMPErrorMessage(error.error));
         })
@@ -94,7 +94,7 @@ export class MarketService {
     return 'Invalid marketplace request';
   }
 
-  startMarket(wallet: string): Observable<any> {
+  startMarket(wallet: string, port: number = 3000): Observable<any> {
     return new Observable((observer) => {
 
       if (this.isMarketStarted) {
@@ -102,8 +102,11 @@ export class MarketService {
         observer.complete();
         return;
       }
+      if (typeof port === 'number' && port !== this.port) {
+        this.port = port;
+      }
       if (window.electron) {
-        this._ipc.runCommand('start-market', null, wallet);
+        this._ipc.runCommand('start-market', null, wallet, port);
         this._checkMarket =
           interval(1000)
             .pipe(takeWhile(() => !this.isMarketStarted))

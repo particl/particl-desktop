@@ -64,6 +64,9 @@ window.ipc = new SafeIpcRenderer([
   'zmq',
   'rpc-configuration',
   'request-configuration',
+  'write-core-config',
+  'ipc-delete-wallet',
+  'open-system-dialog',
 
   'rx-ipc-check-reply',
   'rx-ipc-check-listener',

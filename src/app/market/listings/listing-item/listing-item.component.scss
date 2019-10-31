@@ -21,6 +21,22 @@
     object-fit: cover;
     object-position: center;
   }
+  .badges {
+    @extend %tfx;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    .badge {
+      @extend %tfx;
+      background: $color-white;
+      border-radius: 50%;
+      display: inline-block;
+      padding: 7px;
+      margin: 0 0 0 2px;
+      font-size: 14px;
+      color: $color;
+    }
+  }
   .icons {
     @extend %tfx;
     opacity: 0;

@@ -7,8 +7,10 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { SettingsModule } from 'app/settings/settings.module';
 
 import { OrderItemComponent } from './order-item.component';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('OrderItemComponent', () => {
   let component: OrderItemComponent;
@@ -23,7 +25,9 @@ describe('OrderItemComponent', () => {
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        RpcWithStateModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })

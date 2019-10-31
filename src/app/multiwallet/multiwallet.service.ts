@@ -10,9 +10,7 @@ import * as marketConfig from '../../../modules/market/config.js';
 
 export interface IWallet {
   name: string;
-  fakename: string;
   displayname: string;
-  alreadyLoaded?: boolean;
   isMarketEnabled?: boolean;
 }
 
@@ -41,8 +39,14 @@ export class MultiwalletService implements OnDestroy {
     // subscribe to server side stream
     // and load the wallets in _list.
     this.timer.pipe(takeWhile(() => this.destroyed ? false : !this.hasList)).subscribe(() => {
-      this.findAvailableWallets();
+      if (this._rpc.enabled) {
+        this.findAvailableWallets();
+      }
     });
+  }
+
+  get initComplete(): boolean {
+    return this.hasList;
   }
 
   refreshWalletList() {
@@ -57,7 +61,9 @@ export class MultiwalletService implements OnDestroy {
   get list(): Observable<Array<IWallet>> {
     return this._list
       .asObservable()
-      .pipe(distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
+      .pipe(
+        takeWhile(() => !this.destroyed),
+        distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
   }
 
   /**
@@ -73,6 +79,7 @@ export class MultiwalletService implements OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this._list.complete();
   }
 
   private findAvailableWallets() {

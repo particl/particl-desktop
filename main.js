@@ -26,8 +26,7 @@ const log     = require('./modules/logger').init();
 const init    = require('./modules/init');
 const _auth = require('./modules/webrequest/http-auth');
 
-daemonConfig.deleteAuthFile();
-const options = daemonConfig.getConfiguration();
+const options = daemonConfig.getConfiguration(true, true);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -41,10 +40,9 @@ app.on('ready', () => {
 
   log.info('app ready')
   log.debug('argv', process.argv);
-  log.debug('options', options);
 
   // initialize the authentication filter
-  _auth.init();
+  _auth.init(options);
 
   initMainWindow();
   init.start(mainWindow);
@@ -135,10 +133,9 @@ function initMainWindow() {
   mainWindow.setAutoHideMenuBar(true);
 
   // Setup configuration listener
-  //    Needs to be included here because init.js is only created once (when the app is ready)
-  //    Since the config contains an emitter and a listener based on the browserWindow object,
-  //    it needs to be updated with a new BrowserWindow context when the main window is destroyed and re-created
-  //    (a la OSX, <sarcasm> thanks Apple for your unique behaviour </sarcasm> )
+  //    Needs to be included here because init.js is only created once (when the app is ready), whereas the wind object could be created via app.on('activate', ...);
+  //      Behaviour al la OSX: mainWindow is destroyed, app remains running, and relaunching the application results in a app 'activate' event eing triggered.
+  //      Cue call to initMainWindow(), and anything requiring a mainWindow refernce, needs to now be passed the mainWindow object.
   daemonConfig.init(mainWindow);
 
   // and load the index.html of the app.

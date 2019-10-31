@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import * as _ from 'lodash';
 
 import { TemplateService } from 'app/core/market/api/template/template.service';
 import { ListingService } from 'app/core/market/api/listing/listing.service';
+import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { take } from 'rxjs/operators';
 import { throttle } from 'lodash';
@@ -25,7 +25,7 @@ export class SellComponent implements OnInit, OnDestroy {
   public isPageLoading: boolean = false;
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['listings', 'orders', 'sell_item']; // FIXME: remove sell_item and leave as a separate page?
+  public tabLabels: Array<string> = ['orders', 'listings'];
   private resizeEventer: any;
 
   filters: any = {
@@ -79,22 +79,37 @@ export class SellComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private template: TemplateService,
     private listingService: ListingService,
-    private rpcState: RpcStateService
+    private rpcState: RpcStateService,
+    private _notify: OrderStatusNotifierService
   ) {
     this.getScreenSize();
   }
 
   ngOnInit() {
     this.isPageLoading = true;
-    this.loadPage(0);
+    const tabRequested = this.route.snapshot.paramMap.get('tab');
+    let loadTabIdx = 0;
+
+    if (tabRequested) {
+      const tabIdx = this.tabLabels.findIndex((tl) => tl === tabRequested);
+      if (tabIdx > -1) {
+        loadTabIdx = tabIdx;
+      }
+    }
+    this.changeTab(loadTabIdx);
+
     this.resizeEventer = throttle(() => this.getScreenSize(), 400, {leading: false, trailing: true});
     try {
       window.addEventListener('resize', this.resizeEventer);
     } catch (err) { }
     this.rpcState.observe('getwalletinfo').pipe(take(1))
-     .subscribe((walletinfo) => {
+    .subscribe((walletinfo) => {
       this.hasEncryptedWallet = (walletinfo.encryptionstatus === 'Locked') || (+walletinfo.unlocked_until > 0);
-     });
+    });
+  }
+
+  get orderCount(): number {
+    return this._notify.getActiveCount('sell');
   }
 
   addItem(id?: number, clone?: boolean) {
@@ -117,12 +132,14 @@ export class SellComponent implements OnInit, OnDestroy {
       category: '*',
       hashItems: ''
     };
-    this.loadPage(0, true);
+    if (this.selectedTab === 1) {
+      this.loadPage(0, true);
+    }
   }
 
   changeTab(index: number): void {
-    this.clear();
     this.selectedTab = index;
+    this.clear();
   }
 
   clearAndLoadPage() {
@@ -215,6 +232,9 @@ export class SellComponent implements OnInit, OnDestroy {
   }
 
   getScreenSize() {
+    if (this.selectedTab !== 1) {
+      return;
+    }
     const currentMaxPerPage = this.pagination.maxPerPage;
     const newMaxPerPage = window.innerHeight > 1330 ? 20 : 10;
     const isLarger = (newMaxPerPage - currentMaxPerPage) > 0;

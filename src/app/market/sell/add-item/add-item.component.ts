@@ -223,8 +223,8 @@ export class AddItemComponent implements OnInit, OnDestroy {
   }
 
   backToSell() {
-    this.dialog.closeAll()
-    this.router.navigate(['/wallet/main/market/sell']);
+    this.dialog.closeAll();
+    this.router.navigate(['/wallet/main/market/sell', {tab: 'listings'}]);
   }
 
   ngOnDestroy() {

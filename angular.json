@@ -56,6 +56,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                },
+                {
+                  "replace": "src/index.html",
+                  "with": "src/index.production.html"
                 }
               ]
             },
@@ -64,6 +68,10 @@
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.test.ts"
+                },
+                {
+                  "replace": "src/index.html",
+                  "with": "src/index.production.html"
                 }
               ]
             }
