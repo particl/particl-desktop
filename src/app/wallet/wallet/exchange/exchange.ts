@@ -1,8 +1,8 @@
 import { BotService } from 'app/core/bot/bot.module';
 import { RpcService } from 'app/core/core.module';
-import { Subscription, timer } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { switchMap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 export class Exchange {
 
@@ -45,7 +45,6 @@ export class Exchange {
   public loading: boolean;
   public noBots: boolean;
   public status: any;
-  public exchangeStatus$: Subscription;
 
   constructor (
     private botService: BotService,
@@ -64,9 +63,6 @@ export class Exchange {
     for (const sub of this.botRequestSubscriptions) {
       sub.unsubscribe();
     }
-    if (this.exchangeStatus$) {
-      this.exchangeStatus$.unsubscribe();
-    }
   }
 
   private async getSupportedCurrencies() {
@@ -75,9 +71,9 @@ export class Exchange {
 
     const availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
 
-
     if (availableBots.length === 0) {
       this.noBots = true;
+      this.loading = false;
       return;
     } else {
       this.noBots = false;
@@ -184,9 +180,15 @@ export class Exchange {
 
       this.exchangeData = result.data;
 
-      this.exchangeStatus$ = timer(0, 60000).pipe(
-        switchMap(() => this.botService.command(this.selectedOffer.bot.address, 'EXCHANGE_STATUS', this.exchangeData.track_id))
-      ).subscribe((status) => {
+    } catch (e) {
+      this.loading = false;
+      console.error(e);
+    }
+  }
+
+  getExchangeStatusUpdate(): Observable<any> {
+    return this.botService.command(this.selectedOffer.bot.address, 'EXCHANGE_STATUS', this.exchangeData.track_id).pipe(
+      tap((status) => {
         if (status.error) {
           this.status['status'] = status.error;
           return console.error(status.error);
@@ -196,12 +198,8 @@ export class Exchange {
         }
         if (status.data.tx_to) {
           this.isComplete = true;
-          this.exchangeStatus$.unsubscribe();
         }
-      });
-    } catch (e) {
-      this.loading = false;
-      console.error(e);
-    }
+      })
+    );
   }
 }

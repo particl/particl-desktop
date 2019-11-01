@@ -5,6 +5,9 @@ import { RpcService, SnackbarService } from 'app/core/core.module';
 import { Exchange } from './exchange';
 
 import * as _ from 'lodash';
+import { ModalsHelperService } from 'app/modals/modals.module';
+import { Observable, Subscription, timer } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 const TABS = ['exchange', 'exchangeHistory'];
 
@@ -34,6 +37,7 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     infinityScrollSelector: '.mat-drawer-content'
   };
   public exchangeData: any = {};
+  public exchangeStatus$: Subscription;
 
   public filters: any = {
     search: '',
@@ -46,7 +50,8 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     private changeDetect: ChangeDetectorRef,
     private botService: BotService,
     private rpc: RpcService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private modal: ModalsHelperService
   ) {}
 
   ngAfterViewChecked(): void {
@@ -78,10 +83,14 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     this.search();
   }
 
-  startNewExchange() {
+  async startNewExchange() {
     if (this.stepper) {
       this.stepper.reset();
     }
+    if (this.exchangeStatus$) {
+      this.exchangeStatus$.unsubscribe();
+    }
+    await this.unlock(300).toPromise();
     this.exchange = new Exchange(this.botService, this.rpc);
   }
 
@@ -89,10 +98,13 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     if (this.exchange) {
       this.exchange.clearRequests();
     }
+    if (this.exchangeStatus$) {
+      this.exchangeStatus$.unsubscribe();
+    }
     this.exchange = null;
   }
 
-  nextStep() {
+  async nextStep() {
     this.stepper.steps.toArray()[this.stepper.selectedIndex].completed = true;
     this.stepper.next();
 
@@ -100,10 +112,21 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
 
     switch (this.stepper.selectedIndex) {
       case 1:
+        await this.unlock(300).toPromise();
         this.exchange.getExchangeOffers();
         break;
       case 2:
-        this.exchange.getExchangeAddress();
+        await this.unlock(300).toPromise();
+        await this.exchange.getExchangeAddress();
+
+        this.exchangeStatus$ = timer(0, 60000).pipe(
+          switchMap(() => this.unlock(300)),
+          switchMap(() => this.exchange.getExchangeStatusUpdate())
+        ).subscribe((status: any) => {
+          if (status.data && status.data.tx_to) {
+            this.exchangeStatus$.unsubscribe();
+          }
+        });
         break;
     }
   }
@@ -172,5 +195,13 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
 
   trackByFn(index: number, item: any) {
     return item.id;
+  }
+
+  private unlock(timeout?: number): Observable<any> {
+    return new Observable((observer) => {
+      this.modal.unlock({timeout},
+        ()=> {observer.next(); observer.complete()},
+        ()=> {observer.error(); observer.complete()})
+    });
   }
 }
