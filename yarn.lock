@@ -9009,18 +9009,18 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-bot-core@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/particl-bot-core/-/particl-bot-core-0.0.1.tgz#daa371311998785e940856cc9786a078ed92bc18"
-  integrity sha512-EZ4108lmldHGNAaRzsyyJ1Rdeylv4kz6enqhbeAUHvS1M5LyxraBFG7M5BnasrNwX0PtWN1/tqd8OecCLW0MtQ==
+particl-bot-core@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/particl-bot-core/-/particl-bot-core-0.0.2.tgz#00921f4ac0dce33558f409b99d3b6675aa13be87"
+  integrity sha512-o8b2X2LxEvn5XFFaXsgmnEk1ZokbpkFi8xUVJnKxob4UMnuwinYaOpPS38wijVyJAusJVnD7oWt8IEmAZyI+GA==
   dependencies:
     particl-bitcore-lib "git://github.com/particl/particl-bitcore-lib.git"
-    particl-client "^0.0.1"
+    particl-client "^0.0.2"
 
-particl-bot-manager@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.4.tgz#6a0d59ea15df5f28f4141ddcf8417dba336a70b9"
-  integrity sha512-8gnqnjNo5a7Ef9LE6JYcOffZ0KhI5iVBCgxGp4Y1OpFsbPpqYnABb2m/6ssSfjovlH35c/Y9hc+R6bgA9gO49g==
+particl-bot-manager@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.5.tgz#d37d863905a86ba93a7946a5f4ff5f81bbbff752"
+  integrity sha512-/lUDXjWDcPqG0XAXlhUTTk+0myxZQ2E3tzF3wcM3xowAoUgfZUSr67B+PJkvZ6iuEwTRKR1bGmY193DKZMDAMA==
   dependencies:
     "@nestjs/common" "^6.7.2"
     "@nestjs/core" "^6.7.2"
@@ -9031,18 +9031,18 @@ particl-bot-manager@^0.0.4:
     class-transformer "^0.2.3"
     class-validator "^0.10.1"
     dotenv "^8.2.0"
-    particl-bot-core "^0.0.1"
-    particl-client "^0.0.1"
+    particl-bot-core "^0.0.2"
+    particl-client "^0.0.2"
     reflect-metadata "^0.1.13"
     rimraf "^3.0.0"
     rxjs "^6.5.3"
     sqlite3 "https://github.com/particl/sqlite3-offline.git"
     typeorm "^0.2.19"
 
-particl-client@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/particl-client/-/particl-client-0.0.1.tgz#9e2d0f76f2bfcdec24925201b5e5d18399f505f7"
-  integrity sha512-9tvNN8BS0EwOWNo83zCK56y29idFy4uQtr1JhYAiAQduJzcMqGF1u/iGHtpUF4P9W6VWGs6XJAOOaDGyWPPakw==
+particl-client@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/particl-client/-/particl-client-0.0.2.tgz#a7ad3cd521d643b9388a04477cc81159d7782c3e"
+  integrity sha512-LWh5GGbJk6mjC13fH2TJ3aXiddUtG/W1sZy3/agvp39SAZ3l2wHdXpFpfqvXAP+Ajx0Etc7XTCXZgRrpGYlz8w==
   dependencies:
     got "^9.6.0"
     zeromq "^5.1.0"

@@ -21,6 +21,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public isLoading: boolean = false; // small progress bars
   public isLoadingBig: boolean = true; // big animation
   public noMoreListings: boolean = false;
+  public hasEmptySearch: boolean = false;
 
   public search: string = '';
   public type: string = '';
@@ -76,6 +77,12 @@ export class ListComponent implements OnInit, OnDestroy {
       if (clear === true) {
         this.pages = [page];
         this.noMoreListings = false;
+
+        if (bots.length === 0) {
+          this.hasEmptySearch = true;
+        } else {
+          this.hasEmptySearch = false;
+        }
       } else { // infinite scroll
         this.pages.push(page);
 
