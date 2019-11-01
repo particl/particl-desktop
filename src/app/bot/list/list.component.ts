@@ -80,6 +80,10 @@ export class ListComponent implements OnInit, OnDestroy {
 
         if (bots.length === 0) {
           this.hasEmptySearch = true;
+
+          setTimeout(() => {
+            this.clearAndLoadPage();
+          }, 5000)
         } else {
           this.hasEmptySearch = false;
         }
