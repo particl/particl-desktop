@@ -4,14 +4,14 @@
     <mat-tab-group (selectedTabChange)="selectTab($event.index)" fxFlex="1 1 100%">
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-bitcoin"></mat-icon>
-          Convert BTC/alts
+          <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+          Exchange History
         </ng-template>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
-          Exchange History
+          <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-bitcoin"></mat-icon>
+          Convert BTC/alts
         </ng-template>
       </mat-tab>
     </mat-tab-group>
@@ -23,7 +23,7 @@
   <app-page-intro *ngIf="tab === 'exchange'" [childPageAlias]="tab">
     <ng-container page-title>Exchange BTC/alts</ng-container>
     <ng-container page-content>
-      Exchange your BTC/alts effortlessly for PART &ndash; select a coin for exchange
+      ...
     </ng-container>
     <ng-container page-help>
       TODO, some help text
@@ -31,12 +31,17 @@
   </app-page-intro>
 
   <app-page-intro *ngIf="tab === 'exchangeHistory'" [childPageAlias]="tab">
-    <ng-container page-title>Exchange History</ng-container>
+    <ng-container page-title>Exchange</ng-container>
     <ng-container page-content>
-      Previous Exchanges
+      Exchange your Bitcoin and/or altcoins effortlessly for PART and browse your previous exchanges<br>
     </ng-container>
     <ng-container page-help>
-      TODO, some help text
+      To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them on
+      <!-- FIXME: link to Bot Management page: -->
+      <button mat-button class="small">
+        <mat-icon fontSet="partIcon" fontIcon="part-tool"></mat-icon>
+        Bot Management
+      </button> page
     </ng-container>
   </app-page-intro>
 
@@ -232,17 +237,30 @@
   <div class="container-flex" *ngIf="tab === 'exchangeHistory'">
     <!-- Orders > Filter -->
     <div class="filter">
+
+      <button mat-raised-button color="primary" class="full-width"
+              matTooltip="Exchange BTC/alts for PART" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+        Start new Exchange
+      </button>
+
       <div class="section search-sorting">
-        <div class="subtitle first">Search</div>
+        <div class="subtitle">Search</div>
         <mat-card class="filter-card">
           <mat-form-field class="icon-input filter-input" floatLabel="never">
-            <input matInput type="text" class="header-input" placeholder="Search orders" [(ngModel)]="filters.search"
+            <input matInput type="text" class="header-input" placeholder="Search exchange history" [(ngModel)]="filters.search"
                 (keyup.enter)="search()" (keyup.escape)="filters.search = '' ">
             <mat-icon *ngIf="filters.search" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"
                       (click)="filters.search=''; search()"></mat-icon>
             <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                       (click)="search()"></mat-icon>
           </mat-form-field>
+        </mat-card>
+      </div>
+
+      <div class="section search-sorting">
+        <div class="subtitle">Filter</div>
+        <mat-card class="filter-card">
           <mat-form-field class="full-width">
             <mat-select [(ngModel)]="filters.bot" placeholder="Bot" (selectionChange)="search()">
               <mat-option [value]=""></mat-option>

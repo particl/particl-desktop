@@ -9,7 +9,7 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { Observable, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-const TABS = ['exchange', 'exchangeHistory'];
+const TABS = ['exchangeHistory', 'exchange'];
 
 interface IPage {
   pageNumber: number,
