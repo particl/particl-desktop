@@ -138,7 +138,7 @@
               <img matListAvatar src="{{offer.bot.image}}">
               <h3 matLine> {{offer.bot.name}} </h3>
               <p matLine>~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</p>
-              <p class="widget-help rate" matLine>@ ~{{offer.amount_to / offer.amount_from | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</p>
+              <p class="widget-help rate" matLine>@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</p>
               <mat-radio-button [value]="offer" [checked]="exchange.selectedOffer === offer" color="primary" (change)="exchange.selectedOffer = $event.value"></mat-radio-button>
             </mat-list-item>
           </mat-list>
