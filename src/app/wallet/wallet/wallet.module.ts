@@ -61,7 +61,8 @@ import { ExchangeComponent } from './exchange/exchange.component';
     ReceiveComponent,
     SendComponent,
     HistoryComponent,
-    AddressBookComponent
+    AddressBookComponent,
+    ExchangeComponent
   ],
   entryComponents: [
     AddAddressLabelComponent,

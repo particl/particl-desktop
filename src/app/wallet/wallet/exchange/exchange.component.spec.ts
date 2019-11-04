@@ -9,6 +9,8 @@ import { ExchangeComponent } from './exchange.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ModalsModule } from 'app/modals/modals.module';
 import { RouterTestingModule } from '@angular/router/testing';
+import { QRCodeModule } from 'angularx-qrcode';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
 describe('ExchangeComponent', () => {
@@ -17,6 +19,8 @@ describe('ExchangeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      declarations: [ExchangeComponent],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       imports: [
         SharedModule,
         CoreModule.forRoot(),
@@ -24,7 +28,8 @@ describe('ExchangeComponent', () => {
         ModalsModule.forRoot(),
         RpcWithStateModule.forRoot(),
         BrowserAnimationsModule,
-        RouterTestingModule
+        RouterTestingModule,
+        QRCodeModule
       ]
     }).compileComponents();
   }));
@@ -32,6 +37,7 @@ describe('ExchangeComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ExchangeComponent);
     component = fixture.componentInstance;
+    component.pagination.infinityScrollSelector = '.test-case-container';
     fixture.detectChanges();
   });
 
