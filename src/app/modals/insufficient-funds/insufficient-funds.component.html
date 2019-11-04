@@ -1,0 +1,29 @@
+<div mat-dialog-title class="title">Insufficient funds</div>
+<mat-dialog-content class="modal-content">
+  <p>
+    You have insufficient funds available, would you like to go to convert some public funds to anon or exchange.
+  </p>
+  <table class="info">
+    <tr><th>Required</th><td><strong>{{ data.required.particlsString() }}</strong></td></tr>
+    <tr><th>Have</th><td>{{ availableBalance.particlsString() }}</td></tr>
+    <tr><th>Fee Buffer (5%)</th><td>{{ feeBuffer.particlsString() }}</td></tr>
+    <tr><th>Request</th><td>{{ this.total.particlsString() }}</td></tr>
+  </table>
+  <p class="widget-help">
+    The fee buffer is required to cover any transaction fees etc that will be required for the bid.
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" (click)="goto('send')">
+    <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+    Go to Convert
+  </button>
+  <button mat-raised-button color="primary" (click)="goto('exchange')">
+    <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+    Go to Exchange
+  </button>
+</mat-dialog-actions>

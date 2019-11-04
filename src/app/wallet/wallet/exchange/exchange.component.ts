@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef, AfterViewChecked, OnDestroy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewChecked, OnDestroy, OnInit } from '@angular/core';
 import { MatStepper } from '@angular/material';
 import { BotService } from 'app/core/bot/bot.module';
 import { RpcService, SnackbarService } from 'app/core/core.module';
@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { Observable, Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 const TABS = ['exchangeHistory', 'exchange'];
 
@@ -21,7 +22,7 @@ interface IPage {
   templateUrl: './exchange.component.html',
   styleUrls: ['./exchange.component.scss']
 })
-export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
+export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
 
   @ViewChild('stepper') stepper: MatStepper;
 
@@ -51,8 +52,22 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     private botService: BotService,
     private rpc: RpcService,
     private snackbarService: SnackbarService,
-    private modal: ModalsHelperService
+    private modal: ModalsHelperService,
+    private route: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    const paramsMap = this.route.snapshot.queryParamMap;
+    const tab = paramsMap.get('tab');
+    if (tab) {
+      this.tab = tab
+    }
+
+    const requiredPart = paramsMap.get('requiredPart');
+    if (requiredPart) {
+      this.startNewExchange(requiredPart);
+    }
+  }
 
   ngAfterViewChecked(): void {
     this.changeDetect.detectChanges();
@@ -83,7 +98,7 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     this.search();
   }
 
-  async startNewExchange() {
+  async startNewExchange(amount?: string) {
     if (this.stepper) {
       this.stepper.reset();
     }
@@ -92,6 +107,10 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
     }
     await this.unlock(300).toPromise();
     this.exchange = new Exchange(this.botService, this.rpc);
+
+    if (amount) {
+      this.exchange.requiredParticls = amount
+    }
   }
 
   cancelExchange() {
@@ -200,8 +219,8 @@ export class ExchangeComponent implements AfterViewChecked, OnDestroy  {
   private unlock(timeout?: number): Observable<any> {
     return new Observable((observer) => {
       this.modal.unlock({timeout},
-        ()=> {observer.next(); observer.complete()},
-        ()=> {observer.error(); observer.complete()})
+        () => {observer.next(); observer.complete()},
+        () => {observer.error(); observer.complete()})
     });
   }
 }

@@ -1,0 +1,17 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.modal-content {
+  max-width: 450px;
+}
+
+table.info {
+  width: 100%;
+  margin: 16px 0;
+  th {
+    text-align: right;
+    font-weight: normal;
+    color: $text-muted;
+    width: 130px;
+    padding-right: 8px;
+  }
+}
