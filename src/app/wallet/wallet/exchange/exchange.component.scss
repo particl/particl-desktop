@@ -67,6 +67,49 @@
   .bot-name {
     display: inline-block;
   }
+  .detail { // expanded item details
+    padding: 18px 30px;
+    table.exchange-details {
+      .direction-img { // "illustration" with coin and arrow
+        vertical-align: middle;
+        padding-right: 17px;
+        width: 55px;
+        img.coin {
+          width: 26px;
+          position: relative;
+          top: 2px;
+          margin-right: 5px;
+        }
+        .mat-icon {
+          margin-right: 5px;
+          position: relative;
+          top: -2px;
+        }
+      }
+      th {
+        width: 25%;
+        padding-right: 12px;
+        font-weight: 500;
+        vertical-align: middle;
+      }
+    }
+    input.value {
+      width: calc(100% - 12px);
+      padding: 3px 6px;
+      border-radius: $radius;
+      outline: none;
+      font-family: $font;
+      &.highlight {
+        font-weight: 500;
+      }
+      &:focus {
+        background: $bg;
+      }
+    }
+    .mat-divider {
+      margin: 16px -30px;
+    }
+  }
 }
 
 .rate {

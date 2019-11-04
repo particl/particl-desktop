@@ -36,7 +36,7 @@
       Exchange your Bitcoin and/or altcoins effortlessly for PART and browse your previous exchanges<br>
     </ng-container>
     <ng-container page-help>
-      To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them at
+      To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them in
       <!-- FIXME: link to Bot Management page: -->
       <button mat-button class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-tool"></mat-icon>
@@ -277,14 +277,15 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field class="full-width">
+          <!-- we can enable "To currency" filter when we support more output coins -->
+          <!--mat-form-field class="full-width">
             <mat-select [(ngModel)]="filters.to" placeholder="To Currency" (selectionChange)="search()">
               <mat-option [value]=""></mat-option>
               <mat-option *ngFor="let currency_to of exchangeData.currency_to" [value]="currency_to">
                 {{currency_to}}
               </mat-option>
             </mat-select>
-          </mat-form-field>
+          </mat-form-field-->
         </mat-card>
       </div>
     
@@ -357,13 +358,45 @@
               </div>
             </mat-expansion-panel-header>
           
-            <div>
-              Exchange ID: <code>{{ exchange?.track_id }}</code><br>
-              Send {{ exchange?.currency_from }} to: <code>{{ exchange?.address_from }}</code><br>
-              Receive {{ exchange?.currency_to }} to: <code>{{ exchange?.address_to }}</code><br>
-              From Tx: <code>{{ exchange?.tx_from }}</code><br>
-              To Tx: <code>{{ exchange?.tx_to }}</code><br>
-            </div>        
+            <div class="detail">
+              <table class="exchange-details outgoing full-width">
+                <tr>
+                  <td rowspan="2" class="direction-img">
+                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_from }}.svg" class="coin">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+                  </td>
+                  <th>Send {{ exchange?.currency_from }} to</th>
+                  <td><input type="text" readonly value="{{ exchange?.address_from }}" class="value highlight address"></td>
+                </tr>
+                <tr>
+                  <th>Sent TXID ({{ exchange?.currency_from }})</th>
+                  <td><input type="text" readonly value="{{ exchange?.tx_from }}" class="value address txid"></td>
+                </tr>
+              </table>
+              <mat-divider></mat-divider>
+              <table class="exchange-details incoming full-width">
+                <tr>
+                  <td rowspan="2" class="direction-img">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_to }}.svg" class="coin">
+                  </td>
+                  <th>Receive {{ exchange?.currency_to }} to</th>
+                  <td><input type="text" readonly value="{{ exchange?.address_to }}" class="value highlight address"></td>
+                </tr>
+                <tr>
+                  <th>Received TXID ({{ exchange?.currency_to }})</th>
+                  <td><input type="text" readonly value="{{ exchange?.tx_to }}" class="value address txid"></td>
+                </tr>
+              </table>
+              <mat-divider></mat-divider>
+              <table class="exchange-details full-width">
+                <tr>
+                  <th>Exchange ID</th>
+                  <td><input type="text" readonly value="{{ exchange?.track_id }}" class="value address exchange-id"></td>
+                </tr>
+              </table>
+            </div><!-- .detail -->
+
           </mat-expansion-panel>
         </ng-container>
       </div>
