@@ -10,6 +10,7 @@ import { SendConfirmationModalComponent } from './send-confirmation-modal.compon
 import { SendService } from 'app/wallet/wallet/send/send.service';
 import { SendMockService } from 'app/_test/wallet-test/send-test/send-mock.service';
 import { TransactionBuilder } from 'app/wallet/wallet/send/transaction-builder.model';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('SendConfirmationModalComponent', () => {
@@ -19,6 +20,7 @@ describe('SendConfirmationModalComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        BrowserAnimationsModule,
         CommonModule,
         MaterialModule,
         MatFormFieldModule // check if this is required. If so, move into CoreUi.
