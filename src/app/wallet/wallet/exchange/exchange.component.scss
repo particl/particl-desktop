@@ -4,6 +4,7 @@
 @import './src/app/market/_lists-shared';
 @import './src/app/market/_order'; // order styles
 
+
 .tx-confirmation {
   text-align: center;
 }
@@ -15,6 +16,56 @@
   }
   .address {
     @extend %enable-select;
+  }
+}
+
+.exchange { // EX history item
+  .header {
+    $photo-size: 90px;
+    min-height: $photo-size !important;
+    max-height: $photo-size !important;
+    padding: 0 24px 0 0;
+    .photo {
+      min-height: $photo-size;
+      max-height: $photo-size;
+    }
+  }
+  .name { // "X" was exchanged for "Y"
+    .coin {
+      position: relative;
+      top: 3px;
+      width: 16px;
+      margin-right: 2px;
+      & + .coin {
+        margin-left: 6px;
+      }
+    }
+  }
+  button.exchange-status { // status message/refresh button
+    display: inline-block;
+    font-weight: 400;
+    font-size: 100%;
+    text-transform: uppercase;
+    line-height: 1.6;
+    border: 1px solid;
+    border-radius: $radius;
+    margin: 0 10px 0 0;
+    padding: 1px 9px;
+    .icon {
+      position: relative;
+      top: 0;
+      font-size: 12px;
+      margin-right: 2px;
+    }
+  }
+  .loading-spinner {
+    display: inline-block;
+    position: relative;
+    top: 4px;
+    margin-right: 8px;
+  }
+  .bot-name {
+    display: inline-block;
   }
 }
 
@@ -34,7 +85,7 @@
   max-width: 400px;
 }
 
-.exchange-status {
+.exchange-loading-status {
   width: 100%;
   text-align: center;
 }

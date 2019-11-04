@@ -36,12 +36,12 @@
       Exchange your Bitcoin and/or altcoins effortlessly for PART and browse your previous exchanges<br>
     </ng-container>
     <ng-container page-help>
-      To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them on
+      To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them at
       <!-- FIXME: link to Bot Management page: -->
       <button mat-button class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-tool"></mat-icon>
         Bot Management
-      </button> page
+      </button>
     </ng-container>
   </app-page-intro>
 
@@ -116,16 +116,16 @@
             </div>
 
             <div class="tx-amount">
-              <span  class="big">Requested Amount </span>
-              <span  class="big">{{ exchange.requirePartoshiAmount.particlStringInteger() }}</span>
+              <span class="big">Requested Amount </span>
+              <span class="big">{{ exchange.requirePartoshiAmount.particlStringInteger() }}</span>
               <span class="point">{{ exchange.requirePartoshiAmount.particlStringSep() }}</span>
               <span class="small">{{ exchange.requirePartoshiAmount.particlStringFraction() }}</span>
               &ensp;
               <span class="currency">PART</span>
             </div>
             <div class="tx-amount" *ngIf="exchange.selectedOffer">
-              <span  class="big">Offered Amount </span>
-              <span  class="big">~{{ exchange.offerAmount?.particlStringInteger() }}</span>
+              <span class="big">Offered Amount </span>
+              <span class="big">~{{ exchange.offerAmount?.particlStringInteger() }}</span>
               <span class="point">{{ exchange.offerAmount?.particlStringSep() }}</span>
               <span class="small">{{ exchange.offerAmount?.particlStringFraction() }}</span>
               &ensp;
@@ -144,7 +144,7 @@
           </mat-list>
 
           <div *ngIf="exchange.loading">
-            <p class="widget-help exchange-status">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+            <p class="widget-help exchange-loading-status">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
             <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
           </div>
           <div *ngIf="exchange.noBots">
@@ -164,7 +164,7 @@
               </p>
             </div>
             <div class="tx-amount">
-              <span  class="big">{{ exchange.payAmount?.particlStringInteger() }}</span>
+              <span class="big">{{ exchange.payAmount?.particlStringInteger() }}</span>
               <span class="point">{{ exchange.payAmount?.particlStringSep() }}</span>
               <span class="small">{{ exchange.payAmount?.particlStringFraction() }}</span>
               <span class="currency">{{exchange?.selectedCurrency?.symbol}}</span>
@@ -328,31 +328,39 @@
         </div>
 
         <ng-container *ngFor="let page of pages; let pageIndex = index;">
-          <mat-expansion-panel class="order list-item no-padding" *ngFor="let exchange of page.exchanges; trackBy: trackByFn">
+          <mat-expansion-panel class="exchange order list-item no-padding" *ngFor="let exchange of page.exchanges; trackBy: trackByFn">
             <mat-expansion-panel-header class="header">
               <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-                <div class="photo" fxFlex="0 0 80px">
+
+                <div class="photo" fxFlex="0 0 90px">
                   <img src="{{ exchange.bot.image }}">
                 </div>
+
                 <div class="meta" fxFlex="1 1 100%">
-                  <div class="name">{{ exchange.bot.name }}</div>
-                  <div class="">{{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from }} -&gt; ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to }}</div>
-                  <div class="">{{ exchange?.status }}</div>
-                </div>
-                <div class="status-wrap" fxFlex="0 0 40px" *ngIf="!exchange?.tx_to">
-                  <button mat-button class="refresh-status" (click)="requestUpdate($event, exchange, pageIndex)" [disabled]="updateInProgress[exchange.track_id]"
-                          matTooltip="Request status update" *ngIf="!updateInProgress[exchange.track_id]">
+                  <div class="name">
+                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_from }}.svg">
+                    {{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from }}
+                    -&gt;
+                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_to }}.svg">
+                    ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to }}
+                  </div>
+                  
+                  <mat-spinner class="loading-spinner" [diameter]="16" color="accent" *ngIf="updateInProgress[exchange.track_id]"></mat-spinner>
+                  <button mat-button class="exchange-status" (click)="requestUpdate($event, exchange, pageIndex)" [disabled]="updateInProgress[exchange.track_id]" matTooltip="Request status update" *ngIf="!updateInProgress[exchange.track_id]">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                    {{ exchange?.status }}
                   </button>
-                  <mat-spinner class="loading-spinner" [diameter]="20" *ngIf="updateInProgress[exchange.track_id]"></mat-spinner>
-                </div>
+
+                  <div class="bot-name">{{ exchange.bot.name }}</div>
+                </div><!-- .meta -->
+
               </div>
             </mat-expansion-panel-header>
           
             <div>
               Exchange ID: <code>{{ exchange?.track_id }}</code><br>
-              From Address: <code>{{ exchange?.address_from }}</code><br>
-              To Address: <code>{{ exchange?.address_to }}</code><br>
+              Send {{ exchange?.currency_from }} to: <code>{{ exchange?.address_from }}</code><br>
+              Receive {{ exchange?.currency_to }} to: <code>{{ exchange?.address_to }}</code><br>
               From Tx: <code>{{ exchange?.tx_from }}</code><br>
               To Tx: <code>{{ exchange?.tx_to }}</code><br>
             </div>        
