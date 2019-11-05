@@ -9,7 +9,7 @@
   "keywords": [
     "particl",
     "angular2",
-    "angular4",
+    "angular7",
     "angular-cli",
     "electron",
     "webpack",
@@ -47,11 +47,12 @@
     "travis:test": "ng test --watch=false --code-coverage",
     "start": "yarn run start:electron:fast"
   },
-  "productName": "Particl Desktop Testnet",
   "build": {
     "electronVersion": "5.0.4",
     "appId": "io.particl.desktop",
+    "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
+    "afterSign": "build/notarize.js",
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -68,12 +69,19 @@
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",
-      "category": "public.app-category.wallet",
+      "category": "public.app-category.finance",
+      "icon": "resources/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/mac/entitlements.mac.plist",
+      "entitlementsInherit": "build/mac/entitlements.mac.plist",
       "target": [
-        "zip"
+        "zip",
+        "dmg"
       ]
     },
     "dmg": {
+      "sign": false,
       "background": "background-mac.png",
       "contents": [
         {
@@ -214,6 +222,7 @@
     "coveralls": "^3.0.0",
     "electron": "5.0.4",
     "electron-builder": "^20.38.5",
+    "electron-notarize": "^0.2.0",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^3.3.0",

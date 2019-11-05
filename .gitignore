@@ -49,3 +49,6 @@ Thumbs.db
 /packages
 
 yarn-error.log
+
+# environment config
+/build/**/.env
