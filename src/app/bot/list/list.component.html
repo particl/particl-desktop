@@ -1,57 +1,66 @@
 <!-- Do not remove the below class it is using for test case -->
 <app-header class="test-case-container">
-  <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between center">
-
-    <!-- Search-->
-    <div class="icon-input search-listings" fxFlex="1 1 25%">
-      <input type="text" class="header-input" id="searchbar" placeholder="Search bots..."
-             [(ngModel)]="search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
-             (keyup.escape)="search = ''; clearAndLoadPage()">
-      <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
-    </div>
-
-    <div class="filter-by type" fxFlex="1 1 25%">
-      <mat-form-field class="full-width">
-        <mat-select [(ngModel)]="type" placeholder="Type" (selectionChange)="clearAndLoadPage()">
-          <mat-option [value]=""></mat-option>
-          <mat-option [value]="'EXCHANGE'">Exchange</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
-    <div fxFlex="1 1 50%"></div>
-
-    <div class="filter-by buttons" fxFlex="0 1 120px">
-
-        <button mat-button class="refresh-listings" (click)="clearAndLoadPage()" matTooltip="Refresh Bots">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-        </button>
-  
-        <mat-button-toggle type="checkbox" class="reported-only filter-button icon-only" matTooltip="{{ enabled ? 'Show all bots' : 'Show enabled bots'}}" (change)="toggleEnabled($event)">
-          <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-        </mat-button-toggle>
-  
-      </div> <!-- .buttons -->
-  </div>
 </app-header>
 
-<div class="container-block with-control-bar">
+<div class="container-block without-tab-bar">
   <app-page-intro>
-    <ng-container page-title>Particl Bot Management</ng-container>
+    <ng-container page-title>Manage Bots</ng-container>
     <ng-container page-content>
-      Here you will find all available bots to enable or disable from this wallet... something something
+      Browse available bots and enable/disable them as you need.<br>
+      Particl Bots offer additional functionality for Particl Desktop, like coin exchange capabilities.
     </ng-container>
     <ng-container page-help>
-      Some help.
     </ng-container>
   </app-page-intro>
 
+
+  <div class="filter">
+
+    <div class="section search-sorting">
+      <div class="subtitle first">Search</div>
+      <mat-card class="filter-card">
+        <div class="icon-input search-listings">
+          <input type="text" class="header-input" id="searchbar" placeholder="Search bots..."
+                  [(ngModel)]="search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
+                  (keyup.escape)="search = ''; clearAndLoadPage()">
+          <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
+        </div>
+        <button mat-button class="refresh-listings" (click)="clearAndLoadPage()" matTooltip="Refresh Bots">
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+          Refresh bots
+        </button>
+      </mat-card>
+    </div>
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter bots</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="full-width">
+          <mat-select [(ngModel)]="type" placeholder="All bots" (selectionChange)="clearAndLoadPage()">
+            <mat-option [value]="">All bots</mat-option>
+            <mat-option [value]="'EXCHANGE'">Exchange</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-button-toggle type="checkbox" class="reported-only filter-button icon-only" matTooltip="{{ enabled ? 'Show all bots' : 'Show enabled bots'}}" (change)="toggleEnabled($event)">
+          <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
+          {{ enabled ? 'Show all bots' : 'Show enabled bots'}}
+        </mat-button-toggle>
+      </mat-card>
+    </div>
+
+    <!--button mat-button color="warn" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button-->
+
+  </div><!-- .filter -->
+
   <!-- Do not remove the below class it is using for test case -->
-  <div class="content grid-container test-case-container"
-       infiniteScroll
-       [infiniteScrollContainer]="pagination.infinityScrollSelector"
-       [fromRoot]="true"
-       (scrolled)="loadNextPage()">
+  <div class="content with-filter test-case-container"
+        infiniteScroll
+        [infiniteScrollContainer]="pagination.infinityScrollSelector"
+        [fromRoot]="true"
+        (scrolled)="loadNextPage()">
 
     <div class="loading-container" *ngIf="isLoadingBig">
       <div class="loading-info">
@@ -86,5 +95,6 @@
         That's all folks!
       </p>
     </div>
-  </div><!-- .content -->
-</div> <!-- container-block -->
+
+  </div><!-- .bot-list -->
+</div><!-- .container-block -->

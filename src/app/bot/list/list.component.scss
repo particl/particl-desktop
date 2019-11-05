@@ -1,79 +1,7 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import './src/app/wallet/shared/_filter-sorting'; // filtering & sorting
 
 // ------ UI ELEMENTS ------ //
-
-.container-block {
-  .content {
-    width: 100%;
-    mat-card.listing {
-      overflow: hidden;
-    }
-  }
-}
-
-// ------ CONTROL BAR (top) ------ //
-
-.control-bar {
-  padding: 0 16px 0 $padding; // offset filtering of reported items
-  // search
-  .search-listings {
-    padding-right: 24px;
-    position: relative;
-    input {
-      padding: 17px 26px 17px 0;
-      width: calc(100% - 26px);
-      background: none;
-      outline: none;
-      font-family: $font;
-    }
-    .mat-icon {
-      top: 18px;
-      right: 24px;
-      font-size: 14px;
-    }
-  }
-  .icon {
-    color: $text-muted;
-  }
-  .filter-by {
-    display: flex;
-    align-items: center;
-    border-left: 1px solid $bg-shadow;
-    padding: 0 18px;
-    .icon {
-      margin-right: 12px;
-    }
-    // buttons only (filter Reported, Refresh listings)
-    &.buttons {
-      height: 53px;
-      padding: 0 0 0 12px;
-      display: flex;
-      align-items: center;
-      border-bottom: 0;
-      button {
-        min-width: 0;
-        padding: 0 12px;
-        .mat-icon {
-          margin: 0;
-        }
-      }
-      // Reported toggle
-      mat-button-toggle.reported-only {
-        border: none;
-        &:hover {
-          background: rgba($bg-shadow, 0.25);
-        }
-        &.mat-button-toggle-checked {
-          color: $color-alert;
-          background: rgba($color-alert, 0.1) !important;
-          &:hover {
-            background: rgba($color-alert, 0.15) !important;
-          }
-        }
-      }
-    }
-  }
-}
 
 .no-results {
   width: 100%;
@@ -81,10 +9,18 @@
   padding: 50px 0;
 }
 
+/*
 .loading-bar {
   position: fixed;
   bottom: 0;
   height: 8px;
+}
+*/
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
 }
 
 $card-margin: 25px;
@@ -95,41 +31,35 @@ mat-card.bot {
   margin: 0 $card-margin $card-margin 0;
   padding: 24px 16px 12px;
 
-  // default: 4 columns
-  flex: calc((100% / 4) - 51px);
-  max-width: calc((100% / 4) - 51px);
-  &:nth-of-type(4n) {
+  // default: 3 columns
+  flex: calc((100% / 3) - 51px);
+  max-width: calc((100% / 3) - 51px);
+  &:nth-of-type(3n) {
     margin-right: 0;
     @include break-from(1650px) {
       margin-right: $card-margin;
     }
   }
 
-  // larger: 6 columns
+  // larger: 5 columns
   @include break-from(1650px) {
-    flex: calc((100% / 6) - 53px);
-    max-width: calc((100% / 6) - 53px);
-    &:nth-of-type(6n) {
+    flex: calc((100% / 5) - 53px);
+    max-width: calc((100% / 5) - 53px);
+    &:nth-of-type(5n) {
       margin-right: 0;
+      @include break-from(2300px) {
+        margin-right: $card-margin;
+      }
     }
   }
 
-  // largest: 8 columns
+  // largest: 7 columns
   @include break-from(2300px) {
-    flex: calc((100% / 8) - 55px);
-    max-width: calc((100% / 8) - 55px);
-    &:nth-of-type(6n) {
-      margin-right: $card-margin;
-    }
-    &:nth-of-type(8n) {
+    flex: calc((100% / 7) - 55px);
+    max-width: calc((100% / 7) - 55px);
+    &:nth-of-type(7n) {
       margin-right: 0;
     }
   }
 
-}
-
-.grid-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
 }
