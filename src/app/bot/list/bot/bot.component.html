@@ -1,19 +1,22 @@
-<div class="item">
+<div class="item" [ngClass]="{ 'bot-disabled' : !bot.enabled }">
   <div class="image">
-    <img src="{{bot?.image}}">
+    <img src="{{ bot?.image }}">
   </div>
 
   <div class="info">
-    <div class="title">{{ bot?.name }}  <span class="description">( {{bot?.type}} )</span></div>
-    <div class="description">{{bot?.description}}</div>
+    <div class="type">{{ bot?.type }}</div>
+    <div class="title">{{ bot?.name }}</div>
+    <div class="description">{{ bot?.description }}</div>
   </div>
 
-  <div>
-    <button mat-button color="primary" *ngIf="!bot.enabled" fxFlex (click)="enable()">
-      Enable Bot
+  <div class="toggle-button">
+    <button mat-button color="accent" *ngIf="!bot.enabled" (click)="enable()" matTooltip="Click to enable" matTooltipPosition="below">
+      <mat-icon fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
+      Enable bot
     </button>
-    <button mat-button color="warn" *ngIf="bot.enabled" fxFlex (click)="disable()">
-      Disable Bot
+    <button mat-button color="primary" *ngIf="bot.enabled" (click)="disable()" matTooltip="Click to disable" matTooltipPosition="below">
+      <mat-icon fontSet="partIcon" fontIcon="part-flash"></mat-icon>
+      Bot active
     </button>
   </div>
 
