@@ -6,7 +6,8 @@ import { HelpComponent } from './help/help.component';
 import { AddProposalComponent } from './proposals/add-proposal/add-proposal.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { ReceiveComponent, SendComponent, HistoryComponent, AddressBookComponent } from './wallet/wallet.module';
-import { ExchangeComponent } from './wallet/exchange/exchange.component';
+import { ExchangeHistoryComponent } from './wallet/exchange-history/exchange-history.component';
+import { ExchangeComponent } from './wallet/exchange-history/exchange/exchange.component';
 
 //   { path: '', redirectTo: '/wallet/overview', pathMatch: 'full' },
 const routes: Routes = [
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'overview', component: OverviewComponent, data: { title: 'Overview' } },
   { path: 'receive', component: ReceiveComponent, data: { title: 'Receive' } },
   { path: 'send', component: SendComponent, data: { title: 'Send' } },
+  { path: 'exchange-history', component: ExchangeHistoryComponent, data: { title: 'Exchange' } },
   { path: 'exchange', component: ExchangeComponent, data: { title: 'Exchange' } },
   { path: 'history', component: HistoryComponent, data: { title: 'History' } },
   { path: 'address-book', component: AddressBookComponent, data: { title: 'Address Book' } },
