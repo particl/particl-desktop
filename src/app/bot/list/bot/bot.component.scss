@@ -1,15 +1,12 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import './src/app/market/_lists-shared';
+@import './src/app/market/_order'; // order styles
 
-// Bot's image
-.image {
-  margin: -24px -16px 16px;
-  position: relative;
+
+.header {
+  // bot image/logo
   img {
     @extend %tfx;
-    display: block;
-    width: 100%;
-    height: 218px;
-    cursor: pointer;
     object-fit: cover;
     object-position: center;
     .bot-disabled & { // grey out the image if bot is inactive
@@ -17,37 +14,54 @@
       opacity: 0.7;
     }
   }
-}
-
-// Bot's info (name, type, desc)
-.info {
-  margin-bottom: 10px;
+  // bot type (exchange etc.)
   .type {
     font-size: 11px;
     text-transform: uppercase;
     font-weight: 500;
     color: $text-muted;
   }
+  // bot's name
   .title {
+    color: $text;
     font-size: 15px;
     font-weight: 500;
     line-height: 1.35;
-    margin: 5px 0;
+    margin-bottom: 2px;
   }
-  .description {
-    font-size: 11px;
-    color: $text-muted;
+  // status
+  .status {
+    .dot {
+      background: $color;
+      .bot-disabled & {
+        background: grey;
+      }
+    }
   }
 }
 
-// Enable/disable bot
-.toggle-button {
-  margin: 12px -16px -12px;
-  button {
-    width: 100%;
-    padding: 4px 12px;
-    .mat-icon {
-      margin-right: 2px;
+
+.detail {
+  // Bot info (address, desc)
+  .bot-address {
+    @extend %enable-select;
+  }
+  .author-info {
+    td {
+      @extend %enable-select;
+    }
+  }
+}
+
+
+.action-buttons {
+  // (de)activate button
+  .toggle-button {
+    text-align: right;
+    button {
+      .mat-icon {
+        margin-right: 2px;
+      }
     }
   }
 }

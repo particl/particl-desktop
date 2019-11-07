@@ -76,9 +76,7 @@
 
     <ng-container *ngFor="let page of pages">
       <ng-container *ngFor="let bot of page.bots">
-        <mat-card class="bot">
-          <app-bot-item [bot]="bot"></app-bot-item>
-        </mat-card>
+        <app-bot-item [bot]="bot"></app-bot-item>
       </ng-container>
     </ng-container>
 
