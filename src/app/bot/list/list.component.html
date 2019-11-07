@@ -19,32 +19,25 @@
     <div class="section search-sorting">
       <div class="subtitle first">Search</div>
       <mat-card class="filter-card">
-        <div class="icon-input search-listings">
-          <input type="text" class="header-input" id="searchbar" placeholder="Search bots..."
-                  [(ngModel)]="search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
-                  (keyup.escape)="search = ''; clearAndLoadPage()">
+        <mat-form-field class="icon-input filter-input" floatLabel="never">
+          <input matInput type="text" class="header-input" placeholder="Search bots" [(ngModel)]="search"
+                 (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
+                 (keyup.escape)="search = ''; clearAndLoadPage()">
           <mat-icon fontSet="partIcon" fontIcon="part-search"></mat-icon>
-        </div>
-        <button mat-button class="refresh-listings" (click)="clearAndLoadPage()" matTooltip="Refresh Bots">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-          Refresh bots
-        </button>
+        </mat-form-field>
       </mat-card>
     </div>
 
-    <div class="section filter-by-type">
+    <div class="section search-sorting">
       <div class="subtitle">Filter bots</div>
       <mat-card class="filter-card">
-        <mat-form-field class="full-width">
-          <mat-select [(ngModel)]="type" placeholder="All bots" (selectionChange)="clearAndLoadPage()">
+        <mat-form-field class="sort-by filter-input full-width">
+          <mat-select [(ngModel)]="type" placeholder="Filter by type" (selectionChange)="clearAndLoadPage()">
             <mat-option [value]="">All bots</mat-option>
             <mat-option [value]="'EXCHANGE'">Exchange</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-button-toggle type="checkbox" class="reported-only filter-button icon-only" matTooltip="{{ enabled ? 'Show all bots' : 'Show enabled bots'}}" (change)="toggleEnabled($event)">
-          <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-          {{ enabled ? 'Show all bots' : 'Show enabled bots'}}
-        </mat-button-toggle>
+        <mat-checkbox (change)="toggleEnabled($event)">Show enabled only</mat-checkbox>
       </mat-card>
     </div>
 
@@ -52,6 +45,11 @@
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button-->
+
+    <button mat-button class="refresh-listings" (click)="clearAndLoadPage()" matTooltip="Refresh Bots">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+      Refresh bots
+    </button>
 
   </div><!-- .filter -->
 
