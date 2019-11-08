@@ -10,6 +10,8 @@ import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { ConsoleModalComponent } from './console-modal.component';
 import { MainModule } from 'app/core-ui/main/main.module';
+import { SettingsModule } from 'app/settings/settings.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('ConsoleModalComponent', () => {
   let component: ConsoleModalComponent;
@@ -54,7 +56,9 @@ describe('ConsoleModalComponent', () => {
         CoreUiModule.forRoot(),
         RpcWithStateModule.forRoot(),
         BrowserAnimationsModule,
-        MainModule
+        MainModule,
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [
         /* deps */

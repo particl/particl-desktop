@@ -3,8 +3,10 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { SettingsModule } from 'app/settings/settings.module';
 
 import { ListingItemComponent } from './listing-item.component';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('ListingItemComponent', () => {
   let component: ListingItemComponent;
@@ -16,7 +18,9 @@ describe('ListingItemComponent', () => {
       declarations: [ ListingItemComponent ],
       imports: [
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ]
     })
       .compileComponents();

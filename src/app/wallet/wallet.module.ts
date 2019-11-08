@@ -6,7 +6,6 @@ import { SharedModule } from './shared/shared.module';
 import { WalletModule } from './wallet/wallet.module';
 
 import { OverviewComponent } from './overview/overview.component';
-import { SettingsComponent } from './settings/settings.component';
 import { ProposalsComponent } from './proposals/proposals.component';
 import { AddProposalComponent } from './proposals/add-proposal/add-proposal.component';
 import { StakinginfoComponent } from './overview/widgets/stakinginfo/stakinginfo.component';
@@ -22,7 +21,6 @@ import { ProposalDetailsComponent } from './proposals/proposal-details/proposal-
 @NgModule({
   declarations: [
     OverviewComponent,
-    SettingsComponent,
     ProposalsComponent,
     AddProposalComponent,
     StakinginfoComponent,

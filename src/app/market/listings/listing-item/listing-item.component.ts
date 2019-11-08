@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material';
 import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
 import { Listing } from '../../../core/market/api/listing/listing.model';
 import { PreviewListingComponent } from '../preview-listing/preview-listing.component';
+import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 
 @Component({
   selector: 'app-listing-item',
@@ -14,8 +15,15 @@ export class ListingItemComponent {
   @Output() reportListingComplete: EventEmitter<any> = new EventEmitter();
   constructor(
     private dialog: MatDialog,
-    public listingCacheService: PostListingCacheService
+    public listingCacheService: PostListingCacheService,
+    private notification: MarketNotificationService
   ) {}
+
+  get hasNewComments() {
+    return this.listing && this.listing.hash
+      ? this.notification.targetHasUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.listing.hash)
+      : false;
+  }
 
   openListing() {
     const dialog = this.dialog.open(PreviewListingComponent, {

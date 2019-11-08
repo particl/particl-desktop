@@ -95,7 +95,7 @@ export class Bid extends Product {
   }
 
   get updatedAt(): number {
-    return this.order.updatedAt;
+    return this.order && this.order.OrderItem && this.order.OrderItem.updatedAt ? this.order.OrderItem.updatedAt : this.order.updatedAt;
   }
 
 

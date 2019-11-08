@@ -18,7 +18,9 @@ export class TemplateService {
   ) { }
 
   get(templateId: number, returnImageData: boolean = false): Observable<Template> {
-    return this.market.call('template', ['get', templateId, returnImageData]).pipe(map(t => new Template(t)));
+    return this.market.call('template', ['get', templateId, returnImageData]).pipe(
+      map(t => this.fixMarketplaceImagePath(new Template(t)))
+    );
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PART" 5 5 5 "Pasdfdfd"
@@ -67,7 +69,7 @@ export class TemplateService {
     return this.market.call('template', params)
     .pipe(map(
       (templates: any) => {
-        return templates.map(t => new Template(t));
+        return templates.map(t => this.fixMarketplaceImagePath(new Template(t)));
       }
     ));
   }
@@ -88,6 +90,23 @@ export class TemplateService {
 
   remove(listingTemplateId: number) {
     return this.market.call('template', ['remove', listingTemplateId]);
+  }
+
+  private fixMarketplaceImagePath(templ: Template): Template {
+    //  @TODO: zaSmilingIdiot: 2019-10-22
+    //  This is a sucky way of doing this. But the image datas for each image stored in the MP DB have a data_id field, which stores
+    //  the entire URL to request the specific image from the marketplace. Which creates an issue if the marketplace hostname/port
+    //  changes after images are stored. Using the url stated for an image would be an invalid path in such a case.
+    // This bit attempts to "fix" this...
+    templ.imageCollection.images.forEach(image => {
+      (image.itemImageDatas || []).forEach(datas => {
+        const pathparts = String(datas.dataId).split(':');
+        const newPath = `http://${this.market.hostname}:${this.market.port}/${pathparts[pathparts.length - 1].split('/').slice(1).join('/')}`;
+        datas.dataId = newPath;
+      });
+    });
+
+    return templ;
   }
 
 }

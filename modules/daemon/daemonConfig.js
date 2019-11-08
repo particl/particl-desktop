@@ -2,6 +2,7 @@ const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
 const fs            = require('fs');
 const path          = require('path');
+const _del          = require('del');
 const log           = require('electron-log');
 const iniParser     = require('@jedmao/ini-parser').default;
 const cookie        = require('../rpc/cookie');
@@ -17,8 +18,10 @@ if (isEmptyObject(_options)) {
 const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
 const IPC_CHANNEL_PUB = 'rpc-configuration';
 const IPC_CHANNEL_LISTEN = 'request-configuration';
+const IPC_CHANNEL_WRITE = 'write-core-config';
+const IPC_DELETE_WALLET = 'ipc-delete-wallet';
 
-const SAFE_KEYS = ['addressindex'];
+const SAFE_KEYS = ['addressindex', 'proxy', 'upnp'];
 
 let STORED_CONFIGURATION = {};
 let mainWindowRef = null;
@@ -267,8 +270,7 @@ const getConfiguration = (reloadConfig, loadAuth) => {
 
 
 const emitConfiguration = () => {
-  let settings = getConfiguration(false, true);
-
+  let settings = getConfiguration(true, true);
   try {
     rxIpc.runCommand(IPC_CHANNEL_PUB, mainWindowRef.webContents, settings)
       .subscribe(
@@ -291,6 +293,8 @@ const emitConfiguration = () => {
 const destroyIpcChannels = () => {
   rxIpc.removeListeners(IPC_CHANNEL_PUB);
   rxIpc.removeListeners(IPC_CHANNEL_LISTEN);
+  rxIpc.removeListeners(IPC_CHANNEL_WRITE);
+  rxIpc.removeListeners(IPC_DELETE_WALLET);
 }
 
 
@@ -310,6 +314,52 @@ const initializeIpcChannels = (mainWindow) => {
     emitConfiguration();
     return Observable.create(observer => {
       observer.complete(true);
+    });
+  });
+
+  rxIpc.registerListener(IPC_CHANNEL_WRITE, function(settings) {
+    return Observable.create(observer => {
+      saveSettings(settings);
+      observer.complete(true);
+    });
+  });
+
+  rxIpc.registerListener(IPC_DELETE_WALLET, function(walletName) {
+    return Observable.create(observer => {
+      log.info(`Requested deletion of wallet named "${walletName}"`);
+      let success = false;
+
+      if (walletName !== '') {
+        // Prevents deleting the default wallet
+
+        let walletPath = cookie.getParticlPath(_options);
+        if (_options.testnet) {
+          walletPath = path.join(walletPath, 'testnet');
+        }
+
+        let pathExists = false;
+        if (fs.existsSync(path.join(walletPath, 'wallets', walletName))) {
+          pathExists = true;
+          walletPath = path.join(walletPath, 'wallets', walletName);
+        } else if (fs.existsSync(path.join(walletPath, walletName))) {
+          pathExists = true;
+          walletPath = path.join(walletPath, walletName);
+        }
+
+        if (pathExists && walletPath.endsWith(walletName) && fs.lstatSync(walletPath).isDirectory()) {
+          log.info('Found wallet folder to be deleted: ' + walletPath);
+          try {
+            const delPaths = _del.sync([walletPath], {force: true});
+            log.info('Sucessfully deleted wallet folder: ' + delPaths);
+            success = delPaths.length > 0;
+          } catch (err) {
+            log.error('Failed to delete wallet folder: ', err);
+          }
+        }
+      }
+
+      observer.next(success);
+      observer.complete();
     });
   });
 }

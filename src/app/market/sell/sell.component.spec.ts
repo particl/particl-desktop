@@ -7,9 +7,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { CoreModule } from 'app/core/core.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { SettingsModule } from 'app/settings/settings.module';
 
 import { SellComponent } from './sell.component';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('SellComponent', () => {
   let component: SellComponent;
@@ -25,7 +27,9 @@ describe('SellComponent', () => {
         ModalsModule.forRoot(),
         RouterTestingModule,
         BrowserAnimationsModule,
-        RpcWithStateModule.forRoot()
+        RpcWithStateModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })

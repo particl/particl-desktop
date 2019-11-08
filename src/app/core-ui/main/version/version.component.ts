@@ -6,9 +6,8 @@ import { VersionModel } from './version.model';
 import { ClientVersionService } from 'app/core/http/client-version.service';
 import { isPrerelease } from 'app/core/util/utils';
 import { Log } from 'ng2-logger';
-import { RpcService } from 'app/core/rpc/rpc.service';
 
-import * as marketConfig from '../../../../../modules/market/config.js';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 enum VersionText {
   latest = 'This is the latest client version',
@@ -38,13 +37,24 @@ export class VersionComponent implements OnInit, OnDestroy {
 
   constructor(
     private clientVersionService: ClientVersionService,
-    private _rpc: RpcService
+    private _settingsService: SettingsStateService
   ) { }
 
   ngOnInit() {
-    this.isMarketWallet = (marketConfig.allowedWallets || []).find(
-      (wname: string) => this._rpc.wallet && (wname.toLowerCase() === this._rpc.wallet.toLowerCase())
-    ) !== undefined;
+    let continueListening = true;
+    this._settingsService.currentWallet().pipe(
+      takeWhile(() => !this.destroyed && continueListening)
+    ).subscribe(
+      (wallet) => {
+        // Primary purpose of the null check is to cater for live reload...
+        //  this should not typically be needed otherwise
+        if (wallet === null) {
+          return;
+        }
+        this.isMarketWallet = wallet.isMarketEnabled === true;
+        continueListening = false;
+      }
+    );
     // Initially need to call to verify the client version
     this.getCurrentClientVersion()
     // check new update in every 30 minute
