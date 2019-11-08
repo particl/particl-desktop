@@ -11,19 +11,6 @@
 
   <div class="container-flex">
     <mat-card class="exchange">
-      <div class="tx-confirmation" *ngIf="!exchange">
-        <div class="tx-info">
-          <div class="title">Create a new exchange</div>
-          <p class="widget-help">
-            Convert your favourite cryptocurrencies to Particl
-          </p>
-          <button mat-raised-button color="primary" (click)="startNewExchange()">
-            <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
-            Start Exchange
-          </button>
-        </div>
-      </div>
-
       <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper  *ngIf="exchange">
         <ng-template matStepperIcon="edit">
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>

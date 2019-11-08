@@ -7,8 +7,8 @@ import { Exchange } from './exchange';
 import * as _ from 'lodash';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { Observable, Subscription, timer } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { switchMap, take } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-exchange',
@@ -31,16 +31,19 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
     private rpc: RpcService,
     private rpcState: RpcStateService,
     private modal: ModalsHelperService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
     const paramsMap = this.route.snapshot.queryParamMap;
 
     const requiredPart = paramsMap.get('requiredPart');
-    if (requiredPart) {
-      this.startNewExchange(requiredPart);
-    }
+    
+    this.unlock(300).pipe(take(1)).subscribe(
+      () => this.startNewExchange(requiredPart),
+      () => this.router.navigate(['wallet', 'main', 'wallet', 'exchange-history'])
+    );
   }
 
   ngAfterViewChecked(): void {
@@ -58,7 +61,7 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
     if (this.exchangeStatus$) {
       this.exchangeStatus$.unsubscribe();
     }
-    await this.unlock(300).toPromise();
+    
     this.exchange = new Exchange(this.botService, this.rpc);
 
     if (amount) {
