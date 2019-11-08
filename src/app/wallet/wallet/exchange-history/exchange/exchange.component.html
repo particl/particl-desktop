@@ -14,179 +14,177 @@
     </ng-container>
   </app-page-intro>
 
-  <div class="container-flex">
-    <mat-card class="exchange">
-      <mat-horizontal-stepper [linear]="true" labelPosition="bottom" #stepper  *ngIf="exchange">
-        <ng-template matStepperIcon="edit">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-        </ng-template>
-        <ng-template matStepperIcon="done">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-        </ng-template>
+
+  <mat-horizontal-stepper [linear]="true" class="no-bg" #stepper *ngIf="exchange">
+    <ng-template matStepperIcon="edit">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+    </ng-template>
+    
+    <mat-step label="Currency" [completed]="stepper.selectedIndex >= 1">
+      <mat-card>
+        <div class="tx-info">
+          <div class="title">Select your currency</div>
+          <p class="widget-help">
+            Pay your order effortlessly with your favourite cryptocurrencies &ndash; select the amount of PART and a coin for exchange:
+          </p>
+        </div>
+
+        <div class="amount">
+          <mat-form-field>
+            <input matInput min="10" placeholder="Required Particl" [(ngModel)]="exchange.requiredParticls" type="text">
+            <span matSuffix>PART</span>
+          </mat-form-field>
+        </div>
+
+        <mat-list class="currencies">
+          <mat-list-item *ngFor="let currency of exchange.availableCurrencies">
+            <img matListAvatar src="assets/images/currencies/{{currency.symbol.toLowerCase()}}.png" default="assets/images/currencies/unknown.jpg">
+            <h3 matLine>{{currency.name}}</h3>
+            <p matLine>{{currency.symbol.toUpperCase()}}</p>
+            <mat-radio-button [value]="currency" [checked]="exchange.selectedCurrency === currency" color="primary" (change)="exchange.selectedCurrency = $event.value"></mat-radio-button>
+          </mat-list-item>
+        </mat-list>
+
+        <div *ngIf="exchange.loading">
+          <p class="widget-help exchange-status">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+          <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+        </div>
+        <div *ngIf="exchange.noBots">
+          <span>No exchange bots avaliable, please add one under bot management</span>
+        </div>
+        <div *ngIf="exchange.noResponse">
+          <span>No exchange bots responded</span>
+        </div>
+      </mat-card>
+    </mat-step>
+
+    <mat-step label="Exchange" [completed]="stepper.selectedIndex >= 2">
+      <mat-card>
+        <div class="tx-info">
+          <div class="title">Choose an exchange bot</div>
+          <p class="widget-help">
+            Payment in {{exchange.selectedCurrency?.symbol}} can be processed on multiple bots &ndash; select the one you prefer:
+          </p>
+        </div>
+
+        <div class="tx-amount">
+          <span class="big">Requested Amount </span>
+          <span class="big">{{ exchange.requirePartoshiAmount.particlStringInteger() }}</span>
+          <span class="point">{{ exchange.requirePartoshiAmount.particlStringSep() }}</span>
+          <span class="small">{{ exchange.requirePartoshiAmount.particlStringFraction() }}</span>
+          &ensp;
+          <span class="currency">PART</span>
+        </div>
+        <div class="tx-amount" *ngIf="exchange.selectedOffer">
+          <span class="big">Offered Amount </span>
+          <span class="big">~{{ exchange.offerAmount?.particlStringInteger() }}</span>
+          <span class="point">{{ exchange.offerAmount?.particlStringSep() }}</span>
+          <span class="small">{{ exchange.offerAmount?.particlStringFraction() }}</span>
+          &ensp;
+          <span class="currency">PART</span>
+        </div>
+        <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-up"></mat-icon>
         
-        <mat-step label="Currency" [completed]="stepper.selectedIndex >= 1">
-          <div class="tx-confirmation">
-            <div class="tx-info">
-              <div class="title">Select your currency</div>
-              <p class="widget-help">
-                Pay your order effortlessly with your favourite cryptocurrencies &ndash; select the amount of PART and a coin for exchange:
-              </p>
-            </div>
+        <mat-list class="offers">
+          <mat-list-item *ngFor="let offer of exchange.availableOffers">
+            <img matListAvatar src="{{offer.bot.image}}">
+            <h3 matLine> {{offer.bot.name}} </h3>
+            <p matLine>~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</p>
+            <p class="widget-help rate" matLine>@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</p>
+            <mat-radio-button [value]="offer" [checked]="exchange.selectedOffer === offer" color="primary" (change)="exchange.selectedOffer = $event.value"></mat-radio-button>
+          </mat-list-item>
+        </mat-list>
+        
+        <div *ngIf="exchange.loading">
+          <p class="widget-help exchange-loading-status">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
+          <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+        </div>
+        <div *ngIf="exchange.noBots">
+          <span>No exchange bots avaliable, please add one under bot management</span>
+        </div>
+        <div *ngIf="exchange.noResponse">
+          <span>No exchange bots responded</span>
+        </div>
+      </mat-card>
+    </mat-step>
 
-            <div class="amount">
-              <mat-form-field>
-                <input matInput min="0" placeholder="Required Particl *" [(ngModel)]="exchange.requiredParticls" type="text">
-                <span matSuffix>PART</span>
-              </mat-form-field>
-            </div>
+    <mat-step label="Pay" [completed]="stepper.selectedIndex >= 3">
+      <mat-card *ngIf="!exchange.isComplete && !exchange.status">
+        <div class="tx-info">
+          <div class="title">Pay with {{exchange.selectedCurrency?.name}}</div>
+          <p class="widget-help">
+            Send your {{exchange.selectedCurrency?.symbol}} to the following address to automatically convert it to PART
+          </p>
+        </div>
+        <div class="tx-amount">
+          <span class="big">{{ exchange.payAmount?.particlStringInteger() }}</span>
+          <span class="point">{{ exchange.payAmount?.particlStringSep() }}</span>
+          <span class="small">{{ exchange.payAmount?.particlStringFraction() }}</span>
+          <span class="currency">{{exchange?.selectedCurrency?.symbol}}</span>
+        </div>
 
-            <mat-list class="currencies">
-              <mat-list-item *ngFor="let currency of exchange.availableCurrencies">
-                <img matListAvatar src="assets/images/currencies/{{currency.symbol.toLowerCase()}}.png" default="assets/images/currencies/unknown.jpg">
-                <h3 matLine>{{currency.name}}</h3>
-                <p matLine>{{currency.symbol.toUpperCase()}}</p>
-                <mat-radio-button [value]="currency" [checked]="exchange.selectedCurrency === currency" color="primary" (change)="exchange.selectedCurrency = $event.value"></mat-radio-button>
-              </mat-list-item>
-            </mat-list>
-
-            <div *ngIf="exchange.loading">
-              <p class="widget-help exchange-status">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
-              <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
-            </div>
-            <div *ngIf="exchange.noBots">
-              <span>No exchange bots avaliable, please add one under bot management</span>
-            </div>
-            <div *ngIf="exchange.noResponse">
-              <span>No exchange bots responded</span>
-            </div>
+        <div *ngIf="exchange.loading">
+          <p class="widget-help exchange-status">Requesting exchange address...</p>
+          <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+        </div>
+        <div *ngIf="exchange.exchangeData">
+          <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
+          <div class="receiver-info">
+            <qrcode size="200" [level]="'H'" qrdata="{{exchange.selectedCurrency?.name.toLowerCase()}}:{{exchange.exchangeData.address_from}}?amount={{exchange.exchangeData.amount_from}}"></qrcode>
+            <br>
+            <code class="address"> {{exchange.exchangeData.address_from}} </code>
           </div>
-        </mat-step>
+        </div>
+      </mat-card>
+      <mat-card *ngIf="!exchange.isComplete && exchange.status">
+        <div class="tx-info">
+          <div class="title">Exchange Status</div>
+          <p class="widget-help">
+            {{exchange.status.status }}
+          </p>
+          Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
+          From Address: <code>{{ exchange?.status.address_from }}</code><br>
+          To Address: <code>{{ exchange?.status.address_to }}</code><br>
+          From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
+        </div>
+      </mat-card>
+      <mat-card *ngIf="exchange.isComplete">
+        <div class="tx-info">
+          <div class="title">Done</div>
+          <p class="widget-help">
+            Please go to overview to see new funds
+          </p>
+          Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
+          From Address: <code>{{ exchange?.status.address_from }}</code><br>
+          To Address: <code>{{ exchange?.status.address_to }}</code><br>
+          From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
+        </div>
+        <button mat-raised-button color="primary" (click)="startNewExchange()">
+          <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
+          Start Exchange
+        </button>
+      </mat-card>
+    </mat-step>
 
-        <mat-step label="Exchange" [completed]="stepper.selectedIndex >= 2">
-          <div class="tx-confirmation">
-            <div class="tx-info">
-              <div class="title">Choose an exchange bot</div>
-              <p class="widget-help">
-                Payment in {{exchange.selectedCurrency?.symbol}} can be processed on multiple bots &ndash; select the one you prefer:
-              </p>
-            </div>
+  </mat-horizontal-stepper>
 
-            <div class="tx-amount">
-              <span class="big">Requested Amount </span>
-              <span class="big">{{ exchange.requirePartoshiAmount.particlStringInteger() }}</span>
-              <span class="point">{{ exchange.requirePartoshiAmount.particlStringSep() }}</span>
-              <span class="small">{{ exchange.requirePartoshiAmount.particlStringFraction() }}</span>
-              &ensp;
-              <span class="currency">PART</span>
-            </div>
-            <div class="tx-amount" *ngIf="exchange.selectedOffer">
-              <span class="big">Offered Amount </span>
-              <span class="big">~{{ exchange.offerAmount?.particlStringInteger() }}</span>
-              <span class="point">{{ exchange.offerAmount?.particlStringSep() }}</span>
-              <span class="small">{{ exchange.offerAmount?.particlStringFraction() }}</span>
-              &ensp;
-              <span class="currency">PART</span>
-            </div>
-            <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-up"></mat-icon>
-          </div>
-          <mat-list class="offers">
-            <mat-list-item *ngFor="let offer of exchange.availableOffers">
-              <img matListAvatar src="{{offer.bot.image}}">
-              <h3 matLine> {{offer.bot.name}} </h3>
-              <p matLine>~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</p>
-              <p class="widget-help rate" matLine>@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</p>
-              <mat-radio-button [value]="offer" [checked]="exchange.selectedOffer === offer" color="primary" (change)="exchange.selectedOffer = $event.value"></mat-radio-button>
-            </mat-list-item>
-          </mat-list>
+  <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px" *ngIf="stepper">
+    <button mat-button (click)="cancelExchange()" *ngIf="stepper?.selectedIndex === 0">
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-button *ngIf="stepper?.selectedIndex > 0 && stepper?.selectedIndex < 3 && !exchange.isComplete  && !exchange.status" (click)="prevStep()">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+      Back
+    </button>
+    <button mat-raised-button color="primary" *ngIf="exchange && stepper?.selectedIndex >= 0 && stepper?.selectedIndex < 2" (click)="nextStep()"
+      [disabled]="!(stepper?.selectedIndex === 0 && exchange.selectedCurrency && exchange.requiredParticls || stepper?.selectedIndex === 1 && exchange.selectedOffer)">
+      <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
+      Next
+    </button>
+  </div><!-- .action-buttons -->
 
-          <div *ngIf="exchange.loading">
-            <p class="widget-help exchange-loading-status">Requesting offers from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
-            <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
-          </div>
-          <div *ngIf="exchange.noBots">
-            <span>No exchange bots avaliable, please add one under bot management</span>
-          </div>
-          <div *ngIf="exchange.noResponse">
-            <span>No exchange bots responded</span>
-          </div>
-        </mat-step>
-
-        <mat-step label="Pay" [completed]="stepper.selectedIndex >= 3">
-          <div class="tx-confirmation" *ngIf="!exchange.isComplete && !exchange.status">
-            <div class="tx-info">
-              <div class="title">Pay with {{exchange.selectedCurrency?.name}}</div>
-              <p class="widget-help">
-                Send your {{exchange.selectedCurrency?.symbol}} to the following address to automatically convert it to PART
-              </p>
-            </div>
-            <div class="tx-amount">
-              <span class="big">{{ exchange.payAmount?.particlStringInteger() }}</span>
-              <span class="point">{{ exchange.payAmount?.particlStringSep() }}</span>
-              <span class="small">{{ exchange.payAmount?.particlStringFraction() }}</span>
-              <span class="currency">{{exchange?.selectedCurrency?.symbol}}</span>
-            </div>
-
-            <div *ngIf="exchange.loading">
-              <p class="widget-help exchange-status">Requesting exchange address...</p>
-              <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
-            </div>
-            <div *ngIf="exchange.exchangeData">
-              <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
-
-              <div class="receiver-info">
-                <qrcode size="200" [level]="'H'" qrdata="{{exchange.selectedCurrency?.name.toLowerCase()}}:{{exchange.exchangeData.address_from}}?amount={{exchange.exchangeData.amount_from}}"></qrcode>
-                <br>
-                <code class="address"> {{exchange.exchangeData.address_from}} </code>
-              </div>
-            </div>
-          </div>
-          <div class="tx-confirmation" *ngIf="!exchange.isComplete && exchange.status">
-            <div class="tx-info">
-              <div class="title">Exchange Status</div>
-              <p class="widget-help">
-                {{exchange.status.status }}
-              </p>
-              Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
-              From Address: <code>{{ exchange?.status.address_from }}</code><br>
-              To Address: <code>{{ exchange?.status.address_to }}</code><br>
-              From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
-            </div>
-          </div>
-          <div class="tx-confirmation" *ngIf="exchange.isComplete">
-            <div class="tx-info">
-              <div class="title">Done</div>
-              <p class="widget-help">
-                Please go to overview to see new funds
-              </p>
-              Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
-              From Address: <code>{{ exchange?.status.address_from }}</code><br>
-              To Address: <code>{{ exchange?.status.address_to }}</code><br>
-              From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
-            </div>
-            <button mat-raised-button color="primary" (click)="startNewExchange()">
-              <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
-              Start Exchange
-            </button>
-          </div>
-        </mat-step>
-
-      </mat-horizontal-stepper>
-    </mat-card><!-- .exchange -->
-
-    <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px" *ngIf="stepper">
-      <button mat-button (click)="cancelExchange()" *ngIf="stepper?.selectedIndex === 0">
-        <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-        Cancel
-      </button>
-      <button mat-button *ngIf="stepper?.selectedIndex > 0 && stepper?.selectedIndex < 3 && !exchange.isComplete  && !exchange.status" (click)="prevStep()">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
-        Back
-      </button>
-      <button mat-raised-button color="primary" *ngIf="exchange && stepper?.selectedIndex >= 0 && stepper?.selectedIndex < 2" (click)="nextStep()"
-        [disabled]="!(stepper?.selectedIndex === 0 && exchange.selectedCurrency && exchange.requiredParticls || stepper?.selectedIndex === 1 && exchange.selectedOffer)">
-        <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-        Next
-      </button>
-    </div>
-  </div>
 </div> <!-- container-block -->

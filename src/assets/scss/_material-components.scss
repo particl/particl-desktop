@@ -246,6 +246,9 @@ mat-card.mat-card {
 
 .mat-stepper-horizontal {
   font-family: $font;
+  .mat-step-label {
+    min-width: auto;
+  }
   .mat-step-label-selected {
     font-weight: 700;
   }

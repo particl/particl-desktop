@@ -5,8 +5,25 @@
 @import './src/app/market/_order'; // order styles
 
 
-.tx-confirmation {
+.mat-stepper-horizontal {
+  margin: -16px -24px 0;
+}
+
+
+.mat-card {
   text-align: center;
+  margin: 14px auto 12px;
+  width: 400px;
+  position: relative;
+  .mat-progress-bar { // Loading bar in card (getting exchange bot info)
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    border-bottom-left-radius: $radius;
+    border-bottom-right-radius: $radius;
+  }
 }
 
 .receiver-info {
