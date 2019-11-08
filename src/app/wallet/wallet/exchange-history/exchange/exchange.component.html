@@ -6,7 +6,6 @@
     </ng-container>
     <ng-container page-help>
       To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them in
-      <!-- FIXME: link to Bot Management page: -->
       <button mat-button class="small" (click)="gotoBotManagement()">
         <mat-icon fontSet="partIcon" fontIcon="part-tool"></mat-icon>
         Bot Management
@@ -25,35 +24,46 @@
     
     <mat-step label="Currency" [completed]="stepper.selectedIndex >= 1">
       <mat-card>
-        <div class="tx-info">
-          <div class="title">Select your currency</div>
+        <header>
+          <div class="title">Select amount &amp; currency</div>
           <p class="widget-help">
-            Pay your order effortlessly with your favourite cryptocurrencies &ndash; select the amount of PART and a coin for exchange:
+            Select the amount of PART to receive and a coin for exchange:
           </p>
+        </header>
+
+        <div class="row" fxLayout fxLayoutGap="20px" fxLayoutAlign="center center" class="amount-to-receive">
+          <div class="text" fxFlex="50%">Required PART amount:</div>
+          <div class="part-amount" fxFlex="50%">
+            <mat-form-field floatLabel="never">
+              <input matInput min="10" placeholder="Required Particl" [(ngModel)]="exchange.requiredParticls" type="number">
+              <span matSuffix>PART</span>
+            </mat-form-field>
+          </div>
         </div>
 
-        <div class="amount">
-          <mat-form-field>
-            <input matInput min="10" placeholder="Required Particl" [(ngModel)]="exchange.requiredParticls" type="text">
-            <span matSuffix>PART</span>
-          </mat-form-field>
-        </div>
-
-        <mat-list class="currencies">
-          <mat-list-item *ngFor="let currency of exchange.availableCurrencies">
-            <img matListAvatar src="assets/images/currencies/{{currency.symbol.toLowerCase()}}.png" default="assets/images/currencies/unknown.jpg">
-            <h3 matLine>{{currency.name}}</h3>
-            <p matLine>{{currency.symbol.toUpperCase()}}</p>
-            <mat-radio-button [value]="currency" [checked]="exchange.selectedCurrency === currency" color="primary" (change)="exchange.selectedCurrency = $event.value"></mat-radio-button>
-          </mat-list-item>
-        </mat-list>
+        <mat-radio-group class="select-currency block-radio" fxLayout="column">
+          <mat-radio-button *ngFor="let currency of exchange.availableCurrencies"
+                            class="coin-option" color="primary" fxFlex
+                            [value]="currency"
+                            [checked]="exchange.selectedCurrency === currency"
+                            (change)="exchange.selectedCurrency = $event.value">
+            <img class="coin" src="assets/icons/SVG/coins/{{ currency.symbol.toUpperCase() }}.svg"
+                 default="assets/icons/SVG/coins/unknown.svg">
+            <div class="name">{{ currency.name }}</div>
+            <div class="desc">({{ currency.symbol.toUpperCase() }})</div>
+          </mat-radio-button>
+        </mat-radio-group><!-- .from-balance-type -->
 
         <div *ngIf="exchange.loading">
           <p class="widget-help exchange-status">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
-          <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+          <mat-progress-bar mode="indeterminate" class="loading-bar" color="accent"></mat-progress-bar>
         </div>
         <div *ngIf="exchange.noBots">
-          <span>No exchange bots avaliable, please add one under bot management</span>
+          <span>No exchange bots avaliable, please add one at</span>
+          <button mat-button class="small" (click)="gotoBotManagement()">
+            <mat-icon fontSet="partIcon" fontIcon="part-tool"></mat-icon>
+            Bot Management
+          </button>
         </div>
         <div *ngIf="exchange.noResponse">
           <span>No exchange bots responded</span>
@@ -63,12 +73,12 @@
 
     <mat-step label="Exchange" [completed]="stepper.selectedIndex >= 2">
       <mat-card>
-        <div class="tx-info">
+        <header>
           <div class="title">Choose an exchange bot</div>
           <p class="widget-help">
             Payment in {{exchange.selectedCurrency?.symbol}} can be processed on multiple bots &ndash; select the one you prefer:
           </p>
-        </div>
+        </header>
 
         <div class="tx-amount">
           <span class="big">Requested Amount </span>
@@ -113,12 +123,12 @@
 
     <mat-step label="Pay" [completed]="stepper.selectedIndex >= 3">
       <mat-card *ngIf="!exchange.isComplete && !exchange.status">
-        <div class="tx-info">
+        <header>
           <div class="title">Pay with {{exchange.selectedCurrency?.name}}</div>
           <p class="widget-help">
             Send your {{exchange.selectedCurrency?.symbol}} to the following address to automatically convert it to PART
           </p>
-        </div>
+        </header>
         <div class="tx-amount">
           <span class="big">{{ exchange.payAmount?.particlStringInteger() }}</span>
           <span class="point">{{ exchange.payAmount?.particlStringSep() }}</span>
@@ -140,7 +150,7 @@
         </div>
       </mat-card>
       <mat-card *ngIf="!exchange.isComplete && exchange.status">
-        <div class="tx-info">
+        <header>
           <div class="title">Exchange Status</div>
           <p class="widget-help">
             {{exchange.status.status }}
@@ -149,10 +159,10 @@
           From Address: <code>{{ exchange?.status.address_from }}</code><br>
           To Address: <code>{{ exchange?.status.address_to }}</code><br>
           From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
-        </div>
+        </header>
       </mat-card>
       <mat-card *ngIf="exchange.isComplete">
-        <div class="tx-info">
+        <header>
           <div class="title">Done</div>
           <p class="widget-help">
             Please go to overview to see new funds
@@ -161,7 +171,7 @@
           From Address: <code>{{ exchange?.status.address_from }}</code><br>
           To Address: <code>{{ exchange?.status.address_to }}</code><br>
           From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
-        </div>
+        </header>
         <button mat-raised-button color="primary" (click)="startNewExchange()">
           <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
           Start Exchange

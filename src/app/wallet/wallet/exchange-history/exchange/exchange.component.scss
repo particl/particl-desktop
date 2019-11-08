@@ -15,7 +15,13 @@
   margin: 14px auto 12px;
   width: 400px;
   position: relative;
-  .mat-progress-bar { // Loading bar in card (getting exchange bot info)
+  header {
+    .widget-help {
+      margin-bottom: 20px;
+    }
+  }
+  // Loading bar in card (getting exchange bot info)
+  .mat-progress-bar {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -25,6 +31,63 @@
     border-bottom-right-radius: $radius;
   }
 }
+
+// ---- Step 1: Currency ---- //
+
+.amount-to-receive {
+  .text {
+    text-align: right;
+  }
+  .part-amount {
+    text-align: left;
+    .mat-form-field {
+      width: 100px;
+    }
+  }
+}
+
+.select-currency {
+  margin: 6px -24px 0;
+  .coin-option {
+    @extend %tfx;
+    padding: 0 24px;
+    text-align: left;
+    line-height: 1.8;
+    &:hover,
+    &:focus {
+      background: $bg;
+    }
+    .mat-radio-label {
+      padding: 10px 24px;
+    }
+    img.coin {
+      float: left;
+      width: 30px;
+      height: 30px;
+      margin: 7px 12px 7px 6px;
+    }
+    .name {
+      display: inline-block;
+      padding: 8px 0;
+      font-size: 125%;
+      font-weight: 600;
+    }
+    .desc {
+      @extend %lighter;
+      display: inline-block;
+      margin-left: 6px;
+    }
+  }
+}
+
+// ---- Step 2: Exchange ---- //
+
+
+
+// ---- Step 3: Pay ---- //
+
+
+
 
 .receiver-info {
   qrcode {
@@ -131,12 +194,6 @@
 
 .rate {
   font-size: 10px;
-}
-
-.currencies {
-  text-align: left;
-  margin: 0 auto;
-  max-width: 300px;
 }
 
 .offers {
