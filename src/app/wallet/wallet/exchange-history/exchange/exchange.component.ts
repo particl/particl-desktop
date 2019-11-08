@@ -132,4 +132,8 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
         () => {observer.error(); observer.complete()})
     });
   }
+
+  gotoBotManagement() {
+    this.router.navigate(['wallet', 'main', 'bot', 'list']);
+  }
 }

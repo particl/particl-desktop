@@ -1,11 +1,16 @@
 <div class="container-block without-tab-bar">
   <app-page-intro>
-    <ng-container page-title>Exchange BTC/alts</ng-container>
+    <ng-container page-title>New Exchange</ng-container>
     <ng-container page-content>
-      ...
+      Easily convert your BTC/altcoins to PART &ndash; select desired amount of PART to receive and currency for payment
     </ng-container>
     <ng-container page-help>
-      TODO, some help text
+      To enable exchange functionality, you must first enable one of the exchange bots &ndash; find them in
+      <!-- FIXME: link to Bot Management page: -->
+      <button mat-button class="small" (click)="gotoBotManagement()">
+        <mat-icon fontSet="partIcon" fontIcon="part-tool"></mat-icon>
+        Bot Management
+      </button>
     </ng-container>
   </app-page-intro>
 

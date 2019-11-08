@@ -154,4 +154,8 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
   gotoExchange() {
     this.router.navigate(['wallet', 'main', 'wallet', 'exchange']);
   }
+
+  gotoBotManagement() {
+    this.router.navigate(['wallet', 'main', 'bot', 'list']);
+  }
 }
