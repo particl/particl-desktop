@@ -22,12 +22,13 @@
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
     </ng-template>
     
-    <mat-step label="Currency" [completed]="stepper.selectedIndex >= 1">
+    <mat-step label="Currency & Amount" [completed]="stepper.selectedIndex >= 1">
       <mat-card>
         <header>
-          <div class="title">Select amount &amp; currency</div>
+          <div class="title">Select amount</div>
           <p class="widget-help">
-            Select the amount of PART to receive and a coin for exchange:
+            Select the requested amount of PART to receive.<br>
+            In other words: How much PART do you want?
           </p>
         </header>
 
@@ -40,6 +41,15 @@
             </mat-form-field>
           </div>
         </div>
+      </mat-card>
+
+      <mat-card>
+        <header>
+          <div class="title">Select currency</div>
+          <p class="widget-help">
+            Select the currency for payment &ndash; you will spend it to get your PART:
+          </p>
+        </header>
 
         <mat-radio-group class="select-currency block-radio" fxLayout="column">
           <mat-radio-button *ngFor="let currency of exchange.availableCurrencies"
@@ -48,11 +58,11 @@
                             [checked]="exchange.selectedCurrency === currency"
                             (change)="exchange.selectedCurrency = $event.value">
             <img class="coin" src="assets/icons/SVG/coins/{{ currency.symbol.toUpperCase() }}.svg"
-                 default="assets/icons/SVG/coins/unknown.svg">
+                  default="assets/icons/SVG/coins/unknown.svg">
             <div class="name">{{ currency.name }}</div>
             <div class="desc">({{ currency.symbol.toUpperCase() }})</div>
           </mat-radio-button>
-        </mat-radio-group><!-- .from-balance-type -->
+        </mat-radio-group><!-- .select-currency -->
 
         <div *ngIf="exchange.loading">
           <p class="widget-help exchange-status">Requesting currencies from {{exchange.completedRequests}}/{{exchange.totalBots}} bots</p>
@@ -69,7 +79,7 @@
           <span>No exchange bots responded</span>
         </div>
       </mat-card>
-    </mat-step>
+    </mat-step><!-- step 1: amount & currency -->
 
     <mat-step label="Exchange" [completed]="stepper.selectedIndex >= 2">
       <mat-card>
@@ -119,7 +129,7 @@
           <span>No exchange bots responded</span>
         </div>
       </mat-card>
-    </mat-step>
+    </mat-step><!-- step 2: exchange -->
 
     <mat-step label="Pay" [completed]="stepper.selectedIndex >= 3">
       <mat-card *ngIf="!exchange.isComplete && !exchange.status">
@@ -177,7 +187,7 @@
           Start Exchange
         </button>
       </mat-card>
-    </mat-step>
+    </mat-step><!-- step 3: payment -->
 
   </mat-horizontal-stepper>
 
