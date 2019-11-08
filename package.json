@@ -81,7 +81,7 @@
       ]
     },
     "dmg": {
-      "sign": false,
+      "sign": true,
       "background": "background-mac.png",
       "contents": [
         {
@@ -221,7 +221,7 @@
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
     "electron": "5.0.4",
-    "electron-builder": "^20.38.5",
+    "electron-builder": "^21.2.0",
     "electron-notarize": "^0.2.0",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
