@@ -35,15 +35,16 @@
       <table class="full-width">
         <tr>
           <th>Name/nick</th>
-          <td>Mr. Botguy</td>
+          <td>{{ bot?.author.name }}</td>
         </tr>
         <tr>
           <th>E-mail</th>
-          <td>botguy@botcorp.com</td>
+          <td>{{ bot?.author.email }}</td>
         </tr>
         <tr>
           <th>Chat</th>
-          <td>@botguy (Riot)<br>@botguy.com (Twitter)</td>
+          <td>
+            <div *ngFor="let chat of bot?.author.chat_ids">{{chat.id}} ({{chat.type}})</div>
         </tr>
       </table>
     </div>

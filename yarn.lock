@@ -9009,18 +9009,18 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-bot-core@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/particl-bot-core/-/particl-bot-core-0.0.3.tgz#35711a6f5b3082dac3ed5e7135efc8d8759b755d"
-  integrity sha512-HSpjFslyH90+9mGDPIy6uCtI33TZ5RMFifIJgKcRWMsHszyFc2Ayna679InZIfi49w/iuLm6mftdARldctcCbg==
+particl-bot-core@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/particl-bot-core/-/particl-bot-core-0.0.6.tgz#e163f50fcc9bf80a1a46ab49f2aff3e9b098aa05"
+  integrity sha512-ZroME3vubBBaghKeuqeVd8JKleA2jt/LctCvOMRVfHa3yhV/UM/KPmTMgMFCak/BjG/YrOw0/Op9h5DLYzEnLA==
   dependencies:
     particl-bitcore-lib "git://github.com/particl/particl-bitcore-lib.git"
     particl-client "^0.0.2"
 
-particl-bot-manager@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.6.tgz#24933e78bc7a083de4c6d115bdab71d741453b22"
-  integrity sha512-souOAPVUZ8zlJmZTfHXEg7MVkTSHNDJdVFmGy/Cquz3F/no2APPZQTKwv2PkvekXEoKe2TyzA2KgsXGFg/hqfg==
+particl-bot-manager@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.7.tgz#19878c8d6839eed7c4ac273e6d0b422640b6dfc5"
+  integrity sha512-ZFGiHwuqLFSXlNgP0ACBhV3zq478aIDjJ3wcsaMUsB/PZQaRWtBLS6VOOuujVuWfxEmlQI7MKTGHZMiO1rBLFw==
   dependencies:
     "@nestjs/common" "^6.7.2"
     "@nestjs/core" "^6.7.2"
@@ -9031,13 +9031,13 @@ particl-bot-manager@^0.0.6:
     class-transformer "^0.2.3"
     class-validator "^0.10.1"
     dotenv "^8.2.0"
-    particl-bot-core "^0.0.3"
+    particl-bot-core "^0.0.6"
     particl-client "^0.0.2"
     reflect-metadata "^0.1.13"
     rimraf "^3.0.0"
     rxjs "^6.5.3"
     sqlite3 "https://github.com/particl/sqlite3-offline.git"
-    typeorm "^0.2.19"
+    typeorm "^0.2.20"
 
 particl-client@^0.0.2:
   version "0.0.2"
@@ -12032,7 +12032,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typeorm@^0.2.19:
+typeorm@^0.2.20:
   version "0.2.20"
   resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.20.tgz#efb60f2e55a7d08fc365f281ec2a71c87a9ebba5"
   integrity sha512-VxB+9qH8D+PM19MIx18Zs3Fqv/ZINnnQvUGmBEiLYDrB9etdSdamgSTCIhWdFNndeJ6ldH4jbD0Z6HWsepMPlA==
