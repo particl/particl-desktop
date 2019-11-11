@@ -15,6 +15,7 @@ Customizations and modifiers for default Material components
       1.4. Sliders (range)
       1.5. Paginator
       1.6. Tooltips
+      1.7. Spinners
 
     2. Layout
       2.1. Cards
@@ -145,6 +146,18 @@ mat-tooltip-component .mat-tooltip {
   padding: 5px 8px;
 }
 
+
+.mat-progress-spinner {
+  &.tiny {
+    $spinner-size: 16px;
+    width: $spinner-size !important;
+    height: $spinner-size !important;
+    & > svg {
+      width: $spinner-size !important;
+      height: $spinner-size !important;
+    }
+  }
+}
 
 /* ------------------------------- *\
     2. LAYOUT
