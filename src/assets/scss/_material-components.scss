@@ -265,6 +265,11 @@ mat-card.mat-card {
   .mat-step-label-selected {
     font-weight: 700;
   }
+  .mat-step-icon {
+    .mat-icon {
+      font-size: 12px;
+    }
+  }
   // buy/cart-shipping: remove white background
   &.no-bg {
     background: none !important;

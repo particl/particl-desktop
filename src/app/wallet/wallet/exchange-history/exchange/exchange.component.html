@@ -152,9 +152,13 @@
     <mat-step label="Pay" [completed]="stepper.selectedIndex >= 3">
       <mat-card *ngIf="!exchange.isComplete && !exchange.status">
         <header>
-          <div class="title">Pay with {{exchange.selectedCurrency?.name}}</div>
+          <div class="title">
+            Pay with
+            <img class="coin" src="assets/icons/SVG/coins/{{exchange.selectedCurrency?.symbol}}.svg" default="assets/icons/SVG/coins/unknown.svg">
+            {{exchange.selectedCurrency?.name}}
+          </div>
           <p class="widget-help">
-            Send your {{exchange.selectedCurrency?.symbol}} to the following address to automatically convert it to PART
+            Send your {{exchange.selectedCurrency?.symbol}} to the following address to automatically convert it to PART. Once sent, wait a couple minutes for the exchange to register your transaction.
           </p>
         </header>
         <div class="tx-amount">
@@ -166,47 +170,86 @@
 
         <div *ngIf="exchange.loading">
           <p class="widget-help exchange-status">Requesting exchange address...</p>
-          <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+          <mat-progress-bar mode="indeterminate" class="loading-bar" color="accent"></mat-progress-bar>
         </div>
         <div *ngIf="exchange.exchangeData">
           <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
           <div class="receiver-info">
             <qrcode size="200" [level]="'H'" qrdata="{{exchange.selectedCurrency?.name.toLowerCase()}}:{{exchange.exchangeData.address_from}}?amount={{exchange.exchangeData.amount_from}}"></qrcode>
-            <br>
             <code class="address"> {{exchange.exchangeData.address_from}} </code>
           </div>
         </div>
       </mat-card>
-      <mat-card *ngIf="!exchange.isComplete && exchange.status">
+      <mat-card *ngIf="!exchange.isComplete && exchange.status" class="wider">
         <header>
           <div class="title">Exchange Status</div>
           <p class="widget-help">
-            {{exchange.status.status }}
+            Your payment has been received &ndash; exchange is now in progress.<br>
+            You can safely switch to another page, the rest of the process will happen automatically.
           </p>
-          Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
-          From Address: <code>{{ exchange?.status.address_from }}</code><br>
-          To Address: <code>{{ exchange?.status.address_to }}</code><br>
-          From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
         </header>
+        <p class="info message">
+          <mat-spinner class="tiny" color="accent"></mat-spinner> {{exchange.status.status}}
+        </p>
+        <table class="exchange-details outgoing full-width">
+          <tr>
+            <th>Sending {{ exchange?.status.currency_from }} to</th>
+            <td><input type="text" readonly value="{{ exchange?.status.address_from }}" class="value highlight address"></td>
+          </tr>
+          <tr>
+            <th>Sent TXID ({{ exchange?.status.currency_from }})</th>
+            <td><input type="text" readonly value="{{ exchange?.status.tx_from }}" class="value address txid"></td>
+          </tr>
+        </table>
+        <mat-divider></mat-divider>
+        <table class="exchange-details incoming full-width">
+          <tr>
+            <th>Receiving {{ exchange?.status.currency_to }} to</th>
+            <td><input type="text" readonly value="{{ exchange?.status.address_to }}" class="value highlight address"></td>
+          </tr>
+        </table>
+        <mat-divider></mat-divider>
+        <table class="exchange-details full-width">
+          <tr>
+            <th>Exchange ID</th>
+            <td><input type="text" readonly value="{{ exchange?.status.track_id }}" class="value address exchange-id"></td>
+          </tr>
+        </table>
       </mat-card>
-      <mat-card *ngIf="exchange.isComplete">
+      <mat-card *ngIf="exchange.isComplete" class="wider">
         <header>
-          <div class="title">Done</div>
+          <div class="title">Exchange completed</div>
           <p class="widget-help">
-            Please go to overview to see new funds
+            Exchange was successfully completed, your new {{ exchange?.status.currency_to }} coins are on a way to your wallet.<br>
+            Welcome aboard and happy shopping!
           </p>
-          Exchange ID: <code>{{ exchange?.status.track_id }}</code><br>
-          From Address: <code>{{ exchange?.status.address_from }}</code><br>
-          To Address: <code>{{ exchange?.status.address_to }}</code><br>
-          From Tx: <code>{{ exchange?.status.tx_from }}</code><br>
         </header>
-        <button mat-raised-button color="primary" (click)="startNewExchange()">
-          <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
-          Start Exchange
-        </button>
+        <table class="exchange-details outgoing full-width">
+          <tr>
+            <th>Sent {{ exchange?.status.currency_from }} to</th>
+            <td><input type="text" readonly value="{{ exchange?.status.address_from }}" class="value highlight address"></td>
+          </tr>
+          <tr>
+            <th>Sent TXID ({{ exchange?.status.currency_from }})</th>
+            <td><input type="text" readonly value="{{ exchange?.status.tx_from }}" class="value address txid"></td>
+          </tr>
+        </table>
+        <mat-divider></mat-divider>
+        <table class="exchange-details incoming full-width">
+          <tr>
+            <th>Received {{ exchange?.status.currency_to }} to</th>
+            <td><input type="text" readonly value="{{ exchange?.status.address_to }}" class="value highlight address"></td>
+          </tr>
+        </table>
+        <mat-divider></mat-divider>
+        <table class="exchange-details full-width">
+          <tr>
+            <th>Exchange ID</th>
+            <td><input type="text" readonly value="{{ exchange?.status.track_id }}" class="value address exchange-id"></td>
+          </tr>
+        </table>
       </mat-card>
     </mat-step><!-- step 3: payment -->
-
 
   </mat-horizontal-stepper>
 

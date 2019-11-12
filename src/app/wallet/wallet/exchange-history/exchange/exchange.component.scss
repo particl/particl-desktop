@@ -16,6 +16,13 @@
   width: 400px;
   position: relative;
   header {
+    .title {
+      img.coin {
+        position: relative;
+        top: 5px;
+        margin: 0 2px 0 4px;
+      }
+    }
     .widget-help {
       margin-bottom: 20px;
     }
@@ -156,123 +163,61 @@ table.amounts-overview {
 
 // ---- Step 3: Pay ---- //
 
-
-
-
 .receiver-info {
   qrcode {
     display: inline-block;
-    margin: 0 auto 12px;
+    margin: 0 auto;
   }
   .address {
     @extend %enable-select;
+    margin: 24px 0 12px;
   }
 }
 
-.exchange { // EX history item
-  .header {
-    $photo-size: 90px;
-    min-height: $photo-size !important;
-    max-height: $photo-size !important;
-    padding: 0 24px 0 0;
-    .photo {
-      min-height: $photo-size;
-      max-height: $photo-size;
+
+// ---- Step 4-5: Status, Summary ---- //
+
+table.exchange-details {
+  th {
+    @extend %lighter;
+    width: 23%;
+    padding-right: 12px;
+    font-weight: 500;
+    text-align: right;
+    vertical-align: middle;
+  }
+  input.value {
+    width: calc(100% - 12px);
+    padding: 3px 6px;
+    border-radius: $radius;
+    outline: none;
+    font-family: $font;
+    &.highlight {
+      font-weight: 500;
+    }
+    &:focus {
+      background: $bg;
     }
   }
-  .name { // "X" was exchanged for "Y"
-    .coin {
+}
+
+.mat-card {
+  &.wider {
+    width: 700px;
+  }
+  .mat-divider {
+    @extend %lighter;
+    margin: 8px -24px;
+    position: static;
+    width: auto;
+  }
+  p.info {
+    margin: 18px -24px;
+    .mat-spinner {
+      display: inline-block;
       position: relative;
       top: 3px;
-      width: 16px;
-      margin-right: 2px;
-      & + .coin {
-        margin-left: 6px;
-      }
+      margin-right: 6px;
     }
   }
-  button.exchange-status { // status message/refresh button
-    display: inline-block;
-    font-weight: 400;
-    font-size: 100%;
-    text-transform: uppercase;
-    line-height: 1.6;
-    border: 1px solid;
-    border-radius: $radius;
-    margin: 0 10px 0 0;
-    padding: 1px 9px;
-    .icon {
-      position: relative;
-      top: 0;
-      font-size: 12px;
-      margin-right: 2px;
-    }
-  }
-  .loading-spinner {
-    display: inline-block;
-    position: relative;
-    top: 4px;
-    margin-right: 8px;
-  }
-  .bot-name {
-    display: inline-block;
-  }
-  .detail { // expanded item details
-    padding: 18px 30px;
-    table.exchange-details {
-      .direction-img { // "illustration" with coin and arrow
-        vertical-align: middle;
-        padding-right: 17px;
-        width: 55px;
-        img.coin {
-          width: 26px;
-          position: relative;
-          top: 2px;
-          margin-right: 5px;
-        }
-        .mat-icon {
-          margin-right: 5px;
-          position: relative;
-          top: -2px;
-        }
-      }
-      th {
-        width: 25%;
-        padding-right: 12px;
-        font-weight: 500;
-        vertical-align: middle;
-      }
-    }
-    input.value {
-      width: calc(100% - 12px);
-      padding: 3px 6px;
-      border-radius: $radius;
-      outline: none;
-      font-family: $font;
-      &.highlight {
-        font-weight: 500;
-      }
-      &:focus {
-        background: $bg;
-      }
-    }
-    .mat-divider {
-      margin: 16px -30px;
-    }
-  }
-}
-
-.rate {
-  font-size: 10px;
-}
-
-.offers {
-  text-align: left;
-  margin: 0 auto;
-  max-width: 400px;
-}
-
-.exchange-loading-status {
-  width: 100%;
-  text-align: center;
 }
