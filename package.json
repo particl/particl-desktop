@@ -1,6 +1,6 @@
 {
   "name": "particl-desktop",
-  "version": "2.2.0",
+  "version": "2.2.0-testnet",
   "branch": "2.2",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -50,7 +50,7 @@
   "build": {
     "electronVersion": "5.0.4",
     "appId": "io.particl.desktop",
-    "productName": "Particl Desktop",
+    "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
     "afterSign": "build/notarize.js",
     "directories": {
@@ -123,7 +123,7 @@
       "uninstallerIcon": "resources/icon.ico",
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "menuCategory": "Particl Desktop",
+      "menuCategory": "Particl Desktop Testnet",
       "runAfterFinish": true
     },
     "linux": {
@@ -149,11 +149,11 @@
           ]
         }
       ],
-      "executableName": "Particl Desktop",
+      "executableName": "Particl Desktop Testnet",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl-desktop",
-        "Name": "Particl Desktop",
+        "Name": "Particl Desktop Testnet",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
