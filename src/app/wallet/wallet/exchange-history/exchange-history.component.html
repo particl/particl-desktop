@@ -168,13 +168,30 @@
                   <td><input type="text" readonly value="{{ exchange?.tx_to }}" class="value address txid"></td>
                 </tr>
               </table>
+
               <mat-divider></mat-divider>
-              <table class="exchange-details full-width">
-                <tr>
-                  <th>Exchange ID</th>
-                  <td><input type="text" readonly value="{{ exchange?.track_id }}" class="value address exchange-id"></td>
-                </tr>
-              </table>
+
+              <div class="row" fxLayoutGap="30px" fxLayoutAlign="space-between center">
+                <table class="exchange-details full-width" fxFlex="1 1 100%">
+                  <tr>
+                    <th>Exchange date</th>
+                    <!-- TODO: add date of initiated exchange if possible -->
+                    <td><input type="text" disabled value="XX. XX. XXXX XX:XX:XX" class="value address"></td>
+                  </tr>
+                  <tr>
+                    <th>Exchange ID</th>
+                    <td><input type="text" readonly value="{{ exchange?.track_id }}" class="value address exchange-id"></td>
+                  </tr>
+                </table>
+                <div class="exchange-actions" fxFlex="0 0 100px">
+                  <!-- TODO: implement cancelling exchange & removing it from the list if cancelled (or maybe JUST hide it from the list) -->
+                  <button mat-button color="warn" matTooltip="Cancel this Exchange">
+                    <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+
             </div><!-- .detail -->
 
           </mat-expansion-panel>
