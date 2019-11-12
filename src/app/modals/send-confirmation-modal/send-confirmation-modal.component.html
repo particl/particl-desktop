@@ -1,25 +1,9 @@
-<mat-tab-group class="payment-method-tabs" (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-particl"></mat-icon>
-      Pay with PART
-    </ng-template>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <mat-icon fontSet="partIcon" fontIcon="part-cryptocurrency-bitcoin"></mat-icon>
-      Pay with BTC/alts
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
-
-<button class="small-close-button in-tab-bar pull-right" (click)="dialogClose()">
+<div mat-dialog-title>Confirm transaction</div>
+<button class="small-close-button pull-right" (click)="dialogClose()">
   <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
 </button>
 
-
-<!-- Pay with Particl -->
-<div mat-dialog-content class="dialog-content" *ngIf="tabLabels[selectedTab] === 'pay-with-part'">
+<div mat-dialog-content class="dialog-content">
 
   <!--TX confirmation-->
   <div class="tx-confirmation">
@@ -82,158 +66,15 @@
     </p>
   </div><!-- TX confirmation -->
 
-</div><!-- .dialog-content (pay with PART) -->
+</div><!-- .dialog-content -->
 
-<mat-dialog-actions fxLayoutAlign="space-between center" *ngIf="tabLabels[selectedTab] === 'pay-with-part'">
+<mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()" >
+  <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Send
   </button>
 </mat-dialog-actions>
-
-
-<!-- Pay with BTC/alts -->
-<div mat-dialog-content class="dialog-content exchange" *ngIf="tabLabels[selectedTab] === 'pay-with-btc-alts'">
-  <mat-horizontal-stepper labelPosition="bottom" #stepper>
-    <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
-    <!--ng-template matStepperIcon="edit">
-      <custom-icon>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-      </custom-icon>
-    </ng-template>
-    <ng-template matStepperIcon="done">
-      <custom-icon>
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
-      </custom-icon>
-    </ng-template-->
-
-    <mat-step><!-- [stepControl]="firstFormGroup" -->
-      <form><!-- [formGroup]="firstFormGroup" -->
-        <ng-template matStepLabel>Currency</ng-template>
-        <div class="tx-info">
-          <div class="title">Select your currency</div>
-          <p class="widget-help">
-            Pay your order effortlessly with your favourite cryptocurrencies &ndash; select a coin for payment:
-          </p>
-        </div>
-
-        <mat-radio-group class="select-coin block-radio" fxLayout="column" fxLayoutGap="10px">
-          <mat-radio-button value="btc" checked="checked" color="primary">
-            <div class="name">Bitcoin <span class="ticker">(BTC)</span></div>
-          </mat-radio-button>
-          <mat-radio-button value="eth" color="primary">
-            <div class="name">Ethereum <span class="ticker">(ETH)</span></div>
-          </mat-radio-button>
-          <mat-radio-button value="ltc" color="primary">
-            <div class="name">Litecoin <span class="ticker">(LTC)</span></div>
-          </mat-radio-button>
-          <mat-radio-button value="dcr" color="primary">
-            <div class="name">Decred <span class="ticker">(DCR)</span></div>
-          </mat-radio-button>
-        </mat-radio-group>
-        <mat-checkbox>Remember this choice (can be changed later)</mat-checkbox>
-
-        <!-- [01] these `mat-dialog-actions` would be ideal _below_ this whole `.mat-dialog-content` div - that's their proper placement. BUT since they need to be inside of the `mat-step` to work (I assume), I needed to put them here. If you find a way put it back, that would be great :) -->
-        <mat-dialog-actions fxLayoutAlign="space-between center">
-          <button mat-button mat-dialog-close (click)="dialogClose()">
-            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-            Cancel
-          </button>
-          <button mat-raised-button color="primary" matStepperNext>
-            <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-            Next
-          </button>
-        </mat-dialog-actions>
-      </form>
-    </mat-step>
-
-    <mat-step><!-- [stepControl]="secondFormGroup" -->
-      <form><!-- [formGroup]="secondFormGroup" -->
-        <ng-template matStepLabel>Exchange</ng-template>
-        <div class="tx-info">
-          <div class="title">Choose an exchange</div>
-          <p class="widget-help">
-            Payment in Bitcoin can be processed on multiple exchanges &ndash; select the one you prefer:
-          </p>
-        </div>
-
-        <mat-radio-group class="select-exchange block-radio" fxLayout="column" fxLayoutGap="10px">
-          <mat-radio-button value="bittrex" checked="checked" color="primary">
-            <div class="name">Bittrex <span class="ticker">bittrex.com</span></div>
-          </mat-radio-button>
-          <mat-radio-button value="hitbtc" color="primary">
-            <div class="name">HitBTC <span class="ticker">hitbtc.com</span></div>
-          </mat-radio-button>
-          <mat-radio-button value="simpleswap" color="primary">
-            <div class="name">SimpleSwap <span class="ticker">simpleswap.io</span></div>
-          </mat-radio-button>
-        </mat-radio-group>
-        <mat-checkbox>Remember this choice (can be changed later)</mat-checkbox>
-
-        <mat-dialog-actions fxLayoutAlign="space-between center">
-          <button mat-button matStepperPrevious>
-            <mat-icon fontSet="partIcon" fontIcon="part-arrow-left"></mat-icon>
-            Back
-          </button>
-          <button mat-raised-button color="primary" matStepperNext>
-            <mat-icon fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-            Next
-          </button>
-        </mat-dialog-actions>
-      </form>
-    </mat-step>
-
-    <mat-step>
-      <ng-template matStepLabel>Pay</ng-template>
-      <div class="tx-info">
-        <div class="title">Pay with Bitcoin</div>
-        <p class="widget-help">
-          Send your BTC to the following address to automatically convert it to PART and pay for your order
-        </p>
-      </div>
-
-      <div class="tx-amount">
-        <span class="big">{{ sendAmount.getIntegerPart() }}</span>
-        <span *ngIf="sendAmount.ifDotExist()">
-        <span class="point">.</span>
-        <span class="small">{{ sendAmount.getFractionalPart() }}</span>&ensp;</span>
-        <!-- ..or whatever currency was selected.. -->
-        <span class="currency">BTC</span>
-      </div>
-
-      <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
-      
-      <!-- FIXME: add also QR code here -->
-      <div class="receiver-info">
-        <code class="address"> {{ sendAddress }} </code>
-      </div>
-
-      <p class="widget-help" *ngIf="this.send.subtractFeeFromAmount">
-        Blah blah some more transaction fees for the exchange etc.. FIXME!!
-      </p>
-
-      <mat-dialog-actions fxLayoutAlign="space-between center">
-        <button mat-button matStepperPrevious>
-          <mat-icon fontSet="partIcon" fontIcon="part-arrow-left"></mat-icon>
-          Back
-        </button>
-        <!-- by default, button is disabled as "waiting for payment"; when payment and exchange goes through, it will change to "Paid" and become active - clicking it will close the modal -->
-        <button mat-raised-button color="primary" disabled>
-          <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
-          Waiting for payment
-        </button>
-        <!--button mat-raised-button color="primary">
-          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-          Paid
-        </button-->
-      </mat-dialog-actions>
-    </mat-step>
-
-  </mat-horizontal-stepper>
-</div><!-- .dialog-content (pay with BTC/alts) -->
-
-<!-- [01] ..this would be the ideal place for `mat-dialog-actions` -->

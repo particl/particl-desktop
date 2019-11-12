@@ -373,10 +373,6 @@ mat-card.mat-card {
       border: 0;
       outline: none;
       cursor: pointer;
-      &.in-tab-bar {
-        top: 10px;
-        right: 0;
-      }
       .mat-icon {
         color: rgba($color-alert, 0.5);
         border-radius: 50%;

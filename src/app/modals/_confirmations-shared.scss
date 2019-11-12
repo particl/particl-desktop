@@ -15,12 +15,6 @@
 
 // ------ LAYOUT ------ //
 
-// tab group on top (pay with PART or BTC/alts)
-.payment-method-tabs {
-  margin: -24px -24px 0 -24px;
-}
-
-// "normal" (PART) pay confirmation content
 .dialog-content {
   width: 25rem;
   padding: 20px 15px 10px;
@@ -29,23 +23,16 @@
   p.warning {
     margin: 24px -15px;
   }
-
-  // pay with BTC/alts (exchange)
-  &.exchange {
-    margin: 0 -24px !important;
-    padding: 12px 15px 0 15px;
-    text-align: left;
-    .mat-horizontal-content-container {
-      padding: 0 12px 24px 12px;
-    }
-  }
 }
 
 .tx-info { // info about public/blind/anon TX
-  text-align: center;
   .icon {
     font-size: 32px;
     color: $color;
+  }
+  .help-text {
+    margin: 5px auto 20px;
+    max-width: 20rem;
   }
 }
 
