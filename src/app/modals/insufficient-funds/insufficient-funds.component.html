@@ -1,29 +1,46 @@
 <div mat-dialog-title class="title">Insufficient funds</div>
+
 <mat-dialog-content class="modal-content">
+
+  <p class="lead">
+    You don't have enough Anon (private) funds for this order.
+  </p>
   <p>
-    You have insufficient funds available, would you like to go to convert some public funds to anon or exchange.
+    To place the order, you will need more Anon balance &ndash; you can either Convert some of your other balances (Public or Blind) or use our in-wallet Exchange (to swap BTC or other coins for Anon PART).
   </p>
+
   <table class="info">
-    <tr><th>Required</th><td><strong>{{ data.required.particlsString() }}</strong></td></tr>
-    <tr><th>Have</th><td>{{ availableBalance.particlsString() }}</td></tr>
-    <tr><th>Fee Buffer (5%)</th><td>{{ feeBuffer.particlsString() }}</td></tr>
-    <tr><th>Request</th><td>{{ this.total.particlsString() }}</td></tr>
+    <tr><th>Required for order:</th><td>{{ data.required.particlsString() }} PART</td></tr>
+    <tr><th>Your current Anon balance:</th><td>{{ availableBalance.particlsString() }} PART</td></tr>
+    <tr><th>Fee buffer (5 %):</th><td>{{ feeBuffer.particlsString() }} PART</td></tr>
+    <tr><th>Recommended Anon balance:</th><td><strong>{{ this.total.particlsString() }} PART</strong></td></tr>
   </table>
+
   <p class="widget-help">
-    The fee buffer is required to cover any transaction fees etc that will be required for the bid.
+    Note: 5 % fee buffer is only recommended as a safest way to cover all associated transaction fees, to make sure you will still have enough Anon funds for this order.
   </p>
+
 </mat-dialog-content>
-<mat-dialog-actions fxLayoutAlign="end center">
-  <button type="button" mat-button mat-dialog-close>
-    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-    Cancel
-  </button>
-  <button mat-raised-button color="primary" (click)="goto('send')">
-    <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
-    Go to Convert
-  </button>
-  <button mat-raised-button color="primary" (click)="goto('exchange')">
-    <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
-    Go to Exchange
-  </button>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+
+  <div class="left">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+  </div>
+
+  <div class="right">
+    <button mat-raised-button color="accent" (click)="goto('send')" matTooltip="Convert Public/Blind to Anon PART" matTooltipPosition="below">
+      <mat-icon fontSet="partIcon" fontIcon="part-swap"></mat-icon>
+      Convert PART
+    </button>
+    <button mat-raised-button color="primary" (click)="goto('exchange')" matTooltip="Exchange BTC/altcoins for Anon PART" matTooltipPosition="below">
+      <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
+      Exchange BTC/alts
+    </button>
+  </div>
+
 </mat-dialog-actions>
