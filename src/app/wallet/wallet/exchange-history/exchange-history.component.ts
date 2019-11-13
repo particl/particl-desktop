@@ -7,6 +7,7 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
+import { DateFormatter } from 'app/core/util/utils';
 
 
 interface IPage {
@@ -34,7 +35,9 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
     search: '',
     bot: '',
     from: '',
-    to: ''
+    to: '',
+    hideCompleted: false,
+    hideCancelled: true
   }
 
   private destroyed: boolean = false;
@@ -65,7 +68,9 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
       search: '',
       bot: '',
       from: '',
-      to: ''
+      to: '',
+      hideCompleted: false,
+      hideCancelled: true
     };
     this.search();
   }
@@ -75,8 +80,10 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
   }
 
   async loadPage(pageNumber: number, clear: boolean = false) {
+    const completed = this.filters.hideCompleted ? false : null;
+    const cancelled = this.filters.hideCancelled ? false : null;
     const exchanges = await this.botService.searchExchanges(pageNumber, 10, this.filters.bot,
-       this.filters.from, this.filters.to, this.filters.search);
+       this.filters.from, this.filters.to, this.filters.search, completed, cancelled);
 
     this.isLoading = false;
 
@@ -151,11 +158,32 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
     });
   }
 
+  async cancelExchange(track_id: string, pageIndex: number) {
+    try {
+      await this.botService.cancelExchange(track_id);
+
+      for (const page of this.pages) {
+        if (page.pageNumber >= pageIndex){
+          this.loadPage(page.pageNumber);
+        }
+      }
+    } catch (e) {
+      this.snackbarService.open(e.error.message);
+    }    
+  }
+
   gotoExchange() {
     this.router.navigate(['wallet', 'main', 'wallet', 'exchange']);
   }
 
   gotoBotManagement() {
     this.router.navigate(['wallet', 'main', 'bot', 'list']);
+  }
+
+  formatDate(date: string): string {
+    if (!date) {
+      return '';
+    }
+    return new DateFormatter(new Date(date)).dateFormatter(false);
   }
 }

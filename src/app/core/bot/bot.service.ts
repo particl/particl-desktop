@@ -43,6 +43,7 @@ export class BotService {
 
   search(page: number, pageLimit: number, type: string, search: string, enabled: boolean): Promise<Array<Bot>> {
     const params = [
+      'search',
       page,
       pageLimit,
       type,
@@ -50,7 +51,7 @@ export class BotService {
       enabled
     ];
 
-    return this.call('search', params).pipe(
+    return this.call('bot', params).pipe(
       map(bots => bots.map(b => new Bot(b)))
     ).toPromise();
   }
@@ -58,42 +59,50 @@ export class BotService {
   command(address: string, command: string, ...args: any[]): Observable<any> {
 
     const params = [
+      'command',
       address,
       command,
     ].concat(args);
 
-    return this.call('command', params).pipe(
+    return this.call('bot', params).pipe(
       take(1)
     );
   }
 
   enable(botAddress: string): Promise<Bot> {
-    return this.call('enable', [botAddress]).pipe(
+    return this.call('bot', ['enable', botAddress]).pipe(
       map(bot => new Bot(bot))
     ).toPromise();
   }
 
   disable(botAddress: string): Promise<Bot> {
-    return this.call('disable', [botAddress]).pipe(
+    return this.call('bot', ['disable', botAddress]).pipe(
       map(bot => new Bot(bot))
     ).toPromise();
   }
 
-  searchExchanges(page: number, pageLimit: number, bot: string, from: string, to: string, search: string): Promise<any> {
+  searchExchanges(page: number, pageLimit: number, bot: string, from: string, to: string, search: string, completed: boolean, cancelled: boolean): Promise<any> {
     const params = [
+      'search',
       page,
       pageLimit,
       bot,
       from,
       to,
-      search
+      search,
+      completed,
+      cancelled
     ];
 
-    return this.call('exchanges', params).toPromise();
+    return this.call('exchange', params).toPromise();
+  }
+
+  cancelExchange(track_id: string): Promise<Bot> {
+    return this.call('exchange', ['cancel', track_id]).toPromise();
   }
 
   uniqueExchangeData(): Promise<any> {
-    return this.call('uniqueExchangeData', []).toPromise();
+    return this.call('exchange', ['uniqueExchangeData']).toPromise();
   }
 
   startBotManager(wallet: string) {
