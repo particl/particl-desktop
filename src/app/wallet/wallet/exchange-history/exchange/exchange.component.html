@@ -96,9 +96,9 @@
           <tr>
             <th>Requested amount</th>
             <td>
-              {{ exchange.requirePartoshiAmount.particlStringInteger() }}
-              {{ exchange.requirePartoshiAmount.particlStringSep() }}
-              {{ exchange.requirePartoshiAmount.particlStringFraction() }}
+              {{ exchange.requirePartoshiAmount.particlStringInteger() }}<!-- whitespace hack
+            -->{{ exchange.requirePartoshiAmount.particlStringSep() }}<!--
+            -->{{ exchange.requirePartoshiAmount.particlStringFraction() }}
               <img class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
               {{ exchange.selectedCurrency?.symbol }}
             </td>
@@ -108,9 +108,9 @@
             <td>
               <mat-spinner class="tiny" *ngIf="exchange.loading"></mat-spinner>
               <span *ngIf="!exchange.loading">
-                {{ exchange.offerAmount?.particlStringInteger() }}
-                {{ exchange.offerAmount?.particlStringSep() }}
-                {{ exchange.offerAmount?.particlStringFraction() }}
+                {{ exchange.offerAmount?.particlStringInteger() }}<!-- whitespace hack
+              -->{{ exchange.offerAmount?.particlStringSep() }}<!--
+              -->{{ exchange.offerAmount?.particlStringFraction() }}
                 <img class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
                 {{ exchange.selectedCurrency?.symbol }}
               </span>
@@ -121,6 +121,7 @@
         <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
         <mat-radio-group class="bot-offers block-radio" fxLayout="column">
+          <!-- TODO: add `disabled` attribute to mat-radio-button when error present: -->
           <mat-radio-button *ngFor="let offer of exchange.availableOffers"
                             class="option" color="primary" fxFlex
                             [value]="offer"
@@ -129,8 +130,11 @@
             <img class="image" src="{{offer.bot.image}}">
             <div class="text">
               <div class="name">{{offer.bot.name}}</div>
+              <!-- TODO: show .desc & .rate only if without errors: -->
               <div class="desc">~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</div>
               <div class="rate">@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</div>
+              <!-- TODO: show .error if.. well, you know :) -->
+              <div class="error">Request exceeds max. exchange amount (100 BTC), so show me the multiline error message..</div>
             </div>
           </mat-radio-button>
         </mat-radio-group><!-- .select-currency -->

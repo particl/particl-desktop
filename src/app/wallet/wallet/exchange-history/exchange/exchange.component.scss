@@ -125,11 +125,14 @@ table.amounts-overview {
 .bot-offers {
   margin: 6px -24px 0;
   .option {
+    position: relative;
     img.image {
-      float: left;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
       width: 50px;
       height: 50px;
-      margin: 7px 6px;
+      margin: 0 6px;
       border-radius: 50%;
       overflow: hidden;
     }
@@ -156,6 +159,10 @@ table.amounts-overview {
       margin-left: 6px;
       font-size: 95%;
       font-weight: 400;
+    }
+    .error {
+      color: $color-alert;
+      white-space: normal;
     }
   }
 }
