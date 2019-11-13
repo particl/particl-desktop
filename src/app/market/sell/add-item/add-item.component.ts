@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 import { CategoryService } from 'app/core/market/api/category/category.service';
 import { Category } from 'app/core/market/api/category/category.model';
 import { TemplateService } from 'app/core/market/api/template/template.service';
-import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { Template } from 'app/core/market/api/template/template.model';
 import { CountryListService } from 'app/core/market/api/countrylist/countrylist.service';
 import { ImageService } from 'app/core/market/api/template/image/image.service';
@@ -85,7 +84,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     private image: ImageService,
     private information: InformationService,
     private location: LocationService,
-    private listing: ListingService,
     private snackbar: SnackbarService,
 
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
@@ -236,9 +234,6 @@ export class AddItemComponent implements OnInit, OnDestroy {
     this.template.get(this.templateId, true).subscribe(async (template: Template) => {
       this.log.d(`preloaded id=${this.templateId}!`);
 
-      if (this.listing.cache.isAwaiting(template)) {
-        template.status = 'awaiting';
-      }
 
       const t = {
         title: '',

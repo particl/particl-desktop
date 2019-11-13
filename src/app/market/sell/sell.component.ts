@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
 
 import { TemplateService } from 'app/core/market/api/template/template.service';
-import { ListingService } from 'app/core/market/api/listing/listing.service';
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { Listing } from 'app/core/market/api/listing/listing.model';
 import { take } from 'rxjs/operators';
@@ -78,7 +77,6 @@ export class SellComponent implements OnInit, OnDestroy {
     private router: Router,
     public dialog: MatDialog,
     private template: TemplateService,
-    private listingService: ListingService,
     private rpcState: RpcStateService,
     private _notify: OrderStatusNotifierService
   ) {
@@ -166,36 +164,30 @@ export class SellComponent implements OnInit, OnDestroy {
 
     this.templateSearchSubcription = this.template.search(pageNumber, max, this.filters.sort, 1, this.filters.category, search, hashItems)
       .pipe(take(1)).subscribe((listings: Array<Listing>) => {
-        listings = listings.map((t) => {
-        if (this.listingService.cache.isAwaiting(t)) {
-          t.status = 'awaiting';
-        }
-        return t;
-      });
 
-      this.isLoading = false;
+        this.isLoading = false;
 
 
-      // new page
-      const page = {
-        pageNumber: pageNumber,
-        listings: listings
-      };
+        // new page
+        const page = {
+          pageNumber: pageNumber,
+          listings: listings
+        };
 
-      // should we clear all existing pages? e.g search
-      if (clear === true) {
-        this.pages = [page];
-        this.noMoreListings = false;
-      } else { // infinite scroll
-        if (listings.length > 0) {
-          this.pushNewPage(page);
+        // should we clear all existing pages? e.g search
+        if (clear === true) {
+          this.pages = [page];
           this.noMoreListings = false;
-        } else {
-          this.noMoreListings = true;
+        } else { // infinite scroll
+          if (listings.length > 0) {
+            this.pushNewPage(page);
+            this.noMoreListings = false;
+          } else {
+            this.noMoreListings = true;
+          }
         }
-      }
-      this.isPageLoading = false;
-    })
+        this.isPageLoading = false;
+      })
   }
 
   pushNewPage(page: IPage) {
