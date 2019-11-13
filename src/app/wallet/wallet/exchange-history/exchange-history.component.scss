@@ -20,6 +20,7 @@
 }
 
 .exchange { // EX history item
+  margin-bottom: 12px !important;
   .header {
     $photo-size: 90px;
     min-height: $photo-size !important;
@@ -41,7 +42,7 @@
       }
     }
   }
-  button.exchange-status { // status message/refresh button
+  .exchange-status { // status message/refresh button
     display: inline-block;
     font-weight: 400;
     font-size: 100%;
@@ -56,6 +57,14 @@
       top: 0;
       font-size: 12px;
       margin-right: 2px;
+    }
+    &.completed {
+      padding: 2px 9px;
+      border: none;
+      background: mix($bg, $bg-shadow);
+      .icon {
+        top: 2px;
+      }
     }
   }
   .loading-spinner {
@@ -86,8 +95,14 @@
           top: -2px;
         }
       }
+      .mat-spinner {
+        display: inline-block;
+        position: relative;
+        top: 4px;
+        margin: 0 4px 0 6px;
+      }
       th {
-        width: 25%;
+        width: 140px;
         padding-right: 12px;
         font-weight: 500;
         vertical-align: middle;
@@ -97,7 +112,7 @@
       text-align: right;
     }
     input.value {
-      width: calc(100% - 12px);
+      width: calc(100% - 40px);
       padding: 3px 6px;
       border-radius: $radius;
       outline: none;

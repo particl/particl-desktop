@@ -1,7 +1,7 @@
 <div class="container-block without-tab-bar">
 
   <app-page-intro>
-    <ng-container page-title>Exchange</ng-container>
+    <ng-container page-title>Exchange history</ng-container>
     <ng-container page-content>
       Exchange your Bitcoin and/or altcoins effortlessly for PART and browse your previous exchanges<br>
     </ng-container>
@@ -35,15 +35,9 @@
             <mat-icon *ngIf="!filters.search" matTooltip="Search" fontSet="partIcon" fontIcon="part-search"
                       (click)="search()"></mat-icon>
           </mat-form-field>
-        </mat-card>
-      </div>
-
-      <div class="section search-sorting">
-        <div class="subtitle">Filter</div>
-        <mat-card class="filter-card">
           <mat-form-field class="full-width">
             <mat-select [(ngModel)]="filters.bot" placeholder="Bot" (selectionChange)="search()">
-              <mat-option [value]=""></mat-option>
+              <mat-option [value]="">All bots</mat-option>
               <mat-option *ngFor="let bot of exchangeData.bots" [value]="bot.address">
                 {{bot.name}}
               </mat-option>
@@ -51,7 +45,7 @@
           </mat-form-field>
           <mat-form-field class="full-width">
             <mat-select [(ngModel)]="filters.from" placeholder="From Currency" (selectionChange)="search()">
-              <mat-option [value]=""></mat-option>
+              <mat-option [value]="">All currencies</mat-option>
               <mat-option *ngFor="let currency_from of exchangeData.currency_from" [value]="currency_from">
                 {{currency_from}}
               </mat-option>
@@ -66,6 +60,12 @@
               </mat-option>
             </mat-select>
           </mat-form-field-->
+        </mat-card>
+      </div>
+
+      <div class="section filter-by-group">
+        <div class="subtitle">Filter</div>
+        <mat-card class="filter-card">
           <div class="checkbox">
             <mat-checkbox [(ngModel)]="filters.hideCompleted" (change)="search()" color="primary">Hide completed</mat-checkbox>
           </div>
@@ -137,10 +137,10 @@
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
                     {{ exchange?.status }}
                   </button>
-                  <button mat-button class="exchange-status" [disabled]="true" matTooltip="Exchange Complete" *ngIf="exchange.tx_to">
+                  <span class="completed exchange-status" *ngIf="exchange.tx_to">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
                     {{ exchange?.status }}
-                  </button>
+                  </span>
 
                   <div class="bot-name">{{ exchange.bot.name }}</div>
                 </div><!-- .meta -->
@@ -156,7 +156,10 @@
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
                   </td>
                   <th>Send {{ exchange?.currency_from }} to</th>
-                  <td><input type="text" readonly value="{{ exchange?.address_from }}" class="value highlight address"></td>
+                  <td>
+                    <mat-spinner *ngIf="!exchange.tx_from" class="tiny" color="accent"></mat-spinner>
+                    <input type="text" readonly value="{{ exchange?.address_from }}" class="value highlight address">
+                  </td>
                 </tr>
                 <tr>
                   <th>Sent TXID ({{ exchange?.currency_from }})</th>
