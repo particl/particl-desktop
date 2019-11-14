@@ -9224,10 +9224,10 @@ particl-bot-core@^0.0.6:
     particl-bitcore-lib "git://github.com/particl/particl-bitcore-lib.git"
     particl-client "^0.0.2"
 
-particl-bot-manager@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.10.tgz#de3ef2815ea2a58740fb02575c7035bf70105f6e"
-  integrity sha512-CXhzJWnGvpGfCSe58F2+sMoxPi69uqcRxtDH02nlFQsz5xBkfqf8wi5cJpFFSDlU5XT+FFQ6VQIanTJYYttJvw==
+particl-bot-manager@^0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.12.tgz#cec45ed187bbc79aecb8ced6c347b83fbeaeb7a0"
+  integrity sha512-5p5auQBY5R+QZFxVUj/PtztDDZ1m6iqarjxhS7Fi8UU/YZZE9+KDE6g722MixrsqCHuhELfbA2cvlzd+Owl+QA==
   dependencies:
     "@nestjs/common" "^6.7.2"
     "@nestjs/core" "^6.7.2"
@@ -11351,11 +11351,6 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
-
-"sqlite3@git+https://github.com/particl/sqlite3-offline.git":
-  version "3.2.0"
-  uid fae3ae47f64461b807e874897e76e7c69715e3d5
-  resolved "git+https://github.com/particl/sqlite3-offline.git#fae3ae47f64461b807e874897e76e7c69715e3d5"
 
 "sqlite3@https://github.com/particl/sqlite3-offline.git":
   version "3.2.0"

@@ -1,7 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { BotService } from 'app/core/bot/bot.module';
+import { BotService } from 'app/core/bot/bot.service';
 import { Bot } from 'app/core/bot/bot.model';
 
 interface IPage {

@@ -25,9 +25,9 @@ import { AddToCartCacheService } from 'app/core/market/market-cache/add-to-cart-
 import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifier.service';
 import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
-import { BotService } from 'app/core/bot/bot.module.js';
 import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 import { SettingsStateService } from 'app/settings/settings-state.service';
+import { BotService } from 'app/core/bot/bot.service';
 
 /*
  * The MainView is basically:

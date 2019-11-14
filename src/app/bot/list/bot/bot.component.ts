@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Bot } from 'app/core/bot/bot.model';
-import { BotService } from 'app/core/bot/bot.module';
+import { BotService } from 'app/core/bot/bot.service';
 
 @Component({
   selector: 'app-bot-item',

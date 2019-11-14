@@ -1,6 +1,6 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterViewChecked, OnDestroy, OnInit } from '@angular/core';
 import { MatStepper } from '@angular/material';
-import { BotService } from 'app/core/bot/bot.module';
+import { BotService } from 'app/core/bot/bot.service';
 import { RpcService, RpcStateService } from 'app/core/core.module';
 import { Exchange } from './exchange';
 

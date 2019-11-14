@@ -1,5 +1,5 @@
 import { Component, AfterViewChecked, OnDestroy, OnInit } from '@angular/core';
-import { BotService } from 'app/core/bot/bot.module';
+import { BotService } from 'app/core/bot/bot.service';
 import { SnackbarService, RpcStateService } from 'app/core/core.module';
 
 import * as _ from 'lodash';

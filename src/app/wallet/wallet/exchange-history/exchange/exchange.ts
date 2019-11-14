@@ -1,4 +1,4 @@
-import { BotService } from 'app/core/bot/bot.module';
+import { BotService } from 'app/core/bot/bot.service';
 import { RpcService } from 'app/core/core.module';
 import { Subscription, Observable } from 'rxjs';
 import { PartoshiAmount } from 'app/core/util/utils';

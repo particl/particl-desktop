@@ -8,7 +8,7 @@ import { IpcService } from './ipc/ipc.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 import { NotificationService } from './notification/notification.service';
 import { CloseGuiService } from './close-gui/close-gui.service';
-import { BotModule } from './bot/bot.module';
+import { BotService } from './bot/bot.service';
 
   /*
     Loading the core library will intialize IPC & RPC
@@ -16,8 +16,7 @@ import { BotModule } from './bot/bot.module';
 @NgModule({
   imports: [
     CommonModule,
-    MarketModule.forRoot(),
-    BotModule.forRoot()
+    MarketModule.forRoot()
   ]
 })
 export class CoreModule {
@@ -30,7 +29,8 @@ export class CoreModule {
         UpdaterService,
         SnackbarService,
         NotificationService,
-        CloseGuiService
+        CloseGuiService,
+        BotService
       ]
     };
   }
