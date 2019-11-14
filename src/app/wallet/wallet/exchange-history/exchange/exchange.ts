@@ -89,7 +89,7 @@ export class Exchange {
           this.loading = this.completedRequests < this.totalBots;
 
           if (response.error) {
-            return console.error(response.error);
+            return;
           }
           const currencies = response.data;
 
@@ -179,14 +179,19 @@ export class Exchange {
       this.loading = false;
 
       if (result.error) {
-        return console.error(result.error);
+        this.exchangeData = {
+          error: result.error
+        }
+        return ;
       }
 
       this.exchangeData = result.data;
 
     } catch (e) {
       this.loading = false;
-      console.error(e);
+      this.exchangeData = {
+        error: 'Error with exchange command.'
+      }
     }
   }
 
@@ -195,7 +200,7 @@ export class Exchange {
       tap((status) => {
         if (status.error) {
           this.status['status'] = status.error;
-          return console.error(status.error);
+          return;
         }
         if (status.data.tx_from) {
           this.status = status.data;
