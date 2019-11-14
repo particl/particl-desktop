@@ -87,6 +87,8 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
     if (this.unlock$) {
       this.unlock$.unsubscribe();
     }
+
+    this.router.navigate(['wallet', 'main', 'wallet', 'exchange-history']);
   }
 
   async nextStep() {

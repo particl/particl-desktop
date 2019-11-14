@@ -138,7 +138,11 @@ export class Exchange {
           this.loading = this.completedRequests < this.totalBots;
 
           if (response.error) {
-            return console.error(response.error);
+            this.availableOffers.push({
+              bot: bot,
+              error: response.error
+            });
+            return;
           }
           const offer = response.data;
 

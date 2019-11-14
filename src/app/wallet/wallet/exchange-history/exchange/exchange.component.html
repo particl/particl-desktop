@@ -121,20 +121,20 @@
         <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
         <mat-radio-group class="bot-offers block-radio" fxLayout="column">
-          <!-- TODO: add `disabled` attribute to mat-radio-button when error present: -->
           <mat-radio-button *ngFor="let offer of exchange.availableOffers"
                             class="option" color="primary" fxFlex
                             [value]="offer"
                             [checked]="exchange.selectedOffer === offer"
+                            [disabled]="offer.error"
                             (change)="exchange.selectedOffer = $event.value">
             <img class="image" src="{{offer.bot.image}}">
             <div class="text">
               <div class="name">{{offer.bot.name}}</div>
-              <!-- TODO: show .desc & .rate only if without errors: -->
-              <div class="desc">~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</div>
-              <div class="rate">@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</div>
-              <!-- TODO: show .error if.. well, you know :) -->
-              <div class="error">Request exceeds max. exchange amount (100 BTC), so show me the multiline error message..</div>
+              <ng-container *ngIf="!offer.error">
+                <div class="desc">~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</div>
+                <div class="rate">@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</div>
+              </ng-container>
+              <div *ngIf="offer.error" class="error">{{ offer.error }}</div>
             </div>
           </mat-radio-button>
         </mat-radio-group><!-- .select-currency -->
