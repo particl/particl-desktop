@@ -177,11 +177,14 @@
           <mat-progress-bar mode="indeterminate" class="loading-bar" color="accent"></mat-progress-bar>
         </div>
         <div *ngIf="exchange.exchangeData">
-          <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
-          <div class="receiver-info">
-            <qrcode size="200" [level]="'H'" qrdata="{{exchange.selectedCurrency?.name.toLowerCase()}}:{{exchange.exchangeData.address_from}}?amount={{exchange.exchangeData.amount_from}}"></qrcode>
-            <code class="address"> {{exchange.exchangeData.address_from}} </code>
-          </div>
+          <ng-container *ngIf="!exchange.exchangeData.error">
+            <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
+            <div class="receiver-info">
+              <qrcode size="200" [level]="'H'" qrdata="{{exchange.selectedCurrency?.name.toLowerCase()}}:{{exchange.exchangeData.address_from}}?amount={{exchange.exchangeData.amount_from}}"></qrcode>
+              <code class="address"> {{exchange.exchangeData.address_from}} </code>
+            </div>
+          </ng-container>
+          <div *ngIf="exchange.exchangeData.error" class="error">{{ exchange.exchangeData.error }}</div>
         </div>
       </mat-card>
       <mat-card *ngIf="!exchange.isComplete && exchange.status" class="wider">

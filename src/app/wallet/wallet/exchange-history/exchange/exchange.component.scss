@@ -37,6 +37,11 @@
     border-bottom-left-radius: $radius;
     border-bottom-right-radius: $radius;
   }
+
+  .error {
+    color: $color-alert;
+    white-space: normal;
+  }
 }
 
 .option.mat-radio-button { // radio group option (with hover effect and all)
