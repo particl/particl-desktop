@@ -26,8 +26,8 @@ import { NewTxNotifierService } from 'app/core/rpc/new-tx-notifier/new-tx-notifi
 import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cache.service';
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { BotService } from 'app/core/bot/bot.module.js';
-
-import * as marketConfig from '../../../../modules/market/config.js';
+import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 /*
  * The MainView is basically:
@@ -74,7 +74,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     public _bot: BotService,
 
     private _marketState: MarketStateService,
-    private txNotify: NewTxNotifierService,
+    private _txNotify: NewTxNotifierService,
     private _profile: ProfileService,
     private _cart: CartService,
     private _category: CategoryService,
@@ -83,53 +83,68 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _proposal: ProposalsService,
     private _addToCart: AddToCartCacheService,
     private _favCacheService: FavoriteCacheService,
-    private _orderStatusNotifier: OrderStatusNotifierService
+    private _orderStatusNotifier: OrderStatusNotifierService,
+    private _notificationService: MarketNotificationService,
+    private _settingsService: SettingsStateService
   ) {
     this.log.d('Main.Router constructed');
 
     this.checkMarketRoute(this._router.url);
 
-    _bot.startBotManager(this._rpc.wallet);
-
-    if ((marketConfig.allowedWallets || []).find(
-      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
-      ) !== undefined) {
-      // We recheck if the market is started here for live reload cases, and to start the various MP services
-      this._market.startMarket(this._rpc.wallet).subscribe(
-        () => {
-          this._marketState.start();
-          this._profile.start();
-          this._cart.start();
-          this._category.start();
-          this._favCacheService.start();
-          this._favorite.start();
-          this._report.start();
-          this._proposal.start();
-          this._addToCart.start();
-          this._orderStatusNotifier.start();
+    let continueListening = true;
+    this._settingsService.currentWallet().pipe(takeWhile(() => continueListening)).subscribe(
+      (wallet) => {
+        if (wallet === null) {
+          return;
         }
-      );
-    }
+        _bot.startBotManager(wallet.name);
+
+        if (wallet.isMarketEnabled) {
+          const marketPort = this._settingsService.get('settings.market.env.port');
+          // We recheck if the market is started here for live reload cases, and to start the various MP services
+          this._market.startMarket(wallet.name, marketPort).subscribe(
+            () => {
+              this._marketState.start();
+              this._profile.start();
+              this._cart.start();
+              this._category.start();
+              this._favCacheService.start();
+              this._favorite.start();
+              this._report.start();
+              this._proposal.start();
+              this._addToCart.start();
+              this._orderStatusNotifier.start();
+              this._notificationService.start();
+            }
+          )
+        }
+        continueListening = false;
+      }
+    );
   }
 
   ngOnInit() {
     this._rpcState.start();
+    this._txNotify.start();
     // Change the header title derived from route data
     // Source: https://toddmotto.com/dynamic-page-titles-angular-2-router-events
     this._router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .pipe(map((event: NavigationEnd) => {
-        this.checkMarketRoute(event.url);
-        return this._route;
-      }))
-      .pipe(map(route => {
-        while (route.firstChild) {
-          route = route.firstChild;
-        }
-        return route;
-      }))
-      .pipe(filter(route => route.outlet === 'primary'))
-      .pipe(flatMap(route => route.data))
+      .pipe(
+        takeWhile(() => !this.destroyed),
+        filter(event => event instanceof NavigationEnd),
+        map((event: NavigationEnd) => {
+          this.checkMarketRoute(event.url);
+          return this._route;
+        }),
+        map(route => {
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+        filter(route => route.outlet === 'primary'),
+        flatMap(route => route.data)
+      )
       .subscribe(data => (this.title = data['title']));
 
     /* errors */
@@ -190,6 +205,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroyed = true;
     this.clearTimer();
+    this._txNotify.stop();
     this._rpcState.stop();
 
     this._bot.stopBotManager();
@@ -206,6 +222,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
       this._addToCart.stop();
       this._favCacheService.stop();
       this._orderStatusNotifier.stop();
+      this._notificationService.stop();
     }
   }
 

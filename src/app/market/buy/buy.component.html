@@ -13,7 +13,7 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
-          <!-- <app-order-count [type]="'buy'" class="tag" matTooltip="Orders that need attention" matTooltipPosition="after"></app-order-count> -->
+          <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span>
         </ng-template>
       </mat-tab>
       <mat-tab>

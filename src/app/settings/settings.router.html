@@ -1,0 +1,26 @@
+<!-- TODO: dynamically add `with-top-notification` class when message is shown (new release / alpha warning etc.): -->
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
+    <multiwallet-sidebar class="sidebar-multiwallet"></multiwallet-sidebar>
+  </mat-sidenav><!-- .sidebar -->
+
+
+
+  <!-- ======= Page Header ======= -->
+  <mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
+
+    <div class="left" fxFlex="1 1 40%">
+      <div class="title">
+        Settings
+      </div>
+    </div><!-- .left -->
+
+    <div class="right" fxFlex="1 1 60%">
+      <app-status></app-status>
+    </div><!-- .right -->
+
+  </mat-toolbar><!-- .header-main -->
+
+  <router-outlet></router-outlet>
+
+</mat-sidenav-container>

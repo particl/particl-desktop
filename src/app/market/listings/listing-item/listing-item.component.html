@@ -2,6 +2,10 @@
 
   <div class="image">
     <img src="{{listing?.imageCollection?.featuredImage?.medium}}" (click)="openListing()">
+    <div class="badges">
+      <mat-icon *ngIf="hasNewComments" class="badge" fontSet="partIcon" fontIcon="part-circle-question" matTooltip="New Question"
+        matTooltipPosition="above"></mat-icon>
+    </div>
     <div class="icons">
       <!--mat-icon class="icon preview" fontSet="partIcon" fontIcon="part-zoom-in" matTooltip="Preview"
                 matTooltipPosition="above" (click)="openListing()"></mat-icon-->

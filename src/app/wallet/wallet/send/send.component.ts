@@ -321,6 +321,9 @@ export class SendComponent implements OnInit, OnDestroy {
           this.flashNotification.open('Stealth address required for private transactions!');
           return;
         }
+        if (this.type === 'sendPayment' && (this.send.input === TxType.PUBLIC) && (resp.isstealthaddress === true)) {
+          this.send.output = TxType.ANON;
+        }
         this.modals.unlock({ timeout: 30 }, () => this.sendTransaction());
       },
       () => {

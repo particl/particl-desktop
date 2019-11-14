@@ -60,25 +60,34 @@ exports.reloadConfig = function(_options) {
 }
 
 function isWhitelisted(url) {
-    return whitelist.has(url);
+    let isValid = whitelist.has(url);
+    if (!isValid && url.split(':')[0] === 'localhost') {
+      isValid = whitelist.has('localhost:*') && whitelist.get('localhost:*').name === 'market';
+    }
+    return isValid;
 }
 
 // Get the right authentication for the right hostname
 // e.g market vs rpc
 function getAuthentication(url) {
-  entry = whitelist.get(url);
-  if (isPlainObject(entry) && 'auth' in entry ) {
-    if (entry.name === 'wallet' && !entry.auth) {
+  let entry = whitelist.get(url);
+  if (isPlainObject(entry)) {
+    if ('auth' in entry && entry.name === 'wallet' && !entry.auth) {
       // cookie might not be grabbed just yet, so try again..
       loadWalletAuthentication();
     }
     return entry.auth;
+  } else if (url.split(':')[0] === 'localhost'){
+    entry = whitelist.get('localhost:*');
+    if (isPlainObject(entry) && entry.name === 'market') {
+      return entry.auth;
+    }
   }
 }
 
 function loadMarketAuthentication() {
     // let key = "dev1.particl.xyz:";
-    let key = "localhost:3000";
+    let key = "localhost:*";
     let value = {
         name: "market",
         auth: "test:test"

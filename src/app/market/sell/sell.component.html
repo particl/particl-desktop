@@ -6,6 +6,7 @@
         <ng-template mat-tab-label>
           <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
           Orders
+          <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span>
         </ng-template>
       </mat-tab>
       <mat-tab>

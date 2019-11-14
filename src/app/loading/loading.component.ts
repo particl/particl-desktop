@@ -10,6 +10,7 @@ import { MarketService } from 'app/core/market/market.module';
 import { termsObj } from 'app/installer/terms/terms-txt';
 import { environment } from 'environments/environment';
 import { Observer, Subject, Observable } from 'rxjs';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 @Component({
   selector: 'app-loading',
@@ -33,7 +34,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private rpc: RpcService,
     private multi: MultiwalletService,
     private updater: UpdaterService,
-    private _market: MarketService
+    private _market: MarketService,
+    private _settings: SettingsStateService
   ) {
     this.log.i('loading component initialized');
   }
@@ -54,7 +56,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     /* DETERMINE WHEN DAEMON IS READY (ie: NOT DOWNLOADING, hence above is idling)  */
     this.daemonChecker$.subscribe(
       (loadedWallets: string[]) => {
-        this.checkNavigation(loadedWallets);
+        this.validateNavigation(loadedWallets);
       }
     )
     this.doCheckConnection('listwallets');
@@ -64,19 +66,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isDestroyed = true;
     this.daemonChecker$.complete();
-  }
-
-  get fallbackWallet(): string | undefined {
-    // TODO: allow user to customize this
-    return this.defaultWallet;
-  }
-
-  get defaultWallet(): string {
-    return '';
-  }
-
-  get lastUsedWallet(): string {
-    return localStorage.getItem('wallet');
   }
 
   private goToInstaller(getwalletinfo: any) {
@@ -94,7 +83,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   private goToWallet(notification?: string) {
-    this.log.d('MainModule: moving to new wallet', this.rpc.wallet);
+    this.log.d('MainModule: moving to wallet', this.currentWalletName);
     const queryParams = {
       notification: notification || ''
     };
@@ -114,7 +103,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     if (this.isDestroyed) {
       return;
     }
-    if (!this.rpc.enabled || !this.multi.initComplete) {
+    if (!this.rpc.enabled || !this._settings.initialized) {
       setTimeout(this.doCheckConnection.bind(this), 1500, method);
       return;
     }
@@ -133,6 +122,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   private getWalletInfo(wallet: string, observer: Observer<any>) {
     if (this.isDestroyed) {
+      observer.complete();
       return;
     }
     if (!this.rpc.enabled) {
@@ -151,8 +141,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
     )
   }
 
-  private async checkNavigation(loadedWallets: string[]): Promise<void> {
-    this.currentWalletName = typeof this.rpc.wallet === 'string' ? this.rpc.wallet : undefined;
+  private async validateNavigation(loadedWallets: string[]): Promise<void> {
+
     // Ensure that the list of displayed wallets is updated
     this.multi.refreshWalletList();
 
@@ -163,6 +153,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.goToTerms();
       return;
     }
+
+    const walletFromSettings = await this._settings.currentWallet().pipe(take(1)).toPromise();
+    this.currentWalletName = walletFromSettings.name;
 
     const params: ParamMap = this.route.snapshot.queryParamMap;
     this.log.d('loading params:', params);
@@ -179,33 +172,17 @@ export class LoadingComponent implements OnInit, OnDestroy {
     this.log.d('found existing wallets:', allWallets);
 
     let targetWalletName = params.get('wallet');
-    const currentWallet = this.rpc.wallet;
 
-    if (typeof targetWalletName === 'string' && !allWalletsNames.includes(targetWalletName)) {
-      // Requested wallet does not exist -> check if current rpc wallet exists to fail back to
-      if (typeof currentWallet === 'string' && allWalletsNames.includes(currentWallet)) {
-        targetWalletName = currentWallet;
-      } else {
+    if (typeof targetWalletName === 'string') {
+      if (!allWalletsNames.includes(targetWalletName)) {
         targetWalletName = undefined;
       }
+    } else {
+      targetWalletName = undefined;
     }
 
     if (typeof targetWalletName !== 'string') {
-      targetWalletName = loadedWallets.length ? loadedWallets[0] : allWallets[0].name;
-
-      if (allWalletsNames.includes(this.defaultWallet)) {
-        targetWalletName = this.defaultWallet;
-      }
-
-      const fallbackName = this.fallbackWallet;
-      if (typeof fallbackName === 'string' && allWalletsNames.includes(fallbackName)) {
-        targetWalletName = fallbackName;
-      }
-
-      const lastUsedName = this.lastUsedWallet;
-      if (typeof lastUsedName === 'string' && allWalletsNames.includes(lastUsedName)) {
-        targetWalletName = lastUsedName;
-      }
+      targetWalletName = this.currentWalletName;
     }
 
     this.log.d(`Requesting wallet: "${targetWalletName}"`);
@@ -235,19 +212,18 @@ export class LoadingComponent implements OnInit, OnDestroy {
       async (walletinfo: any) => {
         this.log.d('wallet info found: ', walletinfo);
 
-        this.rpc.wallet = wallet;
-
         if (!('hdseedid' in walletinfo)) {
+          this._settings.changeRpcWalletOnly(wallet);
           this.goToInstaller(walletinfo);
           return;
         }
 
-        // Set the last used wallet name
-        localStorage.setItem('wallet', wallet);
+        // Change to the current wallet
+        await this._settings.changeToWallet(wallet);
 
-        const allWallets = await this.multi.list.pipe(take(1)).toPromise();
-        const selectedIWallet = allWallets.find(w => w.name === this.rpc.wallet);
+        const selectedIWallet = await this._settings.currentWallet().pipe(take(1)).toPromise();
         const isMarketWallet = selectedIWallet && selectedIWallet.isMarketEnabled === true;
+        this.currentWalletName = selectedIWallet.name;
 
         const smsgInfo: any = await this.rpc.call('smsggetinfo').toPromise().then(
           smsgState => smsgState || {},
@@ -258,7 +234,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
         if (!smsgActive && isMarketWallet) {
           // Attempt to enable smsg if not already enabled but this wallet is a marketplace enabled wallet (which depends on smsg)
-          smsgActive = await this.rpc.call('smsgenable', [this.rpc.wallet]).toPromise().then(
+          smsgActive = await this.rpc.call('smsgenable', [this.currentWalletName]).toPromise().then(
             resp => true
           ).catch(err => {
             this.log.er(`FAILED to activate SMSG"`);
@@ -266,16 +242,17 @@ export class LoadingComponent implements OnInit, OnDestroy {
           });
         }
 
-        if (smsgActive && (smsgInfo && smsgInfo.active_wallet !== this.rpc.wallet)) {
+        if (smsgActive && (smsgInfo && smsgInfo.active_wallet !== selectedIWallet.name)) {
           // Set the smsg active wallet if necessary
-          await this.rpc.call('smsgsetwallet', [this.rpc.wallet]).toPromise().catch(err => {
-            this.log.er(`FAILED to set SMSG active wallet to "${this.rpc.wallet}"`);
+          await this.rpc.call('smsgsetwallet', [this.currentWalletName]).toPromise().catch(err => {
+            this.log.er(`FAILED to set SMSG active wallet to "${this.currentWalletName}"`);
           });
         }
 
         if (isMarketWallet) {
+          const marketPort = this._settings.get('settings.market.env.port');
           // Now start the marketplace services if this is a marketplace enabled wallet
-          this._market.startMarket(this.rpc.wallet).subscribe(
+          this._market.startMarket(this.currentWalletName, marketPort).subscribe(
             () => {
               // TODO: Leaving this here for now, but it requires the wallet to be unlocked, so doesn't work as expected.
               // It can help for first load after a Market wallet has been created though, or for an unecrypted wallet...

@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { CommentService } from 'app/core/market/api/comment/comment.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
+import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 import { SnackbarService } from 'app/core/core.module';
 import { DateFormatter } from 'app/core/util/utils';
 
@@ -19,7 +20,14 @@ export class CommentComponent {
   @Input() comment: any;
   @Input() commentIndex: number;
   @Input() sellerAddress: string;
-  @Output() replied: EventEmitter<any> = new EventEmitter<any>();
+  @Input() targetComments: any;
+  @Output() refresh: EventEmitter<any> = new EventEmitter<any>();
+
+  get hasUnreadComments(): boolean {
+    if (this.targetComments) {
+      return this.targetComments.indexOf(this.comment.hash) !== -1;
+    }
+  }
 
   /* tslint:disable:no-bitwise */
   get senderDetail(): string {
@@ -42,7 +50,8 @@ export class CommentComponent {
   constructor(
     private commentService: CommentService,
     private modals: ModalsHelperService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private notification: MarketNotificationService
   ) {}
 
   postReply(reply: any) {
@@ -51,7 +60,7 @@ export class CommentComponent {
         .pipe(take(1))
         .subscribe(
           () => {
-            this.replied.emit();
+            this.refresh.emit(true);
             reply.value = '';
             this.snackbar.open('Reply successfully posted');
           },
@@ -77,5 +86,12 @@ export class CommentComponent {
 
   hasSellerResponded(): boolean {
     return !!_.find(this.comment.ChildComments, (reply) => reply.sender === this.sellerAddress);
+  }
+
+  clearUnreadNotifications() {
+    if (this.hasUnreadComments) {
+      this.notification.clearTargetUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.comment.target);
+      this.refresh.emit(false);
+    }
   }
 }

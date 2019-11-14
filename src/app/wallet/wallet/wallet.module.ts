@@ -1,12 +1,10 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angularx-qrcode';
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 
-import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
 import { SendService } from './send/send.service';
 

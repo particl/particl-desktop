@@ -1,4 +1,3 @@
-<!-- TODO: dynamically add `with-top-notification` class when message is shown (new release / alpha warning etc.): -->
 <mat-sidenav-container fullscreen [ngClass]="{'with-top-notification': showAnnouncements}">
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
 
@@ -126,10 +125,10 @@
           </mat-accordion>
         </mat-content><!-- .sidebar-section -->
 
-        <mat-content class="sidebar-section" *ngIf="_market.isMarketStarted">
+        <mat-content class="sidebar-section">
           <mat-list class="sidebar-item-group">
             <a class="sidebar-item-link"
-              routerLinkActive="active" routerLink="wallet/proposals">
+              routerLinkActive="active" routerLink="wallet/proposals" *ngIf="_market.isMarketStarted">
               <mat-list-item class="sidebar-item">
                 <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
                 <span class="text">Proposals</span>

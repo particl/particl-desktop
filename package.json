@@ -9,7 +9,7 @@
   "keywords": [
     "particl",
     "angular2",
-    "angular4",
+    "angular7",
     "angular-cli",
     "electron",
     "webpack",
@@ -48,11 +48,12 @@
     "start": "yarn run start:electron:fast",
     "postinstall": "./node_modules/.bin/electron-rebuild"
   },
-  "productName": "Particl Desktop Testnet",
   "build": {
     "electronVersion": "5.0.4",
     "appId": "io.particl.desktop",
+    "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
+    "afterSign": "build/notarize.js",
     "directories": {
       "buildResources": "resources",
       "output": "packages"
@@ -69,12 +70,19 @@
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",
-      "category": "public.app-category.wallet",
+      "category": "public.app-category.finance",
+      "icon": "resources/icon.icns",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/mac/entitlements.mac.plist",
+      "entitlementsInherit": "build/mac/entitlements.mac.plist",
       "target": [
-        "zip"
+        "zip",
+        "dmg"
       ]
     },
     "dmg": {
+      "sign": true,
       "background": "background-mac.png",
       "contents": [
         {
@@ -171,6 +179,7 @@
     "buffered-spawn": "^3.3.2",
     "cli-progress": "^1.7.0",
     "core-js": "^2.4.1",
+    "del": "^5.1.0",
     "electron-log": "^2.2.14",
     "got": "^9.6.0",
     "hammerjs": "^2.0.8",
@@ -184,6 +193,7 @@
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
+    "socket.io-client": "^2.2.0",
     "tslib": "1.9.3",
     "zone.js": "0.8.26"
   },
@@ -207,12 +217,14 @@
     "@compodoc/compodoc": "^1.1.7",
     "@types/jasmine": "2.8.9",
     "@types/node": "^9.4.6",
+    "@types/socket.io-client": "^1.4.32",
     "angularx-qrcode": "^1.0.1",
     "checksum": "^0.1.1",
     "codelyzer": "^4.1.0",
     "coveralls": "^3.0.0",
     "electron": "5.0.4",
-    "electron-builder": "^20.38.5",
+    "electron-builder": "^21.2.0",
+    "electron-notarize": "^0.2.0",
     "electron-rebuild": "^1.8.6",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",

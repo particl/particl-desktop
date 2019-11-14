@@ -39,7 +39,6 @@ import {
 
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
-import { ProcessingModalComponent } from './processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { InsufficientFundsComponent } from './insufficient-funds/insufficient-funds.component';
 
@@ -71,7 +70,6 @@ import { InsufficientFundsComponent } from './insufficient-funds/insufficient-fu
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent,
     AlphaMainnetWarningComponent,
     BidRejectComponent,
     BidCancelComponent,
@@ -102,7 +100,6 @@ import { InsufficientFundsComponent } from './insufficient-funds/insufficient-fu
     ProposalVoteConfirmationComponent,
     BidConfirmationModalComponent,
     ListingExpirationComponent,
-    ProcessingModalComponent,
     AlphaMainnetWarningComponent,
     BidRejectComponent,
     BidCancelComponent,

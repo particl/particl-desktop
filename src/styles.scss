@@ -342,6 +342,10 @@ h1 {
 
 // ------ 4.2. PARAGRAPH STYLES ------ //
 
+p {
+  line-height: 1.5;
+}
+
 // Highlighted 'lead' paragraphs
 .lead {
   font-size: 15px;
@@ -351,7 +355,6 @@ h1 {
 .widget-help {
   @extend %lighter;
   font-size: 93%;
-  line-height: 1.5;
   margin-bottom: 25px;
   cursor: help;
 }

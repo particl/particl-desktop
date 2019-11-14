@@ -12,6 +12,7 @@ const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
 const bot           = require('./bot/bot');
+const systemDialogs = require('./dialogs/dialogs');
 
 exports.start = function (mainWindow) {
   // Initialize IPC listeners
@@ -20,13 +21,16 @@ exports.start = function (mainWindow) {
   daemon.init();
   market.init();
   bot.init();
+
+  systemDialogs.init(mainWindow);
+
   /* Initialize daemonWarner */
   daemonWarner.init(mainWindow);
 
   exports.startDaemonManager();
 
   /* Initialize ZMQ */
-  // zmq.init(mainWindow); // Should be moved to main.js#initMainWindow -> prevents mainWindow null reference errors when mainWindow is detroyed and recreated on OSX
+  // zmq.init(mainWindow);
   // zmq.test(); // loop, will send tests
 }
 
