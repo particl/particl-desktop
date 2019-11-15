@@ -99,7 +99,7 @@
               {{ exchange.requirePartoshiAmount.particlStringInteger() }}<!-- whitespace hack
             -->{{ exchange.requirePartoshiAmount.particlStringSep() }}<!--
             -->{{ exchange.requirePartoshiAmount.particlStringFraction() }}
-              <img class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
+              <img *ngIf="exchange.selectedCurrency" class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
               {{ exchange.selectedCurrency?.symbol }}
             </td>
           </tr>
@@ -111,7 +111,7 @@
                 {{ exchange.offerAmount?.particlStringInteger() }}<!-- whitespace hack
               -->{{ exchange.offerAmount?.particlStringSep() }}<!--
               -->{{ exchange.offerAmount?.particlStringFraction() }}
-                <img class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
+                <img *ngIf="exchange.selectedCurrency" class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
                 {{ exchange.selectedCurrency?.symbol }}
               </span>
             </td>
@@ -158,7 +158,7 @@
         <header>
           <div class="title">
             Pay with
-            <img class="coin" src="assets/icons/SVG/coins/{{exchange.selectedCurrency?.symbol}}.svg" default="assets/icons/SVG/coins/unknown.svg">
+            <img *ngIf="exchange.selectedCurrency" class="coin" src="assets/icons/SVG/coins/{{exchange.selectedCurrency?.symbol}}.svg" default="assets/icons/SVG/coins/unknown.svg">
             {{exchange.selectedCurrency?.name}}
           </div>
           <p class="widget-help">
