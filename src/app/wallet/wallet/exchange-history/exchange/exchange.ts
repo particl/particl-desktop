@@ -69,7 +69,10 @@ export class Exchange {
     this.loading = true;
     this.availableCurrencies = [];
 
-    const availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
+    let availableBots = [];
+    try {
+      availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
+    } catch (e) {}
 
     if (availableBots.length === 0) {
       this.noBots = true;
@@ -119,7 +122,10 @@ export class Exchange {
     this.loading = true;
     this.availableOffers = [];
 
-    const availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
+    let availableBots = [];
+    try {
+      availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
+    } catch (e) {}
 
     if (availableBots.length === 0) {
       this.noBots = true;

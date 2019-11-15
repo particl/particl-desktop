@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 import { DateFormatter } from 'app/core/util/utils';
+import { Log } from 'ng2-logger';
 
 
 interface IPage {
@@ -21,6 +22,8 @@ interface IPage {
   styleUrls: ['./exchange-history.component.scss']
 })
 export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDestroy  {
+
+  log: any = Log.create('exchange-history.component');
 
   public isLoading: boolean = true;
   public pages: Array<IPage> = [];
@@ -51,9 +54,30 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
   ) {}
 
   async ngOnInit() {
-    this.exchangeData = await this.botService.uniqueExchangeData();
+    try {
+      this.exchangeData = await this.botService.uniqueExchangeData();
+    } catch (e) {
+      this.log.er(e);
+      this.exchangeData = {
+        bots: [],
+        currency_from: [],
+        currency_to: []
+      }
+    }
     this.isLoading = true;
     this.loadPage(0);
+
+    this.rpcState.observe('locked').pipe(
+      takeWhile(() => !this.destroyed)
+    ).subscribe(async (locked) => {
+      if (locked && Object.keys(this.updateInProgress).length > 0) {
+        try {
+          await this.unlock(300).toPromise();
+        } catch (e) {
+          this.snackbarService.open('Wallet needs to be unlocked to receive response from the bot.');
+        }
+      }
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -80,36 +104,41 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
   }
 
   async loadPage(pageNumber: number, clear: boolean = false) {
-    const completed = this.filters.hideCompleted ? false : null;
-    const cancelled = this.filters.hideCancelled ? false : null;
-    const exchanges = await this.botService.searchExchanges(pageNumber, 10, this.filters.bot,
-       this.filters.from, this.filters.to, this.filters.search, completed, cancelled);
+    try {
+      const completed = this.filters.hideCompleted ? false : null;
+      const cancelled = this.filters.hideCancelled ? false : null;
+    
+      const exchanges = await this.botService.searchExchanges(pageNumber, 10, this.filters.bot,
+        this.filters.from, this.filters.to, this.filters.search, completed, cancelled);
 
-    this.isLoading = false;
+      this.isLoading = false;
 
-    let existingPage;
-    if (clear) {
-      this.pages = []
-    } else {
-      existingPage = _.find(this.pages, (page) => page.pageNumber === pageNumber);
-    }
-
-    if (existingPage) {
-      existingPage.exchanges = exchanges;
-    } else {
-      if (exchanges.length > 0) {
-        this.pages.push({
-          pageNumber: pageNumber,
-          exchanges
-        });
+      let existingPage;
+      if (clear) {
+        this.pages = []
       } else {
-        if (pageNumber === 0) {
+        existingPage = _.find(this.pages, (page) => page.pageNumber === pageNumber);
+      }
+
+      if (existingPage) {
+        existingPage.exchanges = exchanges;
+      } else {
+        if (exchanges.length > 0) {
           this.pages.push({
             pageNumber: pageNumber,
-            exchanges: []
+            exchanges
           });
+        } else {
+          if (pageNumber === 0) {
+            this.pages.push({
+              pageNumber: pageNumber,
+              exchanges: []
+            });
+          }
         }
       }
+    } catch (e) {
+      this.log.er(e);
     }
   }
 
@@ -126,24 +155,27 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
   async requestUpdate(e: any, exchange: any, pageIndex: number) {
     e.stopPropagation();
 
-    await this.unlock(300).toPromise();
-
-    const unlock$ = this.rpcState.observe('locked').pipe(
-      takeWhile(() => !this.destroyed)
-    ).subscribe(async (locked) => {
-      if (locked) {
-        await this.unlock(300).toPromise();
-      }
-    });
+    try {
+      await this.unlock(300).toPromise();
+    } catch (e) {
+      this.snackbarService.open('Wallet needs to be unlocked to request status update.');
+      return;
+    }
 
     this.updateInProgress[exchange.track_id] = true;
-    const update = await this.botService.command(exchange.bot.address, 'EXCHANGE_STATUS', exchange.track_id).toPromise();
-    if (update.error) {
-      this.snackbarService.open(update.error);
+    try {
+      const update = await this.botService.command(exchange.bot.address, 'EXCHANGE_STATUS', exchange.track_id).toPromise();
+
+      if (update.error) {
+        this.snackbarService.open(update.error);
+      }
+    } catch (e) {
+      this.log.er(e);
+      this.snackbarService.open('Error requesting status update.');
     }
+    
     this.loadPage(pageIndex);
     delete this.updateInProgress[exchange.track_id];
-    unlock$.unsubscribe();
   }
 
   trackByFn(index: number, item: any) {

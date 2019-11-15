@@ -1,7 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef, AfterViewChecked, OnDestroy, OnInit } from '@angular/core';
 import { MatStepper } from '@angular/material';
 import { BotService } from 'app/core/bot/bot.service';
-import { RpcService, RpcStateService } from 'app/core/core.module';
+import { RpcService, RpcStateService, SnackbarService } from 'app/core/core.module';
 import { Exchange } from './exchange';
 
 import * as _ from 'lodash';
@@ -32,7 +32,8 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
     private rpcState: RpcStateService,
     private modal: ModalsHelperService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackbarService: SnackbarService 
   ) {}
 
   ngOnInit() {
@@ -70,7 +71,11 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
 
     this.unlock$ = this.rpcState.observe('locked').subscribe(async (locked) => {
       if (locked && this.exchange.loading) {
-        await this.unlock(300).toPromise();
+        try {
+          await this.unlock(300).toPromise();
+        } catch (e) {
+          this.snackbarService.open('Wallet needs to be unlocked to receive response from the bot.');
+        }
       }
     });
   }
@@ -92,6 +97,13 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
   }
 
   async nextStep() {
+    try {
+      await this.unlock(300).toPromise();
+    } catch (e) {
+      this.snackbarService.open('Wallet needs to be unlocked to proceed to the next step.');
+      return;
+    }
+
     this.stepper.steps.toArray()[this.stepper.selectedIndex].completed = true;
     this.stepper.next();
 
@@ -99,11 +111,9 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
 
     switch (this.stepper.selectedIndex) {
       case 1:
-        await this.unlock(300).toPromise();
         this.exchange.getExchangeOffers();
         break;
       case 2:
-        await this.unlock(300).toPromise();
         await this.exchange.getExchangeAddress();
 
         this.exchangeStatus$ = timer(0, 60000).pipe(
