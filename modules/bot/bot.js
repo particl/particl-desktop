@@ -10,9 +10,9 @@ let child = undefined;
 let _options = {};
 
 exports.init = function() {
-  rxIpc.registerListener('start-bot-framework', function(walletName) {
+  rxIpc.registerListener('start-bot-framework', function(walletName, portNum) {
     return Observable.create(observer => {
-      exports.start(walletName);
+      exports.start(walletName, portNum);
       observer.complete(true);
     });
   });
@@ -25,7 +25,7 @@ exports.init = function() {
   });
 }
 
-exports.start = function(walletName) {
+exports.start = function(walletName, portNum) {
   _options = config.getConfiguration();
 
   if (!child) {
@@ -43,6 +43,10 @@ exports.start = function(walletName) {
       ZMQ_SMSG_PORT: '36750',
       WALLET: walletName,
     };
+
+    if ( (typeof portNum === 'number') && (portNum > 0)) {
+      botOptions.APP_PORT = portNum;
+    }
 
     child = botManager.start(botOptions);
 

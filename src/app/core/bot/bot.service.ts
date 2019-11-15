@@ -17,8 +17,6 @@ export class BotService {
   hostname: string = environment.botHost;
   port: number = environment.botPort;
 
-  url: string = `http://${this.hostname}:${this.port}`;
-
   constructor(
     private _http: HttpClient,
     private _ipc: IpcService
@@ -38,7 +36,9 @@ export class BotService {
     };
     const headers = new HttpHeaders(headerJson);
 
-    return this._http.post(this.url, postData, { headers: headers });
+    const url: string = `http://${this.hostname}:${this.port}`;
+
+    return this._http.post(url, postData, { headers: headers });
   }
 
   search(page: number, pageLimit: number, type: string, search: string, enabled: boolean): Promise<Array<Bot>> {
@@ -105,9 +105,12 @@ export class BotService {
     return this.call('exchange', ['uniqueExchangeData']).toPromise();
   }
 
-  startBotManager(wallet: string) {
+  startBotManager(wallet: string, port: number) {
     if (window.electron) {
-      this._ipc.runCommand('start-bot-framework', null, wallet);
+      if (typeof port === 'number' && port !== this.port) {
+        this.port = port;
+      }
+      this._ipc.runCommand('start-bot-framework', null, wallet, port);
     }
   }
 

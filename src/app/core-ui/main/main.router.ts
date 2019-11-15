@@ -97,7 +97,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
         if (wallet === null) {
           return;
         }
-        _bot.startBotManager(wallet.name);
+        const botPort = this._settingsService.get('settings.bot.env.port');
+        _bot.startBotManager(wallet.name, botPort);
 
         if (wallet.isMarketEnabled) {
           const marketPort = this._settingsService.get('settings.market.env.port');

@@ -745,9 +745,29 @@ export class SettingsComponent implements OnInit, OnDestroy {
       validate: this.validatePortNumber
     } as Setting);
 
+    const botConfig = {
+      name: 'Bot General Configuration',
+      settings: []
+    } as SettingGroup;
+
+    botConfig.settings.push({
+      id: 'settings.bot.env.port',
+      title: 'Local Port Number',
+      description: 'The local port that the bot manager is started on (default: 3001).',
+      isDisabled: false,
+      type: SettingType.NUMBER,
+      errorMsg: '',
+      currentValue: this._settingState.get('settings.bot.env.port'),
+      tags: [],
+      restartRequired: true,
+      limits: {min: 1024, max: 65535, step: 1},
+      validate: this.validatePortNumber
+    } as Setting);
+
     group.push(userInterface);
     group.push(marketplaceConfig);
     group.push(coreNetConfig);
+    group.push(botConfig);
   }
 
   private validateIPAddressPort(value: any, setting: Setting): string | null {
