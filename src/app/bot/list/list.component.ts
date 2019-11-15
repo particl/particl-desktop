@@ -54,6 +54,11 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   private async loadPage(pageNumber: number, clear: boolean = false) {
+
+    if (this.destroyed) {
+      return;
+    }
+    
     // set loading aninmation
     this.isLoading = true;
 

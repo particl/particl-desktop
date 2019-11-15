@@ -54,11 +54,13 @@
 
   <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="end stretch">
     <div class="toggle-button">
-      <button mat-raised-button color="accent" *ngIf="!bot.enabled" (click)="enable()" matTooltip="Click to enable" matTooltipPosition="below">
+      <button mat-raised-button color="accent" *ngIf="!bot.enabled" matTooltip="Click to enable"
+              matTooltipPosition="below" appDebounceClick (debounceClick)="enable()" [disabled]="requestInProgress">
         <mat-icon fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
         Enable bot
       </button>
-      <button mat-raised-button color="primary" *ngIf="bot.enabled" (click)="disable()" matTooltip="Click to disable" matTooltipPosition="below">
+      <button mat-raised-button color="primary" *ngIf="bot.enabled" matTooltip="Click to disable"
+              matTooltipPosition="below" appDebounceClick (debounceClick)="disable()" [disabled]="requestInProgress">
         <mat-icon fontSet="partIcon" fontIcon="part-flash"></mat-icon>
         Bot active
       </button>
