@@ -58,7 +58,7 @@ export class ListComponent implements OnInit, OnDestroy {
     if (this.destroyed) {
       return;
     }
-    
+
     // set loading aninmation
     this.isLoading = true;
 
