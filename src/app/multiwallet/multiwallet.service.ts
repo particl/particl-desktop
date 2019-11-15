@@ -98,7 +98,10 @@ export class MultiwalletService implements OnDestroy {
       .subscribe(
         (wallets: IWallet[]) => {
           const filteredWallets = wallets.filter(
-            (w: IWallet) => !(w.name.toLowerCase().startsWith('testnet/'))
+            (w: IWallet) => {
+              const wName = w.name.toLowerCase();
+              return !(wName.startsWith('testnet/') || wName.startsWith('testnet\\') || (wName === 'testnet') );
+            }
           );
           this._list.next(filteredWallets);
           this.hasList = true;
