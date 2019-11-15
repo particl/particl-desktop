@@ -33,14 +33,14 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
     private modal: ModalsHelperService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackbarService: SnackbarService 
+    private snackbarService: SnackbarService
   ) {}
 
   ngOnInit() {
     const paramsMap = this.route.snapshot.queryParamMap;
 
     const requiredPart = paramsMap.get('requiredPart');
-    
+
     this.unlock(300).pipe(take(1)).subscribe(
       () => this.startNewExchange(requiredPart),
       () => this.router.navigate(['wallet', 'main', 'wallet', 'exchange-history'])
@@ -62,7 +62,7 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
     if (this.exchangeStatus$) {
       this.exchangeStatus$.unsubscribe();
     }
-    
+
     this.exchange = new Exchange(this.botService, this.rpc);
 
     if (amount) {

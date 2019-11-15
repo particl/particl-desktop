@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BotService } from 'app/core/bot/bot.service';
 
-export type InsufficientFundsData = {
+export interface InsufficientFundsData {
   required: PartoshiAmount
 }
 
@@ -39,8 +39,10 @@ export class InsufficientFundsComponent implements OnInit, OnDestroy {
       this.data.required = new PartoshiAmount(0);
     }
 
-    this.listSpendable('listunspentanon').pipe(takeWhile(() => !this.destroyed)).subscribe((spendable) => this.availableBalance = spendable);
-    this.listSpendable('listunspent').pipe(takeWhile(() => !this.destroyed)).subscribe((spendable) => this.hasEnoughPublic = spendable.particls() > this.total.particls());
+    this.listSpendable('listunspentanon').pipe(takeWhile(() => !this.destroyed))
+        .subscribe((spendable) => this.availableBalance = spendable);
+    this.listSpendable('listunspent').pipe(takeWhile(() => !this.destroyed))
+        .subscribe((spendable) => this.hasEnoughPublic = spendable.particls() > this.total.particls());
 
     this._rpcState.observe('getwalletinfo').pipe(takeWhile(() => !this.destroyed))
       .subscribe(

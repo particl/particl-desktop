@@ -107,7 +107,7 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
     try {
       const completed = this.filters.hideCompleted ? false : null;
       const cancelled = this.filters.hideCancelled ? false : null;
-    
+
       const exchanges = await this.botService.searchExchanges(pageNumber, 10, this.filters.bot,
         this.filters.from, this.filters.to, this.filters.search, completed, cancelled);
 
@@ -173,7 +173,7 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
       this.log.er(e);
       this.snackbarService.open('Error requesting status update.');
     }
-    
+
     this.loadPage(pageIndex);
     delete this.updateInProgress[exchange.track_id];
   }
@@ -195,13 +195,13 @@ export class ExchangeHistoryComponent implements AfterViewChecked, OnInit, OnDes
       await this.botService.cancelExchange(track_id);
 
       for (const page of this.pages) {
-        if (page.pageNumber >= pageIndex){
+        if (page.pageNumber >= pageIndex) {
           this.loadPage(page.pageNumber);
         }
       }
     } catch (e) {
       this.snackbarService.open(e.error.message);
-    }    
+    }
   }
 
   gotoExchange() {

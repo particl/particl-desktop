@@ -36,9 +36,7 @@ export class BotService {
     };
     const headers = new HttpHeaders(headerJson);
 
-    const url: string = `http://${this.hostname}:${this.port}`;
-
-    return this._http.post(url, postData, { headers: headers });
+    return this._http.post(`http://${this.hostname}:${this.port}`, postData, { headers: headers });
   }
 
   search(page: number, pageLimit: number, type: string, search: string, enabled: boolean): Promise<Array<Bot>> {
@@ -81,7 +79,8 @@ export class BotService {
     ).toPromise();
   }
 
-  searchExchanges(page: number, pageLimit: number, bot: string, from: string, to: string, search: string, completed: boolean, cancelled: boolean): Promise<any> {
+  searchExchanges(page: number, pageLimit: number, bot: string, from: string, to: string,
+                  search: string, completed: boolean, cancelled: boolean): Promise<any> {
     const params = [
       'search',
       page,
