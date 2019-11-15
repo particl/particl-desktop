@@ -12,12 +12,12 @@
   <table class="info">
     <tr><th>Required for order:</th><td>{{ data.required.particlsString() }} PART</td></tr>
     <tr><th>Your current Anon balance:</th><td>{{ availableBalance.particlsString() }} PART</td></tr>
-    <tr><th>Fee buffer (5 %):</th><td>{{ feeBuffer.particlsString() }} PART</td></tr>
+    <tr><th>Your pending Anon balance:</th><td>{{ pendingBalance.particlsString() }} PART</td></tr>
     <tr><th>Recommended Anon balance:</th><td><strong>{{ this.total.particlsString() }} PART</strong></td></tr>
   </table>
 
   <p class="widget-help">
-    Note: 5 % fee buffer is only recommended as a safest way to cover all associated transaction fees, to make sure you will still have enough Anon funds for this order.
+    If using the exchange option please make sure that the offered amount is enough to cover the total, as actual exchange amounts can vary due to rate changes.
   </p>
 
 </mat-dialog-content>
@@ -33,11 +33,13 @@
   </div>
 
   <div class="right">
-    <button mat-raised-button color="accent" (click)="goto('send')" matTooltip="Convert Public/Blind to Anon PART" matTooltipPosition="below">
+    <button mat-raised-button color="accent" (click)="goto('send')" matTooltip="{{ hasEnoughPublic ? 'Convert Public/Blind to Anon PART' : 'Not enough public funds' }}"
+            matTooltipPosition="below" [disabled]="!hasEnoughPublic">
       <mat-icon fontSet="partIcon" fontIcon="part-swap"></mat-icon>
       Convert PART
     </button>
-    <button mat-raised-button color="primary" (click)="goto('exchange')" matTooltip="Exchange BTC/altcoins for Anon PART" matTooltipPosition="below">
+    <button mat-raised-button color="primary" (click)="goto('exchange')" matTooltip="{{ hasExchangeBot ? 'Exchange BTC/altcoins for Anon PART' : 'No exchange bots enabled' }}"
+            matTooltipPosition="below" [disabled]="!hasExchangeBot">
       <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
       Exchange BTC/alts
     </button>
