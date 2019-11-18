@@ -14,6 +14,8 @@ import { take } from 'rxjs/operators';
 import { OrderData } from 'app/core/util/utils';
 import { Image } from 'app/core/market/api/template/image/image.model';
 import { isPlainObject } from 'lodash';
+import { BidCancelComponent } from 'app/modals/bid-cancel/bid-cancel.component';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 @Component({
   selector: 'app-order-item',
@@ -49,14 +51,14 @@ export class OrderItemComponent implements OnInit {
     totalInt: 0,
     totalFraction: 0
   };
-  private _featuredImage: any;
+  private _featuredImage: string;
   constructor(
     private bid: BidService,
 
-    // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private dialog: MatDialog,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private _settings: SettingsStateService
   ) { }
 
   ngOnInit() {
@@ -129,7 +131,16 @@ export class OrderItemComponent implements OnInit {
     this.orderActivity = this.order.orderActivity;
 
     const imageList: any[] = (this.order.ListingItem.ItemInformation || {}).ItemImages || [];
-    this._featuredImage = new Image(imageList.length ? imageList[0] : { ItemImageDatas: [] });
+    const selectedImage = new Image(imageList.length ? imageList[0] : { ItemImageDatas: [] });
+
+
+    const pathparts = String(selectedImage.thumbnail).split(':');
+    if (pathparts.length === 1) {
+      this._featuredImage = pathparts[0];
+    } else {
+      const mpPort = this._settings.get('settings.market.env.port');
+      this._featuredImage = `http://localhost:${mpPort}/${pathparts[pathparts.length - 1].split('/').slice(1).join('/')}`;
+    }
   }
 
   get title(): string {
@@ -141,7 +152,7 @@ export class OrderItemComponent implements OnInit {
   }
 
   get listingImage(): string {
-    return (this._featuredImage && this._featuredImage.thumbnail) ? this._featuredImage.thumbnail : './assets/images/placeholder_1-1.jpg';
+    return this._featuredImage;
   }
 
   get primaryActions(): any[] {
@@ -187,6 +198,9 @@ export class OrderItemComponent implements OnInit {
       case 'REJECT':
         dialogRef = this.dialog.open(BidRejectComponent);
         break;
+      case 'CANCEL':
+        dialogRef = this.dialog.open(BidCancelComponent);
+        break;
       default:
         dialogRef = this.dialog.open(PlaceOrderComponent);
         dialogRef.componentInstance.type = action.toLowerCase();
@@ -217,6 +231,8 @@ export class OrderItemComponent implements OnInit {
           resp = this.shipItem(res);
         } else if (action === 'COMPLETE') {
           resp = this.escrowRelease();
+        } else if (action === 'CANCEL') {
+          resp = this.cancelBid();
         }
 
         if (resp) {
@@ -252,6 +268,12 @@ export class OrderItemComponent implements OnInit {
     }
     return this.bid.rejectBidCommand(this.order.id, reason).pipe(take(1)).toPromise().then(() => {
       this.snackbarService.open(`Order rejected: ${this.itemTitle}`);
+    });
+  }
+
+  private async cancelBid(): Promise<void> {
+    return this.bid.cancelBidCommand(this.order.id).pipe(take(1)).toPromise().then(() => {
+      this.snackbarService.open(`Order cancelled ${this.itemTitle}`);
     });
   }
 

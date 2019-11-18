@@ -6,12 +6,14 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketModule } from '../../../core/market/market.module';
 import { ModalsModule } from 'app/modals/modals.module';
+import { SettingsModule } from 'app/settings/settings.module';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
 
 import { ModalsHelperService } from 'app/modals/modals-helper.service';
 import { SnackbarService } from '../../../core/snackbar/snackbar.service';
 
 import { CommentsComponent } from './comments.component';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('CommentsComponent', () => {
   let component: CommentsComponent;
@@ -25,7 +27,9 @@ describe('CommentsComponent', () => {
         CoreUiModule.forRoot(),
         ModalsModule.forRoot(),
         MarketModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        RpcWithStateModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [
         SnackbarService,

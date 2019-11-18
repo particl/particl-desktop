@@ -13,7 +13,7 @@ export class CommentService {
     private market: MarketService
   ) {}
 
-  watchCommentCount(type: string, target: string, parentCommentHash: string, manualRefresh?: Observable<any>): Observable<any> {
+  watchCommentCount(type: string, target: string, parentCommentHash: string, refresh: Observable<any>): Observable<any> {
 
     const params = [
       'count',
@@ -22,21 +22,14 @@ export class CommentService {
       parentCommentHash
     ];
 
-    if (manualRefresh) {
-      return manualRefresh.pipe(
-        startWith(null),
-        switchMap(() => timer(0, 5000)),
-        switchMap(() => this.market.call('comment', params))
-      );
-    } else {
-      return timer(0, 5000).pipe(
-        switchMap(() => this.market.call('comment', params))
-      );
-    }
+    return refresh.pipe(
+      startWith(null),
+      switchMap(() => this.market.call('comment', params))
+    );
   }
 
-  watch(page: number, pageLimit: number, profileId: number | string, type: string, target: string,
-        parentCommentHash: string, manualRefresh?: Observable<any>):
+  watch(page: number, pageLimit: number, type: string, target: string,
+        parentCommentHash: string, refresh: Observable<any>):
     Observable<any> {
 
     const params = [
@@ -51,20 +44,13 @@ export class CommentService {
         true
         ];
 
-    if (manualRefresh) {
-      return manualRefresh.pipe(
-              startWith(null),
-              switchMap(() => timer(0, 5000)),
-              switchMap(() => this.market.call('comment', params))
-            );
-    } else {
-      return timer(0, 5000).pipe(
-              switchMap(() => this.market.call('comment', params))
-            );
-    }
+    return refresh.pipe(
+      startWith(null),
+      switchMap(() => this.market.call('comment', params))
+    );
   }
 
-  get(id: number) {
+  get(id: number | string) {
     return this.market.call('comment', ['get', id]);
   }
 

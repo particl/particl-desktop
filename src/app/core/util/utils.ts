@@ -348,6 +348,15 @@ export const OrderData = {
     buy: {
       buttons: [
         {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
+        {
           'tooltip': '',
           'colour': 'primary',
           'disabled': true,
@@ -445,6 +454,15 @@ export const OrderData = {
     buy: {
       buttons: [
         {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
+        {
           'tooltip': 'Pay for your order and escrow',
           'colour': 'primary',
           'disabled': false,
@@ -459,6 +477,15 @@ export const OrderData = {
     },
     sell: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': 'Waiting for Buyer\'s Payment',
           'colour': 'primary',
@@ -503,6 +530,15 @@ export const OrderData = {
     },
     sell: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': 'Pay for your escrow',
           'colour': 'primary',
@@ -646,6 +682,50 @@ export const OrderData = {
         }
       ],
       status_info: 'Order delivery confirmed by Buyer - order successfully finalized',
+      notifyOnEntry: true
+    }
+  },
+
+  'CANCELLED': {
+    childBidStatus: {
+      name: 'MPA_CANCEL',
+      order: 7
+    },
+    filter: {
+      query: 'BID_CANCELLED',
+      text: 'Cancelled',
+      order: 11
+    },
+    from_action: 'CANCEL',
+    orderStatus: 'BID_CANCELLED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order Cancelled',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order has been cancelled',
+      notifyOnEntry: false
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order Cancelled',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order has been cancelled',
       notifyOnEntry: true
     }
   }

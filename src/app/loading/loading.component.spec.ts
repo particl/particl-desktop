@@ -6,6 +6,7 @@ import { CoreUiModule } from '../core-ui/core-ui.module';
 import { MultiwalletModule } from '../multiwallet/multiwallet.module';
 
 import { LoadingComponent } from './loading.component';
+import { SettingsModule } from 'app/settings/settings.module';
 
 
 describe('LoadingComponent', () => {
@@ -19,7 +20,8 @@ describe('LoadingComponent', () => {
         RouterTestingModule,
         CoreModule.forRoot(),
         CoreUiModule.forRoot(),
-        MultiwalletModule.forTest()
+        MultiwalletModule.forTest(),
+        SettingsModule.forRoot()
       ]
     })
     .compileComponents();

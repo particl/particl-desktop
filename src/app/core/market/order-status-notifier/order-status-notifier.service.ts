@@ -8,6 +8,7 @@ import { ProfileService } from 'app/core/market/api/profile/profile.service';
 import { Bid } from 'app/core/market/api/bid/bid.model';
 import { take, takeWhile } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { SettingsStateService } from 'app/settings/settings-state.service';
 
 
 class OrderSummary {
@@ -33,6 +34,7 @@ export class OrderStatusNotifierService implements OnDestroy {
 
   log: any = Log.create('order-status-notifier.service id:' + Math.floor((Math.random() * 1000) + 1));
 
+  private doNotify: boolean = true;
   private destroyed: boolean = false;
   private profileAddress: string = '';
   private activeOrders: OrderSummary = new OrderSummary();
@@ -42,18 +44,29 @@ export class OrderStatusNotifierService implements OnDestroy {
   constructor(
     private _marketState: MarketStateService,
     private _notification: NotificationService,
-    private profileService: ProfileService
+    private profileService: ProfileService,
+    private _settings: SettingsStateService
   ) {}
 
   public start() {
     this.log.d('order status notifier service started!');
+    this.destroyed = false;
     this.loadOrders();
+
+    this._settings.observe('settings.wallet.notifications.order_updated').pipe(
+      takeWhile(() => !this.destroyed)
+    ).subscribe(
+      (isSubscribed) => {
+        this.doNotify = Boolean(+isSubscribed);
+      }
+    );
   }
 
   public stop() {
     if (this.orders$) {
       this.orders$.unsubscribe();
     }
+    this.destroyed = true;
   }
 
   public getActiveCount(type: string): number {
@@ -128,8 +141,10 @@ export class OrderStatusNotifierService implements OnDestroy {
       const count = bidHashes.reduce((total, hash) => total + +newOrders.data[typeKey].items[hash].notificationCount, 0);
       if (count > 0) {
         hasUpdated = true;
-        const msg = `${count} ${typeKey} order(s) have been updated.`
-        this.sendNotification(msg);
+        if (this.doNotify) {
+          const msg = `${count} ${typeKey} order(s) have been updated.`
+          this.sendNotification(msg);
+        }
       }
     }
 

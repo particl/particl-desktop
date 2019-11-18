@@ -29,6 +29,8 @@ export class RpcService implements OnDestroy {
   private destroyed: boolean = false;
   private isInitialized: boolean = false;
   private DAEMON_CHANNEL: string = 'rpc-configuration';
+  private _wallet: string;
+  private _coreConfig: any;
 
   /**
    * IP/URL for daemon (default = localhost)
@@ -67,16 +69,21 @@ export class RpcService implements OnDestroy {
     return this.isInitialized;
   }
 
+  get coreConfig(): any {
+    if (!this._coreConfig) {
+      return {};
+    }
+    return JSON.parse(JSON.stringify(this._coreConfig));
+  }
+
   /**
    * Set the wallet to execute commands against.
    * @param w the wallet filename .
    */
-  set wallet(w: string) {
-    localStorage.setItem('wallet', w);
-  }
-
-  get wallet(): string {
-    return localStorage.getItem('wallet') || '';
+  setWalletName(w: string) {
+    if (typeof w === 'string') {
+      this._wallet = w;
+    }
   }
 
   /**
@@ -94,7 +101,7 @@ export class RpcService implements OnDestroy {
    *              error => ...);
    * ```
    */
-  call(method: string, params?: Array<any> | null): Observable<any> {
+  call(method: string, params?: Array<any> | null, walletName?: string): Observable<any> {
 
     if (!this.isInitialized) {
       return observableThrowError('Initializing...');
@@ -116,8 +123,16 @@ export class RpcService implements OnDestroy {
 
     let url = `http://${this.hostname}:${this.port}`;
     if (!['createwallet', 'loadwallet', 'listwalletdir',
-          'listwallet', 'smsgdisable', 'smsgenable', 'smsgsetwallet'].includes(method)) {
-      url += `/wallet/${this.wallet}`
+          'listwallets', 'smsgdisable', 'smsgenable', 'smsgsetwallet', 'unloadwallet'].includes(method)) {
+      let targetWallet = this._wallet;
+      if (typeof walletName === 'string') {
+        targetWallet = walletName;
+      }
+      if (typeof targetWallet !== 'string') {
+        return observableThrowError('Wallet has not been set');
+      }
+
+      url += `/wallet/${targetWallet}`;
     }
 
     return this._http
@@ -139,6 +154,10 @@ export class RpcService implements OnDestroy {
   private daemonListener(config: any): Observable<any> {
     return Observable.create(observer => {
       const isValid = config.auth && (config.auth !== this.authorization);
+      if (Object.prototype.toString.call(config) === '[object Object]') {
+        this._coreConfig = config;
+      }
+
       this.log.d(`Received RPC configuration: details are valid: ${isValid}`);
       if (isValid) {
         this.hostname = config.rpcbind || 'localhost';

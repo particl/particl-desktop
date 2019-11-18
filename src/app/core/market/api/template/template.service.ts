@@ -3,22 +3,21 @@ import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
 
-import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
-
 import { Template } from 'app/core/market/api/template/template.model';
 import { EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class TemplateService {
 
   constructor(
-    private market: MarketService,
-    public listingCache: PostListingCacheService
+    private market: MarketService
   ) { }
 
   get(templateId: number, returnImageData: boolean = false): Observable<Template> {
-    return this.market.call('template', ['get', templateId, returnImageData]).pipe(map(t => new Template(t)));
+    return this.market.call('template', ['get', templateId, returnImageData]).pipe(
+      map(t => this.fixMarketplaceImagePath(new Template(t)))
+    );
   }
 
   // template add 1 "title" "short" "long" 80 "SALE" "PART" 5 5 5 "Pasdfdfd"
@@ -67,19 +66,13 @@ export class TemplateService {
     return this.market.call('template', params)
     .pipe(map(
       (templates: any) => {
-        return templates.map(t => new Template(t));
+        return templates.map(t => this.fixMarketplaceImagePath(new Template(t)));
       }
     ));
   }
 
   post(template: Template, marketId: number, expTime: number, estimateFee: boolean = false) {
-    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee])
-    .pipe(tap(t => {
-      if (!estimateFee) {
-        this.listingCache.posting(template)
-      }
-      return t;
-    }));
+    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee]);
   }
 
   size(listingTemplateId: number) {
@@ -88,6 +81,23 @@ export class TemplateService {
 
   remove(listingTemplateId: number) {
     return this.market.call('template', ['remove', listingTemplateId]);
+  }
+
+  private fixMarketplaceImagePath(templ: Template): Template {
+    //  @TODO: zaSmilingIdiot: 2019-10-22
+    //  This is a sucky way of doing this. But the image datas for each image stored in the MP DB have a data_id field, which stores
+    //  the entire URL to request the specific image from the marketplace. Which creates an issue if the marketplace hostname/port
+    //  changes after images are stored. Using the url stated for an image would be an invalid path in such a case.
+    // This bit attempts to "fix" this...
+    templ.imageCollection.images.forEach(image => {
+      (image.itemImageDatas || []).forEach(datas => {
+        const pathparts = String(datas.dataId).split(':');
+        const newPath = `http://${this.market.hostname}:${this.market.port}/${pathparts[pathparts.length - 1].split('/').slice(1).join('/')}`;
+        datas.dataId = newPath;
+      });
+    });
+
+    return templ;
   }
 
 }
