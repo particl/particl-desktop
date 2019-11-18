@@ -106,8 +106,8 @@
           <tr>
             <th>Offered amount</th>
             <td>
-              <mat-spinner class="tiny" *ngIf="exchange.loading"></mat-spinner>
-              <span *ngIf="!exchange.loading">
+              <mat-spinner class="tiny" *ngIf="!exchange.selectedOffer"></mat-spinner>
+              <span *ngIf="exchange.selectedOffer">
                 {{ exchange.offerAmount?.particlStringInteger() }}<!-- whitespace hack
               -->{{ exchange.offerAmount?.particlStringSep() }}<!--
               -->{{ exchange.offerAmount?.particlStringFraction() }}

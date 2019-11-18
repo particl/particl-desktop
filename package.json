@@ -187,7 +187,7 @@
     "ng2-nvd3": "^2.0.0",
     "ngx-material-file-input": "^1.1.1",
     "node-unzip-2": "^0.2.1",
-    "particl-bot-manager": "^0.0.13",
+    "particl-bot-manager": "^0.0.14",
     "particl-market-import-core": "^0.0.11",
     "particl-marketplace": "^0.2.4",
     "rx-ipc-electron": "^0.1.2",

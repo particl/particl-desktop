@@ -9224,10 +9224,10 @@ particl-bot-core@^0.0.6:
     particl-bitcore-lib "git://github.com/particl/particl-bitcore-lib.git"
     particl-client "^0.0.2"
 
-particl-bot-manager@^0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.13.tgz#614a8962ada7fe0a8dc8c6d220a6fd39cbd53d6e"
-  integrity sha512-zz1bcUWpxkX+kiA8EIP0Ofrz19GuIDo1Ja6v5/qarYYm48i9cRXjcwY7k2YemmdaBl2+rkNF43rywtvYDuxi/Q==
+particl-bot-manager@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/particl-bot-manager/-/particl-bot-manager-0.0.14.tgz#d4c00d2e410206b943fe813f7650f9681ee6a368"
+  integrity sha512-L3OVqEOjhUEBfilbfP9QtY3etP9Lm54ZeoBQCHrWlqAhQGAtXYIwJvNT+JqFsZCO9GwKvIJMMHOSsiGgPjX4IQ==
   dependencies:
     "@nestjs/common" "^6.7.2"
     "@nestjs/core" "^6.7.2"
