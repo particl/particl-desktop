@@ -1,6 +1,6 @@
 <div mat-dialog-title class="title">Insufficient funds</div>
 
-<mat-dialog-content class="modal-content">
+<mat-dialog-content class="modal-content" *ngIf="!hasEnoughPending">
 
   <p class="lead">
     You don't have enough Anon (private) funds for this order.
@@ -10,7 +10,7 @@
   </p>
 
   <table class="info">
-    <tr><th>Required for order:</th><td>{{ data.required.particlsString() }} PART</td></tr>
+    <tr><th>Required for order:</th><td>{{ cartTotal.particlsString() }} PART</td></tr>
     <tr><th>Your current Anon balance:</th><td>{{ availableBalance.particlsString() }} PART</td></tr>
     <tr><th>Your pending Anon balance:</th><td>{{ pendingBalance.particlsString() }} PART</td></tr>
     <tr><th>Recommended Anon balance:</th><td><strong>{{ this.total.particlsString() }} PART</strong></td></tr>
@@ -23,7 +23,7 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions fxLayoutAlign="space-between center" *ngIf="!hasEnoughPending">
 
   <div class="left">
     <button type="button" mat-button mat-dialog-close>
@@ -42,6 +42,34 @@
             matTooltipPosition="below" [disabled]="!hasExchangeBot">
       <mat-icon fontSet="partIcon" fontIcon="part-transfer"></mat-icon>
       Exchange BTC/alts
+    </button>
+  </div>
+
+</mat-dialog-actions>
+
+<mat-dialog-content class="modal-content" *ngIf="hasEnoughPending">
+
+  <p class="lead">
+    You currently have enough pending anon funds, please wait a while for them to confirm and then try again.
+  </p>
+  
+  <table class="info">
+    <tr><th>Required for order:</th><td>{{ cartTotal.particlsString() }} PART</td></tr>
+    <tr><th>Your current Anon balance:</th><td>{{ availableBalance.particlsString() }} PART</td></tr>
+    <tr><th>Your pending Anon balance:</th><td>{{ pendingBalance.particlsString() }} PART</td></tr>
+  </table>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="space-between center" *ngIf="hasEnoughPending">
+
+  <div class="left">
+  </div>
+
+  <div class="right">
+    <button mat-raised-button color="primary" mat-dialog-close>
+      <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+      Ok
     </button>
   </div>
 

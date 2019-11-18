@@ -6,9 +6,11 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { BotService } from 'app/core/bot/bot.service';
+import { Cart } from 'app/core/market/api/cart/cart.model';
 
 export interface InsufficientFundsData {
-  required: PartoshiAmount
+  cart: Cart,
+  country: string
 }
 
 @Component({
@@ -19,10 +21,12 @@ export interface InsufficientFundsData {
 export class InsufficientFundsComponent implements OnInit, OnDestroy {
 
   private destroyed: boolean = false;
+  public cartTotal: PartoshiAmount = new PartoshiAmount(0);
   public availableBalance: PartoshiAmount = new PartoshiAmount(0);
   public pendingBalance: PartoshiAmount = new PartoshiAmount(0);
   public total: PartoshiAmount = new PartoshiAmount(0);
 
+  public hasEnoughPending: boolean = false;
   public hasEnoughPublic: boolean = false;
   public hasExchangeBot: boolean = false;
 
@@ -35,10 +39,6 @@ export class InsufficientFundsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    if (!this.data.required) {
-      this.data.required = new PartoshiAmount(0);
-    }
-
     this.listSpendable('listunspentanon').pipe(takeWhile(() => !this.destroyed))
         .subscribe((spendable) => this.availableBalance = spendable);
     this.listSpendable('listunspent').pipe(takeWhile(() => !this.destroyed))
@@ -53,9 +53,12 @@ export class InsufficientFundsComponent implements OnInit, OnDestroy {
               .add( new PartoshiAmount(+balance.unconfirmed_anon * Math.pow(10, 8)) )
               .add( new PartoshiAmount(+balance.immature_anon_balance * Math.pow(10, 8)) )
           }
-      });
 
-    this.total = new PartoshiAmount(this.data.required.partoshis() - this.pendingBalance.partoshis() - this.availableBalance.partoshis());
+          this.cartTotal = this.data.cart.getTotal(this.data.country);
+          this.total = new PartoshiAmount(this.cartTotal.partoshis() - this.pendingBalance.partoshis() - this.availableBalance.partoshis());
+
+          this.hasEnoughPending = (this.pendingBalance.partoshis() + this.availableBalance.partoshis()) > this.cartTotal.partoshis();
+      });
 
     this.botService.search(0, 1, 'EXCHANGE', '', true).then((bots) => {
       this.hasExchangeBot = bots.length > 0;

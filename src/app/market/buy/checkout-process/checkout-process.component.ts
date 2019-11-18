@@ -328,7 +328,7 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
         this.shippingFormGroup.patchValue(this.cache.address);
       }
       if (error === errorType.broke) {
-        this.dialog.open(InsufficientFundsComponent, {data: {required: this.cart.getTotal(this.country)}});
+        this.dialog.open(InsufficientFundsComponent, {data: {cart: this.cart, country: this.country}});
       }
       this.snackbarService.open(error, 'warn');
       this.log.d(`Error while placing an order`);
