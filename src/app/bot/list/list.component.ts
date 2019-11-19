@@ -1,0 +1,129 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { BotService } from 'app/core/bot/bot.service';
+import { Bot } from 'app/core/bot/bot.model';
+
+interface IPage {
+  pageNumber: number,
+  bots: Array<any>;
+}
+
+@Component({
+  selector: 'app-bot-list',
+  templateUrl: './list.component.html',
+  styleUrls: ['./list.component.scss']
+})
+export class ListComponent implements OnInit, OnDestroy {
+
+  private destroyed: boolean = false;
+
+  public isLoading: boolean = false; // small progress bars
+  public isLoadingBig: boolean = true; // big animation
+  public noMoreListings: boolean = false;
+  public hasEmptySearch: boolean = false;
+
+  public search: string = '';
+  public type: string = '';
+  public enabled: boolean = false;
+
+  pages: Array<IPage> = [];
+
+  pagination: any = {
+    maxPerPage: 24,
+    infinityScrollSelector: '.mat-drawer-content'
+  };
+
+  constructor(
+    private readonly botService: BotService
+  ) {}
+
+  ngOnInit() {
+    this.loadPage(0, true);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
+  clearAndLoadPage() {
+    this.loadPage(0, true);
+  }
+
+  toggleEnabled(event: any): void {
+    this.enabled = event.source.checked;
+    this.clearAndLoadPage();
+  }
+
+  private async loadPage(pageNumber: number, clear: boolean = false) {
+
+    if (this.destroyed) {
+      return;
+    }
+
+    // set loading aninmation
+    this.isLoading = true;
+
+    // params
+    const max = this.pagination.maxPerPage;
+
+    try {
+      const bots: Array<Bot> = await this.botService.search(pageNumber, max, this.type, this.search, this.enabled);
+
+      this.isLoading = false;
+      this.isLoadingBig = false;
+
+      const page = {
+        pageNumber: pageNumber,
+        bots: bots
+      };
+
+      // should we clear all existing pages? e.g search
+      if (clear === true) {
+        this.pages = [page];
+        this.noMoreListings = false;
+
+        if (bots.length === 0) {
+          this.hasEmptySearch = true;
+
+          setTimeout(() => {
+            this.clearAndLoadPage();
+          }, 5000)
+        } else {
+          this.hasEmptySearch = false;
+        }
+      } else { // infinite scroll
+        this.pages.push(page);
+
+        if (bots.length < max) {
+          this.noMoreListings = true;
+        }
+      }
+
+      if (bots.length > 0) {
+        setTimeout(() => this.checkIfShouldLoadMore(), 500);
+      }
+    } catch (e) {
+      setTimeout(() => {
+        if (!this.destroyed) {
+          this.loadPage(pageNumber, clear);
+        }
+      }, 5000);
+    }
+  }
+
+  loadNextPage() {
+    if (this.pages.length) {
+      let nextPage = this.pages[this.pages.length - 1].pageNumber;
+      nextPage++;
+      this.loadPage(nextPage, false);
+    }
+  }
+
+  private checkIfShouldLoadMore() {
+    const scrollContainer = document.querySelector(this.pagination.infinityScrollSelector);
+    // If the scroll bar isn't showing, try load another page
+    if (scrollContainer && scrollContainer.scrollHeight <= scrollContainer.clientHeight) {
+      this.loadNextPage();
+    }
+  }
+
+}

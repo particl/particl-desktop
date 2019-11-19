@@ -8,6 +8,7 @@ import { IpcService } from './ipc/ipc.service';
 import { SnackbarService } from './snackbar/snackbar.service';
 import { NotificationService } from './notification/notification.service';
 import { CloseGuiService } from './close-gui/close-gui.service';
+import { BotService } from './bot/bot.service';
 
   /*
     Loading the core library will intialize IPC & RPC
@@ -28,7 +29,8 @@ export class CoreModule {
         UpdaterService,
         SnackbarService,
         NotificationService,
-        CloseGuiService
+        CloseGuiService,
+        BotService
       ]
     };
   }

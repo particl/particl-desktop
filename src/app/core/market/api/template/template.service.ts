@@ -3,18 +3,15 @@ import { Observable } from 'rxjs';
 
 import { MarketService } from 'app/core/market/market.service';
 
-import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
-
 import { Template } from 'app/core/market/api/template/template.model';
 import { EscrowType } from 'app/core/market/api/template/escrow/escrow.service';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class TemplateService {
 
   constructor(
-    private market: MarketService,
-    public listingCache: PostListingCacheService
+    private market: MarketService
   ) { }
 
   get(templateId: number, returnImageData: boolean = false): Observable<Template> {
@@ -75,13 +72,7 @@ export class TemplateService {
   }
 
   post(template: Template, marketId: number, expTime: number, estimateFee: boolean = false) {
-    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee])
-    .pipe(tap(t => {
-      if (!estimateFee) {
-        this.listingCache.posting(template)
-      }
-      return t;
-    }));
+    return this.market.call('template', ['post', template.id, expTime, marketId, estimateFee]);
   }
 
   size(listingTemplateId: number) {
