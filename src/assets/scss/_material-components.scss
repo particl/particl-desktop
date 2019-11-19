@@ -15,6 +15,7 @@ Customizations and modifiers for default Material components
       1.4. Sliders (range)
       1.5. Paginator
       1.6. Tooltips
+      1.7. Spinners
 
     2. Layout
       2.1. Cards
@@ -153,6 +154,18 @@ mat-tooltip-component .mat-tooltip {
 }
 
 
+.mat-progress-spinner {
+  &.tiny {
+    $spinner-size: 16px;
+    width: $spinner-size !important;
+    height: $spinner-size !important;
+    & > svg {
+      width: $spinner-size !important;
+      height: $spinner-size !important;
+    }
+  }
+}
+
 /* ------------------------------- *\
     2. LAYOUT
 \* ------------------------------- */
@@ -256,14 +269,15 @@ mat-card.mat-card {
 
 .mat-stepper-horizontal {
   font-family: $font !important;
+  .mat-step-label {
+    min-width: auto;
+  }
   .mat-step-label-selected {
     font-weight: 700;
   }
-  custom-icon { // overwrite of Material Stepper's step icons
+  .mat-step-icon {
     .mat-icon {
-      font-size: 13px;
-      line-height: 1.6;
-      text-align: center;
+      font-size: 12px;
     }
   }
   // buy/cart-shipping: remove white background

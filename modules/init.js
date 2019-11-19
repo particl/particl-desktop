@@ -11,6 +11,7 @@ const daemonConfig  = require('./daemon/daemonConfig');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
+const bot           = require('./bot/bot');
 const systemDialogs = require('./dialogs/dialogs');
 
 exports.start = function (mainWindow) {
@@ -19,6 +20,7 @@ exports.start = function (mainWindow) {
   closeGui.init();
   daemon.init();
   market.init();
+  bot.init();
 
   systemDialogs.init(mainWindow);
 
@@ -102,6 +104,7 @@ electron.app.on('before-quit', async function beforeQuit(event) {
   closeGui.destroy();
 
   daemonManager.shutdown();
+  bot.stop();
   market.stop()
   .then(() => sleep(2000))
   .then(async () => {
