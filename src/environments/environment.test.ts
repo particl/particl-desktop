@@ -15,5 +15,7 @@ export const environment = {
   particlPort: 51935,
   marketHost: 'localhost',
   marketPort: 3000,
+  botHost: 'localhost',
+  botPort: 3001,
   isTesting: true
 };

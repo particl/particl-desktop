@@ -1,0 +1,67 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/market/_lists-shared';
+@import './src/app/market/_order'; // order styles
+
+
+.header {
+  // bot image/logo
+  img {
+    @extend %tfx;
+    object-fit: cover;
+    object-position: center;
+    .bot-disabled & { // grey out the image if bot is inactive
+      filter: saturate(0%);
+      opacity: 0.7;
+    }
+  }
+  // bot type (exchange etc.)
+  .type {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: $text-muted;
+  }
+  // bot's name
+  .title {
+    color: $text;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 2px;
+  }
+  // status
+  .status {
+    .dot {
+      background: $color;
+      .bot-disabled & {
+        background: grey;
+      }
+    }
+  }
+}
+
+
+.detail {
+  // Bot info (address, desc)
+  .bot-address {
+    @extend %enable-select;
+  }
+  .author-info {
+    td {
+      @extend %enable-select;
+    }
+  }
+}
+
+
+.action-buttons {
+  // (de)activate button
+  .toggle-button {
+    text-align: right;
+    button {
+      .mat-icon {
+        margin-right: 2px;
+      }
+    }
+  }
+}

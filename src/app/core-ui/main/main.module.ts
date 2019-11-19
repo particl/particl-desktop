@@ -30,7 +30,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'wallet', pathMatch: 'full' },
       { path: 'wallet', loadChildren: '../../wallet/wallet.module#WalletViewsModule'},
-      { path: 'market', loadChildren: '../../market/market.module#MarketModule'}
+      { path: 'market', loadChildren: '../../market/market.module#MarketModule'},
+      { path: 'bot', loadChildren: '../../bot/bot.module#BotModule'}
     ]
   }
 ];

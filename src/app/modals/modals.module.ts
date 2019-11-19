@@ -40,6 +40,7 @@ import {
 import { BidConfirmationModalComponent } from 'app/modals/market-bid-confirmation-modal/bid-confirmation-modal.component';
 import { ListingExpirationComponent } from './market-listing-expiration/listing-expiration.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { InsufficientFundsComponent } from './insufficient-funds/insufficient-funds.component';
 
 @NgModule({
   imports: [
@@ -71,7 +72,8 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ListingExpirationComponent,
     AlphaMainnetWarningComponent,
     BidRejectComponent,
-    BidCancelComponent
+    BidCancelComponent,
+    InsufficientFundsComponent
   ],
   exports: [
     ClipboardModule
@@ -100,7 +102,8 @@ import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-main
     ListingExpirationComponent,
     AlphaMainnetWarningComponent,
     BidRejectComponent,
-    BidCancelComponent
+    BidCancelComponent,
+    InsufficientFundsComponent
   ],
 })
 export class ModalsModule {
