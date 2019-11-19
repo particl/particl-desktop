@@ -9266,10 +9266,10 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@^0.2.5:
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.2.5.tgz#145ded1501ee5a520536225de9ddef85ad989b35"
-  integrity sha512-gWRFJ9ATtxSXOjZe3ckGTpq8YWJ6aLe9APRBP1dMeT2DMh2sVcjHpq5r1dm+m0gIkEJg7MsbdRQHvkj6l/AnCg==
+particl-marketplace@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.2.6.tgz#800291d0a50b19076fc9a74f0b35ae1e3c4e3cd0"
+  integrity sha512-GnfnFdsyIZIdwPEWrstgvs35rScAOEmeyiXj6cznwFxuOliRWLAm0hzQkEF/bb7+/B8kLGGIvCjsfwYBjpTOKw==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -11351,6 +11351,11 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
+
+"sqlite3@git+https://github.com/particl/sqlite3-offline.git":
+  version "3.2.0"
+  uid fae3ae47f64461b807e874897e76e7c69715e3d5
+  resolved "git+https://github.com/particl/sqlite3-offline.git#fae3ae47f64461b807e874897e76e7c69715e3d5"
 
 "sqlite3@https://github.com/particl/sqlite3-offline.git":
   version "3.2.0"
