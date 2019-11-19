@@ -3,17 +3,35 @@
 
   <div class="multiwallet">
 
-    <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.displayname.toUpperCase()}}" matTooltipPosition="after">
-      <!-- If this is market wallet, show "market icon"; if not, show first letter of wallet's name: -->
-      <span *ngIf="!wallet.isMarketEnabled">{{wallet.displayname.toUpperCase()[0]}}</span>
-      <mat-icon fontSet="partIcon" fontIcon="part-cart" *ngIf="wallet.isMarketEnabled"></mat-icon>
-    </button>
-
-    <button mat-raised-button color="primary" (click)="goToWalletCreation()" matTooltip="Add new wallet" matTooltipPosition="after">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
-    </button>
+    <!-- TODO: set `.active` class to active section (ie. either wallets or markets, based on what's selected) -->
+    <section class="wallets active">
+      <header>Wallets</header>
+  
+      <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.displayname.toUpperCase()}}" matTooltipPosition="after">
+        <!-- If this is market wallet, show "market icon"; if not, show first letter of wallet's name: -->
+        <span *ngIf="!wallet.isMarketEnabled">{{wallet.displayname.toUpperCase()[0]}}</span>
+        <mat-icon fontSet="partIcon" fontIcon="part-cart" *ngIf="wallet.isMarketEnabled"></mat-icon>
+      </button>
+  
+      <button mat-raised-button color="primary" (click)="goToWalletCreation()" matTooltip="Add new wallet" matTooltipPosition="after">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
+      </button>
+    </section><!-- .wallets -->
+  
+    <!-- TODO: set `.active` class to active section (ie. either wallets or markets, based on what's selected) -->
+    <section class="markets">
+      <header>Markets</header>
+  
+      <button *ngFor="let wallet of list" mat-raised-button color="primary" (click)="switchToWallet(wallet)" [ngClass]="{'active': isWalletActive(wallet) }" matTooltip="{{wallet.displayname.toUpperCase()}}" matTooltipPosition="after">
+        <!-- If this is market wallet, show "market icon"; if not, show first letter of wallet's name: -->
+        <span *ngIf="!wallet.isMarketEnabled">{{wallet.displayname.toUpperCase()[0]}}</span>
+        <mat-icon fontSet="partIcon" fontIcon="part-cart" *ngIf="wallet.isMarketEnabled"></mat-icon>
+      </button>
+  
+    </section><!-- .markets -->
 
   </div><!-- .multiwallet -->
+
 
   <div class="buttons">
 

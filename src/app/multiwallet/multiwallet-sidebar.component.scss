@@ -11,8 +11,26 @@
   // wallet selection
   .multiwallet {
     flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  section {
+    flex: 0 1 auto;
     overflow-y: scroll;
+    overflow-x: hidden;
     padding: $spacing (10px - $scrollbar-width) $spacing 10px;
+    &.active {
+      background: $bg-black;
+    }
+    header { // section title (Wallets/Markets), rotated 90°
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 0.7rem 0.6rem 0;
+    }
     .mat-raised-button {
       @extend %tfx;
       min-width: auto;
@@ -42,13 +60,13 @@
       border-radius: 4px;
     }
     &::-webkit-scrollbar-track {
-      background: darken($bg-black, 5%);
+      background: transparent;
     }
   }
 
   // app-wide stuff (settings, bugs, ..)
   .buttons {
-    flex: 1 1 10px;
+    flex: 0 1 1px;
     padding: $spacing 10px;
     .mat-button {
       width: 34px;
