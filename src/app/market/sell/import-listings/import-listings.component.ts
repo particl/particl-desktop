@@ -12,8 +12,6 @@ import { Country } from 'app/core/market/api/countrylist/country.model';
 import { RpcService, RpcStateService } from 'app/core/core.module';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
 import { MatDialog } from '@angular/material';
-import { PostListingCacheService } from 'app/core/market/market-cache/post-listing-cache.service';
-import { TemplateService } from 'app/core/market/api/template/template.service';
 import { Router } from '@angular/router';
 
 import * as _ from 'lodash';
@@ -84,8 +82,6 @@ export class ImportListingsComponent {
     private _marketImportService: MarketImportService,
     private _modals: ModalsHelperService,
     private _dialog: MatDialog,
-    private _template: TemplateService,
-    private _listingCache: PostListingCacheService,
     private _router: Router,
     public countryList: CountryListService
   ) {
@@ -249,18 +245,7 @@ export class ImportListingsComponent {
           }
           if (data.result) {
             setTimeout(async() => {
-              this.listings = data.result
-
-              publishingDialog.componentInstance.data.message = 'Hang on, we are busy updating the listing cache';
-
-              for (let index = this.listings.length - 1; index >= 0; index--) {
-                const listing = this.listings[index];
-
-                if (listing.id) {
-                  const template = await this._template.get(listing.id, false).toPromise();
-                  this._listingCache.posting(template);
-                }
-              }
+              this.listings = data.result;
 
               this._dialog.closeAll();
               this._router.navigate(['/wallet/main/market/sell']);

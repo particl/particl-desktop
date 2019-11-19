@@ -106,19 +106,21 @@
 
     <div class="no-results" *ngIf="hasEmptySearch">
       <p>
-        Sorry, no matching listings found
+        Sorry, no matching Listings found
       </p>
     </div>
 
     <div class="no-results" *ngIf="isInitialState">
       <p>
-        It seems that there are either no listings on the marketplace or they are not yet loaded. Please wait a few minutes and try to refresh the page.
-        <br>
-        <button mat-button class="refresh-listings" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()">
-          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-          Refresh Page
-        </button>
+        No Listings found (or loaded yet) on the Marketplace
       </p>
+      <p class="widget-help">
+        Please wait a few minutes and then
+      </p>
+      <button mat-button class="refresh-listings small" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        Refresh Listings
+      </button>
     </div>
 
     <div class="no-results" *ngIf="noMoreListings">

@@ -20,6 +20,7 @@ import {
 } from 'app/modals/send-confirmation-modal/send-confirmation-modal.component';
 import { takeWhile } from 'rxjs/operators';
 import { Amount } from 'app/core/util/utils';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-send',
@@ -51,7 +52,8 @@ export class SendComponent implements OnInit, OnDestroy {
     // @TODO rename ModalsHelperService to ModalsService after modals service refactoring.
     private modals: ModalsHelperService,
     private dialog: MatDialog,
-    private flashNotification: SnackbarService
+    private flashNotification: SnackbarService,
+    private route: ActivatedRoute
   ) {
     this.addressHelper = new AddressHelper();
     this.setFormDefaultValue();
@@ -66,6 +68,34 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    const paramsMap = this.route.snapshot.queryParamMap;
+    const type = paramsMap.get('tab');
+    if (type) {
+      this.selectTab('balanceTransfer' === type ? 1 : 0);
+    }
+
+    const convertTo = paramsMap.get('convertTo');
+    if (convertTo) {
+      switch (convertTo) {
+        case TxType.BLIND:
+          this.send.output = TxType.BLIND;
+          break;
+        case TxType.ANON:
+          this.send.output = TxType.ANON;
+          break;
+        default:
+          this.send.output = TxType.PUBLIC;
+          break;
+      }
+      this.setInputOutput(convertTo, 'input');
+      this.updateAmount();
+    }
+
+    const requiredPart = paramsMap.get('requiredPart');
+    if (requiredPart) {
+      this.send.amount = parseFloat(requiredPart);
+    }
+
     // Calculate Spendable balance
     this._rpcState.observe('listunspent')
       .pipe(takeWhile(() => !this.destroyed))
@@ -290,6 +320,9 @@ export class SendComponent implements OnInit, OnDestroy {
         if (this.send.output === TxType.ANON && !resp.isstealthaddress) {
           this.flashNotification.open('Stealth address required for private transactions!');
           return;
+        }
+        if (this.type === 'sendPayment' && (this.send.input === TxType.PUBLIC) && (resp.isstealthaddress === true)) {
+          this.send.output = TxType.ANON;
         }
         this.modals.unlock({ timeout: 30 }, () => this.sendTransaction());
       },

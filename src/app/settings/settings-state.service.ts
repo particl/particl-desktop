@@ -71,6 +71,8 @@ export class SettingsStateService extends StateService implements OnDestroy {
 
     'settings.market.env.port': new Setting(SaveLocation.LOCALSTORAGE, SettingType.NUMBER, 3000),
 
+    'settings.bot.env.port': new Setting(SaveLocation.LOCALSTORAGE, SettingType.NUMBER, 3001),
+
     'settings.core.network.proxy': new Setting(SaveLocation.CORECONFIG, SettingType.STRING, ''),
     'settings.core.network.upnp': new Setting(SaveLocation.CORECONFIG, SettingType.BOOLEAN, false)
   };

@@ -74,8 +74,10 @@ window.ipc = new SafeIpcRenderer([
   'importer-config',
   'importer-load',
   'importer-validate',
-  'importer-publish'
+  'importer-publish',
 
+  'start-bot-framework',
+  'stop-bot-framework'
 ]);
 
 window.electron = true;

@@ -55,13 +55,14 @@ exports.reloadConfig = function(_options) {
   loadDev();
   loadMarketAuthentication();
   loadWalletAuthentication();
+  loadBotAuthentication();
   loadGithub();
 }
 
 function isWhitelisted(url) {
     let isValid = whitelist.has(url);
     if (!isValid && url.split(':')[0] === 'localhost') {
-      isValid = whitelist.has('localhost:*') && whitelist.get('localhost:*').name === 'market';
+      isValid = whitelist.has('localhost:*') && ['market', 'bot'].indexOf(whitelist.get('localhost:*').name) !== -1;
     }
     return isValid;
 }
@@ -78,7 +79,7 @@ function getAuthentication(url) {
     return entry.auth;
   } else if (url.split(':')[0] === 'localhost'){
     entry = whitelist.get('localhost:*');
-    if (isPlainObject(entry) && entry.name === 'market') {
+    if (isPlainObject(entry) && ['market', 'bot'].indexOf(entry.name) !== -1) {
       return entry.auth;
     }
   }
@@ -89,6 +90,16 @@ function loadMarketAuthentication() {
     let key = "localhost:*";
     let value = {
         name: "market",
+        auth: "test:test"
+    }
+
+    whitelist.set(key, value);
+}
+
+function loadBotAuthentication() {
+    let key = "localhost:*";
+    let value = {
+        name: "bot",
         auth: "test:test"
     }
 

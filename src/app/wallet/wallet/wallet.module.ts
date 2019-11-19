@@ -25,8 +25,8 @@ import { SignatureAddressModalComponent } from './shared/signature-address-modal
 import { FixWalletModalComponent } from './send/fix-wallet-modal/fix-wallet-modal.component';
 import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet-fixed-confirmation/wallet-fixed-confirmation.component';
 import { LoadingPlaceholderComponent } from 'app/core-ui/main/loading-placeholder/loading-placeholder.component';
-
-
+import { ExchangeHistoryComponent } from './exchange-history/exchange-history.component';
+import { ExchangeComponent } from './exchange-history/exchange/exchange.component';
 
 @NgModule({
   imports: [
@@ -50,7 +50,9 @@ import { LoadingPlaceholderComponent } from 'app/core-ui/main/loading-placeholde
     SignatureAddressModalComponent,
     FixWalletModalComponent,
     WalletFixedConfirmationComponent,
-    LoadingPlaceholderComponent
+    LoadingPlaceholderComponent,
+    ExchangeHistoryComponent,
+    ExchangeComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -59,8 +61,9 @@ import { LoadingPlaceholderComponent } from 'app/core-ui/main/loading-placeholde
     ReceiveComponent,
     SendComponent,
     HistoryComponent,
-    AddressBookComponent
-
+    AddressBookComponent,
+    ExchangeHistoryComponent,
+    ExchangeComponent
   ],
   entryComponents: [
     AddAddressLabelComponent,

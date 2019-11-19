@@ -27,6 +27,7 @@ import { FavoriteCacheService } from 'app/core/market/market-cache/favorite-cach
 import { OrderStatusNotifierService } from 'app/core/market/order-status-notifier/order-status-notifier.service';
 import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 import { SettingsStateService } from 'app/settings/settings-state.service';
+import { BotService } from 'app/core/bot/bot.service';
 
 /*
  * The MainView is basically:
@@ -70,6 +71,7 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // get the singleton up and running
     public proposalsNotificationsService: ProposalsNotificationsService,
     public _market: MarketService,
+    public _bot: BotService,
 
     private _marketState: MarketStateService,
     private _txNotify: NewTxNotifierService,
@@ -95,6 +97,9 @@ export class MainRouterComponent implements OnInit, OnDestroy {
         if (wallet === null) {
           return;
         }
+        const botPort = this._settingsService.get('settings.bot.env.port');
+        _bot.startBotManager(wallet.name, botPort);
+
         if (wallet.isMarketEnabled) {
           const marketPort = this._settingsService.get('settings.market.env.port');
           // We recheck if the market is started here for live reload cases, and to start the various MP services
@@ -203,6 +208,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     this.clearTimer();
     this._txNotify.stop();
     this._rpcState.stop();
+
+    this._bot.stopBotManager();
 
     if (this._market.isMarketStarted) {
       this._market.stopMarket();
