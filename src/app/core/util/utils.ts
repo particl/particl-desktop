@@ -472,7 +472,7 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)',
+      status_info: 'Seller accepted your bid - please proceed to making the necessary escrow payment',
       notifyOnEntry: true
     },
     sell: {
@@ -496,7 +496,7 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Awaiting on buyer to lock funds in escrow',
+      status_info: 'Awaiting on buyer to make payment towards the escrow',
       notifyOnEntry: false
     },
   },
@@ -508,13 +508,22 @@ export const OrderData = {
     },
     filter: {
       query: 'ESCROW_LOCKED',
-      text: 'Escrow Lock',
+      text: 'Escrow Pending',
       order: 3
     },
     from_action: 'LOCK_ESCROW',
     orderStatus: 'ESCROW_LOCKED',
     buy: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': '',
           'colour': 'primary',
@@ -525,7 +534,7 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Waiting on seller to complete escrow',
+      status_info: 'Waiting on seller to complete the escrow',
       notifyOnEntry: false
     },
     sell: {
