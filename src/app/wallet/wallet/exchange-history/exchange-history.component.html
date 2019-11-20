@@ -47,7 +47,7 @@
             <mat-select [(ngModel)]="filters.from" placeholder="From Currency" (selectionChange)="search()">
               <mat-option [value]="">All currencies</mat-option>
               <mat-option *ngFor="let currency_from of exchangeData.currency_from" [value]="currency_from">
-                {{currency_from}}
+                {{currency_from.toUpperCase()}}
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -125,11 +125,11 @@
 
                 <div class="meta" fxFlex="1 1 100%">
                   <div class="name">
-                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_from }}.svg">
-                    {{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from }}
+                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_from.toUpperCase() }}.svg">
+                    {{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from.toUpperCase() }}
                     -&gt;
-                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_to }}.svg">
-                    ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to }}
+                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
+                    ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to.toUpperCase() }}
                   </div>
                   
                   <mat-spinner class="loading-spinner" [diameter]="16" color="accent" *ngIf="updateInProgress[exchange.track_id]"></mat-spinner>
@@ -152,17 +152,17 @@
               <table class="exchange-details outgoing full-width">
                 <tr>
                   <td rowspan="2" class="direction-img">
-                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_from }}.svg" class="coin">
+                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
                   </td>
-                  <th>Send {{ exchange?.currency_from }} to</th>
+                  <th>Send {{ exchange?.currency_from.toUpperCase() }} to</th>
                   <td>
                     <mat-spinner *ngIf="!exchange.tx_from" class="tiny" color="accent"></mat-spinner>
                     <input type="text" readonly value="{{ exchange?.address_from }}" class="value highlight address">
                   </td>
                 </tr>
                 <tr>
-                  <th>Sent TXID ({{ exchange?.currency_from }})</th>
+                  <th>Sent TXID ({{ exchange?.currency_from.toUpperCase() }})</th>
                   <td><input type="text" readonly value="{{ exchange?.tx_from }}" class="value address txid"></td>
                 </tr>
               </table>
@@ -171,13 +171,13 @@
                 <tr>
                   <td rowspan="2" class="direction-img">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_to }}.svg" class="coin">
+                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin">
                   </td>
-                  <th>Receive {{ exchange?.currency_to }} to</th>
+                  <th>Receive {{ exchange?.currency_to.toUpperCase() }} to</th>
                   <td><input type="text" readonly value="{{ exchange?.address_to }}" class="value highlight address"></td>
                 </tr>
                 <tr>
-                  <th>Received TXID ({{ exchange?.currency_to }})</th>
+                  <th>Received TXID ({{ exchange?.currency_to.toUpperCase() }})</th>
                   <td><input type="text" readonly value="{{ exchange?.tx_to }}" class="value address txid"></td>
                 </tr>
               </table>

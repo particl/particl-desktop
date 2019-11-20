@@ -2,8 +2,8 @@ export interface BotAuthor {
   name?: string;
   email?: string;
   chat_ids?: {
-    id:string; 
-    type: string
+    id: string;
+    type: string;
   }[];
 }
 
