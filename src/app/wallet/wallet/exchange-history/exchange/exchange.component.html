@@ -99,8 +99,8 @@
               {{ exchange.requirePartoshiAmount.particlStringInteger() }}<!-- whitespace hack
             -->{{ exchange.requirePartoshiAmount.particlStringSep() }}<!--
             -->{{ exchange.requirePartoshiAmount.particlStringFraction() }}
-              <img *ngIf="exchange.selectedCurrency" class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
-              {{ exchange.selectedCurrency?.symbol }}
+              <img class="coin" src="assets/icons/SVG/coins/PART.svg" default="assets/icons/SVG/coins/unknown.svg">
+              PART
             </td>
           </tr>
           <tr>
@@ -108,11 +108,11 @@
             <td>
               <mat-spinner class="tiny" *ngIf="!exchange.selectedOffer"></mat-spinner>
               <span *ngIf="exchange.selectedOffer">
-                {{ exchange.offerAmount?.particlStringInteger() }}<!-- whitespace hack
+                ~{{ exchange.offerAmount?.particlStringInteger() }}<!-- whitespace hack
               -->{{ exchange.offerAmount?.particlStringSep() }}<!--
               -->{{ exchange.offerAmount?.particlStringFraction() }}
-                <img *ngIf="exchange.selectedCurrency" class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedCurrency?.symbol }}.svg" default="assets/icons/SVG/coins/unknown.svg">
-                {{ exchange.selectedCurrency?.symbol }}
+                <img *ngIf="exchange.selectedOffer" class="coin" src="assets/icons/SVG/coins/{{ exchange.selectedOffer?.currency_to.toUpperCase() }}.svg" default="assets/icons/SVG/coins/unknown.svg">
+                {{ exchange.selectedOffer?.currency_to.toUpperCase() }}
               </span>
             </td>
           </tr>
@@ -131,8 +131,8 @@
             <div class="text">
               <div class="name">{{offer.bot.name}}</div>
               <ng-container *ngIf="!offer.error">
-                <div class="desc">~{{offer.amount_from | particlAmount}} {{offer.currency_from}}</div>
-                <div class="rate">@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from}}/{{offer.currency_to}}</div>
+                <div class="desc">{{offer.amount_from | particlAmount}} {{offer.currency_from.toUpperCase()}}</div>
+                <div class="rate">@ ~{{offer.amount_from / offer.amount_to | particlAmount}} {{offer.currency_from.toUpperCase()}}/{{offer.currency_to.toUpperCase()}}</div>
               </ng-container>
               <div *ngIf="offer.error" class="error">{{ offer.error }}</div>
             </div>
@@ -200,18 +200,18 @@
         </p>
         <table class="exchange-details outgoing full-width">
           <tr>
-            <th>Sending {{ exchange?.status.currency_from }} to</th>
+            <th>Sending {{ exchange?.status.currency_from.toUpperCase() }} to</th>
             <td><input type="text" readonly value="{{ exchange?.status.address_from }}" class="value highlight address"></td>
           </tr>
           <tr>
-            <th>Sent TXID ({{ exchange?.status.currency_from }})</th>
+            <th>Sent TXID ({{ exchange?.status.currency_from.toUpperCase() }})</th>
             <td><input type="text" readonly value="{{ exchange?.status.tx_from }}" class="value address txid"></td>
           </tr>
         </table>
         <mat-divider></mat-divider>
         <table class="exchange-details incoming full-width">
           <tr>
-            <th>Receiving {{ exchange?.status.currency_to }} to</th>
+            <th>Receiving {{ exchange?.status.currency_to.toUpperCase() }} to</th>
             <td><input type="text" readonly value="{{ exchange?.status.address_to }}" class="value highlight address"></td>
           </tr>
         </table>
@@ -233,11 +233,11 @@
         </header>
         <table class="exchange-details outgoing full-width">
           <tr>
-            <th>Sent {{ exchange?.status.currency_from }} to</th>
+            <th>Sent {{ exchange?.status.currency_from.toUpperCase() }} to</th>
             <td><input type="text" readonly value="{{ exchange?.status.address_from }}" class="value highlight address"></td>
           </tr>
           <tr>
-            <th>Sent TXID ({{ exchange?.status.currency_from }})</th>
+            <th>Sent TXID ({{ exchange?.status.currency_from.toUpperCase() }})</th>
             <td><input type="text" readonly value="{{ exchange?.status.tx_from }}" class="value address txid"></td>
           </tr>
         </table>
