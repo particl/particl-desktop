@@ -9,7 +9,7 @@ import { ImportListingsComponent } from './sell/import-listings/import-listings.
 
 const routes: Routes = [
   { path: 'listings', component: ListingsComponent, data: { title: 'Listings' } },
-  { path: 'buy', component: BuyComponent, data: { title: 'Buy' } },
+  { path: 'buy', component: BuyComponent, data: { title: 'Purchases' } },
   { path: 'sell', component: SellComponent, data: { title: 'Sell' } },
   { path: 'template', component: AddItemComponent, data: { title: 'Sell › Add/Edit item' } },
   { path: 'import', component: ImportListingsComponent, data: { title: 'Sell › Import listings' } }
