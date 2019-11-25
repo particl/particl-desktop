@@ -22,6 +22,14 @@
           <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
         </mat-form-field>
 
+        <app-category-tree
+          class="category-overlay"
+          *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+          (onChange)="onCategoryChange($event)"
+          [options]="_rootCategoryList?.subCategoryList"
+          [selected]="selectedCategory">
+        </app-category-tree>
+
         <mat-form-field class="full-width">
           <textarea matInput #summary rows="3" placeholder="Summary (short description)"
                     formControlName="shortDescription"></textarea>
@@ -33,14 +41,6 @@
                     formControlName="longDescription"></textarea>
           <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
         </mat-form-field>
-
-        <app-category-tree
-          class="category-overlay"
-          *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-          (onChange)="onCategoryChange($event)"
-          [options]="_rootCategoryList?.subCategoryList"
-          [selected]="selectedCategory">
-        </app-category-tree>
 
       </mat-card><!-- .details -->
 
@@ -134,16 +134,21 @@
       <h2 class="subtitle">Shipping</h2>
       <mat-card class="shipping">
 
-        <mat-select-search
-          class="full-width"
-          [options]="countryList.getList()"
-          [showValueOf]="'name'"
-          [placeHolder]="'Shipping from (your country)'"
-          [isRequired]="'true'"
-          [defaultSelectedValue]="selectedCountry"
-          [isLexigraphicalOrder]="true"
-          (onChange)="onCountryChange($event)">
-        </mat-select-search>
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <mat-select-search
+            class="half full-width" fxFlex="50%"
+            [options]="countryList.getList()"
+            [showValueOf]="'name'"
+            [placeHolder]="'Shipping from (your country)'"
+            [isRequired]="'true'"
+            [defaultSelectedValue]="selectedCountry"
+            [isLexigraphicalOrder]="true"
+            (onChange)="onCountryChange($event)">
+          </mat-select-search>
+          <p fxFlex="50%" class="widget-help half">
+            From which country will you be selling and shipping your item?
+          </p>
+        </div>
 
         <div class="row" fxLayout="row" fxLayoutGap="25px">
           <mat-form-field fxFlex="50%" class="half auto-width">
