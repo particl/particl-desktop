@@ -46,7 +46,7 @@
     "travis:win32": "electron-builder --win --ia32 && yarn run checksum",
     "travis:test": "ng test --watch=false --code-coverage",
     "start": "yarn run start:electron:fast",
-    "postinstall": "./node_modules/.bin/electron-rebuild"
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "electronVersion": "5.0.4",
@@ -167,7 +167,8 @@
     "asar": true,
     "asarUnpack": [
       "node_modules/sqlite3/**/*",
-      "node_modules/particl-marketplace/**/*"
+      "node_modules/particl-marketplace/**/*",
+      "node_modules/zeromq/**/*"
     ]
   },
   "dependencies": {
@@ -225,7 +226,6 @@
     "electron": "5.0.4",
     "electron-builder": "^21.2.0",
     "electron-notarize": "^0.2.0",
-    "electron-rebuild": "^1.8.6",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^3.3.0",
