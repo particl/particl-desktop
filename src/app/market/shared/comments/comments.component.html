@@ -41,7 +41,9 @@
     </div><!-- .loading-container -->
 
     <div class="no-results" *ngIf="pages[0]?.comments.length === 0">
-      No questions asked about this product yet
+      <p>
+        No questions asked about this product yet
+      </p>
     </div>
 
     <ng-container *ngFor="let page of pages; let pageIndex = index;">
