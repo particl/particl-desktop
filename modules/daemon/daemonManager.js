@@ -33,15 +33,11 @@ class DaemonManager extends EventEmitter {
     return this._availableClients['particld'].binPath;
   }
 
-  init(options) {
+  init() {
     log.info('Particl Daemon Manager initializing...');
-    // const isTestnet = Boolean(+options.testnet);
-    // if (isTestnet) {
-    //   this.localPath = path.join(this.localPath, 'testnet');
-    // }
 
     this._resolveBinPath();
-    return this._checkForNewConfig();
+    this._checkForNewConfig();
   }
 
   shutdown() {
@@ -61,21 +57,24 @@ class DaemonManager extends EventEmitter {
     );
   }
 
-  _checkForNewConfig() {
+  async _checkForNewConfig() {
     const nodeType = 'particld';
-    let binariesDownloaded = false;
-    let nodeInfo;
 
     log.info(`Checking for new client binaries config from: ${BINARY_URL}`);
 
-    this._emit('loadConfig', 'Fetching remote client config');
+    this._emit('loadConfig', 'Looking remotely for Particl Core version updates...');
 
-    // fetch config
-    return got(BINARY_URL, {
+    const request = got(BINARY_URL, {
       timeout: 30000,
       json: true
-    })
-    .then((res) => {
+    });
+
+    this.on('close', () => {
+      request.cancel();
+    });
+
+    // fetch config
+    return request.then((res) => {
       if (!res || _.isEmpty(res.body)) {
         throw new Error('Invalid fetch result');
       } else {
@@ -83,8 +82,14 @@ class DaemonManager extends EventEmitter {
       }
     })
     .catch((err) => {
-      log.warn('Error fetching client binaries config from repo', err);
-      this._emit('error', err.message);
+      if (request.isCanceled || (err instanceof got.CancelError)) {
+        const errMsg = 'Failed to fetch client binary info: request cancelled'
+        log.warn(errMsg);
+        throw new Error (errMsg);
+      } else {
+        this._emit('error', err.message);
+        log.warn('Error fetching client binaries config from repo', err);
+      }
     })
     .then((latestConfig) => {
 
@@ -121,26 +126,7 @@ class DaemonManager extends EventEmitter {
         log.info('No "skippedNodeVersion.json" found.');
       }
 
-      // prepare node info
-      const platform = process.platform
-        .replace('darwin', 'mac')
-        .replace('win32', 'win')
-        .replace('freebsd', 'linux')
-        .replace('sunos', 'linux');
-      const binaryVersion = latestConfig.clients[nodeType].platforms[platform][process.arch];
-      const checksums = _.pick(binaryVersion.download, 'sha256', 'md5');
-      const algorithm = _.keys(checksums)[0].toUpperCase();
-      const hash = _.values(checksums)[0];
-
-      // get the node data, to be able to pass it to a possible error
-      nodeInfo = {
-        type: nodeType,
-        version: nodeVersion,
-        checksum: hash,
-        algorithm
-      };
-
-      // if new config version available then ask user if they wish to update
+      // new config version available: update
       if (latestConfig
         && JSON.stringify(localConfig) !== JSON.stringify(latestConfig)
         && nodeVersion !== skipedVersion) {
@@ -150,50 +136,6 @@ class DaemonManager extends EventEmitter {
           log.info('New client binaries config found, updating binary...');
           this._writeLocalConfig(latestConfig);
           resolve(latestConfig);
-
-          // const wnd = Windows.createPopup('clientUpdateAvailable', _.extend({
-          //   useWeb3: false,
-          //   electronOptions: {
-          //     width: 600,
-          //     height: 340,
-          //     alwaysOnTop: false,
-          //     resizable: false,
-          //     maximizable: false
-          //   }
-          // }, {
-          //   sendData: {
-          //     uiAction_sendData: {
-          //       name: nodeType,
-          //       version: nodeVersion,
-          //       checksum: `${algorithm}: ${hash}`,
-          //       downloadUrl: binaryVersion.download.url,
-          //       restart
-          //     }
-          //   }
-          // }), (update) => {
-          //   // update
-          //   if (update === 'update') {
-          //     this._writeLocalConfig(latestConfig);
-          //
-          //     resolve(latestConfig);
-          //
-          //     // skip
-          //   } else if (update === 'skip') {
-          //     fs.writeFileSync(
-          //       path.join(app.getPath('userData'), 'skippedNodeVersion.json'),
-          //       nodeVersion
-          //     );
-          //
-          //     resolve(localConfig);
-          //   }
-          //
-          //   wnd.close();
-          // });
-          //
-          // // if the window is closed, simply continue and as again next time
-          // wnd.on('close', () => {
-          //   resolve(localConfig);
-          // });
         });
       }
 
@@ -241,7 +183,6 @@ class DaemonManager extends EventEmitter {
           });
 
           return Q.map(_.values(clients), (c) => {
-            binariesDownloaded = true;
 
             return mgr.download(c.id, {
               downloadFolder: this.localPath

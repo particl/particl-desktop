@@ -30,6 +30,8 @@ function setupDaemonManagerListener() {
         daemonWarner.send(msg, 'update');
       } else if (status === 'error') {
         daemonWarner.send(msg, 'error');
+      } else if (status === 'loadConfig') {
+        daemonWarner.send(msg, 'info');
       }
     }
 
@@ -61,7 +63,7 @@ function setupDaemonManagerListener() {
           if (response === 0) {
             electron.app.quit();
           } else if(response === 1) {
-            daemonManager.init(daemonConfig.getConfig());
+            daemonManager.init();
           }
         });
       } else if (msg.toLowerCase().indexOf('hash mismatch') !== -1) {
@@ -115,7 +117,7 @@ exports.startSystem = function () {
             log.info('Particl daemon instance not running: attempting to boot Particl Core');
             daemonWarner.send('Attempting to boot particl core...', 'info');
             setupDaemonManagerListener();
-            daemonManager.init(daemonConfig.getConfig());
+            daemonManager.init();
           }
         ).then(
           () => {
