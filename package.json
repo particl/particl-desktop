@@ -1,6 +1,7 @@
 {
-  "name": "particl-desktop-testnet",
-  "version": "2.4.0-testnet",
+  "name": "particl-desktop",
+  "productName": "Particl Desktop Testnet",
+  "version": "2.4.0",
   "branch": "2.4",
   "preRelease": "",
   "license": "GPL-2.0",

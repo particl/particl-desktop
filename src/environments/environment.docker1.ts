@@ -3,6 +3,7 @@ declare const require: any;
 export const environment = {
   production: false,
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
+  name: require('../../package.json').name,
   version: require('../../package.json').version,
   preRelease: require('../../package.json').preRelease,
   envName: 'docker1',
