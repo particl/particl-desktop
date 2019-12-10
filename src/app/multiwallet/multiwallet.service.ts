@@ -21,12 +21,18 @@ export class MultiwalletService implements OnDestroy {
   );
   private destroyed: boolean = false;
   private hasList: boolean = false;
+  private _initialized: boolean = false;
 
   private timer: any = interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
-  constructor(
-    private _rpc: RpcService) {
+  constructor(private _rpc: RpcService) { }
+
+  initialize() {
+    if (this._initialized) {
+      return;
+    }
+    this._initialized = true;
     this.listen();
   }
 

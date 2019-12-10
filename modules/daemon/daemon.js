@@ -1,64 +1,24 @@
-const electron      = require('electron');
 const log           = require('electron-log');
-const fs            = require('fs');
 const spawn         = require('child_process').spawn;
-const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs/Observable').Observable;
 
 const _options      = require('../options');
 const rpc           = require('../rpc/rpc');
 const daemonManager = require('../daemon/daemonManager');
+const daemonWarner  = require('./update');
 const daemonConfig  = require('./daemonConfig');
+const _auth         = require('../webrequest/http-auth');
 
 let daemon = undefined;
+let authRequested = false;
 
 function daemonData(data, logger) {
   data = data.toString().trim();
   logger(data);
 }
 
-exports.init = function () {
-  console.log('daemon init listening for reboot')
-  rxIpc.registerListener('daemon', (data) => {
-    return Observable.create(observer => {
-      console.log('got data on daemon channel!');
-      // if (data && data.type === 'restart') {
-      //   exports.restart(true);
-      //   observer.complete(true);
-      // } else {
-        observer.complete(true);
-      // }
-    });
-  });
-}
-
-// exports.restart = function (alreadyStopping) {
-//   log.info('restarting daemon...')
-
-//   // setup a listener, waiting for the daemon
-//   // to exit.
-//   if (daemon) {
-//     daemon.once('close', code => {
-//       // clear authentication
-//       clearCookie();
-//       // restart
-//       this.start();
-//     });
-//   }
-
-//   // wallet encrypt will restart by itself
-//   if (!alreadyStopping) {
-//     // stop daemon but don't make it quit the app.
-//     const restarting = true;
-//     exports.stop(restarting).then(() => {
-//       log.debug('waiting for daemon shutdown...')
-//     });
-//   }
-
-// }
-
 let attemptsToStart = 0;
 const maxAttempts = 10;
+
 exports.start = function (doReindex = false) {
   let options = _options.get();
 
@@ -99,6 +59,7 @@ exports.start = function (doReindex = false) {
         .on('close', code => {
           log.info('daemon exited - setting to undefined.');
           daemon = undefined;
+          authRequested = false;
           if (code !== 0) {
             reject();
             log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
@@ -108,7 +69,16 @@ exports.start = function (doReindex = false) {
         });
 
       // TODO change for logging
-      child.stdout.on('data', data => daemonData(data, console.log));
+      child.stdout.on('data', data => {
+        daemonData(data, console.log);
+        if (!authRequested && data.toString().includes('Generated RPC authentication cookie')) {
+          authRequested = true;
+          daemonConfig.loadAuth();
+          const config = daemonConfig.getConfig();
+          _auth.setAuthConfig(config);
+          daemonWarner.send(config, 'done');
+        }
+      });
       child.stderr.on('data', data => {
         const err = data.toString('utf8');
         if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
@@ -128,7 +98,6 @@ exports.start = function (doReindex = false) {
 
 exports.check = function () {
   return new Promise((resolve, reject) => {
-    const _timeout = rpc.getTimeoutDelay();
     rpc.call('getnetworkinfo', null, (error, response) => {
       if (error) {
         reject(error);
@@ -136,10 +105,9 @@ exports.check = function () {
         resolve(response);
       }
     });
-    rpc.setTimeoutDelay(_timeout);
-
   });
 }
+
 
 exports.stop = function () {
   log.info('daemon stop called..');
@@ -151,7 +119,6 @@ exports.stop = function () {
       // do not close electron when restarting (e.g encrypting wallet)
       daemon.once('close', code => {
         log.info('daemon exited successfully - we can now quit electron safely! :)');
-        electron.app.quit();
       });
 
       log.info('Call RPC stop!');
@@ -168,9 +135,7 @@ exports.stop = function () {
     } else {
       log.info('Daemon not managed by gui.');
       log.info('Daemon disconnecting - we can now quit electron safely! :)');
-      electron.app.quit();
       resolve();
     }
-
   });
 }

@@ -1,4 +1,4 @@
-const { app, dialog } = require('electron');
+const { app } = require('electron');
 const EventEmitter    = require('events').EventEmitter;
 
 const _    = require('lodash');
@@ -10,7 +10,6 @@ const log  = require('electron-log');
 const branch = require('../../package.json').branch;
 
 const ClientBinariesManager = require('../clientBinaries/clientBinariesManager').Manager;
-const rpc = require('../rpc/rpc');
 
 // master
 // const BINARY_URL = 'https://raw.githubusercontent.com/particl/particl-desktop/master/modules/clientBinaries/clientBinaries.json';
@@ -35,14 +34,12 @@ class DaemonManager extends EventEmitter {
   }
 
   init(options) {
-    log.info('Initializing...');
-    const isTestnet = Boolean(+options.testnet);
-    if (isTestnet) {
-      this.localPath = path.join(this.localPath, 'testnet');
-    }
-    // TODO: reactivate when prompt user in GUI works
-    // check every hour
-    // setInterval(() => this._checkForNewConfig(true), 1000 * 60 * 60);
+    log.info('Particl Daemon Manager initializing...');
+    // const isTestnet = Boolean(+options.testnet);
+    // if (isTestnet) {
+    //   this.localPath = path.join(this.localPath, 'testnet');
+    // }
+
     this._resolveBinPath();
     return this._checkForNewConfig();
   }
@@ -114,7 +111,7 @@ class DaemonManager extends EventEmitter {
 
           this._writeLocalConfig(localConfig);
         } else {
-          throw new Error('Unable to load local or remote config, cannot proceed!');
+          throw new Error('Unable to load local or remote config: unknown particl core, cannot proceed!');
         }
       }
 
@@ -150,9 +147,7 @@ class DaemonManager extends EventEmitter {
 
         return new Q((resolve) => {
 
-          log.debug('New client binaries config found, asking user if they wish to update...');
-
-          log.debug('skipping ask user because Electron is not yet linked for that');
+          log.info('New client binaries config found, updating binary...');
           this._writeLocalConfig(latestConfig);
           resolve(latestConfig);
 
@@ -280,24 +275,6 @@ class DaemonManager extends EventEmitter {
       const errMessage = err.message ? err.message : String(err);
 
       this._emit('error', errMessage);
-
-      // show error
-      if (err.message.indexOf('Hash mismatch') !== -1) {
-        // show hash mismatch error
-        dialog.showMessageBox({
-          type: 'warning',
-          buttons: ['OK'],
-          message: 'Checksum mismatch in downloaded node!',
-          detail: `${nodeInfo.algorithm}:${nodeInfo.checksum}\n\nPlease install the ${nodeInfo.type} node version ${nodeInfo.version} manually.`
-        }, () => {
-          app.quit();
-        });
-
-        // throw so the main.js can catch it
-        if (!(err.status && err.status === 'cancel')) {
-          throw err;
-        }
-      }
     });
   }
 

@@ -1,5 +1,5 @@
 /* electron */
-const electron      = require('electron').app;
+const app      = require('electron').app;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const log = require('electron-log');
 
@@ -11,9 +11,9 @@ const Observable = require('rxjs/Observable').Observable;
 exports.init = function () {
     rxIpc.registerListener('close-gui', function (doRestart) {
       if (typeof doRestart === 'boolean' && doRestart) {
-        electron.relaunch();
+        app.relaunch();
       }
-      electron.quit();
+      app.quit();
       return Observable.create(observer => {
           observer.complete(true);
       });

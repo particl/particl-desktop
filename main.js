@@ -7,26 +7,27 @@ const url           = require('url');
 const platform      = require('os').platform();
 
 
-/* correct appName and userData to respect Linux standards */
+// Parse command line arguments
+if (app.getName().toLowerCase().includes('testnet')) {
+  process.argv.push('-testnet');
+}
+
+/* correct userData to respect Linux standards */
 if (process.platform === 'linux') {
-  app.setName('particl-desktop');
+  app.setName(app.getName().toLowerCase().split(' ').join('-'));
   app.setPath('userData', `${app.getPath('appData')}/${app.getName()}`);
 }
 
 /* check for paths existence and create */
-[ app.getPath('userData'),
-  path.join(app.getPath('userData'), 'testnet')
-].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
+[ app.getPath('userData')].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
 
-if (app.getVersion().includes('testnet'))
-  process.argv.push(...['-testnet']);
 
-const daemonConfig = require('./modules/daemon/daemonConfig');
-const log     = require('./modules/logger').init();
-const init    = require('./modules/init');
-const _auth = require('./modules/webrequest/http-auth');
+const log            = require('./modules/logger').init();
+const options        = require('./modules/options').get();
+const init           = require('./modules/init');
+const _auth          = require('./modules/webrequest/http-auth');
 
-const options = daemonConfig.getConfiguration(true, true);
+log.info(`init ${app.getName()} : ${app.getVersion()}`);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -38,14 +39,24 @@ let tray;
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
 
-  log.info('app ready')
+  log.info('initialization complete');
   log.debug('argv', process.argv);
-
-  // initialize the authentication filter
-  _auth.init(options);
-
+  _auth.init();
+  init.startSystem();
   initMainWindow();
-  init.start(mainWindow);
+});
+
+
+app.on('activate', function () {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (mainWindow === null) {
+    initMainWindow();
+  }
+});
+
+app.on('browser-window-created', function (e, window) {
+  window.setMenu(null);
 });
 
 // Quit when all windows are closed.
@@ -53,30 +64,38 @@ app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
 });
 
-app.on('activate', function () {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
-    initMainWindow()
-  }
+app.on('before-quit', function beforeQuit(event) {
+
+  // TODO: DISPLAY A MODAL INDICATING THAT THE WINDOW IS SHUTTING DOWN
+  log.info('Shutdown of application started...');
+
+  event.preventDefault();
+  app.removeListener('before-quit', beforeQuit);
+
+  init.stopSystem().catch(() => {
+    // do nothing, here just to ensure that we prevent errors from aborting the shutdown process
+  }).then(() => {
+    init.stopGUI();
+    app.quit();
+  });
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-app.on('browser-window-created', function (e, window) {
-  window.setMenu(null);
+app.on('quit', (event, exitCode) => {
+  log.info('Exiting!');
 });
 
 /*
 ** initiates the Main Window
 */
 function initMainWindow() {
+  log.info('Building up UI elements...');
+
   if (platform !== "darwin") {
-    let trayImage = makeTray();
+    makeTray();
   } else {
     electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate([
       {
@@ -132,12 +151,6 @@ function initMainWindow() {
   mainWindow.setMenuBarVisibility(false);
   mainWindow.setAutoHideMenuBar(true);
 
-  // Setup configuration listener
-  //    Needs to be included here because init.js is only created once (when the app is ready), whereas the wind object could be created via app.on('activate', ...);
-  //      Behaviour al la OSX: mainWindow is destroyed, app remains running, and relaunching the application results in a app 'activate' event eing triggered.
-  //      Cue call to initMainWindow(), and anything requiring a mainWindow refernce, needs to now be passed the mainWindow object.
-  daemonConfig.init(mainWindow);
-
   // and load the index.html of the app.
   if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');
@@ -149,9 +162,11 @@ function initMainWindow() {
     }));
   }
 
+  init.startGUI(mainWindow);
+
   // Open the DevTools.
   if (options.devtools) {
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools();
   }
 
   // handle external URIs
@@ -165,7 +180,9 @@ function initMainWindow() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    mainWindow = null
+    log.info('Tearing down UI elements');
+    init.stopGUI();
+    mainWindow = null;
   });
 }
 
@@ -176,14 +193,6 @@ function makeTray() {
 
   // Default tray image + icon
   let trayImage = path.join(__dirname, 'resources/icon.png');
-
-  // Determine appropriate icon for platform
-  // if (platform === 'darwin') {
-  //    trayImage = path.join(__dirname, 'src/assets/icons/logo.icns');
-  // }
-  // else if (platform === 'win32' || platform === 'win64') {
-  //   trayImage = path.join(__dirname, 'src/assets/icons/logo.ico');
-  // }
 
   // The tray context menu
   const contextMenu = electron.Menu.buildFromTemplate([
@@ -214,13 +223,7 @@ function makeTray() {
         {
           label: 'Maximize',
           click() { mainWindow.maximize(); }
-        } /* TODO: stop full screen somehow,
-        {
-          label: 'Toggle Full Screen',
-          click () {
-            mainWindow.setFullScreen(!mainWindow.isFullScreen());
-           }
-        }*/
+        }
       ]
     },
     {
@@ -245,14 +248,9 @@ function makeTray() {
   // Create the tray icon
   tray = new electron.Tray(trayImage)
 
-  // TODO, tray pressed icon for OSX? :)
-  // if (platform === "darwin") {
-  //   tray.setPressedImage(imageFolder + '/osx/trayHighlight.png');
-  // }
-
   // Set the tray icon
-  tray.setToolTip('Particl ' + app.getVersion());
-  tray.setContextMenu(contextMenu)
+  tray.setToolTip(`${app.getName()} ${app.getVersion()}`);
+  tray.setContextMenu(contextMenu);
 
   // Always show window when tray icon clicked
   tray.on('click', function () {

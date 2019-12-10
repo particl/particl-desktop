@@ -51,6 +51,7 @@ class SafeIpcRenderer {
 }
 
 window.ipc = new SafeIpcRenderer([
+  'start-system',
   'front-choosewallet',
   'front-walletready',
 
@@ -62,8 +63,6 @@ window.ipc = new SafeIpcRenderer([
   'stop-market',
 
   'zmq',
-  'rpc-configuration',
-  'request-configuration',
   'write-core-config',
   'ipc-delete-wallet',
   'open-system-dialog',

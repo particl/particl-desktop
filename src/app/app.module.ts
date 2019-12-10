@@ -23,12 +23,12 @@ import { CoreModule } from './core/core.module';
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
-    app_routing,
     InstallerModule,
     MultiwalletModule.forRoot(),
     SettingsModule.forRoot(),
     RpcWithStateModule.forRoot(),
     CoreModule.forRoot(),
+    app_routing,
   ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

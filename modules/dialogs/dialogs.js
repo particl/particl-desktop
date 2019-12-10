@@ -4,8 +4,6 @@ const Observable    = require('rxjs/Observable').Observable;
 
 const IPC_CHANNEL_DIALOG = 'open-system-dialog';
 
-let mainWindowRef = null;
-
 
 function isObject(obj) {
   return Object.prototype.toString.call(obj) === '[object Object]';
@@ -21,8 +19,7 @@ const destroyIpcChannels = () => {
 }
 
 
-const initializeIpcChannels = (mainWindow) => {
-  mainWindowRef = mainWindow;
+const initializeIpcChannels = (mainWindowRef) => {
   destroyIpcChannels();
 
   rxIpc.registerListener(IPC_CHANNEL_DIALOG, (options) => {

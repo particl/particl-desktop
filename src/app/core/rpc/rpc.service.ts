@@ -5,7 +5,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
 import { map, catchError } from 'rxjs/operators';
 
-import { IpcService } from '../ipc/ipc.service';
 import { environment } from '../../../environments/environment';
 
 declare global {
@@ -28,7 +27,6 @@ export class RpcService implements OnDestroy {
   private log: any = Log.create('rpc.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
   private isInitialized: boolean = false;
-  private DAEMON_CHANNEL: string = 'rpc-configuration';
   private _wallet: string;
   private _coreConfig: any;
 
@@ -42,21 +40,15 @@ export class RpcService implements OnDestroy {
    */
   private port: number = environment.particlPort;
 
-  private daemonProto: number = 0;
-
   // note: password basic64 equiv= dGVzdDp0ZXN0
   private authorization: string = btoa('test:test');
 
   constructor(
-    private _http: HttpClient,
-    private _ipc: IpcService
+    private _http: HttpClient
   ) {
+    this.log.d('Creating service');
     if (environment.isTesting || !window.electron) {
       this.isInitialized = true;
-    } else {
-      this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
-      this.requestConfiguration();
-      this.log.d('Creating service');
     }
   }
 
@@ -77,7 +69,7 @@ export class RpcService implements OnDestroy {
   }
 
   /**
-   * Set the wallet to execute commands against.
+   * Set the wallet aginst which regular commands are executed.
    * @param w the wallet filename .
    */
   setWalletName(w: string) {
@@ -151,35 +143,20 @@ export class RpcService implements OnDestroy {
         })))
   }
 
-  private daemonListener(config: any): Observable<any> {
-    return Observable.create(observer => {
-      const isValid = config.auth && (config.auth !== this.authorization);
-      if (Object.prototype.toString.call(config) === '[object Object]') {
-        this._coreConfig = config;
-      }
 
-      this.log.d(`Received RPC configuration: details are valid: ${isValid}`);
-      if (isValid) {
-        this.hostname = config.rpcbind || 'localhost';
-        this.port = config.port ? config.port : this.port;
-        this.authorization = config.auth ? config.auth : this.authorization;
-        this.isInitialized = true;
-      }
+  initialize(config: any) {
+    if (this.isInitialized) {
+      return;
+    }
+    this.isInitialized = true;
 
-      // complete
-      observer.complete();
-    });
+    if (Object.prototype.toString.call(config) === '[object Object]' && config.auth && (config.auth !== this.authorization)) {
+      this.hostname = config.rpcbind || 'localhost';
+      this.port = config.port ? config.port : this.port;
+      this.authorization = config.auth ? config.auth : this.authorization;
+      this._coreConfig = config;
+    } else {
+      this.isInitialized = false;
+    }
   }
-
-  private requestConfiguration(): void {
-    setTimeout(() => {
-      this.log.d('Checking if RPC configuration is valid');
-      if (!this.isInitialized) {
-        this.log.d('Requesting valid RPC configuration');
-        this._ipc.runCommand('request-configuration', null, null);
-        this.requestConfiguration();
-      }
-    }, 5000);
-  }
-
 }
