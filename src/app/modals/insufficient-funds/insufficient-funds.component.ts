@@ -54,7 +54,7 @@ export class InsufficientFundsComponent implements OnInit, OnDestroy {
               .add( new PartoshiAmount(+balance.immature_anon_balance * Math.pow(10, 8)) )
           }
 
-          this.cartTotal = this.data.cart.getTotal(this.data.country);
+          this.cartTotal = this.data && this.data.cart ? this.data.cart.getTotal(this.data.country) : new PartoshiAmount(0);
           this.total = new PartoshiAmount(this.cartTotal.partoshis() - this.pendingBalance.partoshis() - this.availableBalance.partoshis());
 
           this.hasEnoughPending = (this.pendingBalance.partoshis() + this.availableBalance.partoshis()) > this.cartTotal.partoshis();

@@ -6,6 +6,7 @@ import { IpcService } from 'app/core/ipc/ipc.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
 import { SettingsStateService } from 'app/settings/settings-state.service';
+import { environment } from 'environments/environment';
 
 
 @Injectable()
@@ -22,7 +23,7 @@ export class UpdaterService {
     private _settings: SettingsStateService
   ) {
     this.log.d('Registering ipc listener for updater');
-    if (window.electron) {
+    if (window.electron || !environment.isTesting) {
       this.log.d('Registering ipc listener for updater');
       // Register a listener on the channel "updater" (ipc)
       this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));

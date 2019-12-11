@@ -5,7 +5,7 @@ import { Log } from 'ng2-logger';
 
 import { SignVerifyMessage } from './sign-verify-message.model';
 
-import { RpcService, RpcStateService } from '../../../../core/core.module';
+import { RpcService } from '../../../../core/core.module';
 import { ModalsHelperService } from 'app/modals/modals.module';
 import { SnackbarService } from '../../../../core/snackbar/snackbar.service';
 
@@ -35,7 +35,6 @@ export class SignatureAddressModalComponent implements OnInit {
 
   constructor(private dialog: MatDialog,
               private _rpc: RpcService,
-              private _rpcState: RpcStateService,
               private flashNotification: SnackbarService,
               private formBuilder: FormBuilder,
 
