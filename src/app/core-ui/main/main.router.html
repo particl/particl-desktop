@@ -243,7 +243,7 @@
       </div>
 
       <!-- Cart overview -->
-      <app-cart *ngIf="_market.isMarketStarted"></app-cart>
+      <app-cart *ngIf="_market.isMarketStarted && isMarketRoute"></app-cart>
 
       <!-- Status icons -->
       <app-status></app-status>
