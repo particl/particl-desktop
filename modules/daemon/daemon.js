@@ -55,18 +55,7 @@ exports.start = function (doReindex = false) {
       const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...addedArgs];
       log.info(`starting daemon: ${deamonArgs.join(' ')}`);
 
-      const child = spawn(daemonPath, deamonArgs)
-        .on('close', code => {
-          log.info('daemon exited - setting to undefined.');
-          daemon = undefined;
-          authRequested = false;
-          if (code !== 0) {
-            reject();
-            log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
-          } else {
-            log.info('daemon exited successfully');
-          }
-        });
+      const child = spawn(daemonPath, deamonArgs);
 
       // TODO change for logging
       child.stdout.on('data', data => {
@@ -118,7 +107,16 @@ exports.stop = function () {
       // attach event to stop electron when daemon closes.
       // do not close electron when restarting (e.g encrypting wallet)
       daemon.once('close', code => {
-        log.info('daemon exited successfully - we can now quit electron safely! :)');
+        daemon = undefined;
+        authRequested = false;
+        if (code !== 0) {
+          reject();
+          log.error(`daemon exited with code ${code}.\n${daemonPath}\n${process.argv}`);
+        } else {
+          log.info('daemon exited successfully');
+          resolve();
+        }
+        log.info('daemon exit complete - we can now quit electron safely! :)');
       });
 
       log.info('Call RPC stop!');
@@ -129,7 +127,6 @@ exports.stop = function () {
           reject();
         } else {
           log.info('Daemon stopping gracefully...');
-          resolve();
         }
       });
     } else {

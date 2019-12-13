@@ -184,7 +184,7 @@ exports.stopSystem = async function() {
     }
   ).then(
     () => {
-      log.info('daemon.stop() resolved!');
+      log.info('daemon.stop() complete');
     }
   );
   isInitializedSystem = false;
