@@ -70,21 +70,61 @@ app.on('window-all-closed', function () {
 
 app.on('before-quit', function beforeQuit(event) {
 
-  // TODO: DISPLAY A MODAL INDICATING THAT THE WINDOW IS SHUTTING DOWN
   log.info('Shutdown of application started...');
 
   event.preventDefault();
   app.removeListener('before-quit', beforeQuit);
 
+  // Display a 'modal' -like window indicating that the application is shutting down
+  let closingWindow = new BrowserWindow({
+    width:     600,
+    minWidth:  600,
+    height:    400,
+    minHeight: 400,
+    icon:      path.join(__dirname, 'resources/icon.png'),
+
+    backgroundColor: '#222828',
+    frame: false,
+    darkTheme: true,
+
+    webPreferences: {
+      webviewTag: false,
+      nodeIntegration: false,
+      sandbox: true,
+      contextIsolation: false
+    },
+  });
+
+  closingWindow.loadURL(url.format({
+    protocol: 'file:',
+    pathname: path.join(__dirname, `${options.dev ? 'src' : 'dist'}`, 'assets', 'modals', 'closing.html'),
+    slashes: true
+  }));
+
+  if (platform !== "darwin" && tray) {
+    try {
+      tray.destroy();
+    } catch (err) {
+      // do nothing.. we don't care because electron will destroy it if not already destroyed
+    }
+  }
+
+  if (mainWindow) {
+    try {
+      mainWindow.close();
+    } catch(err) {
+      // do nothing: window is likely closed already
+    }
+  }
+
   init.stopSystem().catch(() => {
     // do nothing, here just to ensure that we prevent errors from aborting the shutdown process
   }).then(() => {
-    init.stopGUI();
     app.quit();
   });
 });
 
-app.on('quit', (event, exitCode) => {
+app.on('quit', () => {
   log.info('Exiting!');
 });
 
@@ -135,6 +175,7 @@ function initMainWindow() {
 
     frame: true,
     darkTheme: true,
+    backgroundColor: '#222828',
 
     webPreferences: {
       backgroundThrottling: false,
@@ -180,7 +221,7 @@ function initMainWindow() {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    log.info('Tearing down UI elements');
+    log.info('Tearing down UI');
     init.stopGUI();
     mainWindow = null;
   });
@@ -246,7 +287,7 @@ function makeTray() {
   ]);
 
   // Create the tray icon
-  tray = new electron.Tray(trayImage)
+  tray = new electron.Tray(trayImage);
 
   // Set the tray icon
   tray.setToolTip(`${app.getName()} ${app.getVersion()}`);
