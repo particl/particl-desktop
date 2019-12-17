@@ -125,6 +125,8 @@ if (!instanceLock) {
         slashes: true
       }));
 
+      closingWindow.setClosable(false);
+
       closingWindow.on('closed', function () {
         closingWindow = null;
       });

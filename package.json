@@ -51,7 +51,7 @@
   },
   "build": {
     "electronVersion": "5.0.4",
-    "appId": "io.particl.desktop",
+    "appId": "io.particl.desktop.testnet",
     "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
     "afterSign": "build/notarize.js",
