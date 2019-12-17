@@ -177,8 +177,7 @@ exports.stopGUI = function() {
 exports.stopSystem = async function() {
   destroySystemListeners();
 
-  const resp = daemon.stop();
-  await resp.catch(
+  await daemon.stop().catch(
     (err) => {
       log.error('daemon.stop() errored:', err);
     }

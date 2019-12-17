@@ -10,6 +10,7 @@ const platform      = require('os').platform();
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
+let closingWindow;
 let tray;
 let isTerminating = false;
 
@@ -88,61 +89,71 @@ if (!instanceLock) {
     }
   });
 
-  app.on('before-quit', function beforeQuit(event) {
-    isTerminating = true;
-
+  app.once ('will-quit', async function beforeQuit(event) {
+    app.removeListener('will-quit', beforeQuit);
     event.preventDefault();
-    app.removeListener('before-quit', beforeQuit);
+
+    isTerminating = true;
 
     log.info('Shutdown of application started...');
 
-    // Display a 'modal' -like window indicating that the application is shutting down
-    let closingWindow = new BrowserWindow({
-      width:     600,
-      minWidth:  600,
-      height:    400,
-      minHeight: 400,
-      icon:      path.join(__dirname, 'resources/icon.png'),
+    try {
 
-      backgroundColor: '#222828',
-      frame: false,
-      darkTheme: true,
+      // Display a 'modal'-like window indicating that the application is shutting down
+      closingWindow = new BrowserWindow({
+        width:     600,
+        minWidth:  600,
+        height:    400,
+        minHeight: 400,
+        icon:      path.join(__dirname, 'resources/icon.png'),
 
-      webPreferences: {
-        webviewTag: false,
-        nodeIntegration: false,
-        sandbox: true,
-        contextIsolation: false
-      },
-    });
+        backgroundColor: '#222828',
+        frame: false,
+        darkTheme: true,
 
-    closingWindow.loadURL(url.format({
-      protocol: 'file:',
-      pathname: path.join(__dirname, `${options.dev ? 'src' : 'dist'}`, 'assets', 'modals', 'closing.html'),
-      slashes: true
-    }));
+        webPreferences: {
+          webviewTag: false,
+          nodeIntegration: false,
+          sandbox: true,
+          contextIsolation: false
+        }
+      });
+
+      closingWindow.loadURL(url.format({
+        protocol: 'file:',
+        pathname: path.join(__dirname, `${options.dev ? 'src' : 'dist'}`, 'assets', 'modals', 'closing.html'),
+        slashes: true
+      }));
+
+      closingWindow.on('closed', function () {
+        closingWindow = null;
+      });
+
+    } catch (err1) {
+      log.error('Failed creating closing modal window -> ', err1);
+    }
 
     if (platform !== "darwin" && tray) {
       try {
         tray.destroy();
-      } catch (err) {
+      } catch (err2) {
         // do nothing.. we don't care because electron will destroy it if not already destroyed
       }
     }
 
-    if (mainWindow) {
-      try {
-        mainWindow.close();
-      } catch(err) {
-        // do nothing: window is likely closed already
-      }
-    }
+    // if (mainWindow) {
+    //   try {
+    //     mainWindow.close();
+    //   } catch(err) {
+    //     // do nothing: window is likely closed already
+    //   }
+    // }
 
-    init.stopSystem().catch(() => {
+    await init.stopSystem().catch(() => {
       // do nothing, here just to ensure that we prevent errors from aborting the shutdown process
-    }).then(() => {
-      app.quit();
     });
+
+    app.quit();
   });
 
   app.on('quit', () => {
