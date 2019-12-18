@@ -245,10 +245,17 @@ export class ImportListingsComponent {
           }
           if (data.result) {
             setTimeout(async() => {
-              this.listings = data.result;
-
+              this.listings = data.result.filter(l => !!l.validationError);
               this._dialog.closeAll();
-              this._router.navigate(['/wallet/main/market/sell']);
+
+              if (this.hasValidationError) {
+                this._modals.showAlert(
+                  'There was 1 or more errors publishing the listings, please review the errors and try again.',
+                  'Publish Error'
+                );
+              } else {
+                this._router.navigate(['/wallet/main/market/sell']);
+              }
             }, 1);
           }
         },
