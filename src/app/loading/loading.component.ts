@@ -3,7 +3,7 @@ import { Router, ParamMap, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
-import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
+import { MultiwalletService, IWallet } from 'app/multiwallet/multiwallet.service';
 import { UpdaterService } from 'app/loading/updater.service';
 import { take, takeWhile } from 'rxjs/operators';
 import { MarketService } from 'app/core/market/market.module';
@@ -140,7 +140,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
   private async validateNavigation(loadedWallets: string[]): Promise<void> {
 
     // Ensure that the list of displayed wallets is updated
-    this.multi.refreshWalletList();
 
     // Check that terms and conditions have been accepted
     const termsVersion = this.getTerms();
@@ -158,7 +157,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     const params: ParamMap = this.route.snapshot.queryParamMap;
     this.log.d('loading params:', params);
 
-    const allWallets = await this.multi.list.pipe(take(1)).toPromise();
+    const allWallets = await this.multi.refreshWalletList().toPromise().catch(() => (<IWallet[]>[]));
     const allWalletsNames = allWallets.map(w => w.name);
 
     if ((allWallets.length <= 0) && (loadedWallets.length <= 0)) {
