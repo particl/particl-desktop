@@ -155,6 +155,9 @@ if (!instanceLock) {
       // do nothing, here just to ensure that we prevent errors from aborting the shutdown process
     });
 
+    closingWindow.setClosable(true);
+
+    closingWindow.close();
     app.quit();
   });
 
