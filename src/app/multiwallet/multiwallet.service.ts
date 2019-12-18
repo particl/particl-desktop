@@ -46,7 +46,13 @@ export class MultiwalletService implements OnDestroy {
     // and load the wallets in _list.
     this.timer.pipe(takeWhile(() => this.destroyed ? false : !this.hasList)).subscribe(() => {
       if (this._rpc.enabled) {
-        this.findAvailableWallets();
+        this.requestAvailableWallets().subscribe(
+          (wallets: IWallet[]) => {
+            this._list.next(wallets);
+            this.hasList = true;
+          },
+          (error) => this.log.er('listwalletdir: ', error)
+        );
       }
     });
   }
@@ -55,9 +61,21 @@ export class MultiwalletService implements OnDestroy {
     return this.hasList;
   }
 
-  refreshWalletList() {
-    if (this.hasList && !this.destroyed) {
-      this.findAvailableWallets();
+  refreshWalletList(): Observable<Array<IWallet>> {
+    if (this._initialized && !this.destroyed) {
+      const request = this.requestAvailableWallets();
+      request.subscribe(
+        (wallets) => {
+          this._list.next(wallets);
+          this.hasList = true;
+        }
+      )
+      return request;
+    } else {
+      return new Observable((observer) => {
+        observer.error('multiwallets not available');
+        observer.complete();
+      });
     }
   }
 
@@ -88,8 +106,8 @@ export class MultiwalletService implements OnDestroy {
     this._list.complete();
   }
 
-  private findAvailableWallets() {
-    this._rpc.call('listwalletdir', [])
+  private requestAvailableWallets(): Observable<IWallet[]> {
+    return this._rpc.call('listwalletdir', [])
       .pipe(
         map((response: any) => {
           response.wallets.forEach(wallet => {
@@ -99,20 +117,17 @@ export class MultiwalletService implements OnDestroy {
             ) !== undefined;
           });
           return _.orderBy(response.wallets, 'name', 'asc');
-        })
-      )
-      .subscribe(
-        (wallets: IWallet[]) => {
+        }),
+
+        map((wallets: IWallet[]) => {
           const filteredWallets = wallets.filter(
             (w: IWallet) => {
               const wName = w.name.toLowerCase();
               return !(wName.startsWith('testnet/') || wName.startsWith('testnet\\') || (wName === 'testnet') );
             }
           );
-          this._list.next(filteredWallets);
-          this.hasList = true;
-        },
-        (error) => this.log.er('listwalletdir: ', error)
+          return filteredWallets;
+        })
       );
   }
 }
