@@ -761,7 +761,7 @@ export const isPrerelease = (release?: string): boolean => {
 export const isMainnetRelease = (release?: string): boolean => {
   let version = release;
   if (!release) {
-    version = environment.version;
+    version = environment.name;
   }
 
   return !version.includes('testnet');

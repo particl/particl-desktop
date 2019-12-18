@@ -240,10 +240,10 @@ describe('Util Functions', () => {
   });
 
   it('should return the correct mainnet release status', () => {
-    expect(isMainnetRelease('2.0.0-testnet-1')).toBe(false);
-    expect(isMainnetRelease('2.0.0-test')).toBe(true);
-    expect(isMainnetRelease('2.0.0-alpha-testnet1')).toBe(false);
-    expect(isMainnetRelease('2.0.0')).toBe(true);
+    expect(isMainnetRelease('application-testnet-1')).toBe(false);
+    expect(isMainnetRelease('application-test')).toBe(true);
+    expect(isMainnetRelease('application-alpha-testnet1')).toBe(false);
+    expect(isMainnetRelease('application')).toBe(true);
     expect(isMainnetRelease('random-string')).toBe(true);
   });
 

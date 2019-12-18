@@ -1,6 +1,7 @@
 {
-  "name": "particl-desktop",
-  "version": "2.4.0-testnet",
+  "name": "particl-desktop-testnet",
+  "productName": "Particl Desktop Testnet",
+  "version": "2.4.0",
   "branch": "2.4",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -50,7 +51,7 @@
   },
   "build": {
     "electronVersion": "5.0.4",
-    "appId": "io.particl.desktop",
+    "appId": "io.particl.desktop.testnet",
     "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
     "afterSign": "build/notarize.js",

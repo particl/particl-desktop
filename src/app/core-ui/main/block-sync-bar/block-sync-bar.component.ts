@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { BlockStatusService } from 'app/core/rpc/rpc.module';
-import { takeWhile, distinctUntilChanged } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 
 @Component({
@@ -27,6 +28,9 @@ export class BlockSyncBarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     /* Hook BlockStatus -> open syncing modal */
+    if (environment.isTesting) {
+      return;
+    }
     this._blockStatusService.statusUpdates.asObservable().pipe(
       takeWhile(() => !this.destroyed)
     ).subscribe(status => {

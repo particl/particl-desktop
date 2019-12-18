@@ -1,15 +1,15 @@
-import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { Router, ParamMap, ActivatedRoute } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { RpcService } from 'app/core/rpc/rpc.service';
 import { MultiwalletService } from 'app/multiwallet/multiwallet.service';
-import { UpdaterService } from './updater.service';
+import { UpdaterService } from 'app/loading/updater.service';
 import { take, takeWhile } from 'rxjs/operators';
 import { MarketService } from 'app/core/market/market.module';
 import { termsObj } from 'app/installer/terms/terms-txt';
 import { environment } from 'environments/environment';
-import { Observer, Subject, Observable } from 'rxjs';
+import { Observer, Observable } from 'rxjs';
 import { SettingsStateService } from 'app/settings/settings-state.service';
 
 @Component({
@@ -24,11 +24,10 @@ export class LoadingComponent implements OnInit, OnDestroy {
   loadingMessage: string;
 
   private isDestroyed: boolean = false;
-  private daemonChecker$: Subject<any> = new Subject<any>();
-
   private currentWalletName: string;
 
   constructor(
+    private _zone: NgZone,
     private router: Router,
     private route: ActivatedRoute,
     private rpc: RpcService,
@@ -44,28 +43,30 @@ export class LoadingComponent implements OnInit, OnDestroy {
     this.log.i('Loading component booted!');
 
     /* Daemon download notifications */
-    this.updater.status.asObservable().pipe(
+    this.updater.currentStatus.pipe(
       takeWhile(() => !this.isDestroyed)
     ).subscribe(
       status => {
-        this.log.d(`updating statusMessage: `, status);
-        this.loadingMessage = status;
+        this._zone.run(() => {
+          this.log.d(`updating statusMessage: `, status);
+          this.loadingMessage = status;
+        });
+      },
+      null,
+      () => {
+        this._zone.run(() => {
+          new Observable((observer) => {
+            this.doCheckConnection(observer);
+          }).subscribe(
+            (loadedWallets: string[]) => this.validateNavigation(loadedWallets)
+          );
+        })
       }
     );
-
-    /* DETERMINE WHEN DAEMON IS READY (ie: NOT DOWNLOADING, hence above is idling)  */
-    this.daemonChecker$.subscribe(
-      (loadedWallets: string[]) => {
-        this.validateNavigation(loadedWallets);
-      }
-    )
-    this.doCheckConnection('listwallets');
-
   }
 
   ngOnDestroy() {
     this.isDestroyed = true;
-    this.daemonChecker$.complete();
   }
 
   private goToInstaller(getwalletinfo: any) {
@@ -99,22 +100,20 @@ export class LoadingComponent implements OnInit, OnDestroy {
     return JSON.parse(localStorage.getItem('terms'));
   }
 
-  private doCheckConnection(method: string) {
+  private doCheckConnection(observer: Observer<string[]>) {
     if (this.isDestroyed) {
+      observer.complete();
       return;
     }
-    if (!this.rpc.enabled || !this._settings.initialized) {
-      setTimeout(this.doCheckConnection.bind(this), 1500, method);
-      return;
-    }
-    this.rpc.call(method, []).subscribe(
+    this.rpc.call('listwallets', []).subscribe(
       (data: any) => {
-        this.daemonChecker$.next(data);
-        this.daemonChecker$.complete();
+        observer.next(data);
+        observer.complete();
       },
       (err) => {
         if (!this.isDestroyed) {
-          setTimeout(this.doCheckConnection.bind(this), 1500, method);
+          setTimeout(this.doCheckConnection.bind(this), 500, observer);
+          this.loadingMessage = 'Error while attempting to connect to daemon. Retrying...';
         }
       }
     )
@@ -125,9 +124,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
       observer.complete();
       return;
     }
-    if (!this.rpc.enabled) {
-      setTimeout(this.getWalletInfo.bind(this), 1500, wallet, observer);
-    }
     this.rpc.call('getwalletinfo', [], wallet).subscribe(
       (data: any) => {
         observer.next(data);
@@ -135,7 +131,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       },
       (err) => {
         if (!this.isDestroyed) {
-          setTimeout(this.doCheckConnection.bind(this), 1000, wallet, observer);
+          setTimeout(this.getWalletInfo.bind(this), 1000, wallet, observer);
         }
       }
     )
@@ -156,6 +152,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
     const walletFromSettings = await this._settings.currentWallet().pipe(take(1)).toPromise();
     this.currentWalletName = walletFromSettings.name;
+
+    this.loadingMessage = 'Navigating to wallet...';
 
     const params: ParamMap = this.route.snapshot.queryParamMap;
     this.log.d('loading params:', params);
@@ -250,6 +248,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
         }
 
         if (isMarketWallet) {
+          this.loadingMessage = 'Starting marketplace...';
+
           const marketPort = this._settings.get('settings.market.env.port');
           // Now start the marketplace services if this is a marketplace enabled wallet
           this._market.startMarket(this.currentWalletName, marketPort).subscribe(

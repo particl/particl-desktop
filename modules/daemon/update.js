@@ -18,9 +18,9 @@ exports.init = function (mainWindow) {
 /*
     Sends a message to the Angular frontend, on the channel "update".
 */
-exports.send = function(data) {
+exports.send = function(data, type) {
     data = {
-        type: 'update',
+        type: type || 'update',
         content: data
     };
 

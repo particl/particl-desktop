@@ -9,7 +9,15 @@ let child = undefined;
 
 let _options = {};
 
+
+const removeIpcListeners = function() {
+  rxIpc.removeListeners('start-bot-framework');
+  rxIpc.removeListeners('stop-bot-framework');
+}
+
+
 exports.init = function() {
+  exports.destroy();
   rxIpc.registerListener('start-bot-framework', function(walletName, portNum) {
     return Observable.create(observer => {
       exports.start(walletName, portNum);
@@ -25,8 +33,15 @@ exports.init = function() {
   });
 }
 
+
+exports.destroy = function() {
+  exports.stop();
+  removeIpcListeners();
+}
+
+
 exports.start = function(walletName, portNum) {
-  _options = config.getConfiguration();
+  _options = config.getConfig();
 
   if (!child) {
     log.info('bot process starting.');
