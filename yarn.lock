@@ -8182,10 +8182,10 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.123:
-  version "0.1.125"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.125.tgz#809abe2274aab7d739ee5b1797bd0d88557724d3"
-  integrity sha512-cQuvJ5GKmSWbjr6y7zw/d9TJHGu44F88YOtL4ldqwNnFB+diXux0Lsdlp39mCG/w2FMOcQA8eYS7Si8W2KHJ9A==
+omp-lib@0.1.123:
+  version "0.1.123"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.123.tgz#2d9d197cb99fff95e689b35f3d0ff65881eefbb7"
+  integrity sha512-B2JnwUuZOaonh3h5wrHiozDwmiAjMGd2izYQa1sqCUUCVkmIsz/I6LbP29bwuOhp36GYPh3wxMzyFybBSyfEQA==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -8591,9 +8591,9 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -8652,10 +8652,10 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@^0.2.6:
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.2.6.tgz#800291d0a50b19076fc9a74f0b35ae1e3c4e3cd0"
-  integrity sha512-GnfnFdsyIZIdwPEWrstgvs35rScAOEmeyiXj6cznwFxuOliRWLAm0hzQkEF/bb7+/B8kLGGIvCjsfwYBjpTOKw==
+particl-marketplace@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.2.7.tgz#2741ee90b7b1a760fd72bce406943d9bfcc9b6d2"
+  integrity sha512-kHGIE2TUutDXTII+8d3x6uQVkpJU8/Nwww09lNROf+0MqFSbjNyiHEbVxJdoGLeV7kCu17C6OoxdmX6e65214Q==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -8695,7 +8695,7 @@ particl-marketplace@^0.2.6:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.123"
+    omp-lib "0.1.123"
     particl-bitcore-lib "^0.16.0"
     path "^0.12.7"
     piexifjs "^1.0.3"
@@ -10657,6 +10657,11 @@ sprintf-js@~1.0.2:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
+
+"sqlite3@git+https://github.com/particl/sqlite3-offline.git":
+  version "3.2.0"
+  uid fae3ae47f64461b807e874897e76e7c69715e3d5
+  resolved "git+https://github.com/particl/sqlite3-offline.git#fae3ae47f64461b807e874897e76e7c69715e3d5"
 
 "sqlite3@https://github.com/particl/sqlite3-offline.git":
   version "3.2.0"
