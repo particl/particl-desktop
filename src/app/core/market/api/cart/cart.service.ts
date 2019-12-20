@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Log } from 'ng2-logger';
 
 import { MarketService } from 'app/core/market/market.service';
@@ -19,6 +19,7 @@ export class CartService {
 
   private defaultCartId: number;
   private profile$: Subscription;
+  private cartList$: BehaviorSubject<Cart> = new BehaviorSubject(new Cart([]));
 
   constructor(
     private market: MarketService,
@@ -32,6 +33,9 @@ export class CartService {
       this.log.d('Setting default cartId and registering listener= ' + cart.id);
       this.defaultCartId = cart.id;
       this.marketState.register('cartitem', 60 * 1000, ['list', cart.id, true]);
+      this.marketState.observe('cartitem').pipe(map(c => new Cart(c))).subscribe(
+        c => this.cartList$.next(c)
+      );
     });
   }
 
@@ -71,8 +75,7 @@ export class CartService {
 
   list(): Observable<Cart> {
     this.log.d(`Getting cart with id=${this.defaultCartId}`);
-    return this.marketState.observe('cartitem')
-    .pipe(map(c => new Cart(c)));
+    return this.cartList$.asObservable();
   }
 
   removeItem(listingItemId: number): Observable<any> {

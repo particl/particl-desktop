@@ -95,14 +95,18 @@ export class SettingsStateService extends StateService implements OnDestroy {
     super();
 
     this.log.d('service started');
+  }
 
-    new Observable((observer) => {
+  initialize() {
+    const ret = new Observable((observer) => {
       this.initializeComponent(observer);
-    }).subscribe(
-      () => {
-        this.start();
+    });
+    ret.subscribe(
+      async () => {
+        await this.start();
       }
     );
+    return ret;
   }
 
   ngOnDestroy() {
@@ -253,7 +257,7 @@ export class SettingsStateService extends StateService implements OnDestroy {
     }
 
     if (!this._rpc.enabled || !this._multi.initComplete) {
-      setTimeout(this.initializeComponent.bind(this), 1500, observer);
+      setTimeout(this.initializeComponent.bind(this), 500, observer);
       return;
     }
 

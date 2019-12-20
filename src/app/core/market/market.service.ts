@@ -28,6 +28,10 @@ export class MarketService {
   ) { }
 
   public call(method: string, params?: Array<any> | null): Observable<any> {
+
+    if (!this.isMarketStarted && (method !== 'profile')) {
+      return observableThrowError('Market service not started');
+    }
     // Running in browser, delete?
     const postData = JSON.stringify({
       method: method,
@@ -55,7 +59,12 @@ export class MarketService {
         }))
   }
 
-  public uploadImage(templateId: number, base64DataURIArray: any[]) {
+  public uploadImage(templateId: number, base64DataURIArray: any[]): Observable<Object> {
+
+    if (!this.isMarketStarted) {
+      return observableThrowError('Market service not started');
+    }
+
     // Running in browser, delete?
     const form: FormData = new FormData();
     /*

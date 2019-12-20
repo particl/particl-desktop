@@ -79,5 +79,8 @@ exports.parse = function() {
 }
 
 exports.get = function() {
+  if (!_options.port) {
+    exports.parse();
+  }
   return _options;
 }

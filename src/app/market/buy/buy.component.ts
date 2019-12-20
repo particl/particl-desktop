@@ -59,7 +59,7 @@ export class BuyComponent implements OnInit {
     } else {
       this.cartService.list().pipe(take(1)).subscribe(
         cart => {
-          this.selectedTab = +cart.countOfItems > 0 ? 0 : 1
+          this.selectedTab = +cart.countOfItems > 0 ? 0 : 1;
         },
         err => this.selectedTab = 0
       );

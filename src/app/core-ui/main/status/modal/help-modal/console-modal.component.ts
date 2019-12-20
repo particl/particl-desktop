@@ -17,6 +17,7 @@ import { Command } from './command.model';
 import { isFinite, isPlainObject, isArray } from 'lodash';
 import { SettingsStateService } from 'app/settings/settings-state.service';
 import { takeWhile } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-console-modal',
@@ -48,6 +49,12 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.getCurrentTime();
+
+    if (environment.isTesting) {
+      return;
+    }
+
     let continueListening = true;
     this._settingsService.currentWallet().pipe(takeWhile(() => continueListening)).subscribe(
       (wallet) => {
@@ -60,7 +67,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
         continueListening = false;
       }
     );
-    this.getCurrentTime();
   }
 
   ngAfterViewChecked() {

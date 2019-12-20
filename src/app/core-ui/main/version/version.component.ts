@@ -41,6 +41,10 @@ export class VersionComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    if (environment.isTesting) {
+      return;
+    }
+
     let continueListening = true;
     this._settingsService.currentWallet().pipe(
       takeWhile(() => !this.destroyed && continueListening)

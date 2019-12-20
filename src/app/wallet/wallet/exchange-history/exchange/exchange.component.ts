@@ -9,6 +9,7 @@ import { ModalsHelperService } from 'app/modals/modals.module';
 import { Observable, Subscription, timer } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-exchange',
@@ -41,10 +42,12 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
 
     const requiredPart = paramsMap.get('requiredPart');
 
-    this.unlock(300).pipe(take(1)).subscribe(
-      () => this.startNewExchange(requiredPart),
-      () => this.router.navigate(['wallet', 'main', 'wallet', 'exchange-history'])
-    );
+    if (!environment.isTesting) {
+      this.unlock(300).pipe(take(1)).subscribe(
+        () => this.startNewExchange(requiredPart),
+        () => this.router.navigate(['wallet', 'main', 'wallet', 'exchange-history'])
+      );
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -52,6 +55,9 @@ export class ExchangeComponent implements AfterViewChecked, OnInit, OnDestroy  {
   }
 
   ngOnDestroy() {
+    if (environment.isTesting) {
+      return;
+    }
     this.cancelExchange();
   }
 

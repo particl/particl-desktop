@@ -11,6 +11,7 @@ export class MarketStateService extends StateService implements OnDestroy {
   private log: any = Log.create('market-state.service id: ' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
   private _enableState: boolean = true;
+  private stateTimeouts: any = {};
 
   constructor(private market: MarketService) {
     super();
@@ -24,6 +25,10 @@ export class MarketStateService extends StateService implements OnDestroy {
   }
 
   stop() {
+    Object.keys(this.stateTimeouts).forEach(method => {
+      clearTimeout(this.stateTimeouts[method]);
+    });
+    this.stateTimeouts = {};
     this._enableState = false;
     this.clear();
   }
@@ -38,12 +43,17 @@ export class MarketStateService extends StateService implements OnDestroy {
       if (this.destroyed || ! this._enableState) {
         return;
       }
+
+      const preflightTimeout = this.stateTimeouts[method];
+
       this.market.call(method, params)
         .pipe(finalize(() => {
           // re-start loop
           if (timeout) {
-            const restartAfter = this.determineTimeoutDuration(errors, timeout);
-            setTimeout(_call, restartAfter);
+            if (this._enableState && preflightTimeout === this.stateTimeouts[method] ) {
+              const restartAfter = this.determineTimeoutDuration(errors, timeout);
+              this.stateTimeouts[method] = setTimeout(_call, restartAfter);
+            }
           }
         }))
         .subscribe(

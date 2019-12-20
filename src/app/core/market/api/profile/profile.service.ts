@@ -7,7 +7,7 @@ import { MarketStateService } from 'app/core/market/market-state/market-state.se
 
 import { AddressService } from './address/address.service';
 import { Profile } from './profile.model';
-import { tap, map, takeWhile, find, distinctUntilChanged } from 'rxjs/operators';
+import { tap, map, takeWhile, distinctUntilChanged } from 'rxjs/operators';
 
 // TODO: addresses & favourites!
 @Injectable()

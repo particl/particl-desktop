@@ -1,20 +1,14 @@
-const log     = require('electron-log');
-const options = require('./options.js').get();
+const log       = require('electron-log');
+const options   = require('./options.js').get();
 
 exports.init = function () {
 
   log.transports.console.level = 'info';
   log.transports.file.level    = 'debug';
 
-  log.transports.file.appName = process.platform == 'linux'
-    ? 'particl-desktop'
-    : 'Particl Desktop';
-  let logPath = options.testnet
-    ? 'particl-desktop-testnet.log'
-    : 'particl-desktop.log';
   log.transports.file.file = log.transports.file
     .findLogPath(log.transports.file.appName)
-    .replace('log.log', logPath);
+    .replace('log.log', 'application.log');
 
   switch (options.verbose) {
     case 1:

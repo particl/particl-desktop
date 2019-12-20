@@ -25,6 +25,13 @@ p.warning {
   background: rgba($color-alert, 0.1);
 }
 
+p.error {
+  color: $color-alert;
+  font-family: $font;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 
 // ------ LAYOUT ------ //
 
