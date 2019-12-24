@@ -12,8 +12,18 @@ const filter = {
 
 let whitelist = new Map();
 
+let initialized = false;
+
 exports.init = function (_options) {
-    exports.reloadConfig(_options);
+
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+
+    loadBotAuthentication();
+    loadGithub();
+    loadMarketAuthentication();
 
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         // clone it
@@ -49,14 +59,10 @@ exports.init = function (_options) {
 }
 
 
-exports.reloadConfig = function(_options) {
+exports.setAuthConfig = function(_options) {
   OPTIONS = _options;
-  whitelist.clear();
   loadDev();
-  loadMarketAuthentication();
   loadWalletAuthentication();
-  loadBotAuthentication();
-  loadGithub();
 }
 
 function isWhitelisted(url) {

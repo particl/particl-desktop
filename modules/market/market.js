@@ -11,7 +11,14 @@ let child = undefined;
 
 let _options = {};
 
+
+const removeIpcListeners = function() {
+  rxIpc.removeListeners('start-market');
+  rxIpc.removeListeners('stop-market');
+}
+
 exports.init = function() {
+  exports.destroy();
   rxIpc.registerListener('start-market', function(walletName, portNum) {
     return Observable.create(observer => {
       exports.start(walletName, portNum);
@@ -27,8 +34,13 @@ exports.init = function() {
   });
 }
 
+exports.destroy = function() {
+  exports.stop();
+  removeIpcListeners();
+}
+
 exports.start = function(walletName, portNum) {
-  _options = config.getConfiguration();
+  _options = config.getConfig();
 
   if (!_options.skipmarket && !child) {
     log.info('market process starting.');

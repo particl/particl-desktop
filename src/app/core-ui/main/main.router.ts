@@ -28,6 +28,7 @@ import { OrderStatusNotifierService } from 'app/core/market/order-status-notifie
 import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 import { SettingsStateService } from 'app/settings/settings-state.service';
 import { BotService } from 'app/core/bot/bot.service';
+import { UpdaterService } from 'app/loading/updater.service';
 
 /*
  * The MainView is basically:
@@ -63,7 +64,6 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute,
     private _rpcState: RpcStateService,
-    private _rpc: RpcService,
     private _modalsService: ModalsHelperService,
     private messagesService: UserMessageService,
     private dialog: MatDialog,
@@ -71,6 +71,11 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     // get the singleton up and running
     public proposalsNotificationsService: ProposalsNotificationsService,
     public _market: MarketService,
+
+    // UpdaterService and RpcService are not used here, but need to be left in so as to be usable for hot-reloading.
+    private _updater: UpdaterService,
+    private _rpc: RpcService,
+
     public _bot: BotService,
 
     private _marketState: MarketStateService,

@@ -8,6 +8,7 @@ import { Subscription, Subject } from 'rxjs';
 
 import * as _ from 'lodash';
 import { take, delay } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 interface IPage {
   pageNumber: number,
@@ -52,18 +53,20 @@ export class CommentsComponent implements OnDestroy, OnInit {
   ) {}
 
   ngOnInit() {
-    this.commentCount$ = this.commentService.watchCommentCount(this.type, this.target, '', this.refresh)
-      .subscribe((count) => {
-        this.commentCount = count;
+    if (!environment.isTesting) {
+      this.commentCount$ = this.commentService.watchCommentCount(this.type, this.target, '', this.refresh)
+        .subscribe((count) => {
+          this.commentCount = count;
+        });
+      this.loadPage(0);
+      this.comment$ = this.notification.onEvent('NEW_COMMENT').pipe(delay(500))
+      .subscribe((comment) => {
+        if (comment.type === this.type && comment.target === this.target) {
+          this.doRefresh(true);
+        }
       });
-    this.loadPage(0);
-    this.comment$ = this.notification.onEvent('NEW_COMMENT').pipe(delay(500))
-    .subscribe((comment) => {
-      if (comment.type === this.type && comment.target === this.target) {
-        this.doRefresh(true);
-      }
-    });
-    this.targetComments = this.notification.getTargetUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.target);
+      this.targetComments = this.notification.getTargetUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.target);
+    }
   }
 
   ngOnDestroy() {

@@ -202,7 +202,7 @@ class Manager extends EventEmitter {
         client.id
       );
 
-      this._logger.debug(`Ensure download folder ${downloadFolder} exists ...`);
+      this._logger.debug(`Test that download folder ${downloadFolder} exists`);
 
       mkdirp.sync(downloadFolder);
 
@@ -217,8 +217,8 @@ class Manager extends EventEmitter {
 
       stream.pipe(writeStream);
 
-      this.once('cancel', async () => {
-        this._logger.info('Stopping download of binary...');
+      this.once('cancel', () => {
+        this._logger.info('Stopping download of binary');
         try {
           stream.unpipe(writeStream);
           writeStream.end();

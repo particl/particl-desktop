@@ -122,14 +122,6 @@ export class SendService {
     this.flashNotification.open(`Transaction failed: ${msg}`, 'err');
     this.log.er('rpc_send_failed, failed to execute transaction!');
     this.log.er(message);
-
-    /* Detect bug in older wallets with Blind inputs */
-    // AddBlindedInputs: GetBlind failed for
-    // 2019-06-24 zaSmilingIdiot -> removing this as all valid blind transaction errors return with the prefix 'AddBlindedInput'
-    //    We also rescan chain where applicable on startup, so hopefully this should not be an issue.
-    // if (message.search('AddBlindedInput') !== -1) {
-    //   this.fixWallet();
-    // }
   }
 
   /*
