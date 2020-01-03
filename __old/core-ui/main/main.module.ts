@@ -29,9 +29,9 @@ const routes: Routes = [
     component: MainRouterComponent,
     children: [
       { path: '', redirectTo: 'wallet', pathMatch: 'full' },
-      { path: 'wallet', loadChildren: '../../wallet/wallet.module#WalletViewsModule'},
-      { path: 'market', loadChildren: '../../market/market.module#MarketModule'},
-      { path: 'bot', loadChildren: '../../bot/bot.module#BotModule'}
+      { path: 'wallet', loadChildren: () => import('../../wallet/wallet.module').then(m => m.WalletViewsModule)},
+      { path: 'market', loadChildren: () => import('../../market/market.module').then(m => m.MarketModule)},
+      { path: 'bot', loadChildren: () => import('../../bot/bot.module').then(m => m.BotModule)}
     ]
   }
 ];

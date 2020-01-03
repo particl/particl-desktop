@@ -1,16 +1,10 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoadingComponent } from './loading/loading.component';
-import { installer_routing } from './installer/installer.router';
-import { settings_routing } from './settings/settings.router';
 
 /* actual routing */
 const app_routes: Routes = [
   { path: '', redirectTo: 'loading', pathMatch: 'full' },
-  { path: 'loading', component: LoadingComponent },
-  settings_routing,
-  installer_routing,
-  { path: 'wallet', loadChildren: './core-ui/main/main.module#MainModule' }
+  { path: 'loading', loadChildren: () => require('./startup/startup.module').then(m => m.StartupModule) }
 ];
 
 export const app_routing: ModuleWithProviders = RouterModule.forRoot(

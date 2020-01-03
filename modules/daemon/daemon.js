@@ -21,6 +21,8 @@ const maxAttempts = 10;
 
 exports.start = function (doReindex = false) {
   let options = _options.get();
+  const config = daemonConfig.getConfig();
+  const configKeys = Object.keys(config);
 
   if (+options.addressindex !== 1) {
     const daemonSettings = daemonConfig.getSettings();
@@ -43,16 +45,29 @@ exports.start = function (doReindex = false) {
         : daemonManager.getPath();
 
 
-      const addedArgs = [
-        "-zmqpubsmsg=tcp://127.0.0.1:36750"
-      ];
+      const addedArgs = [];
+
+      if (options.dev) {
+        addedArgs.push('-rpccorsdomain=http://localhost:4200');
+      }
 
       if (doReindex) {
         log.info('Adding reindex flag to daemon startup');
         addedArgs.push('-reindex');
       }
 
-      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...addedArgs];
+      // ZMQ subscription configuration
+      if (!configKeys.includes('zmqpubsmsg')) {
+        "-zmqpubsmsg=tcp://127.0.0.1:36750"
+      }
+      if (!configKeys.includes('zmqpubhashblock')) {
+        "-zmqpubhashblock=tcp://127.0.0.1:36750"
+      }
+      if (!configKeys.includes('zmqpubhashtx')) {
+        "-zmqpubhashtx=tcp://127.0.0.1:36750"
+      }
+
+      const deamonArgs = [...process.argv, ...addedArgs];
       log.info(`starting daemon: ${deamonArgs.join(' ')}`);
 
       const child = spawn(daemonPath, deamonArgs);

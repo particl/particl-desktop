@@ -101,13 +101,13 @@
     /* "component-selector": [true, "element", "app", "kebab-case"],*
      * Would be nice if we could make this apply to certain components only...
      */
-    "use-input-property-decorator": true,
-    "use-output-property-decorator": true,
-    "use-host-property-decorator": true,
+    "no-inputs-metadata-property": true,
+    "no-outputs-metadata-property": true,
+    "no-host-metadata-property": true,
     "no-input-rename": true,
     "no-output-rename": true,
 
-    "use-life-cycle-interface": true,
+    "use-lifecycle-interface": true,
     "use-pipe-transform-interface": true,
 
     "component-class-suffix": [true, "Component"],
