@@ -195,10 +195,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/flex-layout@7.0.0-beta.21":
-  version "7.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-7.0.0-beta.21.tgz#02db5908479448bd457da0ac4d2180584fee3e13"
-  integrity sha512-oHcc2zUgbq9VkojF4QlwTwzyCdP9BrElUbCypD3Md6gdbJylNu7AeIbO3Vf7Ql84VNgA0dAJ9HlNTuJkBCOaUQ==
+"@angular/flex-layout@8.0.0-beta.27":
+  version "8.0.0-beta.27"
+  resolved "https://registry.yarnpkg.com/@angular/flex-layout/-/flex-layout-8.0.0-beta.27.tgz#a697d5a90e6d04c06b02ee872f88f384d1723f7c"
+  integrity sha512-qmpvQPesU4ZQ56IscwgmVRpK2UnyV+gwvXUql7TMv0QV215hLcHczjGsrKkLfW2By5E7XEyDat9br72uVXcPMw==
   dependencies:
     tslib "^1.7.1"
 
@@ -8385,10 +8385,10 @@ ngx-infinite-scroll@7.1.0:
   dependencies:
     opencollective-postinstall "^2.0.2"
 
-ngx-material-file-input@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-material-file-input/-/ngx-material-file-input-1.1.1.tgz#836201cbb8a312d749776c65327b3f4652bc0d61"
-  integrity sha512-rYhBPAr7EZca6RoFWKcceV4Y4V2xH8SPAgrA/bCXgKbS/tJ+h/e9UW3jIPMWVOR/u/rbNhzuXVTuTMfSgS3klw==
+ngx-material-file-input@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-material-file-input/-/ngx-material-file-input-2.0.0.tgz#ae94d9e79193015258ff1edb101b04c0b85a26da"
+  integrity sha512-E8JyFbAZRzCNC96lbkzg+LS4xmcfoZ3Mh4jhuWfAeBngMLlLxdMW2dgZSu8MFO9V2ZQytb1DPjgmvGhJo5TJHg==
   dependencies:
     tslib "^1.9.0"
 
