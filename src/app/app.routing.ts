@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 /* actual routing */
 const app_routes: Routes = [
   { path: '', redirectTo: 'loading', pathMatch: 'full' },
-  { path: 'loading', loadChildren: () => require('./startup/startup.module').then(m => m.StartupModule) }
+  { path: 'loading', loadChildren: () => import('./startup/startup.module').then(m => m.StartupModule) }
 ];
 
 export const app_routing: ModuleWithProviders = RouterModule.forRoot(

@@ -7,7 +7,7 @@
   </div>
 
   <div *ngIf="loadingMessage">
-    <span><i>{{loadingMessage}}</i></span>
+    <span><i>{{loadingMessage | async}}</i></span>
   </div>
 
   <blockquote class="quote">
