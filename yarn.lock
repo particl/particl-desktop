@@ -123,10 +123,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/cdk@^7.2.0":
-  version "7.3.7"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-7.3.7.tgz#ce1ad53ba04beb9c8e950acc5691ea0143753764"
-  integrity sha512-xbXxhHHKGkVuW6K7pzPmvpJXIwpl0ykBnvA2g+/7Sgy5Pd35wCC+UtHD9RYczDM/mkygNxMQtagyCErwFnDtQA==
+"@angular/cdk@^8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-8.2.3.tgz#16b96ffa935cbf5a646757ecaf2b19c434678f72"
+  integrity sha512-ZwO5Sn720RA2YvBqud0JAHkZXjmjxM0yNzCO8RVtRE9i8Gl26Wk0j0nQeJkVm4zwv2QO8MwbKUKGTMt8evsokA==
   dependencies:
     tslib "^1.7.1"
   optionalDependencies:
@@ -209,10 +209,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@angular/material@^7.2.0":
-  version "7.3.7"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-7.3.7.tgz#dcd95e6618ba6254c5880efee1aad349cf5b9140"
-  integrity sha512-Eq+7frkeNGkLOfEtmkmJgR+AgoWajOipXZWWfCSamNfpCcPof82DwvGOpAmgGni9FuN2XFQdqP5MoaffQzIvUA==
+"@angular/material@^8.2.3":
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-8.2.3.tgz#16543e4e06a3fde2651a25cfe126e88e714ae105"
+  integrity sha512-SOczkIaqes+r+9XF/UUiokidfFKBpHkOPIaFK857sFD0FBNPvPEpOr5oHKCG3feERRwAFqHS7Wo2ohVEWypb5A==
   dependencies:
     tslib "^1.7.1"
 
@@ -1227,16 +1227,6 @@
   resolved "https://registry.yarnpkg.com/@nestjsx/util/-/util-4.2.0.tgz#28a9eab85e01390dcc0d8fd32074256b08ff6c1d"
   integrity sha512-dGu4UlHibcv4nWfYpIdbY4CEHe87mua3QTu43FFE/F76BIwQc0Bq9ohnUnR0Cgp4MjutNGXff9L9DakQaE7eWQ==
 
-"@ngrx/effects@^8.6.0":
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/effects/-/effects-8.6.0.tgz#a0d7339597a5128c5cf896ddcf93f73406a45860"
-  integrity sha512-JdyJLQbv/wnE0ZPY9DcDOtF9PzJuzsKWmIWgIGunHF18wdjk5O8Zpkcrxq18wDRL6geg5UTtNJRMvTQhpDbzow==
-
-"@ngrx/store@^8.6.0":
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/@ngrx/store/-/store-8.6.0.tgz#8540c5bd40b33fc2f443e7e86f47c0d801b8f413"
-  integrity sha512-K4cvCEa+5hw9qrETQWO+Cha3YbVCAT8yaIKJr/N35KntTL9mQMjoL+51JWLZfBwPV0e19CFgJIyrBnVUTxwr2A==
-
 "@ngtools/webpack@8.3.21":
   version "8.3.21"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-8.3.21.tgz#d28f2b66a8aeced5260c42ae722192ec5d5e4e56"
@@ -1266,6 +1256,13 @@
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/@ngx-gallery/lightbox/-/lightbox-4.0.3.tgz#4dfdd76806ce3f2e8465a765504fe2d4d45d52d8"
   integrity sha512-KE+XMHt6/xtWBTZxoKjYriPl1T/XzqUwpnpBCec7GHHpvbJHuJMgcz9s5uJOwyRgkMfLI3r451BZ0r0tACIsnQ==
+  dependencies:
+    tslib "^1.9.0"
+
+"@ngxs/store@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@ngxs/store/-/store-3.6.0.tgz#4536f90445e0d5231eb418c84408d39a58a34e6f"
+  integrity sha512-SE/2XK83snCDUj1c3iLRKp7YgCfBb9I+b+N82i1k5odn14oWvnalzB6oComu8zDwxzpD92Gt3CoZWr0V8Xct+A==
   dependencies:
     tslib "^1.9.0"
 
