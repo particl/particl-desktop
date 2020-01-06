@@ -3,7 +3,7 @@ const config = require('../daemon/daemonConfig');
 const cookie = require('../rpc/cookie');
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
-const Observable = require('rxjs/Observable').Observable;
+const Observable = require('rxjs').Observable;
 const importer = require('./importer/importer');
 
 // Stores the child process

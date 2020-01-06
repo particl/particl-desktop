@@ -1,4 +1,4 @@
-const Observable  = require('rxjs/Observable').Observable;
+const Observable  = require('rxjs').Observable;
 const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const log         = require('electron-log');
 
@@ -11,7 +11,7 @@ const SPY_ON_ZMQ = true;
 let mainReference = null;
 
 exports.init = function (mainWindow) {
-    /* 
+    /*
         Store a reference of the main window (electron),
         which we need for rx-ipc-electron (need to get webContents).
     */

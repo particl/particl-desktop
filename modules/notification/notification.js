@@ -7,7 +7,7 @@ const Notification = require('electron').Notification;
 /* node */
 const path = require('path');
 
-const Observable = require('rxjs/Observable').Observable;
+const Observable = require('rxjs').Observable;
 
 /*
     Register and IPC listener and execute notification.

@@ -1,6 +1,6 @@
 const _     = require('lodash');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
-const Observable = require('rxjs/Observable').Observable;
+const Observable = require('rxjs').Observable;
 
 const particl_market_import_core = require('particl-market-import-core');
 const Transformers = particl_market_import_core.Transformers;

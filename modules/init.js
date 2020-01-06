@@ -1,7 +1,7 @@
 const electron      = require('electron');
 const log           = require('electron-log');
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs/Observable').Observable;
+const Observable    = require('rxjs').Observable;
 
 const daemon        = require('./daemon/daemon');
 const daemonWarner  = require('./daemon/update');
