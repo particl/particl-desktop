@@ -1,7 +1,11 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
+
+import { termsObj } from 'app/startup/terms/terms-txt';
 
 @Component({
   selector: 'app-loading',
@@ -9,15 +13,50 @@ import { Observable } from 'rxjs';
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss']
 })
-export class LoadingComponent {
+export class LoadingComponent implements OnInit, OnDestroy {
   log: any = Log.create('loading.component');
 
   loadingMessage: Observable <string>;
 
+  private unsubscribe$: Subject<void> = new Subject();
+
   constructor(
-    private _store: Store
+    private _store: Store,
+    private _router: Router
   ) {
     this.log.i('loading component initialized');
     this.loadingMessage = this._store.select(state => state.global.loadingMessage);
   }
+
+  ngOnInit() {
+    const connected$ = this._store.select(state => state.global.isConnected).pipe(takeUntil(this.unsubscribe$));
+    connected$.subscribe(
+      (isConnected: boolean) => {
+        if (!isConnected) {
+          return;
+        }
+        this.getNextRoute();
+      }
+    )
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  private getNextRoute() {
+    const termsVersion = JSON.parse(localStorage.getItem('terms'));
+    if (!termsVersion || (termsVersion && termsVersion.createdAt !== termsObj.createdAt
+      && termsVersion.text !== termsObj.text)) {
+      this.goToTerms();
+      return;
+    }
+  }
+
+  private goToTerms() {
+    this.log.d('Going to terms');
+    this._router.navigate(['loading', 'terms']);
+  }
+
 }

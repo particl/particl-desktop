@@ -7,11 +7,11 @@ import { NgxsModule } from '@ngxs/store';
 
 import 'hammerjs';
 
-import { app_routing } from './app.routing';
+import { app_routing } from 'app/app.routing';
 
-import { CoreModule } from './core/core.module';
-import { AppComponent } from './app.component';
-import { ApplicationState } from './core/store/app.state';
+import { CoreModule } from 'app/core/core.module';
+import { AppComponent } from 'app/app.component';
+import { ApplicationState, CoreConnectionState, ngxsConfig } from 'app/core/store/app.state';
 
 @NgModule({
   declarations: [
@@ -21,7 +21,10 @@ import { ApplicationState } from './core/store/app.state';
     HttpClientModule,
     BrowserModule,
     BrowserAnimationsModule,
-    NgxsModule.forRoot([ApplicationState]),
+    NgxsModule.forRoot(
+      [ApplicationState, CoreConnectionState],
+      ngxsConfig
+    ),
     CoreModule,
     app_routing,
   ],

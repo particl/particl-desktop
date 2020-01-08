@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon'; // TODO: move to material module?
+import { MatIconRegistry } from '@angular/material/icon';
 import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
 import { Global } from './core/store/app.actions';
@@ -12,8 +12,6 @@ import { Global } from './core/store/app.actions';
 export class AppComponent implements OnInit {
 
   log: any = Log.create('app.component');
-
-  // multiwallet: any = [];
 
   constructor(
     private _iconRegistry: MatIconRegistry,

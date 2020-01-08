@@ -1,17 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LoadingComponent } from './loading/loading.component';
+import { LoadingComponent } from 'app/startup/loading/loading.component';
+import { TermsComponent } from 'app/startup/terms/terms.component';
 
 
 const routes: Routes = [
-  {
-    path: '',
-    component: LoadingComponent
-  }
+  { path: '', redirectTo: 'loading' },
+  { path: 'loading', component: LoadingComponent },
+  { path: 'terms', component: TermsComponent }
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)]
+  imports: [
+    RouterModule.forChild(routes)
+  ]
 })
 export class StartupRoutingModule { }

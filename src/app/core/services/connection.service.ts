@@ -6,7 +6,7 @@ import { Store } from '@ngxs/store';
 import { environment } from 'environments/environment';
 import { IpcService } from './ipc.service';
 import { Global } from '../store/app.actions';
-import { CoreConfig } from '../store/app.models';
+import { CoreConnectionModel } from '../store/app.models';
 
 
 @Injectable(
@@ -59,7 +59,7 @@ export class ConnectionService {
           break;
         case 'done':
           this.updateStatus('Application initialized, loading user interface...');
-          this.store.dispatch(new Global.Connected((<CoreConfig>status.content)));
+          this.store.dispatch(new Global.Connected((<CoreConnectionModel>status.content)));
           this._ipc.removeListeners(this.DAEMON_CHANNEL);
           break;
       }
