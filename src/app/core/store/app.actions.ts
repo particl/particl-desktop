@@ -2,10 +2,6 @@ import { CoreConnectionModel, APP_MODE } from './app.models';
 
 export namespace Global {
 
-  export class Initialize {
-    static readonly type: string = '[Application] Initialize';
-  }
-
   export class Connected {
     static readonly type: string = '[Application] Connected';
     constructor(public config: CoreConnectionModel) {}

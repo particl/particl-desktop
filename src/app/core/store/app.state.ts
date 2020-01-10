@@ -1,11 +1,20 @@
-import { State, StateToken, Action, StateContext, NgxsModuleOptions, Selector } from '@ngxs/store';
+import {
+  State,
+  StateToken,
+  Action,
+  StateContext,
+  NgxsModuleOptions,
+  Selector,
+  NgxsOnInit
+} from '@ngxs/store';
 import { tap } from 'rxjs/operators';
 import { environment } from 'environments/environment';
 
 import { ConnectionService } from 'app/core/services/connection.service';
+import { SettingsService } from 'app/core/services/settings.service';
 
 import { Global } from './app.actions';
-import { AppStateModel, CoreConnectionModel, APP_MODE, ConnectionDetails } from './app.models';
+import { AppStateModel, CoreConnectionModel, AppSettingsModel, APP_MODE, ConnectionDetails } from './app.models';
 
 
 export const ngxsConfig: NgxsModuleOptions = {
@@ -21,8 +30,9 @@ export const ngxsConfig: NgxsModuleOptions = {
 };
 
 
-const APP_STATE_TOKEN = new StateToken<AppStateModel>('global');
 const CORE_CONFIG_TOKEN = new StateToken<CoreConnectionModel>('coreconnection');
+const APP_SETTINGS_TOKEN = new StateToken<CoreConnectionModel>('settings');
+const APP_STATE_TOKEN = new StateToken<AppStateModel>('global');
 
 
 @State<CoreConnectionModel>({
@@ -42,6 +52,7 @@ export class CoreConnectionState {
   static isTestnet(state: CoreConnectionModel) {
     return state.testnet;
   }
+
 
   @Action(Global.Connected)
   configureConnectionDetails(ctx: StateContext<CoreConnectionModel>, action: Global.Connected) {
@@ -81,16 +92,47 @@ export class CoreConnectionState {
 };
 
 
+@State<AppSettingsModel>({
+  name: APP_SETTINGS_TOKEN,
+  defaults: {
+    activatedWallet: '',
+    language: 'en-us',
+    marketActive: false
+  }
+})
+export class AppSettingsState implements NgxsOnInit {
+  constructor(
+    private _settings: SettingsService
+  ) {}
+
+  ngxsOnInit(ctx: StateContext<AppSettingsModel>) {
+    const saved = this._settings.fetchGlobalSettings();
+    const current = ctx.getState();
+
+    for (const key of Object.keys(saved)) {
+      if ( (key in current) && (typeof saved[key] === typeof current[key]) ) {
+        current[key] = saved[key];
+      }
+    }
+
+    ctx.patchState({
+      ...current
+    });
+  }
+}
+
+
 @State<AppStateModel>({
   name: APP_STATE_TOKEN,
   defaults: {
     isConnected: false,
     appMode: null,
-    loadingMessage: ''
+    loadingMessage: '',
+    activeWallet: ''
   },
-  children: [CoreConnectionState]
+  children: [CoreConnectionState, AppSettingsState]
 })
-export class ApplicationState {
+export class ApplicationState implements NgxsOnInit {
 
 
   @Selector([ApplicationState, CoreConnectionState])
@@ -104,15 +146,27 @@ export class ApplicationState {
   }
 
 
+  @Selector()
+  static appMode(state: AppStateModel) {
+    return state.appMode;
+  }
+
+
+  @Selector()
+  static activeWallet(appState: AppStateModel) {
+    return appState.activeWallet;
+  }
+
+
   constructor(
     private _connectionService: ConnectionService
   ) {}
 
 
-  @Action(Global.Initialize)
-  initializeApplication() {
+  ngxsOnInit() {
     this._connectionService.connect();
   }
+
 
   @Action(Global.SetLoadingMessage)
   setApplicationLoadingMessage(ctx: StateContext<AppStateModel>, action: Global.SetLoadingMessage) {
@@ -120,6 +174,7 @@ export class ApplicationState {
       loadingMessage: action.message
     })
   }
+
 
   @Action(Global.Connected)
   setConnected(ctx: StateContext<AppStateModel>) {
@@ -129,6 +184,7 @@ export class ApplicationState {
       })
     )
   }
+
 
   @Action(Global.ChangeMode)
   changeApplicationMode(ctx: StateContext<AppStateModel>, {mode}: Global.ChangeMode) {
@@ -150,5 +206,38 @@ export class ApplicationState {
     localStorage.setItem('settings.app_mode', APP_MODE[checkedMode]);
     ctx.patchState({appMode: checkedMode});
   }
+
+
+  // @Action(Global.UpdateWallets)
+  // setWalletsAvailable(ctx: StateContext<AppStateModel>, { newWallets }: Global.UpdateWallets) {
+  //   const currentWallets = ctx.getState().walletsAvailable;
+  //   let isDiff = false;
+
+  //   const cwMax = currentWallets.length;
+  //   const nwMax = newWallets.length;
+
+  //   if (nwMax !== cwMax) {
+  //     isDiff = true;
+  //   } else {
+  //     const max = nwMax;
+  //     for (let i = 0; i < max; ++i) {
+  //       if (i < cwMax) {
+  //         isDiff = isDiff && newWallets.findIndex(w => w.name === currentWallets[i].name) === -1;
+  //       }
+
+  //       if (!isDiff && i < nwMax) {
+  //         isDiff = isDiff && currentWallets.findIndex(w => w.name === newWallets[i].name) === -1;
+  //       }
+
+  //       if (!isDiff) {
+  //         break;
+  //       }
+  //     }
+  //   }
+
+  //   if (isDiff) {
+  //     ctx.patchState({walletsAvailable: newWallets})
+  //   }
+  // }
 
 };

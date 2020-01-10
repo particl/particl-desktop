@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { Log } from 'ng2-logger';
-import { Store } from '@ngxs/store';
-import { Global } from './core/store/app.actions';
+
 
 @Component({
   selector: 'app-root',
@@ -14,8 +13,7 @@ export class AppComponent implements OnInit {
   log: any = Log.create('app.component');
 
   constructor(
-    private _iconRegistry: MatIconRegistry,
-    private _store: Store
+    private _iconRegistry: MatIconRegistry
   ) {
     this._iconRegistry
       .registerFontClassAlias('partIcon', 'part-icon')
@@ -26,7 +24,5 @@ export class AppComponent implements OnInit {
     // Prevent dropped files, links replacing the contents of the application.
     document.addEventListener('dragover', event => event.preventDefault());
     document.addEventListener('drop', event => event.preventDefault());
-
-    this._store.dispatch(new Global.Initialize());
   }
 }

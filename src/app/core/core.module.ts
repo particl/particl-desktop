@@ -15,7 +15,7 @@ import { CloseGuiService } from 'app/core/services/close-gui.service';
   ],
   providers: [
     ConnectionService,
-    // RpcService,
+    RpcService,
     IpcService,
     CloseGuiService
   ]

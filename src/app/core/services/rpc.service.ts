@@ -37,7 +37,9 @@ export class RpcService {
     'smsgenable',
     'smsgsetwallet',
     'unloadwallet',
-    'getzmqnotifications'
+    'getzmqnotifications',
+    'getpeerinfo',
+    'getnetworkinfo'
   ];
 
   /**

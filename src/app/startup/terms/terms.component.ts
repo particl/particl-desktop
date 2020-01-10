@@ -27,7 +27,7 @@ export class TermsComponent {
 
   acceptTerms(): void {
     localStorage.setItem('terms', JSON.stringify(termsObj));
-    this.router.navigate(['wallet']);
+    this.router.navigate(['/main']);
   }
 
   decline(): void {

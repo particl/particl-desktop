@@ -6,6 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { termsObj } from 'app/startup/terms/terms-txt';
+import { AppStateModel, APP_MODE } from 'app/core/store/app.models';
 
 @Component({
   selector: 'app-loading',
@@ -29,8 +30,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    const connected$ = this._store.select(state => state.global.isConnected).pipe(takeUntil(this.unsubscribe$));
-    connected$.subscribe(
+    this._store.select(state => state.global.isConnected).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(
       (isConnected: boolean) => {
         if (!isConnected) {
           return;
@@ -52,11 +54,30 @@ export class LoadingComponent implements OnInit, OnDestroy {
       this.goToTerms();
       return;
     }
+
+    const mode = this._store.selectSnapshot(state => (<AppStateModel>state.global).appMode);
+    switch (mode) {
+      case APP_MODE.MARKET:
+        this.goToMarket();
+        break;
+      default:
+        this.goToWallet();
+    }
   }
 
   private goToTerms() {
     this.log.d('Going to terms');
     this._router.navigate(['loading', 'terms']);
+  }
+
+  private goToMarket() {
+    this.log.d('Going to terms');
+    this._router.navigate(['/main/market']);
+  }
+
+  private goToWallet() {
+    this.log.d('Going to terms');
+    this._router.navigate(['/main/wallet']);
   }
 
 }

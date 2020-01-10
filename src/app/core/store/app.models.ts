@@ -9,6 +9,7 @@ export interface AppStateModel {
   isConnected: boolean;
   loadingMessage: string;
   appMode: APP_MODE;
+  activeWallet: string;
 }
 
 
@@ -19,6 +20,13 @@ export interface CoreConnectionModel {
   port: number;
   proxy: string;
   upnp: boolean;
+}
+
+
+export interface AppSettingsModel {
+  activatedWallet: string;
+  language: string;
+  marketActive: boolean;
 }
 
 
