@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { APP_MODE } from 'app/core/store/app.models';
-import { ApplicationState } from 'app/core/store/app.state';
+import { AppSettingsState, ApplicationState } from 'app/core/store/app.state';
 
 
 @Component({
@@ -39,12 +39,14 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this._store.select(
-      ApplicationState.activeWallet
+      AppSettingsState.activeWallet
     ).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe(
       wName => {
-      this.activeWallet = wName;
+        if (wName) {
+          this.activeWallet = wName;
+        }
       }
     );
 

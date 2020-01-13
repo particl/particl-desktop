@@ -22,8 +22,8 @@ export class SettingsService {
    * NB!! Does absolutely no validation on the types or presence of various settings stored: this is up to the caller
    */
   fetchGlobalSettings(): SettingLiteral {
-    console.log('@@@@ SettingsService -> fetchGlobalSettings');
-    return JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    const settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    return Object.prototype.toString.call(settings.global) === '[object Object]' ? settings.global : {};
   }
 
 

@@ -13,6 +13,8 @@ import { CloseGuiService } from 'app/core/services/close-gui.service';
   imports: [
     CommonModule,
   ],
+  exports: [
+  ],
   providers: [
     ConnectionService,
     RpcService,

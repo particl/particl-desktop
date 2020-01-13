@@ -9,7 +9,6 @@ export interface AppStateModel {
   isConnected: boolean;
   loadingMessage: string;
   appMode: APP_MODE;
-  activeWallet: string;
 }
 
 
@@ -35,4 +34,12 @@ export interface ConnectionDetails {
   rpcHostname: string,
   rpcPort: number,
   rpcAuth: string
+}
+
+
+export interface SettingsViewModel {
+  proxy: string;
+  upnp: boolean;
+  language: string;
+  marketActive: boolean;
 }

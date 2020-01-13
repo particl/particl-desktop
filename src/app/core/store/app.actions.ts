@@ -17,3 +17,12 @@ export namespace Global {
     constructor(public mode: APP_MODE | null) {}
   }
 }
+
+
+export namespace AppSettings {
+
+  export class SetSetting {
+    static readonly type: string = '[AppSettings] Set Setting';
+    constructor(public setting: string, public value: string | boolean | number) {}
+  }
+}

@@ -18,12 +18,16 @@ import { DirectiveModule } from './directive/directive.module';
 import { PipeModule } from './pipe/pipe.module';
 import { MaterialModule } from './material/material.module';
 
-import { PaginatorComponent } from './paginator/paginator.component';
+import { PaginatorComponent } from 'app/core-ui/paginator/paginator.component';
+import { HeaderComponent } from 'app/core-ui/components/header/header.component';
+import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro.component';
 
 
 @NgModule({
   declarations: [
-    PaginatorComponent
+    PaginatorComponent,
+    HeaderComponent,
+    PageIntroComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +52,9 @@ import { PaginatorComponent } from './paginator/paginator.component';
     GalleryModule,
     LightboxModule,
     GallerizeModule,
-    PipeModule
+    PipeModule,
+    HeaderComponent,
+    PageIntroComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -13,8 +13,9 @@ import { environment } from 'environments/environment';
 import { ConnectionService } from 'app/core/services/connection.service';
 import { SettingsService } from 'app/core/services/settings.service';
 
-import { Global } from './app.actions';
-import { AppStateModel, CoreConnectionModel, AppSettingsModel, APP_MODE, ConnectionDetails } from './app.models';
+import { Global, AppSettings } from './app.actions';
+import { AppStateModel, CoreConnectionModel, AppSettingsModel, APP_MODE, ConnectionDetails, SettingsViewModel } from './app.models';
+import { IpcService } from '../services/ipc.service';
 
 
 export const ngxsConfig: NgxsModuleOptions = {
@@ -54,6 +55,11 @@ export class CoreConnectionState {
   }
 
 
+  constructor(
+    private _ipcService: IpcService
+  ) {}
+
+
   @Action(Global.Connected)
   configureConnectionDetails(ctx: StateContext<CoreConnectionModel>, action: Global.Connected) {
     if (Object.prototype.toString.call(action.config) !== '[object Object]') {
@@ -89,6 +95,21 @@ export class CoreConnectionState {
       ctx.patchState({testnet: Boolean(+action.config.testnet)});
     }
   }
+
+
+  @Action(AppSettings.SetSetting)
+  setCoreSetting(ctx: StateContext<CoreConnectionModel>, action: AppSettings.SetSetting) {
+    if (action.setting.startsWith('core.network.')) {
+      const key = action.setting.replace('core.network.', '');
+      const currentState = ctx.getState();
+      if ( Object.keys(currentState).includes(key) && (typeof currentState[key] === typeof action.value)) {
+        const obj = {};
+        obj[key] = action.value;
+        ctx.patchState(obj);
+        this._ipcService.runCommand('write-core-config', null, obj);
+      }
+    }
+  }
 };
 
 
@@ -101,6 +122,14 @@ export class CoreConnectionState {
   }
 })
 export class AppSettingsState implements NgxsOnInit {
+
+
+  @Selector()
+  static activeWallet(appState: AppSettingsModel) {
+    return appState.activatedWallet;
+  }
+
+
   constructor(
     private _settings: SettingsService
   ) {}
@@ -119,6 +148,18 @@ export class AppSettingsState implements NgxsOnInit {
       ...current
     });
   }
+
+
+  @Action(AppSettings.SetSetting)
+  setGlobalAppSetting(ctx: StateContext<AppStateModel>, action: AppSettings.SetSetting) {
+    const currentState = ctx.getState();
+    const parts = action.setting.split('.', 2);
+    if (parts[0] === 'global' && Object.keys(currentState).includes(parts[1]) && (typeof currentState[parts[1]] === action.value) ) {
+      const obj = {};
+      obj[parts[1]] = action.value;
+      ctx.patchState(obj);
+    }
+  }
 }
 
 
@@ -127,8 +168,7 @@ export class AppSettingsState implements NgxsOnInit {
   defaults: {
     isConnected: false,
     appMode: null,
-    loadingMessage: '',
-    activeWallet: ''
+    loadingMessage: ''
   },
   children: [CoreConnectionState, AppSettingsState]
 })
@@ -146,15 +186,20 @@ export class ApplicationState implements NgxsOnInit {
   }
 
 
-  @Selector()
-  static appMode(state: AppStateModel) {
-    return state.appMode;
+  @Selector([CoreConnectionState, AppSettingsState])
+  static appSettings(coreState: CoreConnectionModel, settingState: AppSettingsModel) {
+    return {
+      proxy: coreState.proxy,
+      upnp: coreState.upnp,
+      language: settingState.language,
+      marketActive: settingState.marketActive
+    } as SettingsViewModel
   }
 
 
   @Selector()
-  static activeWallet(appState: AppStateModel) {
-    return appState.activeWallet;
+  static appMode(state: AppStateModel) {
+    return state.appMode;
   }
 
 
@@ -191,7 +236,7 @@ export class ApplicationState implements NgxsOnInit {
     let checkedMode: APP_MODE;
     if (mode === null) {
       // force the read from settings storage
-      const storedMode = localStorage.getItem('settings.app_mode') || '';
+      const storedMode = localStorage.getItem('app.app_mode') || '';
       if (APP_MODE[storedMode]) {
         checkedMode = APP_MODE[storedMode];
       }
@@ -203,7 +248,7 @@ export class ApplicationState implements NgxsOnInit {
       checkedMode = APP_MODE.WALLET;
     }
 
-    localStorage.setItem('settings.app_mode', APP_MODE[checkedMode]);
+    localStorage.setItem('app.app_mode', APP_MODE[checkedMode]);
     ctx.patchState({appMode: checkedMode});
   }
 

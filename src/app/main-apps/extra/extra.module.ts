@@ -1,9 +1,11 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { ExtraRoutingModule } from './extra-routing.module';
-import { HelpComponent } from 'app/extra/help/help.component';
 import { ExtraBaseComponent } from './base/extra-base.component';
+import { ExtraRoutingModule } from './extra-routing.module';
+
+import { HelpComponent } from 'app/main-apps/extra/help/help.component';
+import { GlobalSettingsComponent } from 'app/main-apps/extra/global-settings/global-settings.component';
 
 @NgModule({
   imports: [
@@ -13,6 +15,7 @@ import { ExtraBaseComponent } from './base/extra-base.component';
   ],
   declarations: [
     HelpComponent,
+    GlobalSettingsComponent,
     ExtraBaseComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -55,14 +55,16 @@ export class LoadingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const mode = this._store.selectSnapshot(state => (<AppStateModel>state.global).appMode);
-    switch (mode) {
-      case APP_MODE.MARKET:
-        this.goToMarket();
-        break;
-      default:
-        this.goToWallet();
-    }
+    this._router.navigate(['/main/extra/help']);
+
+    // const mode = this._store.selectSnapshot(state => (<AppStateModel>state.global).appMode);
+    // switch (mode) {
+    //   case APP_MODE.MARKET:
+    //     this.goToMarket();
+    //     break;
+    //   default:
+    //     this.goToWallet();
+    // }
   }
 
   private goToTerms() {
