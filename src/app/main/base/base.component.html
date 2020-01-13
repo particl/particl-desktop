@@ -1,2 +1,8 @@
-<multiwallet-sidebar *ngIf="showAppSelector" class="sidebar-multiwallet"></multiwallet-sidebar>
-<router-outlet></router-outlet>
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
+
+    <multiwallet-sidebar *ngIf="showAppSelector" class="sidebar-multiwallet"></multiwallet-sidebar>
+  </mat-sidenav><!-- .sidebar -->
+
+  <router-outlet></router-outlet>
+</mat-sidenav-container>

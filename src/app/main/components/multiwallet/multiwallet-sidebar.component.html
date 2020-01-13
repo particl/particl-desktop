@@ -7,7 +7,7 @@
       <header>Wallets</header>
 
       <button mat-raised-button color="primary"
-        routerLinkActive="active" [routerLink]="wallet/active"
+        routerLinkActive="active" routerLink="wallet/active"
         matTooltip="{{activeWallet.toUpperCase()}}"
         matTooltipPosition="after"
       >
@@ -15,7 +15,7 @@
       </button>
 
       <button mat-raised-button color="primary"
-        routerLinkActive="active" [routerLink]="wallet/selection"
+        routerLinkActive="active" routerLink="wallet/selection"
         matTooltip="Select a wallet or add a new one" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
       </button>
@@ -26,19 +26,19 @@
       <header>Markets</header>
 
       <button mat-raised-button color="primary"
-        routerLinkActive="active" [routerLink]="market/active"
+        routerLinkActive="active" routerLink="market/active"
         matTooltip="Last active market" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
       </button>
 
       <button mat-raised-button color="primary"
-        routerLinkActive="active" [routerLink]="market/switcher"
+        routerLinkActive="active" routerLink="market/switcher"
         matTooltip="Select a known market" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-swap"></mat-icon>
       </button>
 
       <button mat-raised-button color="primary"
-        routerLinkActive="active" [routerLink]="market/manage"
+        routerLinkActive="active" routerLink="market/manage"
         matTooltip="Manage markets" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
       </button>
@@ -50,7 +50,7 @@
 
   <div class="buttons">
 
-    <a mat-button class="help-support" routerLinkActive="active" routerLink="/extra/help" matTooltip="Help & Support" matTooltipPosition="after">
+    <a mat-button class="help-support" routerLinkActive="active" routerLink="extra/help" matTooltip="Help & Support" matTooltipPosition="after">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
     </a>
 

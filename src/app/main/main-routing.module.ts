@@ -14,9 +14,10 @@ const routes: Routes = [
       modeChanger: ModeChangerResolverService
     },
     children: [
-      { path: '', redirectTo: '/extra/help', pathMatch: 'full' },
+      { path: 'extra', loadChildren: () => import('app/extra/extra.module').then(m => m.ExtraModule) },
       // { path: 'wallet', loadChildren: () => import('app/main/wallet/wallet.module').then(m => m.WalletModule)},
       // { path: 'market', loadChildren: () => import('app/main/market/market.module').then(m => m.MarketModule)}
+      { path: '', redirectTo: 'extra', pathMatch: 'full' },
     ]
   }
 ];
@@ -24,6 +25,9 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forChild(routes)
+  ],
+  exports: [
+    RouterModule
   ]
 })
 export class MainRoutingModule { }

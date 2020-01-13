@@ -15,9 +15,6 @@ import { MultiwalletSidebarComponent } from './components/multiwallet/multiwalle
     CoreUiModule,
     MainRoutingModule
   ],
-  entryComponents: [
-    BaseComponent
-  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MainModule {

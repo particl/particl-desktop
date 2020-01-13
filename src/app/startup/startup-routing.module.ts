@@ -6,9 +6,9 @@ import { TermsComponent } from 'app/startup/terms/terms.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'loading' },
   { path: 'loading', component: LoadingComponent },
-  { path: 'terms', component: TermsComponent }
+  { path: 'terms', component: TermsComponent },
+  { path: '', redirectTo: 'loading' },
 ];
 
 @NgModule({
