@@ -4,7 +4,6 @@ import { IpcService } from 'app/core/services/ipc.service';
 
 
 @Component({
-  selector: 'app-application-restart-modal',
   templateUrl: './application-restart-modal.component.html',
   styleUrls: ['./application-restart-modal.component.scss']
 })

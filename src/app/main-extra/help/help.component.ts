@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-help',
+  selector: 'main-help',
   templateUrl: './help.component.html',
   styleUrls: ['./help.component.scss']
 })

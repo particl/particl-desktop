@@ -1,0 +1,39 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+.header-main {
+  border-bottom: 1px solid $bg-shadow;
+  width: calc(100% - #{$sidebar-width} - #{$scrollbar-width});
+  padding-left: 35px;
+  padding-right: 26px;
+  font-family: $font;
+  font-size: 15px;
+  text-transform: uppercase;
+  position: fixed;
+  top: 0;
+  left: $sidebar-width;
+  right: 0;
+  z-index: 100;
+  @include break(l) {
+    padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;
+  }
+  .title {
+    font-weight: 700;
+    display: inline-block;
+  }
+  .right {
+    text-align: right;
+    .spendable-balance { // available blind balance for spending on Market
+      display: inline-block;
+      border-right: 1px solid $bg-shadow;
+      margin-right: 24px;
+      padding: 15px 24px 15px 0;
+      .mat-icon {
+        margin-right: 8px;
+        position: relative;
+        top: 2px;
+        color: $text-muted;
+      }
+    }
+  }
+}

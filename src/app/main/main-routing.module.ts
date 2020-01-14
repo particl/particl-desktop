@@ -14,8 +14,8 @@ const routes: Routes = [
       modeChanger: ModeChangerResolverService
     },
     children: [
-      { path: 'extra', loadChildren: () => import('app/main-apps/extra/extra.module').then(m => m.ExtraModule) },
-      // { path: 'wallet', loadChildren: () => import('app/main/wallet/wallet.module').then(m => m.WalletModule)},
+      { path: 'extra', loadChildren: () => import('app/main-extra/extra.module').then(m => m.ExtraModule) },
+      { path: 'wallet', loadChildren: () => import('app/main-wallet/wallet.module').then(m => m.WalletModule)},
       // { path: 'market', loadChildren: () => import('app/main/market/market.module').then(m => m.MarketModule)}
       { path: '', redirectTo: 'extra', pathMatch: 'full' },
     ]

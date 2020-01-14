@@ -4,8 +4,8 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ExtraBaseComponent } from './base/extra-base.component';
 import { ExtraRoutingModule } from './extra-routing.module';
 
-import { HelpComponent } from 'app/main-apps/extra/help/help.component';
-import { GlobalSettingsComponent } from 'app/main-apps/extra/global-settings/global-settings.component';
+import { HelpComponent } from 'app/main-extra/help/help.component';
+import { GlobalSettingsComponent } from 'app/main-extra/global-settings/global-settings.component';
 
 @NgModule({
   imports: [

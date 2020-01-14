@@ -1,4 +1,4 @@
-import { CoreConnectionModel, APP_MODE } from './app.models';
+import { CoreConnectionModel, APP_MODE, PeerModel } from './app.models';
 
 export namespace Global {
 
@@ -24,5 +24,14 @@ export namespace AppSettings {
   export class SetSetting {
     static readonly type: string = '[AppSettings] Set Setting';
     constructor(public setting: string, public value: string | boolean | number) {}
+  }
+}
+
+
+export namespace AppData {
+
+  export class GotPeers {
+    static readonly type: string = '[AppData] Got Peers';
+    constructor(public peers: PeerModel[]) {}
   }
 }

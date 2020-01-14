@@ -6,7 +6,6 @@ interface DialogData {
 }
 
 @Component({
-  selector: 'app-processing-modal',
   templateUrl: './processing-modal.component.html',
   styleUrls: ['./processing-modal.component.scss']
 })

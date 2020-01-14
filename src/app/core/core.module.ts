@@ -4,7 +4,8 @@ import { CommonModule } from '@angular/common';
 import { RpcService } from './services/rpc.service';
 import { IpcService } from './services/ipc.service';
 import { ConnectionService } from './services/connection.service';
-import { CloseGuiService } from 'app/core/services/close-gui.service';
+import { CloseGuiService } from './services/close-gui.service';
+import { PeerService } from './services/peer.service';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { CloseGuiService } from 'app/core/services/close-gui.service';
     ConnectionService,
     RpcService,
     IpcService,
-    CloseGuiService
+    CloseGuiService,
+    PeerService
   ]
 })
 

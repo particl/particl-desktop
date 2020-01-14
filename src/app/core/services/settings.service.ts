@@ -22,9 +22,29 @@ export class SettingsService {
    * NB!! Does absolutely no validation on the types or presence of various settings stored: this is up to the caller
    */
   fetchGlobalSettings(): SettingLiteral {
-    const settings = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    const settings = this.fetchSettings();
     return Object.prototype.toString.call(settings.global) === '[object Object]' ? settings.global : {};
   }
 
 
+  saveGlobalSetting(key: string, value: any): boolean {
+    // @TODO: zaSmilingIdiot 2020-01-14 -> potential for conflicts to happen... not "thread safe"
+
+    if (!['boolean', 'string', 'number'].includes(typeof value)) {
+      return false;
+    }
+
+    const saved = this.fetchSettings();
+    const global = Object.prototype.toString.call(saved.global) === '[object Object]' ? saved.global : {};
+    if (global[key] && (typeof global[key] !== typeof value)) {
+      return false;
+    }
+    global[key] = value;
+    saved.global = global;
+    localStorage.setItem('settings', JSON.stringify(saved));
+  }
+
+  private fetchSettings(): any {
+    return JSON.parse(localStorage.getItem('settings') || '{}') || {};
+  }
 }

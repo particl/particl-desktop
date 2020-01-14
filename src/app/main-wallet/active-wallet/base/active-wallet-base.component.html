@@ -1,0 +1,100 @@
+<mat-sidenav-container fullscreen>
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
+    <div class="sidebar-menu">
+      <div class="logo">
+        <img src="./assets/particl-logo{{ (testnet | async) ? '-testnet' : ''}}.svg" alt="Particl">
+      </div>
+
+      <mat-divider></mat-divider>
+
+
+      <div class="menu-links">
+
+        <mat-content class="sidebar-section">
+          <mat-list class="sidebar-item-group">
+            <a class="sidebar-item-link"
+              routerLinkActive="active" routerLink="overview">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-overview"></mat-icon>
+                <span class="text">Overview</span>
+              </mat-list-item>
+            </a>
+          </mat-list><!-- .sidebar-item-group -->
+        </mat-content><!-- .sidebar-section -->
+
+        <mat-content class="sidebar-section">
+          <mat-accordion [multi]="'multi'">
+            <mat-expansion-panel #panel1 expanded="true" class="no-padding arrow-colored">
+              <mat-expansion-panel-header>Wallet</mat-expansion-panel-header>
+              <mat-content>
+                <mat-list class="sidebar-item-group">
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="send">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-send"></mat-icon>
+                      <span class="text">Send / Convert</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="receive">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-receive"></mat-icon>
+                      <span class="text">Receive</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="history">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon"
+                        fontSet="partIcon" fontIcon="part-date"></mat-icon>
+                      <span class="text">History</span>
+                    </mat-list-item>
+                  </a>
+
+                  <a class="sidebar-item-link"
+                    routerLinkActive="active" routerLink="addressbook">
+                    <mat-list-item class="sidebar-item">
+                      <mat-icon class="icon" fontSet="partIcon"
+                        fontIcon="part-people"></mat-icon>
+                      <span class="text">Address Book</span>
+                    </mat-list-item>
+                  </a>
+
+                </mat-list><!-- .sidebar-item-group -->
+              </mat-content>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </mat-content><!-- .sidebar-section -->
+
+        <mat-content class="sidebar-section">
+          <mat-list class="sidebar-item-group">
+            <a class="sidebar-item-link"
+              routerLinkActive="active" routerLink="settings">
+              <mat-list-item class="sidebar-item">
+                <mat-icon class="icon" fontSet="partIcon" fontIcon="part-tool"></mat-icon>
+                <span class="text">Wallet Settings</span>
+              </mat-list-item>
+            </a>
+          </mat-list><!-- .sidebar-item-group -->
+        </mat-content><!-- .sidebar-section -->
+
+      </div><!-- .menu-links -->
+
+
+      <footer class="footer">
+
+      </footer><!-- .pin-to-bottom -->
+    </div>
+
+  </mat-sidenav><!-- .sidebar -->
+
+  <main-topbar></main-topbar>
+
+  <router-outlet></router-outlet>
+
+</mat-sidenav-container>

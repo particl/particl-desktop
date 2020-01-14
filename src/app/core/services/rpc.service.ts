@@ -4,9 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
 import { map, catchError } from 'rxjs/operators';
-import { Select } from '@ngxs/store';
 
-import { ApplicationState } from 'app/core/store/app.state';
 import { ConnectionDetails } from 'app/core/store/app.models';
 
 
@@ -60,21 +58,17 @@ export class RpcService {
   // note: password basic64 equiv= dGVzdDp0ZXN0
   private authorization: string;
 
-  @Select(ApplicationState.connectionDetails) details$: Observable<ConnectionDetails>;
-
-
   constructor(
     private _http: HttpClient
   ) {
     this.log.d('Creating service');
-    this.details$.subscribe(
-      (details: ConnectionDetails) => {
-        this.isConnected = details.connected;
-        this.hostname = details.rpcHostname;
-        this.port = details.rpcPort;
-        this.authorization = details.rpcAuth;
-      }
-    )
+  }
+
+  setConnectionDetails(details: ConnectionDetails) {
+    this.hostname = details.rpcHostname;
+    this.port = details.rpcPort;
+    this.authorization = details.rpcAuth;
+    this.isConnected = this.hostname.length > 0 && this.authorization.length > 0;
   }
 
   /**
@@ -96,7 +90,7 @@ export class RpcService {
   call(walletName: string, method: string, params?: Array<any> | null): Observable<any> {
 
     if (!this.isConnected) {
-      return observableThrowError('RPC servicecs not connected...');
+      return observableThrowError('RPC services not connected...');
     }
 
     // Running in browser, delete?

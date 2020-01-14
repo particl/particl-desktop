@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HelpComponent } from 'app/main-apps/extra/help/help.component';
-import { GlobalSettingsComponent } from 'app/main-apps/extra/global-settings/global-settings.component';
-import { ExtraBaseComponent } from 'app/main-apps/extra/base/extra-base.component';
+import { HelpComponent } from 'app/main-extra/help/help.component';
+import { GlobalSettingsComponent } from 'app/main-extra/global-settings/global-settings.component';
+import { ExtraBaseComponent } from 'app/main-extra/base/extra-base.component';
 
 
 const routes: Routes = [

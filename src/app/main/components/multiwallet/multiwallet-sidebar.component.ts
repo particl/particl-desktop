@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { APP_MODE } from 'app/core/store/app.models';
-import { AppSettingsState, ApplicationState } from 'app/core/store/app.state';
+import { ApplicationState } from 'app/core/store/app.state';
+import { AppSettingsState } from 'app/core/store/appsettings.state';
 
 
 @Component({

@@ -1,3 +1,4 @@
+import { NumberValueAccessor } from '@angular/forms';
 
 export enum APP_MODE {
   WALLET,
@@ -42,4 +43,30 @@ export interface SettingsViewModel {
   upnp: boolean;
   language: string;
   marketActive: boolean;
+}
+
+
+
+export interface PeerModel {
+  id: number;
+  addr: string;
+  addrbind: string;
+  services: string;
+  services_str: string;
+  version: number;
+  subver: string;
+  whitelisted: boolean;
+  minfeefilter: number;
+  synced_blocks: number;
+  synced_headers: number;
+  inbound: boolean;
+  addnode: boolean;
+  banscore: number;
+  timeoffset: number;
+  currentheight: number;
+}
+
+
+export interface AppDataModel {
+  peers: PeerModel[]
 }

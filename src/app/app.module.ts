@@ -11,8 +11,10 @@ import { app_routing } from 'app/app.routing';
 
 import { CoreModule } from 'app/core/core.module';
 import { AppComponent } from 'app/app.component';
-import { ApplicationState, CoreConnectionState, AppSettingsState, ngxsConfig } from 'app/core/store/app.state';
-
+import { ApplicationState, ngxsConfig } from 'app/core/store/app.state';
+import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { AppSettingsState } from 'app/core/store/appsettings.state';
+import { AppDataState } from 'app/core/store/appdata.state';
 @NgModule({
   declarations: [
     AppComponent
@@ -22,7 +24,7 @@ import { ApplicationState, CoreConnectionState, AppSettingsState, ngxsConfig } f
     BrowserModule,
     BrowserAnimationsModule,
     NgxsModule.forRoot(
-      [ApplicationState, CoreConnectionState, AppSettingsState],
+      [ApplicationState, CoreConnectionState, AppSettingsState, AppDataState],
       ngxsConfig
     ),
     CoreModule,

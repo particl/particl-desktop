@@ -18,12 +18,12 @@ import {
   SettingGroup,
   Setting,
   SelectableOption
-} from 'app/main-apps/extra/global-settings/settings.types';
+} from 'app/main-extra/global-settings/settings.types';
 import { ApplicationState } from 'app/core/store/app.state';
 
 
 @Component({
-  selector: 'app-settings',
+  selector: 'main-settings',
   templateUrl: './global-settings.component.html',
   styleUrls: ['./global-settings.component.scss']
 })

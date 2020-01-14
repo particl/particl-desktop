@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { CloseGuiService } from 'app/core/services/close-gui.service';
 import { termsObj } from 'app/startup/terms/terms-txt';
-import { CoreConnectionState } from 'app/core/store/app.state'
+import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 
 
