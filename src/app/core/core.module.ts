@@ -5,7 +5,7 @@ import { RpcService } from './services/rpc.service';
 import { IpcService } from './services/ipc.service';
 import { ConnectionService } from './services/connection.service';
 import { CloseGuiService } from './services/close-gui.service';
-import { PeerService } from './services/peer.service';
+import { PollingService } from './services/polling.service';
 
 
 @NgModule({
@@ -21,7 +21,7 @@ import { PeerService } from './services/peer.service';
     RpcService,
     IpcService,
     CloseGuiService,
-    PeerService
+    PollingService
   ]
 })
 

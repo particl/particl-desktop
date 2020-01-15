@@ -12,14 +12,14 @@ import { AppSettings } from './app.actions';
 import {
   AppStateModel,
   CoreConnectionModel,
-  AppSettingsModel
+  AppSettingsStateModel
 } from './app.models';
 
 
 const APP_SETTINGS_TOKEN = new StateToken<CoreConnectionModel>('settings');
 
 
-@State<AppSettingsModel>({
+@State<AppSettingsStateModel>({
   name: APP_SETTINGS_TOKEN,
   defaults: {
     activatedWallet: '',
@@ -31,7 +31,7 @@ export class AppSettingsState implements NgxsOnInit {
 
 
   @Selector()
-  static activeWallet(appState: AppSettingsModel) {
+  static activeWallet(appState: AppSettingsStateModel) {
     return appState.activatedWallet;
   }
 
@@ -40,7 +40,7 @@ export class AppSettingsState implements NgxsOnInit {
     private _settings: SettingsService
   ) {}
 
-  ngxsOnInit(ctx: StateContext<AppSettingsModel>) {
+  ngxsOnInit(ctx: StateContext<AppSettingsStateModel>) {
     const saved = this._settings.fetchGlobalSettings();
     const current = ctx.getState();
 

@@ -23,7 +23,7 @@ export interface CoreConnectionModel {
 }
 
 
-export interface AppSettingsModel {
+export interface AppSettingsStateModel {
   activatedWallet: string;
   language: string;
   marketActive: boolean;
@@ -67,6 +67,17 @@ export interface PeerModel {
 }
 
 
-export interface AppDataModel {
-  peers: PeerModel[]
+export interface NetworkInfoModel {
+  connections: number;
+}
+
+
+export interface ActiveWalletInfoModel {
+  encryptionstatus: string;
+}
+
+
+export interface AppDataStateModel {
+  networkInfo: NetworkInfoModel,
+  activeWalletInfo: ActiveWalletInfoModel
 }

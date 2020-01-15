@@ -1,4 +1,4 @@
-import { CoreConnectionModel, APP_MODE, PeerModel } from './app.models';
+import { CoreConnectionModel, APP_MODE, NetworkInfoModel, ActiveWalletInfoModel } from './app.models';
 
 export namespace Global {
 
@@ -30,8 +30,14 @@ export namespace AppSettings {
 
 export namespace AppData {
 
-  export class GotPeers {
-    static readonly type: string = '[AppData] Got Peers';
-    constructor(public peers: PeerModel[]) {}
+  export class SetActiveWalletInfo {
+    static readonly type: string = '[AppData] Set Active Wallet Info';
+    constructor(public walletinfo: ActiveWalletInfoModel) {}
   }
+
+  export class SetNetworkInfo {
+    static readonly type: string = '[AppData] Set NetworkInfo';
+    constructor(public network: NetworkInfoModel) {}
+  }
+
 }

@@ -16,7 +16,7 @@ import { Global  } from './app.actions';
 import {
   AppStateModel,
   CoreConnectionModel,
-  AppSettingsModel,
+  AppSettingsStateModel,
   APP_MODE,
   SettingsViewModel
 } from './app.models';
@@ -55,7 +55,7 @@ export class ApplicationState implements NgxsOnInit {
 
 
   @Selector([CoreConnectionState, AppSettingsState])
-  static appSettings(coreState: CoreConnectionModel, settingState: AppSettingsModel) {
+  static appSettings(coreState: CoreConnectionModel, settingState: AppSettingsStateModel) {
     return {
       proxy: coreState.proxy,
       upnp: coreState.upnp,
