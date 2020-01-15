@@ -69,6 +69,7 @@ export interface PeerModel {
 
 export interface NetworkInfoModel {
   connections: number;
+  timeoffset: number;
 }
 
 

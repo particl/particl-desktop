@@ -6,8 +6,6 @@ import { BaseComponent } from './base/base.component';
 import { MultiwalletSidebarComponent } from './components/multiwallet/multiwallet-sidebar.component';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { TopbarComponent } from 'app/main/components/topbar/topbar.component';
-
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
 @NgModule({
@@ -15,8 +13,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
     BaseComponent,
     MultiwalletSidebarComponent,
     ApplicationRestartModalComponent,
-    ProcessingModalComponent,
-    TopbarComponent
+    ProcessingModalComponent
   ],
   imports: [
     CommonModule,
@@ -25,9 +22,6 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
   ],
   providers: [
     SnackbarService
-  ],
-  exports: [
-    TopbarComponent
   ],
   entryComponents: [
     ApplicationRestartModalComponent,

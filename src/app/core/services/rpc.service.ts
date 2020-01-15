@@ -3,7 +3,7 @@ import {throwError as observableThrowError, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Log } from 'ng2-logger';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError} from 'rxjs/operators';
 
 import { ConnectionDetails } from 'app/core/store/app.models';
 

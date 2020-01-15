@@ -64,7 +64,6 @@ export class PollingService implements OnDestroy {
             )
           ),
           tap(response => {
-            console.log(`@@@@ CALLING RPC ${activity.rpc} -> `, response);
             if (response !== null) {
               this._store.dispatch( new AppData[activity.action](response));
             }

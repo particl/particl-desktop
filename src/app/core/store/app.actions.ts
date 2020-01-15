@@ -25,6 +25,12 @@ export namespace AppSettings {
     static readonly type: string = '[AppSettings] Set Setting';
     constructor(public setting: string, public value: string | boolean | number) {}
   }
+
+
+  export class SetActiveWallet {
+    static readonly type: string = '[AppSettings] Set Active Wallet';
+    constructor(public wallet: string) {}
+  }
 }
 
 

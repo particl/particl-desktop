@@ -4,9 +4,10 @@ import {
   Action,
   Selector,
   StateContext,
+  createSelector,
 } from '@ngxs/store';
 
-import { Global, AppData } from './app.actions';
+import { Global, AppData, AppSettings } from './app.actions';
 import {
   AppDataStateModel,
 } from './app.models';
@@ -20,7 +21,8 @@ const APP_DATA_TOKEN = new StateToken<AppDataStateModel>('appdata');
   name: APP_DATA_TOKEN,
   defaults: {
     networkInfo: {
-      connections: 0
+      connections: 0,
+      timeoffset: 0
     },
     activeWalletInfo: {
       encryptionstatus: ''
@@ -32,6 +34,15 @@ export class AppDataState {
   @Selector()
   static network(state: AppDataStateModel) {
     return state.networkInfo;
+  }
+
+  static networkValue(field: string) {
+    return createSelector(
+      [AppDataState],
+      (state: AppDataStateModel) => {
+        return state.networkInfo[field];
+      }
+    );
   }
 
 
@@ -69,7 +80,7 @@ export class AppDataState {
       }
 
       if (Object.keys(newVals).length > 0) {
-        ctx.patchState(newVals);
+        ctx.patchState({activeWalletInfo: {...currentState, ...newVals}});
       }
     }
   }
@@ -93,7 +104,7 @@ export class AppDataState {
       }
 
       if (Object.keys(newVals).length > 0) {
-        ctx.patchState(newVals);
+        ctx.patchState({networkInfo: {...currentState, ...newVals}});
       }
     }
   }

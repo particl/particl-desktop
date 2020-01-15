@@ -10,7 +10,6 @@ import { SettingsService } from 'app/core/services/settings.service';
 
 import { AppSettings } from './app.actions';
 import {
-  AppStateModel,
   CoreConnectionModel,
   AppSettingsStateModel
 } from './app.models';
@@ -56,8 +55,18 @@ export class AppSettingsState implements NgxsOnInit {
   }
 
 
+  @Action(AppSettings.SetActiveWallet)
+  setActiveWallet(ctx: StateContext<AppSettingsStateModel>, {wallet}: AppSettings.SetActiveWallet) {
+    const currentWallet = ctx.getState().activatedWallet;
+    if (currentWallet === wallet) {
+      return;
+    }
+    return ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', wallet));
+  }
+
+
   @Action(AppSettings.SetSetting)
-  setGlobalAppSetting(ctx: StateContext<AppStateModel>, action: AppSettings.SetSetting) {
+  setGlobalAppSetting(ctx: StateContext<AppSettingsStateModel>, action: AppSettings.SetSetting) {
     const currentState = ctx.getState();
     const parts = action.setting.split('.', 2);
     if (parts[0] === 'global' && Object.keys(currentState).includes(parts[1]) && (typeof currentState[parts[1]] === action.value) ) {

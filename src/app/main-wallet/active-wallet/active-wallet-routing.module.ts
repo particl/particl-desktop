@@ -15,12 +15,12 @@ const routes: Routes = [
     path: '',
     component: ActiveWalletBaseComponent,
     children: [
-      { path: 'overview', component: OverviewComponent },
-      { path: 'send', component: SendComponent },
-      { path: 'receive', component: ReceiveComponent },
-      { path: 'addressbook', component: AddressBookComponent },
-      { path: 'history', component: HistoryComponent },
-      { path: 'settings', component: WalletSettingsComponent },
+      { path: 'overview', component: OverviewComponent, data: { title: 'Overview'} },
+      { path: 'send', component: SendComponent, data: { title: 'Send'} },
+      { path: 'receive', component: ReceiveComponent, data: { title: 'Receive'} },
+      { path: 'addressbook', component: AddressBookComponent, data: { title: 'Address Book'} },
+      { path: 'history', component: HistoryComponent, data: { title: 'History'} },
+      { path: 'settings', component: WalletSettingsComponent, data: { title: 'Wallet Settings'} },
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
     ]
   }

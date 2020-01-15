@@ -5,6 +5,8 @@ import {
   StateContext,
   Selector,
 } from '@ngxs/store';
+import { delayWhen, retryWhen, tap } from 'rxjs/operators';
+import { timer } from 'rxjs';
 import { environment } from 'environments/environment';
 
 import { Global, AppSettings } from './app.actions';
@@ -87,6 +89,23 @@ export class CoreConnectionState {
     } as ConnectionDetails;
 
     this._rpcService.setConnectionDetails(connDetails);
+
+    // @TODO: zaSmilingIdiot 2020-01-15
+    //  Only required because there is no indication of whether this is connecting to a running daemon, or if the backend started the daemon
+    //  Refactor the connection details so this call can be conditionally executed.
+    return this._rpcService.call('', 'getblockchaininfo').pipe(
+      retryWhen (
+        errors => errors.pipe(
+          delayWhen(() => timer(1000)), // retry every 1000 ms if an error occurs
+        )
+      )
+    ).subscribe(
+      (blockchaininfo: any) => {
+        if ('chain' in blockchaininfo) {
+          ctx.patchState({testnet: blockchaininfo.chain === 'test'})
+        }
+      }
+    );
   }
 
 
@@ -103,4 +122,5 @@ export class CoreConnectionState {
       }
     }
   }
+
 };

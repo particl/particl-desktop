@@ -1,0 +1,29 @@
+<div class="status-icons">
+
+  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
+    <img src="assets/icons/SVG/network/peers-{{ peerIcon }}.svg"/>
+  </span>
+
+  <span
+    class="encryption icon"
+    matTooltip="{{ walletStatus }}"
+    container="body"
+    (click)="toggleWalletStatus()">
+      <img src="assets/icons/SVG/lock/lock{{ walletStatusIcon }}.svg"/>
+  </span>
+
+  <span
+    class="console icon"
+    matTooltip="Debug Console"
+    container="body"
+    (click)="openConsoleWindow()">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console-window"></mat-icon>
+  </span>
+
+  <span class="icon">
+    <span class="warning" *ngIf="timeOffset !== 0" matTooltip="Time offset: {{ timeOffset }}s">
+      <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+    </span>
+  </span>
+
+  </div><!-- .status-icons -->
