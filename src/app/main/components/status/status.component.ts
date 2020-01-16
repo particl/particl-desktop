@@ -1,10 +1,12 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
 import { Subject, merge } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { AppDataState } from 'app/core/store/appdata.state';
+import { ConsoleModalComponent } from '../console-modal/console-modal.component';
 
 
 @Component({
@@ -23,7 +25,8 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _store: Store
+    private _store: Store,
+    private _dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -70,7 +73,7 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   openConsoleWindow() {
-    // to be implemented
+    this._dialog.open(ConsoleModalComponent);
   }
 
   toggleWalletStatus() {
