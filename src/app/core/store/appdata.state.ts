@@ -7,7 +7,7 @@ import {
   createSelector,
 } from '@ngxs/store';
 
-import { Global, AppData, AppSettings } from './app.actions';
+import { Global, AppData } from './app.actions';
 import {
   AppDataStateModel,
 } from './app.models';
@@ -22,10 +22,14 @@ const APP_DATA_TOKEN = new StateToken<AppDataStateModel>('appdata');
   defaults: {
     networkInfo: {
       connections: 0,
-      timeoffset: 0
+      timeoffset: 0,
+      subversion: ''
     },
     activeWalletInfo: {
       encryptionstatus: ''
+    },
+    appVersions: {
+      latestClient: ''
     }
   }
 })
@@ -46,8 +50,18 @@ export class AppDataState {
   }
 
 
+  static versionValue(field: string) {
+    return createSelector(
+      [AppDataState],
+      (state: AppDataStateModel) => {
+        return state.appVersions[field];
+      }
+    );
+  }
+
+
   @Selector()
-  static wallet(state: AppDataStateModel) {
+  static walletInfo(state: AppDataStateModel) {
     return state.activeWalletInfo;
   }
 
@@ -105,6 +119,30 @@ export class AppDataState {
 
       if (Object.keys(newVals).length > 0) {
         ctx.patchState({networkInfo: {...currentState, ...newVals}});
+      }
+    }
+  }
+
+
+  @Action(AppData.SetVersionInfo)
+  setVersionInfo(ctx: StateContext<AppDataStateModel>, {versions}: AppData.SetVersionInfo) {
+    if (Object.prototype.toString.call(versions) === '[object Object]') {
+      const newVals = {};
+      const currentState = ctx.getState().appVersions;
+      const currentKeys = Object.keys(currentState);
+
+      for (const key of currentKeys) {
+        if (
+          (versions[key] !== null) &&
+          (typeof versions[key] === typeof currentState[key]) &&
+          (versions[key] !== currentState[key])
+        ) {
+          newVals[key] = versions[key];
+        }
+      }
+
+      if (Object.keys(newVals).length > 0) {
+        ctx.patchState({appVersions: {...currentState, ...newVals}});
       }
     }
   }

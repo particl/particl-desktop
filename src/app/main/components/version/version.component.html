@@ -1,0 +1,22 @@
+<mat-content class="client-version">
+  <div class="client item">
+    Client
+    <span class="version" [ngClass]="newVersion.length === 0 ? 'unknown' : (isClientLatest ? 'current' : 'outdated')" [matTooltip]=" clientUpdateText " matTooltipPosition="right">
+      <span class="dot"></span>
+      <span class="selectable">{{ clientVersion }}</span>
+      <span *ngIf="preRelease.length > 0" class="selectable">&nbsp;({{ preRelease }})</span>
+    </span>
+  </div>
+  <div class="daemon item">
+    Core
+    <span class="version">
+      {{ daemonVersion }}
+    </span>
+  </div>
+  <div class="client item" *ngIf="marketVersion.length > 0">
+    Market
+    <span class="version">
+      {{ marketVersion }}
+    </span>
+  </div>
+</mat-content>

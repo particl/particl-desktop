@@ -45,8 +45,8 @@ export class CoreConnectionState {
   ) {}
 
 
-  @Action(Global.Connected)
-  configureConnectionDetails(ctx: StateContext<CoreConnectionModel>, action: Global.Connected) {
+  @Action(Global.ConnectionReady)
+  configureConnectionDetails(ctx: StateContext<CoreConnectionModel>, action: Global.ConnectionReady) {
     if (Object.prototype.toString.call(action.config) !== '[object Object]') {
       return;
     }
@@ -90,20 +90,25 @@ export class CoreConnectionState {
 
     this._rpcService.setConnectionDetails(connDetails);
 
+    // Polls until the connection is actually ready (ie: daemon may be performing internal sync)...
+    //  ... Prevents resposes with -1 error codes for example.
     // @TODO: zaSmilingIdiot 2020-01-15
     //  Only required because there is no indication of whether this is connecting to a running daemon, or if the backend started the daemon
     //  Refactor the connection details so this call can be conditionally executed.
-    return this._rpcService.call('', 'getblockchaininfo').pipe(
+    this._rpcService.call('', 'getblockchaininfo').pipe(
       retryWhen (
         errors => errors.pipe(
           delayWhen(() => timer(1000)), // retry every 1000 ms if an error occurs
         )
-      )
-    ).subscribe(
-      (blockchaininfo: any) => {
+      ),
+      tap((blockchaininfo: any) => {
         if ('chain' in blockchaininfo) {
           ctx.patchState({testnet: blockchaininfo.chain === 'test'})
         }
+      })
+    ).subscribe(
+      () => {
+        ctx.dispatch(new Global.Connected());
       }
     );
   }

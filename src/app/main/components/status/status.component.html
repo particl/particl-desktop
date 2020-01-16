@@ -1,9 +1,5 @@
 <div class="status-icons">
 
-  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
-    <img src="assets/icons/SVG/network/peers-{{ peerIcon }}.svg"/>
-  </span>
-
   <span
     class="encryption icon"
     matTooltip="{{ walletStatus }}"
@@ -18,6 +14,10 @@
     container="body"
     (click)="openConsoleWindow()">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console-window"></mat-icon>
+  </span>
+
+  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
+    <img src="assets/icons/SVG/network/peers-{{ peerIcon }}.svg"/>
   </span>
 
   <span class="icon">

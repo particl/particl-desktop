@@ -1,10 +1,21 @@
-import { CoreConnectionModel, APP_MODE, NetworkInfoModel, ActiveWalletInfoModel } from './app.models';
+import {
+  APP_MODE,
+  CoreConnectionModel,
+  NetworkInfoModel,
+  ActiveWalletInfoModel,
+  AppVersionsModel
+} from './app.models';
 
 export namespace Global {
 
+
+  export class ConnectionReady {
+    static readonly type: string = '[Application] Connection Ready';
+    constructor(public config: CoreConnectionModel) {}
+  }
+
   export class Connected {
     static readonly type: string = '[Application] Connected';
-    constructor(public config: CoreConnectionModel) {}
   }
 
   export class SetLoadingMessage {
@@ -44,6 +55,11 @@ export namespace AppData {
   export class SetNetworkInfo {
     static readonly type: string = '[AppData] Set NetworkInfo';
     constructor(public network: NetworkInfoModel) {}
+  }
+
+  export class SetVersionInfo {
+    static readonly type: string = '[AppData] Set Version Info';
+    constructor(public versions: AppVersionsModel) {}
   }
 
 }

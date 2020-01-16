@@ -46,30 +46,10 @@ export interface SettingsViewModel {
 }
 
 
-
-export interface PeerModel {
-  id: number;
-  addr: string;
-  addrbind: string;
-  services: string;
-  services_str: string;
-  version: number;
-  subver: string;
-  whitelisted: boolean;
-  minfeefilter: number;
-  synced_blocks: number;
-  synced_headers: number;
-  inbound: boolean;
-  addnode: boolean;
-  banscore: number;
-  timeoffset: number;
-  currentheight: number;
-}
-
-
 export interface NetworkInfoModel {
   connections: number;
   timeoffset: number;
+  subversion: string;
 }
 
 
@@ -78,7 +58,13 @@ export interface ActiveWalletInfoModel {
 }
 
 
+export interface AppVersionsModel {
+  latestClient: string;
+}
+
+
 export interface AppDataStateModel {
   networkInfo: NetworkInfoModel,
-  activeWalletInfo: ActiveWalletInfoModel
+  activeWalletInfo: ActiveWalletInfoModel,
+  appVersions: AppVersionsModel
 }

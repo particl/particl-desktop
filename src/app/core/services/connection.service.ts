@@ -59,7 +59,7 @@ export class ConnectionService {
           break;
         case 'done':
           this.updateStatus('Application initialized, loading user interface...');
-          this.store.dispatch(new Global.Connected((<CoreConnectionModel>status.content)));
+          this.store.dispatch(new Global.ConnectionReady((<CoreConnectionModel>status.content)));
           this._ipc.removeListeners(this.DAEMON_CHANNEL);
           break;
       }
