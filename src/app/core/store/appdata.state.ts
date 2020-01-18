@@ -25,9 +25,6 @@ const APP_DATA_TOKEN = new StateToken<AppDataStateModel>('appdata');
       timeoffset: 0,
       subversion: ''
     },
-    activeWalletInfo: {
-      encryptionstatus: ''
-    },
     appVersions: {
       latestClient: ''
     }
@@ -39,6 +36,7 @@ export class AppDataState {
   static network(state: AppDataStateModel) {
     return state.networkInfo;
   }
+
 
   static networkValue(field: string) {
     return createSelector(
@@ -60,43 +58,14 @@ export class AppDataState {
   }
 
 
-  @Selector()
-  static walletInfo(state: AppDataStateModel) {
-    return state.activeWalletInfo;
-  }
-
-
   constructor(
     private _pollingService: PollingService
   ) {}
 
+
   @Action(Global.Connected)
   pollForData() {
     this._pollingService.start();
-  }
-
-
-  @Action(AppData.SetActiveWalletInfo)
-  setWalletInfo(ctx: StateContext<AppDataStateModel>, {walletinfo}: AppData.SetActiveWalletInfo) {
-    if (Object.prototype.toString.call(walletinfo) === '[object Object]') {
-      const newVals = {};
-      const currentState = ctx.getState().activeWalletInfo;
-      const currentKeys = Object.keys(currentState);
-
-      for (const key of currentKeys) {
-        if (
-          (walletinfo[key] !== null) &&
-          (typeof walletinfo[key] === typeof currentState[key]) &&
-          (walletinfo[key] !== currentState[key])
-        ) {
-          newVals[key] = walletinfo[key];
-        }
-      }
-
-      if (Object.keys(newVals).length > 0) {
-        ctx.patchState({activeWalletInfo: {...currentState, ...newVals}});
-      }
-    }
   }
 
 

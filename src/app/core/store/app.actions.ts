@@ -2,7 +2,6 @@ import {
   APP_MODE,
   CoreConnectionModel,
   NetworkInfoModel,
-  ActiveWalletInfoModel,
   AppVersionsModel
 } from './app.models';
 
@@ -46,11 +45,6 @@ export namespace AppSettings {
 
 
 export namespace AppData {
-
-  export class SetActiveWalletInfo {
-    static readonly type: string = '[AppData] Set Active Wallet Info';
-    constructor(public walletinfo: ActiveWalletInfoModel) {}
-  }
 
   export class SetNetworkInfo {
     static readonly type: string = '[AppData] Set NetworkInfo';

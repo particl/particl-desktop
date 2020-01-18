@@ -53,11 +53,6 @@ export interface NetworkInfoModel {
 }
 
 
-export interface ActiveWalletInfoModel {
-  encryptionstatus: string;
-}
-
-
 export interface AppVersionsModel {
   latestClient: string;
 }
@@ -65,6 +60,5 @@ export interface AppVersionsModel {
 
 export interface AppDataStateModel {
   networkInfo: NetworkInfoModel,
-  activeWalletInfo: ActiveWalletInfoModel,
   appVersions: AppVersionsModel
 }

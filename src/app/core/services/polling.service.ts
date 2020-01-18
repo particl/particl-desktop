@@ -55,37 +55,14 @@ export class PollingService implements OnDestroy {
     const rpcObs = this.getRpcPolling();
     const versionOb = this.getAppVersionPolling();
 
-    // obsList.push(
-    //   this._store.select(AppSettingsState.activeWallet).pipe(
-    //     tap(wallet => {
-    //       this.currentWallet = wallet;
-    //     })
-    //   )
-    // );
-
     merge(...rpcObs, versionOb).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe();
-
-    // const outerObs = merge(...obsList);
-    // concat(
-    //   this._store.select(AppSettingsState.activeWallet).pipe(
-    //     take(1),
-    //     tap(wallet => {
-    //       this.currentWallet = wallet
-    //     })
-    //   ),
-
-    //   outerObs
-    // ).pipe(
-    //   takeUntil(this.unsubscribe$)
-    // ).subscribe();
   }
 
   private getRpcPolling(): Observable<any>[] {
 
     const rpcActivities: IPoll[] = [
-      // {rpc: 'getwalletinfo', interval: 5000, action: 'SetActiveWalletInfo'},
       {rpc: 'getnetworkinfo', interval: 10000, action: 'SetNetworkInfo'}
     ];
 
