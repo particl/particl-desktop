@@ -54,7 +54,9 @@ export class VersionComponent implements OnInit, OnDestroy {
     const daemon$ = this._store.select(AppDataState.networkValue('subversion')).pipe(
       tap((version: string) => {
         this.log.d('received daemon version: ', version);
-        this.daemonVersion = version.match(/\d+\.\d+.\d+.\d+/)[0];
+        if (version) {
+          this.daemonVersion = version.match(/\d+\.\d+.\d+.\d+/)[0];
+        }
       })
     );
 

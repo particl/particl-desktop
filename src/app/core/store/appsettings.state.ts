@@ -23,7 +23,8 @@ const APP_SETTINGS_TOKEN = new StateToken<CoreConnectionModel>('settings');
   defaults: {
     activatedWallet: '',
     language: 'en_us',
-    marketActive: false
+    marketActive: false,
+    zmqPort: 36750
   }
 })
 export class AppSettingsState implements NgxsOnInit {

@@ -27,6 +27,7 @@ export interface AppSettingsStateModel {
   activatedWallet: string;
   language: string;
   marketActive: boolean;
+  zmqPort: number;
 }
 
 
@@ -61,4 +62,33 @@ export interface AppVersionsModel {
 export interface AppDataStateModel {
   networkInfo: NetworkInfoModel,
   appVersions: AppVersionsModel
+}
+
+
+
+interface ZmqFieldStatus {
+  connected: boolean;
+  retryCount: number;
+  error: boolean;
+}
+
+
+export interface ZmqTypeField {
+  status: ZmqFieldStatus;
+  data: any;
+}
+
+
+export enum ZmqActions {
+  CONNECTED = 'connected',
+  CLOSED = 'close',
+  RETRY = 'retry',
+  ERROR = 'error',
+  DATA = 'data'
+}
+
+
+export interface ZmqConnectionStateModel {
+  hashblock: ZmqTypeField;
+  smsg: ZmqTypeField
 }

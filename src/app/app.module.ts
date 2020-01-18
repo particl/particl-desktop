@@ -15,6 +15,9 @@ import { ApplicationState, ngxsConfig } from 'app/core/store/app.state';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { AppDataState } from 'app/core/store/appdata.state';
+import { ZmqConnectionState } from './core/store/zmq-connection.state';
+
+
 @NgModule({
   declarations: [
     AppComponent
@@ -24,7 +27,7 @@ import { AppDataState } from 'app/core/store/appdata.state';
     BrowserModule,
     BrowserAnimationsModule,
     NgxsModule.forRoot(
-      [ApplicationState, CoreConnectionState, AppSettingsState, AppDataState],
+      [ApplicationState, CoreConnectionState, AppSettingsState, AppDataState, ZmqConnectionState],
       ngxsConfig
     ),
     CoreModule,

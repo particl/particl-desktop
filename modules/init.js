@@ -13,13 +13,14 @@ const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
 const bot           = require('./bot/bot');
 const systemDialogs = require('./dialogs/dialogs');
+const zmq           = require('./zmq/zmq');
 
 
 let isInitializedGUI = false;
 let isInitializedSystem = false;
 
 
-function setupDaemonManagerListener() {
+function setupDaemonManagerListener(zmqPort) {
   daemonManager.on('status', (status, msg) => {
 
     // warns GUI (if initialized) that daemon is downloading
@@ -40,7 +41,7 @@ function setupDaemonManagerListener() {
       log.debug('Particl Daemon Manager has found particl core binary... starting');
       daemonWarner.send('Booting Particl Core...', 'info');
       daemonManager.shutdown();
-      daemon.start(false).catch(
+      daemon.start(false, zmqPort).catch(
         (err) => {
           log.error('daemon start error: ', err);
           daemonWarner.send('Daemon startup failed', 'error');
@@ -96,7 +97,7 @@ exports.startSystem = function () {
 
   destroySystemListeners();
 
-  rxIpc.registerListener('start-system', () => {
+  rxIpc.registerListener('start-system', (options) => {
     return Observable.create(observer => {
       try {
         daemonWarner.send('Checking for running Particl daemon', 'info');
@@ -109,14 +110,14 @@ exports.startSystem = function () {
             if (!isInitializedSystem) {
               _auth.setAuthConfig(configOptions);
             }
-            daemonWarner.send(configOptions, 'done');
+            daemonWarner.send({...configOptions, isRunningDaemon: true}, 'done');
           }
         ).catch(
           () => {
             daemonConfig.clearAuth();
             log.info('Particl daemon instance not running: attempting to boot Particl Core');
             daemonWarner.send('Attempting to boot particl core...', 'info');
-            setupDaemonManagerListener();
+            setupDaemonManagerListener(options.zmq_port);
             daemonManager.init();
           }
         ).then(
@@ -154,6 +155,7 @@ exports.startGUI = function (mainWindow) {
 
   /* Initialize daemonWarner */
   daemonWarner.init(mainWindow);
+  zmq.init(mainWindow);
 
   isInitializedGUI = true;
 }
@@ -169,6 +171,7 @@ exports.stopGUI = function() {
   daemonConfig.destroyComms();
   systemDialogs.destroy();
   daemonWarner.destroy();
+  zmq.destroy();
 
   isInitializedGUI = false;
 }

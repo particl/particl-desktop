@@ -4754,6 +4754,11 @@ event-emitter@^0.3.5, event-emitter@~0.3.5:
     d "1"
     es5-ext "~0.10.14"
 
+eventemitter2@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-5.0.1.tgz#6197a095d5fb6b57e8942f6fd7eaad63a09c9452"
+  integrity sha1-YZegldX7a1folC9v1+qtY6CclFI=
+
 eventemitter3@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.0.tgz#d65176163887ee59f386d64c82610b696a4a74eb"
@@ -9333,6 +9338,15 @@ particl-marketplace@^0.2.7:
     tslib "^1.7.1"
     web-request "^1.0.7"
     winston "^2.4.4"
+
+particl-zmq@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/particl-zmq/-/particl-zmq-1.0.4.tgz#213844127ba0141c85485087cf3c55de67d68518"
+  integrity sha512-K3dt20ZFDz+Uq33qFmuOoR1CnqZLDB4AhcIyNjD3MVU4ovxi1GkovRhIVGULi9rupL12tmKem8hfHK/RjkeImg==
+  dependencies:
+    debug "^4.1.0"
+    eventemitter2 "^5.0.1"
+    zeromq "^5.1.0"
 
 pascalcase@^0.1.1:
   version "0.1.1"

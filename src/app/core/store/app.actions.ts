@@ -57,3 +57,11 @@ export namespace AppData {
   }
 
 }
+
+
+export namespace ZMQ {
+  export class UpdateStatus {
+    static readonly type: string = '[ZMQ] Update Status';
+    constructor(public action: string, public field: string, public value: any) {}
+  }
+}

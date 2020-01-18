@@ -24,6 +24,7 @@ import {
 import { AppSettingsState } from './appsettings.state';
 import { CoreConnectionState } from './coreconnection.state';
 import { AppDataState } from './appdata.state';
+import { ZmqConnectionState } from './zmq-connection.state';
 
 
 export const ngxsConfig: NgxsModuleOptions = {
@@ -49,7 +50,7 @@ const APP_STATE_TOKEN = new StateToken<AppStateModel>('global');
     appMode: null,
     loadingMessage: ''
   },
-  children: [CoreConnectionState, AppSettingsState, AppDataState]
+  children: [CoreConnectionState, AppSettingsState, AppDataState, ZmqConnectionState]
 })
 export class ApplicationState implements NgxsOnInit {
 
@@ -93,7 +94,7 @@ export class ApplicationState implements NgxsOnInit {
   setConnected(ctx: StateContext<AppStateModel>) {
     return ctx.dispatch(new Global.ChangeMode(null)).pipe(
       tap(() => {
-        ctx.patchState({isConnected: true})
+        ctx.patchState({isConnected: true});
       })
     )
   }

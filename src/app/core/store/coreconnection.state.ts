@@ -91,10 +91,7 @@ export class CoreConnectionState {
     this._rpcService.setConnectionDetails(connDetails);
 
     // Polls until the connection is actually ready (ie: daemon may be performing internal sync)...
-    //  ... Prevents resposes with -1 error codes for example.
-    // @TODO: zaSmilingIdiot 2020-01-15
-    //  Only required because there is no indication of whether this is connecting to a running daemon, or if the backend started the daemon
-    //  Refactor the connection details so this call can be conditionally executed.
+    //  ... Prevents responses with -1 error codes for example.
     this._rpcService.call('', 'getblockchaininfo').pipe(
       retryWhen (
         errors => errors.pipe(

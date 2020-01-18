@@ -6,7 +6,8 @@ import { Store } from '@ngxs/store';
 import { environment } from 'environments/environment';
 import { IpcService } from './ipc.service';
 import { Global } from '../store/app.actions';
-import { CoreConnectionModel } from '../store/app.models';
+import { CoreConnectionModel, AppSettingsStateModel } from '../store/app.models';
+import { AppSettingsState } from '../store/appsettings.state';
 
 
 @Injectable(
@@ -17,6 +18,7 @@ export class ConnectionService {
   log: any = Log.create('connection.service id:' + Math.floor((Math.random() * 1000) + 1));
   private DAEMON_CHANNEL: string = 'daemon';
   private isStarted: boolean = false;
+  private zmqPort: number;
 
   constructor(
     private _ipc: IpcService,
@@ -38,9 +40,12 @@ export class ConnectionService {
       return;
     }
 
+    const settings = (<AppSettingsStateModel>this.store.selectSnapshot(AppSettingsState));
+    this.zmqPort = settings.zmqPort;
+
     this._ipc.removeListeners(this.DAEMON_CHANNEL);
     this._ipc.registerListener(this.DAEMON_CHANNEL, this.daemonListener.bind(this));
-    this._ipc.runCommand('start-system', null, null);
+    this._ipc.runCommand('start-system', null, {zmq_port: this.zmqPort});
   }
 
   private daemonListener(status: any): Observable<any> {
@@ -58,9 +63,22 @@ export class ConnectionService {
           this.updateStatus(status.content);
           break;
         case 'done':
-          this.updateStatus('Application initialized, loading user interface...');
-          this.store.dispatch(new Global.ConnectionReady((<CoreConnectionModel>status.content)));
+          this.updateStatus('Starting service listeners...');
+          const coreConfig = (<CoreConnectionModel>status.content);
           this._ipc.removeListeners(this.DAEMON_CHANNEL);
+          this._ipc.runCommand('zmq-connect', null, {zmq_port: this.zmqPort, zmq_host: coreConfig.rpcbind}).subscribe(
+            (resp) => {
+              if (resp) {
+                this.updateStatus('Application initialized, loading user interface...');
+              }
+            },
+            () => {
+              this.updateStatus('Error initializing service listeners');
+            },
+            () => {
+              this.store.dispatch(new Global.ConnectionReady(coreConfig));
+            }
+          );
           break;
       }
 

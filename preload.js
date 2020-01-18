@@ -52,8 +52,7 @@ class SafeIpcRenderer {
 
 window.ipc = new SafeIpcRenderer([
   'start-system',
-  'front-choosewallet',
-  'front-walletready',
+  'zmq-connect',
 
   'notification',
   'daemon',
