@@ -66,7 +66,7 @@ export interface AppDataStateModel {
 
 
 
-interface ZmqFieldStatus {
+export interface ZmqFieldStatus {
   connected: boolean;
   retryCount: number;
   error: boolean;

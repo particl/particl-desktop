@@ -6,7 +6,7 @@ import {
   Action,
   StateContext
 } from '@ngxs/store';
-import { ZmqConnectionStateModel, ZmqTypeField, ZmqActions } from './app.models';
+import { ZmqConnectionStateModel, ZmqTypeField, ZmqActions, ZmqFieldStatus } from './app.models';
 import { ZMQ } from './app.actions';
 import { ZmqService } from '../services/zmq.service';
 
@@ -41,7 +41,7 @@ export class ZmqConnectionState implements NgxsOnInit {
   static get(field: string) {
     return createSelector(
       [ZmqConnectionState],
-      (state: ZmqConnectionStateModel) => {
+      (state: ZmqConnectionStateModel): ZmqTypeField => {
         return state[field];
       }
     );
@@ -50,7 +50,7 @@ export class ZmqConnectionState implements NgxsOnInit {
   static getStatus(field: string) {
     return createSelector(
       [ZmqConnectionState],
-      (state: ZmqConnectionStateModel) => {
+      (state: ZmqConnectionStateModel): ZmqFieldStatus | null => {
         return field in state ? state[field].status : null;
       }
     );
@@ -100,7 +100,10 @@ export class ZmqConnectionState implements NgxsOnInit {
         break;
 
       case ZmqActions.DATA:
-        fieldValues.status.error = false;
+        if (!fieldValues.status.connected) {
+          fieldValues.status.connected = true;
+          fieldValues.status.error = false;
+        }
         fieldValues.data = action.value;
         break;
     }

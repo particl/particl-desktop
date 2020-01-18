@@ -2,7 +2,7 @@
 
   <span
     class="encryption icon"
-    matTooltip="{{ walletStatus }}"
+    [matTooltip]="walletStatus"
     container="body"
     (click)="toggleWalletStatus()">
       <img src="assets/icons/SVG/lock/lock{{ walletStatusIcon }}.svg"/>
@@ -18,6 +18,13 @@
 
   <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
     <img src="assets/icons/SVG/network/peers-{{ peerIcon }}.svg"/>
+  </span>
+
+  <span
+    class="icon"
+    [ngClass]="zmqStatus"
+    [matTooltip]="zmqStatusMessage">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
   </span>
 
   <span class="icon">

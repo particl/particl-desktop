@@ -69,11 +69,11 @@ export class ConnectionService {
           this._ipc.runCommand('zmq-connect', null, {zmq_port: this.zmqPort, zmq_host: coreConfig.rpcbind}).subscribe(
             (resp) => {
               if (resp) {
-                this.updateStatus('Application initialized, loading user interface...');
+                this.updateStatus('Verifying network connection...');
               }
             },
             () => {
-              this.updateStatus('Error initializing service listeners');
+              this.updateStatus('Error initializing service listeners!');
             },
             () => {
               this.store.dispatch(new Global.ConnectionReady(coreConfig));

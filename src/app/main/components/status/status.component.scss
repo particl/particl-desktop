@@ -17,17 +17,6 @@
     cursor: pointer;
   }
 
-  // Staking icon
-  &.staking {
-    font-size: 0.8em;
-    &.active {
-      color: $color-info;
-    }
-    &.inactive {
-      color: darken($bg-shadow, 15%);
-    }
-  }
-
   // Console
   &.console {
     margin-left: 6px;
@@ -39,4 +28,20 @@
   .warning {
     color: $color-alert;
   }
+}
+
+.zmq-alert {
+  color: $color-alert;
+}
+
+.zmq-warning {
+  color: $color-warning;
+}
+
+.zmq-info {
+  color: $color-info;
+}
+
+.zmq-connected {
+  color: $color-success;
 }

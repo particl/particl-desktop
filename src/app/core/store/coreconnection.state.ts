@@ -105,7 +105,10 @@ export class CoreConnectionState {
       })
     ).subscribe(
       () => {
-        ctx.dispatch(new Global.Connected());
+        ctx.dispatch([
+          new Global.SetLoadingMessage('Application ready...'),
+          new Global.Connected()
+        ]);
       }
     );
   }
