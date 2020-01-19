@@ -1,0 +1,8 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.text {
+  font-family: $font;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: $color-white;
+}

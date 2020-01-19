@@ -43,10 +43,10 @@ const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo
 })
 export class WalletInfoState {
 
-  static walletValue(field: string) {
+  static getValue(field: string) {
     return createSelector(
       [WalletInfoState],
-      (state: WalletInfoStateModel) => {
+      (state: WalletInfoStateModel): number | string | null => {
         return field in state ? state[field] : null;
       }
     );
@@ -71,7 +71,7 @@ export class WalletInfoState {
 export class MainState {
 
   @Selector()
-  static network(state: MainStateModel) {
+  static initialized(state: MainStateModel) {
     return state.isInitialized;
   }
 

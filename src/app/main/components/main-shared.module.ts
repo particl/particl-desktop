@@ -5,6 +5,7 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { StatusComponent } from './status/status.component';
 import { ConsoleModalComponent } from './console-modal/console-modal.component';
 import { VersionComponent } from './version/version.component';
+import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
 
 
 @NgModule({
@@ -12,7 +13,8 @@ import { VersionComponent } from './version/version.component';
     StatusComponent,
     TopbarComponent,
     ConsoleModalComponent,
-    VersionComponent
+    VersionComponent,
+    CountdownTimerComponent
   ],
   imports: [
     CommonModule,
@@ -20,7 +22,8 @@ import { VersionComponent } from './version/version.component';
   ],
   exports: [
     TopbarComponent,
-    VersionComponent
+    VersionComponent,
+    CountdownTimerComponent
   ],
   entryComponents: [
     ConsoleModalComponent
