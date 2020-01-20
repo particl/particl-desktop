@@ -7,6 +7,8 @@
   flex-direction: column;
   background: darken($bg-black, 5%);
   height: 100vh;
+  width: $multiwallet-width;
+  color: $color-white;
 
   // wallet selection
   .multiwallet {

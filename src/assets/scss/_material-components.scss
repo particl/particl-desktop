@@ -471,6 +471,7 @@ mat-card.mat-card {
 // ------ 2.8. SIDENAV ------ //
 
 .mat-sidenav {
+  border: none !important;
   &.sidebar { // app's sidebar, dark main menu
     .mat-drawer-inner-container {
       display: flex;
