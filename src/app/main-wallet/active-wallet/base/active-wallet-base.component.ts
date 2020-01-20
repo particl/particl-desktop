@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 
 interface IMenuItem {
@@ -27,7 +24,7 @@ export class ActiveWalletBaseComponent {
     {
       title: '',
       menuItems: [
-        {text: 'Overview', path: '/main/wallet/active/overview', icon: 'part-overview'}
+        {text: 'Overview', path: 'overview', icon: 'part-overview'}
       ]
     },
     {
@@ -46,8 +43,6 @@ export class ActiveWalletBaseComponent {
       ]
     }
   ];
-
-  @Select(CoreConnectionState.isTestnet) testnet: Observable<boolean>;
 
   constructor() { }
 }

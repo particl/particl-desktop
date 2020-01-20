@@ -13,7 +13,7 @@ import { ApplicationRestartModalComponent } from './components/application-resta
 import { ProcessingModalComponent } from './components/processing-modal/processing-modal.component';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-// import { MainRpcService } from './services/main-rpc/main-rpc.service';
+import { MainRpcService } from './services/main-rpc/main-rpc.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
   ],
   providers: [
     SnackbarService,
-    // MainRpcService
+    MainRpcService
   ],
   entryComponents: [
     ApplicationRestartModalComponent,

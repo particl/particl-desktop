@@ -14,9 +14,8 @@ import { Subject, merge } from 'rxjs';
 import { tap, takeUntil } from 'rxjs/operators';
 import { isFinite, isPlainObject, isArray } from 'lodash';
 
-import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { RpcService } from 'app/core/services/rpc.service';
+import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { DateFormatter } from 'app/core/util/utils';
 import { Command } from './command.model';
 import { ApplicationState } from 'app/core/store/app.state';
@@ -44,11 +43,10 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
   public marketTabEnabled: boolean = false;
   public useRunstringsParser: boolean = false;
 
-  private currentWallet: string = '';
   private destroy$: Subject<void> = new Subject();
 
   constructor(
-    private _rpc: RpcService,
+    private _rpc: MainRpcService,
     private _store: Store,
     private dialog: MatDialogRef<ConsoleModalComponent>,
     private snackbar: SnackbarService
@@ -58,12 +56,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
     this.getCurrentTime();
 
     merge(
-      this._store.select(AppSettingsState.activeWallet).pipe(
-        tap(wallet => {
-          this.currentWallet = wallet;
-        })
-      ),
-
       this._store.select(ApplicationState.appMode).pipe(
         tap((mode) => {
           this.marketTabEnabled = mode === APP_MODE.MARKET;
@@ -90,8 +82,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
     let commandString: string;
     let callableParams: (string|number|boolean|null)[];
 
-    const callArgs = [];
-
     if (this.useRunstringsParser) {
       let params = this.queryParserRunstrings(this.command);
       commandString = 'runstrings';
@@ -105,8 +95,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
         commandString = params.shift();
         params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
         callableParams = params.map((param) => isFinite(+param) ? +param : param);
-      } else {
-        callArgs.push(this.currentWallet);
       }
     } else {
       const params = this.queryParserCommand(this.command);
@@ -116,15 +104,9 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
       }
       commandString = String(params.shift());
       callableParams = params;
-      if (this.activeTab === '_rpc') {
-        callArgs.push(this.currentWallet);
-      }
     }
 
-    callArgs.push(commandString);
-    callArgs.push(callableParams);
-
-    this[this.activeTab].call(...callArgs)
+    this[this.activeTab].call(commandString, callableParams)
       .subscribe(
         (response: any) => this.formatSuccessResponse(response),
         (error: any) => {
