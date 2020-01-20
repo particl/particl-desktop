@@ -16,10 +16,10 @@ import { WalletSettingsComponent } from './settings/settings.component';
 
 @NgModule({
   imports: [
+    ActiveWalletRoutingModule,
     CommonModule,
     CoreUiModule,
-    MainSharedModule,
-    ActiveWalletRoutingModule
+    MainSharedModule
   ],
   declarations: [
     ActiveWalletBaseComponent,

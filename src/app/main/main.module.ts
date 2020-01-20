@@ -13,22 +13,24 @@ import { ApplicationRestartModalComponent } from './components/application-resta
 import { ProcessingModalComponent } from './components/processing-modal/processing-modal.component';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+// import { MainRpcService } from './services/main-rpc/main-rpc.service';
 
 @NgModule({
   declarations: [
     BaseComponent,
     MultiwalletSidebarComponent,
     ApplicationRestartModalComponent,
-    ProcessingModalComponent,
+    ProcessingModalComponent
   ],
   imports: [
-    CommonModule,
-    CoreUiModule,
+    MainRoutingModule,
     NgxsModule.forFeature([MainState, WalletInfoState]),
-    MainRoutingModule
+    CommonModule,
+    CoreUiModule
   ],
   providers: [
-    SnackbarService
+    SnackbarService,
+    // MainRpcService
   ],
   entryComponents: [
     ApplicationRestartModalComponent,

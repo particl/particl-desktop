@@ -2,7 +2,7 @@
 
   <span
     class="encryption icon"
-    [matTooltip]="walletStatus"
+    [matTooltip]="(walletStatus | async)"
     container="body"
     (click)="toggleWalletStatus()">
       <img src="assets/icons/SVG/lock/lock{{ walletStatusIcon }}.svg"/>

@@ -2,11 +2,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
-import { Store } from '@ngxs/store';
-import { Subject, merge, combineLatest } from 'rxjs';
+import { Store, Select } from '@ngxs/store';
+import { Observable, Subject, merge, combineLatest } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { AppDataState } from 'app/core/store/appdata.state';
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
+import { WalletInfoState } from 'app/main/store/main.state';
 import { ConsoleModalComponent } from '../console-modal/console-modal.component';
 
 
@@ -17,14 +18,15 @@ import { ConsoleModalComponent } from '../console-modal/console-modal.component'
 })
 export class StatusComponent implements OnInit, OnDestroy {
 
+  @Select(WalletInfoState.getValue('encryptionstatus')) walletStatus: Observable<string>;
   peerListCount: number = 0;
-  walletStatus: string = '-off';
   timeOffset: number = 0;
 
   private log: any = Log.create('status.component id:' + Math.floor(Math.random() * 1000 + 1));
   private destroy$: Subject<void> = new Subject();
   private _zmqStyle: string = '';
   private _zmqStatus: string = '';
+  private _walletEncryption: string = '';
 
 
   constructor(
@@ -73,6 +75,13 @@ export class StatusComponent implements OnInit, OnDestroy {
       })
     );
 
+
+    const walletIcon$ = this.walletStatus.pipe(
+      tap(status => {
+        this._walletEncryption = status;
+      })
+    );
+
     merge(
       this._store.select(AppDataState.networkValue('connections')).pipe(
         tap((count) => {
@@ -86,6 +95,7 @@ export class StatusComponent implements OnInit, OnDestroy {
         })
       ),
 
+      walletIcon$,
       zmq$
 
     ).pipe(
@@ -111,8 +121,17 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   get walletStatusIcon(): string {
-    // to be implemented
-    return '-off';
+    switch (this._walletEncryption) {
+      case 'Unencrypted':
+      case 'Unlocked':
+        return '-off';
+      case 'Unlocked, staking only':
+        return '-stake';
+      case 'Locked':
+        return '';
+      default:
+        return '-off';
+    }
   }
 
   get zmqStatus(): string {
@@ -128,6 +147,20 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   toggleWalletStatus() {
-    // to be implemented
+    // switch (this._walletEncryption) {
+    //   case 'Unencrypted':
+    //     this._modals.encrypt();
+    //     break;
+    //   case 'Unlocked':
+    //   case 'Unlocked, staking only':
+    //     this._rpc.call('walletlock')
+    //       .subscribe(
+    //         success => this._rpcState.stateCall('getwalletinfo'),
+    //         error => this.log.er('walletlock error'));
+    //     break;
+    //   case 'Locked':
+    //     this._modals.unlock({showStakeOnly: true, showEditableTimeout: true});
+    //     break;
+    // }
   }
 }
