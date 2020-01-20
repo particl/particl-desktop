@@ -42,6 +42,7 @@ export class SettingsService {
     global[key] = value;
     saved.global = global;
     localStorage.setItem('settings', JSON.stringify(saved));
+    return true;
   }
 
   private fetchSettings(): any {

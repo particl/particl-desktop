@@ -70,7 +70,7 @@ export class AppSettingsState implements NgxsOnInit {
   setGlobalAppSetting(ctx: StateContext<AppSettingsStateModel>, action: AppSettings.SetSetting) {
     const currentState = ctx.getState();
     const parts = action.setting.split('.', 2);
-    if (parts[0] === 'global' && Object.keys(currentState).includes(parts[1]) && (typeof currentState[parts[1]] === action.value) ) {
+    if (parts[0] === 'global' && Object.keys(currentState).includes(parts[1]) && (typeof currentState[parts[1]] === typeof action.value) ) {
       if (this._settings.saveGlobalSetting(parts[1], action.value)) {
         const obj = {};
         obj[parts[1]] = action.value;

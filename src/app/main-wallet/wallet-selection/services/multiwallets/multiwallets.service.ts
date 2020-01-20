@@ -9,10 +9,17 @@ import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { IWallet } from '../../models/wallet-selection.models';
+import { CoreErrorModel } from 'app/core/core.models';
 
 
 interface IWalletModel {
   name: string;
+}
+
+
+interface ILoadWalletModel {
+  name: string;
+  warning: string;
 }
 
 
@@ -49,8 +56,8 @@ export class MultiwalletService implements OnDestroy {
   fetchWalletInfo(): Observable<IWallet[]> {
     return forkJoin(
       {
-        loadedWallets: this.createListener('listwallets') as Observable<string[]>,
-        walletList: this.createListener('listwalletdir') as Observable<IWalletCollectionModel>,
+        loadedWallets: this.createRetryListener('listwallets') as Observable<string[]>,
+        walletList: this.createRetryListener('listwalletdir') as Observable<IWalletCollectionModel>,
         activeWallet: this._store.selectOnce(AppSettingsState.activeWallet)
       }
     ).pipe(
@@ -78,17 +85,23 @@ export class MultiwalletService implements OnDestroy {
   }
 
 
-  loadWallet(wallet: IWallet) {
-    // TODO: CHECK IF WALLET IS LOADED AND PERFORM LOAD IF NECESSARY
-    if (wallet.isLoaded) {
-      return throwError(false);
-    }
-    return throwError(false);
-    // return this.createListener('loadwallet', [])
+  loadWallet(wallet: IWallet): Observable<any> {
+    return this._rpc.call('loadwallet', [wallet.name]).pipe(
+      catchError((error: CoreErrorModel) => {
+        return error && (error.code === -4) ? of({name: wallet.name, warning: ''} as ILoadWalletModel) : throwError(error);
+      }),
+
+      map((resp: ILoadWalletModel) => {
+        if ((resp.name === wallet.name) && (resp.warning === '')) {
+          return true;
+        }
+        return false;
+      })
+    )
   }
 
 
-  private createListener(method: string, params?: any): Observable<any> {
+  private createRetryListener(method: string, params?: any, retries: number = 5): Observable<any> {
     return this._rpc.call(method, params).pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 5})),
       catchError(error => of(null))

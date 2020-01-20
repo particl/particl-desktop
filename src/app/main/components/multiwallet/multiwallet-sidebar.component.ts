@@ -41,29 +41,26 @@ export class MultiwalletSidebarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.log.d('initializing');
 
-    const obsList = [];
-
-    obsList.push(
-      this._store.select(
-        AppSettingsState.activeWallet
-      ).pipe(
-        tap((wName) => {
-          this.activeWallet = wName === '' ? 'Default' : wName;
-        })
-      )
+    const wallet$ = this._store.select(
+      AppSettingsState.activeWallet
+    ).pipe(
+      tap((wName) => {
+        this.activeWallet = wName === '' ? 'Default' : wName;
+      })
     );
 
-    obsList.push(
-      this._store.select(
-        ApplicationState.appMode
-      ).pipe(
-        tap((mode) => {
-            this.selectedMode = mode;
-        })
-      )
+    const mode$ = this._store.select(
+      ApplicationState.appMode
+    ).pipe(
+      tap((mode) => {
+          this.selectedMode = mode;
+      })
     );
 
-    merge(...obsList).pipe(
+    merge(
+      wallet$,
+      mode$
+    ).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe();
   }
