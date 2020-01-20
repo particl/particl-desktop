@@ -1,1 +1,48 @@
-<p>This is the wallet select component</p>
+<div class="container-block">
+  <app-page-intro [canHideContent]="true">
+    <ng-container page-title>Change Wallet</ng-container>
+    <ng-container page-content>
+      Choose from an available wallet below or create a new wallet using the menu
+    </ng-container>
+    <ng-container page-help>
+      You can create as many wallets as you need, for example to separate your funds.
+    </ng-container>
+  </app-page-intro>
+
+  <ng-container *ngTemplateOutlet="hasError ? error : (wallets.length > 0 ? walletList : loading)"></ng-container>
+
+  <ng-template #walletList>
+    <ng-container *ngFor="let wallet of wallets">
+      <mat-card  (click)="navigateToWallet(wallet)">
+        <mat-card-header>
+          <mat-card-title>{{wallet.displayName}}</mat-card-title>
+          <mat-card-subtitle>{{wallet.isLoaded ? 'loaded' : ''}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-mat-card-content *ngIf="wallet.isSelected">
+          This wallet is currently selected
+        </mat-card-mat-card-content>
+      </mat-card>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #loading>
+    <p>Fetching the current list of wallets...</p>
+  </ng-template>
+
+
+  <ng-template #error>
+    <div class="no-results">
+      <p>
+        An error occurred while fetching the wallet information.
+      </p>
+      <p class="widget-help">
+        Please refresh to try again
+      </p>
+      <button mat-button class="refresh-listings small" (click)="refreshWallets()">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        Refresh
+      </button>
+    </div>
+  </ng-template>
+
+  </div>

@@ -6,6 +6,7 @@ import { WalletSelectionRoutingModule } from './wallet-selection-routing.module'
 import { WalletSelectionBaseComponent } from './base/wallet-selection-base.component';
 import { WalletSelectComponent } from './wallet-select/wallet-select.component';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
+import { MultiwalletService } from './services/multiwallets/multiwallets.service';
 
 
 @NgModule({
@@ -18,6 +19,9 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
   declarations: [
     WalletSelectionBaseComponent,
     WalletSelectComponent
+  ],
+  providers: [
+    MultiwalletService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
