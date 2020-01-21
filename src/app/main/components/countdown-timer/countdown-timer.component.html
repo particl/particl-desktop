@@ -1,10 +1,7 @@
-<ng-container *ngIf="(unlockedUntil$ | async) > 0">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
-  <span class="text"
-    matTooltip="As a security measure, wallet auto-locks after the timer expires"
-    matTooltipPosition="above"
-  >
-
-    <strong>Wallet locks in </strong> {{ timeRemaining }}
-  </span>
-</ng-container>
+<div
+  class="countdown"
+  *ngIf="(unlockedUntil$ | async) > 0"
+  matTooltip="Wallet will auto-lock in&hellip;"
+  matTooltipPosition="below">
+  {{ timeRemaining }}
+</div>
