@@ -6,7 +6,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { termsObj } from 'app/startup/terms/terms-txt';
-import { AppStateModel, APP_MODE } from 'app/core/store/app.models';
+// import { AppStateModel, APP_MODE } from 'app/core/store/app.models';
 
 @Component({
   selector: 'app-loading',
@@ -72,14 +72,14 @@ export class LoadingComponent implements OnInit, OnDestroy {
     this._router.navigate(['loading', 'terms']);
   }
 
-  private goToMarket() {
-    this.log.d('Going to terms');
-    this._router.navigate(['/main/market']);
-  }
+  // private goToMarket() {
+  //   this.log.d('Going to terms');
+  //   this._router.navigate(['/main/market']);
+  // }
 
-  private goToWallet() {
-    this.log.d('Going to terms');
-    this._router.navigate(['/main/wallet']);
-  }
+  // private goToWallet() {
+  //   this.log.d('Going to terms');
+  //   this._router.navigate(['/main/wallet']);
+  // }
 
 }

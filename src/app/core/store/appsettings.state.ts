@@ -6,13 +6,17 @@ import {
   Selector,
   NgxsOnInit
 } from '@ngxs/store';
-import { SettingsService } from 'app/core/services/settings.service';
+import { of, Observable } from 'rxjs';
+import { catchError, concatMap } from 'rxjs/operators';
 
 import { AppSettings } from './app.actions';
 import {
   CoreConnectionModel,
   AppSettingsStateModel
 } from './app.models';
+
+import { SettingsService } from 'app/core/services/settings.service';
+import { MultiwalletService } from '../services/multiwallets/multiwallets.service';
 
 
 const APP_SETTINGS_TOKEN = new StateToken<CoreConnectionModel>('settings');
@@ -37,8 +41,10 @@ export class AppSettingsState implements NgxsOnInit {
 
 
   constructor(
-    private _settings: SettingsService
+    private _settings: SettingsService,
+    private _multi: MultiwalletService
   ) {}
+
 
   ngxsOnInit(ctx: StateContext<AppSettingsStateModel>) {
     const saved = this._settings.fetchGlobalSettings();
@@ -59,10 +65,38 @@ export class AppSettingsState implements NgxsOnInit {
   @Action(AppSettings.SetActiveWallet)
   setActiveWallet(ctx: StateContext<AppSettingsStateModel>, {wallet}: AppSettings.SetActiveWallet) {
     const currentWallet = ctx.getState().activatedWallet;
-    if (currentWallet === wallet) {
-      return;
+
+    let loadWallet = currentWallet;
+
+    // Allows for null wallets to be passed to load the current wallet. This should probably be a separate action...
+    if (typeof wallet === 'string') {
+      loadWallet = wallet;
+      if (currentWallet === wallet) {
+        return;
+      }
     }
-    return ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', wallet));
+
+    return this.loadActiveWallet(loadWallet).pipe(
+      concatMap((isValid) => {
+        // if we got a value, set the current state correctly
+        if (typeof isValid === 'boolean') {
+          return ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', loadWallet));
+        }
+
+        // value was null (or something else), indicating an error occurred... fallback to
+        if (wallet === null) {
+          const failoverWallet = '';
+
+          return this.loadActiveWallet(failoverWallet).pipe(
+            concatMap((failoverValid) => {
+              return typeof failoverValid === 'boolean' ?
+                ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', failoverWallet)) : of(true)
+            })
+          )
+        }
+        return of(null);
+      })
+    );
   }
 
 
@@ -77,5 +111,15 @@ export class AppSettingsState implements NgxsOnInit {
         ctx.patchState(obj);
       };
     }
+  }
+
+
+  private loadActiveWallet(walletName: string): Observable<boolean | null> {
+    return this._multi.loadWallet(walletName).pipe(
+      // catch any thrown error from the loadWallet call
+      catchError((err) => {
+        return of(null);
+      })
+    );
   }
 }

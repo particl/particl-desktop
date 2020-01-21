@@ -1,10 +1,13 @@
 import { Component, AfterViewInit } from '@angular/core';
-import { IWallet } from '../models/wallet-selection.models';
 import { Store } from '@ngxs/store';
-import { AppSettings } from 'app/core/store/app.actions';
 import { Router } from '@angular/router';
-import { MultiwalletService } from '../services/multiwallets/multiwallets.service';
+import { WalletSelectService } from './wallet-select.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+
+import { AppSettings } from 'app/core/store/app.actions';
+import { AppSettingsState } from 'app/core/store/appsettings.state';
+
+import { IWallet } from './wallet-select.models';
 
 
 enum TextContent {
@@ -26,7 +29,7 @@ export class WalletSelectComponent implements AfterViewInit {
   constructor(
     private _store: Store,
     private _router: Router,
-    private _multi: MultiwalletService,
+    private _selectService: WalletSelectService,
     private _snackbar: SnackbarService
   ) { }
 
@@ -39,24 +42,22 @@ export class WalletSelectComponent implements AfterViewInit {
     return this._wallets;
   }
 
+
   navigateToWallet(wallet: IWallet) {
-    this._multi.loadWallet(wallet).subscribe(
-      (noErrors: boolean) => {
-        if (noErrors) {
+    this._store.dispatch(new AppSettings.SetActiveWallet(wallet.name)).subscribe(
+      () => {
+        const activatedWallet = this._store.selectSnapshot(AppSettingsState.activeWallet);
+        if (activatedWallet === wallet.name) {
           this._snackbar.open(TextContent.WALLET_LOAD_SUCCESS, 'success');
-          this._store.dispatch(new AppSettings.SetActiveWallet(wallet.name)).subscribe(
-            () => {
-              this._router.navigate(['/main/wallet/active/overview']);
-            }
-          );
+          this._router.navigate(['/main/wallet/active/overview']);
         } else {
-          this._snackbar.open(TextContent.WALLET_LOAD_WARNING, 'error');
+          this._snackbar.open(TextContent.WALLET_LOAD_ERROR, 'error');
         }
       },
       () => {
         this._snackbar.open(TextContent.WALLET_LOAD_ERROR, 'error');
       }
-    )
+    );
   }
 
 
@@ -70,7 +71,7 @@ export class WalletSelectComponent implements AfterViewInit {
 
 
   private fetchWallets() {
-    this._multi.fetchWalletInfo().subscribe(
+    this._selectService.fetchWalletInfo().subscribe(
       (wallets) => {
         this._wallets = wallets;
       },

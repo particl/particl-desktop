@@ -5,7 +5,7 @@ import {
   StateContext,
   Selector,
 } from '@ngxs/store';
-import { delayWhen, retryWhen, tap } from 'rxjs/operators';
+import { delayWhen, retryWhen} from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { environment } from 'environments/environment';
 
@@ -91,24 +91,27 @@ export class CoreConnectionState {
     this._rpcService.setConnectionDetails(connDetails);
 
     // Polls until the connection is actually ready (ie: daemon may be performing internal sync)...
-    //  ... Prevents responses with -1 error codes for example.
+    //  ... Prevents responses with -28 error codes for example.
     this._rpcService.call('', 'getblockchaininfo').pipe(
       retryWhen (
         errors => errors.pipe(
           delayWhen(() => timer(1000)), // retry every 1000 ms if an error occurs
         )
-      ),
-      tap((blockchaininfo: any) => {
+      )
+    ).subscribe(
+      (blockchaininfo) => {
         if ('chain' in blockchaininfo) {
           ctx.patchState({testnet: blockchaininfo.chain === 'test'})
         }
-      })
-    ).subscribe(
-      () => {
+
+        // @TODO zaSmilingIdiot (2020-01-21): Might be better to move this into a component/service... not necessarily ideal here
         ctx.dispatch([
           new Global.SetLoadingMessage('Application ready...'),
-          new Global.Connected()
-        ]);
+          new AppSettings.SetActiveWallet(null),
+          new Global.ChangeMode(null),
+        ]).subscribe(
+          () => ctx.dispatch(new Global.Connected())
+        );
       }
     );
   }

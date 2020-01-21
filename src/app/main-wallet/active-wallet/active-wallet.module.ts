@@ -4,6 +4,8 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ActiveWalletRoutingModule } from './active-wallet-routing.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
 
+import { ActiveWalletGuard } from './active-wallet.guard';
+
 import { ActiveWalletBaseComponent } from './base/active-wallet-base.component';
 
 import { OverviewComponent } from './overview/overview.component';
@@ -29,6 +31,9 @@ import { WalletSettingsComponent } from './settings/settings.component';
     AddressBookComponent,
     HistoryComponent,
     WalletSettingsComponent
+  ],
+  providers: [
+    ActiveWalletGuard
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

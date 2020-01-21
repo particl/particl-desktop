@@ -3,37 +3,26 @@ import { Store } from '@ngxs/store';
 import { Observable, Subject, of, forkJoin, throwError } from 'rxjs';
 import { catchError, map, retryWhen, tap } from 'rxjs/operators';
 import { Log } from 'ng2-logger';
-import * as _ from 'lodash';
 
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
-import { IWallet } from '../../models/wallet-selection.models';
-import { CoreErrorModel } from 'app/core/core.models';
+import { IWallet } from './wallet-select.models';
 
 
 interface IWalletModel {
   name: string;
 }
 
-
-interface ILoadWalletModel {
-  name: string;
-  warning: string;
-}
-
-
 interface IWalletCollectionModel {
   wallets: IWalletModel[]
 }
 
 
-@Injectable({
-  providedIn: 'root'
-})
-export class MultiwalletService implements OnDestroy {
+@Injectable()
+export class WalletSelectService implements OnDestroy {
   private log: any = Log.create(
-    'multiwallet.service id:' + Math.floor(Math.random() * 1000 + 1)
+    'wallet-select.service id:' + Math.floor(Math.random() * 1000 + 1)
   );
 
   private destroy$: Subject<void> = new Subject();
@@ -85,25 +74,9 @@ export class MultiwalletService implements OnDestroy {
   }
 
 
-  loadWallet(wallet: IWallet): Observable<any> {
-    return this._rpc.call('loadwallet', [wallet.name]).pipe(
-      catchError((error: CoreErrorModel) => {
-        return error && (error.code === -4) ? of({name: wallet.name, warning: ''} as ILoadWalletModel) : throwError(error);
-      }),
-
-      map((resp: ILoadWalletModel) => {
-        if ((resp.name === wallet.name) && (resp.warning === '')) {
-          return true;
-        }
-        return false;
-      })
-    )
-  }
-
-
-  private createRetryListener(method: string, params?: any, retries: number = 5): Observable<any> {
+  private createRetryListener(method: string, params?: any, maxRetries: number = 5): Observable<any> {
     return this._rpc.call(method, params).pipe(
-      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 5})),
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: maxRetries})),
       catchError(error => of(null))
     )
   }

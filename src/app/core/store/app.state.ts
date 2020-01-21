@@ -7,7 +7,6 @@ import {
   Selector,
   NgxsOnInit
 } from '@ngxs/store';
-import { tap } from 'rxjs/operators';
 import { environment } from 'environments/environment';
 
 import { ConnectionService } from 'app/core/services/connection.service';
@@ -92,11 +91,7 @@ export class ApplicationState implements NgxsOnInit {
 
   @Action(Global.Connected)
   setConnected(ctx: StateContext<AppStateModel>) {
-    return ctx.dispatch(new Global.ChangeMode(null)).pipe(
-      tap(() => {
-        ctx.patchState({isConnected: true});
-      })
-    )
+    ctx.patchState({isConnected: true});
   }
 
 
@@ -120,38 +115,5 @@ export class ApplicationState implements NgxsOnInit {
     localStorage.setItem('app.app_mode', APP_MODE[checkedMode]);
     ctx.patchState({appMode: checkedMode});
   }
-
-
-  // @Action(Global.UpdateWallets)
-  // setWalletsAvailable(ctx: StateContext<AppStateModel>, { newWallets }: Global.UpdateWallets) {
-  //   const currentWallets = ctx.getState().walletsAvailable;
-  //   let isDiff = false;
-
-  //   const cwMax = currentWallets.length;
-  //   const nwMax = newWallets.length;
-
-  //   if (nwMax !== cwMax) {
-  //     isDiff = true;
-  //   } else {
-  //     const max = nwMax;
-  //     for (let i = 0; i < max; ++i) {
-  //       if (i < cwMax) {
-  //         isDiff = isDiff && newWallets.findIndex(w => w.name === currentWallets[i].name) === -1;
-  //       }
-
-  //       if (!isDiff && i < nwMax) {
-  //         isDiff = isDiff && currentWallets.findIndex(w => w.name === newWallets[i].name) === -1;
-  //       }
-
-  //       if (!isDiff) {
-  //         break;
-  //       }
-  //     }
-  //   }
-
-  //   if (isDiff) {
-  //     ctx.patchState({walletsAvailable: newWallets})
-  //   }
-  // }
 
 };

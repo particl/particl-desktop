@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { ActiveWalletGuard } from './active-wallet.guard';
+
 import { ActiveWalletBaseComponent } from './base/active-wallet-base.component';
 import { OverviewComponent } from './overview/overview.component';
 import { SendComponent } from './send/send.component';
@@ -14,6 +16,7 @@ const routes: Routes = [
   {
     path: '',
     component: ActiveWalletBaseComponent,
+    canActivate: [ActiveWalletGuard],
     children: [
       { path: 'overview', component: OverviewComponent, data: { title: 'Overview'} },
       { path: 'send', component: SendComponent, data: { title: 'Send'} },
