@@ -10,7 +10,6 @@
 }
 
 .icon {
-  padding: 1px 0 1px 4px;
 
   // Encryption
   &.encryption {
@@ -19,29 +18,35 @@
 
   // Console
   &.console {
-    margin-left: 6px;
     position: relative;
     top: 1px;
     cursor: pointer;
   }
 
-  .warning {
+  // ZMQ warnings
+  &.zmq {
+    &.zmq-alert {
+      color: $color-alert;
+    }
+    &.zmq-warning {
+      color: $color-warning;
+    }
+    &.zmq-info {
+      color: $color-info;
+    }
+    &.zmq-connected {
+      color: $text;
+    }
+  }
+
+  // Time offset warning
+  &.warning {
     color: $color-alert;
+    position: relative;
+    top: 1px;
+    .mat-icon {
+      font-size: 18px;
+    }
   }
 }
 
-.zmq-alert {
-  color: $color-alert;
-}
-
-.zmq-warning {
-  color: $color-warning;
-}
-
-.zmq-info {
-  color: $color-info;
-}
-
-.zmq-connected {
-  color: $color-success;
-}

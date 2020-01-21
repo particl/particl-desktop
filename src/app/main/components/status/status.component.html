@@ -1,13 +1,18 @@
-<div class="status-icons">
+<div class="status-icons" fxLayout="row" fxLayoutGap="12px">
+
+  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
+    <img src="assets/icons/status/peers-{{ peerIcon }}.svg"/>
+  </span>
 
   <span
     class="encryption icon"
     [matTooltip]="(walletStatus | async)"
     container="body"
     (click)="toggleWalletStatus()">
-      <img src="assets/icons/SVG/lock/lock{{ walletStatusIcon }}.svg"/>
+      <img src="assets/icons/status/encryption{{ walletStatusIcon }}.svg"/>
   </span>
 
+  <!-- FIXME/TODO: remove this button when Console button in Multiwallet sidebar is implemented -->
   <span
     class="console icon"
     matTooltip="Debug Console"
@@ -16,21 +21,15 @@
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console-window"></mat-icon>
   </span>
 
-  <span class="status icon" matTooltip="Peers: {{ peerListCount }}">
-    <img src="assets/icons/SVG/network/peers-{{ peerIcon }}.svg"/>
-  </span>
-
   <span
-    class="icon"
+    class="zmq icon"
     [ngClass]="zmqStatus"
     [matTooltip]="zmqStatusMessage">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
   </span>
 
-  <span class="icon">
-    <span class="warning" *ngIf="timeOffset !== 0" matTooltip="Time offset: {{ timeOffset }}s">
-      <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-    </span>
+  <span class="warning icon" *ngIf="timeOffset !== 0" matTooltip="Time offset: {{ timeOffset }}s">
+    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
   </span>
 
   </div><!-- .status-icons -->

@@ -123,12 +123,13 @@ export class StatusComponent implements OnInit, OnDestroy {
   get walletStatusIcon(): string {
     switch (this._walletEncryption) {
       case 'Unencrypted':
-      case 'Unlocked':
         return '-off';
+      case 'Unlocked':
+        return '-unlocked';
       case 'Unlocked, staking only':
-        return '-stake';
+        return '-staking';
       case 'Locked':
-        return '';
+        return '-locked';
       default:
         return '-off';
     }
