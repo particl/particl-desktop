@@ -9,7 +9,10 @@ import {
 
 import { MainStateModel, WalletInfoStateModel  } from './main.models';
 import { MainActions } from './main.actions';
-import { Global, AppSettings } from 'app/core/store/app.actions';
+import { AppSettings } from 'app/core/store/app.actions';
+import { Observable } from 'rxjs';
+import { concatMap, tap } from 'rxjs/operators';
+import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 
 
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
@@ -51,11 +54,16 @@ export class WalletInfoState {
   static getValue(field: string) {
     return createSelector(
       [WalletInfoState],
-      (state: WalletInfoStateModel): number | string | null => {
+      (state: WalletInfoStateModel): number | string | boolean | null => {
         return field in state ? state[field] : null;
       }
     );
   }
+
+
+  constructor(
+    private _walletService: WalletInfoService
+  ) {}
 
 
   @Action(MainActions.UpdateWalletInfo)
@@ -67,9 +75,39 @@ export class WalletInfoState {
 
 
   @Action(AppSettings.SetActiveWallet)
-  resetWalletDetails(ctx: StateContext<WalletInfoStateModel>) {
+  onGlobalWalletChange(ctx: StateContext<WalletInfoStateModel>) {
     // reset the wallet information when the active wallet changes
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE)));
+  }
+
+
+  @Action(MainActions.Initialize)
+  onMainInitialized(ctx: StateContext<WalletInfoStateModel>, action: MainActions.ChangeWallet) {
+    // reset the wallet information when the active wallet changes
+    ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE)));
+
+    return this.updateWalletInfo(ctx);
+  }
+
+
+  @Action(MainActions.ChangeWallet)
+  changeActiveWallet(ctx: StateContext<WalletInfoStateModel>, action: MainActions.ChangeWallet) {
+    return ctx.dispatch(new AppSettings.SetActiveWallet(action.wallet)).pipe(
+      concatMap(() => {
+        return this.updateWalletInfo(ctx)
+      })
+    );
+  }
+
+
+  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<WalletInfoStateModel> {
+    return this._walletService.getWalletInfo().pipe(
+      tap((info) => {
+        if ( (typeof info === 'object') && Object.keys(info).length > 0) {
+          ctx.patchState(info);
+        }
+      })
+    );
   }
 };
 

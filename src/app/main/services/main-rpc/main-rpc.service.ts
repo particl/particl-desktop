@@ -1,14 +1,17 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { RpcService } from 'app/core/services/rpc.service';
 import { Store } from '@ngxs/store';
+import { Log } from 'ng2-logger';
 import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { Subject, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { RpcService } from 'app/core/services/rpc.service';
 
 
 @Injectable()
 export class MainRpcService implements OnDestroy {
 
+  private log: any = Log.create('main-rpc-service.service id:' + Math.floor((Math.random() * 1000) + 1));
   private _currentWallet: string = '';
   private destroy$: Subject<void> = new Subject();
 
@@ -16,6 +19,8 @@ export class MainRpcService implements OnDestroy {
     private _rpc: RpcService,
     private _store: Store
   ) {
+    this.log.d('starting service...');
+
     this._store.select(AppSettingsState.activeWallet).pipe(
       takeUntil(this.destroy$)
     ).subscribe(

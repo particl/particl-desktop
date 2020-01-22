@@ -1,10 +1,8 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { Log } from 'ng2-logger';
-
-import { DappRoutingModel } from 'app/main/main.models';
+import { Store } from '@ngxs/store';
+import { MainActions } from '../store/main.actions';
 
 
 /*
@@ -26,19 +24,12 @@ export class BaseComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
 
   constructor(
-    private _route: ActivatedRoute
+    private _store: Store
   ) { }
 
   ngOnInit() {
     this.log.d('Main.Component constructed');
-
-    this._route.data.pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe(
-      (routeData: DappRoutingModel) => {
-        this.showAppSelector = typeof routeData.showAppSelector === 'boolean' ? routeData.showAppSelector : true;
-      }
-    );
+    this._store.dispatch(new MainActions.Initialize(true));
   }
 
   ngOnDestroy() {

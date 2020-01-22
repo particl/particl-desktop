@@ -66,35 +66,43 @@ export class AppSettingsState implements NgxsOnInit {
   setActiveWallet(ctx: StateContext<AppSettingsStateModel>, {wallet}: AppSettings.SetActiveWallet) {
     const currentWallet = ctx.getState().activatedWallet;
 
-    let loadWallet = currentWallet;
+    /*
 
-    // Allows for null wallets to be passed to load the current wallet. This should probably be a separate action...
-    if (typeof wallet === 'string') {
-      loadWallet = wallet;
-      if (currentWallet === wallet) {
-        return;
-      }
+    - Allows for null wallet name to be passed to load the current wallet (for app startup only!!).
+    - This should probably be a separate action though...
+    - Purpose of this elaborate setup is so that if a wallet name is invalid then try the default wallet;
+        Failing the default wallet load, degrade gracefully without erroring out and causing the app launch to break
+        Example of possible error:
+          = user selected a wallet
+          = app is closed
+          = wallet is deleted (external to the application)
+          = user starts up app, which now tries to load data using the now non-existent saved wallet name
+    */
+    if (wallet === null) {
+      return this.loadActiveWallet(currentWallet).pipe(
+        concatMap((isValid) => {
+          // if we got a value, save the wallet in the state
+          if (typeof isValid === 'boolean') {
+            return ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', currentWallet));
+          }
+
+          // Load the failover (default) wallet
+          return ctx.dispatch(new AppSettings.SetActiveWallet(''));
+        })
+      )
     }
 
-    return this.loadActiveWallet(loadWallet).pipe(
+    if (currentWallet === wallet) {
+      // no need to process further: wallet requested is the current wallet
+      return;
+    }
+
+    return this.loadActiveWallet(wallet).pipe(
       concatMap((isValid) => {
-        // if we got a value, set the current state correctly
         if (typeof isValid === 'boolean') {
-          return ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', loadWallet));
+          return ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', wallet));
         }
-
-        // value was null (or something else), indicating an error occurred... fallback to
-        if (wallet === null) {
-          const failoverWallet = '';
-
-          return this.loadActiveWallet(failoverWallet).pipe(
-            concatMap((failoverValid) => {
-              return typeof failoverValid === 'boolean' ?
-                ctx.dispatch(new AppSettings.SetSetting('global.activatedWallet', failoverWallet)) : of(true)
-            })
-          )
-        }
-        return of(null);
+        return of(true);
       })
     );
   }

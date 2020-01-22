@@ -10,6 +10,7 @@
         routerLinkActive="active" routerLink="wallet/active"
         matTooltip="{{activeWallet.toUpperCase()}}"
         matTooltipPosition="after"
+        [disabled]="activeWallet === '-'"
       >
         <span>{{activeWallet.toUpperCase()[0]}}</span>
       </button>
@@ -58,10 +59,9 @@
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
     </a>
 
-    <!-- FIXME/TODO: open Console when clicking this button + remove the button from Status area -->
-    <!--a mat-button class="console" matTooltip="Open Console" matTooltipPosition="after" (click)="openConsoleWindow()">
+    <a mat-button class="console" matTooltip="Open Console" matTooltipPosition="after" (click)="openConsoleWindow()" [disabled]="activeWallet === '-'">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console-window"></mat-icon>
-    </a-->
+    </a>
 
     <a mat-button class="report-bug" href="https://github.com/particl/particl-desktop/issues" target="_blank" matTooltip="Report bug" matTooltipPosition="after">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bug"></mat-icon>

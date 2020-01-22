@@ -5,9 +5,9 @@ import { catchError, map, retryWhen, tap } from 'rxjs/operators';
 import { Log } from 'ng2-logger';
 
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
-import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { IWallet } from './wallet-select.models';
+import { WalletInfoState } from 'app/main/store/main.state';
 
 
 interface IWalletModel {
@@ -47,11 +47,11 @@ export class WalletSelectService implements OnDestroy {
       {
         loadedWallets: this.createRetryListener('listwallets') as Observable<string[]>,
         walletList: this.createRetryListener('listwalletdir') as Observable<IWalletCollectionModel>,
-        activeWallet: this._store.selectOnce(AppSettingsState.activeWallet)
+        activeWallet: this._store.selectOnce(WalletInfoState.getValue('walletname'))
       }
     ).pipe(
-      tap( ({loadedWallets, walletList, activeWallet}) => {
-        if ([loadedWallets, walletList, activeWallet].includes(null)) {
+      tap( ({loadedWallets, walletList}) => {
+        if ([loadedWallets, walletList].includes(null)) {
           throwError('Failed to fetch wallet information');
         }
       }),

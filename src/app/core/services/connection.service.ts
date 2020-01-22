@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Log } from 'ng2-logger'
 import { Observable } from 'rxjs';
 import { Store } from '@ngxs/store';
 
@@ -15,7 +14,6 @@ import { AppSettingsState } from '../store/appsettings.state';
 )
 export class ConnectionService {
 
-  log: any = Log.create('connection.service id:' + Math.floor((Math.random() * 1000) + 1));
   private DAEMON_CHANNEL: string = 'daemon';
   private isStarted: boolean = false;
   private zmqPort: number;

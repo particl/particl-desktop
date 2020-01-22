@@ -1,19 +1,22 @@
 import { Component, AfterViewInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Store } from '@ngxs/store';
 import { Router } from '@angular/router';
 import { WalletSelectService } from './wallet-select.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
-import { AppSettings } from 'app/core/store/app.actions';
-import { AppSettingsState } from 'app/core/store/appsettings.state';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 
 import { IWallet } from './wallet-select.models';
+import { MainActions } from 'app/main/store/main.actions';
+import { WalletInfoState } from 'app/main/store/main.state';
+import { finalize } from 'rxjs/operators';
 
 
 enum TextContent {
+  WALLET_LOADING = 'Activating the selected wallet',
   WALLET_LOAD_SUCCESS = 'Successfully Loaded Wallet',
-  WALLET_LOAD_WARNING = 'Loaded wallet, but with warnings. Please manually navigate',
-  WALLET_LOAD_ERROR = 'Failed to load the selected wallet'
+  WALLET_LOAD_ERROR = 'Failed to activate and load the selected wallet'
 };
 
 @Component({
@@ -30,7 +33,8 @@ export class WalletSelectComponent implements AfterViewInit {
     private _store: Store,
     private _router: Router,
     private _selectService: WalletSelectService,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _dialog: MatDialog
   ) { }
 
 
@@ -44,9 +48,12 @@ export class WalletSelectComponent implements AfterViewInit {
 
 
   navigateToWallet(wallet: IWallet) {
-    this._store.dispatch(new AppSettings.SetActiveWallet(wallet.name)).subscribe(
+    this.openProcessingModal();
+    this._store.dispatch(new MainActions.ChangeWallet(wallet.name)).pipe(
+      finalize(() => this._dialog.closeAll())
+    ).subscribe(
       () => {
-        const activatedWallet = this._store.selectSnapshot(AppSettingsState.activeWallet);
+        const activatedWallet = this._store.selectSnapshot(WalletInfoState.getValue('walletname'));
         if (activatedWallet === wallet.name) {
           this._snackbar.open(TextContent.WALLET_LOAD_SUCCESS, 'success');
           this._router.navigate(['/main/wallet/active/overview']);
@@ -79,5 +86,15 @@ export class WalletSelectComponent implements AfterViewInit {
         this.hasError = true;
       }
     )
+  }
+
+
+  private openProcessingModal() {
+    this._dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: TextContent.WALLET_LOADING
+      }
+    });
   }
 }

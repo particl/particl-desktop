@@ -63,7 +63,7 @@ export class CountdownTimerComponent implements OnDestroy, AfterViewInit {
   }
 
 
-  // @TODO: should probably be implemented instead as a pipe
+  // @TODO: zaSmilingIdiot 2020-01-19 -> should probably be implemented instead as a pipe
   get timeRemaining(): string {
     if (this._remaining <= 0) {
       return '00:00';

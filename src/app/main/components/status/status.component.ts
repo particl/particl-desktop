@@ -1,6 +1,5 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Store, Select } from '@ngxs/store';
 import { Observable, Subject, merge, combineLatest } from 'rxjs';
@@ -8,7 +7,6 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { AppDataState } from 'app/core/store/appdata.state';
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
 import { WalletInfoState } from 'app/main/store/main.state';
-import { ConsoleModalComponent } from '../console-modal/console-modal.component';
 
 
 @Component({
@@ -30,8 +28,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _store: Store,
-    private _dialog: MatDialog
+    private _store: Store
   ) { }
 
   ngOnInit() {
@@ -135,16 +132,16 @@ export class StatusComponent implements OnInit, OnDestroy {
     }
   }
 
+  get walletActivated() {
+    return this._walletEncryption !== '';
+  }
+
   get zmqStatus(): string {
     return this._zmqStyle;
   }
 
   get zmqStatusMessage(): string {
     return this._zmqStatus;
-  }
-
-  openConsoleWindow() {
-    this._dialog.open(ConsoleModalComponent);
   }
 
   toggleWalletStatus() {

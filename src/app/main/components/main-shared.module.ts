@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { TopbarComponent } from './topbar/topbar.component';
 import { StatusComponent } from './status/status.component';
-import { ConsoleModalComponent } from './console-modal/console-modal.component';
 import { VersionComponent } from './version/version.component';
 import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
 import { MainLayoutDefaultComponent } from './layout-default/main-layout-default.component';
@@ -13,7 +12,6 @@ import { MainLayoutDefaultComponent } from './layout-default/main-layout-default
   declarations: [
     StatusComponent,
     TopbarComponent,
-    ConsoleModalComponent,
     VersionComponent,
     CountdownTimerComponent,
     MainLayoutDefaultComponent
@@ -24,12 +22,8 @@ import { MainLayoutDefaultComponent } from './layout-default/main-layout-default
   ],
   exports: [
     TopbarComponent,
-    // VersionComponent,
     CountdownTimerComponent,
     MainLayoutDefaultComponent
-  ],
-  entryComponents: [
-    ConsoleModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
