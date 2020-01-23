@@ -1,0 +1,70 @@
+<div mat-dialog-title class="title">Unlock your wallet</div>
+
+<mat-dialog-content class="modal-content">
+  <p class="lead">
+    Please enter your password to unlock the wallet:
+  </p>
+
+  <div class="enter-password">
+
+    <mat-form-field>
+      <input matInput name="password"
+              id="password"
+              [type]="showPass ? 'text' : 'password'"
+              [appFocusTimeout]="true"
+              [(ngModel)]="password"
+              placeholder="Enter your password" />
+    </mat-form-field>
+
+    <span>
+      <mat-checkbox type="checkbox" name="showpass" value="password" [(ngModel)]="showPass" tabindex="-1">Show password</mat-checkbox>
+    </span>
+
+
+    <div class="additional-options">
+      <div class="subtitle">Additional options</div>
+
+      <div class="unlock-timeout">
+        <strong>Unlock for</strong>
+        <input  name="customTimeout"
+                class="duration-input"
+                [disabled]="!timeoutIsEditable || unlockForStaking"
+                type="number"
+                min="0"
+                step="10"
+                max="99999990"
+                [(ngModel)]="timeout">
+        seconds
+        <span class="widget-help">(default: 300 seconds)</span>
+      </div>
+
+      <span *ngIf="showStakingUnlock" class="stake-only">
+        <mat-checkbox type="checkbox" name="stakeonly" value="stakeonly" [(ngModel)]="unlockForStaking">
+          <strong>Unlock for Staking only</strong>
+        </mat-checkbox>
+        <p class="widget-help">
+          Unlock indefinitely for staking only &ndash; for spending your coins, you would need to do a full unlock
+        </p>
+      </span>
+
+    </div><!-- .additional-options -->
+
+
+    <div class="actions">
+      <button color="warn" mat-raised-button appDebounceClick (debounceClick)="unlock()" [disabled]="(password.length === 0) || isProcessing">
+        <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+        Unlock wallet
+      </button>
+    </div><!-- .actions -->
+
+
+  </div><!-- .enter-password -->
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+</mat-dialog-actions>

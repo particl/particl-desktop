@@ -182,7 +182,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     }
 
     if (this.isProcessing) {
-      this._snackbar.open(TextContent.ERROR_BUSY_PROCESSING);
+      this._snackbar.open(TextContent.ERROR_BUSY_PROCESSING, 'err');
       return;
     }
 
@@ -214,7 +214,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
       const errMsg = !hasChanged ? TextContent.SAVE_NOT_NEEDED : TextContent.ERROR_INVALID_ITEMS;
       this.isProcessing = false;
       this.enableUI();
-      this._snackbar.open(errMsg);
+      this._snackbar.open(errMsg, 'info');
       return;
     }
 
@@ -246,7 +246,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
       (err) => {
         this.isProcessing = false;
         this.enableUI();
-        this._snackbar.open(TextContent.SAVE_FAILED);
+        this._snackbar.open(TextContent.SAVE_FAILED, 'err');
       }
     );
   }

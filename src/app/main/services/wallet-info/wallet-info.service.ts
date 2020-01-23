@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable, of } from 'rxjs';
-import { retryWhen, catchError } from 'rxjs/operators';
+import { retryWhen, catchError, map } from 'rxjs/operators';
 
 import { MainRpcService } from '../main-rpc/main-rpc.service';
 import { WalletInfoStateModel } from 'app/main/store/main.models';
@@ -25,6 +25,30 @@ export class WalletInfoService {
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
       catchError(error => of({}))
     )
+  }
+
+
+  lockWallet(retryAttempts: number = 3): Observable<boolean> {
+    return this._rpc.call('walletlock').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
+      catchError(error => of(false)),
+      map((result) => {
+        if (typeof result === 'boolean') {
+          return result;
+        }
+        return true;
+      })
+    )
+  }
+
+
+  encryptWallet(password: string): Observable<any> {
+    return this._rpc.call('encryptwallet', [password]);
+  }
+
+
+  walletPassphrase(password: string, timeout: number, staking: boolean = false): Observable<any> {
+    return this._rpc.call('walletpassphrase', [password, (staking ? 0 : timeout), staking]);
   }
 
 }

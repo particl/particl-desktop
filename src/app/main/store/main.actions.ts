@@ -18,4 +18,9 @@ export namespace MainActions {
     static readonly type: string = '[Main] Change To Wallet';
     constructor(public wallet: string) {}
   }
+
+
+  export class RefreshWalletInfo {
+    static readonly type: string = '[Main] Fetch Wallet Info';
+  }
 }

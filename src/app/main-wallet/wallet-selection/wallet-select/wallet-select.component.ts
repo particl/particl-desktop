@@ -58,11 +58,11 @@ export class WalletSelectComponent implements AfterViewInit {
           this._snackbar.open(TextContent.WALLET_LOAD_SUCCESS, 'success');
           this._router.navigate(['/main/wallet/active/overview']);
         } else {
-          this._snackbar.open(TextContent.WALLET_LOAD_ERROR, 'error');
+          this._snackbar.open(TextContent.WALLET_LOAD_ERROR, 'err');
         }
       },
       () => {
-        this._snackbar.open(TextContent.WALLET_LOAD_ERROR, 'error');
+        this._snackbar.open(TextContent.WALLET_LOAD_ERROR, 'err');
       }
     );
   }

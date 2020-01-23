@@ -7,6 +7,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 import { AppDataState } from 'app/core/store/appdata.state';
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
 import { WalletInfoState } from 'app/main/store/main.state';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 
 @Component({
@@ -28,7 +29,8 @@ export class StatusComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _store: Store
+    private _store: Store,
+    private _encrypt: WalletEncryptionService
   ) { }
 
   ngOnInit() {
@@ -145,20 +147,6 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   toggleWalletStatus() {
-    // switch (this._walletEncryption) {
-    //   case 'Unencrypted':
-    //     this._modals.encrypt();
-    //     break;
-    //   case 'Unlocked':
-    //   case 'Unlocked, staking only':
-    //     this._rpc.call('walletlock')
-    //       .subscribe(
-    //         success => this._rpcState.stateCall('getwalletinfo'),
-    //         error => this.log.er('walletlock error'));
-    //     break;
-    //   case 'Locked':
-    //     this._modals.unlock({showStakeOnly: true, showEditableTimeout: true});
-    //     break;
-    // }
+    this._encrypt.changeCurrentStatus().subscribe();
   }
 }

@@ -1,0 +1,96 @@
+<div mat-dialog-title *ngIf="!hasPassword" class="title">Encrypt your wallet</div>
+<div mat-dialog-title *ngIf="hasPassword" class="title">Confirm your password</div>
+
+<button class="small-close-button" mat-dialog-close>
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="modal-content">
+
+  <ng-container *ngTemplateOutlet="hasPassword ? confirm : newpass"></ng-container>
+
+</mat-dialog-content>
+
+
+
+<ng-template #newpass>
+  <div>
+    <p>
+      Please choose a password to encrypt your wallet
+    </p>
+    <p class="widget-help">
+      Wallet encryption protects you from unauthorized access to your coins (e.g. if someone steals your computer).<br>
+      It affects Particl wallet only on your current device.
+    </p>
+    <p class="warning">
+      Do NOT forget this password or you will be unable to access your coins!
+    </p>
+
+
+    <div class="enter-password">
+
+      <mat-form-field>
+        <input matInput name="password"
+                id="password"
+                [type]="showPass ? 'text' : 'password'"
+                [appFocusTimeout]="true"
+                [(ngModel)]="password"
+                placeholder="Enter your password" />
+      </mat-form-field>
+
+      <span>
+        <mat-checkbox type="checkbox" name="showpass" value="password" [(ngModel)]="showPass" tabindex="-1">Show password</mat-checkbox>
+      </span>
+
+      <div class="actions">
+        <button color="warn" mat-raised-button appDebounceClick (debounceClick)="encrypt()" [disabled]="(password.length === 0) || isProcessing">
+          <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+          Encrypt wallet
+        </button>
+      </div><!-- .actions -->
+
+    </div>
+  </div>
+</ng-template>
+
+
+
+
+<ng-template #confirm>
+  <div>
+    <div>
+      <p>
+        Please enter your chosen password again to confirm it
+      </p>
+      <p class="warning">
+        Do NOT forget this password or you will be unable to access your coins!
+      </p>
+    </div>
+
+
+    <div class="enter-password">
+
+      <mat-form-field>
+        <input matInput name="confirmation"
+                id="confirmation"
+                [type]="showPass ? 'text' : 'password'"
+                [appFocusTimeout]="true"
+                [(ngModel)]="confirmation"
+                placeholder="Confirm your password" />
+      </mat-form-field>
+
+      <span>
+        <mat-checkbox type="checkbox" name="showpass" value="confirmation" [(ngModel)]="showPass" tabindex="-1">Show password</mat-checkbox>
+      </span>
+
+      <div class="actions">
+        <button color="warn" mat-raised-button appDebounceClick (debounceClick)="confirmPass()" [disabled]="(confirmation.length === 0) || isProcessing">
+          <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+          Confirm password
+        </button>
+      </div><!-- .actions -->
+
+    </div>
+  </div>
+</ng-template>

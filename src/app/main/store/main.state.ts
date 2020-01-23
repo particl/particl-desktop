@@ -100,6 +100,12 @@ export class WalletInfoState {
   }
 
 
+  @Action(MainActions.RefreshWalletInfo)
+  refreshWalletInfo(ctx: StateContext<WalletInfoStateModel>) {
+    return this.updateWalletInfo(ctx);
+  }
+
+
   private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<WalletInfoStateModel> {
     return this._walletService.getWalletInfo().pipe(
       tap((info) => {

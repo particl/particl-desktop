@@ -12,10 +12,13 @@ import { MultiwalletSidebarComponent } from './components/multiwallet/multiwalle
 import { ApplicationRestartModalComponent } from './components/application-restart-modal/application-restart-modal.component';
 import { ProcessingModalComponent } from './components/processing-modal/processing-modal.component';
 import { ConsoleModalComponent } from './components/console-modal/console-modal.component';
+import { UnlockwalletModalComponent } from './components/unlock-wallet-modal/unlock-wallet-modal.component';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MainRpcService } from './services/main-rpc/main-rpc.service';
 import { WalletInfoService } from './services/wallet-info/wallet-info.service';
+import { WalletEncryptionService } from './services/wallet-encryption/wallet-encryption.service';
+import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/encrypt-wallet-modal.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,8 @@ import { WalletInfoService } from './services/wallet-info/wallet-info.service';
     ApplicationRestartModalComponent,
     ProcessingModalComponent,
     ConsoleModalComponent,
+    UnlockwalletModalComponent,
+    EncryptwalletModalComponent,
   ],
   imports: [
     MainRoutingModule,
@@ -34,12 +39,15 @@ import { WalletInfoService } from './services/wallet-info/wallet-info.service';
   providers: [
     SnackbarService,
     MainRpcService,
-    WalletInfoService
+    WalletInfoService,
+    WalletEncryptionService
   ],
   entryComponents: [
     ApplicationRestartModalComponent,
     ProcessingModalComponent,
-    ConsoleModalComponent
+    ConsoleModalComponent,
+    UnlockwalletModalComponent,
+    EncryptwalletModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
