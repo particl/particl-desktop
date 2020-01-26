@@ -90,5 +90,6 @@ export enum ZmqActions {
 
 export interface ZmqConnectionStateModel {
   hashblock: ZmqTypeField;
-  smsg: ZmqTypeField
+  smsg: ZmqTypeField;
+  hashtx: ZmqTypeField;
 }

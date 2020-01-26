@@ -6,6 +6,7 @@ import { StatusComponent } from './status/status.component';
 import { VersionComponent } from './version/version.component';
 import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
 import { MainLayoutDefaultComponent } from './layout-default/main-layout-default.component';
+import { LoadingPlaceholderComponent } from './loading-placeholder/loading-placeholder.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { MainLayoutDefaultComponent } from './layout-default/main-layout-default
     TopbarComponent,
     VersionComponent,
     CountdownTimerComponent,
-    MainLayoutDefaultComponent
+    MainLayoutDefaultComponent,
+    LoadingPlaceholderComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,8 @@ import { MainLayoutDefaultComponent } from './layout-default/main-layout-default
   exports: [
     TopbarComponent,
     CountdownTimerComponent,
-    MainLayoutDefaultComponent
+    MainLayoutDefaultComponent,
+    LoadingPlaceholderComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

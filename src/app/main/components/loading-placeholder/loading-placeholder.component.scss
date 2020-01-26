@@ -1,0 +1,57 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// animated placeholder before items load
+.loading {
+  .item {
+    animation: 1s ease infinite loading-pulse;
+  }
+  &.transactions {
+    $items: 5;
+    max-width: none;
+    .item {
+      box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+      background: $color-white;
+      border-radius: $radius;
+      padding: 0 24px;
+      height: 67px;
+      margin-bottom: 9px;
+      .placeholder {
+        background: mix($bg, $bg-shadow);
+        border-radius: $radius;
+        display: inline-block;
+        height: 10px;
+        width: 50%;
+        &.date {
+          width: 95%;
+        }
+        &.type {
+          width: 50%;
+        }
+        &.value {
+          text-align: right;
+        }
+      }
+    }
+    @for $i from 1 through $items {
+      .item {
+        &:nth-child(#{$i}) {
+          animation-delay: $i * (0.1s);
+        }
+      }
+    }
+  }
+}
+@keyframes loading-pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.5;
+    transform: scale(0.975);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

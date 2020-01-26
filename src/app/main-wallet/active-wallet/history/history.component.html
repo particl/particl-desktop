@@ -1,1 +1,58 @@
-<div>History Component</div>
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
+      <mat-tab *ngFor="let category of categories">
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" fontIcon="part-{{ category.icon }}"></mat-icon>
+          {{ category.title }}
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+<div class="container-block with-tab-bar">
+
+  <div class="filter">
+
+    <div class="section search-sorting">
+      <div class="subtitle first">Sort</div>
+      <mat-card class="filter-card">
+
+        <mat-form-field class="sort-by filter-input" floatLabel="never">
+          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+            <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
+    </div>
+
+    <p class="widget-help">
+      Transaction filter gives you the most granular control over displayed transactions.
+    </p>
+
+    <div class="section filter-by-type">
+      <div class="subtitle">Filter by type</div>
+      <mat-card class="filter-card">
+        <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.type" (change)="filter()">
+          <mat-radio-button class="filter-option" *ngFor="let type of types" value="{{ type.value }}" color="primary">
+            {{ type.title }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+    </div>
+
+    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div>
+
+  <div class="tx-list section with-filter">
+    <transaction-table #transactions></transaction-table>
+  </div><!-- .tx-list -->
+
+</div>

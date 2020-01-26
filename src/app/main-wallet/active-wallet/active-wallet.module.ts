@@ -12,8 +12,9 @@ import { OverviewComponent } from './overview/overview.component';
 import { SendComponent } from './send/send.component';
 import { ReceiveComponent } from './receive/receive.component';
 import { AddressBookComponent } from './addressbook/addressbook.component';
-import { HistoryComponent } from './history/history.component';
+import { WalletHistoryComponent } from './history/history.component';
 import { WalletSettingsComponent } from './settings/settings.component';
+import { TransactionsTableComponent } from './transaction-table/transaction-table.component';
 
 
 @NgModule({
@@ -29,8 +30,9 @@ import { WalletSettingsComponent } from './settings/settings.component';
     SendComponent,
     ReceiveComponent,
     AddressBookComponent,
-    HistoryComponent,
-    WalletSettingsComponent
+    WalletHistoryComponent,
+    WalletSettingsComponent,
+    TransactionsTableComponent,
   ],
   providers: [
     ActiveWalletGuard

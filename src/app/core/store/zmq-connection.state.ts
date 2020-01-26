@@ -32,6 +32,14 @@ const ZMQ_CONNECTION_TOKEN = new StateToken<ZmqConnectionStateModel>('zmq');
         retryCount: 0,
         error: false
       }
+    },
+    hashtx: {
+      data: null,
+      status: {
+        connected: false,
+        retryCount: 0,
+        error: false
+      }
     }
   }
 })
@@ -46,6 +54,17 @@ export class ZmqConnectionState implements NgxsOnInit {
       }
     );
   }
+
+
+  static getData(field: string) {
+    return createSelector(
+      [ZmqConnectionState],
+      (state: ZmqConnectionStateModel): string => {
+        return field in state ? state[field].data : null;
+      }
+    );
+  }
+
 
   static getStatus(field: string) {
     return createSelector(
