@@ -1,5 +1,7 @@
 const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const Observable  = require('rxjs').Observable;
+const _subject    = require('rxjs').Subject;
+const _rxjsOperators = require('rxjs/operators');
 const _zmq        = require('particl-zmq');
 const log         = require('electron-log');
 const _services    = require('./services');
@@ -14,24 +16,20 @@ let mainReference = null;
 let zmqSocket = null;
 
 
+const SUBJECTS = {};
+
+
 function destroyIpcListeners() {
   rxIpc.removeListeners(ZMQ_START_CHANNEL);
 }
 
 
 function sendMessage(channel, type, data) {
-  if (SPY_ON_ZMQ) {
-    log.info('zmq.send: -> ', channel, ', data: ', data)
-  }
   if (mainReference === null) {
     log.debug("zmq.send failed: no application window");
   }
 
-  try {
-    rxIpc.runCommand(ZMQ_CHANNEL, mainReference.webContents, channel, type, data).subscribe();
-  } catch (error) {
-    log.error("zmq.send: failed to runCommand (maybe window closed/closing): ", error.toString());
-  }
+  SUBJECTS[type].subject.next({channel, type, data});
 }
 
 
@@ -47,6 +45,27 @@ function startZMQListener(host, port) {
 
   if (zmqSocket !== null) {
     return;
+  }
+
+  for (const service of services) {
+    const sub = new _subject();
+
+    const obs = sub.asObservable().pipe(
+      _rxjsOperators.auditTime(1000)
+    ).subscribe(
+      (data) => {
+        try {
+          if (SPY_ON_ZMQ) {
+            log.info('zmq.send: -> ', data.type, ', data: ', data.data)
+          }
+          rxIpc.runCommand(ZMQ_CHANNEL, mainReference.webContents, data.channel, data.type, data.data);
+        } catch (error) {
+          log.error("zmq.send: failed to runCommand (maybe window closed/closing): ", error.toString());
+        }
+      }
+    );
+
+    SUBJECTS[service] = {subject: sub, observer: obs};
   }
 
   zmqSocket = new _zmq(
@@ -118,20 +137,25 @@ const init = (mainWindow) => {
 
 const destroy = () => {
   if (zmqSocket) {
-    try {
-      zmqSocket.disconnect().catch((e) => {
-        log.warn('zmq.disconnect() error: ', e.toString());
-      }).then(() => {
-        mainReference = null;
-        zmqSocket = null;
-      });
-    } catch(err) {
-      log.error('Failed disconnecting zmq listener... possibly leaking a listener');
-      mainReference = null
+    log.info('disconnecting zmq socket listeners...');
+
+    zmqSocket.disconnect().catch((e) => {
+      log.warn('zmq.disconnect() error: ', e.toString());
+    }).then(() => {
+
+      for (const service of _services.required) {
+        try {
+          SUBJECTS[service].subject.complete();
+        } catch(e) {
+          log.error('Failed unsubscribing zmq channel listener... possibly leaking a listener');
+        }
+      }
+      mainReference = null;
       zmqSocket = null;
-    }
+    });
   }
   destroyIpcListeners();
+  log.info('zmq disconnect complete');
 }
 
 
