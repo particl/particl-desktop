@@ -429,7 +429,7 @@ mat-card.mat-card {
 */
 
 ::-webkit-scrollbar-track {
-  background: lighten($bg-shadow, 3%);
+  background: $bg;
 }
 
 ::-webkit-scrollbar,
@@ -441,17 +441,12 @@ mat-card.mat-card {
 ::-webkit-scrollbar-thumb {
   @extend %tfx;
   background: darken($bg-shadow, 15%);
-  border-radius: $radius;
   &:hover {
     background: darken($bg-shadow, 20%);
   }
 }
 .mat-drawer-container {
   background: $bg;
-}
-// scroll on by default, so the content doesn't jump on larger pages
-.mat-drawer-content {
-  overflow-y: scroll !important;
 }
 
 

@@ -26,11 +26,19 @@ strong {
 }
 
 .additional-options {
-  margin: 16px -24px 24px;
-  padding: 24px;
-  border-top: 1px dashed $bg-shadow;
-  border-bottom: 1px dashed $bg-shadow;
+  margin: 16px -24px 0 !important;
+  border-top: 1px solid $bg-shadow;
+  border-bottom: 1px solid $bg-shadow;
+  border-radius: 0;
+  box-shadow: none !important;
   background: $bg;
+  .mat-expansion-panel-header {
+    max-height: 48px;
+    font-size: 14px;
+    .mat-expansion-panel-header-title {
+      color: $text-muted;
+    }
+  }
 
   // customize unlock duration
   .unlock-timeout {
@@ -48,15 +56,9 @@ strong {
   // unlock for staking only
   .stake-only {
     .widget-help {
-      margin: 4px 0 0;
+      margin: 4px 0 0 24px;
+      max-width: 390px;
     }
   }
 
-}
-
-.actions { // area with button(s)
-  margin: 10px 0 0;
-  button {
-    margin: 0;
-  }
 }
