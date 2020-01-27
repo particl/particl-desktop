@@ -3,16 +3,13 @@
 
 .header-main {
   border-bottom: 1px solid $bg-shadow;
-  // width: calc(100% - #{$sidebar-width} - #{$scrollbar-width});
   padding-left: 35px;
   padding-right: 26px;
   font-family: $font;
   font-size: 15px;
   text-transform: uppercase;
-  // position: fixed;
-  // top: 0;
-  // left: $sidebar-width;
-  // right: 0;
+  position: sticky;
+  top: 0;
   z-index: 100;
   @include break(l) {
     padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;

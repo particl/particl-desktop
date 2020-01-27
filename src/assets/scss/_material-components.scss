@@ -113,32 +113,19 @@ button,
 // ------ 1.5. PAGINATOR ------ //
 
 .mat-paginator {
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  min-height: 56px;
-  padding: 0 8px;
-  border-bottom: 1px solid $bg-shadow;
-  font-family: $font;
+  justify-content: space-between;
+  background: none !important;
+  font-family: $font !important;
   .mat-icon-button {
     @extend %tfx;
     &:hover {
-      background-color: $color;
-      border-radius: 50%;
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $color-white;
-      }
+      color: $text;
     }
     &[disabled] {
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $bg-shadow;
-      }
-      &:hover {
-        background-color: transparent;
-      }
+      @extend %lighter;
     }
   }
 }
