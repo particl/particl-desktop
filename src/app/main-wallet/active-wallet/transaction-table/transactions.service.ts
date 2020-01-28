@@ -26,7 +26,7 @@ export class TransactionService implements OnDestroy {
   }
 
 
-  getFilteredTransactions(filters: FilterTransactionOptionsModel): Observable<any> {
+  getFilteredTransactions(filters: FilterTransactionOptionsModel): Observable<FilteredTransaction[]> {
     return this._rpc.call('filtertransactions', [filters]).pipe(
       retryWhen (genericPollingRetryStrategy()),
       map((response: FilterTransactionModel[]) => {

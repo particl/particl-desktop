@@ -9,7 +9,7 @@ import {
 
 import { MainStateModel, WalletInfoStateModel  } from './main.models';
 import { MainActions } from './main.actions';
-import { AppSettings } from 'app/core/store/app.actions';
+import { AppSettings, ZMQ } from 'app/core/store/app.actions';
 import { Observable } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
@@ -66,14 +66,6 @@ export class WalletInfoState {
   ) {}
 
 
-  @Action(MainActions.UpdateWalletInfo)
-  setWalletInfo(ctx: StateContext<WalletInfoStateModel>, {info}: MainActions.UpdateWalletInfo) {
-    if ( (typeof info.walletname === 'string') && (info.walletname.length > 0)) {
-      ctx.patchState(info);
-    }
-  }
-
-
   @Action(AppSettings.SetActiveWallet)
   onGlobalWalletChange(ctx: StateContext<WalletInfoStateModel>) {
     // reset the wallet information when the active wallet changes
@@ -106,11 +98,31 @@ export class WalletInfoState {
   }
 
 
+  @Action(ZMQ.UpdateStatus)
+  zmqUpdated(ctx: StateContext<WalletInfoStateModel>, action: ZMQ.UpdateStatus) {
+    if (ctx.getState().hdseedid && action.field === 'hashtx') {
+      return this.updateWalletInfo(ctx);
+    }
+  }
+
+
   private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<WalletInfoStateModel> {
     return this._walletService.getWalletInfo().pipe(
       tap((info) => {
-        if ( (typeof info === 'object') && Object.keys(info).length > 0) {
-          ctx.patchState(info);
+        const currCtx = ctx.getState();
+        const keys = Object.keys(info);
+        if ( (typeof info === 'object') && keys.length > 0) {
+          let changed = false;
+          for (const key of keys) {
+            if (currCtx[key] !== info[key]) {
+              changed = true;
+              break;
+            }
+          }
+
+          if (changed) {
+            ctx.patchState(info);
+          }
         }
       })
     );

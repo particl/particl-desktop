@@ -8,11 +8,6 @@ export namespace MainActions {
     constructor(public init: boolean) {}
   }
 
-  export class UpdateWalletInfo {
-    static readonly type: string = '[Main] Update Wallet Info';
-    constructor(public info: WalletInfoStateModel) {}
-  }
-
 
   export class ChangeWallet {
     static readonly type: string = '[Main] Change To Wallet';

@@ -1,0 +1,11 @@
+
+<div class="sync-progress-wrapper" *ngIf="isSyncing">
+  <div class="sync-progress" matTooltip="Services may not be fully ready while syncing is in progress" matTooltipPosition="after" (click)="openSyncingModal()">
+
+    <p class="sync-info">
+      <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+      <span class="highlight">Syncing with the network</span>
+    </p>
+
+  </div>
+</div>

@@ -1,0 +1,25 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.subtitle {
+  font-weight: 700;
+  font-size: 15px;
+  text-transform: uppercase;
+  margin: 26px 0 10px;
+}
+
+table.sync-progress {
+  margin: 10px 0 30px;
+  th,
+  td {
+    padding: 3px 20px 3px 0;
+    font-size: 13px;
+  }
+  th {
+    color: $text-muted;
+    text-align: left;
+    font-weight: 400;
+  }
+  td {
+    font-weight: 500;
+  }
+}

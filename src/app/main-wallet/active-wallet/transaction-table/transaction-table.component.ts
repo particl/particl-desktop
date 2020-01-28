@@ -32,6 +32,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
 
   @Input() showPagination: boolean = true;
   @Input() loadOnInit: boolean = true;
+  @Input() count: number = 10;
   @ViewChild('paginator', {static: false}) paginator: any;
   @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
 
@@ -120,7 +121,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
 
 
   get TxCountPerPage(): number {
-    return this._filters.count || this.defaultPageCount;
+    return this._filters.count || +this.count || this.defaultPageCount;
   }
 
 
@@ -173,7 +174,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  private fetchTransactionInfo(): Observable<any> {
+  private fetchTransactionInfo(): Observable<FilteredTransaction[]> {
     this._filters.count = this.TxCountPerPage;
     this._filters.skip = this.pageCount * this._filters.count;
 

@@ -7,6 +7,7 @@ import { VersionComponent } from './version/version.component';
 import { CountdownTimerComponent } from './countdown-timer/countdown-timer.component';
 import { MainLayoutDefaultComponent } from './layout-default/main-layout-default.component';
 import { LoadingPlaceholderComponent } from './loading-placeholder/loading-placeholder.component';
+import { BlockSyncIndicatorComponent } from './block-sync-indicator/block-sync-indicator.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { LoadingPlaceholderComponent } from './loading-placeholder/loading-place
     VersionComponent,
     CountdownTimerComponent,
     MainLayoutDefaultComponent,
-    LoadingPlaceholderComponent
+    LoadingPlaceholderComponent,
+    BlockSyncIndicatorComponent,
   ],
   imports: [
     CommonModule,

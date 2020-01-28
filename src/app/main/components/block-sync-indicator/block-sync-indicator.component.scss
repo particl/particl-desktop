@@ -1,0 +1,19 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+// Sidebar
+.sync-progress-wrapper {
+  @extend %menu-divider;
+  cursor: pointer;
+  padding: 12px 24px 14px;
+  .sync-info {
+    font-size: 11px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    color: $text-muted;
+    .highlight {
+      color: lighten($text-muted, 40%);
+      font-weight: 500;
+    }
+  }
+}
