@@ -1,0 +1,24 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../shared/shared.scss';
+
+.mat-card {
+  padding: 0;
+}
+
+.staking-overview { // listing of staking stats
+  width: 100%;
+  .row {
+    display: flex;
+    .key {
+      @extend %lighter;
+      flex: auto;
+      padding: 10px 5px 10px 20px;
+    }
+    .value {
+      text-align: right;
+      font-weight: 500;
+      flex: auto;
+      padding: 10px 20px 10px 5px;
+    }
+  }
+}

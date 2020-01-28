@@ -1,0 +1,36 @@
+<div class="staking-info section">
+
+  <header>
+    <div class="subtitle">Staking stats</div>
+  </header>
+
+  <mat-card class="staking-overview">
+
+    <div class="row" *ngIf="!stakingEnabled">
+      <div class="key">Staking is not enabled</div>
+    </div>
+
+    <ng-container *ngIf="stakingEnabled">
+      <div class="row">
+        <div class="key">Next reward</div>
+        <div class="value">~&nbsp;{{ nextRewardTime }}</div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="row">
+        <div class="key">Your Stake weight</div>
+        <div class="value">{{ stakingWeightWhole }}{{ stakingWeightFraction ? '.' : ''}}<small>{{ stakingWeightFraction }}</small>&nbsp;%</div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="row">
+        <div class="key">Stake percentage</div>
+        <div class="value">{{ stakingPercentage }}&nbsp;%</div>
+      </div>
+    </ng-container>
+
+  </mat-card><!-- .staking-overview -->
+
+</div><!-- .staking-info -->
