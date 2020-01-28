@@ -7,11 +7,12 @@
   margin-left: 10px;
   background: $text;
   border-radius: 4px;
+  font-family: monospace;
   color: $bg;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1;
   position: relative;
-  top: -2px;
+  top: -4px;
   &::before {
     content: "";
     display: block;
@@ -21,6 +22,6 @@
     border-color: transparent $text transparent transparent;
     position: absolute;
     left: -10px;
-    top: 6px;
+    top: 5px;
   }
 }

@@ -1,7 +1,7 @@
 <div
   class="countdown"
   *ngIf="(unlockedUntil$ | async) > 0"
-  matTooltip="Wallet will auto-lock in&hellip;"
+  matTooltip="Wallet will auto-lock in&hellip; - click to lock now"
   matTooltipPosition="below">
   {{ timeRemaining }}
 </div>

@@ -113,32 +113,19 @@ button,
 // ------ 1.5. PAGINATOR ------ //
 
 .mat-paginator {
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  min-height: 56px;
-  padding: 0 8px;
-  border-bottom: 1px solid $bg-shadow;
-  font-family: $font;
+  justify-content: space-between;
+  background: none !important;
+  font-family: $font !important;
   .mat-icon-button {
     @extend %tfx;
     &:hover {
-      background-color: $color;
-      border-radius: 50%;
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $color-white;
-      }
+      color: $text;
     }
     &[disabled] {
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $bg-shadow;
-      }
-      &:hover {
-        background-color: transparent;
-      }
+      @extend %lighter;
     }
   }
 }
@@ -442,7 +429,7 @@ mat-card.mat-card {
 */
 
 ::-webkit-scrollbar-track {
-  background: lighten($bg-shadow, 3%);
+  background: $bg;
 }
 
 ::-webkit-scrollbar,
@@ -454,17 +441,12 @@ mat-card.mat-card {
 ::-webkit-scrollbar-thumb {
   @extend %tfx;
   background: darken($bg-shadow, 15%);
-  border-radius: $radius;
   &:hover {
     background: darken($bg-shadow, 20%);
   }
 }
 .mat-drawer-container {
   background: $bg;
-}
-// scroll on by default, so the content doesn't jump on larger pages
-.mat-drawer-content {
-  overflow-y: scroll !important;
 }
 
 

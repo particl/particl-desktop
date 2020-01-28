@@ -74,7 +74,7 @@ body {
 
 
 // ------ 2.2. MODIFIERS ------ //
-
+/*
 // offset content from top (due to fixed status bar)
 .with-tab-bar {
   margin-top: ($header-main-height + $tab-bar-height);
@@ -86,7 +86,7 @@ body {
 .with-control-bar {
   margin-top: ($header-main-height + $control-bar-height);
 }
-
+*/
 // content offset from left, when sticky sidebar is present
 .with-filter {
   margin-left: $filter-width + $padding;
@@ -100,16 +100,13 @@ body {
 
 // sticky tabs under status bar
 .tab-bar {
-  position: fixed;
+  position: sticky;
   top: $header-main-height;
   z-index: 100;
-  left: $sidebar-width;
-  right: 6px;
   background: rgba($bg, 0.95);
   .buttons {
     flex: 1 0 100px;
     padding: 0 20px; // offset side padding
-    //border-left: 1px solid $bg-shadow;
     border-bottom: 1px solid $bg-shadow;
     display: flex;
     justify-content: flex-end;
@@ -129,11 +126,11 @@ body {
 
 .filter { // sticky sidebars in content area
   position: sticky;
-  top: ($header-main-height + $tab-bar-height + $padding);
+  top: ($header-main-height + $tab-bar-height + $padding + 1px); // 1px for border
   width: $filter-width;
   float: left;
   .without-tab-bar & {
-    top: ($header-main-height + $padding);
+    top: ($header-main-height + $padding + 1px);
   }
   button.full-width {
     margin-top: 10px;
@@ -488,30 +485,34 @@ kbd {
     .header-main { // status bar
       top: 61px;
     }
+    /*
     .balance-overview { // Overview
       margin-top: 125px;
     }
+    */
     .tab-bar,
     .control-bar {
       top: 125px;
     }
     .with-tab-bar { // content containers
-      margin-top: 175px;
+      //margin-top: 175px;
       .filter {
         top: 210px;
       }
     }
     .without-tab-bar { // content containers w/o tabs
-      margin-top: 125px;
+      //margin-top: 125px;
       .filter {
         top: 160px;
       }
     }
+    /*
     app-listing {
       .container-block.with-control-bar {
         margin-top: 180px;
       }
     }
+    */
     app-send {
       .from-box {
         .sticky {
@@ -529,11 +530,13 @@ kbd {
         }
       }
     }
+    /*
     app-add-item,
     app-help {
       .container-block {
         margin-top: 125px;
       }
     }
+    */
   }
 }

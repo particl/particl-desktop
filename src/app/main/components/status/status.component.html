@@ -1,27 +1,25 @@
 <div class="status-icons" fxLayout="row" fxLayoutGap="14px">
 
-  <div class="status icon" matTooltip="Peers: {{ peerListCount }}">
-    <img src="assets/icons/status/peers-{{ peerIcon }}.svg"/>
+  <div class="status icon">
+    <img src="assets/icons/status/peers-{{ peerIcon }}.svg" matTooltip="Peers: {{ peerListCount }}" />
   </div>
 
   <div *ngIf="walletActivated"
     class="encryption icon"
-    [matTooltip]="(walletStatus | async)"
     container="body"
     (click)="toggleWalletStatus()">
-      <img src="assets/icons/status/encryption{{ walletStatusIcon }}.svg"/>
-      <main-countdown-timer></main-countdown-timer>
+    <img src="assets/icons/status/encryption{{ walletStatusIcon }}.svg" [matTooltip]="(walletStatus | async)" />
+    <main-countdown-timer></main-countdown-timer>
   </div>
 
   <div
     class="zmq icon"
-    [ngClass]="zmqStatus"
-    [matTooltip]="zmqStatusMessage">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
+    [ngClass]="zmqStatus">
+    <mat-icon class="icon" [matTooltip]="zmqStatusMessage" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
   </div>
 
-  <div class="warning icon" *ngIf="timeOffset !== 0" matTooltip="Time offset: {{ timeOffset }}s">
-    <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+  <div class="warning icon" *ngIf="timeOffset !== 0">
+    <mat-icon matTooltip="Time offset: {{ timeOffset }}s" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
   </div>
 
 </div><!-- .status-icons -->
