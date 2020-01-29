@@ -37,7 +37,8 @@ export class RpcService {
     'unloadwallet',
     'getzmqnotifications',
     'getpeerinfo',
-    'getnetworkinfo'
+    'getnetworkinfo',
+    'getblockcount'
   ];
 
   /**

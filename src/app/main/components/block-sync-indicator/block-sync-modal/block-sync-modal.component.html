@@ -2,7 +2,7 @@
 
 
 <mat-dialog-content class="modal-content">
-  <mat-spinner *ngIf="!syncPercentage" class="sync-spinner"></mat-spinner>
+  <mat-spinner *ngIf="!syncComplete" class="sync-spinner"></mat-spinner>
 
   <p>
     Your wallet automatically synchronizes with the Particl network after a connection is established, but this process has not completed yet. This means that recent transactions will not be visible, and the balance may not be up-to-date until this process has completed.
@@ -21,7 +21,11 @@
   <table class="sync-progress">
     <tr>
       <th>Blocks to sync</th>
-      <td>{{ remainder }}</td>
+      <td>{{ remainderBlocks }}</td>
+    </tr>
+    <tr>
+      <th>Percentage complete</th>
+      <td>{{ syncPercentage }}&nbsp;&#37;</td>
     </tr>
     <tr>
       <th>Estimated time left</th>

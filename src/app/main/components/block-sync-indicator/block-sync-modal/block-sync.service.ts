@@ -1,15 +1,15 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
-import { auditTime, concatMap } from 'rxjs/operators';
+import { retryWhen, map, concatMap } from 'rxjs/operators';
 
-import { RpcGetPeerInfo } from './block-sync.models';
+import { RpcGetPeerInfo, PeerCalculatedStats } from './block-sync.models';
 import { Observable } from 'rxjs';
-import { RpcGetStakingInfo } from 'app/main-wallet/active-wallet/overview/widgets/staking-info-widget/staking-info-widget.models';
+import { genericPollingRetryStrategy } from 'app/core/util/utils';
 
 
 @Injectable()
-export class BlockSyncService implements OnDestroy {
+export class BlockSyncService {
   private log: any = Log.create('block-sync.service id:' + Math.floor((Math.random() * 1000) + 1));
 
 
@@ -20,33 +20,51 @@ export class BlockSyncService implements OnDestroy {
   }
 
 
-  ngOnDestroy() {
-    this.log.d('service destroyed');
-  }
-
-
   fetchPeerInfo(): Observable<RpcGetPeerInfo[]> {
-    return this._rpc.call('getpeerinfo');
+    return this._rpc.call('getpeerinfo').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1}))
+    );
   }
 
 
-  // fetchPeerData() {
-  //   this.fetchPeerInfo().pipe(
-  //     auditTime(5000),
-  //     concatMap((peerinfo: RpcGetPeerInfo[]) => {
-  //       console.log('@@@@ GOT PEER INFO!!!: ', peerinfo);
-
-  //       const highestBlock = this.calculateBlockCountNetwork(peerinfo);
-  //     })
-  //   )
-  // }
+  fetchBlockCount(): Observable<number> {
+    return this._rpc.call('getblockcount').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1}))
+    );
+  }
 
 
-  calculateBlockCountNetwork(peerList: RpcGetPeerInfo[]): number {
+  fetchCalculatedStats(): Observable<PeerCalculatedStats> {
+    return this.fetchPeerInfo().pipe(
+      concatMap((peers) => this.fetchBlockCount().pipe(
+        map((currentBlock) => {
+          const highestPeerBlock = this.calculateHighestPeerBlock(peers);
+          const remainingBlocks = highestPeerBlock - currentBlock;
+
+          let syncPercentage = -1;
+          if ( highestPeerBlock > 0) {
+            syncPercentage = Math.min( (currentBlock / highestPeerBlock * 100), 100);
+          }
+
+          const stats: PeerCalculatedStats = {
+            remainingBlocks,
+            highestPeerBlock,
+            syncPercentage,
+            currentBlock
+          }
+
+          return stats;
+        })
+      ))
+    );
+  }
+
+
+  calculateHighestPeerBlock(peerList: RpcGetPeerInfo[]): number {
     let highestBlock = -1;
 
     peerList.forEach(peer => {
-      const peerBlockHeight = peer.currentheight;
+      const peerBlockHeight = +peer.currentheight;
 
       if (peerBlockHeight > highestBlock) {
         highestBlock = peerBlockHeight;

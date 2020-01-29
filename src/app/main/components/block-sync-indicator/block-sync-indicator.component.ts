@@ -3,19 +3,16 @@ import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Select } from '@ngxs/store';
 import { Observable, Subject, timer } from 'rxjs';
-import { takeUntil, switchMap, tap } from 'rxjs/operators';
+import { takeUntil, switchMap, tap, skip } from 'rxjs/operators';
 
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
 import { BlockSyncModalComponent } from './block-sync-modal/block-sync-modal.component';
-import { BlockSyncService } from './block-sync-modal/block-sync.service';
-
 
 
 @Component({
   selector: 'block-sync-bar',
   templateUrl: './block-sync-indicator.component.html',
   styleUrls: ['./block-sync-indicator.component.scss'],
-  providers: [ BlockSyncService ]
 })
 export class BlockSyncIndicatorComponent implements OnInit, OnDestroy {
 
@@ -36,13 +33,12 @@ export class BlockSyncIndicatorComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.blockWatcher$.pipe(
-      tap(() => {
-        this.isSyncing = true;
-      }),
+      skip(1),
       switchMap(() => {
-        // If the timeout has been executed 2s since the last zmqupdate msg was received,
-        //  then set isLoading to false (sync is likely over).
-        return timer(2000).pipe(
+        this.isSyncing = true;
+        // If the timeout has been executed (2.5s since the last zmqupdate msg was received),
+        //  then set isLoading to false as the sync is likely over (single block received).
+        return timer(2500).pipe(
           tap(() => {
               this.isSyncing = false;
           })

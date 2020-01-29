@@ -19,6 +19,7 @@ import { MainRpcService } from './services/main-rpc/main-rpc.service';
 import { WalletInfoService } from './services/wallet-info/wallet-info.service';
 import { WalletEncryptionService } from './services/wallet-encryption/wallet-encryption.service';
 import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/encrypt-wallet-modal.component';
+import { BlockSyncModalComponent } from './components/block-sync-indicator/block-sync-modal/block-sync-modal.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/e
     ConsoleModalComponent,
     UnlockwalletModalComponent,
     EncryptwalletModalComponent,
+    BlockSyncModalComponent,
   ],
   imports: [
     MainRoutingModule,
@@ -48,6 +50,7 @@ import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/e
     ConsoleModalComponent,
     UnlockwalletModalComponent,
     EncryptwalletModalComponent,
+    BlockSyncModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

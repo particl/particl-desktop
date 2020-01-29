@@ -31,3 +31,11 @@ export interface RpcGetPeerInfo {
   whitelisted: boolean;
   minfeefilter: number;
 }
+
+
+export interface PeerCalculatedStats {
+  remainingBlocks: number;
+  highestPeerBlock: number;
+  currentBlock: number;
+  syncPercentage: number;
+}
