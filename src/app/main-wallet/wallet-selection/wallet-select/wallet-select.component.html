@@ -15,17 +15,22 @@
 
 
 <ng-template #walletList>
-  <ng-container *ngFor="let wallet of wallets">
-    <mat-card  (click)="navigateToWallet(wallet)">
-      <mat-card-header>
-        <mat-card-title>{{wallet.displayName}}</mat-card-title>
-        <mat-card-subtitle>{{wallet.isLoaded ? 'loaded' : ''}}</mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-mat-card-content *ngIf="wallet.isSelected">
-        This wallet is currently selected
-      </mat-card-mat-card-content>
-    </mat-card>
-  </ng-container>
+  <mat-card class="wallet-switcher">
+    <mat-list class="wallet-list">
+      <mat-list-item *ngFor="let wallet of wallets"
+                     class="wallet-item" [ngClass]="{'active-wallet': wallet.isSelected}"
+                     (click)="navigateToWallet(wallet)">
+        <mat-icon matListIcon *ngIf="wallet.isSelected" fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+        <mat-icon matListIcon *ngIf="!wallet.isSelected" fontSet="partIcon" fontIcon="part-document"></mat-icon>
+        <h3 matLine class="name">{{wallet.displayName}}</h3>
+        <p matLine class="details">
+          {{wallet.isSelected ? 'Active wallet' : 'Click to activate wallet'}}
+          <!--{{wallet.isLoaded ? 'Loaded' : ''}}-->
+        </p>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
 </ng-template>
 
 

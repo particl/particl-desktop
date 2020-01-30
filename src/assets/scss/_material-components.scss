@@ -279,6 +279,7 @@ mat-card.mat-card {
 .mat-list {
   mat-list-item.mat-list-item {
     padding: 0;
+    font-family: $font;
   }
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
