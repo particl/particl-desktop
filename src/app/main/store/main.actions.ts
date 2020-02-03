@@ -18,4 +18,9 @@ export namespace MainActions {
   export class RefreshWalletInfo {
     static readonly type: string = '[Main] Fetch Wallet Info';
   }
+
+
+  export class ResetWallet {
+    static readonly type: string = '[Main] Reset Wallet';
+  }
 }

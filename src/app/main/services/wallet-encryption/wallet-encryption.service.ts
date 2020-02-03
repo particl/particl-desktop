@@ -97,7 +97,7 @@ export class WalletEncryptionService implements OnDestroy {
       return this.getUnlockModal(data);
     }
 
-    if (data.timeout) {
+    if ((currentStatus === 'Unlocked') && data.timeout) {
       const unlockUntil = <number>this._store.selectSnapshot(WalletInfoState.getValue('unlocked_until'));
       const secondsLeft = unlockUntil - Math.floor( (new Date().getTime()) / 1000);
 

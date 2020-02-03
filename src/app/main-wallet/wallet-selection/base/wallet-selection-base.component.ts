@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { MainActions } from 'app/main/store/main.actions';
 
 
 interface IMenuItem {
@@ -29,5 +32,17 @@ export class WalletSelectionBaseComponent {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private _router: Router,
+    private _store: Store
+  ) { }
+
+
+  navigateToWalletCreate() {
+    this._store.dispatch(new MainActions.ResetWallet()).subscribe(
+      () => {
+        this._router.navigate(['/main/wallet/create/']);
+      }
+    )
+  }
 }
