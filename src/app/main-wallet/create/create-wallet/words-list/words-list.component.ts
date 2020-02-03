@@ -95,7 +95,6 @@ export class WordsListComponent implements  OnInit {
 
       // split the text that is pasted into the current editable input element...
       let words = this.words[index].split(' ');
-      console.log('@@@@@ split input pasted words: ', words);
 
       // ... limit input to the length of the editable input range...
       const maxInputs = this.sourceWords.filter(word => word.length === 0).length;
@@ -148,7 +147,6 @@ export class WordsListComponent implements  OnInit {
 
   private validateWord(word: string, index: number): void {
     if (!this.wordListDump.includes(word)) {
-      console.log('@@@@ PASTED WORD NOT IN wordListDump: ', word, index);
       this.invalidWordIndex.push(index);
     } else {
       this.invalidWordIndex = this.invalidWordIndex.filter(idx => idx !== index);

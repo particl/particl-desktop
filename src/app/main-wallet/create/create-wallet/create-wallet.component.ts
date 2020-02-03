@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { Observable, Subject, of } from 'rxjs';
-import { takeUntil, concatMap, catchError, take, mapTo, map, tap } from 'rxjs/operators';
+import { takeUntil, concatMap, catchError, take, mapTo, map } from 'rxjs/operators';
 import { Select, Store } from '@ngxs/store';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 import { WalletInfoState } from 'app/main/store/main.state';
@@ -139,9 +139,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     ).subscribe(
       (info: WalletInfoStateModel) => {
         this.isEncrypted = (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted');
-        console.log('@@@@@ ENCRYPTION STATUS SET: ', this.isEncrypted,
-          (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted')
-        );
         this.walletName = (typeof info.walletname === 'string') ? info.walletname : this.walletName;
       }
     );
@@ -163,7 +160,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
       return;
     }
     if (event.keyCode === 13) {
-      console.log('@@@@@@ EXECUTING KEY PRESS FOR ENTER KEY');
       this.incrementStep();
     }
   }
@@ -193,14 +189,12 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   incrementStep(): void {
-    console.log('@@@@@ incrementStep() called');
     if (this.isBusy) {
       return;
     }
     this.isBusy = true;
     this.takeStepAction().pipe(take(1)).subscribe(
       async (success: boolean) => {
-        console.log('@@@@@ Increment subscribe() -> continue? ', success);
         this.isBusy = false;
         if (success) {
           this.doStepCleanup();
@@ -217,7 +211,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   async decrementStep(): Promise<void> {
-    console.log('@@@@@ decrementStep() called');
     if (this.isBusy) {
       return;
     }
@@ -230,9 +223,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   closeAndReturn(): void {
     const currentSeed = <string>this._store.selectSnapshot(WalletInfoState.getValue('hdseedid'));
     const currentName = <string>this._store.selectSnapshot(AppSettingsState.activeWallet);
-    console.log('@@@@@ closeAndReturn() -> currentSeed is: ', currentSeed, ', walletname is: ', currentName);
+
     if (currentSeed && currentSeed.length > 0) {
-      console.log('@@@@@ closeAndReturn() -> navigating to the current wallet');
       this.navigateToActiveWallet();
       return;
     }
@@ -279,7 +271,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   private setNextStep(extraSteps: number = 0): void {
-    console.log('@@@@@ setNextStep - updating step, current = ', this.actionIndex, 'next = ', this.actionIndex + extraSteps);
 
     if (extraSteps === 0) {
       this.actionIndex++;
@@ -300,7 +291,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
     if (addExtraStep) {
-      console.log('@@@@@ setNextStep - calling myself again!');
       this.setNextStep(extraSteps + 1);
     } else {
       this.actionIndex += extraSteps;
@@ -309,7 +299,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   setPreviousStep(extraSteps: number = 0): void {
-    console.log('@@@@@ setPreviousStep - decreasing step, current = ', this.actionIndex, 'next = ', this.actionIndex - 1);
 
     if (extraSteps === 0) {
       this.actionIndex--;
@@ -335,7 +324,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     }
 
     if (dropExtraStep) {
-      console.log('@@@@@ setPreviousStep - calling myself again!');
       this.setPreviousStep(extraSteps + 1);
     } else {
       this.actionIndex -= extraSteps;
@@ -349,7 +337,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   private doStepCleanup(): void {
-    console.log('@@@@@ doStepCleanup()');
     switch (this.currentStep) {
       case Step.WALLET_NAME:
         this.tempWalletName = '';
@@ -369,8 +356,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   private async doStepInit(): Promise<void> {
-    console.log('@@@@@ doStepInit()');
     this.errorString = '';
+
     switch (this.currentStep) {
       case Step.WALLET_NAME:
         this.tempWalletName = '';
@@ -391,7 +378,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
           take(1)
         ).toPromise();
 
-        console.log('@@@@@ MNEMONIC INIT: words = ', mnemonic);
         const wordsList = mnemonic.mnemonic.split(' ');
 
         if (wordsList.length > 1) {
@@ -431,7 +417,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         );
         this._encryptService.unlock({showStakingUnlock: false, timeoutIsEditable: true, timeout: 9999}).pipe(
           take(1),
-          tap((isUnlocked) => console.log('@@@@@@@ GOT RESPONSE FROM UNLOCK WALLET MODAL: ', isUnlocked)),
           concatMap((unlocked) => {
             if (!unlocked) {
               this._snackbar.open(TextContent.ERROR_UNLOCK_WALLET, 'warn');
@@ -466,14 +451,11 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   private takeStepAction(): Observable<boolean> {
-    console.log('@@@@@ takeStepAction() -> currentStep: ', this.currentStep);
-
     let obs: Observable<boolean>;
 
     switch (this.currentStep) {
 
       case Step.WALLET_NAME:
-        console.log('@@@@  takeAction() STEP WALLET_NAME: ', this.tempWalletName, '=> ', !this.tempWalletName);
         if (!this.tempWalletName) {
           break;
         }
@@ -584,7 +566,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     }
 
     if (obs === undefined) {
-      console.log('@@@@@ takeStepAction - nothing set, so returning false observable');
       obs = of(false);
     }
     return obs;
