@@ -4,8 +4,6 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ActiveWalletRoutingModule } from './active-wallet-routing.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
 
-import { ActiveWalletGuard } from './active-wallet.guard';
-
 import { ActiveWalletBaseComponent } from './base/active-wallet-base.component';
 
 import { OverviewComponent } from './overview/overview.component';
@@ -15,6 +13,8 @@ import { AddressBookComponent } from './addressbook/addressbook.component';
 import { WalletHistoryComponent } from './history/history.component';
 import { WalletSettingsComponent } from './settings/settings.component';
 import { TransactionsTableComponent } from './transaction-table/transaction-table.component';
+// import { BalancesHeaderComponent } from './overview/balances-header/balances-header.component';
+import { StakingInfoWidgetComponent } from './overview/widgets/staking-info-widget/staking-info-widget.component';
 
 
 @NgModule({
@@ -33,9 +33,8 @@ import { TransactionsTableComponent } from './transaction-table/transaction-tabl
     WalletHistoryComponent,
     WalletSettingsComponent,
     TransactionsTableComponent,
-  ],
-  providers: [
-    ActiveWalletGuard
+    // BalancesHeaderComponent,
+    StakingInfoWidgetComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

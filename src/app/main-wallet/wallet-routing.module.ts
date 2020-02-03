@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { WalletBaseComponent } from './base/wallet-base.component';
+import { ActiveWalletGuard } from './active-wallet/active-wallet.guard';
 
 
 const routes: Routes = [
@@ -11,7 +12,8 @@ const routes: Routes = [
     children: [
       {
         path: 'active',
-        loadChildren: () => import('./active-wallet/active-wallet.module').then(m => m.ActiveWalletModule)
+        loadChildren: () => import('./active-wallet/active-wallet.module').then(m => m.ActiveWalletModule),
+        canLoad: [ActiveWalletGuard]
       },
       {
         path: 'selection',

@@ -66,13 +66,6 @@ export class WalletInfoState {
   ) {}
 
 
-  // @Action(AppSettings.SetActiveWallet)
-  // onGlobalWalletChange(ctx: StateContext<WalletInfoStateModel>) {
-  //   // reset the wallet information when the active wallet changes
-  //   ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE)));
-  // }
-
-
   @Action(MainActions.ResetWallet)
   onGlobalWalletChange(ctx: StateContext<WalletInfoStateModel>) {
     // reset the wallet information when the active wallet changes
