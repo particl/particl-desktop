@@ -31,7 +31,7 @@
                   >
                     <mat-list-item class="sidebar-item">
                       <ng-container *ngIf="menuItem.icon?.length > 0">
-                        <mat-icon class="icon" fontSet="partIcon" [fontIcon]="menuGroup.menuItems[0].icon"></mat-icon>
+                        <mat-icon class="icon" fontSet="partIcon" [fontIcon]="menuItem.icon"></mat-icon>
                       </ng-container>
                       <span class="text">{{menuItem.text}}</span>
                     </mat-list-item>
