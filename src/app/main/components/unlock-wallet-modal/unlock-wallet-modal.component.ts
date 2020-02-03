@@ -1,4 +1,4 @@
-import { Component, Inject, HostListener } from '@angular/core';
+import { Component, Inject, HostListener, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UnlockModalConfig } from '../../services/wallet-encryption/wallet-encryption.model';
@@ -18,7 +18,7 @@ enum TextContent {
   templateUrl: './unlock-wallet-modal.component.html',
   styleUrls: ['./unlock-wallet-modal.component.scss']
 })
-export class UnlockwalletModalComponent {
+export class UnlockwalletModalComponent implements AfterViewInit {
 
   readonly timeoutIsEditable?: boolean;
   readonly showStakingUnlock?: boolean;
@@ -28,6 +28,7 @@ export class UnlockwalletModalComponent {
   password: string = '';
   unlockForStaking: boolean = false;
   isProcessing: boolean = false;
+  disableAnimation: boolean = true;
 
 
   constructor(
@@ -41,6 +42,14 @@ export class UnlockwalletModalComponent {
 
     this.showStakingUnlock = typeof data.showStakingUnlock === 'boolean' ? data.showStakingUnlock : false;
     this.timeoutIsEditable = typeof data.timeoutIsEditable === 'boolean' ? data.timeoutIsEditable : true;
+  }
+
+
+  ngAfterViewInit(): void {
+    // timeout required to avoid the dreaded 'ExpressionChangedAfterItHasBeenCheckedError'
+    // Implemented to avoid FOUC and mat-expansion-panel temproarily opened and suddenly closed, on render..
+    //    see Angular Material issue: https://github.com/angular/components/issues/13870
+    setTimeout(() => this.disableAnimation = false);
   }
 
 
