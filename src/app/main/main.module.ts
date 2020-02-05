@@ -5,7 +5,7 @@ import { NgxsModule } from '@ngxs/store';
 import { MainRoutingModule } from 'app/main/main-routing.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
-import { MainState, WalletInfoState } from './store/main.state';
+import { MainState, WalletInfoState, WalletStakingState } from './store/main.state';
 
 import { BaseComponent } from './base/base.component';
 import { MultiwalletSidebarComponent } from './components/multiwallet/multiwallet-sidebar.component';
@@ -34,7 +34,7 @@ import { BlockSyncModalComponent } from './components/block-sync-indicator/block
   ],
   imports: [
     MainRoutingModule,
-    NgxsModule.forFeature([MainState, WalletInfoState]),
+    NgxsModule.forFeature([MainState, WalletInfoState, WalletStakingState]),
     CommonModule,
     CoreUiModule
   ],

@@ -1,5 +1,9 @@
 <div class="status-icons" fxLayout="row" fxLayoutGap="14px">
 
+  <div class="staking icon" *ngIf="(coldStakingEnabled | async)">
+    <img src="assets/icons/status/peers-{{ peerIcon }}.svg" matTooltip="Cold staking active" />
+  </div>
+
   <div class="status icon">
     <img src="assets/icons/status/peers-{{ peerIcon }}.svg" matTooltip="Peers: {{ peerListCount }}" />
   </div>

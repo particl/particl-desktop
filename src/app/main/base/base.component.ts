@@ -1,8 +1,11 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Subject, fromEvent, merge } from 'rxjs';
+import { map, filter, tap, takeUntil, auditTime, debounceTime } from 'rxjs/operators';
 import { Log } from 'ng2-logger';
-import { Store } from '@ngxs/store';
+import { Store, Actions, ofActionDispatched, ofActionCompleted } from '@ngxs/store';
 import { MainActions } from '../store/main.actions';
+import { ZMQ } from 'app/core/store/app.actions';
+import * as zmqOptions from '../../../../modules/zmq/services.js';
 
 
 /*
@@ -16,7 +19,7 @@ import { MainActions } from '../store/main.actions';
   templateUrl: './base.component.html',
   styleUrls: ['./base.component.scss']
 })
-export class BaseComponent implements OnInit, OnDestroy {
+export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showAppSelector: boolean = true;
 
@@ -24,25 +27,69 @@ export class BaseComponent implements OnInit, OnDestroy {
   private unsubscribe$: Subject<void> = new Subject();
 
   constructor(
-    private _store: Store
-  ) { }
+    private _store: Store,
+    private _actions$: Actions
+  ) {
+
+    const blockWatcher$ = this._actions$.pipe(
+      ofActionDispatched(ZMQ.UpdateStatus),
+      filter((action: ZMQ.UpdateStatus) => action.field === 'hashtx'),
+      auditTime(zmqOptions.throlledSeconds * 1000), // rate-limited to max every x seconds
+      takeUntil(this.unsubscribe$)
+    );
+
+    const walletChanger$ = this._actions$.pipe(
+      ofActionCompleted(MainActions.ChangeWallet),
+      takeUntil(this.unsubscribe$)
+    );
+
+    const walletInit$ = this._actions$.pipe(
+      ofActionCompleted(MainActions.Initialize),
+      takeUntil(this.unsubscribe$)
+    );
+
+    // Create pipeline to update various additional necessary wallet details
+    merge(
+      blockWatcher$,
+      walletChanger$,
+      walletInit$
+    ).pipe(
+      debounceTime(1000),
+      takeUntil(this.unsubscribe$)
+    ).subscribe(
+      () => {
+        // console.log('@@@@ REQUESTING INFO DATA!!!!');
+        this._store.dispatch(new MainActions.LoadWalletData());
+      }
+    );
+  }
 
   ngOnInit() {
     this.log.d('Main.Component constructed');
     this._store.dispatch(new MainActions.Initialize(true));
   }
 
+
+  ngAfterViewInit() {
+    // Paste Event Handle: using rxjs's fromEvent instead of HostListener
+    // Prevents Angular change detection running for each event (whether the event handled or not) when using HostListener
+    fromEvent(document, 'keydown').pipe(
+      map((event: KeyboardEvent) => {
+        if (event.metaKey && event.keyCode === 86 && navigator.platform.indexOf('Mac') > -1) {
+          event.preventDefault();
+          return true;
+        }
+        return false;
+      }),
+      filter(Boolean),
+      tap(() => document.execCommand('Paste')),
+      takeUntil(this.unsubscribe$)
+    ).subscribe();
+  }
+
+
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-  }
-
-  // Paste Event Handle
-  @HostListener('window:keydown', ['$event'])
-  keyDownEvent(event: any) {
-    if (event.metaKey && event.keyCode === 86 && navigator.platform.indexOf('Mac') > -1) {
-      document.execCommand('Paste');
-      event.preventDefault();
-    }
   }
 }

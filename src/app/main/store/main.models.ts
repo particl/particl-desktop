@@ -1,5 +1,34 @@
 
 export interface WalletInfoStateModel {
+  walletname: string;
+  walletversion: number;
+  encryptionstatus: string;
+  unlocked_until: number;
+  hdseedid: string;
+  private_keys_enabled: boolean;
+}
+
+
+export interface WalletStakingStateModel {
+  cold_staking_enabled: boolean;
+}
+
+
+export interface MainStateModel {
+  isInitialized: boolean;
+}
+
+
+export interface RpcGetColdStakingInfo {
+  enabled: boolean;
+  coin_in_stakeable_script: number;
+  coin_in_coldstakeable_script: number;
+  percent_in_coldstakeable_script: number;
+  currently_staking: number;
+}
+
+
+export interface RpcGetWalletInfo {
   walletname: string,
   walletversion: number,
   total_balance: number,
@@ -21,9 +50,4 @@ export interface WalletInfoStateModel {
   paytxfee: number,
   hdseedid: string,
   private_keys_enabled: boolean
-}
-
-
-export interface MainStateModel {
-  isInitialized: boolean;
 }

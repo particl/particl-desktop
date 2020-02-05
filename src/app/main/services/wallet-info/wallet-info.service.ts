@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { retryWhen, catchError, map } from 'rxjs/operators';
 
 import { MainRpcService } from '../main-rpc/main-rpc.service';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { RpcGetWalletInfo, RpcGetColdStakingInfo } from 'app/main/store/main.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 
 
@@ -20,7 +20,7 @@ export class WalletInfoService {
   }
 
 
-  getWalletInfo(retryAttempts: number = 3): Observable<WalletInfoStateModel> {
+  getWalletInfo(retryAttempts: number = 3): Observable<RpcGetWalletInfo> {
     return this._rpc.call('getwalletinfo').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
       catchError(error => of({}))
@@ -49,6 +49,15 @@ export class WalletInfoService {
 
   walletPassphrase(password: string, timeout: number, staking: boolean = false): Observable<any> {
     return this._rpc.call('walletpassphrase', [password, (staking ? 0 : timeout), staking]);
+  }
+
+
+  getColdStakingInfo(retryAttempts: number = 3): Observable<RpcGetColdStakingInfo> {
+    // console.log('@@@@ ASKED TO GET COLD STAKING INFO');
+    return this._rpc.call('getcoldstakinginfo').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
+      catchError(error => of({}))
+    )
   }
 
 }

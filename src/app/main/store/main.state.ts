@@ -7,41 +7,32 @@ import {
   Selector
 } from '@ngxs/store';
 
-import { MainStateModel, WalletInfoStateModel  } from './main.models';
-import { MainActions } from './main.actions';
-import { AppSettings, ZMQ } from 'app/core/store/app.actions';
-import { Observable } from 'rxjs';
+import { MainStateModel, WalletInfoStateModel, RpcGetWalletInfo, WalletStakingStateModel, RpcGetColdStakingInfo  } from './main.models';
+import { MainActions, WalletDetailActions } from './main.actions';
+import { AppSettings } from 'app/core/store/app.actions';
+import { Observable, concat } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 
 
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
 const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo');
+const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletstakinginfo');
 
 
 
-const DEFAULT_WALLET_STATE = {
+const DEFAULT_WALLET_STATE: WalletInfoStateModel = {
   walletname: null,
   walletversion: 0,
-  total_balance: 0,
-  balance: 0,
-  blind_balance: 0,
-  anon_balance: 0,
-  staked_balance: 0,
-  unconfirmed_balance: 0,
-  unconfirmed_blind: 0,
-  unconfirmed_anon: 0,
-  immature_balance: 0,
-  immature_anon_balance: 0,
-  txcount: 0,
-  keypoololdest: 0,
-  keypoolsize: 0,
-  reserve: 0,
   encryptionstatus: '',
   unlocked_until: 0,
-  paytxfee: 0,
   hdseedid: '',
   private_keys_enabled: false
+};
+
+
+const DEFAULT_STAKING_INFO_STATE: WalletStakingStateModel = {
+  cold_staking_enabled: false,
 };
 
 
@@ -66,16 +57,27 @@ export class WalletInfoState {
   ) {}
 
 
+  @Action(MainActions.LoadWalletData)
+  loadAllWalletData(ctx: StateContext<WalletInfoStateModel>) {
+    const currentCtx = ctx.getState();
+    if (currentCtx.hdseedid) {
+      return concat(
+        ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())
+      );
+    }
+  }
+
+
   @Action(MainActions.ResetWallet)
-  onGlobalWalletChange(ctx: StateContext<WalletInfoStateModel>) {
-    // reset the wallet information when the active wallet changes
+  onResetStateToDefault(ctx: StateContext<WalletInfoStateModel>) {
+    // Explicitly reset the state only
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE)));
   }
 
 
   @Action(MainActions.Initialize)
-  onMainInitialized(ctx: StateContext<WalletInfoStateModel>, action: MainActions.ChangeWallet) {
-    // reset the wallet information when the active wallet changes
+  onMainInitialized(ctx: StateContext<WalletInfoStateModel>) {
+    // Set the initial wallet info state, with the current wallet obtained from core.
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE)));
 
     return this.updateWalletInfo(ctx);
@@ -100,29 +102,29 @@ export class WalletInfoState {
   }
 
 
-  @Action(ZMQ.UpdateStatus)
-  zmqUpdated(ctx: StateContext<WalletInfoStateModel>, action: ZMQ.UpdateStatus) {
-    if (ctx.getState().hdseedid && action.field === 'hashtx') {
-      return this.updateWalletInfo(ctx);
-    }
-  }
+  // @Action(ZMQ.UpdateStatus)
+  // zmqUpdated(ctx: StateContext<WalletInfoStateModel>, action: ZMQ.UpdateStatus) {
+  //   if (ctx.getState().hdseedid && action.field === 'hashtx') {
+  //     return this.updateWalletInfo(ctx);
+  //   }
+  // }
 
 
-  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<WalletInfoStateModel> {
+  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<RpcGetWalletInfo> {
     return this._walletService.getWalletInfo().pipe(
-      tap((info) => {
-        const currCtx = ctx.getState();
-        const keys = Object.keys(info);
-        if ( (typeof info === 'object') && keys.length > 0) {
-          let changed = false;
+      tap((info: RpcGetWalletInfo) => {
+        if ( (typeof info === 'object')) {
+          const newState = {};
+          const currCtx = ctx.getState();
+          const keys = Object.keys(currCtx);
+
           for (const key of keys) {
-            if (currCtx[key] !== info[key]) {
-              changed = true;
-              break;
+            if ((key in info) && (typeof currCtx[key] === typeof info[key]) && (currCtx[key] !== info[key])) {
+              newState[key] = info[key];
             }
           }
 
-          if (changed) {
+          if (Object.keys(newState).length > 0) {
             ctx.patchState(info);
           }
         }
@@ -130,6 +132,48 @@ export class WalletInfoState {
     );
   }
 };
+
+
+@State<WalletStakingStateModel>({
+  name: WALLET_STAKING_INFO_STATE_TOKEN,
+  defaults: JSON.parse(JSON.stringify(DEFAULT_STAKING_INFO_STATE))
+})
+export class WalletStakingState {
+
+  static getValue(field: string) {
+    return createSelector(
+      [WalletStakingState],
+      (state: WalletStakingStateModel): number | string | boolean | null => {
+        return field in state ? state[field] : null;
+      }
+    );
+  }
+
+
+  constructor(
+    private _walletService: WalletInfoService
+  ) {}
+
+
+  @Action(MainActions.ResetWallet)
+  onResetStateToDefault(ctx: StateContext<WalletStakingStateModel>) {
+    // Explicitly reset the state only
+    ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_STAKING_INFO_STATE)));
+  }
+
+
+  @Action(WalletDetailActions.GetColdStakingInfo)
+  loadAllWalletData(ctx: StateContext<WalletStakingStateModel>) {
+    return this._walletService.getColdStakingInfo().pipe(
+      tap((result: RpcGetColdStakingInfo) => {
+        // console.log('@@@@@@ STATE PROCESSING OF RPC RESPONSE: ', result);
+        if (typeof result.enabled === typeof ctx.getState().cold_staking_enabled) {
+          ctx.patchState({cold_staking_enabled: result.enabled});
+        }
+      })
+    );
+  }
+}
 
 
 @State<MainStateModel>({

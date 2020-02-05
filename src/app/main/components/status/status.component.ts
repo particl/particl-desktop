@@ -6,7 +6,7 @@ import { Observable, Subject, merge, combineLatest } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { AppDataState } from 'app/core/store/appdata.state';
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
-import { WalletInfoState } from 'app/main/store/main.state';
+import { WalletInfoState, WalletStakingState } from 'app/main/store/main.state';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 
@@ -18,6 +18,7 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
 export class StatusComponent implements OnInit, OnDestroy {
 
   @Select(WalletInfoState.getValue('encryptionstatus')) walletStatus: Observable<string>;
+  @Select(WalletStakingState.getValue('cold_staking_enabled')) coldStakingEnabled: Observable<boolean>;
   peerListCount: number = 0;
   timeOffset: number = 0;
 

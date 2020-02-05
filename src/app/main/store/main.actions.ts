@@ -1,5 +1,3 @@
-import { WalletInfoStateModel } from './main.models';
-
 
 export namespace MainActions {
 
@@ -16,11 +14,36 @@ export namespace MainActions {
 
 
   export class RefreshWalletInfo {
-    static readonly type: string = '[Main] Fetch Wallet Info';
+    /**
+     * Request an update of the base wallet model data only:
+     *  specifically for determining updates to the wallet intialization, encryption statuses, for example.
+     */
+    static readonly type: string = '[Main] Refresh Wallet Info Only';
+  }
+
+
+  export class LoadWalletData {
+    /**
+     * Request an update of the supporting wallet model data only:
+     *  Ideally used to load extra wallet information, eg: balance related info.
+     */
+    static readonly type: string = '[Main] Load Supporting Wallet Data';
   }
 
 
   export class ResetWallet {
+    /**
+     * Reset the active wallet state to a default blank one.
+     */
     static readonly type: string = '[Main] Reset Wallet';
   }
+}
+
+
+export namespace WalletDetailActions {
+
+  export class GetColdStakingInfo {
+    static readonly type: string = '[Wallet Details] Get Cold Staking Info';
+  }
+
 }
