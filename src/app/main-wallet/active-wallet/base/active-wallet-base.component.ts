@@ -8,11 +8,6 @@ interface IMenuItem {
   params?: any;
 }
 
-interface IMenuGroup {
-  title: string;
-  menuItems: IMenuItem[];
-}
-
 
 @Component({
   templateUrl: './active-wallet-base.component.html',
@@ -20,28 +15,13 @@ interface IMenuGroup {
 })
 export class ActiveWalletBaseComponent {
 
-  readonly menu: IMenuGroup[] = [
-    {
-      title: '',
-      menuItems: [
-        {text: 'Overview', path: 'overview', icon: 'part-overview'}
-      ]
-    },
-    {
-      title: 'Wallet',
-      menuItems: [
-        {text: 'Send / Convert', path: 'send', icon: 'part-send'},
-        {text: 'Receive', path: 'receive', icon: 'part-receive'},
-        {text: 'History', path: 'history', icon: 'part-date'},
-        {text: 'Address Book', path: 'addressbook', icon: 'part-people'}
-      ]
-    },
-    {
-      title: '',
-      menuItems: [
-        {text: 'Wallet Settings', path: 'settings', icon: 'part-tool'}
-      ]
-    }
+  readonly menu: IMenuItem[] = [
+    {text: 'Overview', path: 'overview', icon: 'part-overview'},
+    {text: 'Send / Convert', path: 'send', icon: 'part-send'},
+    {text: 'Receive', path: 'receive', icon: 'part-receive'},
+    {text: 'History', path: 'history', icon: 'part-date'},
+    {text: 'Address Book', path: 'addressbook', icon: 'part-people'},
+    {text: 'Wallet Settings', path: 'settings', icon: 'part-tool'}
   ];
 
   constructor() { }
