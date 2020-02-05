@@ -125,10 +125,10 @@
 
                 <div class="meta" fxFlex="1 1 100%">
                   <div class="name">
-                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_from.toUpperCase() }}.svg">
+                    <img class="coin" src="./assets/images/coins/{{ exchange?.currency_from.toUpperCase() }}.svg">
                     {{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from.toUpperCase() }}
                     -&gt;
-                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
+                    <img class="coin" src="./assets/images/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
                     ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to.toUpperCase() }}
                   </div>
                   
@@ -152,7 +152,7 @@
               <table class="exchange-details outgoing full-width">
                 <tr>
                   <td rowspan="2" class="direction-img">
-                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin">
+                    <img src="./assets/images/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
                   </td>
                   <th>Send {{ exchange?.currency_from.toUpperCase() }} to</th>
@@ -171,7 +171,7 @@
                 <tr>
                   <td rowspan="2" class="direction-img">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin">
+                    <img src="./assets/images/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin">
                   </td>
                   <th>Receive {{ exchange?.currency_to.toUpperCase() }} to</th>
                   <td><input type="text" readonly value="{{ exchange?.address_to }}" class="value highlight address"></td>

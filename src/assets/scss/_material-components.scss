@@ -141,6 +141,8 @@ mat-tooltip-component .mat-tooltip {
 }
 
 
+// ------ 1.7. SPINNERS ------ //
+
 .mat-progress-spinner {
   &.tiny {
     $spinner-size: 16px;
@@ -149,6 +151,9 @@ mat-tooltip-component .mat-tooltip {
     & > svg {
       width: $spinner-size !important;
       height: $spinner-size !important;
+      & > circle {
+        stroke-width: 15% !important;
+      }
     }
   }
 }
