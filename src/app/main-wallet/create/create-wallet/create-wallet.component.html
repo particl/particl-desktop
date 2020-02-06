@@ -11,27 +11,27 @@
 
     <div class="progress">
       <div class="step first" [ngClass]="{'active': currentStep === Step.START, 'done': currentStep > Step.START}">
-        <div class="number">1</div>
+        <div class="dot"></div>
         <div class="desc">Create/restore</div>
       </div>
       <div class="step" [ngClass]="{'active': currentStep === Step.WALLET_NAME, 'done': currentStep > Step.WALLET_NAME}">
-        <div class="number">2</div>
+        <div class="dot"></div>
         <div class="desc">Name wallet</div>
       </div>
       <div class="step" [ngClass]="{'active': currentStep === Step.ENCRYPT, 'done': currentStep > Step.ENCRYPT}">
-        <div class="number">3</div>
+        <div class="dot"></div>
         <div class="desc">Encrypt wallet</div>
       </div>
       <div class="step" [ngClass]="{'active': currentStep === Step.MNEMONIC_INITIAL, 'done': currentStep > Step.MNEMONIC_INITIAL}">
-        <div class="number">4</div>
+        <div class="dot"></div>
         <div class="desc">Recovery Phrase</div>
       </div>
       <div class="step" [ngClass]="{'active': currentStep === Step.PASSWORD, 'done': currentStep > Step.PASSWORD}">
-        <div class="number">5</div>
+        <div class="dot"></div>
         <div class="desc">Recovery Password</div>
       </div>
       <div class="step last" [ngClass]="{'active': currentStep === Step.COMPLETED}">
-        <div class="number">6</div>
+        <div class="dot"></div>
         <div class="desc">Summary</div>
       </div>
     </div>

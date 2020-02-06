@@ -50,6 +50,7 @@
 
 .sidebar-item {
   @extend %tfx;
+  cursor: pointer;
   padding: 0 24px;
   .icon {
     @extend %tfx;
