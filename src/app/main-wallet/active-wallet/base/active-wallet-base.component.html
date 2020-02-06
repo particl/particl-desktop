@@ -1,23 +1,27 @@
 <main-layout-default>
 
   <ng-container ngProjectAs="menu">
-    <ng-container *ngFor="let menuItem of menu">
-      <mat-content class="sidebar-section">
-        <mat-list class="sidebar-item-group">
-          <a class="sidebar-item-link"
-            routerLinkActive="active" [routerLink]="menuItem.path"
-          >
-            <mat-list-item class="sidebar-item">
-              <ng-container *ngIf="menuItem.icon.length > 0">
-                <mat-icon class="icon" fontSet="partIcon" [fontIcon]="menuItem.icon"></mat-icon>
-              </ng-container>
-              <span class="text">{{menuItem.text}}</span>
-            </mat-list-item>
-          </a>
-        </mat-list>
-      </mat-content>
 
+    <mat-expansion-panel class="instance-switcher">
+      <mat-expansion-panel-header class="switcher-toggle">
+        Default wallet<br>
+        2,841.5215 PART
+      </mat-expansion-panel-header>
+      <div class="options">
+        <div class="item">Work wallet</div>
+        <div class="item">Market what?</div>
+      </div>
+    </mat-expansion-panel>
+
+    <ng-container *ngFor="let menuItem of menu">
+      <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+        <ng-container *ngIf="menuItem.icon.length > 0">
+          <mat-icon class="icon" fontSet="partIcon" [fontIcon]="menuItem.icon"></mat-icon>
+        </ng-container>
+        <span class="text">{{menuItem.text}}</span>
+      </a>
     </ng-container>
+
   </ng-container>
 
   <main-topbar></main-topbar>
