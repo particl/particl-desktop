@@ -234,6 +234,15 @@ mat-card.mat-card {
       top: 3px;
     }
   }
+  // sidebar/instance switcher
+  &.instance-switcher {
+    .mat-expansion-indicator {
+      right: 16px;
+    }
+    &.mat-expanded {
+      background: darken($bg-black, 2.5%);
+    }
+  }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
   &.no-padding {
     .mat-expansion-panel-body {
@@ -248,7 +257,6 @@ mat-card.mat-card {
     }
     // when expanded..
     &.mat-expanded {
-      //background: darken($bg-black, 2%); // darken 'submenu' background to more visually separate from the rest
       .mat-expansion-indicator::after {
         color: $color;
       }

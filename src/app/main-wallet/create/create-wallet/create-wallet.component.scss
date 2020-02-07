@@ -40,21 +40,19 @@ $installer-header-height: 96px;
 }
 
 .progress {
-  margin-left: -15px;
-  padding: 30px 0;
+  padding: 30px 16px;
   .step {
     margin-bottom: 16px;
     position: relative;
-    .number {
-      $size: 28px;
+    .dot {
+      $size: 14px;
       display: inline-block;
       background: lighten($bg-black, 10%);
       width: $size;
       height: $size;
       border-radius: 50%;
-      text-align: center;
-      line-height: $size;
       position: relative;
+      top: 2px;
       z-index: 10;
     }
     .desc {
@@ -70,16 +68,26 @@ $installer-header-height: 96px;
       background: lighten($bg-black, 5%);
       width: 2px;
       position: absolute;
-      top: 12px;
+      top: 14px;
       bottom: -24px;
-      left: 13px;
+      left: 6px;
       z-index: 1;
     }
     &.active { // active steps
-      .number {
-        background: $color;
-        font-weight: 700;
-        color: $bg-black;
+      .dot {
+        background: transparent;
+        border: 3px solid $color;
+        width: 8px;
+        height: 8px;
+        &::after {
+          content: "";
+          display: block;
+          border: 1.5px solid rgba($color, 0.2);
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          transform: scale(3);
+        }
       }
       .desc {
         color: $bg;
@@ -90,9 +98,8 @@ $installer-header-height: 96px;
       &:after {
         background: rgba($color, 0.2);
       }
-      .number {
+      .dot {
         background: mix($color, $bg-black);
-        color: $bg-black;
       }
       .desc {
         font-weight: 400;
