@@ -1,12 +1,34 @@
 <!-- Small sidebar for Multiwallet, Settings etc. -->
 <div class="mini-sidebar-menu">
 
-  <div class="multiwallet">
+  <div class="app-bar">
 
-    <section class="wallets" [ngClass]="{'active': selectedMode === SELECTED_MODE.WALLET}">
-      <header>Wallets</header>
+    <button mat-button class="wallet app" [ngClass]="{'--active': selectedMode === SELECTED_MODE.WALLET}">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+      <div class="title">Wallet</div>
+    </button>
 
-      <button mat-raised-button color="primary"
+    <button mat-button class="market app" [ngClass]="{'--active': selectedMode === SELECTED_MODE.MARKET}">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bag"></mat-icon>
+      <div class="title">Market</div>
+    </button>
+
+    <!--button mat-button class="exchange app" [ngClass]="{'--active': selectedMode === SELECTED_MODE.EXCHANGE}">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bitcointalk"></mat-icon>
+      <div class="title">Exch.</div>
+    </button-->
+
+    <!--button mat-button class="chat app" [ngClass]="{'--active': selectedMode === SELECTED_MODE.CHAT}">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-chat-discussion"></mat-icon>
+      <div class="title">Chat</div>
+    </button-->
+
+
+    <!-- FIXME: remove after ^ app tabs implementation: -->
+    <section class="wallets" style="margin-top: 40px; opacity: 0.2;">
+      <header>wallets</header>
+
+      <button mat-button
         routerLinkActive="active" routerLink="wallet/active"
         matTooltip="{{activeWallet.toUpperCase()}}"
         matTooltipPosition="after"
@@ -15,30 +37,30 @@
         <span>{{activeWallet.toUpperCase()[0]}}</span>
       </button>
 
-      <button mat-raised-button color="primary"
+      <button mat-button
         routerLinkActive="active" routerLink="wallet/selection"
         matTooltip="Select a wallet or add a new one" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
       </button>
     </section><!-- .wallets -->
 
-    <section class="markets" [ngClass]="{'active': selectedMode === SELECTED_MODE.MARKET}">
+    <section class="markets" style="opacity: 0.2;">
 
-      <header>Markets</header>
+      <header>markets</header>
 
-      <button mat-raised-button color="primary"
+      <button mat-button
         routerLinkActive="active" routerLink="market/active"
         matTooltip="Last active market" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-select"></mat-icon>
       </button>
 
-      <button mat-raised-button color="primary"
+      <button mat-button
         routerLinkActive="active" routerLink="market/switcher"
         matTooltip="Select a known market" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-swap"></mat-icon>
       </button>
 
-      <button mat-raised-button color="primary"
+      <button mat-button
         routerLinkActive="active" routerLink="market/manage"
         matTooltip="Manage markets" matTooltipPosition="after">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
@@ -46,7 +68,7 @@
 
     </section><!-- .markets -->
 
-  </div><!-- .multiwallet -->
+  </div><!-- .app-bar -->
 
 
   <div class="buttons">
