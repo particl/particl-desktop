@@ -1,1 +1,20 @@
-<div>Overview Component</div>
+<balances-list></balances-list>
+
+<div class="overview">
+  <div class="overview-content">
+    <div class="recent-transactions section">
+      <header>
+        <div class="subtitle">Recent Transactions</div>
+      </header>
+      <transaction-table [showPagination]="false" [count]="5">
+      </transaction-table>
+    </div><!-- .recent-transactions -->
+
+  </div><!-- .overview-content -->
+
+
+  <div class="overview-sidebar">
+    <app-coldstake></app-coldstake>
+    <widget-stakinginfo></widget-stakinginfo>
+  </div><!-- .overview-sidebar -->
+</div><!-- .overview-content -->

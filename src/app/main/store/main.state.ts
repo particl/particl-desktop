@@ -7,17 +7,26 @@ import {
   Selector
 } from '@ngxs/store';
 
-import { MainStateModel, WalletInfoStateModel, RpcGetWalletInfo, WalletStakingStateModel, RpcGetColdStakingInfo  } from './main.models';
+import {
+  MainStateModel,
+  WalletInfoStateModel,
+  RpcGetWalletInfo,
+  WalletStakingStateModel,
+  RpcGetColdStakingInfo,
+  WalletUTXOStateModel
+} from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
 import { Observable, concat } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
+import { xorWith } from 'lodash';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 
 
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
 const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo');
-const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletstakinginfo');
+const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletStakingStateModel>('walletstakinginfo');
+const WALLET_UTXOS_TOKEN = new StateToken<WalletUTXOStateModel>('walletutxos');
 
 
 
@@ -27,12 +36,30 @@ const DEFAULT_WALLET_STATE: WalletInfoStateModel = {
   encryptionstatus: '',
   unlocked_until: 0,
   hdseedid: '',
-  private_keys_enabled: false
+  private_keys_enabled: false,
+  total_balance: 0,
+  balance: 0,
+  blind_balance: 0,
+  anon_balance: 0,
+  staked_balance: 0,
+  unconfirmed_balance: 0,
+  unconfirmed_blind: 0,
+  unconfirmed_anon: 0,
+  immature_balance: 0,
+  immature_anon_balance: 0,
 };
 
 
 const DEFAULT_STAKING_INFO_STATE: WalletStakingStateModel = {
   cold_staking_enabled: false,
+  percent_in_coldstakeable_script: 0,
+};
+
+
+const DEFAULT_UTXOS_STATE: WalletUTXOStateModel = {
+  public: [],
+  blind: [],
+  anon: []
 };
 
 
@@ -62,7 +89,8 @@ export class WalletInfoState {
     const currentCtx = ctx.getState();
     if (currentCtx.hdseedid) {
       return concat(
-        ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())
+        ctx.dispatch(new WalletDetailActions.GetColdStakingInfo()),
+        ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
       );
     }
   }
@@ -100,14 +128,6 @@ export class WalletInfoState {
       return this.updateWalletInfo(ctx);
     }
   }
-
-
-  // @Action(ZMQ.UpdateStatus)
-  // zmqUpdated(ctx: StateContext<WalletInfoStateModel>, action: ZMQ.UpdateStatus) {
-  //   if (ctx.getState().hdseedid && action.field === 'hashtx') {
-  //     return this.updateWalletInfo(ctx);
-  //   }
-  // }
 
 
   private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<RpcGetWalletInfo> {
@@ -163,17 +183,87 @@ export class WalletStakingState {
 
 
   @Action(WalletDetailActions.GetColdStakingInfo)
-  loadAllWalletData(ctx: StateContext<WalletStakingStateModel>) {
+  fetchColdStakingData(ctx: StateContext<WalletStakingStateModel>) {
     return this._walletService.getColdStakingInfo().pipe(
       tap((result: RpcGetColdStakingInfo) => {
-        // console.log('@@@@@@ STATE PROCESSING OF RPC RESPONSE: ', result);
-        if (typeof result.enabled === typeof ctx.getState().cold_staking_enabled) {
-          ctx.patchState({cold_staking_enabled: result.enabled});
+
+        const updatedValues = {};
+        const currentState = ctx.getState();
+
+        if (typeof result.enabled === typeof currentState.cold_staking_enabled) {
+          updatedValues['cold_staking_enabled'] = result.enabled;
+        }
+
+        if (typeof result.percent_in_coldstakeable_script === typeof currentState.percent_in_coldstakeable_script) {
+          updatedValues['percent_in_coldstakeable_script'] = result.percent_in_coldstakeable_script;
+        }
+
+        if (Object.keys(updatedValues).length > 0 ) {
+          ctx.patchState(updatedValues);
         }
       })
     );
   }
 }
+
+
+
+@State<WalletUTXOStateModel>({
+  name: WALLET_UTXOS_TOKEN,
+  defaults: JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE))
+})
+export class WalletUTXOState {
+
+  static getValue(field: string) {
+    return createSelector(
+      [WalletUTXOState],
+      (state: WalletUTXOState): any[] => {
+        return field in state ? state[field] : 0;
+      }
+    );
+  }
+
+
+  constructor(
+    private _walletService: WalletInfoService
+  ) {}
+
+
+  @Action(MainActions.ResetWallet)
+  onResetStateToDefault(ctx: StateContext<WalletUTXOStateModel>) {
+    // Explicitly reset the state only
+    ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
+  }
+
+
+  @Action(WalletDetailActions.GetAllUTXOS)
+  fetchAllUTXOS(ctx: StateContext<WalletUTXOStateModel>) {
+    return this._walletService.getAllUTXOs().pipe(
+      tap((result) => {
+
+        const updatedValues = {};
+        const currentState = ctx.getState();
+
+        const resultKeys = Object.keys(result);
+        for (const resKey of resultKeys) {
+          if ((resKey in currentState) && (result[resKey].length > 0)) {
+            if (
+              (currentState[resKey].length !== result[resKey].length) ||
+              (xorWith((val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)).length > 0)
+            ) {
+              updatedValues[resKey] = result[resKey];
+            }
+          }
+        }
+
+        if (Object.keys(updatedValues).length > 0 ) {
+          ctx.patchState(updatedValues);
+        }
+      })
+    );
+  }
+}
+
 
 
 @State<MainStateModel>({

@@ -6,11 +6,72 @@ export interface WalletInfoStateModel {
   unlocked_until: number;
   hdseedid: string;
   private_keys_enabled: boolean;
+  total_balance: number;
+  balance: number;
+  blind_balance: number;
+  anon_balance: number;
+  staked_balance: number;
+  unconfirmed_balance: number;
+  unconfirmed_blind: number;
+  unconfirmed_anon: number;
+  immature_balance: number;
+  immature_anon_balance: number;
 }
 
 
 export interface WalletStakingStateModel {
   cold_staking_enabled: boolean;
+  percent_in_coldstakeable_script: number;
+}
+
+
+export interface PublicUTXO {
+  txid: string;
+  vout: number;
+  address?: string;
+  label?: string;
+  coldstaking_address?: string;
+  scriptPubKey: string;
+  amount: number;
+  confirmations: number;
+  spendable?: boolean;
+  solvable: boolean;
+  desc: string;
+  safe: boolean;
+  stakeable: boolean;
+}
+
+
+export interface BlindUTXO {
+  txid: string;
+  vout: number;
+  address: string;
+  coldstaking_address?: string;
+  scriptPubKey: string;
+  amount: number;
+  confirmations: number;
+  safe: boolean;
+  spendable?: boolean;
+}
+
+
+export interface AnonUTXO {
+  txid: string;
+  vout: number;
+  address: string;
+  coldstaking_address?: string;
+  label: string;
+  amount: number;
+  confirmations: number;
+  safe: boolean;
+  spendable?: boolean;
+}
+
+
+export interface WalletUTXOStateModel {
+  public: PublicUTXO[];
+  blind: BlindUTXO[];
+  anon: AnonUTXO[];
 }
 
 

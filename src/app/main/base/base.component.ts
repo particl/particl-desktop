@@ -58,7 +58,6 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
       takeUntil(this.unsubscribe$)
     ).subscribe(
       () => {
-        // console.log('@@@@ REQUESTING INFO DATA!!!!');
         this._store.dispatch(new MainActions.LoadWalletData());
       }
     );

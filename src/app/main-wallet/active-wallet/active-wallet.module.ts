@@ -13,7 +13,7 @@ import { AddressBookComponent } from './addressbook/addressbook.component';
 import { WalletHistoryComponent } from './history/history.component';
 import { WalletSettingsComponent } from './settings/settings.component';
 import { TransactionsTableComponent } from './transaction-table/transaction-table.component';
-// import { BalancesHeaderComponent } from './overview/balances-header/balances-header.component';
+import { BalancesHeaderComponent } from './overview/balances-header/balances-header.component';
 import { StakingInfoWidgetComponent } from './overview/widgets/staking-info-widget/staking-info-widget.component';
 
 
@@ -33,7 +33,7 @@ import { StakingInfoWidgetComponent } from './overview/widgets/staking-info-widg
     WalletHistoryComponent,
     WalletSettingsComponent,
     TransactionsTableComponent,
-    // BalancesHeaderComponent,
+    BalancesHeaderComponent,
     StakingInfoWidgetComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

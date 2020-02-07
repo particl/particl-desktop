@@ -1,1 +1,30 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import 'widgets/shared/shared.scss';
+
+.overview { // area with widgets
+  display: flex;
+  padding: 0 35px 50px;
+  @include break(l) {
+    padding: 10px 50px 50px;
+  }
+}
+
+.overview-content {
+  flex: 1 1 100%;
+  margin-right: 40px;
+}
+
+.overview-sidebar {
+  flex: 0 0 245px;
+  @include break(l) {
+    flex: 0 0 320px;
+  }
+  @include break(hd) {
+    flex: 0 0 370px;
+  }
+}
+
+.action-buttons {
+  text-align: right;
+  margin: 24px 0 48px;
+}

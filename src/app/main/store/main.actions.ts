@@ -46,4 +46,8 @@ export namespace WalletDetailActions {
     static readonly type: string = '[Wallet Details] Get Cold Staking Info';
   }
 
+  export class GetAllUTXOS {
+    static readonly type: string = '[Wallet Details] Get All Balances';
+  }
+
 }

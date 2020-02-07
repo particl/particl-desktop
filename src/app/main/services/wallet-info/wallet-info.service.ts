@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import { retryWhen, catchError, map } from 'rxjs/operators';
 
 import { MainRpcService } from '../main-rpc/main-rpc.service';
-import { RpcGetWalletInfo, RpcGetColdStakingInfo } from 'app/main/store/main.models';
+import { RpcGetWalletInfo, RpcGetColdStakingInfo, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 
 
@@ -53,11 +53,34 @@ export class WalletInfoService {
 
 
   getColdStakingInfo(retryAttempts: number = 3): Observable<RpcGetColdStakingInfo> {
-    // console.log('@@@@ ASKED TO GET COLD STAKING INFO');
     return this._rpc.call('getcoldstakinginfo').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
       catchError(error => of({}))
     )
+  }
+
+
+  getAllUTXOs(): Observable<{public: PublicUTXO[], blind: BlindUTXO[], anon: AnonUTXO[]}> {
+    const public$: Observable<PublicUTXO[]> = this._rpc.call('listunspent').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1})),
+      catchError(() => of([]))
+    );
+    const blind$: Observable<BlindUTXO[]> = this._rpc.call('listunspentblind').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1})),
+      catchError(() => of([]))
+    );
+    const anon$: Observable<AnonUTXO[]> = this._rpc.call('listunspentanon').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1})),
+      catchError(() => of([]))
+    );
+
+    return forkJoin(
+      {
+        public: public$,
+        blind: blind$,
+        anon: anon$
+      }
+    );
   }
 
 }
