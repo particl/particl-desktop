@@ -60,8 +60,8 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
     this.settingPages.push({
       icon: 'part-cog',
       info: {
-        title: 'Wallet Specific Settings',
-        description: 'Adjust settings and configuration that apply to the current selected wallet',
+        title: 'Wallet Settings',
+        description: 'Adjust settings and configuration that apply to the currently selected wallet',
         help: ''
       } as PageInfo,
       settingGroups: [],
@@ -409,6 +409,7 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
 
     const notificationsWallet = {
       name: 'Wallet Notifications',
+      icon: 'part-notification-bell',
       settings: []
     } as SettingGroup;
 
@@ -441,6 +442,7 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
 
     const dangerZone = {
       name: 'Danger Zone',
+      icon: 'part-alert',
       settings: []
     } as SettingGroup;
 

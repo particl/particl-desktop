@@ -19,7 +19,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       2.2. Modifiers
       2.3. Tab/control bars
       2.4. Filters (sidebars)
-      2.5. Page intros (help titles)
+      2.5. Radio switchers (sidebar submenu)
     3. UI elements
       3.1. Buttons
       3.2. Addresses
@@ -136,6 +136,66 @@ body {
     margin-top: 10px;
     &:first-of-type {
       margin-top: 0;
+    }
+  }
+}
+
+
+// ------ 2.5. RADIO SWITCHERS ------ //
+
+.radio-switcher {
+  @extend %mat-card;
+  border-radius: $radius;
+  overflow: hidden;
+  label {
+    input[type="radio"] { // radio button for functionality, hidden
+      position: absolute;
+      left: -999%;
+      margin: 0;
+      // active state
+      &:checked + .switcher-option {
+        font-weight: 600;
+        .mat-icon {
+          @extend %reset;
+          color: $secondary;
+          &.part-alert {
+            color: $color-alert;
+          }
+        }
+      }
+      // keyboard/mouse focus
+      &:focus + .switcher-option {
+        .mat-icon {
+          background: rgba($secondary, 0.05);
+          padding: 8px;
+          margin: 0 4px 0 0;
+          &.part-alert {
+            background: rgba($color-alert, 0.05);
+          }
+        }
+      }
+    }
+    .switcher-option { // container for all option's content
+      cursor: pointer;
+      background: $color-white;
+      border-top: 1px solid $bg-shadow;
+      padding: 0 12px 0 4px;
+      line-height: 40px;
+      font-weight: 500;
+      .mat-icon {
+        @extend %lightest;
+        @extend %tfx;
+        position: relative;
+        top: 3px;
+        padding: 0;
+        margin: 8px 12px 8px 8px;
+        border-radius: 50%;
+      }
+    }
+    &:first-of-type {
+      .switcher-option {
+        border: none;
+      }
     }
   }
 }
