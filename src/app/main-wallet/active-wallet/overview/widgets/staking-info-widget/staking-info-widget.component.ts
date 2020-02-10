@@ -7,8 +7,8 @@ import { auditTime, distinctUntilChanged, takeUntil, switchMap } from 'rxjs/oper
 import { StakingInfoService } from './staking-info.service';
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
 import { WalletInfoState } from 'app/main/store/main.state';
+import { RpcGetStakingInfo, NumericStat } from './staking-info-widget.models.js';
 import * as zmqOptions from '../../../../../../../modules/zmq/services.js';
-import { RpcGetStakingInfo } from './staking-info-widget.models.js';
 
 @Component({
   selector: 'widget-stakinginfo',
@@ -21,11 +21,16 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
   @Select(ZmqConnectionState.getData('hashblock')) blockWatcher$: Observable<string>;
   @Select(WalletInfoState.getValue('walletname')) walletSwitcher$: Observable<string>;
 
-  nextRewardTime: string;
-  stakingWeightWhole: string;
-  stakingWeightFraction: string;
-  stakingPercentage: string;
   stakingEnabled: boolean;
+  nextRewardTime: string;
+  ownWeight: NumericStat;
+
+  annualPercent: string;
+  difficulty: NumericStat;
+  moneySupply: NumericStat;
+  totalStakingAmount: NumericStat;
+  totalStakingPercent: NumericStat;
+  rewardDistribution: NumericStat;
 
 
   private log: any = Log.create('staking-info-widget.component' + Math.floor((Math.random() * 1000) + 1));
@@ -73,10 +78,16 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
   private resetStats() {
     this.nextRewardTime = this.calculateRemainingTime(0);
-    this.stakingWeightWhole = '-';
-    this.stakingWeightFraction = '';
-    this.stakingPercentage = '-';
     this.stakingEnabled = true;
+
+    this.ownWeight = {whole: '-', sep: '', fraction: ''};
+
+    this.annualPercent = '';
+    this.difficulty = {whole: '-', sep: '', fraction: ''};
+    this.moneySupply = {whole: '-', sep: '', fraction: ''};
+    this.totalStakingAmount = {whole: '-', sep: '', fraction: ''};
+    this.totalStakingPercent = {whole: '-', sep: '', fraction: ''};
+    this.rewardDistribution = {whole: '-', sep: '', fraction: ''};
   }
 
 
@@ -91,18 +102,28 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
     const percentyearreward = +response.percentyearreward || 0;
     const netstakeweight = +response.netstakeweight || 0;
     const weight = +response.weight || 0;
+    const moneySupply = +response.moneysupply || 0;
 
     this.stakingEnabled = typeof response.enabled === 'boolean' ? response.enabled : false;
-    this.stakingPercentage = `${percentyearreward}`;
+    this.annualPercent = `${percentyearreward}`;
     this.nextRewardTime = this.calculateRemainingTime(+response.expectedtime);
+    this.difficulty = this.convertToNumericStat(+response.difficulty || 0, 2);
+    this.moneySupply = this.convertToNumericStat(moneySupply, 2);
+    this.totalStakingAmount = this.convertToNumericStat(netstakeweight / Math.pow(10, 8), 3);
 
     if (netstakeweight > 0) {
-      const weightCalc = ((weight / netstakeweight) * 100).toPrecision(6);
-      const weightParts = weightCalc.split('.');
+      const weightCalc = ((weight / netstakeweight) * 100);
+      this.ownWeight = this.convertToNumericStat(weightCalc, 5);
+    }
 
-      this.stakingWeightWhole = weightParts[0];
-      if (+weightParts[1] > 0) {
-        this.stakingWeightFraction = weightParts[1];
+    if (moneySupply > 0) {
+      const totalPercent = netstakeweight / Math.pow(10, 8) / moneySupply * 100;
+
+      this.totalStakingPercent = this.convertToNumericStat(totalPercent, 2);
+
+      if (+totalPercent > 0) {
+        const effectivePercent = percentyearreward * 100 / totalPercent;
+        this.rewardDistribution = this.convertToNumericStat(effectivePercent, 2);
       }
     }
   }
@@ -135,6 +156,25 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
   private errorHandler(): void {
     this.log.er('Requesting staking stats failed');
     this.resetStats();
+  }
+
+
+  private convertToNumericStat(amount: number, precision: number = 2): NumericStat {
+    // const parts = amount.toPrecision(precision + 1).split('.');
+    const parts = Math.fround(amount).toFixed(precision).split('.');
+
+    const resp = {
+      whole: `${parts[0] || 0}`,
+      sep: '',
+      fraction: ''
+    } as NumericStat;
+
+    if (+parts[1] > 0) {
+      resp.sep = '.';
+      resp.fraction = `${+parts[1]}`;
+    }
+
+    return resp;
   }
 
 }

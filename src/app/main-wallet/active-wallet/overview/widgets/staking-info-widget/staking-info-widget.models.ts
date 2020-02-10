@@ -15,3 +15,10 @@ export interface RpcGetStakingInfo {
   netstakeweight: number;
   expectedtime: number;
 }
+
+
+export interface NumericStat {
+  whole: string;
+  sep: string;
+  fraction: string;
+}

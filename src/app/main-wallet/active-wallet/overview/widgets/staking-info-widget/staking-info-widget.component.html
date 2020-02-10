@@ -20,16 +20,52 @@
 
       <div class="row">
         <div class="key">Your Stake weight</div>
-        <div class="value">{{ stakingWeightWhole }}{{ stakingWeightFraction ? '.' : ''}}<small>{{ stakingWeightFraction }}</small>&nbsp;%</div>
+        <div class="value">{{ ownWeight.whole }}{{ ownWeight.sep }}<small>{{ ownWeight.fraction }}</small>&nbsp;%</div>
       </div>
 
       <mat-divider></mat-divider>
+    </ng-container>
+
+    <div class="row">
+      <div class="key">PoS Difficulty</div>
+      <div class="value">{{ difficulty.whole }}{{ difficulty.sep }}<small>{{ difficulty.fraction }}</small></div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">
+      <div class="key">Money Supply</div>
+      <div class="value">{{ moneySupply.whole }}{{ moneySupply.sep }}<small>{{ moneySupply.fraction }}</small></div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">
+      <div class="key">Amount Staking</div>
+      <div class="value">{{ totalStakingAmount.whole }}{{ totalStakingAmount.sep }}<small>{{ totalStakingAmount.fraction }}</small></div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">
+      <div class="key">% All PART Staking</div>
+      <div class="value">{{ totalStakingPercent.whole }}{{ totalStakingPercent.sep }}<small>{{ totalStakingPercent.fraction }}</small>&nbsp;%</div>
+    </div>
+
+    <mat-divider></mat-divider>
 
       <div class="row">
-        <div class="key">Stake percentage</div>
-        <div class="value">{{ stakingPercentage }}&nbsp;%</div>
+        <div class="key">Annual %</div>
+        <div class="value">{{ annualPercent }}&nbsp;%</div>
       </div>
-    </ng-container>
+
+    <mat-divider></mat-divider>
+
+    <div class="row">
+      <div class="key">Effective Staking %</div>
+      <div class="value">{{ rewardDistribution.whole }}{{ rewardDistribution.sep }}<small>{{ rewardDistribution.fraction }}</small>&nbsp;%</div>
+    </div>
+
 
   </mat-card><!-- .staking-overview -->
 
