@@ -1,22 +1,22 @@
 <mat-sidenav-container fullscreen>
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
     <div class="sidebar-menu">
+
       <div class="logo">
         <img src="./assets/particl-logo{{ (testnet | async) ? '-testnet' : ''}}.svg" alt="Particl">
       </div>
 
       <mat-divider></mat-divider>
 
-
       <div class="menu-links">
         <ng-content select="menu"></ng-content>
       </div><!-- .menu-links -->
-
 
       <footer class="footer">
         <block-sync-bar></block-sync-bar>
         <main-version></main-version>
       </footer><!-- .pin-to-bottom -->
+
     </div>
 
   </mat-sidenav><!-- .sidebar -->
