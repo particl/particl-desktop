@@ -15,6 +15,7 @@ import { WalletSettingsComponent } from './settings/settings.component';
 import { TransactionsTableComponent } from './transaction-table/transaction-table.component';
 import { BalancesHeaderComponent } from './overview/balances-header/balances-header.component';
 import { StakingInfoWidgetComponent } from './overview/widgets/staking-info-widget/staking-info-widget.component';
+import { WalletBackupModalComponent } from './settings/wallet-backup-modal/wallet-backup-modal.component';
 
 
 @NgModule({
@@ -34,7 +35,11 @@ import { StakingInfoWidgetComponent } from './overview/widgets/staking-info-widg
     WalletSettingsComponent,
     TransactionsTableComponent,
     BalancesHeaderComponent,
-    StakingInfoWidgetComponent
+    StakingInfoWidgetComponent,
+    WalletBackupModalComponent
+  ],
+  entryComponents: [
+    WalletBackupModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

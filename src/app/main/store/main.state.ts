@@ -13,7 +13,8 @@ import {
   RpcGetWalletInfo,
   WalletStakingStateModel,
   RpcGetColdStakingInfo,
-  WalletUTXOStateModel
+  WalletUTXOStateModel,
+  WalletSettingsStateModel
 } from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
@@ -21,12 +22,14 @@ import { Observable, concat } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 import { xorWith } from 'lodash';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
+import { SettingsService } from 'app/core/services/settings.service';
 
 
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
 const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo');
 const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletStakingStateModel>('walletstakinginfo');
 const WALLET_UTXOS_TOKEN = new StateToken<WalletUTXOStateModel>('walletutxos');
+const WALLET_SETTINGS_STATE_TOKEN = new StateToken<WalletUTXOStateModel>('walletsettings');
 
 
 
@@ -60,6 +63,12 @@ const DEFAULT_UTXOS_STATE: WalletUTXOStateModel = {
   public: [],
   blind: [],
   anon: []
+};
+
+
+const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
+  notifications_payment_received: true,
+  notifications_staking_reward: true,
 };
 
 
@@ -115,9 +124,7 @@ export class WalletInfoState {
   @Action(MainActions.ChangeWallet)
   changeActiveWallet(ctx: StateContext<WalletInfoStateModel>, action: MainActions.ChangeWallet) {
     return ctx.dispatch(new AppSettings.SetActiveWallet(action.wallet)).pipe(
-      concatMap(() => {
-        return this.updateWalletInfo(ctx)
-      })
+      concatMap(() => this.updateWalletInfo(ctx))
     );
   }
 
@@ -130,7 +137,7 @@ export class WalletInfoState {
   }
 
 
-  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<RpcGetWalletInfo> {
+  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<void> {
     return this._walletService.getWalletInfo().pipe(
       tap((info: RpcGetWalletInfo) => {
         if ( (typeof info === 'object')) {
@@ -148,7 +155,9 @@ export class WalletInfoState {
             ctx.patchState(info);
           }
         }
-      })
+      }),
+
+      concatMap(info => ctx.dispatch(new WalletDetailActions.GetSettings(info.walletname)))
     );
   }
 };
@@ -262,6 +271,52 @@ export class WalletUTXOState {
       })
     );
   }
+}
+
+
+
+@State<WalletSettingsStateModel>({
+  name: WALLET_SETTINGS_STATE_TOKEN,
+  defaults: JSON.parse(JSON.stringify(DEFAULT_WALLET_SETTINGS_STATE))
+})
+export class WalletSettingsState {
+
+  constructor(
+    private _settings: SettingsService
+  ) {}
+
+  @Action(WalletDetailActions.GetSettings)
+  getWalletSettings(ctx: StateContext<WalletSettingsStateModel>, action: WalletDetailActions.GetSettings) {
+
+    if (typeof action.walletName === 'string') {
+      const updatedValues = JSON.parse(JSON.stringify(DEFAULT_WALLET_SETTINGS_STATE));
+
+      const settings = this._settings.fetchWalletSettings(action.walletName);
+
+      const settingKeys = Object.keys(settings);
+      for (const settingKey of settingKeys) {
+        if ((settingKey in updatedValues) && (typeof updatedValues[settingKey] === typeof settings[settingKey])) {
+          updatedValues[settingKey] = settings[settingKey];
+        }
+      }
+
+      ctx.patchState(updatedValues);
+    }
+  }
+
+
+  @Action(WalletDetailActions.SetSetting)
+  changeWalletSetting(ctx: StateContext<WalletSettingsStateModel>, action: WalletDetailActions.SetSetting) {
+    const currentState = DEFAULT_WALLET_SETTINGS_STATE;
+    if ( Object.keys(currentState).includes(action.key) && (typeof currentState[action.key] === typeof action.value) ) {
+      if (this._settings.saveWalletSetting(action.walletName, action.key, action.value)) {
+        const obj = {};
+        obj[action.key] = action.value;
+        ctx.patchState(obj);
+      };
+    }
+  }
+
 }
 
 

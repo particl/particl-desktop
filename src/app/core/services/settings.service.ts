@@ -27,7 +27,17 @@ export class SettingsService {
   }
 
 
-  saveGlobalSetting(key: string, value: any): boolean {
+  fetchWalletSettings(walletName: string): SettingLiteral {
+    const settings = this.fetchSettings();
+    const wallets = Object.prototype.toString.call(settings.wallets) === '[object Object]' ? settings.wallets : {};
+    if ((walletName in wallets) && Object.prototype.toString.call(wallets[walletName])) {
+      return wallets[walletName];
+    }
+    return {};
+  }
+
+
+  saveGlobalSetting(key: string, value: boolean | string | number): boolean {
     // @TODO: zaSmilingIdiot 2020-01-14 -> potential for conflicts to happen... not "thread safe"
 
     if (!['boolean', 'string', 'number'].includes(typeof value)) {
@@ -44,6 +54,24 @@ export class SettingsService {
     localStorage.setItem('settings', JSON.stringify(saved));
     return true;
   }
+
+
+  saveWalletSetting(walletName: string, key: string, value: boolean | string | number ): boolean {
+    // @TODO: zaSmilingIdiot 2020-02-10 -> potential for conflicts to happen... not "thread safe"
+    if (!['boolean', 'string', 'number'].includes(typeof value)) {
+      return false;
+    }
+    const saved = this.fetchSettings();
+    const wallets = Object.prototype.toString.call(saved.wallets) === '[object Object]' ? saved.wallets : {};
+    const wallet = Object.prototype.toString.call(wallets[walletName]) === '[object Object]' ? wallets[walletName] : {};
+    wallet[key] = value;
+    wallets[walletName] = wallet;
+    saved.wallets = wallets;
+    localStorage.setItem('settings', JSON.stringify(saved));
+
+    return true;
+  }
+
 
   private fetchSettings(): any {
     return JSON.parse(localStorage.getItem('settings') || '{}') || {};

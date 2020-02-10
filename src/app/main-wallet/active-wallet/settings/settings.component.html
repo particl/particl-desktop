@@ -1,1 +1,178 @@
-<div>Wallet Settings Component</div>
+<!-- Do not remove the below class it is using for test case -->
+<app-header class="test-case-container">
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)">
+      <mat-tab *ngFor="let page of settingPages">
+        <ng-template mat-tab-label>
+          <mat-icon *ngIf="page.icon.length" class="icon" fontSet="partIcon" fontIcon="{{page.icon}}"></mat-icon>
+          Settings for {{ walletName | async }}
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+<div class="container-block with-tab-bar"  *ngIf="currentPage">
+  <app-page-intro [childPageAlias]="currentPage.header">
+    <ng-container page-title>{{ currentPage.info.title }}</ng-container>
+    <ng-container page-content>
+      {{ currentPage.info.description }}
+    </ng-container>
+    <ng-container page-help>
+      {{ currentPage.info.help }}
+    </ng-container>
+  </app-page-intro>
+
+  <ng-container *ngTemplateOutlet="isLoading ? pageloader : content"></ng-container>
+
+</div>
+
+
+<ng-template #pageloader>
+  <div class="no-results">
+    <p>
+      Requesting configuration values
+    </p>
+  </div>
+</ng-template>
+
+
+<ng-template #content>
+
+  <div class="row" fxLayout fxLayoutGap="30px" *ngFor="let rowIdx of groupIdxs">
+    <div class="third" fxFlex="33" *ngFor="let colIdx of colIdxs">
+      <ng-container *ngIf="(currentPage.settingGroups[rowIdx + colIdx])?.settings.length > 0">
+        <h2 class="subtitle"> {{ (currentPage.settingGroups[rowIdx + colIdx])?.name }} </h2>
+        <mat-card>
+          <ng-container *ngFor="let setting of (currentPage.settingGroups[rowIdx + colIdx])?.settings; let settingIdx = index;">
+            <div class="item" [ngSwitch]="setting.type">
+
+              <ng-container *ngSwitchCase="settingType.BOOLEAN">
+                <mat-checkbox
+                  class="checkbox align-top wrap"
+                  [disabled]="setting.isDisabled"
+                  [(ngModel)]="setting.newValue"
+                  (change)="settingChangedValue(rowIdx + colIdx, settingIdx)"
+                >
+                  <h4 class="option">
+                    {{ setting.title }}
+                    <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                  </h4>
+                  <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                </mat-checkbox>
+                <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="settingType.NUMBER">
+                <h4 class="option">
+                  {{ setting.title }}
+                  <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
+                <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                <mat-form-field floatLabel="never">
+                  <input matInput type="number" *ngIf="!setting.limits"
+                    [disabled]="setting.isDisabled"
+                    [(ngModel)]="setting.newValue"
+                    (change)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                  <input matInput type="number" *ngIf="setting.limits"
+                    [min]="setting.limits.min"
+                    [step]="setting.limits.step"
+                    [max]="setting.limits.max"
+                    [disabled]="setting.isDisabled"
+                    [(ngModel)]="setting.newValue"
+                    (change)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                </mat-form-field>
+                <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="settingType.STRING">
+                <h4 class="option">
+                  {{ setting.title }}
+                  <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
+                <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                <mat-form-field class="full-width">
+                  <input matInput
+                    [placeholder]="setting?.limits?.placeholder"
+                    [disabled]="setting.isDisabled"
+                    [(ngModel)]="setting.newValue"
+                    (change)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                </mat-form-field>
+                <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="settingType.SELECT">
+                <h4 class="option">
+                  {{ setting.title }}
+                  <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
+                <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                <mat-form-field>
+                  <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                    <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
+                      {{ option.text }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="settingType.BUTTON">
+                <h4 class="option">
+                  {{ setting.title }}
+                  <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                </h4>
+                <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                <p class="buttons">
+                  <button mat-raised-button
+                    color="{{ setting.limits ? setting.limits.color || 'primary' : 'primary' }}"
+                    class="validate"
+                    [disabled]="setting.isDisabled"
+                    (click)="settingChangedValue(rowIdx + colIdx, settingIdx)"
+                  >
+                    <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" fontSet="partIcon" [fontIcon]="setting.limits.icon"></mat-icon>
+                  {{ setting.title }}
+                  </button>
+                </p>
+                <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+              </ng-container>
+            </div>
+
+            <hr class="divider" *ngIf="settingIdx !== ((currentPage.settingGroups[rowIdx + colIdx]).settings.length - 1)">
+          </ng-container>
+        </mat-card>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="actions">
+    <div class="left">
+      <button mat-button
+        color="basic"
+        [disabled]="currentChanges.length === 0"
+        appDebounceClick
+        (debounceClick)="clearChanges()"
+      >
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        Reset unsaved changes
+      </button>
+    </div>
+    <div class="right">
+      <button mat-raised-button
+        color="primary"
+        class="validate"
+        [disabled]="(currentChanges.length === 0) || (currentPage.settingErrors.length > 0) || isProcessing"
+        (click)="saveChanges()">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        Save changes
+      </button>
+    </div>
+  </div>
+
+</ng-template>

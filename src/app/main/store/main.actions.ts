@@ -50,4 +50,14 @@ export namespace WalletDetailActions {
     static readonly type: string = '[Wallet Details] Get All Balances';
   }
 
+  export class GetSettings {
+    static readonly type: string = '[Wallet Details] Load Wallet Settings';
+    constructor(public walletName: string) {}
+  }
+
+  export class SetSetting {
+    static readonly type: string = '[Wallet Details] Set Setting';
+    constructor(public walletName: string, public key: string, public value: string | boolean | number) {}
+  }
+
 }

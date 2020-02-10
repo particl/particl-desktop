@@ -19,6 +19,12 @@ export interface WalletInfoStateModel {
 }
 
 
+export interface WalletSettingsStateModel {
+  notifications_payment_received: boolean;
+  notifications_staking_reward: boolean;
+}
+
+
 export interface WalletStakingStateModel {
   cold_staking_enabled: boolean;
   percent_in_coldstakeable_script: number;
