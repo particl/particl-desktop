@@ -5,7 +5,7 @@
 .section {
   .subtitle { // title
     @extend %subtitle;
-    margin: 24px 0 14px;
+    margin: 36px 0 14px;
     &.first {
       margin-top: 0;
     }

@@ -635,6 +635,10 @@ mat-option.mat-option {
   .mat-option-text {
     font-size: 13px;
   }
+  &.mat-selected {
+    color: $text !important;
+    font-weight: 500;
+  }
 }
 .mat-select-panel {
   background: $color-white;
@@ -643,6 +647,41 @@ mat-option.mat-option {
 .underlining-select {
   border-bottom: 0.2px solid rgba(0, 0, 0, 0.507);
   line-height: 1.6em;
+}
+
+// "filled" selects, custom-styled
+.mat-form-field-type-mat-select[appearance="fill"] {
+  display: block;
+  .mat-form-field-flex {
+    padding: 0 16px;
+    background: $color-white;
+  }
+  .mat-form-field-infix {
+    padding: 0.2em 0 1.1em 0;
+  }
+
+  // standalone card-like variant
+  &.--boxed {
+    box-shadow: 0 1px 10px -4px rgba($text, 0.3);
+    border-radius: $radius $radius 0 0;
+    margin-bottom: 16px;
+    .mat-select-value {
+      font-weight: 500;
+    }
+    .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+      padding-bottom: 0;
+      .mat-select-arrow-wrapper {
+        transform: none;
+      }
+      .mat-form-field-subscript-wrapper {
+        top: 100%;
+      }
+      .mat-form-field-underline {
+        bottom: 0;
+      }
+    }
+  }
+
 }
 
 
