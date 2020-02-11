@@ -96,7 +96,7 @@ export class FilteredTransaction {
 
     const partoshiAmount = new PartoshiAmount(Math.abs(+json.amount) * Math.pow(10, 8));
     this.amount = +json.amount;
-    this.amountWhole = (this.amount < 0 ? '-' : '') + partoshiAmount.particlStringInteger();
+    this.amountWhole = (this.amount < 0 ? '-' : '+') + partoshiAmount.particlStringInteger();
     this.amountFraction = partoshiAmount.particlStringFraction();
 
     this.reward = +json.reward ? +json.reward : 0;

@@ -1,7 +1,9 @@
 @import './src/assets/_config'; // import shared colors etc.
 
 .mat-expansion-panel-header {
-  min-height: 67px !important;
+  $size: 50px;
+  min-height: $size !important;
+  max-height: $size !important;
 
   // TX date/time
   .date {
@@ -71,6 +73,7 @@
       .name {
         font-weight: 500;
         margin-left: 12px;
+        text-transform: none;
       }
       &.staked {
         .mat-icon {
@@ -103,6 +106,7 @@
   // TX amount
   .tx-value {
     text-align: right;
+    font-family: monospace;
     display: block;
     .amount {
       .big {

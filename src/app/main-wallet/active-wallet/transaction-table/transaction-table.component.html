@@ -21,7 +21,7 @@
       <mat-panel-title class="tx-overview" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
 
         <!-- Date -->
-        <div fxFlex="0 0 135px" class="date">
+        <div fxFlex="0 0 145px" class="date">
           {{ txn.formattedTime }}
         </div>
 
@@ -107,7 +107,7 @@
             <span class="big number">{{ txn.amountWhole }}</span><!-- inline element comment hack
             --><span class="point">{{ txn.amountFraction.length > 0 ? '.' : '' }}</span><!--
             --><small class="small number">{{ txn.amountFraction }}</small>
-            <span class="currency">PART</span>
+            <!--span class="currency">PART</span-->
           </span>
 
           <span class="amount" *ngIf="txn.requires_unlock">

@@ -188,6 +188,11 @@ body {
         margin: 8px 12px 8px 8px;
         border-radius: 50%;
       }
+      &:hover {
+        .mat-icon {
+          @extend %lighter;
+        }
+      }
     }
     &:first-of-type {
       .switcher-option {

@@ -205,11 +205,12 @@ mat-card.mat-card {
 
 // ------ 2.3. EXPANSION PANELS ------ //
 
-.mat-expansion-panel {
+mat-expansion-panel.mat-expansion-panel {
   @extend mat-card.mat-card;
-  margin-bottom: 9px !important;
+  margin-bottom: 4px;
   overflow: hidden;
   padding: 0;
+  border-radius: 0;
   .mat-expansion-panel-header {
     font-family: $font;
     font-size: 100%;
