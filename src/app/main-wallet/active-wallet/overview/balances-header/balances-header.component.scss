@@ -3,7 +3,6 @@
 
 .balance-overview {
   display: flex;
-  margin-top: $header-main-height;
   padding: 20px 35px;
   @include break(l) {
     padding: 24px 50px;

@@ -476,6 +476,14 @@ mat-card.mat-card {
   }
 }
 
+.mat-sidenav-container {
+  &.always-scroll { // show scrollbar always, so content doesn't jump when it expands outside of viewport
+    .mat-drawer-content {
+      overflow-y: scroll;
+    }
+  }
+}
+
 
 // ------ 2.9. MENUS (CONTEXTUAL) ------ //
 

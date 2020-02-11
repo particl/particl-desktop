@@ -51,9 +51,6 @@ body {
   background-color: $bg;
   font-size: 13px;
   margin: 0;
-  @include break(l) {
-    font-size: 14px;
-  }
 }
 
 
