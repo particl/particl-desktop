@@ -100,6 +100,7 @@ body {
   position: sticky;
   top: $header-main-height;
   z-index: 100;
+  height: $tab-bar-height + 1px;
   background: rgba($bg, 0.95);
   .buttons {
     flex: 1 0 100px;
