@@ -6,15 +6,14 @@
     animation: 1s ease infinite loading-pulse;
   }
   &.transactions {
-    $items: 5;
+    $items: 6;
     max-width: none;
     .item {
       box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
       background: $color-white;
-      border-radius: $radius;
       padding: 0 24px;
-      height: 67px;
-      margin-bottom: 9px;
+      height: 50px;
+      margin-bottom: 5px;
       .placeholder {
         background: mix($bg, $bg-shadow);
         border-radius: $radius;
