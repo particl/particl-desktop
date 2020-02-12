@@ -59,7 +59,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: monospace;
+    font-family: $font-mono;
     color: $text-muted;
     background: transparent;
     transition: background 0.3s;

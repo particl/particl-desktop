@@ -23,7 +23,7 @@ body {
     color: $color;
     opacity: 0.8;
     font-size: 60px;
-    font-family: monospace;
+    font-family: $font-mono;
     span {
       display: inline-block;
       margin: 0 3px;

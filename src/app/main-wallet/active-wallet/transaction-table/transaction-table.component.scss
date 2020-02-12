@@ -106,11 +106,11 @@
   // TX amount
   .tx-value {
     text-align: right;
-    font-family: monospace;
+    font-family: $font-mono;
     display: block;
     .amount {
       .big {
-        font-weight: bold;
+        font-weight: 500;
       }
       .point,
       .small {
@@ -169,7 +169,8 @@
   // to/from address
   .to-from-address {
     width: 100%;
-    font-family: monospace;
+    font-family: $font-mono;
+    font-weight: 500;
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
     border-radius: 4px;
@@ -178,6 +179,7 @@
   .tx-detail-link {
     width: 100%;
     color: $text-muted;
+    font-family: $font-mono;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
