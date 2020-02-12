@@ -1,9 +1,5 @@
 <div class="status-icons" fxLayout="row" fxLayoutGap="14px">
 
-  <div class="staking icon" *ngIf="(coldStakingEnabled | async)">
-    <img src="assets/icons/status/peers-{{ peerIcon }}.svg" matTooltip="Cold staking active" />
-  </div>
-
   <div class="status icon">
     <img src="assets/icons/status/peers-{{ peerIcon }}.svg" matTooltip="Peers: {{ peerListCount }}" />
   </div>
@@ -14,6 +10,10 @@
     (click)="toggleWalletStatus()">
     <img src="assets/icons/status/encryption{{ walletStatusIcon }}.svg" [matTooltip]="(walletStatus | async)" />
     <main-countdown-timer></main-countdown-timer>
+  </div>
+
+  <div class="coldstaking icon" *ngIf="(coldStakingEnabled | async)">
+    <img src="assets/icons/status/coldstaking.svg" matTooltip="Cold staking active" />
   </div>
 
   <div

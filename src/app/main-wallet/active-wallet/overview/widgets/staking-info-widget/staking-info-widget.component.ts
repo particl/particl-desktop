@@ -130,11 +130,11 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
 
   private calculateRemainingTime(seconds: number) {
-    const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365/*days*/));
-    const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5/*months*/)) - years * 12;
-    const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24/*hours*/)) - months * 30.5;
-    const hours: number =  Math.floor(seconds / (60 /*s*/ * 60/*min*/)) - days * 24;
-    const minutes: number =  Math.floor(seconds / (60/*s*/)) - hours * 60;
+    const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365 /*days*/ ));
+    const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5 /*months*/ )) - years * 12;
+    const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ )) - months * 30.5;
+    const hours: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ )) - days * 24;
+    const minutes: number =  Math.floor(seconds / (60 /*s*/ )) - hours * 60;
 
     if (years > 0) {
       return  years + ' years';
