@@ -34,7 +34,7 @@ mat-card.address-entry {
       display: block;
     }
     .address-string {
-      font-family: monospace;
+      font-family: $font-mono;
       color: $text-muted;
       overflow: hidden;
       text-overflow: ellipsis;

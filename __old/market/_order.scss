@@ -23,7 +23,7 @@ $photo-size: 80px;
   }
   .hash { // order 'ID'
     font-size: 90%;
-    font-family: monospace;
+    font-family: $font-mono;
     font-weight: 600;
     color: $color-white;
     line-height: 1.4;

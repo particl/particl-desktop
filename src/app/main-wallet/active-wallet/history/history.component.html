@@ -16,22 +16,15 @@
   <div class="filter">
 
     <div class="section search-sorting">
-      <div class="subtitle first">Sort</div>
-      <mat-card class="filter-card">
-
-        <mat-form-field class="sort-by filter-input" floatLabel="never">
-          <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
-            <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
-              {{ sorting.title }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </mat-card>
+      <div class="subtitle first">Sorting</div>
+      <mat-form-field class="sort-by --boxed" appearance="fill">
+        <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+          <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+            {{ sorting.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
-
-    <p class="widget-help">
-      Transaction filter gives you the most granular control over displayed transactions.
-    </p>
 
     <div class="section filter-by-type">
       <div class="subtitle">Filter by type</div>
@@ -44,12 +37,12 @@
       </mat-card>
     </div>
 
-    <button mat-button color="warn" class="clear-filters" (click)="clear()">
+    <button mat-button class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
 
-  </div>
+  </div><!-- .filter -->
 
   <div class="tx-list section with-filter">
     <transaction-table #transactions></transaction-table>

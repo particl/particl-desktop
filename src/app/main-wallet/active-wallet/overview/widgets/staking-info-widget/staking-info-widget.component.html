@@ -1,7 +1,7 @@
 <div class="staking-info section">
 
   <header>
-    <div class="subtitle">Staking stats</div>
+    <div class="subtitle">Staking &amp; Network stats</div>
   </header>
 
   <mat-card class="staking-overview">
@@ -12,58 +12,59 @@
 
     <ng-container *ngIf="stakingEnabled">
       <div class="row">
-        <div class="key">Next reward</div>
+        <div class="key">Your next reward</div>
         <div class="value">~&nbsp;{{ nextRewardTime }}</div>
       </div>
 
       <mat-divider></mat-divider>
 
       <div class="row">
-        <div class="key">Your Stake weight</div>
+        <div class="key">Your stake weight</div>
         <div class="value">{{ ownWeight.whole }}{{ ownWeight.sep }}<small>{{ ownWeight.fraction }}</small>&nbsp;%</div>
       </div>
-
-      <mat-divider></mat-divider>
     </ng-container>
 
-    <div class="row">
-      <div class="key">PoS Difficulty</div>
+  </mat-card><!-- .staking-overview -->
+  <mat-card class="staking-overview">
+
+    <!--div class="row">
+      <div class="key">Staking difficulty</div>
       <div class="value">{{ difficulty.whole }}{{ difficulty.sep }}<small>{{ difficulty.fraction }}</small></div>
     </div>
 
-    <mat-divider></mat-divider>
+    <mat-divider></mat-divider-->
 
     <div class="row">
-      <div class="key">Money Supply</div>
-      <div class="value">{{ moneySupply.whole }}{{ moneySupply.sep }}<small>{{ moneySupply.fraction }}</small></div>
+      <div class="key">Money supply</div>
+      <div class="value">{{ moneySupply.whole }}{{ moneySupply.sep }}<small>{{ moneySupply.fraction }}</small> PART</div>
     </div>
 
     <mat-divider></mat-divider>
 
-    <div class="row">
+    <!--div class="row">
       <div class="key">Amount Staking</div>
       <div class="value">{{ totalStakingAmount.whole }}{{ totalStakingAmount.sep }}<small>{{ totalStakingAmount.fraction }}</small></div>
     </div>
 
-    <mat-divider></mat-divider>
+    <mat-divider></mat-divider-->
 
     <div class="row">
-      <div class="key">% All PART Staking</div>
+      <div class="key">Network staking %</div>
       <div class="value">{{ totalStakingPercent.whole }}{{ totalStakingPercent.sep }}<small>{{ totalStakingPercent.fraction }}</small>&nbsp;%</div>
     </div>
 
     <mat-divider></mat-divider>
 
       <div class="row">
-        <div class="key">Annual %</div>
-        <div class="value">{{ annualPercent }}&nbsp;%</div>
+        <div class="key">Staking rewards</div>
+        <div class="value">{{ annualPercent }}&nbsp;% p.a.</div>
       </div>
 
     <mat-divider></mat-divider>
 
     <div class="row">
-      <div class="key">Effective Staking %</div>
-      <div class="value">{{ rewardDistribution.whole }}{{ rewardDistribution.sep }}<small>{{ rewardDistribution.fraction }}</small>&nbsp;%</div>
+      <div class="key">Effective staking %</div>
+      <div class="value">{{ rewardDistribution.whole }}{{ rewardDistribution.sep }}<small>{{ rewardDistribution.fraction }}</small>&nbsp;% p.a.</div>
     </div>
 
 

@@ -51,9 +51,6 @@ body {
   background-color: $bg;
   font-size: 13px;
   margin: 0;
-  @include break(l) {
-    font-size: 14px;
-  }
 }
 
 
@@ -103,6 +100,7 @@ body {
   position: sticky;
   top: $header-main-height;
   z-index: 100;
+  height: $tab-bar-height + 1px;
   background: rgba($bg, 0.95);
   .buttons {
     flex: 1 0 100px;
@@ -190,6 +188,11 @@ body {
         padding: 0;
         margin: 8px 12px 8px 8px;
         border-radius: 50%;
+      }
+      &:hover {
+        .mat-icon {
+          @extend %lighter;
+        }
       }
     }
     &:first-of-type {

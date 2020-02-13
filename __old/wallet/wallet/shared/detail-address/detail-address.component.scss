@@ -50,7 +50,7 @@
 .address-string {
   @extend %enable-select;
   font-size: 15px;
-  font-family: monospace;
+  font-family: $font-mono;
   line-height: 1.45;
   color: darken($color, 7%);
   background: rgba($color, 0.04);

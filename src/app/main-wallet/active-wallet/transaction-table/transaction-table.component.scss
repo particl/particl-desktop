@@ -1,7 +1,15 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+.history-list {
+  &.mat-expanded {
+    margin: 8px -8px; // expand sideways and visually separate from other items when expanded
+  }
+}
+
 .mat-expansion-panel-header {
-  min-height: 67px !important;
+  $size: 50px;
+  min-height: $size !important;
+  max-height: $size !important;
 
   // TX date/time
   .date {
@@ -71,6 +79,7 @@
       .name {
         font-weight: 500;
         margin-left: 12px;
+        text-transform: none;
       }
       &.staked {
         .mat-icon {
@@ -103,10 +112,11 @@
   // TX amount
   .tx-value {
     text-align: right;
+    font-family: $font-mono;
     display: block;
     .amount {
       .big {
-        font-weight: bold;
+        font-weight: 500;
       }
       .point,
       .small {
@@ -165,7 +175,8 @@
   // to/from address
   .to-from-address {
     width: 100%;
-    font-family: monospace;
+    font-family: $font-mono;
+    font-weight: 500;
     color: lighten($text, 10%);
     background: lighten($bg-shadow, 10%);
     border-radius: 4px;
@@ -174,6 +185,7 @@
   .tx-detail-link {
     width: 100%;
     color: $text-muted;
+    font-family: $font-mono;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;

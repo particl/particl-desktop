@@ -148,7 +148,7 @@ mat-card.address-info { // address 'card'
       @extend %tfx;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-family: monospace;
+      font-family: $font-mono;
       color: $text-muted;
       max-width: 350px;
       margin: 1px 0 0;

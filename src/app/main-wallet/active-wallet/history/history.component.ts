@@ -43,12 +43,14 @@ export class WalletHistoryComponent {
   ];
 
   readonly sortings: ISorting[] = [
-    { title: 'By time',                  value: 'time'          },
-    { title: 'By amount',                value: 'amount'        },
-    { title: 'By address',               value: 'address'       },
-    { title: 'By category',              value: 'category'      },
-    { title: 'By confirmations',         value: 'confirmations' },
-    { title: 'By transaction ID (txid)', value: 'txid'          }
+    { title: 'Most recent first',            value: 'time'          },
+    { title: 'Largest first',                value: 'amount'        },
+
+    // @TODO: IMO we don't need these filters, they are mostly useless - we can get rid of them [Allien]
+    //{ title: 'By address',               value: 'address'       },
+    //{ title: 'By category',              value: 'category'      },
+    //{ title: 'By confirmations',         value: 'confirmations' },
+    //{ title: 'By transaction ID (txid)', value: 'txid'          }
   ];
 
   readonly types: ITxType[] = [

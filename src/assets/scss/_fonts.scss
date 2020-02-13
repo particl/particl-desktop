@@ -8,31 +8,47 @@
   font-family: 'Inter_UI';
   font-style: normal;
   font-weight: 400;
-  src: url('assets/fonts/Inter-UI-Regular.woff2') format('woff2'), url('assets/fonts/Inter-UI-Regular.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Regular.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter_UI';
   font-style: italic;
   font-weight: 400;
-  src: url('assets/fonts/Inter-UI-Italic.woff2') format('woff2'), url('assets/fonts/Inter-UI-Italic.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Italic.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter_UI';
   font-style: normal;
   font-weight: 500;
-  src: url('assets/fonts/Inter-UI-Medium.woff2') format('woff2'), url('assets/fonts/Inter-UI-Medium.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Medium.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter_UI';
   font-style: normal;
   font-weight: 700;
-  src: url('assets/fonts/Inter-UI-Bold.woff2') format('woff2'), url('assets/fonts/Inter-UI-Bold.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Bold.woff2') format('woff2');
+}
+
+
+// ------ MONOSPACE FONT ------ //
+
+@font-face {
+  font-family: 'Office_Code_Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/OfficeCodePro-Regular.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Inter_UI';
+  font-family: 'Office_Code_Pro';
   font-style: normal;
-  font-weight: 900;
-  src: url('assets/fonts/Inter-UI-Black.woff2') format('woff2'), url('assets/fonts/Inter-UI-Black.woff') format('woff');
+  font-weight: 500;
+  src: url('assets/fonts/OfficeCodePro-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Office_Code_Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: url('assets/fonts/OfficeCodePro-Bold.woff2') format('woff2');
 }
 
 
@@ -40,7 +56,7 @@
 
 @font-face {
   font-family: 'part';
-  src: url('assets/fonts/part.woff2') format('woff2'), url('assets/fonts/part.woff') format('woff');
+  src: url('assets/fonts/part.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
