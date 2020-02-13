@@ -1,1 +1,56 @@
-<div>Receive Component</div>
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group
+      animationDuration="0ms"
+      [selectedIndex]="selectedTab.value"
+      (selectedIndexChange)="selectedTab.setValue($event)"
+    >
+      <mat-tab *ngFor="let tab of tabs">
+        <ng-template mat-tab-label>
+          <mat-icon fontSet="partIcon" [fontIcon]="tab.icon"></mat-icon>
+          {{ tab.title }}
+        </ng-template>
+        <ng-template matTabContent>
+          <ng-container *ngTemplateOutlet="addressTemplate;context:tab"></ng-container>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+<!-- ====== FRESH RECEIVE ADDRESS ====== -->
+
+<ng-template #addressTemplate let-addressType="type" let-newText="newAddressText">
+  <div  class="container-flex with-tab-bar">
+
+    <mat-card class="receive-address">
+      <div class="address-details">
+        <detail-address [address]="activeAddress"></detail-address>
+      </div>
+      <div class="buttons" fxLayout fxLayoutAlign="space-between center">
+        <div class="left" fxFlex="30%">
+          <button mat-button color="primary" matTooltip="Generate fresh address" [disabled]="isLoading" (click)="generateAddress(addressType)">
+            <mat-icon fontSet="partIcon" fontIcon="part-plus"></mat-icon>
+            {{ newText }}
+          </button>
+        </div>
+        <div class="right" fxFlex="70%">
+          <a mat-button matTooltip="Display address' public information on Block Explorer" [disabled]="isLoading || (activeAddress.address.length === 0)" href="https://explorer{{ (isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{activeAddress.address}}" target="_blank">
+            <mat-icon fontSet="partIcon" fontIcon="part-info"></mat-icon>
+            Show on Explorer
+          </a>
+          <button mat-raised-button color="primary" ngxClipboard [cbContent]="activeAddress.address || ''" [disabled]="isLoading || (activeAddress.address.length === 0)" (click)="copyToClipBoard()">
+            <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            Copy address
+          </button>
+        </div>
+      </div><!-- .buttons -->
+
+    </mat-card><!-- .receive-address -->
+
+    <receive-history [activeAddress]="activeAddress"></receive-history>
+
+  </div>
+</ng-template>
+

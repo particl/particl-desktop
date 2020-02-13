@@ -1,0 +1,111 @@
+<div class="show-old">
+  <button mat-button class="small" (click)="isVisible.setValue(!isVisible.value)" matTooltip="Display and filter your previously used addresses">
+    <ng-container *ngIf="isVisible.value">
+      <mat-icon fontSet="partIcon" fontIcon="part-triangle-up"></mat-icon>
+      Hide older addresses
+    </ng-container>
+    <ng-container *ngIf="!isVisible.value">
+      <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
+      Show older addresses
+    </ng-container>
+  </button>
+</div>
+
+
+<!-- ====== OLD, USED ADDRESS ====== -->
+
+<div #scroll class="previous-addresses container-block" *ngIf="isVisible.value">
+
+  <!-- Sorting, filtering -->
+  <div class="filter">
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search addresses</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input search-address">
+          <input matInput type="text" [formControl]="searchQuery"
+                placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+          <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" fontSet="partIcon"
+                    fontIcon="part-clear-all"></mat-icon>
+          <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+        </mat-form-field>
+      </mat-card>
+
+      <p class="widget-help">
+        These are your previously used addresses. It is recommended not to reuse your old addresses &ndash; to increase your privacy, you should use a new address for each transaction.
+      </p>
+    </div><!-- .search-sorting -->
+
+  </div><!-- .filter -->
+
+
+  <!-- Address list -->
+  <div class="with-filter" *ngIf="activeAddress?.address">
+
+    <ng-template #loading>
+      <div class="no-results">
+        <p>
+          Fetching addresses
+        </p>
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="!isLoading else loading">
+      <div class="no-results" *ngIf="filteredAddresses.length === 0">
+        <p>
+          No addresses found
+        </p>
+      </div>
+
+      <div class="list-data" *ngIf="filteredAddresses.length > 0">
+        <div class="address-title">Used addresses</div>
+        <div *ngFor="let address of filteredAddresses; trackBy: trackByAddressFn">
+
+          <mat-card class="address-info">
+
+            <div class="address-name cursor-pointer" > <!-- (click)="openNewAddress(address)"> -->
+              <div class="address-id">
+                /{{ +address?.id + 1 || '' }}
+              </div>
+              <span class="address-label" [ngClass]="{'no-label': address.label === ''}">
+                {{ address?.label || '(No Label)' }}
+              </span>
+              <span class="address">
+                {{ address?.address || '' }}
+              </span>
+            </div>
+
+            <div class="address-actions" fxFlex="0 0 50px" fxLayoutAlign="end center">
+              <!-- Copy address -->
+              <span fxFlex="50%">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer"
+                          matTooltip="Copy address" (click)="copyToClipBoard()"
+                          ngxClipboard [cbContent]="address?.address || ''"></mat-icon>
+              </span>
+              <!-- Sign/Verify public address only  -->
+              <span fxFlex="50%" *ngIf="address.address.length < 35">
+                <mat-icon fontSet="partIcon" fontIcon="part-person-check" matTooltip="Sign / Verify message"
+                          (click)="openSignatureModal(address.address)" class="cursor-pointer" ngxClipboard></mat-icon>
+              </span>
+            </div><!-- .address-actions -->
+
+          </mat-card>
+        </div>
+      </div><!-- .list-data -->
+
+      <!-- use a paginator for reset pagination after tab change. -->
+      <div class="receive-pagination">
+        <app-paginator
+          *ngIf="this.pageFilters.actualResultLength > 0"
+          #paginator
+          [length]="this.pageFilters.actualResultLength"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageOptions"
+          (page)="paginatorChangeHandler($event)">
+        </app-paginator>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>

@@ -116,7 +116,7 @@ export class WalletEncryptionService implements OnDestroy {
       disableClose: true
     }).afterClosed().pipe(
       map((timeout: number) => {
-        if ((typeof timeout === 'number') && timeout > 3) {
+        if ((typeof timeout === 'number') && timeout >= (data.timeout || 1)) {
             return true;
         }
         return false;

@@ -86,8 +86,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
   Step: typeof Step = Step; // so we can use it in HTML
 
-  @ViewChild('nameField', {static: false})
-  nameField: ElementRef;
+  @ViewChild('nameField', {static: false}) nameField: ElementRef;
 
   public tempWalletName: string;
   public errorString: string = '';
