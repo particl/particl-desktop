@@ -30,6 +30,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input() activeAddress: FilteredAddress;
   @ViewChild('paginator', {static: false}) paginator: any;
+  @ViewChild('scroll', {static: false}) scrollContainer: any;
 
   isVisible: FormControl = new FormControl(false);
   searchQuery: FormControl = new FormControl('');
@@ -56,9 +57,20 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
 
   ngOnInit() {
+
+    // @TODO: zaSMilingIdiot (2020-02-13) -> This implementation is not the best way to tbe doing this, but it works for now.
+    //    Should probably be updated when more time is available...
+
     this.isVisible.valueChanges.pipe(
       filter((visible: boolean) => visible),
-      tap(() => this.loader$.next()),
+      tap(() => {
+        this.loader$.next();
+        setTimeout(() => {
+          if (this.scrollContainer) {
+            this.scrollContainer.nativeElement.scrollIntoView(true);
+          }
+        }, 0)
+      }),
       takeUntil(this.destroy$)
     ).subscribe();
 

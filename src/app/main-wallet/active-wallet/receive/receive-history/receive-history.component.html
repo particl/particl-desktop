@@ -43,11 +43,7 @@
   <div class="with-filter" *ngIf="activeAddress?.address">
 
     <ng-template #loading>
-      <div class="no-results">
-        <p>
-          Fetching addresses
-        </p>
-      </div>
+      <main-loading-placeholder></main-loading-placeholder>
     </ng-template>
 
     <ng-container *ngIf="!isLoading else loading">
@@ -96,9 +92,9 @@
       <!-- use a paginator for reset pagination after tab change. -->
       <div class="receive-pagination">
         <app-paginator
-          *ngIf="this.pageFilters.actualResultLength > 0"
+          *ngIf="pageFilters.actualResultLength > 0"
           #paginator
-          [length]="this.pageFilters.actualResultLength"
+          [length]="pageFilters.actualResultLength"
           [pageSize]="pageSize"
           [pageSizeOptions]="pageOptions"
           (page)="paginatorChangeHandler($event)">
