@@ -24,6 +24,9 @@ import { WalletBackupModalComponent } from './settings/wallet-backup-modal/walle
 import { DetailAddressComponent } from './shared/detail-address/detail-address.component';
 import { ReceiveHistoryComponent } from './receive/receive-history/receive-history.component';
 import { AddressService } from './shared/address.service';
+import { DeleteAddressConfirmationModalComponent } from './addressbook/delete-address-confirmation-modal/delete-address-confirmation-modal.component';
+import { NewAddressbookEntryModalComponent } from './addressbook/new-addressbook-entry-modal/new-addressbook-entry-modal.component';
+import { NotOwnAddressValidator } from './addressbook/new-addressbook-entry-modal/not-owned-address.directive';
 
 
 @NgModule({
@@ -49,12 +52,17 @@ import { AddressService } from './shared/address.service';
     StakingInfoWidgetComponent,
     WalletBackupModalComponent,
     DetailAddressComponent,
+    DeleteAddressConfirmationModalComponent,
+    NewAddressbookEntryModalComponent,
   ],
   entryComponents: [
-    WalletBackupModalComponent
+    WalletBackupModalComponent,
+    DeleteAddressConfirmationModalComponent,
+    NewAddressbookEntryModalComponent
   ],
   providers: [
-    AddressService
+    AddressService,
+    NotOwnAddressValidator
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -193,6 +193,6 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
   private loadAddresses(): Observable<FilteredAddress[]> {
     const addrType: AddressType = this.activeAddress.address.length >= 35 ? 'private' : 'public';
-    return this._addressService.fetchAddressHistory(addrType);
+    return this._addressService.fetchOwnAddressHistory(addrType);
   }
 }

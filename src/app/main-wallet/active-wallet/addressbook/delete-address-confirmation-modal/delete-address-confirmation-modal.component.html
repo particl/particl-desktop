@@ -1,0 +1,29 @@
+<div mat-dialog-title>Delete Address</div>
+<button class="small-close-button" (click)="dialogClose()">
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+
+<div mat-dialog-content class="dialog-content">
+  <p class="lead">
+    Are you certain you want to delete this address from your Address book?
+  </p>
+  <code class="address-details">
+    {{ data.address.address }}
+  </code>
+  <p class="address-details">
+    With label: {{ data.address.label || '(no label)' }}
+  </p>
+</div>
+
+
+<mat-dialog-actions fxLayoutAlign="end center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" [disabled]="isProcessing" appDebounceClick (click)="onConfirmDelete()">
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+    Yes, delete
+  </button>
+</mat-dialog-actions>
