@@ -47,8 +47,8 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
 
 body {
   @extend %disable-select;
-  font-family: $font;
-  background-color: $bg;
+  font-family: var(--font);
+  background-color: var(--bg);
   font-size: 13px;
   margin: 0;
 }
@@ -63,33 +63,15 @@ body {
 // main container for content
 .container-block {
   @extend %clearfix;
-  padding: $padding;
-  @include break(l) {
-    padding: 45px $padding-l;
-  }
+  padding: var(--paddingV) var(--paddingH);
 }
 
 
 // ------ 2.2. MODIFIERS ------ //
-/*
-// offset content from top (due to fixed status bar)
-.with-tab-bar {
-  margin-top: ($header-main-height + $tab-bar-height);
-}
-.without-tab-bar {
-  margin-top: $header-main-height;
-}
 
-.with-control-bar {
-  margin-top: ($header-main-height + $control-bar-height);
-}
-*/
 // content offset from left, when sticky sidebar is present
 .with-filter {
-  margin-left: $filter-width + $padding;
-  @include break(l) {
-    margin-left: $filter-width + $padding-l;
-  }
+  margin-left: calc(var(--filter-width) + var(--paddingH));
 }
 
 
@@ -98,14 +80,14 @@ body {
 // sticky tabs under status bar
 .tab-bar {
   position: sticky;
-  top: $header-main-height;
+  top: var(--header-main-height);
   z-index: 100;
-  height: $tab-bar-height + 1px;
-  background: rgba($bg, 0.95);
+  height: calc(var(--tab-bar-height) + 1px);
+  background: hsla(var(--bg-hsl), 0.87);
   .buttons {
     flex: 1 0 100px;
     padding: 0 20px; // offset side padding
-    border-bottom: 1px solid $bg-shadow;
+    border-bottom: 1px solid var(--bg-muted);
     display: flex;
     justify-content: flex-end;
     align-items: center;
@@ -115,8 +97,8 @@ body {
 // sticky control bars (eg. on Listings page)
 .control-bar {
   @extend .tab-bar;
-  padding: 0 28px 0 $padding;
-  border-bottom: 1px solid $bg-shadow;
+  padding: 0 28px 0 var(--paddingH);
+  border-bottom: 1px solid var(--bg-muted);
 }
 
 
@@ -124,11 +106,11 @@ body {
 
 .filter { // sticky sidebars in content area
   position: sticky;
-  top: ($header-main-height + $tab-bar-height + $padding + 1px); // 1px for border
-  width: $filter-width;
+  top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV) + 1px); // 1px for border
+  width: var(--filter-width);
   float: left;
   .without-tab-bar & {
-    top: ($header-main-height + $padding + 1px);
+    top: calc(var(--header-main-height) + var(--paddingV) + 1px);
   }
   button.full-width {
     margin-top: 10px;
@@ -141,9 +123,9 @@ body {
 
 // ------ 2.5. RADIO SWITCHERS ------ //
 
-.radio-switcher {
+.radio-switcher { // ~ vertical tabs
   @extend %mat-card;
-  border-radius: $radius;
+  border-radius: var(--radius);
   overflow: hidden;
   label {
     input[type="radio"] { // radio button for functionality, hidden
@@ -155,28 +137,28 @@ body {
         font-weight: 600;
         .mat-icon {
           @extend %reset;
-          color: $secondary;
+          color: var(--color-secondary);
           &.part-alert {
-            color: $color-alert;
+            color: var(--color-alert);
           }
         }
       }
       // keyboard/mouse focus
       &:focus + .switcher-option {
         .mat-icon {
-          background: rgba($secondary, 0.05);
+          background: hsla(var(--color-secondary-hsl), 0.05);
           padding: 8px;
           margin: 0 4px 0 0;
           &.part-alert {
-            background: rgba($color-alert, 0.05);
+            background: hsla(var(--color-alert-hsl), 0.05);
           }
         }
       }
     }
     .switcher-option { // container for all option's content
       cursor: pointer;
-      background: $color-white;
-      border-top: 1px solid $bg-shadow;
+      background: var(--color-white);
+      border-top: 1px solid var(--bg-muted);
       padding: 0 12px 0 4px;
       line-height: 40px;
       font-weight: 500;
@@ -235,12 +217,12 @@ body {
   text-align: center;
   position: fixed;
   z-index: 10;
-  top: $header-main-height;
-  left: $sidebar-width;
+  top: var(--header-main-height);
+  left: var(--sidebar-width);
   right: 0;
   bottom: 8px;
   display: flex;
-  background: rgba($bg, 0.9);
+  background: hsla(var(--bg-hsl), 0.9);
   pointer-events: none;
   .loading-info { // text info for loading screens (e.g. Listings)
     margin: auto;
@@ -250,8 +232,8 @@ body {
       padding: 14px;
       margin: 0 auto 24px;
       border-radius: 50%;
-      background: $color-white;
-      box-shadow: 0 0 20px rgba($bg-black, 0.07);
+      background: var(--color-white);
+      box-shadow: 0 0 20px hsla(var(--bg-black-hsl), 0.07);
       & > img {
         animation: rotate 4s infinite;
         display: inline-block;
@@ -278,8 +260,8 @@ body {
   text-transform: uppercase;
   text-align: center;
   padding: 170px 0;
-  border: 2px dashed $bg-shadow;
-  background: rgba($color-white, 0.5);
+  border: 2px dashed var(--bg-muted);
+  background: hsla(var(--color-white-hsl), 0.5);
   p {
     @extend %lightest;
   }
@@ -287,11 +269,9 @@ body {
     margin-top: 12px;
   }
   .widget-help {
-    @extend %reset;
     margin: 0;
     text-transform: none;
     font-size: 12px;
-    color: darken($bg-shadow, 17%);
     .mat-icon {
       font-size: 13px;
       margin: 0 4px;
@@ -325,7 +305,7 @@ body {
     cursor: pointer;
   }
   .mat-form-field-underline {
-    background-color: $bg-shadow;
+    background-color: var(--bg-muted);
   }
 }
 
@@ -347,12 +327,12 @@ body {
     .mat-button {
       font-size: 13px;
       .mat-icon {
-        color: $bg-shadow;
+        color: var(--bg-muted);
       }
     }
     &[aria-expanded='true'] { // toggled category
       .mat-icon {
-        color: $secondary;
+        color: var(--color-secondary);
       }
     }
   }
@@ -423,7 +403,7 @@ p.warning,
 p.info {
   font-weight: 500;
   font-size: 13px;
-  background: $bg;
+  background: var(--bg);
   padding: 16px 24px 16px 52px;
   position: relative;
   .mat-dialog-content & {
@@ -439,53 +419,54 @@ p.info {
     left: 24px;
     margin-right: 8px;
   }
+  a {
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 p.warning {
   &::before {
     content: '\ea02'; // part-alert icon
-    color: $color-alert;
+    color: var(--color-alert);
   }
   a {
-    @extend %tfx;
-    color: $color-alert;
-    &:hover {
-      color: darken($color-alert, 7%);
-    }
+    color: var(--color-alert);
   }
 }
 
 p.info {
   &::before {
     content: '\ea19'; // part-info icon
-    color: $color-info;
+    color: var(--color-info);
   }
   a {
-    @extend %tfx;
-    color: $color-info;
-    &:hover {
-      color: darken($color-info, 7%);
-    }
+    color: var(--color-info);
   }
 }
 
 code {
-  color: darken($secondary, 10%);
-  background: rgba($secondary, 0.15);
-  padding: 1px 3px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-secondary);
+  background: hsla(var(--color-secondary-hsl), 0.15);
+  padding: 2px 6px;
   border-radius: $radius;
 }
 
 kbd {
+  font-family: var(--font-mono);
   font-size: 95%;
   line-height: 1.3;
-  font-family: inherit;
-  border: 1px solid darken($bg-hover, 7%);
+  border: 1px solid var(--bg-muted);
+  border-bottom-width: 2px;
   border-radius: 2px;
-  background: $bg;
+  background: var(--bg);
   display: inline-block;
   padding: 2px 5px;
-  margin: 0 2px;
+  margin: 0 2px -3px;
 }
 
 
@@ -498,7 +479,7 @@ kbd {
 .nvd3-svg {
   // Pie/donut chart
   .nv-slice {
-    stroke: $color-white;
+    stroke: var(--color-white);
     stroke-width: 2px;
   }
   .nv-legend-text {
@@ -508,18 +489,18 @@ kbd {
 
 .nvtooltip { // tooltips
   z-index: 1000;
-  font-family: $font;
+  font-family: var(--font);
   font-size: 12px;
-  color: $color-white;
-  background: rgba($bg-black, 0.85);
-  border-radius: $radius;
+  color: var(--color-white);
+  background: hsla(var(--bg-black-hsl), 0.85);
+  border-radius: var(--radius);
   padding: 1px 4px;
   .legend-color-guide > div {
     height: 6px;
     width: 6px;
     margin-right: 2px;
     display: inline-block;
-    border-radius: $radius;
+    border-radius: var(--radius);
     position: relative;
     top: -1px;
   }
@@ -529,7 +510,7 @@ kbd {
   }
   .value {
     font-size: 10px;
-    color: lighten($bg-black, 50%);
+    color: hsla(var(--bg-black-hsl), 0.5);
     position: relative;
     top: 1px;
   }

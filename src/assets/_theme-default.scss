@@ -14,38 +14,38 @@ Default Particl light theme
 
 // Define custom background colors
 $theme-background: (
-  status-bar:               $color-white,
-  app-bar:                  $color-white,
-  background:               $bg,
-  hover:                    rgba($bg-shadow, 0.25),
-  card:                     $color-white,
-  dialog:                   $color-white,
-  disabled-button:          rgba(mix($text-muted, $bg-shadow), 0.2),
-  raised-button:            $color,
-  focused-button:           $white-6-opacity,
-  selected-button:          $color-alert,
-  selected-disabled-button: $color-warning,
-  disabled-button-toggle: #000,
-  unselected-chip:          $color-info,
-  disabled-list-option:   #000,
+  status-bar:               var(--color-white),
+  app-bar:                  var(--color-white),
+  background:               var(--bg),
+  hover:                    hsla(var(--bg-muted-hsl), 0.25),
+  card:                     var(--color-white),
+  dialog:                   var(--color-white),
+  disabled-button:          hsla(var(--text-muted-hsl), 0.2),
+  raised-button:            var(--color-primary),
+  focused-button:           var(--color-white),
+  selected-button:          var(--color-alert),
+  selected-disabled-button: var(--color-warning),
+  disabled-button-toggle:   var(--text),
+  unselected-chip:          var(--color-info),
+  disabled-list-option:     var(--text),
 );
 
 // Define custom foreground colors
 $theme-foreground: (
-  base:              $text,
-  divider:           $bg-shadow,
-  dividers:          $bg-shadow,
-  disabled:          darken($bg-shadow, 10%), // disabled radio buttons
-  disabled-button:   mix($text-muted, $bg-shadow),
-  disabled-text:     $text-muted, // inactive steps in stepper
-  hint-text:         $text-muted,
-  secondary-text:    $text-muted,
-  icon:              $text,
-  icons:             $text,
-  text:              $text,
-  slider-min:        $color-alert,
-  slider-off:        $bg-shadow,
-  slider-off-active: rgba($color, 0.35),
+  base:              var(--text),
+  divider:           var(--bg-muted),
+  dividers:          var(--bg-muted),
+  disabled:          var(--bg-muted), // disabled radio buttons
+  disabled-button:   hsla(var(--text-muted-hsl), 0.55),
+  disabled-text:     var(--text-muted), // inactive steps in stepper
+  hint-text:         var(--text-muted),
+  secondary-text:    var(--text-muted),
+  icon:              var(--text),
+  icons:             var(--text),
+  text:              var(--text),
+  slider-min:        var(--color-alert),
+  slider-off:        var(--bg-muted),
+  slider-off-active: hsla(var(--color-primary-hsl), 0.35),
 );
 
 // instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
