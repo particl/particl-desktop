@@ -3,8 +3,16 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { retryWhen, concatMap, map, catchError } from 'rxjs/operators';
 import { partition } from 'lodash';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
-import { genericPollingRetryStrategy } from 'app/core/util/utils';
-import { AddressType, FilteredAddressCount, FilteredAddress, AddressFilterSortDirection, AddressFilterOwnership } from './address.models';
+import { genericPollingRetryStrategy, AddressHelper } from 'app/core/util/utils';
+import {
+  AddressType,
+  FilteredAddressCount,
+  FilteredAddress,
+  AddressFilterSortDirection,
+  AddressFilterOwnership,
+  AddressInfo,
+  AddressAdded
+} from './address.models';
 
 
 type RecentAddressByType = {
@@ -18,6 +26,23 @@ export class AddressService {
   constructor(
     private _rpc: MainRpcService
   ) { }
+
+
+  deleteAddressFromAddressBook(address: string): Observable<boolean> {
+    return this._rpc.call('manageaddressbook', ['del', address]).pipe(
+      catchError(() => of(false)),
+      map((resp) => resp ? true : false)
+    );
+  }
+
+  saveAddressToAddressBook(address: string, label: string): Observable<AddressAdded> {
+    return this._rpc.call('manageaddressbook', ['newsend', address, label]);
+  }
+
+
+  getAddressInfo(address: string): Observable<AddressInfo> {
+    return this._rpc.call('getaddressinfo', [address]);
+  }
 
 
   updateAddressLabel(address: string, label: string) {
@@ -67,31 +92,16 @@ export class AddressService {
   }
 
 
-  fetchAddressHistory(type: AddressType): Observable<FilteredAddress[]> {
-    return this.fetchFilteredAddresses().pipe(
-      map((addresses) => {
-        const compare = (a: FilteredAddress, b: FilteredAddress) => b.id - a.id;
+  fetchOwnAddressHistory(type: AddressType | 'all' = 'all'): Observable<FilteredAddress[]> {
+    return this.fetchFilteredAddresses(0, 99999, AddressFilterSortDirection.ASC, '', AddressFilterOwnership.OWNED).pipe(
+      map((response) => this.processAddressHistoryItems(response, type))
+    );
+  }
 
-        const res: FilteredAddress[] = [];
 
-        addresses.forEach((address => {
-          if ((type === 'public') && (address.address.length < 35)) {
-            address.id = (typeof address.path === 'string' && address.path.length > 0) ? +address.path.replace('m/0/', '') : 0;
-            res.push(address);
-          }
-          if (
-            (type === 'private') &&
-            (address.address.length >= 35) &&
-            !(/m\/[0-9]+/g.test(address.path) && !/m\/[0-9]+'\/[0-9]+/g.test(address.path))
-          ) {
-            address.id = (typeof address.path === 'string' && address.path.length > 0) ?
-              +(address.path.replace('m/0\'/', '').replace('\'', '')) / 2 :
-              0;
-              res.push(address);
-          }
-        }));
-        return res.sort(compare);
-      })
+  fetchUnownedAddressHistory(type: AddressType | 'all' = 'all'): Observable<FilteredAddress[]> {
+    return this.fetchFilteredAddresses(0, 99999, AddressFilterSortDirection.ASC, '', AddressFilterOwnership.NOT_OWNED).pipe(
+      map((response) => this.processAddressHistoryItems(response, type))
     );
   }
 
@@ -111,7 +121,7 @@ export class AddressService {
 
         const partitioned: FilteredAddress[][] = partition(addresses, (address) => address.address.length < 35);
         const pub = (partitioned[0] || []).map((addr) => {
-          addr.id = (typeof addr.path === 'string' && addr.path.length > 0) ? +addr.path.replace('m/0/', '') : 0;
+          addr.id = this.getAddressId(addr);
           return addr;
         }).sort(
           compare
@@ -126,9 +136,7 @@ export class AddressService {
           }
           return true;
         }).map((addr) => {
-          addr.id = (typeof addr.path === 'string' && addr.path.length > 0) ?
-              +(addr.path.replace('m/0\'/', '').replace('\'', '')) / 2 :
-              0;
+          addr.id = this.getAddressId(addr);
           return addr;
         }).sort(
           compare
@@ -206,6 +214,45 @@ export class AddressService {
         return of(addresses);
       })
     );
+  }
+
+
+  private getAddressId(address: FilteredAddress): number {
+    if (typeof address.address !== 'string') {
+      return -1;
+    }
+    if (address.address.length < 35) {
+      // public address
+      return (typeof address.path === 'string' && address.path.length > 0) ? +address.path.replace('m/0/', '') : -1;
+    } else {
+      // private address
+      return (typeof address.path === 'string' && address.path.length > 0) ?
+        +(address.path.replace('m/0\'/', '').replace('\'', '')) / 2 :
+        -1;
+    }
+  }
+
+
+  private processAddressHistoryItems(addresses: FilteredAddress[], type: AddressType | 'all'): FilteredAddress[] {
+    const compare = (a: FilteredAddress, b: FilteredAddress) => b.id - a.id;
+
+    const res: FilteredAddress[] = [];
+
+    addresses.forEach((address => {
+      address.id = this.getAddressId(address);
+
+      const pushAddress = (type === 'all') ||
+        ((type === 'public') && (address.address.length < 35)) ||
+        ( (type === 'private') &&
+          (address.address.length >= 35) &&
+          !(/m\/[0-9]+/g.test(address.path) && !/m\/[0-9]+'\/[0-9]+/g.test(address.path))
+        );
+
+      if (pushAddress) {
+        res.push(address);
+      }
+    }));
+    return res.sort(compare);
   }
 
 }

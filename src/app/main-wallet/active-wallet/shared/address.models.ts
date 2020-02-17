@@ -30,3 +30,34 @@ export enum AddressFilterOwnership {
   OWNED = 1,
   NOT_OWNED = 2
 };
+
+
+export interface AddressInfo {
+  address: string;
+  label: string;
+  scriptPubKey: string;
+  ismine: boolean;
+  iswatchonly: boolean;
+  solvable: boolean;
+  isscript: boolean;
+  ischange: boolean;
+  iswitness: boolean;
+  witness_version?: number;
+  witness_program?: string;
+  script?: string;
+  sigsrequired?: number;
+  iscompressed?: boolean;
+  hex?: string;
+  pubkey?: string;
+  pubkeys?: string[];
+  labels?: Array<{name: string, purpose: 'send' | 'receive'}>,
+  timestamp?: number;
+}
+
+
+export interface AddressAdded {
+  result: 'success' | 'failed' | '';
+  action: 'newsend';
+  address: string;
+  label: string;
+}

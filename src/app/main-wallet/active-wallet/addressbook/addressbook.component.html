@@ -1,1 +1,105 @@
-<div>Address Book Component</div>
+<div class="address-book container-block without-tab-bar">
+
+  <app-page-intro>
+    <ng-container page-title>Address Book</ng-container>
+    <ng-container page-content>
+      Address Book is your personal collection of saved addresses belonging to other parties.
+    </ng-container>
+    <ng-container page-help>
+      Note that it is recommended that you mostly save Private addresses (if possible).<br>
+      Re-using the same Public addresses increases transaction traceability, which results in loss of privacy both for you and the other party.
+    </ng-container>
+  </app-page-intro>
+
+  <div class="filter">
+
+    <button mat-raised-button color="primary" [disabled]="isLoading" (click)="addNewAddress()" class="full-width"
+            matTooltip="Save new address to your Address book" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+      Add new address
+    </button>
+
+    <div class="section search-sorting">
+      <div class="subtitle">Search</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="icon-input search-address">
+          <input matInput type="text" [formControl]="searchQuery"
+                placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+
+          <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+          <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
+
+        </mat-form-field>
+      </mat-card>
+
+      <div class="subtitle">Filter by type</div>
+      <mat-card class="filter-card">
+        <mat-select class="type-filter" name="type" (selectionChange)="filterQuery.setValue($event.value)" value="all">
+          <mat-option *ngFor="let filter of tableFilters;trackBy:trackByFiltersFn" [value]="filter.value">{{ filter.text }}</mat-option>
+        </mat-select>
+      </mat-card>
+    </div><!-- .search-sorting -->
+
+  </div><!-- .filter -->
+
+
+  <div class="addresses section with-filter">
+    <div class="address-table">
+      <mat-list class="list-data">
+
+        <ng-container *ngTemplateOutlet="isLoading ? loading : (pageFilters.resultsTotalCount > 0 ? content : emptyList)"></ng-container>
+
+        <ng-template #loading>
+          <main-loading-placeholder></main-loading-placeholder>
+        </ng-template>
+
+        <ng-template #emptyList>
+          <div class="no-results">
+            <p>
+              No addresses found
+            </p>
+          </div>
+        </ng-template>
+
+
+        <ng-template #content>
+          <div *ngFor="let address of displayedResults;trackBy:displayedAddressTrackFn">
+            <mat-card class="address-entry">
+
+              <!-- label & address string -->
+              <div class="address-name" (click)="openQrCodeModal(address)">
+                <span class="label">{{ address.label || '(No label)' }}</span>
+                <span class="address-string">{{ address.address }}</span>
+              </div>
+
+              <!-- Actions/controls -->
+              <div class="address-actions">
+                <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
+                <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address.address)"
+                            class="cursor-pointer" matTooltip="Sign / Verify message"
+                            ngxClipboard></mat-icon>
+                <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
+                            class="cursor-pointer"
+                            appDebounceClick (debounceClick)="deleteAddress(address)" matTooltip="Delete address"></mat-icon>
+              </div>
+
+            </mat-card>
+          </div>
+
+          <app-paginator
+            *ngIf="pageFilters.resultsTotalCount > 0"
+            #paginator
+            [length]="pageFilters.resultsTotalCount"
+            [pageSize]="pageFilters.pageSize"
+            [pageSizeOptions]="pageFilters.pageSizes"
+            (page)="paginatorChangeHandler($event)">
+          </app-paginator>
+
+        </ng-template>
+
+      </mat-list>
+    </div><!-- .address-table -->
+
+  </div><!-- addresses -->
+
+</div>
