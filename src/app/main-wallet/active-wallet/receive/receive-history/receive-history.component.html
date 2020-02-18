@@ -77,8 +77,8 @@
                 <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
               </button>
               <!-- Sign/Verify public address only  -->
-              <button mat-button class="tiny icon-only" *ngIf="address.address.length < 35" matTooltip="Sign / Verify message"
-              (click)="openSignatureModal(address.address)" ngxClipboard>
+              <button mat-button class="tiny icon-only" *ngIf="address.address.length < 35" matTooltip="Sign message"
+              (click)="openSignatureModal(address)" ngxClipboard>
                 <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
               </button>
             </div><!-- .address-actions -->

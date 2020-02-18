@@ -1,11 +1,13 @@
 import { Component, Input, OnChanges, SimpleChanges, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 import { Observable, Subject, of} from 'rxjs';
 import { takeUntil, filter, switchMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { AddressService } from '../../shared/address.service';
 import { FilteredAddress, AddressType } from '../../shared/address.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { SignVerifyAddressModalComponent } from '../../shared/sign-verify-address-modal/sign-verify-address-modal.component';
 
 
 enum TextContent {
@@ -52,7 +54,8 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
   constructor(
     private _addressService: AddressService,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _dialog: MatDialog
   ) {}
 
 
@@ -175,8 +178,8 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
   }
 
 
-  openSignatureModal() {
-    // TODO IMPLEMENT WHATEVER THIS IS
+  openSignatureModal(address: FilteredAddress) {
+    this._dialog.open(SignVerifyAddressModalComponent, {data: {address, type: 'sign'}});
   }
 
 
