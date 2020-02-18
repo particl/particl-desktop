@@ -292,16 +292,14 @@ body {
 // ------ 3.5. INPUT WITH ICON (eg. Search) ------ //
 
 .icon-input {
-  input {
-    .mat-input-element {
-      height: 20px;
-    }
+  .mat-input-element {
+    height: 28px;
   }
   .mat-icon {
     position: absolute;
     right: 0;
-    top: 2px;
-    font-size: 21px;
+    font-size: 16px;
+    line-height: 26px;
     cursor: pointer;
   }
   .mat-form-field-underline {

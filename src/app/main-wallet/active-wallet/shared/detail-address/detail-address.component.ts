@@ -68,13 +68,13 @@ export class DetailAddressComponent implements OnChanges {
           this.widgetHelpText = TextContent.WIDGET_HELP_PUBLIC_OWN;
           break;
         case (this.addressType === 'private') && (address.owned === 'true'):
-          this.widgetHelpText = TextContent.WIDGET_HELP_PUBLIC_OWN;
+          this.widgetHelpText = TextContent.WIDGET_HELP_PRIVATE_OWN;
           break;
         case (this.addressType === 'public') && (address.owned === 'false'):
-          this.widgetHelpText = TextContent.WIDGET_HELP_PUBLIC_OWN;
+          this.widgetHelpText = TextContent.WIDGET_HELP_PUBLIC_OTHER;
           break;
         case (this.addressType === 'private') && (address.owned === 'false'):
-          this.widgetHelpText = TextContent.WIDGET_HELP_PUBLIC_OWN;
+          this.widgetHelpText = TextContent.WIDGET_HELP_PRIVATE_OTHER;
           break;
         default:
           this.widgetHelpText = ''

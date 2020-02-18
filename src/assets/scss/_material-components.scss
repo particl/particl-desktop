@@ -67,6 +67,11 @@ button,
     font-size: 12px;
     font-weight: 500;
   }
+  &.tiny {
+    min-width: auto;
+    line-height: 28px;
+    padding: 0 8px;
+  }
   &.full-width {
     width: 100%;
   }
@@ -170,7 +175,8 @@ mat-card.mat-card {
 
 // ------ 2.2. TABS ------ //
 
-.mat-tab-group {
+mat-tab-group.mat-tab-group {
+  font-family: var(--font);
   .mat-tab-label {
     font-family: var(--font);
     font-weight: 500;
@@ -590,6 +596,26 @@ mat-expansion-panel.mat-expansion-panel {
   &.no-bottom-padding {
     .mat-form-field-wrapper {
       margin-bottom: -1.25em; // offset bottom padding
+    }
+  }
+}
+
+// "filled" inputs, custom-styled
+.mat-form-field-type-mat-input[appearance="fill"] {
+  display: block;
+  .mat-form-field-flex {
+    padding: 0 16px;
+    background: var(--color-white);
+  }
+  &.--boxed {
+    box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
+    border-radius: var(--radius) var(--radius) 0 0;
+    margin-bottom: 16px;
+    .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+      padding-bottom: 0;
+      .mat-form-field-underline {
+        bottom: 0;
+      }
     }
   }
 }
