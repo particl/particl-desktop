@@ -8,6 +8,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { AddressType, FilteredAddress } from '../shared/address.models';
 import { DeleteAddressConfirmationModalComponent } from './delete-address-confirmation-modal/delete-address-confirmation-modal.component';
 import { NewAddressbookEntryModalComponent } from './new-addressbook-entry-modal/new-addressbook-entry-modal.component';
+import { SignVerifyAddressModalComponent } from '../shared/sign-verify-address-modal/sign-verify-address-modal.component';
 
 
 type SelectableAddressType = AddressType | 'all';
@@ -168,8 +169,8 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   }
 
 
-  openSignatureModal(address: string) {
-    // TODO : IMPLEMENT THIS
+  openSignatureModal(address: FilteredAddress) {
+    this._dialog.open(SignVerifyAddressModalComponent, {data: {address, type: 'verify'}});
   }
 
 

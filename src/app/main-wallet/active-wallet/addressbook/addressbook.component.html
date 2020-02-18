@@ -75,8 +75,8 @@
               <!-- Actions/controls -->
               <div class="address-actions">
                 <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
-                <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address.address)"
-                            class="cursor-pointer" matTooltip="Sign / Verify message"
+                <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address)"
+                            class="cursor-pointer" matTooltip="Verify message"
                             ngxClipboard></mat-icon>
                 <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
                             class="cursor-pointer"

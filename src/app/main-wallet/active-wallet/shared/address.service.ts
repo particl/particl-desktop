@@ -3,7 +3,7 @@ import { Observable, of, forkJoin } from 'rxjs';
 import { retryWhen, concatMap, map, catchError } from 'rxjs/operators';
 import { partition } from 'lodash';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
-import { genericPollingRetryStrategy, AddressHelper } from 'app/core/util/utils';
+import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import {
   AddressType,
   FilteredAddressCount,
@@ -48,6 +48,18 @@ export class AddressService {
   updateAddressLabel(address: string, label: string) {
     return this._rpc.call('setlabel', [address, label]).pipe(
       retryWhen (genericPollingRetryStrategy())
+    );
+  }
+
+
+  signAddressMessage(address: string, message: string): Observable<string> {
+    return this._rpc.call('signmessage', [address, message]);
+  }
+
+
+  verifySignedAddressMessage(address: string, signature: string, message: string): Observable<boolean> {
+    return this._rpc.call('verifymessage', [address, signature, message]).pipe(
+      map((response) => response ? true : false)
     );
   }
 
