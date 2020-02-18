@@ -445,6 +445,10 @@ p.info {
   }
 }
 
+pre {
+  font-family: var(--font-mono);
+}
+
 code {
   font-family: var(--font-mono);
   font-weight: 500;
