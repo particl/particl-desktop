@@ -127,7 +127,7 @@ export class CoreConnectionState {
         const obj = {};
         obj[key] = action.value;
         ctx.patchState(obj);
-        this._ipcService.runCommand('write-core-config', null, obj);
+        return this._ipcService.runCommand('write-core-config', null, obj);
       }
     }
   }

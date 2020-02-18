@@ -75,16 +75,6 @@ export class PageInfo {
   help: string;
 };
 
-// Defines a page (rendered as a tab on the Settings page) of groups of settings
-export class Page {
-  header: string;                 // tab name
-  icon: string;                   // tab icon
-  info: PageInfo;                 // general information about the page (tab), displayed in the tab
-  settingGroups: SettingGroup[];  // a group of similar settings... all displayed close to each other
-  load: PageLoadFunction;         // executed when the page (tab) is loaded
-  settingErrors: any[];
-};
-
 // Convenience means for defining text content for loading/waiting/error messages
 export enum TextContent {
   LOADING = 'Loading applicable settings',
