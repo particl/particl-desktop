@@ -8,6 +8,7 @@ import { AddressService } from '../../shared/address.service';
 import { FilteredAddress, AddressType } from '../../shared/address.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SignVerifyAddressModalComponent } from '../../shared/sign-verify-address-modal/sign-verify-address-modal.component';
+import { AddressDetailModalComponent } from '../../shared/address-detail-modal/address-detail-modal.component';
 
 
 enum TextContent {
@@ -175,6 +176,11 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
   copyToClipBoard() {
     this._snackbar.open(TextContent.ADDRESS_COPIED, '');
+  }
+
+
+  openAddressDetailModal(address: FilteredAddress) {
+    this._dialog.open(AddressDetailModalComponent, {data: {address}});
   }
 
 

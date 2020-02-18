@@ -9,6 +9,7 @@ import { AddressType, FilteredAddress } from '../shared/address.models';
 import { DeleteAddressConfirmationModalComponent } from './delete-address-confirmation-modal/delete-address-confirmation-modal.component';
 import { NewAddressbookEntryModalComponent } from './new-addressbook-entry-modal/new-addressbook-entry-modal.component';
 import { SignVerifyAddressModalComponent } from '../shared/sign-verify-address-modal/sign-verify-address-modal.component';
+import { AddressDetailModalComponent } from '../shared/address-detail-modal/address-detail-modal.component';
 
 
 type SelectableAddressType = AddressType | 'all';
@@ -164,8 +165,8 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   }
 
 
-  openQrCodeModal(addr: FilteredAddress) {
-    // TODO : IMPLEMENT THIS
+  openQrCodeModal(address: FilteredAddress) {
+    this._dialog.open(AddressDetailModalComponent, {data: {address}});
   }
 
 

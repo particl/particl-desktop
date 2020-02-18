@@ -58,7 +58,7 @@
 
           <mat-card class="address-info">
 
-            <div class="address-name cursor-pointer" > <!-- (click)="openNewAddress(address)"> -->
+            <div class="address-name cursor-pointer" (click)="openAddressDetailModal(address)">
               <div class="address-id">
                 #{{ +address?.id + 1 || '' }}
               </div>

@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { concatMap, mapTo } from 'rxjs/operators';
+import { concatMap, mapTo, finalize } from 'rxjs/operators';
 import { iif, of } from 'rxjs';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -107,8 +107,6 @@ export class DetailAddressComponent implements OnChanges {
 
 
   updateLabel() {
-    this.isEditing = false;
-
     if (this.address.label === this.newLabel) {
       if (this.newLabel === '') {
         this.newLabel = TextContent.DEFAULT_EMPTY_LABEL;
@@ -121,7 +119,10 @@ export class DetailAddressComponent implements OnChanges {
         !isUnlocked,
         of(false),
         this._addressService.updateAddressLabel(this.address.address, this.newLabel).pipe(mapTo(true))
-      ))
+      )),
+      finalize(() => {
+        this.isEditing = this.address.label !== this.newLabel;
+      })
     ).subscribe(
       (success) => {
         if (success) {

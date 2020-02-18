@@ -1,0 +1,16 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ Modal ------ //
+
+.dialog-content {
+  width: 700px;
+  padding: 24px;
+  margin: 10px -24px !important;
+}
+
+mat-dialog-actions {
+  border-top: 1px dashed $bg-shadow;
+  .right {
+    text-align: right;
+  }
+}

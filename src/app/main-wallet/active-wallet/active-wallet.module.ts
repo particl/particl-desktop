@@ -28,6 +28,7 @@ import { DeleteAddressConfirmationModalComponent } from './addressbook/delete-ad
 import { NewAddressbookEntryModalComponent } from './addressbook/new-addressbook-entry-modal/new-addressbook-entry-modal.component';
 import { NotOwnAddressValidator } from './addressbook/new-addressbook-entry-modal/not-owned-address.directive';
 import { SignVerifyAddressModalComponent } from './shared/sign-verify-address-modal/sign-verify-address-modal.component';
+import { AddressDetailModalComponent } from './shared/address-detail-modal/address-detail-modal.component';
 
 
 @NgModule({
@@ -56,12 +57,14 @@ import { SignVerifyAddressModalComponent } from './shared/sign-verify-address-mo
     DeleteAddressConfirmationModalComponent,
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,
+    AddressDetailModalComponent
   ],
   entryComponents: [
     WalletBackupModalComponent,
     DeleteAddressConfirmationModalComponent,
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,
+    AddressDetailModalComponent,
   ],
   providers: [
     AddressService,
