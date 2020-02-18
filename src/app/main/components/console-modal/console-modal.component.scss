@@ -8,35 +8,39 @@
   // command input & button
   .command-actions {
     padding: 12px 24px;
-    border-top: 1px solid $bg-shadow;
+    border-top: 1px solid var(--bg-muted);
   }
 }
 
 .warn-text {
-  color: $color-alert;
+  color: var(--color-alert);
 }
 
 .console-modal-form {
-  height: 450px;
-  font-family: $font;
+  height: 70vh;
+  width: 950px;
+  font-family: var(--font);
   overflow-y: scroll;
-  background: $bg;
+  background: var(--bg);
 }
 
 .content-modal {
   @extend %enable-select;
   max-height: none !important;
-  margin: 0 24px 24px;
+  margin: 0 8px 8px;
   padding: 10px 16px;
-  background: $color-white;
-  border-bottom: 1px solid $bg-shadow;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--bg-muted);
+  font-size: 11px;
   // user input commands
   &.input {
     margin-bottom: 0;
-    border-bottom: 1px dashed $bg-shadow;
+    border-bottom: 1px dashed var(--bg-muted);
+    font-size: 13px;
     .time {
-      color: $text-muted;
-      font-size: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
       text-align: right;
     }
     .command {
@@ -52,8 +56,7 @@
 }
 
 .intro-text { // console welcome/warning text
-  background: $bg;
-  padding: 10px 25px;
+  padding: 10px 25px 0;
   p {
     line-height: 1.5;
   }

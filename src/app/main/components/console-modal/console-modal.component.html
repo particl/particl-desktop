@@ -19,10 +19,10 @@
         <br>
         Type <code>help</code> for an overview of available commands.
       </p>
-      <p class="warn-text">
-        <strong>WARNING:</strong> Scammers have been active, telling users to type commands here, stealing their wallet contents. Do not use this console without fully understanding the ramification of a command.
-      </p>
     </div>
+    <p class="warning">
+      <strong>WARNING:</strong> Scammers have been active, telling users to type commands here, stealing their wallet contents.<br>Do not use this console without fully understanding the ramification of a command.
+    </p>
 
     <div class="content-modal" [ngClass]="{'input': list.type === 1}" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between start" *ngFor="let list of commandList">
       <div fxFlex="1 1 100%" class="command">
