@@ -14,6 +14,7 @@ Global SCSS config file defining app-wide settings (included in every page)
 */
 
 @import '~@angular/material/theming';
+@import 'scss/mixins';
 
 
 /* ------------------------------- *\
@@ -68,12 +69,121 @@ $break-hd: 1920px;
 $break-xhd: 2200px;
 
 
+/*
+  Override SASS' handling of HSL(a) color functions, don't touch it and let CSS handle it itself.
+  This will enable the trick with variable alpha channels for CSS color variables (see below).
+*/
+//@function hsl($args...) { @return #{'hsl(#{$args})'}; }
+@function hsla($args...) { @return #{'hsla(#{$args})'}; }
+
+
+:root {
+
+  /* ---------- COLORS ----------
+      
+    Each color is defined by 2 variables - 1st is "proper" color definition (HSL),
+    the 2nd one containes only the HSL values for usage with variable alpha channel, e.g.:
+    
+    .white-transparent { color: hsla(var(--color-primary-hsl), 0.6); }
+
+  */
+
+  // --- Main colors
+
+  --color-primary: hsl(152, 62%, 55%); // primary green-ish color
+  --color-primary-hsl: 152, 62%, 55%;
+
+  --color-secondary: hsl(201, 83%, 47%); // new blue
+  --color-secondary-hsl: 201, 83%, 47%;
+
+  --color-tertiary: hsl(250, 39%, 47%); // new purple
+  --color-tertiary-hsl: 250, 39%, 47%;
+
+  // --- Status colors
+
+  --color-success: var(--color-primary);
+  --color-success-hsl: var(--color-primary-hsl);
+
+  --color-alert: hsl(358, 68%, 50%); // red
+  --color-alert-hsl: 358, 68%, 50%;
+
+  --color-warning: hsl(41, 100%, 47%); // yellow-ish
+  --color-warning-hsl: 41, 100%, 47%;
+
+  --color-info: var(--color-secondary); // blue-ish (e.g. status cold staking icon)
+  --color-info-hsl: var(--color-secondary-hsl);
+
+  --color-white: hsl(0, 0%, 100%);
+  --color-white-hsl: 0, 0%, 100%;
+
+  // --- Text colors
+
+  --text: hsl(192, 7%, 15%); // main text color (high priority content - headings etc.)
+  --text-hsl: 192, 7%, 15%;
+
+  --text-muted: hsl(206, 6%, 48%); // lighter (for lower priority text)
+  --text-muted-hsl: 206, 6%, 48%;
+  
+  // --- Background colors
+
+  --bg: hsl(0, 0%, 98%); // default app bg
+  --bg-hsl: 0, 0%, 98%;
+
+  --bg-hover: hsl(0, 0%, 96%); // slightly darker bg
+  --bg-hover-hsl: 0, 0%, 96%;
+
+  --bg-muted: hsl(0, 0%, 86%); // darker bg (lines, shadows etc.)
+  --bg-muted-hsl: 0, 0%, 86%;
+
+  --bg-black: var(--text); // inverted bg (sidebar)
+  --bg-black-hsl: var(--text-hsl);
+
+  // --- Specific backgrounds
+
+  // Dark sidebar
+  --bg-sidebar: hsl(192, 7%, 15%);
+  --bg-sidebar-hsl: 192, 7%, 15%;
+  --bg-sidebar-lighter: hsl(192, 7%, 20%);
+  --bg-sidebar-lighter-hsl: 192, 7%, 20%;
+  --bg-sidebar-darker: hsl(192, 7%, 10%);
+  --bg-sidebar-darker-hsl: 192, 7%, 10%;
+
+  // Appbar switcher (formerly multiwallet)
+  --bg-appbar: hsl(192, 7%, 10%); // dark appbar bg
+  --bg-appbar-hsl: 192, 7%, 10%;
+
+
+  /* ---------- LAYOUT & UI ---------- */
+
+  --font: 'Inter_UI', sans-serif; // default sans-serif font
+  --font-mono: 'Office_Code_Pro', monospace; // default monospace font
+  --radius: 4px; // default border radius
+
+  --header-main-height: 64px; // app header with status bar
+  --tab-bar-height: 48px; // tab height in pages
+  --control-bar-height: 55px; // control bar height (filters etc., e.g. in Market)
+
+  // FIXME @Allien - rename!
+  --multiwallet-width: 56px; // width of app switcher bar
+  --sidebar-width: 220px; // main sidebar menu width
+  --filter-width: 230px; // sidebar in content area (filter/sort, search)
+  --scrollbar-width: 6px; // 'duh
+
+  --paddingV: 35px; // default vertical padding
+  --paddingH: 35px; // default horizontal padding
+  @include break(l) {
+    --paddingV: 40px;
+    --paddingH: 50px;
+  }
+
+}
+
+
 /* ------------------------------- *\
     2. Global imports
 \* ------------------------------- */
 
 @import 'color-palettes'; // Material theming color palettes
-@import 'scss/mixins';
 
 // Import themes
 @import 'theme-default';
@@ -102,7 +212,7 @@ $break-xhd: 2200px;
 %subtitle { // section titles / H2's
   @extend %lighter;
   font-size: 14px;
-  font-family: $font;
+  font-family: var(--font);
   font-weight: normal;
   text-transform: uppercase;
   margin: 30px 0 16px;
@@ -115,7 +225,7 @@ $break-xhd: 2200px;
 }
 
 %help-text { // small help texts & small descriptions (for form elements)
-  color: $text-muted;
+  color: var(--text-muted);
   font-size: 11px;
   line-height: 1.5;
 }
@@ -132,10 +242,10 @@ $break-xhd: 2200px;
 %tag { // notification tags - e.g. in tabs: Orders [3]
   @extend %tfx;
   font-size: 80%;
-  color: $color-white;
+  color: var(--color-white);
   font-weight: 600;
   line-height: 1.6;
-  background-color: $color;
+  background-color: var(--color-primary);
   border-radius: 4px;
   display: inline-block;
   margin-left: 8px;
@@ -143,13 +253,13 @@ $break-xhd: 2200px;
 }
 
 %mat-card {
-  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
-  background: $color-white;
+  box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
+  background: var(--color-white);
 }
 
 %menu-divider { // diviers in sidebar menu
-  border-top: 1px solid #15191a;
-  box-shadow: 0 1px 0 #333 inset;
+  border-top: 1px solid hsl(192, 11%, 9%);
+  box-shadow: 0 1px 0 hsl(0, 0%, 20%) inset;
 }
 
 

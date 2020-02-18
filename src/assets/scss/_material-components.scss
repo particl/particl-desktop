@@ -53,7 +53,7 @@ Customizations and modifiers for default Material components
 button,
 .mat-button,
 .mat-raised-button {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   font-weight: 600;
   .mat-icon {
     margin-right: 5px;
@@ -91,22 +91,16 @@ button,
 
 
 // ------ 1.3. PROGRESS BARS ------ //
-
+/*
 .mat-progress-bar {
-  // sidebar/sync: dark buffer background for progress bar
-  &.dark-buffer {
-    .mat-progress-bar-buffer {
-      background: lighten($bg-black, 15%);
-    }
-  }
 }
-
+*/
 
 // ------ 1.4. SLIDERS (RANGE) ------ //
 
 .mat-slider-thumb-label-text {
   font-weight: 700 !important;
-  font-family: $font !important;
+  font-family: var(--font) !important;
 }
 
 
@@ -118,11 +112,11 @@ button,
   align-items: center;
   justify-content: space-between;
   background: none !important;
-  font-family: $font !important;
+  font-family: var(--font) !important;
   .mat-icon-button {
     @extend %tfx;
     &:hover {
-      color: $text;
+      color: var(--text);
     }
     &[disabled] {
       @extend %lighter;
@@ -134,9 +128,9 @@ button,
 // ------ 1.6. TOOLTIPS ------ //
 
 mat-tooltip-component .mat-tooltip {
-  font-family: $font;
+  font-family: var(--font);
   font-size: 11px;
-  background: rgba($bg-black, 0.75);
+  background: hsla(var(--bg-black-hsl), 0.75);
   padding: 5px 8px;
 }
 
@@ -145,12 +139,12 @@ mat-tooltip-component .mat-tooltip {
 
 .mat-progress-spinner {
   &.tiny {
-    $spinner-size: 16px;
-    width: $spinner-size !important;
-    height: $spinner-size !important;
+    --spinner-size: 16px;
+    width: var(--spinner-size) !important;
+    height: var(--spinner-size) !important;
     & > svg {
-      width: $spinner-size !important;
-      height: $spinner-size !important;
+      width: var(--spinner-size) !important;
+      height: var(--spinner-size) !important;
       & > circle {
         stroke-width: 15% !important;
       }
@@ -165,8 +159,8 @@ mat-tooltip-component .mat-tooltip {
 // ------ 2.1. CARDS ------ //
 
 mat-card.mat-card {
-  font-family: $font;
-  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+  font-family: var(--font);
+  box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
   padding: 24px;
   &.not-rounded {
     border-radius: 0;
@@ -178,7 +172,7 @@ mat-card.mat-card {
 
 .mat-tab-group {
   .mat-tab-label {
-    font-family: $font;
+    font-family: var(--font);
     font-weight: 500;
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
@@ -186,7 +180,7 @@ mat-card.mat-card {
         opacity: 0.9;
       }
       .tag {
-        background-color: $color;
+        background-color: var(--color-primary);
       }
     }
     .mat-icon {
@@ -198,7 +192,7 @@ mat-card.mat-card {
   }
   .tag { // notification tags in tabs - e.g. Orders [3]
     @extend %tag;
-    background-color: darken($bg-shadow, 15%);
+    background-color: var(--bg-muted);
   }
 }
 
@@ -212,14 +206,14 @@ mat-expansion-panel.mat-expansion-panel {
   padding: 0;
   border-radius: 0;
   .mat-expansion-panel-header {
-    font-family: $font;
+    font-family: var(--font);
     font-size: 100%;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
     }
     .mat-expansion-panel-header-title {
       text-transform: uppercase;
-      font-family: $font;
+      font-family: var(--font);
     }
   }
   .mat-expansion-indicator {
@@ -228,7 +222,7 @@ mat-expansion-panel.mat-expansion-panel {
     top: -3px;
   }
   .mat-expansion-panel-content {
-    font-family: $font;
+    font-family: var(--font);
   }
   &.mat-expanded { // while expanded..
     .mat-expansion-indicator {
@@ -241,7 +235,7 @@ mat-expansion-panel.mat-expansion-panel {
       right: 16px;
     }
     &.mat-expanded {
-      background: darken($bg-black, 2.5%);
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.5);
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
@@ -254,12 +248,12 @@ mat-expansion-panel.mat-expansion-panel {
   &.arrow-colored {
     .mat-expansion-indicator::after {
       @extend %tfx;
-      color: $text-muted;
+      color: var(--text-muted);
     }
     // when expanded..
     &.mat-expanded {
       .mat-expansion-indicator::after {
-        color: $color;
+        color: var(--color-primary);
       }
     }
   }
@@ -269,7 +263,7 @@ mat-expansion-panel.mat-expansion-panel {
 // ------ 2.4. STEPPER ------ //
 
 .mat-stepper-horizontal {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   .mat-step-label {
     min-width: auto;
   }
@@ -293,7 +287,7 @@ mat-expansion-panel.mat-expansion-panel {
 .mat-list {
   mat-list-item.mat-list-item {
     padding: 0;
-    font-family: $font;
+    font-family: var(--font);
   }
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
@@ -313,7 +307,7 @@ mat-expansion-panel.mat-expansion-panel {
       .mat-list-item-content {
         padding: 6px 26px 6px 36px !important;
         font-size: 13px;
-        color: $text-muted;
+        color: var(--text-muted);
       }
     }
   }
@@ -347,7 +341,7 @@ mat-expansion-panel.mat-expansion-panel {
       margin: 15px -24px;
     }
     [mat-dialog-title] { // dialog title
-      font-family: $font;
+      font-family: var(--font);
       font-weight: 500;
       font-size: 20px;
       margin-bottom: 15px;
@@ -359,6 +353,7 @@ mat-expansion-panel.mat-expansion-panel {
 
     mat-dialog-content {
       line-height: 1.5;
+      // TODO @Allien: is the spinner here needed anymore? (in Sync modal only?)
       .mat-progress-spinner { // loading spinners
         width: 100px;
         height: 100px;
@@ -367,8 +362,8 @@ mat-expansion-panel.mat-expansion-panel {
         left: calc((100% - 100px) / 2);
         top: calc((100% - 100px) / 2);
         z-index: 10;
-        background: rgba($color-white, 0.9);
-        box-shadow: 0 0 70px darken($bg-hover, 7%);
+        background: hsla(var(--color-white-hsl), 0.9);
+        box-shadow: 0 0 70px var(--bg-muted);
         border-radius: 50%;
         svg {
           width: 70px !important;
@@ -384,14 +379,14 @@ mat-expansion-panel.mat-expansion-panel {
       top: 22px;
       z-index: 10;
       background: transparent;
-      color: $text-muted;
+      color: var(--text-muted);
       min-width: 50px;
       padding: 0;
       border: 0;
       outline: none;
       cursor: pointer;
       .mat-icon {
-        color: rgba($color-alert, 0.5);
+        color: hsla(var(--color-alert-hsl), 0.5);
         border-radius: 50%;
         font-size: 22px;
         line-height: 1.4;
@@ -399,7 +394,7 @@ mat-expansion-panel.mat-expansion-panel {
       }
       &:hover {
         .mat-icon {
-          color: $color-alert;
+          color: var(--color-alert);
         }
       }
     }
@@ -410,12 +405,12 @@ mat-expansion-panel.mat-expansion-panel {
       z-index: 10;
       padding: 25px 38px;
       background: transparent;
-      color: $text-muted;
+      color: var(--text-muted);
       min-width: 50px;
       outline: none;
       cursor: pointer;
       .mat-icon {
-        color: rgba($color-alert, 0.5);
+        color: hsla(var(--color-alert-hsl), 0.5);
         border-radius: 50%;
         font-size: 24px;
         line-height: 1.4;
@@ -423,7 +418,7 @@ mat-expansion-panel.mat-expansion-panel {
       }
       &:hover {
         .mat-icon {
-          color: $color-alert;
+          color: var(--color-alert);
         }
       }
     }
@@ -444,24 +439,23 @@ mat-expansion-panel.mat-expansion-panel {
 */
 
 ::-webkit-scrollbar-track {
-  background: $bg;
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-thumb {
-  width: $scrollbar-width;
-  height: $scrollbar-width;
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
 }
 
 ::-webkit-scrollbar-thumb {
-  @extend %tfx;
-  background: darken($bg-shadow, 15%);
+  background: hsla(var(--bg-black-hsl), 0.3);
   &:hover {
-    background: darken($bg-shadow, 20%);
+    background: hsla(var(--bg-black-hsl), 0.35);
   }
 }
 .mat-drawer-container {
-  background: $bg;
+  background: var(--bg);
 }
 
 
@@ -509,7 +503,7 @@ mat-expansion-panel.mat-expansion-panel {
       float: right;
     }
     .muted {
-      color: $text-muted;
+      color: var(--text-muted);
     }
   }
   &.smaller { // smaller line height for menu items
@@ -534,12 +528,12 @@ mat-expansion-panel.mat-expansion-panel {
 
 .mat-divider {
   &.thicker {
-    $thickness: 2px;
+    --thickness: 2px;
     &.mat-divider-horizontal {
-      border-top-width: $thickness;
+      border-top-width: var(--thickness);
     }
     &.mat-divider-vertical {
-      border-right-width: $thickness;
+      border-right-width: var(--thickness);
     }
   }
   &.dashed {
@@ -563,7 +557,7 @@ mat-expansion-panel.mat-expansion-panel {
 // ------ 3.1. INPUTS ------ //
 
 .mat-form-field {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   line-height: normal;
   .mat-form-field-label {
     overflow: visible; // fix cropped labels
@@ -609,12 +603,12 @@ input {
   }
   // visual verification
   &.verify-sucess {
-    color: darken($color, 7%) !important;
+    color: var(--color-primary) !important;
   }
   &.verify-error,
   &.verify-error::placeholder {
-    color: darken($color-alert, 5%);
-    border-color: $color-alert;
+    color: var(--color-alert);
+    border-color: var(--color-alert);
   }
 }
 
@@ -622,30 +616,31 @@ input {
 // ------ 3.3. SELECTS ------ //
 
 .mat-select {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   .mat-select-trigger {
     height: 1.2em; // fix overflow:hidden for our custom font
   }
 }
 mat-option.mat-option {
-  $height: 36px;
-  font-family: $font !important;
-  line-height: $height;
-  height: $height;
+  --height: 36px;
+  font-family: var(--font) !important;
+  line-height: var(--height);
+  height: var(--height);
   .mat-option-text {
     font-size: 13px;
   }
   &.mat-selected {
-    color: $text !important;
+    color: var(--text) !important;
     font-weight: 500;
   }
 }
 .mat-select-panel {
-  background: $color-white;
+  background: var(--color-white);
 }
 
+// TODO @Allien: remove/replace
 .underlining-select {
-  border-bottom: 0.2px solid rgba(0, 0, 0, 0.507);
+  border-bottom: 0.2px solid hsla(var(--text-hsl), 0.6);
   line-height: 1.6em;
 }
 
@@ -654,7 +649,7 @@ mat-option.mat-option {
   display: block;
   .mat-form-field-flex {
     padding: 0 16px;
-    background: $color-white;
+    background: var(--color-white);
   }
   .mat-form-field-infix {
     padding: 0.2em 0 1.1em 0;
@@ -662,8 +657,8 @@ mat-option.mat-option {
 
   // standalone card-like variant
   &.--boxed {
-    box-shadow: 0 1px 10px -4px rgba($text, 0.3);
-    border-radius: $radius $radius 0 0;
+    box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
+    border-radius: var(--radius) var(--radius) 0 0;
     margin-bottom: 16px;
     .mat-select-value {
       font-weight: 500;
@@ -695,7 +690,7 @@ mat-option.mat-option {
 // ------ 3.5. RADIOS ------ //
 
 .mat-radio-button {
-  font-family: $font;
+  font-family: var(--font);
   &.mat-radio-checked {
     font-weight: 500;
   }
@@ -714,7 +709,7 @@ mat-option.mat-option {
 }
 
 .mat-radio-group {
-  font-family: $font;
+  font-family: var(--font);
   // send: full-width clickable radios
   &.block-radio {
     .mat-radio-button .mat-radio-label,
@@ -728,7 +723,7 @@ mat-option.mat-option {
 // ------ 3.6. CHECKBOXES ------ //
 
 .mat-checkbox {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   &.align-top { // settings: don't center checkbox vertically
     .mat-checkbox-inner-container {
       margin: 0 12px 0 0;
@@ -751,7 +746,7 @@ mat-option.mat-option {
   &.with-hover {
     .mat-checkbox:hover {
       .mat-checkbox-layout {
-        background: $bg-hover;
+        background: var(--bg-hover);
       }
     }
   }
@@ -770,7 +765,7 @@ mat-button-toggle {
     &.mat-button-toggle-appearance-standard {
       background: transparent;
       border: 0;
-      color: $text-muted;
+      color: var(--text-muted);
       .mat-button-toggle-label-content {
         line-height: 36px;
       }
@@ -798,6 +793,6 @@ lightbox#lightbox-lightbox {
   max-height: 100vh;
   border-radius: 0;
   gallery {
-    background: rgba(darken($bg-black, 5%), 0.95);
+    background: hsla(var(--bg-black), 0.95);
   }
 }
