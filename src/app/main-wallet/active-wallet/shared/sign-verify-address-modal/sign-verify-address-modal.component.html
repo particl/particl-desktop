@@ -1,0 +1,76 @@
+<div class="signature-address-container disable-select">
+  <button class="small-close-button pull-right" mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  </button>
+
+  <form [formGroup]="addressForm" (ngSubmit)="onFormSubmit()">
+    <div mat-dialog-container>
+      <mat-tab-group>
+        <mat-tab label="Sign Message" *ngIf="isSigning">
+          <p>
+            You can sign messages/agreements with your address to prove you can receive Particl sent to them. Be careful not to sign anything vague or random, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.
+          </p>
+        </mat-tab>
+        <mat-tab label="Verify Message" *ngIf="!isSigning">
+          <p>
+            Enter the receiver's message (ensure you copy line breaks, spaces, tabs etc. exactly) and signature below to verify the message. Be careful not to read more into the signature than what is in the signed message itself, to avoid being tricked by a man-in-the-middle attack. Note that this only proves the signing party receives with the address, it cannot prove sendership of any transaction!
+          </p>
+        </mat-tab>
+      </mat-tab-group>
+
+      <div class="signature-address-modal-form">
+        <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%">
+            <input matInput
+                type="text"
+                formControlName="address"
+            >
+          </mat-form-field>
+        </div><!-- .address-field -->
+
+        <mat-form-field>
+          <textarea matInput
+              formControlName="message"
+              rows="10"
+              cols="100"
+              placeholder="Enter message to sign/verify"
+              #messageInput
+              required
+          ></textarea>
+          <mat-hint class="error"  *ngIf="message.invalid && (message.dirty || message.touched)">
+            A message is required
+          </mat-hint>
+        </mat-form-field>
+
+        <div class="address-field" fxLayout="row" fxLayoutAlign="center center">
+          <mat-form-field fxFlex="1 1 100%">
+            <input matInput
+                formControlName="signature"
+                [placeholder]="signMessagePlaceholder"
+                #signatureInput
+            >
+            <mat-hint class="error"  *ngIf="signature.invalid && (signature.dirty || signature.touched)">
+              A signature is required
+            </mat-hint>
+          </mat-form-field>
+
+          <div class="icons" fxFlex="0 0 45px">
+            <span class="icon" matTooltip="Copy" (click)="copyToClipBoard()" *ngIf="isSigning" ngxClipboard [cbContent]="signature.value">
+              <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            </span>
+          </div>
+        </div>
+      </div><!-- .signature-address-modal-form -->
+    </div>
+    <mat-dialog-actions fxLayoutAlign="end center">
+      <button mat-button type="button" (click)="resetForm()">
+        <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+        Clear all
+      </button>
+      <button mat-button mat-raised-button color="primary" class="capitalize" [disabled]="!addressForm.valid || isProcessing">
+        <mat-icon fontSet="partIcon" [fontIcon]="isSigning ? 'part-pen-2' : 'part-check'"></mat-icon>
+        {{ actionButtonText }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>
