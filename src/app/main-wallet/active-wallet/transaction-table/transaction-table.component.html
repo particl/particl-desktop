@@ -103,7 +103,7 @@
         <div fxFlex="1 0 155px" class="tx-value">
 
           <span class="amount" *ngIf="!txn.requires_unlock"
-                [ngClass]="{'positive': (+txn.amountWhole) > 0, 'negative': (+txn.amountWhole) < 0 }">
+                [ngClass]="{'positive': (+txn.amount) > 0, 'negative': (+txn.amount) < 0 }">
             <span class="big number">{{ txn.amountWhole }}</span><!-- inline element comment hack
             --><span class="point">{{ txn.amountFraction.length > 0 ? '.' : '' }}</span><!--
             --><small class="small number">{{ txn.amountFraction }}</small>
@@ -186,11 +186,11 @@
           </div>
           <!-- Net amount (detail) -->
           <div class="tx-detail-item text-right" fxFlex>
-            <ng-container *ngIf="txn.category === 'internal_transfer' && !txn.isListingFee; else netamount">
+            <ng-container *ngIf="txn.category === 'internal_transfer' && !txn.isListingFee; else totalamount">
               <span >Transferred amount:</span>
             </ng-container>
-            <ng-template #netamount>
-              <span>Net amount:</span>
+            <ng-template #totalamount>
+              <span>Total amount:</span>
             </ng-template>
 
             <span class="value">{{ txn.netAmount}} PART</span>

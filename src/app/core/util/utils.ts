@@ -55,9 +55,10 @@ export class PartoshiAmount {
     return this.amount.length > this.MAX_DECIMALS ? this.amount.substr(0, this.amount.length - this.MAX_DECIMALS) : '0';
   }
 
-  public particlStringFraction(): string {
+  public particlStringFraction(paddingCount: number = 0): string {
     const amount = this.calculateParticls().split(this.DEC_SEP)[1];
-    return +amount > 0 ? amount.replace(/0+$/, '') : '';
+    const str = +amount > 0 ? amount.replace(/0+$/, '') : '';
+    return paddingCount > 0 ? str.padEnd(paddingCount, '0').substring(0, paddingCount) : str;
   }
 
   public particlStringSep(): string {

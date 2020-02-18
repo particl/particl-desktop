@@ -96,8 +96,6 @@ export class FilteredTransaction {
 
     const partoshiAmount = new PartoshiAmount(Math.abs(+json.amount) * Math.pow(10, 8));
     this.amount = +json.amount;
-    this.amountWhole = (this.amount < 0 ? '-' : '+') + partoshiAmount.particlStringInteger();
-    this.amountFraction = partoshiAmount.particlStringFraction();
 
     this.reward = +json.reward ? +json.reward : 0;
     this.fee = +json.fee ? +json.fee : 0;
@@ -166,6 +164,13 @@ export class FilteredTransaction {
           this.transferType = TxTransferType.SPLIT;
       }
     }
+
+    this.amountWhole = (
+      this.amount < 0 ?
+      '- ' :
+      (this.transferType === TxTransferType.NONE ? '+ ' : '')
+     ) + partoshiAmount.particlStringInteger();
+    this.amountFraction = partoshiAmount.particlStringFraction(4);
 
 
     let netValue = this.amount;
