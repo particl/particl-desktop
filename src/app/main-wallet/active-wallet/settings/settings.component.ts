@@ -1,8 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Store, Select } from '@ngxs/store';
-import { range } from 'lodash';
-import { take, concatMap } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { take, concatMap, finalize } from 'rxjs/operators';
 import { Observable, from } from 'rxjs';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
@@ -11,11 +10,9 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
 
 import {
-  Page,
   PageInfo,
   TextContent,
   SettingType,
-  PageLoadFunction,
   SettingGroup,
   Setting
 } from 'app/main-extra/global-settings/settings.types';
@@ -29,24 +26,21 @@ import { WalletDetailActions } from 'app/main/store/main.actions';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class WalletSettingsComponent implements OnInit, OnDestroy {
+export class WalletSettingsComponent implements OnInit {
 
-  @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
+  settingType: (typeof SettingType) = SettingType;  // Template typings
 
-  public settingPages: Array<Page> = [];
-  public isLoading: boolean = true;       // Indicates current tab is loading
-  public isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
-  public currentChanges: number[][] = []; // Tracks which setting items on the current page have changed
+  settingGroups: SettingGroup[] = [];
+  isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
+  currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
 
-  public settingType: (typeof SettingType) = SettingType;
+  readonly pageDetails: PageInfo = {
+    title: 'Wallet Settings',
+    description: 'Adjust settings and configuration that apply to the currently selected wallet',
+    help: ''
+  } as PageInfo;
 
-  // Convenience properties for assisting the template in laying out columns of setting groups for the current page/tab
-  public columnCount: number = 3;
-  public colIdxs: number[] = range(0, this.columnCount);
-  public groupIdxs: number[] = [];
-
-  // Internal (private) vars
-  private pageIdx: number = -1;   // Tracks the current displayed page
+  private _currentGroupIdx: number = 0;
 
 
   constructor(
@@ -56,123 +50,113 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
     private _rpc: MainRpcService
   ) { };
 
+
   ngOnInit() {
-    this.settingPages.push({
-      icon: 'part-cog',
-      info: {
-        title: 'Wallet Settings',
-        description: 'Adjust settings and configuration that apply to the currently selected wallet',
-        help: ''
-      } as PageInfo,
-      settingGroups: [],
-      load: (<PageLoadFunction>this.pageLoadWalletSettings)
-    } as Page);
+    this.loadPageData();
 
-    this.changeTab(0);
+    // Perform relevant data binding
+    this.settingGroups.forEach((group: SettingGroup) => {
+      group.settings.forEach((setting: Setting) => {
+        if (setting.validate) {
+          setting.validate = setting.validate.bind(this);
+        }
+        if (setting.onChange) {
+          setting.onChange = setting.onChange.bind(this);
+        }
+      });
 
+      this.currentChanges.push([]);
+    });
+    this.clearChanges();
   }
 
-  ngOnDestroy() {
+
+  get hasErrors(): boolean {
+    return this.settingGroups.findIndex(group => group.errors.length > 0) > -1;
   }
 
-  /**
-   * Extracts the current rendered page
-   */
-  get currentPage(): Page | null {
-    return this.pageIdx >= 0 ? this.settingPages[this.pageIdx] : null;
+  get hasChanges(): boolean {
+    return this.currentChanges.findIndex(group => group.length > 0) > -1;
   }
 
-  /**
-   * Changes the currently loaded tab
-   * @param idx The index of the page/tab (from this.settingPages) to be loaded
-   */
-  changeTab(idx: number): void {
-    if (this.isProcessing) {
-      return;
+
+  get currentGroup(): SettingGroup {
+    return this.settingGroups[this._currentGroupIdx];
+  }
+
+
+  trackBySettingGroupFn(idx: number, item: SettingGroup) {
+    return idx;
+  }
+
+
+  trackBySettingFn(idx: number, item: Setting) {
+    return item.id;
+  }
+
+
+  changeSelectedGroup(idx: number) {
+    if (idx >= 0 && idx < this.settingGroups.length) {
+      this._currentGroupIdx = idx;
     }
-    if ( (this.pageIdx === idx) || (idx < 0) || (idx >= this.settingPages.length) ) {
-      return;
-    }
-    this.isLoading = true;
-    this.isProcessing = false;
-    this.disableUI(TextContent.LOADING);
-    this.pageIdx = idx;
-    this.loadPageSettings(idx);
   }
 
-  /**
-   * Called when a setting value has been changed. This executes the specific settings 'validate' function,
-   *  if available, and the executes the setting's 'onChange' function if its been provided.
-   *
-   * Applies to the currently loaded page
-   * @param groupIdx the index of the group on the current page that the setting belongs to
-   * @param settingIdx the index of the setting in the group
-   */
-  settingChangedValue(groupIdx: number, settingIdx: number) {
-    if (this.isLoading ||
-      !(groupIdx >= 0 && groupIdx < this.currentPage.settingGroups.length) ||
-      !(settingIdx >= 0 && settingIdx < this.currentPage.settingGroups[groupIdx].settings.length)) {
+
+  settingChangedValue(settingIdx: number) {
+    if (!(settingIdx >= 0 && settingIdx < this.currentGroup.settings.length)) {
         return;
     }
 
     this.isProcessing = true;
-    const setting = this.currentPage.settingGroups[groupIdx].settings[settingIdx];
-
-    if (setting.type === SettingType.BUTTON) {
-      // this.disableUI(TextContent.SAVING);
-    }
+    const currentGroup = this.currentGroup;
+    const groupIdx = this._currentGroupIdx;
+    const setting = this.currentGroup.settings[settingIdx];
 
     if (setting.validate) {
       const response = setting.validate(setting.newValue, setting);
-      if (response) {
-        setting.errorMsg = response;
-      } else {
-        setting.errorMsg = '';
-      }
+      setting.errorMsg = response ? response : '';
     }
-    if (setting.onChange) {
+    if (!setting.errorMsg && setting.onChange) {
       const response = setting.onChange(setting.newValue, setting);
-      if (response) {
-        setting.errorMsg = response;
-      } else {
-        setting.errorMsg = '';
-      }
+      setting.errorMsg = response ? response : '';
     }
-    const listedError = this.currentPage.settingErrors.findIndex(
-      errItem => (errItem.grpIdx === groupIdx) && (errItem.setIdx === settingIdx)
-    );
+    const listedError = currentGroup.errors.findIndex(errItem => errItem === settingIdx);
 
     if (setting.errorMsg && (listedError === -1)) {
-      this.currentPage.settingErrors.push({grpIdx: groupIdx, setIdx: settingIdx});
+      currentGroup.errors.push(settingIdx);
     } else if (!setting.errorMsg && (listedError > -1)) {
-      this.currentPage.settingErrors.splice(listedError, 1);
+      currentGroup.errors.splice(listedError, 1);
     }
 
-    const changeIdx = this.currentChanges.findIndex((change) => change[0] === groupIdx && change[1] === settingIdx);
+    const changeIdx = this.currentChanges[groupIdx].findIndex((c) => c === settingIdx);
 
     if ((setting.currentValue !== setting.newValue) && (changeIdx === -1)) {
-      this.currentChanges.push([groupIdx, settingIdx]);
+      this.currentChanges[groupIdx].push(settingIdx);
     } else if ((setting.currentValue === setting.newValue) && (changeIdx !== -1)) {
-      this.currentChanges.splice(changeIdx, 1);
-    }
-
-    if (setting.type === SettingType.BUTTON) {
-      // this.enableUI();
+      this.currentChanges[groupIdx].splice(changeIdx, 1);
     }
 
     this.isProcessing = false;
   }
 
-  /**
-   * Resets changes to any settings on the currently loaded page.
-   */
+
   clearChanges() {
-    if (this.isLoading) {
+    if (this.isProcessing) {
       return;
     }
     this.isProcessing = true;
-    this.resetPageChanges(this.pageIdx);
-    this.currentChanges = [];
+
+    this.settingGroups.forEach(group => {
+      group.settings.forEach(setting => {
+        if ( !(setting.type === SettingType.BUTTON)) {
+          setting.newValue = setting.currentValue;
+        }
+        setting.errorMsg = '';
+        group.errors = [];
+      })
+    });
+
+    this.currentChanges = this.currentChanges.map(change => []);
     this.isProcessing = false;
   }
 
@@ -182,22 +166,18 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
    * If no setting validation errors occur, then the SettingPages's "save" function is invoked.
    */
   saveChanges() {
-    if (this.isLoading) {
-      return;
-    }
-
     if (this.isProcessing) {
       this._snackbar.open(TextContent.ERROR_BUSY_PROCESSING, 'err');
       return;
     }
-
     this.isProcessing = true;
+
     this.disableUI(TextContent.SAVING);
 
-    // Validation of each changed setting ensures page is not in an error state
+    // Validation of each changed setting ensures current settings are not in an error state
     let hasError = false;
     let hasChanged = false;
-    this.settingPages[this.pageIdx].settingGroups.forEach(group => {
+    this.settingGroups.forEach(group => {
       group.settings.forEach(setting => {
         if ( !(setting.type === SettingType.BUTTON)) {
           if (setting.currentValue !== setting.newValue) {
@@ -219,29 +199,32 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
       const errMsg = !hasChanged ? TextContent.SAVE_NOT_NEEDED : TextContent.ERROR_INVALID_ITEMS;
       this.isProcessing = false;
       this.enableUI();
-      this._snackbar.open(errMsg, 'info');
+      this._snackbar.open(errMsg, 'err');
       return;
     }
 
-    this.saveCurrentPageSettings().pipe(
-      take(1)
+    this.saveActualChanges().pipe(
+      take(1),
+      finalize(() => {
+        this.isProcessing = false;
+        this.enableUI();
+      })
     ).subscribe(
       (doRestart: boolean) => {
 
         // Change current settings in case it has not been done
-        this.settingPages[this.pageIdx].settingGroups.forEach(group => {
+        this.settingGroups.forEach(group => {
           group.settings.forEach(setting => {
             if ( !(setting.type === SettingType.BUTTON)) {
               setting.currentValue = setting.newValue;
             }
             setting.errorMsg = '';
           });
+          group.errors = [];
         });
 
         // reset the list of current changes
-        this.currentChanges = [];
-        this.isProcessing = false;
-        this.enableUI();
+        this.currentChanges = this.currentChanges.map(change => []);
         this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
 
         if (doRestart) {
@@ -249,81 +232,12 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
         }
       },
       (err) => {
-        this.isProcessing = false;
-        this.enableUI();
         this._snackbar.open(TextContent.SAVE_FAILED, 'err');
       }
     );
   }
 
-  /**
-   * (PRIVATE)
-   * Performs the resetting of values on an indicates page.
-   * Resetting in this context means updating the setting's "newValue" value with its "currentValue" value.
-   * @param pageIndex The index of the page which needs to be reset
-   */
-  private resetPageChanges(pageIndex: number) {
-    // Reset each setting for the indicated page to the last saved value;
-    this.settingPages[pageIndex].settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          setting.newValue = setting.currentValue;
-        }
-        setting.errorMsg = '';
-      })
-    });
-    this.settingPages[pageIndex].settingErrors = [];
-  }
 
-  /**
-   * (PRIVATE)
-   * Invokes a specific page's load function, if it has not been previously loaded.
-   * @param pageIndex The index of the page that should be loaded
-   */
-  private async loadPageSettings(pageIndex: number) {
-    const selectedPage = this.settingPages[pageIndex];
-    const isActivePage = pageIndex === this.pageIdx;
-
-    if (isActivePage) {
-      this.groupIdxs = [];
-    }
-
-    if (selectedPage.settingGroups.length <= 0) {
-      let fn: Function;
-      if (selectedPage && (typeof selectedPage.load === 'function')) {
-        fn = selectedPage.load.bind(this);
-      }
-
-      if (fn !== undefined) {
-        await fn(selectedPage.settingGroups).catch(() => {});
-      }
-
-      selectedPage.settingGroups.forEach(group => {
-        group.settings.forEach(setting => {
-          if (setting.validate) {
-            setting.validate = setting.validate.bind(this);
-          }
-          if (setting.onChange) {
-            setting.onChange = setting.onChange.bind(this);
-          }
-        })
-      });
-    }
-
-    this.resetPageChanges(pageIndex);
-
-    if (isActivePage) {
-      this.groupIdxs = range(0, selectedPage.settingGroups.length, this.columnCount);
-      this.isLoading = false;
-      this.enableUI();
-    }
-  }
-
-  /**
-   * (PRIVATE)
-   * Displays a busy indicator overlay preventing the user from interacting with the page
-   * @param message the text to be displayed in the loading overlay
-   */
   private disableUI(message: string) {
     this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
@@ -333,18 +247,15 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * (PRIVATE)
-   * Closes any open busy indicator overlay
-   */
+
   private enableUI() {
     this._dialog.closeAll();
   }
 
   /**
-   * Extracts the changed settings on the current page for persisting the changes
+   * Extracts the changed settings for persistence: Modify this depending on the specific settings being configured
    */
-  private saveCurrentPageSettings(): Observable<boolean> {
+  private saveActualChanges(): Observable<boolean> {
     return new Observable((observer) => {
 
       let restartRequired = false;
@@ -352,9 +263,9 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
 
       const wName = <string>this._store.selectSnapshot(WalletInfoState.getValue('walletname'));
 
-      this.settingPages[this.pageIdx].settingGroups.forEach(group => {
+      this.settingGroups.forEach(group => {
         group.settings.forEach((setting) => {
-          if ( !(setting.type === SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
+          if ( (setting.type !== SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
             actions.push(new WalletDetailActions.SetSetting(wName, setting.id, setting.newValue));
             if (setting.restartRequired) {
               restartRequired = true;
@@ -369,9 +280,7 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
         () => {
           observer.next(restartRequired);
         },
-        () => {
-
-        },
+        null,
         () => {
           observer.complete();
         }
@@ -388,29 +297,15 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
-   * ***********************************************************************
-   * ***********************************************************************
-   *
-   *    PAGE SPECIFIC FUNCTIONALITY (LOAD FUNCTION DEFINITIONS,
-   *      SETTING SPECIFIC VALIDATION/CHANGE FUNCTIONS) OCCURS BELOW
-   *
-   * ***********************************************************************
-   * ***********************************************************************
-   */
-
-
-  /**
-   * The specific page load function for the wallet settings
-   */
-  private async pageLoadWalletSettings(group: SettingGroup[]) {
+  private loadPageData() {
 
     const walletSettings: WalletSettingsStateModel = this._store.selectSnapshot(WalletSettingsState);
 
     const notificationsWallet = {
       name: 'Wallet Notifications',
       icon: 'part-notification-bell',
-      settings: []
+      settings: [],
+      errors: []
     } as SettingGroup;
 
     notificationsWallet.settings.push({
@@ -422,7 +317,7 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
       errorMsg: '',
       currentValue: walletSettings.notifications_payment_received,
       tags: [],
-      restartRequired: false
+      restartRequired: false,
     } as Setting);
 
     notificationsWallet.settings.push({
@@ -437,13 +332,14 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
       restartRequired: false
     } as Setting);
 
-    group.push(notificationsWallet);
+    this.settingGroups.push(notificationsWallet);
 
 
     const dangerZone = {
       name: 'Danger Zone',
       icon: 'part-alert',
-      settings: []
+      settings: [],
+      errors: []
     } as SettingGroup;
 
     dangerZone.settings.push({
@@ -461,7 +357,7 @@ export class WalletSettingsComponent implements OnInit, OnDestroy {
       onChange: this.actionBackupWallet
     } as Setting);
 
-    group.push(dangerZone);
+    this.settingGroups.push(dangerZone);
   }
 
 

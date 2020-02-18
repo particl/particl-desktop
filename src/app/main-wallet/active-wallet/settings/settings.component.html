@@ -1,41 +1,17 @@
-<!-- Do not remove the below class it is using for test case -->
-<app-header class="test-case-container">
-  <!--div class="tab-bar">
-    <mat-tab-group (selectedTabChange)="changeTab($event.index)">
-      <mat-tab *ngFor="let page of settingPages">
-        <ng-template mat-tab-label>
-          <mat-icon *ngIf="page.icon.length" class="icon" fontSet="partIcon" fontIcon="{{page.icon}}"></mat-icon>
-          Settings for {{ walletName | async }}
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
-  </div-->
-</app-header>
-
-
-<div class="container-block with-tab-bar" *ngIf="currentPage">
-  <app-page-intro [childPageAlias]="currentPage.header">
-    <ng-container page-title>{{ currentPage.info.title }}</ng-container>
+<div class="container-block with-tab-bar">
+  <app-page-intro [childPageAlias]="pageDetails.title">
+    <ng-container page-title>{{ pageDetails.title }}</ng-container>
     <ng-container page-content>
-      {{ currentPage.info.description }}
+      {{ pageDetails.description }}
     </ng-container>
     <ng-container page-help>
-      {{ currentPage.info.help }}
+      {{ pageDetails.help }}
     </ng-container>
   </app-page-intro>
 
-  <ng-container *ngTemplateOutlet="isLoading ? pageloader : content"></ng-container>
+  <ng-container *ngTemplateOutlet="content"></ng-container>
 
 </div>
-
-
-<ng-template #pageloader>
-  <div class="no-results">
-    <p>
-      Requesting configuration values
-    </p>
-  </div>
-</ng-template>
 
 
 <ng-template #content>
@@ -44,12 +20,12 @@
 
     <div class="sidebar" fxFlex="250px">
 
-      <div class="radio-switcher" *ngFor="let rowIdx of groupIdxs">
-        <label *ngFor="let colIdx of colIdxs">
-          <input type="radio" name="option" id="{{ (currentPage.settingGroups[rowIdx + colIdx])?.name }}">
-          <div class="switcher-option" *ngIf="(currentPage.settingGroups[rowIdx + colIdx])?.settings.length > 0">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="{{ (currentPage.settingGroups[rowIdx + colIdx])?.icon }}"></mat-icon>
-            <span class="name">{{ (currentPage.settingGroups[rowIdx + colIdx])?.name }}</span>
+      <div class="radio-switcher">
+        <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
+          <input type="radio" name="option" (change)="changeSelectedGroup(groupIdx)">
+          <div class="switcher-option" *ngIf="group.settings.length > 0" [class.warning]="group.errors.length">
+            <mat-icon class="icon" fontSet="partIcon" [fontIcon]="group.icon"></mat-icon>
+            <span class="name">{{ group.name }}</span>
           </div>
         </label>
       </div><!-- .radio-switcher -->
@@ -57,12 +33,12 @@
     </div><!-- .sidebar -->
 
 
-    <div class="row" fxFlex="100%" *ngFor="let rowIdx of groupIdxs">
-      <div class="third" *ngFor="let colIdx of colIdxs">
-        <ng-container *ngIf="(currentPage.settingGroups[rowIdx + colIdx])?.settings.length > 0">
-          <h2 class="subtitle"> {{ (currentPage.settingGroups[rowIdx + colIdx])?.name }} </h2>
+    <div class="row" fxFlex="100%">
+      <div class="third">
+        <ng-container *ngIf="currentGroup.settings.length > 0">
+          <h2 class="subtitle"> {{ currentGroup.name }} </h2>
           <mat-card>
-            <ng-container *ngFor="let setting of (currentPage.settingGroups[rowIdx + colIdx])?.settings; let settingIdx = index;">
+            <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
               <div class="item" [ngSwitch]="setting.type">
 
                 <ng-container *ngSwitchCase="settingType.BOOLEAN">
@@ -70,7 +46,7 @@
                     class="checkbox align-top wrap"
                     [disabled]="setting.isDisabled"
                     [(ngModel)]="setting.newValue"
-                    (change)="settingChangedValue(rowIdx + colIdx, settingIdx)"
+                    (change)="settingChangedValue(settingIdx)"
                   >
                     <h4 class="option">
                       {{ setting.title }}
@@ -93,14 +69,14 @@
                     <input matInput type="number" *ngIf="!setting.limits"
                       [disabled]="setting.isDisabled"
                       [(ngModel)]="setting.newValue"
-                      (change)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                      (change)="settingChangedValue(settingIdx)">
                     <input matInput type="number" *ngIf="setting.limits"
                       [min]="setting.limits.min"
                       [step]="setting.limits.step"
                       [max]="setting.limits.max"
                       [disabled]="setting.isDisabled"
                       [(ngModel)]="setting.newValue"
-                      (change)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                      (change)="settingChangedValue(settingIdx)">
                   </mat-form-field>
                   <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
@@ -114,10 +90,10 @@
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                   <mat-form-field class="full-width">
                     <input matInput
-                      [placeholder]="setting?.limits?.placeholder"
+                      [placeholder]="setting.limits?.placeholder"
                       [disabled]="setting.isDisabled"
                       [(ngModel)]="setting.newValue"
-                      (change)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                      (change)="settingChangedValue(settingIdx)">
                   </mat-form-field>
                   <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
@@ -130,7 +106,7 @@
                   </h4>
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                   <mat-form-field>
-                    <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(rowIdx + colIdx, settingIdx)">
+                    <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
                       <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
                         {{ option.text }}
                       </mat-option>
@@ -151,7 +127,7 @@
                       color="{{ setting.limits ? setting.limits.color || 'primary' : 'primary' }}"
                       class="validate"
                       [disabled]="setting.isDisabled"
-                      (click)="settingChangedValue(rowIdx + colIdx, settingIdx)"
+                      (click)="settingChangedValue(settingIdx)"
                     >
                       <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" fontSet="partIcon" [fontIcon]="setting.limits.icon"></mat-icon>
                     {{ setting.title }}
@@ -161,7 +137,7 @@
                 </ng-container>
               </div>
 
-              <hr class="divider" *ngIf="settingIdx !== ((currentPage.settingGroups[rowIdx + colIdx]).settings.length - 1)">
+              <hr class="divider" *ngIf="!isLastSetting">
             </ng-container>
           </mat-card>
         </ng-container>
@@ -173,7 +149,7 @@
     <div class="left">
       <button mat-button
         color="basic"
-        [disabled]="currentChanges.length === 0"
+        [disabled]="!hasChanges"
         appDebounceClick
         (debounceClick)="clearChanges()"
       >
@@ -185,7 +161,7 @@
       <button mat-raised-button
         color="primary"
         class="validate"
-        [disabled]="(currentChanges.length === 0) || (currentPage.settingErrors.length > 0) || isProcessing"
+        [disabled]="!hasChanges || hasErrors || isProcessing"
         (click)="saveChanges()">
         <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
         Save changes

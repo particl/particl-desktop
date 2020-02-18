@@ -63,7 +63,9 @@ export class Setting {
 export class SettingGroup {
   id?: string;                    // Easy identification of the setting group (eg: when saving)
   name: string;
+  icon: string;
   settings: Setting[];            // The settings in this group
+  errors: number[];
 };
 
 // Additional information applicable to the content of the page (rendered as a tab on the Settings page)
