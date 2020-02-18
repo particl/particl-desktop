@@ -1,25 +1,18 @@
 @import './src/assets/_config'; // import shared colors etc.
 
 .page-intro {
-  //@extend %tfx;
-  @include gradient(rgba($color-white, 0.7), $bg);
-  margin: (-$padding) (-$padding) 0;
-  padding: $padding;
-  @include break(l) {
-    margin: (-$padding-l) (-$padding-l) 0;
-    padding: $padding-l;
-  }
+  @extend %tfx;
+  @include gradient(hsla(var(--color-white-hsl), 0.7), var(--bg));
+  margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
+  padding: var(--paddingV) var(--paddingH);
 
   // collapsed (hidden) state styles
   &.collapsed {
-    padding: ($padding - 10px) $padding;
-    @include break(l) {
-      padding: ($padding-l - 10px) $padding-l;
-    }
+    padding: calc(var(--paddingV) / 1.5) var(--paddingH);
     h1 {
       font-size: 1.55em;
     }
-    > .content {
+    & > .content {
       display: none;
     }
   }
@@ -34,14 +27,11 @@
     &:focus {
       opacity: 1;
     }
-    .mat-icon {
-      margin: 0;
-    }
   }
 
   // page heading (always visible)
   h1 {
-    //@extend %tfx;
+    @extend %tfx;
     margin: 0;
   }
 
