@@ -1,13 +1,34 @@
 @import './src/assets/config'; // import shared colors etc.
 
-.address-details { // address details to be deleted
-  display: block;
-  padding: 16px 32px;
+.dialog-content {
+  width: 530px;
+  margin: 0 -24px;
+  p.lead {
+    margin-top: 0;
+  }
+}
+
+.address-info {
+  @extend %enable-select;
   text-align: center;
-  font-size: 15px;
-  line-height: 1.4;
-  color: $color-alert;
-  background: rgba($color-alert, 0.12);
-  border-radius: 3px;
-  word-wrap: break-word;
+  border: 2px dashed hsla(var(--color-alert-hsl), 0.15);
+  border-radius: 4px;
+  padding: 24px;
+  margin: 24px 0 0;
+  .label {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .string {
+    font-family: var(--font-mono);
+    color: var(--color-alert);
+    font-weight: 500;
+    line-height: 1.5;
+    word-break: break-all;
+    background: hsla(var(--color-alert-hsl), 0.1);
+    border-radius: 4px;
+    display: inline-block;
+    padding: 5px 12px;
+  }
 }
