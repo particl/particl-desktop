@@ -50,15 +50,15 @@ export class AddressBookComponent implements OnInit, OnDestroy {
 
   readonly pageFilters: PageFilter = {
     currentPage: 0,
-    pageSize: 10,
+    pageSize: 50,
     pageSizes: [10, 25, 50],
     resultsTotalCount: 0,
   };
 
   readonly tableFilters: TableFilter[] = [
-    { text: 'All types', value: 'all' },
-    { text: 'Public', value: 'public' },
-    { text: 'Private', value: 'private' },
+    { text: 'Show all addresses', value: 'all' },
+    { text: 'Public only', value: 'public' },
+    { text: 'Private only', value: 'private' },
   ];
 
   private destroy$: Subject<void> = new Subject();

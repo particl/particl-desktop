@@ -3,38 +3,30 @@
 
 // ------ UI ELEMENTS ------ //
 
-.search-address {
-  .mat-icon {
-    top: 4px;
-    right: 18px;
-    font-size: 14px;
-  }
-}
-
-
-.mat-list {
-  padding-top: 0;
-}
-
 mat-card.address-entry {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  padding: 0 24px 0 0;
-  & > div {
-    margin: 0 20px 0 0;
+  align-items: center;
+  margin-bottom: var(--card-spacing);
+  padding: 0;
+  border-radius: 0;
+  &:hover {
+    .address-actions {
+      opacity: 1;
+    }
   }
   .address-name {
     @extend %tfx;
+    cursor: pointer;
     flex: 1 0 calc(100% - 180px);
-    padding: 24px 0 24px 24px;
+    padding: 0 0 0 24px;
     text-overflow: ellipsis;
     overflow: hidden;
     display: flex;
+    align-items: center;
+    height: 50px;
     width: 100%;
-    cursor: pointer;
     &:hover {
-      box-shadow: 4px 0 $color inset;
+      box-shadow: 4px 0 var(--color-primary) inset;
     }
     .label {
       font-size: 14px;
@@ -42,12 +34,12 @@ mat-card.address-entry {
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin: -1px 12px 0 0;
+      margin: -1px 16px 0 0;
       display: block;
     }
     .address-string {
-      font-family: $font-mono;
-      color: $text-muted;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
       overflow: hidden;
       text-overflow: ellipsis;
       max-width: 350px;
@@ -57,13 +49,10 @@ mat-card.address-entry {
       }
     }
   }
-
-  .address-actions { // copy, verify, delete & QR
-    margin: 0;
-    flex: 0 0 86px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .address-actions { // copy, verify, delete
+    @extend %tfx;
+    opacity: 0;
+    margin: 0 8px 0 14px;
   }
 }
 
