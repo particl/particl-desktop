@@ -19,6 +19,8 @@
     font-size: 20px;
     font-weight: 500;
     margin-bottom: 12px;
+    word-break: break-all;
+    line-height: 1.3;
   }
   .string {
     font-family: var(--font-mono);
