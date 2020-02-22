@@ -167,8 +167,8 @@ export class FilteredTransaction {
 
     this.amountWhole = (
       this.amount < 0 ?
-      '- ' :
-      (this.transferType === TxTransferType.NONE ? '+ ' : '')
+      '-' :
+      (this.transferType === TxTransferType.NONE ? '+' : '')
      ) + partoshiAmount.particlStringInteger();
     this.amountFraction = partoshiAmount.particlStringFraction(4);
 

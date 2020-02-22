@@ -6,7 +6,7 @@
   @extend %subtitle;
   .tag {
     font-size: 9px;
-    border: 1px solid rgba($text-muted, 0.7);
+    border: 1px solid hsla(var(--text-muted-hsl), 0.7);
     border-radius: 2px;
     margin-left: 6px;
     padding: 1px 4px;
@@ -24,18 +24,18 @@
 // ------ LAYOUT ------ //
 
 .container-block {
-  margin-top: $header-main-height;
   padding-top: 0;
 }
 
 .section {
+  --dash: hsla(var(--bg-muted-hsl), 0.7);
 
   // vertical list
   &.list {
     .item {
       display: flex;
       align-items: stretch;
-      border-top: 1px dashed mix($bg, $bg-shadow);
+      border-top: 1px dashed var(--dash);
       padding: 20px 26px 20px 6px;
       &:first-of-type {
         border: 0;
@@ -58,8 +58,8 @@
       display: block;
       padding: 29px 0;
       text-align: center;
-      border-right: 1px dashed mix($bg, $bg-shadow);
-      border-bottom: 1px dashed mix($bg, $bg-shadow);
+      border-right: 1px dashed var(--dash);
+      border-bottom: 1px dashed var(--dash);
       &:nth-of-type(4n) {
         border-right: 0;
       }
@@ -69,14 +69,11 @@
       &:nth-last-of-type(4) {
         border-bottom: 0;
       }
-      .text .title {
-        font-size: 12px;
+      .title {
+        font-size: 14px;
       }
       .icon {
-        margin: auto auto 6px;
-        .mat-icon {
-          font-size: 20px;
-        }
+        margin: 0 auto 8px;
       }
     }
   }
@@ -85,12 +82,15 @@
   .item {
     @extend %tfx;
     text-decoration: none;
-    color: $text;
+    color: var(--text);
     &:hover,
     &:focus {
-      background: rgba($color, 0.015);
-      .icon .mat-icon {
-        color: $color;
+      background: hsla(var(--color-secondary-hsl), 0.02);
+      .icon {
+        .mat-icon {
+          color: var(--color-secondary);
+          transform: scale(1.2);
+        }
       }
     }
     .icon {
@@ -99,19 +99,16 @@
       .mat-icon {
         @extend %tfx;
         font-size: 20px;
-        color: $text-muted;
+        color: var(--text-muted);
       }
     }
-    .text {
-      .title {
-        @extend %box-title;
-        font-size: 14px;
-        font-weight: 500;
-      }
-      .desc {
-        color: $text-muted;
-        margin: 6px 0 0;
-      }
+    .title {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .desc {
+      color: var(--text-muted);
+      margin: 3px 0 0;
     }
   }
 

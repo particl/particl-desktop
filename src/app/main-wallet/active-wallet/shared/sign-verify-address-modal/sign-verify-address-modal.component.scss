@@ -1,21 +1,15 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-.signature-address-container {
-  max-width: 600px;
-}
-
-.signature-address-modal-form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 15px;
-  .icons { // address lookup/paste icons
-    text-align: right;
-    .icon {
-      margin-left: 10px;
-    }
+.dialog-content {
+  width: 750px;
+  p.lead {
+    margin-top: 0;
   }
 }
 
-.signature-address-modal-form > * {
-  width: 100%;
+.mat-form-field {
+  margin-bottom: 6px;
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }

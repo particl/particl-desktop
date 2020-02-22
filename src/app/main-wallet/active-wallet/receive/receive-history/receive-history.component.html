@@ -21,14 +21,12 @@
 
     <div class="section search-sorting">
       <div class="subtitle">Search addresses</div>
-      <!--mat-card class="filter-card"-->
-        <mat-form-field class="icon-input --boxed" appearance="fill">
-          <input matInput type="text" [formControl]="searchQuery"
-                placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-          <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-          <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
-        </mat-form-field>
-      <!--/mat-card-->
+      <mat-form-field class="icon-input --boxed" appearance="fill">
+        <input matInput type="text" [formControl]="searchQuery"
+              placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+        <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+        <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+      </mat-form-field>
 
       <p class="widget-help">
         These are your previously used addresses. It is recommended not to reuse your old addresses &ndash; to increase your privacy, you should use a new address for each transaction.

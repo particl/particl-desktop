@@ -21,84 +21,79 @@
 
     <div class="section search-sorting">
       <div class="subtitle">Search</div>
-      <mat-card class="filter-card">
-        <mat-form-field class="icon-input search-address">
-          <input matInput type="text" [formControl]="searchQuery"
-                placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-
-          <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-          <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search" matTooltip="Search For Address" matTooltipPosition="before"></mat-icon>
-
-        </mat-form-field>
-      </mat-card>
+      <mat-form-field class="icon-input --boxed" appearance="fill">
+        <input matInput type="text" [formControl]="searchQuery"
+              placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+        <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+        <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+      </mat-form-field>
 
       <div class="subtitle">Filter by type</div>
-      <mat-card class="filter-card">
-        <mat-select class="type-filter" name="type" (selectionChange)="filterQuery.setValue($event.value)" value="all">
-          <mat-option *ngFor="let filter of tableFilters;trackBy:trackByFiltersFn" [value]="filter.value">{{ filter.text }}</mat-option>
+      <mat-form-field class="filter-type --boxed" appearance="fill">
+        <mat-select placeholder="All types" name="type" (selectionChange)="filterQuery.setValue($event.value)" value="all">
+          <mat-option *ngFor="let filter of tableFilters;trackBy:trackByFiltersFn" [value]="filter.value">
+            {{ filter.text }}
+          </mat-option>
         </mat-select>
-      </mat-card>
+      </mat-form-field>
     </div><!-- .search-sorting -->
 
   </div><!-- .filter -->
 
 
   <div class="addresses section with-filter">
-    <div class="address-table">
-      <mat-list class="list-data">
 
-        <ng-container *ngTemplateOutlet="isLoading ? loading : (pageFilters.resultsTotalCount > 0 ? content : emptyList)"></ng-container>
+    <ng-container *ngTemplateOutlet="isLoading ? loading : (pageFilters.resultsTotalCount > 0 ? content : emptyList)"></ng-container>
 
-        <ng-template #loading>
-          <main-loading-placeholder></main-loading-placeholder>
-        </ng-template>
+    <ng-template #loading>
+      <main-loading-placeholder></main-loading-placeholder>
+    </ng-template>
 
-        <ng-template #emptyList>
-          <div class="no-results">
-            <p>
-              No addresses found
-            </p>
-          </div>
-        </ng-template>
+    <ng-template #emptyList>
+      <div class="no-results">
+        <p>
+          No addresses found
+        </p>
+      </div>
+    </ng-template>
 
 
-        <ng-template #content>
-          <div *ngFor="let address of displayedResults;trackBy:displayedAddressTrackFn">
-            <mat-card class="address-entry">
+    <ng-template #content>
+      <ng-container *ngFor="let address of displayedResults;trackBy:displayedAddressTrackFn">
+        <mat-card class="address-entry">
 
-              <!-- label & address string -->
-              <div class="address-name" (click)="openQrCodeModal(address)">
-                <span class="label">{{ address.label || '(No label)' }}</span>
-                <span class="address-string">{{ address.address }}</span>
-              </div>
-
-              <!-- Actions/controls -->
-              <div class="address-actions">
-                <mat-icon fontSet="partIcon" fontIcon="part-copy" class="cursor-pointer" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()"></mat-icon>
-                <mat-icon fontSet="partIcon" fontIcon="part-person-check" (click)="openSignatureModal(address)"
-                            class="cursor-pointer" matTooltip="Verify message"
-                            ngxClipboard></mat-icon>
-                <mat-icon color="warn" fontSet="partIcon" fontIcon="part-circle-remove"
-                            class="cursor-pointer"
-                            appDebounceClick (debounceClick)="deleteAddress(address)" matTooltip="Delete address"></mat-icon>
-              </div>
-
-            </mat-card>
+          <!-- label & address string -->
+          <div class="address-name" (click)="openQrCodeModal(address)">
+            <span class="label">{{ address.label || '(No label)' }}</span>
+            <span class="address-string">{{ address.address }}</span>
           </div>
 
-          <app-paginator
-            *ngIf="pageFilters.resultsTotalCount > 0"
-            #paginator
-            [length]="pageFilters.resultsTotalCount"
-            [pageSize]="pageFilters.pageSize"
-            [pageSizeOptions]="pageFilters.pageSizes"
-            (page)="paginatorChangeHandler($event)">
-          </app-paginator>
+          <!-- Actions/controls -->
+          <div class="address-actions">
+            <button mat-button class="tiny icon-only" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()">
+              <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" (click)="openSignatureModal(address)" matTooltip="Verify message" ngxClipboard>
+              <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" color="warn" appDebounceClick (debounceClick)="deleteAddress(address)" matTooltip="Remove address">
+              <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+            </button>
+          </div>
 
-        </ng-template>
+        </mat-card>
+      </ng-container>
 
-      </mat-list>
-    </div><!-- .address-table -->
+      <app-paginator
+        *ngIf="pageFilters.resultsTotalCount > 0"
+        #paginator
+        [length]="pageFilters.resultsTotalCount"
+        [pageSize]="pageFilters.pageSize"
+        [pageSizeOptions]="pageFilters.pageSizes"
+        (page)="paginatorChangeHandler($event)">
+      </app-paginator>
+
+    </ng-template>
 
   </div><!-- addresses -->
 

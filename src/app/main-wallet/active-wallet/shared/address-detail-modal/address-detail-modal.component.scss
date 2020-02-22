@@ -4,12 +4,14 @@
 
 .dialog-content {
   width: 700px;
-  padding: 24px;
-  margin: 10px -24px !important;
+  padding: 8px 24px 32px;
+  margin: 0 -24px !important;
 }
 
 mat-dialog-actions {
-  border-top: 1px dashed $bg-shadow;
+  border-top: 1px dashed var(--bg-muted);
+  margin: 0 -24px -24px;
+  padding: 0 24px;
   .right {
     text-align: right;
   }
