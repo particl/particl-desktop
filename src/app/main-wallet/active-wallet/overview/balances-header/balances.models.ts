@@ -10,15 +10,3 @@ export interface Balance {
   amount: number;
   isHorizontal: boolean;
 }
-
-
-export type ListUnspentType = 'listunspent' | 'listunspentblind' | 'listunspentanon';
-
-
-export interface RpcUnspentBalanceUtxo {
-  spendable?: boolean;
-  coldstaking_address?: string;
-  address: string;
-  confirmations: number;
-  amount: number;
-}

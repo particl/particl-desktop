@@ -26,9 +26,11 @@ import { ReceiveHistoryComponent } from './receive/receive-history/receive-histo
 import { AddressService } from './shared/address.service';
 import { DeleteAddressConfirmationModalComponent } from './addressbook/delete-address-confirmation-modal/delete-address-confirmation-modal.component';
 import { NewAddressbookEntryModalComponent } from './addressbook/new-addressbook-entry-modal/new-addressbook-entry-modal.component';
-import { NotOwnAddressValidator } from './addressbook/new-addressbook-entry-modal/not-owned-address.directive';
 import { SignVerifyAddressModalComponent } from './shared/sign-verify-address-modal/sign-verify-address-modal.component';
 import { AddressDetailModalComponent } from './shared/address-detail-modal/address-detail-modal.component';
+// import { ColdstakeWidgetComponent } from './overview/widgets/coldstake/coldstake-widget.component';
+// import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-modal/coldstake-modal.component';
+// import { ColdstakeService } from './overview/widgets/coldstake/coldstake.service';
 
 
 @NgModule({
@@ -57,7 +59,9 @@ import { AddressDetailModalComponent } from './shared/address-detail-modal/addre
     DeleteAddressConfirmationModalComponent,
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,
-    AddressDetailModalComponent
+    AddressDetailModalComponent,
+    // ColdstakeWidgetComponent,
+    // ColdStakeModalComponent,
   ],
   entryComponents: [
     WalletBackupModalComponent,
@@ -65,10 +69,11 @@ import { AddressDetailModalComponent } from './shared/address-detail-modal/addre
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,
     AddressDetailModalComponent,
+    // ColdStakeModalComponent,
   ],
   providers: [
     AddressService,
-    NotOwnAddressValidator
+    // ColdstakeService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
