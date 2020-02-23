@@ -9,18 +9,11 @@ import { FilteredAddress, AddressType } from '../../shared/address.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SignVerifyAddressModalComponent } from '../../shared/sign-verify-address-modal/sign-verify-address-modal.component';
 import { AddressDetailModalComponent } from '../../shared/address-detail-modal/address-detail-modal.component';
+import { PageFilter } from '../../shared/shared.models';
 
 
 enum TextContent {
   ADDRESS_COPIED = 'Address copied to clipboard'
-};
-
-
-interface PageFilter {
-  currentPage: number;
-  pageSize: number;
-  pageSizes: number[];
-  actualResultLength: number;
 };
 
 
@@ -49,7 +42,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
     pageSizes: [10, 25, 50],
     pageSize: 10,
     currentPage: 0,
-    actualResultLength: 0
+    resultsTotalCount: 0
   };
 
 
@@ -115,7 +108,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(
       (addresses) => {
-        this.pageFilters.actualResultLength = addresses.length;
+        this.pageFilters.resultsTotalCount = addresses.length;
         let startIdx = this.pageFilters.currentPage * this.pageFilters.pageSize;
 
         if ((startIdx >= addresses.length)) {

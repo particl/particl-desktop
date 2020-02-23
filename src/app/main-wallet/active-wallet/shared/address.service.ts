@@ -118,6 +118,22 @@ export class AddressService {
   }
 
 
+  fetchSavedContacts(): Observable<{address: string, label: string, type: AddressType}[]> {
+    return this._rpc.call('filteraddresses', [-1]).pipe(
+      catchError(() => of({} as FilteredAddressCount)),
+      concatMap((addrCounts: FilteredAddressCount) =>
+        this.fetchFilteredAddresses(0, addrCounts.num_send || 1, AddressFilterSortDirection.ASC, '', AddressFilterOwnership.NOT_OWNED)
+      ),
+      map((addresses: FilteredAddress[]) => {
+        return addresses.map(addr => {
+          const address = typeof addr.address === 'string' ? addr.address : '';
+          return { address, label: addr.label, type: (<AddressType>(address.length > 35 ? 'private' : 'public')) }
+        })
+      })
+    );
+  }
+
+
   fetchNewestAddressForAll(): Observable<RecentAddressByType> {
     return this._rpc.call('filteraddresses', [-1]).pipe(
       concatMap((addrCounts: FilteredAddressCount) => {

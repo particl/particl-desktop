@@ -5,28 +5,18 @@ import { Subject, Observable, merge, of } from 'rxjs';
 import { takeUntil, startWith, switchMap, debounceTime, tap, distinctUntilChanged } from 'rxjs/operators';
 import { AddressService } from '../shared/address.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { AddressType, FilteredAddress } from '../shared/address.models';
 import { DeleteAddressConfirmationModalComponent } from './delete-address-confirmation-modal/delete-address-confirmation-modal.component';
 import { NewAddressbookEntryModalComponent } from './new-addressbook-entry-modal/new-addressbook-entry-modal.component';
 import { SignVerifyAddressModalComponent } from '../shared/sign-verify-address-modal/sign-verify-address-modal.component';
 import { AddressDetailModalComponent } from '../shared/address-detail-modal/address-detail-modal.component';
-
-
-type SelectableAddressType = AddressType | 'all';
+import { PageFilter } from '../shared/shared.models';
+import { SelectableAddressType, FilteredAddress } from '../shared/address.models';
 
 
 interface TableFilter {
   text: string;
   value: SelectableAddressType;
 }
-
-
-interface PageFilter {
-  currentPage: number;
-  pageSize: number;
-  pageSizes: number[];
-  resultsTotalCount: number;
-};
 
 
 enum TextContent {

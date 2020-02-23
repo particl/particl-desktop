@@ -1,3 +1,5 @@
+import { AddressType } from '../shared/address.models';
+
 
 export type TabType = 'transfer' | 'send';
 export type TxType = 'anon' | 'blind' | 'part';
@@ -27,4 +29,11 @@ export interface ValidatedAddress {
   iswitness: boolean;
   witness_version?: number;
   witness_program?: string;
+}
+
+
+export interface SavedAddress {
+  address: string;
+  label: string;
+  type: AddressType;
 }

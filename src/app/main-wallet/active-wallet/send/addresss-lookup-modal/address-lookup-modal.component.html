@@ -1,0 +1,56 @@
+<div mat-dialog-title class="title">Address lookup</div>
+<button class="small-close-button pull-right" mat-dialog-close>
+  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+</button>
+
+<div mat-dialog-content class="modal-content">
+  <form>
+    <div fxLayout="row" fxLayoutGap="35px">
+
+      <mat-form-field fxFlex="1 1 100%" class="search-address icon-input">
+        <input matInput type="text" name="query" [formControl]="queryFilter"
+               placeholder="Filter by label or address...">
+
+        <mat-icon *ngIf="queryFilter.value" (click)="queryFilter.setValue('')" matTooltip="Clear" fontSet="partIcon"
+                  fontIcon="part-clear-all"></mat-icon>
+
+        <mat-icon *ngIf="!queryFilter.value" fontSet="partIcon" fontIcon="part-search" matTooltip="Search">
+        </mat-icon>
+      </mat-form-field>
+
+      <mat-select fxFlex="1 0 130px" class="address-type" [formControl]="typeFilter">
+        <mat-option *ngFor="let filter of typeFilters" [value]="filter.value">
+          {{ filter.label }}
+        </mat-option>
+      </mat-select>
+    </div>
+  </form>
+
+
+  <mat-list class="list-data">
+    <mat-list-item class="list-header">
+      <div class="address-list-header" fxFlex="row" fxLayoutGap="10px">
+        <div fxFlex="1 1 350px">Label</div>
+        <div fxFlex="1 1 300px">Address</div>
+        <div fxFlex="0 0 80px" class="text-right">Type</div>
+      </div>
+    </mat-list-item>
+
+    <div *ngFor="let address of displayedAddresses;trackBy:displayedAddressTrackFn">
+      <mat-divider></mat-divider>
+      <mat-list-item class="address-entry" (click)="onSelectAddress(address)">
+        <div class="address-list" fxFlex="row" fxLayoutGap="10px">
+          <div fxFlex="1 1 350px" class="label">{{ address.label }}</div>
+          <div fxFlex="1 1 300px" class="address">{{ address.address }}</div>
+          <div fxFlex="0 0 80px" class="type text-right">{{ address.type }}</div>
+        </div>
+      </mat-list-item>
+    </div>
+  </mat-list>
+
+  <app-paginator
+    [length]="pageFilters.resultsTotalCount"
+    [pageSize]="pageFilters.pageSize"
+    (page)="paginatorChangeHandler($event)">
+  </app-paginator>
+</div>

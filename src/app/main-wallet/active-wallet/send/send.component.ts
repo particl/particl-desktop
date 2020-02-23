@@ -1,11 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material';
 import { Subject, merge, defer } from 'rxjs';
-import { takeUntil, tap, startWith, concatMap } from 'rxjs/operators';
+import { takeUntil, tap, startWith, concatMap, take } from 'rxjs/operators';
 import { SendService } from './send.service';
-import { TabType, TxTypeOption, TabModel } from './send.models';
+import { TabType, TxTypeOption, TabModel, SavedAddress } from './send.models';
 import { targetTypeValidator, amountRangeValidator, ValidAddressValidator } from './send.validators';
+import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
 
 
 enum TextContent {
@@ -44,7 +46,8 @@ export class SendComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private _sendService: SendService,
-    private _addressValidator: ValidAddressValidator
+    private _addressValidator: ValidAddressValidator,
+    private _dialog: MatDialog,
   ) { }
 
 
@@ -194,7 +197,15 @@ export class SendComponent implements OnInit, OnDestroy {
 
 
   openAddressLookup(): void {
-    // TODO: implement addressbook lookup modal thingy
+    const dialog = this._dialog.open(AddressLookupModalComponent);
+    dialog.componentInstance.addressSelected.pipe(take(1)).subscribe(
+      (value: SavedAddress) => {
+        if (value && value.address) {
+          this.address.setValue(value.address);
+        }
+      }
+    );
+    dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.addressSelected.unsubscribe());
   }
 
 

@@ -88,9 +88,9 @@
       <!-- use a paginator for reset pagination after tab change. -->
       <div class="receive-pagination">
         <app-paginator
-          *ngIf="pageFilters.actualResultLength > 0"
+          *ngIf="pageFilters.resultsTotalCount > 0"
           #paginator
-          [length]="pageFilters.actualResultLength"
+          [length]="pageFilters.resultsTotalCount"
           [pageSize]="pageSize"
           [pageSizeOptions]="pageOptions"
           (page)="paginatorChangeHandler($event)">

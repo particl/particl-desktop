@@ -1,5 +1,6 @@
 
 export type AddressType = 'public' | 'private';
+export type SelectableAddressType = AddressType | 'all';
 
 
 export interface FilteredAddressCount {
