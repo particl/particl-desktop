@@ -29,6 +29,7 @@ import { NewAddressbookEntryModalComponent } from './addressbook/new-addressbook
 import { SignVerifyAddressModalComponent } from './shared/sign-verify-address-modal/sign-verify-address-modal.component';
 import { AddressDetailModalComponent } from './shared/address-detail-modal/address-detail-modal.component';
 import { AddressLookupModalComponent } from './send/addresss-lookup-modal/address-lookup-modal.component';
+import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 // import { ColdstakeWidgetComponent } from './overview/widgets/coldstake/coldstake-widget.component';
 // import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-modal/coldstake-modal.component';
 // import { ColdstakeService } from './overview/widgets/coldstake/coldstake.service';
@@ -55,6 +56,7 @@ import { AddressLookupModalComponent } from './send/addresss-lookup-modal/addres
     TransactionsTableComponent,
     BalancesHeaderComponent,
     StakingInfoWidgetComponent,
+    SendConfirmationModalComponent,
     WalletBackupModalComponent,
     DetailAddressComponent,
     DeleteAddressConfirmationModalComponent,
@@ -67,6 +69,7 @@ import { AddressLookupModalComponent } from './send/addresss-lookup-modal/addres
   ],
   entryComponents: [
     WalletBackupModalComponent,
+    SendConfirmationModalComponent,
     DeleteAddressConfirmationModalComponent,
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,

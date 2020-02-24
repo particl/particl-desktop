@@ -2,17 +2,42 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { Subject, merge, defer } from 'rxjs';
-import { takeUntil, tap, startWith, concatMap, take } from 'rxjs/operators';
+import { Log } from 'ng2-logger';
+import { Store } from '@ngxs/store';
+import { Subject, merge, defer, iif } from 'rxjs';
+import { takeUntil, tap, startWith, concatMap, take, finalize } from 'rxjs/operators';
 import { SendService } from './send.service';
-import { TabType, TxTypeOption, TabModel, SavedAddress } from './send.models';
 import { targetTypeValidator, amountRangeValidator, ValidAddressValidator } from './send.validators';
 import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
+import { CoreErrorModel } from 'app/core/core.models';
+import {
+  TabType,
+  TxTypeOption,
+  TabModel,
+  SavedAddress,
+  MAX_RING_SIZE,
+  DEFAULT_RING_SIZE,
+  MIN_RING_SIZE,
+  SendTransaction,
+  SendTypeToEstimateResponse
+} from './send.models';
+import { WalletDetailActions } from 'app/main/store/main.actions';
+
 
 
 enum TextContent {
-  LOW_BALANCE_HELP = 'It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform.'
+  LOW_BALANCE_HELP = 'It is normal to have a very small balance in Blind even after transferring out everything. This is due to the way CT works and part of the privacy platform.',
+  ESTIMATE_ERROR = 'Could not accurately estimate this transaction fee. Please try again',
+  SEND_SUCCESS = 'Successfully sent ${amount} PART to ${address}',
+  SEND_FAILURE = 'Failed creating the transaction, please try again later',
+  TRANSFER_SUCCESS = 'Successfully transferred ${amount} PART',
+  PAY_FEE_ERROR = 'The transaction amount is too small to pay the fee',
+  STEALTH_ADDRESS_ERROR = 'Stealth address required for private transactions!'
 }
+
 
 @Component({
   templateUrl: './send.component.html',
@@ -26,8 +51,8 @@ export class SendComponent implements OnInit, OnDestroy {
   sourceType: FormControl = new FormControl('part');
   targetForm: FormGroup;
 
-  readonly minRingSize: number = 3;
-  readonly maxRingSize: number = 32;
+  readonly minRingSize: number = MIN_RING_SIZE;
+  readonly maxRingSize: number = MAX_RING_SIZE;
 
   readonly tabs: TabModel[] = [
     { icon: 'part-send', type: 'send', title: 'Send payment'},
@@ -41,19 +66,24 @@ export class SendComponent implements OnInit, OnDestroy {
   ];
 
   private destroy$: Subject<void> = new Subject();
+  private log: any = Log.create('send.component');
+  private isProcessing: boolean = true;
 
 
   constructor(
     private route: ActivatedRoute,
     private _sendService: SendService,
+    private _unlocker: WalletEncryptionService,
+    private _snackbar: SnackbarService,
     private _addressValidator: ValidAddressValidator,
     private _dialog: MatDialog,
+    private _store: Store
   ) { }
 
 
   ngOnInit() {
     this.targetForm = new FormGroup({
-      ringSize: new FormControl(8, [Validators.min(this.minRingSize), Validators.max(this.maxRingSize)]),
+      ringSize: new FormControl(DEFAULT_RING_SIZE, [Validators.min(this.minRingSize), Validators.max(this.maxRingSize)]),
       targetType: new FormControl('blind', targetTypeValidator(this.currentTabType, this.sourceType.value)),
       address: new FormControl('', [], this._addressValidator.validate.bind(this._addressValidator)),
       addressLabel: new FormControl(''),
@@ -154,6 +184,8 @@ export class SendComponent implements OnInit, OnDestroy {
       switcher$,
       sendingAll$
     ).subscribe();
+
+    this.isProcessing = false;
   }
 
 
@@ -216,7 +248,79 @@ export class SendComponent implements OnInit, OnDestroy {
 
 
   onSubmit() {
-    // TODO: implement the form submission thing.
+    if (this.isProcessing) {
+      return;
+    }
+    this.isProcessing = true;
+
+    const trans = new SendTransaction();
+    trans.transactionType = this.currentTabType;
+    trans.source = this.sourceType.value;
+    trans.targetAddress = this.address.value;
+    trans.targetTransfer = this.targetType.value;
+    trans.amount = +this.amount.value;
+    trans.narration = this.narration.value || '';
+    trans.ringSize = this.ringSize.value;
+    trans.deductFeesFromTotal = this.sendingAll.value;
+    trans.addressLabel = trans.transactionType === 'send' ? this.addressLabel.value : '';
+
+    this._unlocker.unlock({timeout: 10}).pipe(
+      finalize(() => this.isProcessing = false),
+      concatMap((unlocked: boolean) => iif(() => unlocked, this._sendService.runTransaction(trans, true)))
+    ).subscribe(
+      (result: SendTypeToEstimateResponse) => {
+        const dialog = this._dialog.open(SendConfirmationModalComponent, {data: {sendTx: trans, fee: result.fee}});
+        dialog.componentInstance.isConfirmed.pipe(
+          take(1),
+          concatMap(() => this._unlocker.unlock({timeout: 5}).pipe(
+            concatMap((unlocked) => iif(() => unlocked, this._sendService.runTransaction(trans, false)))
+          ))
+        ).subscribe(
+          () => {
+            // request new balances
+            this._store.dispatch(new WalletDetailActions.GetAllUTXOS());
+            // present success message
+            const trimAddress = trans.targetAddress.substring(0, 16) + '...';
+            const displayAmount = this.amount.value;
+            const text = this.selectedTab.value === 'send' ?
+              TextContent.SEND_SUCCESS.replace('${amount}', displayAmount).replace('${address}', trimAddress) :
+              TextContent.TRANSFER_SUCCESS.replace('${amount}', displayAmount);
+
+            // reset relevant input fields
+            this.amount.reset();
+            this.address.reset();
+            this.addressLabel.reset();
+            this.narration.reset();
+            this.sendingAll.reset();
+
+            this._snackbar.open(text, '');
+          },
+          (err) => {
+            this.log.er('sending failed: ', err);
+            this._snackbar.open(TextContent.SEND_FAILURE);
+          }
+        );
+        dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
+      },
+
+      (err: CoreErrorModel) => {
+        this.log.er('estimation failed: ', err);
+        const errorMessage = err.message || '';
+        let text: string;
+
+        switch (true) {
+          case errorMessage.includes('amount is too small to pay the fee'):
+            text = TextContent.PAY_FEE_ERROR;
+            break;
+          case errorMessage === 'STEALTH_ADDRESS_ERROR':
+            text = TextContent.STEALTH_ADDRESS_ERROR;
+            break;
+          default:
+            text = TextContent.ESTIMATE_ERROR;
+        }
+        this._snackbar.open(text, 'err');
+      }
+    );
   }
 
 
