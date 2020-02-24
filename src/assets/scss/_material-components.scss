@@ -560,6 +560,76 @@ mat-expansion-panel.mat-expansion-panel {
     3. FORMS
 \* ------------------------------- */
 
+// New customized "filled" inputs/selects etc.
+
+.mat-form-field[appearance="fill"] {
+  --field-boxed-paddingV: 16px;
+  display: block;
+  .mat-form-field-flex {
+    padding: 0 16px;
+    background: var(--color-white);
+  }
+  
+  // Boxed, standalone variant (common)
+  &.--boxed {
+    box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
+    border-radius: var(--radius) var(--radius) 0 0;
+    margin-bottom: 16px;
+    .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+      padding-bottom: 0;
+      .mat-form-field-underline {
+        bottom: 0;
+      }
+    }
+    .mat-form-field-infix {
+      padding: 0;
+      border-top: none;
+    }
+  }
+
+
+  // --- INPUTS ---
+  &.mat-form-field-type-mat-input {
+
+    // Boxed, standalone variant
+    &.--boxed {
+      .mat-form-field-flex {
+        align-items: center;
+      }
+      .mat-input-element {
+        padding: var(--field-boxed-paddingV) 0;
+      }
+    }
+  } // << INPUTS
+
+
+  // --- SELECTS ---
+  &.mat-form-field-type-mat-select {
+    .mat-form-field-infix {
+      padding: 0.2em 0 1.1em 0;
+    }
+
+    // Boxed, standalone variant
+    &.--boxed {
+      .mat-form-field-infix {
+        padding: var(--field-boxed-paddingV) 0;
+      }
+      .mat-select-value {
+        font-weight: 500;
+      }
+      .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+        .mat-select-arrow-wrapper {
+          transform: none;
+        }
+        .mat-form-field-subscript-wrapper {
+          top: 100%;
+        }
+      }
+    }
+  } // << SELECTS
+
+}
+
 // ------ 3.1. INPUTS ------ //
 
 .mat-form-field {
@@ -596,26 +666,6 @@ mat-expansion-panel.mat-expansion-panel {
   &.no-bottom-padding {
     .mat-form-field-wrapper {
       margin-bottom: -1.25em; // offset bottom padding
-    }
-  }
-}
-
-// "filled" inputs, custom-styled
-.mat-form-field-type-mat-input[appearance="fill"] {
-  display: block;
-  .mat-form-field-flex {
-    padding: 0 16px;
-    background: var(--color-white);
-  }
-  &.--boxed {
-    box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
-    border-radius: var(--radius) var(--radius) 0 0;
-    margin-bottom: 16px;
-    .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
-      padding-bottom: 0;
-      .mat-form-field-underline {
-        bottom: 0;
-      }
     }
   }
 }
@@ -668,41 +718,6 @@ mat-option.mat-option {
 .underlining-select {
   border-bottom: 0.2px solid hsla(var(--text-hsl), 0.6);
   line-height: 1.6em;
-}
-
-// "filled" selects, custom-styled
-.mat-form-field-type-mat-select[appearance="fill"] {
-  display: block;
-  .mat-form-field-flex {
-    padding: 0 16px;
-    background: var(--color-white);
-  }
-  .mat-form-field-infix {
-    padding: 0.2em 0 1.1em 0;
-  }
-
-  // standalone card-like variant
-  &.--boxed {
-    box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
-    border-radius: var(--radius) var(--radius) 0 0;
-    margin-bottom: 16px;
-    .mat-select-value {
-      font-weight: 500;
-    }
-    .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
-      padding-bottom: 0;
-      .mat-select-arrow-wrapper {
-        transform: none;
-      }
-      .mat-form-field-subscript-wrapper {
-        top: 100%;
-      }
-      .mat-form-field-underline {
-        bottom: 0;
-      }
-    }
-  }
-
 }
 
 

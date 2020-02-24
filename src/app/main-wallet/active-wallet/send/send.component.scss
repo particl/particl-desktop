@@ -26,10 +26,10 @@
 .subtitle { // subtitles (eg. 'privacy level' in anon
   text-transform: uppercase;
   margin: 20px 0 16px;
-  color: $text;
+  color: var(--text);
   font-weight: 700;
   small {
-    color: $text-muted;
+    color: var(--text-muted);
     font-weight: 400;
     font-size: inherit;
   }
@@ -39,18 +39,19 @@
   @extend %tfx;
   padding: 8px 24px;
   margin: 0 -24px !important;
-  font-family: $font;
+  font-family: var(--font);
   &:hover {
-    background: $bg-hover;
+    background: var(--bg-hover);
   }
-  &.mat-radio-checked {
+  &.mat-radio-checked { // selected balance
     .name {
       font-weight: 700;
     }
     .desc {
       font-weight: 400;
       .amount {
-        color: darken($color, 3%);
+        color: var(--color-primary);
+        font-weight: 600;
       }
     }
   }
@@ -61,20 +62,21 @@
     padding-left: 4px;
   }
   .desc { // available balance
-    color: $text-muted;
+    color: var(--text-muted);
     font-size: 11px;
     font-weight: 400;
     padding-left: 4px;
     .amount {
       @extend %tfx;
-      color: $text-muted;
-      font-weight: 600;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      font-weight: 500;
       margin-left: 5px;
     }
     .help-icon { // explanation of '1e-8' at blind balances (after sending all blind)
       margin-left: 3px;
       font-size: 14px;
-      color: $color-info;
+      color: var(--color-info);
       line-height: 0;
       position: relative;
       top: 2px;
@@ -88,7 +90,7 @@
 .from-box { // 'pay from..'
   .sticky {
     position: sticky;
-    top: $header-main-height + $tab-bar-height + 30px;
+    top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV));
   }
   mat-card {
     padding-top: 14px;
@@ -143,8 +145,17 @@ mat-card.to-balance-type { // 'convert to..'
   }
 }
 
-mat-card.send-amount {
-  padding: 12px 24px;
+.send-amount {
+  padding: 0;
+  .amount-to-send {
+    font-size: 16px;
+    font-family: var(--font-mono) !important;
+    font-weight: 500;
+    margin: 0;
+    span[matPrefix] {
+      font-weight: 400;
+    }
+  }
 }
 
 

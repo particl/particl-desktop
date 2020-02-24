@@ -26,7 +26,7 @@ export class SendComponent implements OnInit, OnDestroy {
   sourceType: FormControl = new FormControl('part');
   targetForm: FormGroup;
 
-  readonly minRingSize: number = 3;
+  readonly minRingSize: number = 4;
   readonly maxRingSize: number = 32;
 
   readonly tabs: TabModel[] = [

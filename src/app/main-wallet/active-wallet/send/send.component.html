@@ -13,7 +13,7 @@
     </mat-tab-group>
 
     <div class="buttons">
-      <button mat-button (click)="showAdvanced = !showAdvanced" class="small advanced-options" [disabled]="sourceType.value !== 'anon'">
+      <button mat-button (click)="showAdvanced = !showAdvanced" class="small advanced-options">
         <mat-icon fontSet="partIcon" fontIcon="{{ (showAdvanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
         <span>Advanced options</span>
       </button>
@@ -85,7 +85,7 @@
 
               <mat-slider
                 thumbLabel
-                color="primary"
+                color="accent"
                 [min]="minRingSize"
                 (change)="ringSize.setValue($event.value)"
                 [max]="maxRingSize"
@@ -121,8 +121,7 @@
               <mat-radio-button class="balance" color="primary" *ngFor="let option of selectorOptions" [value]="option.value" [disabled]="option.value === sourceType.value">
                 <div class="name">{{ option.name }}</div>
                 <div class="desc">Available balance:<span class="amount">{{ option.displayedBalance }}</span>
-                  <mat-icon *ngIf="option.help.length > 0" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
-                            [matTooltip]="option.help"></mat-icon>
+                  <mat-icon *ngIf="option.help.length > 0" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" [matTooltip]="option.help"></mat-icon>
                 </div>
               </mat-radio-button>
             </mat-radio-group>
@@ -166,7 +165,7 @@
             </div><!-- .receiver-address.section -->
 
             <!-- Narrations -->
-            <div class="section narration advanced" *ngIf="showAdvanced && sourceType.value === 'anon'">
+            <div class="section narration advanced" *ngIf="showAdvanced">
               <mat-form-field class="full-width larger" floatLabel="never">
                 <input matInput type="text" formControlName="narration" placeholder="Narration (optional)" maxlength="24">
                 <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
@@ -182,10 +181,11 @@
 
         <!-- Send amount & buttons -->
         <h2 class="section-title">Amount & confirmation</h2>
-        <mat-card class="send-amount" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
-          <mat-form-field fxFlex="0 0 150px">
+        <div class="send-amount" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
+          <mat-form-field fxFlex="0 0 235px" appearance="fill" class="amount-to-send --boxed">
             <!-- Send amount -->
-            <input matInput type="text" formControlName="amount" placeholder="Amount to send"
+            <span matPrefix>PART&nbsp;</span>
+            <input matInput type="text" formControlName="amount" placeholder="0.00"
                   [class.verify-sucess]="amount.valid"
                   [class.verify-error]="amount.invalid">
           </mat-form-field>
@@ -200,7 +200,7 @@
               Make payment
             </button>
           </div><!-- .actions -->
-        </mat-card><!-- .send-amount -->
+        </div><!-- .send-amount -->
 
 
       </form><!-- walletSendForm -->

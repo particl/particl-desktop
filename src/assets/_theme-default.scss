@@ -45,7 +45,7 @@ $theme-foreground: (
   text:              var(--text),
   slider-min:        var(--color-alert),
   slider-off:        var(--bg-muted),
-  slider-off-active: hsla(var(--color-primary-hsl), 0.35),
+  slider-off-active: var(--bg-muted),
 );
 
 // instead of creating a theme with mat-light-theme like a sane person, we will create our own theme-creating function that lets us apply our own foreground and background palettes.
