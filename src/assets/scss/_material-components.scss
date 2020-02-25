@@ -569,41 +569,67 @@ mat-expansion-panel.mat-expansion-panel {
     padding: 0 16px;
     background: var(--color-white);
   }
+  .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+    padding-bottom: 0;
+    .mat-form-field-underline {
+      bottom: 0;
+    }
+  }
+  .mat-form-field-infix {
+    padding: 0;
+    border-top: none;
+  }
+  .mat-form-field-subscript-wrapper {
+    overflow: visible;
+    .mat-hint {
+      position: relative;
+      // position needs to be tweaked based on the location of the label
+      bottom: 38px;
+      right: 8px;
+    }
+  }
   
   // Boxed, standalone variant (common)
   &.--boxed {
     box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
     border-radius: var(--radius) var(--radius) 0 0;
     margin-bottom: 16px;
-    .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
-      padding-bottom: 0;
-      .mat-form-field-underline {
-        bottom: 0;
-      }
-    }
-    .mat-form-field-infix {
-      padding: 0;
-      border-top: none;
-    }
   }
 
+  // Plain variant, used inside of MatCards
+  &.--plain {
+    margin-bottom: 0;
+    border-radius: 0;
+  }
 
   // --- INPUTS ---
-  &.mat-form-field-type-mat-input {
 
-    // Boxed, standalone variant
-    &.--boxed {
+  &.mat-form-field-type-mat-input {
+    .mat-form-field-flex {
+      align-items: center;
+    }
+    .mat-input-element {
+      padding: var(--field-boxed-paddingV) 0;
+    }
+    // Send: Larger padding around input
+    &.--larger {
+      font-size: 15px;
       .mat-form-field-flex {
-        align-items: center;
+        padding: 0 24px;
       }
       .mat-input-element {
-        padding: var(--field-boxed-paddingV) 0;
+        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+      }
+      .mat-hint {
+        bottom: 52px;
+        right: 14px;
       }
     }
   } // << INPUTS
 
 
   // --- SELECTS ---
+
   &.mat-form-field-type-mat-select {
     .mat-form-field-infix {
       padding: 0.2em 0 1.1em 0;

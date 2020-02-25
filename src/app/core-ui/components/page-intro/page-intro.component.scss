@@ -1,7 +1,6 @@
 @import './src/assets/_config'; // import shared colors etc.
 
 .page-intro {
-  @extend %tfx;
   @include gradient(hsla(var(--color-white-hsl), 0.7), var(--bg));
   margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
   padding: var(--paddingV) var(--paddingH);
@@ -31,7 +30,6 @@
 
   // page heading (always visible)
   h1 {
-    @extend %tfx;
     margin: 0;
   }
 

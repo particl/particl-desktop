@@ -137,6 +137,40 @@
           <h2 class="section-title">
             Pay to
           </h2>
+
+
+
+          <mat-card class="pay-to">
+
+            <h2 class="subtitle">Receiver's address</h2>
+            <mat-form-field appearance="fill" class="address --plain --larger">
+              <input matInput type="text" formControlName="address"
+                    [class.verify-success]="address.valid"
+                    [class.verify-error]="!address.valid"
+                    placeholder="Receiver's address (required)"/>
+              <button matSuffix mat-button class="small" matTooltip="Load from Address Book" matTooltipPosition="before" (click)="openAddressLookup()">
+                <mat-icon fontSet="partIcon" fontIcon="part-people"></mat-icon>
+              </button>
+              <!--button matSuffix mat-button class="small" color="warn" (click)="clearSendInputs()" matTooltip="Clear all" matTooltipPosition="before">
+                <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+              </button-->
+            </mat-form-field>
+
+            <h2 class="subtitle">Receiver's name</h2>
+            <!-- FIXME @zaSmilingIdiot: label/name needs to be pre-filled when picking address from Address Book -->
+            <mat-form-field appearance="fill" class="label --plain --larger">
+              <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
+            </mat-form-field>
+
+            <h2 class="subtitle">Narration</h2>
+            <mat-form-field appearance="fill" class="narration --plain --larger">
+              <input matInput type="text" formControlName="narration" placeholder="Enter short note to send with the payment (optional)" maxlength="24">
+              <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
+            </mat-form-field>
+
+          </mat-card>
+
+
           <mat-card class="pay-to">
             <!-- Receiver's address/label -->
             <div class="section receiver-address">
