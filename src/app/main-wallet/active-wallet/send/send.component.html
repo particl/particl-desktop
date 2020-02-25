@@ -195,7 +195,7 @@
 
           <!-- Send buttons -->
           <div class="actions" fxFlex="1 1 100%">
-            <button mat-raised-button color="primary" class="validate" (click)="onSubmit()" [disabled]="targetForm.invalid">
+            <button mat-raised-button color="primary" class="validate" appDebounceClick (debounceClick)="onSubmit()" [disabled]="targetForm.invalid || isProcessing">
               <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
               Make payment
             </button>
