@@ -45,7 +45,7 @@ export class AddressService {
   }
 
 
-  updateAddressLabel(address: string, label: string) {
+  updateAddressLabel(address: string, label: string): Observable<any> {
     return this._rpc.call('setlabel', [address, label]).pipe(
       retryWhen (genericPollingRetryStrategy())
     );

@@ -1,8 +1,8 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Observable, of, iif, throwError } from 'rxjs';
-import { map, catchError, concatMap, tap } from 'rxjs/operators';
+import { Observable, of, throwError, iif } from 'rxjs';
+import { map, catchError, concatMap } from 'rxjs/operators';
 
 import { WalletUTXOState } from 'app/main/store/main.state';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
@@ -10,6 +10,7 @@ import { WalletUTXOStateModel, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/
 import { PartoshiAmount } from 'app/core/util/utils';
 import { ValidatedAddress, SendTransaction, SendTypeToEstimateResponse } from './send.models';
 import { CoreErrorModel } from 'app/core/core.models';
+import { AddressService } from '../shared/address.service';
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class SendService {
 
   constructor(
     private _store: Store,
-    private _rpc: MainRpcService
+    private _rpc: MainRpcService,
+    private _addressService: AddressService
   ) {}
 
 
@@ -57,24 +59,22 @@ export class SendService {
       source = this.getDefaultStealthAddress().pipe(
         catchError(() => of('')),
         map((address) => {
-
           tx.targetAddress = address;
           return tx;
         })
-      )
+      );
     } else {
       source = this.validateAddress(tx.targetAddress).pipe(
         concatMap((resp: ValidatedAddress) => {
-          if (tx.getTargetType() === 'anon' && !resp.isstealthaddress) {
-            return throwError('STEALTH_ADDRESS_ERROR')
-          }
           if ((tx.transactionType === 'send') && (tx.source === 'part') && (resp.isstealthaddress === true)) {
             tx.targetTransfer = 'anon';
           }
           return of(tx);
         })
-      )
+      );
     }
+
+    const labelupdate$ = this._addressService.updateAddressLabel(tx.targetAddress, tx.addressLabel);
 
     return source.pipe(
       concatMap((trans) => this.sendTypeTo(trans, estimateFee).pipe(
@@ -85,7 +85,11 @@ export class SendService {
             return this.sendTypeTo(trans, estimateFee);
           }
           return throwError(err);
-        })
+        }),
+        // update the address label if provided AND a non-estimate request, but ignore any errors thrown (the primary activity succeeded)
+        concatMap((result) => iif(
+          () => (tx.addressLabel.length <= 0) || estimateFee, of(result), labelupdate$.pipe(catchError(() => of(result)), map((r) => r))
+        ))
       ))
     );
   }

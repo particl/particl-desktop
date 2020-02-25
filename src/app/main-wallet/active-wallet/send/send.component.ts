@@ -7,7 +7,7 @@ import { Store } from '@ngxs/store';
 import { Subject, merge, defer, iif } from 'rxjs';
 import { takeUntil, tap, startWith, concatMap, take, finalize } from 'rxjs/operators';
 import { SendService } from './send.service';
-import { targetTypeValidator, amountRangeValidator, ValidAddressValidator } from './send.validators';
+import { targetTypeValidator, amountRangeValidator, ValidAddressValidator, publicAddressUsageValidator } from './send.validators';
 import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -25,7 +25,6 @@ import {
   SendTypeToEstimateResponse
 } from './send.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
-
 
 
 enum TextContent {
@@ -85,7 +84,10 @@ export class SendComponent implements OnInit, OnDestroy {
     this.targetForm = new FormGroup({
       ringSize: new FormControl(DEFAULT_RING_SIZE, [Validators.min(this.minRingSize), Validators.max(this.maxRingSize)]),
       targetType: new FormControl('blind', targetTypeValidator(this.currentTabType, this.sourceType.value)),
-      address: new FormControl('', [], this._addressValidator.validate.bind(this._addressValidator)),
+      address: new FormControl('',
+        publicAddressUsageValidator(this.currentTabType, this.sourceType.value),
+        this._addressValidator.validate.bind(this._addressValidator)
+      ),
       addressLabel: new FormControl(''),
       narration: new FormControl('', [Validators.maxLength(24)]),
       amount: new FormControl({value: '', disabled: false}, amountRangeValidator(this.selectedSourceSelector().balance)),
@@ -160,10 +162,23 @@ export class SendComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    const address$ = defer(() => {
+      this.address.setValidators(publicAddressUsageValidator(this.currentTabType, this.sourceType.value));
+      this.address.updateValueAndValidity();
+    });
+
     const switcher$ = this.selectedTab.valueChanges.pipe(
       tap(() => {
         this.currentTabType === 'send' ? this.address.enable() : this.address.disable();
       }),
+      takeUntil(this.destroy$)
+    );
+
+    const addressValid$ = merge(
+      sourceType$,
+      switcher$
+    ).pipe(
+      concatMap(() => address$),
       takeUntil(this.destroy$)
     );
 
@@ -181,7 +196,7 @@ export class SendComponent implements OnInit, OnDestroy {
 
     merge(
       amountValid$,
-      switcher$,
+      addressValid$,
       sendingAll$
     ).subscribe();
 
@@ -235,6 +250,9 @@ export class SendComponent implements OnInit, OnDestroy {
         if (value && value.address) {
           this.address.setValue(value.address);
         }
+        if (value && value.label) {
+          this.addressLabel.setValue(value.label);
+        }
       }
     );
     dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.addressSelected.unsubscribe());
@@ -279,6 +297,7 @@ export class SendComponent implements OnInit, OnDestroy {
           () => {
             // request new balances
             this._store.dispatch(new WalletDetailActions.GetAllUTXOS());
+
             // present success message
             const trimAddress = trans.targetAddress.substring(0, 16) + '...';
             const displayAmount = this.amount.value;
@@ -311,9 +330,6 @@ export class SendComponent implements OnInit, OnDestroy {
         switch (true) {
           case errorMessage.includes('amount is too small to pay the fee'):
             text = TextContent.PAY_FEE_ERROR;
-            break;
-          case errorMessage === 'STEALTH_ADDRESS_ERROR':
-            text = TextContent.STEALTH_ADDRESS_ERROR;
             break;
           default:
             text = TextContent.ESTIMATE_ERROR;
