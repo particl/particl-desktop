@@ -45,6 +45,13 @@ export class AddressService {
   }
 
 
+  getDefaultStealthAddress(): Observable<string> {
+    return this._rpc.call('liststealthaddresses', null).pipe(
+      map(list => list[0]['Stealth Addresses'][0]['Address'])
+    );
+  }
+
+
   updateAddressLabel(address: string, label: string): Observable<any> {
     return this._rpc.call('setlabel', [address, label]).pipe(
       retryWhen (genericPollingRetryStrategy())

@@ -284,14 +284,14 @@ export class SendComponent implements OnInit, OnDestroy {
 
     this._unlocker.unlock({timeout: 10}).pipe(
       finalize(() => this.isProcessing = false),
-      concatMap((unlocked: boolean) => iif(() => unlocked, this._sendService.runTransaction(trans, true)))
+      concatMap((unlocked: boolean) => iif(() => unlocked, defer(() => this._sendService.runTransaction(trans, true))))
     ).subscribe(
       (result: SendTypeToEstimateResponse) => {
         const dialog = this._dialog.open(SendConfirmationModalComponent, {data: {sendTx: trans, fee: result.fee}});
         dialog.componentInstance.isConfirmed.pipe(
           take(1),
           concatMap(() => this._unlocker.unlock({timeout: 5}).pipe(
-            concatMap((unlocked) => iif(() => unlocked, this._sendService.runTransaction(trans, false)))
+            concatMap((unlocked) => iif(() => unlocked, defer(() => this._sendService.runTransaction(trans, false))))
           ))
         ).subscribe(
           () => {

@@ -30,9 +30,11 @@ import { SignVerifyAddressModalComponent } from './shared/sign-verify-address-mo
 import { AddressDetailModalComponent } from './shared/address-detail-modal/address-detail-modal.component';
 import { AddressLookupModalComponent } from './send/addresss-lookup-modal/address-lookup-modal.component';
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
-// import { ColdstakeWidgetComponent } from './overview/widgets/coldstake/coldstake-widget.component';
+import { ColdstakeWidgetComponent } from './overview/widgets/coldstake/coldstake-widget.component';
+import { DisableColdstakingConfirmationModalComponent } from './overview/widgets/coldstake/disable-coldstaking-confirmation-modal/disable-coldstaking-confirmation-modal.component';
 // import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-modal/coldstake-modal.component';
 // import { ColdstakeService } from './overview/widgets/coldstake/coldstake.service';
+
 
 
 @NgModule({
@@ -63,9 +65,10 @@ import { SendConfirmationModalComponent } from './send/send-confirmation-modal/s
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,
     AddressDetailModalComponent,
-    AddressLookupModalComponent
-    // ColdstakeWidgetComponent,
+    AddressLookupModalComponent,
+    ColdstakeWidgetComponent,
     // ColdStakeModalComponent,
+    DisableColdstakingConfirmationModalComponent
   ],
   entryComponents: [
     WalletBackupModalComponent,
@@ -74,7 +77,8 @@ import { SendConfirmationModalComponent } from './send/send-confirmation-modal/s
     NewAddressbookEntryModalComponent,
     SignVerifyAddressModalComponent,
     AddressDetailModalComponent,
-    AddressLookupModalComponent
+    AddressLookupModalComponent,
+    DisableColdstakingConfirmationModalComponent
     // ColdStakeModalComponent,
   ],
   providers: [

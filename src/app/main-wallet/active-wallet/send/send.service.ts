@@ -41,13 +41,6 @@ export class SendService {
   }
 
 
-  getDefaultStealthAddress(): Observable<string> {
-    return this._rpc.call('liststealthaddresses', null).pipe(
-      map(list => list[0]['Stealth Addresses'][0]['Address'])
-    );
-  }
-
-
   sendTypeTo(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
     return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee));
   }
@@ -56,7 +49,7 @@ export class SendService {
   runTransaction(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
     let source: Observable<SendTransaction>;
     if (tx.transactionType === 'transfer') {
-      source = this.getDefaultStealthAddress().pipe(
+      source = this._addressService.getDefaultStealthAddress().pipe(
         catchError(() => of('')),
         map((address) => {
           tx.targetAddress = address;

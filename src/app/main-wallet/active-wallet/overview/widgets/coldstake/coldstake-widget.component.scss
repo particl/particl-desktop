@@ -1,0 +1,86 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../shared/shared.scss';
+
+.cold-staking {
+  .staking-node {
+    padding: 24px 24px 30px;
+    margin-bottom: 20px;
+    &.active .subtitle {
+      color: $color;
+    }
+    &.inactive {
+      padding: 24px;
+      .subtitle {
+        color: $text-muted;
+      }
+    }
+    &.warning .subtitle {
+      color: $color-alert;
+    }
+
+    .title {
+      display: inline-block;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .subtitle {
+      display: block;
+      margin-top: 4px;
+      &.in-progress {
+        margin: 10px 0 5px;
+      }
+      .progress {
+        float: right;
+      }
+    }
+    .progress-bar {
+      margin: 5px 0 15px;
+    }
+    .buttons { // Zap/revert buttons
+      margin: 0 0 24px;
+      button {
+        margin: 0;
+        .tag {
+          background: $text-muted;
+          color: $color-white;
+          display: inline-block;
+          padding: 1px 6px;
+          border-radius: 4px;
+          line-height: 1.3;
+          font-size: 85%;
+          font-weight: 800;
+          margin-left: 3px;
+          position: relative;
+          top: -1px;
+          &.zap {
+            background: $color;
+          }
+          &.cancel {
+            background: $color-alert;
+          }
+        }
+      }
+    }
+
+    button {
+      font-size: 12px;
+      text-transform: uppercase;
+      min-width: 0;
+      padding: 0 10px;
+      margin-right: 20px;
+      border: 1px solid transparent;
+      top: -2px;
+      float: left;
+      &.secondary {
+        border-color: $bg-shadow;
+      }
+      .mat-icon {
+        font-size: 14px;
+        margin: 0;
+        width: 24px;
+      }
+    }
+
+  }
+}
