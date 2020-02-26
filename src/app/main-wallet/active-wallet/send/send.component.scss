@@ -2,15 +2,6 @@
 
 // ------ UI ------ //
 
-.section {
-  &.advanced { // 'advanced options' fields
-    background: mix($color-white, $bg);
-    border-top: 1px dashed darken($bg, 7%);
-    margin: 0 -24px !important;
-    padding: 8px 24px;
-  }
-}
-
 .mat-card {
   margin-bottom: 20px;
   overflow: hidden;
@@ -28,7 +19,7 @@
   text-transform: uppercase;
   margin: 20px 0 16px;
   color: var(--text);
-  font-weight: 700;
+  font-weight: 500;
   small {
     color: var(--text-muted);
     font-weight: 400;
@@ -94,9 +85,12 @@
     top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV));
   }
   mat-card {
-    padding-top: 14px;
+    padding: 14px 24px 14px;
+    .advanced-options { // show advanced stuff for Anon TXs
+      margin-top: 6px;
+    }
   }
-  .advanced {
+  .advanced { // advanced Anon options
     background: mix($bg, $color-white);
     border-top: 1px dashed darken($bg, 7%);
     margin: 8px -24px -24px;
@@ -119,7 +113,10 @@
   .mat-slider {
     width: 100%;
     padding: 0;
-    margin: -4px 0 -6px;
+    margin: -4px 0 2px;
+  }
+  .widget-help {
+    margin: 0 8px 6px 0;
   }
 }
 
@@ -162,13 +159,10 @@
   .widget-help {
     margin-top: 0;
   }
-
-  // TEMP $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ REMOVE!!!
-  &:last-of-type { display: none; }
 }
 
 mat-card.to-balance-type { // 'convert to..'
-  padding-top: 14px;
+  padding: 14px 24px;
 }
 
 .actions {

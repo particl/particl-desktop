@@ -35,7 +35,7 @@ $theme-foreground: (
   base:              var(--text),
   divider:           var(--bg-muted),
   dividers:          var(--bg-muted),
-  disabled:          var(--bg-muted), // disabled radio buttons
+  disabled:          hsla(var(--text-muted-hsl), 0.55), // disabled radio buttons
   disabled-button:   hsla(var(--text-muted-hsl), 0.55),
   disabled-text:     var(--text-muted), // inactive steps in stepper
   hint-text:         var(--text-muted),

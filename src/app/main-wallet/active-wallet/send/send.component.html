@@ -1,5 +1,5 @@
 <app-header>
-  <div class="tab-bar" fxLayout fxLayoutAlign="space-between stretch">
+  <div class="tab-bar">
     <mat-tab-group
       animationDuration="0ms"
       [selectedIndex]="selectedTab.value"
@@ -11,14 +11,6 @@
         </ng-template>
       </mat-tab>
     </mat-tab-group>
-
-    <div class="buttons">
-      <button mat-button (click)="showAdvanced = !showAdvanced" class="small advanced-options">
-        <mat-icon fontSet="partIcon" fontIcon="{{ (showAdvanced) ? 'part-circle-minus': 'part-circle-plus' }}"></mat-icon>
-        <span>Advanced options</span>
-      </button>
-    </div>
-
   </div><!-- .tab-bar -->
 </app-header>
 
@@ -45,14 +37,18 @@
 
           <p class="widget-help">
             <ng-container *ngIf="sourceType.value === 'part'">
-              In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender and receiver addresses.
+              In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender's and receiver's addresses.
             </ng-container>
             <ng-container *ngIf="sourceType.value === 'blind'">
-              Blinded transactions hide transaction amounts, but the sender and receiver addresses are still visible.
+              Blinded transactions hide transaction amounts, but the sender's and receiver's addresses are still visible.
             </ng-container>
             <ng-container *ngIf="sourceType.value === 'anon'">
-              Anon transaction offer the highest privacy &ndash; transaction amounts and not even sender and receiver
-              addresses are publicly visible. The higher privacy level is, the larger fee needs to be paid. Advanced users can further adjust the number of ring signatures.
+              Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
+              addresses are hidden from public.
+              <button mat-button (click)="showAdvanced = !showAdvanced" class="small advanced-options">
+                <mat-icon fontSet="partIcon" fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
+                Advanced options
+              </button>
             </ng-container>
           </p>
 
@@ -92,16 +88,22 @@
                 [value]="ringSize.value">
               </mat-slider>
 
-              <button
-                (click)="ringSize.setValue(8)"
-                mat-button
-                class="small"
-                matTooltip="Set default, recommended privacy level">
-                <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
-                Auto privacy
-              </button>
+              <div class="row" fxLayout fxLayoutAlign="spacebetween center">
+                <p class="widget-help">
+                  The higher privacy level is, the larger fee needs to be paid.
+                </p>
+                <button
+                  (click)="ringSize.setValue(8)"
+                  mat-button
+                  class="small"
+                  matTooltip="Set default privacy level">
+                  <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                  Default
+                </button>
+              </div>
+
             </div>
-          </div>
+          </div><!-- advanced -->
         </mat-card>
       </div>
     </div>
@@ -120,25 +122,17 @@
                 fxLayout="column" fxLayoutGap="10px">
               <mat-radio-button class="balance" color="primary" *ngFor="let option of selectorOptions" [value]="option.value" [disabled]="option.value === sourceType.value">
                 <div class="name">{{ option.name }}</div>
-                <div class="desc">Available balance:<span class="amount">{{ option.displayedBalance }}</span>
-                  <mat-icon *ngIf="option.help.length > 0" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon" [matTooltip]="option.help"></mat-icon>
-                </div>
+                <div class="desc">{{ option.description }}</div>
               </mat-radio-button>
             </mat-radio-group>
-            <p class="widget-help">
-              Balance transfer helps you convert your PART between Public and Private balances.
-            </p>
           </mat-card>
         </ng-container>
 
 
         <ng-container *ngIf="currentTabType === 'send'">
-
           <h2 class="section-title">
             Pay to
           </h2>
-
-
 
           <mat-card class="pay-to">
 
@@ -157,7 +151,6 @@
             </mat-form-field>
 
             <h2 class="subtitle">Receiver's name</h2>
-            <!-- FIXME @zaSmilingIdiot: label/name needs to be pre-filled when picking address from Address Book -->
             <mat-form-field appearance="fill" class="label --plain --larger">
               <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
             </mat-form-field>
@@ -168,49 +161,8 @@
               <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
             </mat-form-field>
 
-          </mat-card>
-
-
-          <mat-card class="pay-to">
-            <!-- Receiver's address/label -->
-            <div class="section receiver-address">
-              <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="15px">
-                <mat-form-field fxFlex="1 1 100%" class="full-width larger">
-                  <input matInput type="text" formControlName="address"
-                        [class.verify-success]="address.valid"
-                        [class.verify-error]="!address.valid"
-                        placeholder="Receiver's address"/>
-                </mat-form-field>
-                <span fxFlex="0 0 16px">
-                  <mat-icon class="cursor-pointer" matTooltip="Pick from Address Book" (click)="openAddressLookup()"
-                            fontSet="partIcon" fontIcon="part-people"></mat-icon>
-                </span>
-                <span fxFlex="0 0 16px">
-                  <mat-icon class="cursor-pointer" matTooltip="Clear all" (click)="clearSendInputs()"
-                            color="warn" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-                </span>
-              </div>
-              <mat-form-field class="full-width larger no-top-padding" floatLabel="never">
-                <input matInput type="text" formControlName="addressLabel" placeholder="Receiver's name (optional)">
-              </mat-form-field>
-              <p class="widget-help">
-                You can save Receiver's address to your Address book by labeling it here.
-              </p>
-            </div><!-- .receiver-address.section -->
-
-            <!-- Narrations -->
-            <div class="section narration advanced" *ngIf="showAdvanced">
-              <mat-form-field class="full-width larger" floatLabel="never">
-                <input matInput type="text" formControlName="narration" placeholder="Narration (optional)" maxlength="24">
-                <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
-              </mat-form-field>
-              <p class="widget-help">
-                Send a short note with your payment. Keep in mind that when sending to Public addresses, the narrations will be recorded and publicly visible on the blockchain. Blind & Anon transactions make narrations visible only for Sender and Receiver.
-              </p>
-            </div><!-- .narration.section -->
-          </mat-card>
-
-        </ng-container>
+          </mat-card><!-- .pay-to -->
+        </ng-container><!-- << Send -->
 
 
         <!-- Send amount & buttons -->
@@ -270,7 +222,7 @@
       To increase your level of privacy, it's recommended to always keep some of your coins in private balances (Blind &amp; Anon).
     </ng-container>
     <ng-container page-help>
-      What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
+      What are the differences between Blind and Anon balances? How do they affect your privacy? Learn more on Particl Wiki:
       <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
         <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
         Currency &amp; transaction types

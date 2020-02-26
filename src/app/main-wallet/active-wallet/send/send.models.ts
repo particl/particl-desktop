@@ -22,6 +22,7 @@ export interface TxTypeOption {
   displayedBalance: string;
   value: TxType;
   help: string;
+  description: string;
 }
 
 
