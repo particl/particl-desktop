@@ -91,8 +91,8 @@
     }
   }
   .advanced { // advanced Anon options
-    background: mix($bg, $color-white);
-    border-top: 1px dashed darken($bg, 7%);
+    background: hsla(var(--bg-hsl), 0.4);
+    border-top: 1px dashed var(--bg-muted);
     margin: 8px -24px -24px;
     padding: 1px 24px;
   }
