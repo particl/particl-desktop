@@ -632,7 +632,22 @@ mat-expansion-panel.mat-expansion-panel {
 
   &.mat-form-field-type-mat-select {
     .mat-form-field-infix {
-      padding: 0.2em 0 1.1em 0;
+      padding: var(--field-boxed-paddingV) 0;
+    }
+    .mat-select-arrow-wrapper {
+      position: relative;
+      top: 7px;
+    }
+
+    &.--larger {
+      font-size: 15px;
+      .mat-form-field-infix {
+        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        .mat-select-value {
+          position: relative;
+          top: 1px;
+        }
+      }
     }
 
     // Boxed, standalone variant
@@ -734,6 +749,11 @@ mat-option.mat-option {
   &.mat-selected {
     color: var(--text) !important;
     font-weight: 500;
+  }
+  &.--larger {
+    .mat-option-text {
+      font-size: 15px;
+    }
   }
 }
 .mat-select-panel {

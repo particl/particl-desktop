@@ -302,6 +302,11 @@ body {
   .mat-form-field-underline {
     background-color: var(--bg-muted);
   }
+  &.--larger {
+    .mat-icon {
+      top: 8px;
+    }
+  }
 }
 
 

@@ -25,9 +25,9 @@ export class AddressLookupModalComponent implements OnInit, OnDestroy {
 
 
   readonly typeFilters: Array<{label: string, value: SelectableAddressType}> = [
-    { label: 'All types', value: 'all' },
-    { label: 'Public', value: 'public' },
-    { label: 'Private', value: 'private' }
+    { label: 'Show all address types', value: 'all' },
+    { label: 'Public addresses only', value: 'public' },
+    { label: 'Private addresses only', value: 'private' }
   ];
 
   readonly pageFilters: PageFilter = {
