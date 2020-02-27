@@ -113,10 +113,7 @@
       <form name="walletSendForm" [formGroup]="targetForm">
 
         <ng-container *ngIf="currentTabType === 'transfer'">
-          <h2 class="section-title">
-            Convert to
-          </h2>
-
+          <h2 class="section-title">Convert to</h2>
           <mat-card class="section to-balance-type">
             <mat-radio-group class="to-balance-type block-radio" name="targetType" formControlName="targetType"
                 fxLayout="column" fxLayoutGap="10px">
@@ -130,13 +127,10 @@
 
 
         <ng-container *ngIf="currentTabType === 'send'">
-          <h2 class="section-title">
-            Pay to
-          </h2>
-
+          <h2 class="section-title">Pay to</h2>
           <mat-card class="pay-to">
 
-            <h2 class="subtitle">Receiver's address</h2>
+            <h3 class="subtitle">Receiver's address</h3>
             <mat-form-field appearance="fill" class="address --plain --larger">
               <input matInput type="text" formControlName="address"
                     [class.verify-success]="address.valid"
@@ -150,14 +144,17 @@
               </button-->
             </mat-form-field>
 
-            <h2 class="subtitle">Receiver's name</h2>
+            <h3 class="subtitle">Receiver's name</h3>
             <mat-form-field appearance="fill" class="label --plain --larger">
               <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
             </mat-form-field>
 
-            <h2 class="subtitle">Narration</h2>
+            <h3 class="subtitle">Narration</h3>
             <mat-form-field appearance="fill" class="narration --plain --larger">
-              <input matInput type="text" formControlName="narration" placeholder="Enter short note to send with the payment (optional)" maxlength="24">
+              <input matInput type="text" formControlName="narration" maxlength="24"
+                [placeholder]="sourceType.value === 'part'
+                ? 'Send a short public message with the payment (optional)'
+                : 'Send a short private message with the payment (optional)'">
               <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
             </mat-form-field>
 
