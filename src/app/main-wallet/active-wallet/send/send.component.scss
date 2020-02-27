@@ -2,11 +2,6 @@
 
 // ------ UI ------ //
 
-.mat-card {
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-
 .section-title { // 'Pay from/to, Convert' etc.
   @extend %subtitle;
   margin-top: 32px;
@@ -16,10 +11,8 @@
 }
 
 .subtitle { // subtitles (eg. 'privacy level' in anon
-  text-transform: uppercase;
+  @extend %box-title;
   margin: 20px 0 16px;
-  color: var(--text);
-  font-weight: 500;
   small {
     color: var(--text-muted);
     font-weight: 400;
@@ -50,12 +43,12 @@
   .name { // balance type
     font-weight: 500;
     font-size: 15px;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
     padding-left: 4px;
   }
   .desc { // available balance
     color: var(--text-muted);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 400;
     padding-left: 4px;
     .amount {
@@ -122,10 +115,8 @@
 
 .pay-to { // whole 'pay to' card
   padding: 0;
-  margin-bottom: 8px;
   .subtitle {
-    font-size: 13px;
-    font-weight: 500;
+    @extend %box-title;
     padding: 22px 24px 0;
     margin: 0 0 -0.9em 0;
     position: relative;
@@ -146,32 +137,12 @@
       }
     }
   }
-  .narration {
-    .mat-form-field-subscript-wrapper {
-      overflow: visible;
-    }
-  }
-
-
-  .receiver-address { // recipient's addy & label
-    margin-bottom: 30px !important;
-  }
-  .widget-help {
-    margin-top: 0;
-  }
 }
 
 mat-card.to-balance-type { // 'convert to..'
   padding: 14px 24px;
 }
 
-.actions {
-  text-align: right;
-  margin: 0;
-  button {
-    margin: 0 0 0 12px;
-  }
-}
 
 .send-amount {
   padding: 0;
@@ -184,17 +155,8 @@ mat-card.to-balance-type { // 'convert to..'
       font-weight: 400;
     }
   }
-}
-
-
-// ------ FORMS ------ //
-
-mat-form-field {
-  &.full-width {
-    width: 100%;
+  .actions {
+    text-align: right;
+    margin: 0;
   }
-}
-
-.underlining-select {
-  position: relative;
 }
