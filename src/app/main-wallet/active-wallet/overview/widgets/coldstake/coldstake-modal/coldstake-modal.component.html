@@ -1,0 +1,28 @@
+<div mat-dialog-title class="title">Cold staking setup</div>
+
+<mat-dialog-content class="modal-content">
+  <p>
+    To activate, generate cold staking public key on your staking node and enter it below
+  </p>
+  <p class="info">
+    Read more about
+    <a href="https://particl.wiki/learn/staking" target="_blank" matTooltip="Particl.wiki > Staking" tabindex="-1">(Cold) Staking</a> and check <a href="https://particl.wiki/tutorial/staking/start" target="_blank" matTooltip="Particl.wiki > Staking Tutorials" tabindex="-1">Cold staking tutorials</a> on Particl Wiki
+  </p>
+
+  <mat-form-field class="cold-stake-address">
+    <input matInput [formControl]="addressField" placeholder="Enter the public key" required />
+  </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="activate()" [disabled]="addressField.invalid">
+    <mat-icon fontSet="partIcon" fontIcon="part-snowflake"></mat-icon>
+    Enable cold staking
+  </button>
+</mat-dialog-actions>

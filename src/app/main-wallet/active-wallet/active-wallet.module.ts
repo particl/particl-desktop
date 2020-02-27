@@ -32,9 +32,7 @@ import { AddressLookupModalComponent } from './send/addresss-lookup-modal/addres
 import { SendConfirmationModalComponent } from './send/send-confirmation-modal/send-confirmation-modal.component';
 import { ColdstakeWidgetComponent } from './overview/widgets/coldstake/coldstake-widget.component';
 import { DisableColdstakingConfirmationModalComponent } from './overview/widgets/coldstake/disable-coldstaking-confirmation-modal/disable-coldstaking-confirmation-modal.component';
-// import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-modal/coldstake-modal.component';
-// import { ColdstakeService } from './overview/widgets/coldstake/coldstake.service';
-
+import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-modal/coldstake-modal.component';
 
 
 @NgModule({
@@ -67,7 +65,7 @@ import { DisableColdstakingConfirmationModalComponent } from './overview/widgets
     AddressDetailModalComponent,
     AddressLookupModalComponent,
     ColdstakeWidgetComponent,
-    // ColdStakeModalComponent,
+    ColdStakeModalComponent,
     DisableColdstakingConfirmationModalComponent
   ],
   entryComponents: [
@@ -78,12 +76,11 @@ import { DisableColdstakingConfirmationModalComponent } from './overview/widgets
     SignVerifyAddressModalComponent,
     AddressDetailModalComponent,
     AddressLookupModalComponent,
-    DisableColdstakingConfirmationModalComponent
-    // ColdStakeModalComponent,
+    DisableColdstakingConfirmationModalComponent,
+    ColdStakeModalComponent,
   ],
   providers: [
-    AddressService,
-    // ColdstakeService
+    AddressService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

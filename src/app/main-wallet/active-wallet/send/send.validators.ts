@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { ValidatorFn, AbstractControl, AsyncValidator, ValidationErrors } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { SendService } from './send.service';
-import { TabType, TxType, ValidatedAddress } from './send.models';
+import { AddressService } from '../shared/address.service';
+import { ValidatedAddress } from '../shared/address.models';
+import { TabType, TxType } from './send.models';
 import { AddressHelper } from 'app/core/util/utils';
 
 
@@ -69,14 +70,14 @@ export function publicAddressUsageValidator(currentTab: TabType, sourceType: TxT
 @Injectable()
 export class ValidAddressValidator implements AsyncValidator {
 
-  constructor(private _sendService: SendService) {}
+  constructor(private _addressService: AddressService) {}
 
   validate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     if (!ctrl.value || ctrl.value.length < 15) {
       return of({validAddress: false});
     }
 
-    return this._sendService.validateAddress(`${ctrl.value}`).pipe(
+    return this._addressService.validateAddress(`${ctrl.value}`).pipe(
       catchError(() => of(null)),
       map((resp: ValidatedAddress | null) => {
         if (resp === null || !resp.isvalid) {

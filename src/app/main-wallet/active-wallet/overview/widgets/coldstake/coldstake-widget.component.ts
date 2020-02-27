@@ -12,11 +12,15 @@ import { ColdstakeService } from './coldstake.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 // import { ZapColdstakingModalComponent } from './zap-coldstaking-modal/zap-coldstaking-modal.component';
 import { DisableColdstakingConfirmationModalComponent } from './disable-coldstaking-confirmation-modal/disable-coldstaking-confirmation-modal.component';
-// import { ColdStakeModalComponent } from './coldstake-modal/coldstake-modal.component';
+import { ColdStakeModalComponent } from './coldstake-modal/coldstake-modal.component';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { CoreErrorModel } from 'app/core/core.models';
 
 
 enum TextContent {
+  ACTIVATE_ERROR_GENERIC = 'Failed to activate cold staking!',
+  ACTIVATE_ERROR_ADDRESS = 'Address provided is invalid',
+  ACTIVATE_SUCCESS = 'Cold staking successfully activated',
   REVERT_SUCCESS_NO_TXS = 'Succesfully disabled coldstaking, no transactions needed.',
   REVERT_PARTIAL_SUCCESS = 'Disabling succeeded, but some funds may still be cold staking',
   REVERT_SUCCESS = 'Succesfully brought cold staking balance into hot wallet',
@@ -113,7 +117,33 @@ export class ColdstakeWidgetComponent implements OnDestroy {
 
 
   openColdStakeModal(): void {
-    // this._dialog.open(ColdStakeModalComponent, {disableClose: true});
+    if (this.isProcessing) {
+      return;
+    }
+
+    const dialog = this._dialog.open(ColdStakeModalComponent, {disableClose: true});
+    dialog.componentInstance.hasAddress.pipe(
+      take(1),
+      tap(() => this.isProcessing = true),
+      finalize(() => this.isProcessing = false),
+      concatMap((address: string) => this._unlocker.unlock({timeout: 5}).pipe(
+        concatMap((unlocked) => iif(() => unlocked, defer(() => this._coldStake.enableColdStaking(address))))
+      ))
+    ).subscribe(
+
+      () => {
+        this._store.dispatch(new WalletDetailActions.GetColdStakingInfo());
+        this._snackbar.open(TextContent.ACTIVATE_SUCCESS, '');
+      },
+
+      (err: CoreErrorModel) => {
+        const errorMessage = ((typeof err !== 'string') && err.code && (err.code === -8)) ?
+            TextContent.ACTIVATE_ERROR_ADDRESS :
+            TextContent.ACTIVATE_ERROR_GENERIC;
+        this._snackbar.open(errorMessage, 'err');
+      }
+    );
+    dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.hasAddress.unsubscribe());
   }
 
 

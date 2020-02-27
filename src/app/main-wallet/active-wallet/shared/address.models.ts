@@ -33,6 +33,18 @@ export enum AddressFilterOwnership {
 };
 
 
+export interface ValidatedAddress {
+  isvalid: boolean;
+  address: string;
+  scriptPubKey: string;
+  isscript: boolean;
+  iswitness: boolean;
+  witness_version?: number;
+  witness_program?: string;
+  isstealthaddress?: boolean;
+}
+
+
 export interface AddressInfo {
   address: string;
   label: string;

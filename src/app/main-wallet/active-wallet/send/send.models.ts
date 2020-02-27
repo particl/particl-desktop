@@ -26,18 +26,6 @@ export interface TxTypeOption {
 }
 
 
-export interface ValidatedAddress {
-  isvalid: boolean;
-  address: string;
-  scriptPubKey: string;
-  isscript: boolean;
-  iswitness: boolean;
-  witness_version?: number;
-  witness_program?: string;
-  isstealthaddress?: boolean;
-}
-
-
 export interface SavedAddress {
   address: string;
   label: string;

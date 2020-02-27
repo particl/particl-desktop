@@ -11,7 +11,8 @@ import {
   AddressFilterSortDirection,
   AddressFilterOwnership,
   AddressInfo,
-  AddressAdded
+  AddressAdded,
+  ValidatedAddress
 } from './address.models';
 
 
@@ -37,6 +38,11 @@ export class AddressService {
 
   saveAddressToAddressBook(address: string, label: string): Observable<AddressAdded> {
     return this._rpc.call('manageaddressbook', ['newsend', address, label]);
+  }
+
+
+  validateAddress(address: string): Observable<ValidatedAddress> {
+    return this._rpc.call('validateaddress', [address]);
   }
 
 

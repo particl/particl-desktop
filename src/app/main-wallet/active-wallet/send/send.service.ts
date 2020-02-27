@@ -6,11 +6,12 @@ import { map, catchError, concatMap } from 'rxjs/operators';
 
 import { WalletUTXOState } from 'app/main/store/main.state';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { AddressService } from '../shared/address.service';
 import { WalletUTXOStateModel, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { ValidatedAddress, SendTransaction, SendTypeToEstimateResponse } from './send.models';
+import { SendTransaction, SendTypeToEstimateResponse } from './send.models';
+import { ValidatedAddress } from '../shared/address.models';
 import { CoreErrorModel } from 'app/core/core.models';
-import { AddressService } from '../shared/address.service';
 
 
 @Injectable()
@@ -36,11 +37,6 @@ export class SendService {
   }
 
 
-  validateAddress(address: string): Observable<ValidatedAddress> {
-    return this._rpc.call('validateaddress', [address]);
-  }
-
-
   sendTypeTo(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
     return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee));
   }
@@ -57,7 +53,7 @@ export class SendService {
         })
       );
     } else {
-      source = this.validateAddress(tx.targetAddress).pipe(
+      source = this._addressService.validateAddress(tx.targetAddress).pipe(
         concatMap((resp: ValidatedAddress) => {
           if ((tx.transactionType === 'send') && (tx.source === 'part') && (resp.isstealthaddress === true)) {
             tx.targetTransfer = 'anon';
