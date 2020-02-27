@@ -379,6 +379,7 @@ mat-expansion-panel.mat-expansion-panel {
       }
     }
 
+    // FIXME/TODO @allienworks: old, replace with .close-button and remove
     .small-close-button {
       position: absolute;
       right: 10px; // align with modal's content padding
@@ -404,30 +405,29 @@ mat-expansion-panel.mat-expansion-panel {
         }
       }
     }
-    .close-button {
+
+    .modal-close { // new modal close button (use with `mat-button color="warn"`
+      @extend %tfx;
       position: absolute;
-      right: 0;
-      top: 0;
+      right: 16px; // align with modal's content padding
+      top: 20px;
       z-index: 10;
-      padding: 25px 38px;
-      background: transparent;
-      color: var(--text-muted);
-      min-width: 50px;
-      outline: none;
-      cursor: pointer;
+      color: var(--bg-muted) !important;
+      min-width: 36px;
+      padding: 0;
+      border-radius: 50%;
+      overflow: hidden;
       .mat-icon {
-        color: hsla(var(--color-alert-hsl), 0.5);
-        border-radius: 50%;
-        font-size: 24px;
+        font-size: 16px;
         line-height: 1.4;
         margin: 0;
       }
-      &:hover {
-        .mat-icon {
-          color: var(--color-alert);
-        }
+      &:hover,
+      &:focus {
+        color: var(--color-alert) !important;
       }
     }
+
   }
 }
 

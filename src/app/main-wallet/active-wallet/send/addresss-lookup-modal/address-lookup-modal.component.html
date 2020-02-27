@@ -1,5 +1,5 @@
 <div mat-dialog-title class="title">Address lookup</div>
-<button class="small-close-button pull-right" mat-dialog-close>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
 </button>
 
@@ -29,7 +29,8 @@
   <mat-list class="list-data">
     <ng-container *ngFor="let address of displayedAddresses;trackBy:displayedAddressTrackFn">
       <mat-divider></mat-divider>
-      <mat-list-item class="address-entry" [ngClass]="address.type" (click)="onSelectAddress(address)">
+      <!-- TODO @dev: make this accessible via keyboard (on Enter and Space press) -->
+      <mat-list-item class="address-entry" [ngClass]="address.type" (click)="onSelectAddress(address)" tabindex="0">
         <div fxFlex="1 1 300px" class="label">{{ address.label }}</div>
         <div fxFlex="1 1 400px" class="address">{{ address.address }}</div>
         <div fxFlex="0 0 80px" class="text-right"><span class="type">{{ address.type }}</span></div>

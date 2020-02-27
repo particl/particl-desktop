@@ -30,7 +30,9 @@
     font-family: var(--font);
     padding: 0 8px !important;
     width: calc(100% - 16px) !important;
-    &:hover {
+    &:hover,
+    &:focus {
+      outline: none;
       .address {
         font-weight: 500;
       }
