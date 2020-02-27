@@ -12,14 +12,12 @@ import { ActiveWalletBaseComponent } from './base/active-wallet-base.component';
 import { OverviewComponent } from './overview/overview.component';
 import { BalancesHeaderComponent } from './overview/balances-header/balances-header.component';
 import { StakingInfoWidgetComponent } from './overview/widgets/staking-info-widget/staking-info-widget.component';
-
 import { SendComponent } from './send/send.component';
 import { ReceiveComponent } from './receive/receive.component';
 import { AddressBookComponent } from './addressbook/addressbook.component';
 import { WalletHistoryComponent } from './history/history.component';
 import { WalletSettingsComponent } from './settings/settings.component';
 import { TransactionsTableComponent } from './transaction-table/transaction-table.component';
-
 import { WalletBackupModalComponent } from './settings/wallet-backup-modal/wallet-backup-modal.component';
 import { DetailAddressComponent } from './shared/detail-address/detail-address.component';
 import { ReceiveHistoryComponent } from './receive/receive-history/receive-history.component';
@@ -33,6 +31,7 @@ import { SendConfirmationModalComponent } from './send/send-confirmation-modal/s
 import { ColdstakeWidgetComponent } from './overview/widgets/coldstake/coldstake-widget.component';
 import { DisableColdstakingConfirmationModalComponent } from './overview/widgets/coldstake/disable-coldstaking-confirmation-modal/disable-coldstaking-confirmation-modal.component';
 import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-modal/coldstake-modal.component';
+import { ZapColdstakingModalComponent } from './overview/widgets/coldstake/zap-coldstaking-modal/zap-coldstaking-modal.component';
 
 
 @NgModule({
@@ -66,7 +65,8 @@ import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-
     AddressLookupModalComponent,
     ColdstakeWidgetComponent,
     ColdStakeModalComponent,
-    DisableColdstakingConfirmationModalComponent
+    DisableColdstakingConfirmationModalComponent,
+    ZapColdstakingModalComponent
   ],
   entryComponents: [
     WalletBackupModalComponent,
@@ -77,6 +77,7 @@ import { ColdStakeModalComponent } from './overview/widgets/coldstake/coldstake-
     AddressDetailModalComponent,
     AddressLookupModalComponent,
     DisableColdstakingConfirmationModalComponent,
+    ZapColdstakingModalComponent,
     ColdStakeModalComponent,
   ],
   providers: [

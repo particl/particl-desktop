@@ -23,7 +23,10 @@ export class ColdStakeModalComponent {
     private _dialogRef: MatDialogRef<ColdStakeModalComponent>,
     private _addressValidator: ValidAddressValidator,
   ) {
-    this.addressField = new FormControl('', Validators.required, this._addressValidator.validate.bind(this._addressValidator));
+    this.addressField = new FormControl('',
+      [Validators.required, Validators.minLength(15)],
+      // this._addressValidator.validate.bind(this._addressValidator)
+    );
   }
 
   activate() {

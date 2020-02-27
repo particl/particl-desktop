@@ -56,3 +56,11 @@ export interface RpcColdStakingEnabled {
 export interface RpcColdStakingDisabled {
   changeaddress: 'cleared';
 }
+
+
+export interface ZapInformation {
+  utxos: Array<{tx: string, n: number}>;
+  scriptHex: string;
+  utxoAmount: number;
+  fee: number;
+}

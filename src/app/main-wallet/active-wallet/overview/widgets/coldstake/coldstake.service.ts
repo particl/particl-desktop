@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
-import { Observable, of, forkJoin, throwError, iif } from 'rxjs';
+import { Observable, of, forkJoin, throwError, iif, defer } from 'rxjs';
 import { catchError, map, concatMap, mergeMap } from 'rxjs/operators';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AddressService } from 'app/main-wallet/active-wallet/shared/address.service';
@@ -12,7 +12,8 @@ import {
   ZapDetailUTXOModel,
   RpcSendTypeToZap,
   RpcColdStakingEnabled,
-  RpcColdStakingDisabled
+  RpcColdStakingDisabled,
+  ZapInformation
 } from './coldstake.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { PublicUTXO } from 'app/main/store/main.models';
@@ -57,6 +58,23 @@ export class ColdstakeService {
           throwError('FAILED_CHANGEADDRESS')
         );
       }),
+    );
+  }
+
+
+  fetchZapInformation(): Observable<ZapInformation> {
+    return this.getZapDetails().pipe(
+      concatMap((result: ZapDetailsModel) => this.buildScriptHex(result).pipe(
+        concatMap((scriptHex: string) => {
+          const utxos = result.utxos.map(utxo => utxo.inputs);
+          const action$ = defer(() => this.zapTransaction(scriptHex, result.value, utxos, true).pipe(
+            map((sendTypeResult: RpcSendTypeToZap) => {
+              return {utxos, scriptHex, utxoAmount: result.value, fee: +sendTypeResult.fee || 0}
+            })
+          ));
+          return iif(() => scriptHex.length > 0, action$, throwError('INVALID_SCRIPT'));
+        })
+      ))
     );
   }
 
@@ -115,7 +133,7 @@ export class ColdstakeService {
   }
 
 
-  getZapDetails(): Observable<ZapDetailsModel> {
+  private getZapDetails(): Observable<ZapDetailsModel> {
     const pkey$: Observable<string> = this._rpc.call('walletsettings', ['changeaddress']).pipe(
       catchError(() => of({})),
       map((response: RpcWalletSettingsChangeAddress) => {
@@ -155,7 +173,7 @@ export class ColdstakeService {
       });
     }
 
-    const unspent$: Observable<ZapDetailsModel> = this._rpc.call('listunspent').pipe(
+    const unspent$: Observable<ZapDetailsModel> = this._store.selectOnce(WalletUTXOState.getValue('public')).pipe(
       catchError(() => of([])),
       map((unspent: RpcUnspentTx[]) => {
         const amount: PartoshiAmount = new PartoshiAmount(0);

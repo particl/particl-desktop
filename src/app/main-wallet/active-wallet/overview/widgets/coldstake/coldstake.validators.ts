@@ -15,7 +15,7 @@ export class ValidAddressValidator implements AsyncValidator {
   constructor(private _addressService: AddressService) {}
 
   validate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
-    if (!ctrl.value || ctrl.value.length < 15 || !this.addressHelper.testAddress(ctrl.value, 'public')) {
+    if (!ctrl.value || ctrl.value.length < 15) { // || !this.addressHelper.testAddress(ctrl.value, 'public')) {
       // fail early if necessary to prevent unnecessary expensive rpc call
       return of({validAddress: false});
     }
