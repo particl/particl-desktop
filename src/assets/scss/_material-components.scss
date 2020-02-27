@@ -634,10 +634,6 @@ mat-expansion-panel.mat-expansion-panel {
     .mat-form-field-infix {
       padding: var(--field-boxed-paddingV) 0;
     }
-    .mat-select-arrow-wrapper {
-      position: relative;
-      top: 7px;
-    }
 
     &.--larger {
       font-size: 15px;
@@ -647,6 +643,10 @@ mat-expansion-panel.mat-expansion-panel {
           position: relative;
           top: 1px;
         }
+      }
+      .mat-select-arrow-wrapper {
+        position: relative;
+        top: 9px;
       }
     }
 
