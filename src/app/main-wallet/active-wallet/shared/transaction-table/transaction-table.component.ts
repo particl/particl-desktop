@@ -13,7 +13,7 @@ import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { FilterTransactionOptionsModel, FilteredTransaction, AddressType, TxTransferType } from './transaction-table.models';
-import * as zmqOptions from '../../../../../modules/zmq/services.js';
+import * as zmqOptions from '../../../../../../modules/zmq/services.js';
 
 
 enum TextContent {
