@@ -25,7 +25,6 @@ function properAddressValidator(regex: RegExp): ValidatorFn {
 
 
 @Component({
-  selector: 'app-new-address-modal',
   templateUrl: './new-addressbook-entry-modal.component.html',
   styleUrls: ['./new-addressbook-entry-modal.component.scss'],
   providers: [NotOwnAddressValidator],

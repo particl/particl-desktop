@@ -9,7 +9,6 @@ import { termsObj } from 'app/startup/terms/terms-txt';
 // import { AppStateModel, APP_MODE } from 'app/core/store/app.models';
 
 @Component({
-  selector: 'app-loading',
   encapsulation: ViewEncapsulation.None,
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss']

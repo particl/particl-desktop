@@ -10,7 +10,6 @@ import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 
 @Component({
-  selector: 'app-terms',
   templateUrl: './terms.component.html',
   styleUrls: ['./terms.component.scss']
 })

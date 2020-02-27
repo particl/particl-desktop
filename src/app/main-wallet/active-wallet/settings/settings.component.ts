@@ -22,7 +22,6 @@ import { WalletDetailActions } from 'app/main/store/main.actions';
 
 
 @Component({
-  selector: 'main-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })

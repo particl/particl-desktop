@@ -12,7 +12,6 @@ interface SendConfirmationModalTemplateInputs {
 
 
 @Component({
-  selector: 'app-send-confirmation-modal',
   templateUrl: './send-confirmation-modal.component.html',
   styleUrls: ['./send-confirmation-modal.component.scss']
 })

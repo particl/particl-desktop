@@ -20,7 +20,6 @@ enum TextContent {
 
 
 @Component({
-  selector: 'app-delete-confirmation-modal',
   templateUrl: './delete-address-confirmation-modal.component.html',
   styleUrls: ['./delete-address-confirmation-modal.component.scss']
 })

@@ -13,7 +13,6 @@ interface AddressDetailModalTemplateInputs {
 
 
 @Component({
-  selector: 'app-qr-code-modal',
   templateUrl: './address-detail-modal.component.html',
   styleUrls: ['./address-detail-modal.component.scss']
 })

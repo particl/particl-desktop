@@ -20,7 +20,6 @@ import { ApplicationState } from 'app/core/store/app.state';
 
 
 @Component({
-  selector: 'main-settings',
   templateUrl: './global-settings.component.html',
   styleUrls: ['./global-settings.component.scss']
 })

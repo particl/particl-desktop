@@ -23,7 +23,6 @@ import { APP_MODE } from 'app/core/store/app.models';
 
 
 @Component({
-  selector: 'main-console-modal',
   templateUrl: './console-modal.component.html',
   styleUrls: ['./console-modal.component.scss']
 })
