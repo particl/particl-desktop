@@ -6,7 +6,7 @@
     animation: 1s ease infinite loading-pulse;
   }
   &.transactions {
-    $items: 6;
+    $items: 7;
     max-width: none;
     .item {
       box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
