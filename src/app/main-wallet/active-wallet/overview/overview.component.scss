@@ -3,10 +3,7 @@
 
 .overview { // area with widgets
   display: flex;
-  padding: 0 35px 50px;
-  @include break(l) {
-    padding: 10px 50px 50px;
-  }
+  padding: 0 var(--paddingH) var(--paddingV);
 }
 
 .overview-content {
@@ -17,14 +14,9 @@
 .overview-sidebar {
   flex: 0 0 245px;
   @include break(l) {
-    flex: 0 0 320px;
+    flex: 0 0 300px;
   }
   @include break(hd) {
-    flex: 0 0 370px;
+    flex: 0 0 350px;
   }
-}
-
-.action-buttons {
-  text-align: right;
-  margin: 24px 0 48px;
 }

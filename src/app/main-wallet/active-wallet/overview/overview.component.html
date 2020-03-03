@@ -2,10 +2,9 @@
 
 <div class="overview">
   <div class="overview-content">
+
     <div class="recent-transactions section">
-      <header>
-        <div class="subtitle">Recent Transactions</div>
-      </header>
+      <div class="subtitle">Recent Transactions</div>
       <transaction-table [showPagination]="false" [count]="7">
       </transaction-table>
     </div><!-- .recent-transactions -->
@@ -14,7 +13,9 @@
 
 
   <div class="overview-sidebar">
+
     <widget-coldstake></widget-coldstake>
     <widget-stakinginfo></widget-stakinginfo>
-  </div>
+
+  </div><!-- .overview-sidebar -->
 </div>

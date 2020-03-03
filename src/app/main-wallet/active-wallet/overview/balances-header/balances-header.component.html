@@ -2,10 +2,9 @@
     <div class="balance-item" *ngFor="let balance of verticalBalances; trackBy: trackByFn">
       <div class="balance">
         <span class="number big">{{ balance.amountWhole }}</span><!--
-      --><span class="point big" >{{ balance.amountSep }}</span><!--
+      --><span class="point small" >{{ balance.amountSep }}</span><!--
       --><span class="number small">{{ balance.amountFraction }}</span>
-
-        <p class="description">{{ balance.label }}</p>
+        <div class="description">{{ balance.label }}</div>
       </div>
     </div>
 
