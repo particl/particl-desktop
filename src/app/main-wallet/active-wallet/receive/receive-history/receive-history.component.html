@@ -2,11 +2,11 @@
   <button mat-button class="small" (click)="isVisible.setValue(!isVisible.value)">
     <ng-container *ngIf="isVisible.value">
       <mat-icon fontSet="partIcon" fontIcon="part-triangle-up"></mat-icon>
-      Hide older addresses
+      Hide used addresses
     </ng-container>
     <ng-container *ngIf="!isVisible.value">
       <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
-      Show older addresses
+      Show used addresses
     </ng-container>
   </button>
 </div>
@@ -16,11 +16,22 @@
 
 <div #scroll class="previous-addresses container-block" *ngIf="isVisible.value">
 
+  <app-page-intro [childPageAlias]="'receive'">
+    <ng-container page-title>Your used addresses</ng-container>
+    <ng-container page-content>
+      These are your previously used addresses.<br>
+      It is recommended not to reuse your old addresses.
+    </ng-container>
+    <ng-container page-help>
+      To increase your privacy, you should use a new address for each transaction.
+    </ng-container>
+  </app-page-intro>
+
   <!-- Sorting, filtering -->
   <div class="filter">
 
     <div class="section search-sorting">
-      <div class="subtitle">Search addresses</div>
+      <h2 class="section-title">Search addresses</h2>
       <mat-form-field class="icon-input --boxed" appearance="fill">
         <input matInput type="text" [formControl]="searchQuery"
               placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
@@ -28,7 +39,7 @@
         <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
       </mat-form-field>
 
-      <p class="widget-help">
+      <p class="help-text">
         These are your previously used addresses. It is recommended not to reuse your old addresses &ndash; to increase your privacy, you should use a new address for each transaction.
       </p>
     </div><!-- .search-sorting -->
@@ -51,7 +62,7 @@
       </div>
 
       <div class="list-data" *ngIf="filteredAddresses.length > 0">
-        <div class="subtitle">Used addresses</div>
+        <h2 class="section-title">Used addresses</h2>
         <ng-container *ngFor="let address of filteredAddresses; trackBy: trackByAddressFn">
 
           <mat-card class="address-info">

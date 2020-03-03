@@ -1,22 +1,21 @@
 @import './src/assets/_config'; // import shared colors etc.
 @import 'widgets/shared/shared.scss';
 
+
 .overview { // area with widgets
   display: flex;
-  padding: 0 var(--paddingH) var(--paddingV);
-}
-
-.overview-content {
-  flex: 1 1 100%;
-  margin-right: 40px;
-}
-
-.overview-sidebar {
-  flex: 0 0 245px;
-  @include break(l) {
-    flex: 0 0 300px;
+  .content {
+    flex: 1 1 100%;
+    margin-right: 40px;
   }
-  @include break(hd) {
-    flex: 0 0 350px;
+  
+  .sidebar {
+    flex: 0 0 245px;
+    @include break(l) {
+      flex: 0 0 300px;
+    }
+    @include break(hd) {
+      flex: 0 0 350px;
+    }
   }
 }

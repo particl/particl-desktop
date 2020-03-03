@@ -15,9 +15,14 @@
   }
 }
 
-.subtitle {
-  @extend %subtitle;
+// Tweak page-intro so it fits in this unusual position
+app-page-intro {
+  padding: var(--paddingV) var(--paddingH) 0;
+  border-top: 1px dashed var(--bg-muted);
+  display: block;
+  margin: 0 calc(-1 * var(--paddingH));
 }
+
 
 .filter {
   position: sticky;

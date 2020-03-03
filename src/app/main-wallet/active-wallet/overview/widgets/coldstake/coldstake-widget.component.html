@@ -1,34 +1,7 @@
-<div class="cold-staking section">
-  <header>
-    <div class="subtitle">Cold Staking</div>
-  </header>
+<h2 class="section-title">Cold Staking</h2>
 
-  <ng-container *ngTemplateOutlet="(walletName | async) === null ? disabled : enabled"></ng-container>
-
-</div><!-- .cold-staking -->
-
-
-<!-- =============== DISABLED =============== -->
-
-<ng-template #disabled>
-
-  <mat-expansion-panel class="coldstaking --inactive no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="dot"></div>
-      <div class="text">
-        <div class="title">Inactive</div>
-        <div class="status">Wallet currently unavailable</div>
-      </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <p class="help-text">
-        <!-- FIXME: write proper help text! -->
-        Sorry, Cold staking setup isn't possible while your wallet is unavailable.
-      </p>
-    </div>
-  </mat-expansion-panel><!-- .coldstaking -->
-
-</ng-template>
+<ng-container *ngTemplateOutlet="(walletName | async) === null ? disabled : enabled">
+</ng-container>
 
 
 <!-- =============== ENABLED & ACTIVE =============== -->

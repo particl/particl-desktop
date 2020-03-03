@@ -11,32 +11,35 @@
     </ng-container>
   </app-page-intro>
 
+
   <div class="filter">
 
-    <button mat-raised-button color="primary" [disabled]="isLoading" (click)="addNewAddress()" class="full-width"
-            matTooltip="Save new address to your Address book" matTooltipPosition="above">
-      <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
-      Add new address
-    </button>
+    <div class="buttons">
+      <button mat-raised-button color="primary" [disabled]="isLoading" (click)="addNewAddress()" class="full-width"
+              matTooltip="Save new address to your Address book" matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        Add new address
+      </button>
+    </div><!-- .buttons -->
 
-    <div class="section search-sorting">
-      <div class="subtitle">Search</div>
-      <mat-form-field class="icon-input --boxed" appearance="fill">
-        <input matInput type="text" [formControl]="searchQuery"
-              placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-        <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-        <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
-      </mat-form-field>
+    <h2 class="section-title">Search</h2>
 
-      <div class="subtitle">Filter by type</div>
-      <mat-form-field class="filter-type --boxed" appearance="fill">
-        <mat-select placeholder="All types" name="type" (selectionChange)="filterQuery.setValue($event.value)" value="all">
-          <mat-option *ngFor="let filter of tableFilters;trackBy:trackByFiltersFn" [value]="filter.value">
-            {{ filter.text }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div><!-- .search-sorting -->
+    <mat-form-field class="icon-input --boxed" appearance="fill">
+      <input matInput type="text" [formControl]="searchQuery"
+            placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+      <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+    </mat-form-field>
+
+    <h2 class="section-title">Filter by type</h2>
+
+    <mat-form-field class="filter-type --boxed" appearance="fill">
+      <mat-select placeholder="All types" name="type" (selectionChange)="filterQuery.setValue($event.value)" value="all">
+        <mat-option *ngFor="let filter of tableFilters;trackBy:trackByFiltersFn" [value]="filter.value">
+          {{ filter.text }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
   </div><!-- .filter -->
 

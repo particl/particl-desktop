@@ -35,8 +35,8 @@ export class WalletSettingsComponent implements OnInit {
 
   readonly pageDetails: PageInfo = {
     title: 'Wallet Settings',
-    description: 'Adjust settings and configuration that apply to the currently selected wallet',
-    help: ''
+    description: 'Adjust settings and configuration that apply only to the currently selected wallet',
+    help: 'For configuration of global app settings, click the settings icon in bottom right corner'
   } as PageInfo;
 
   private _currentGroupIdx: number = 0;
@@ -301,7 +301,7 @@ export class WalletSettingsComponent implements OnInit {
     const walletSettings: WalletSettingsStateModel = this._store.selectSnapshot(WalletSettingsState);
 
     const notificationsWallet = {
-      name: 'Wallet Notifications',
+      name: 'System notifications',
       icon: 'part-notification-bell',
       settings: [],
       errors: []
@@ -335,7 +335,7 @@ export class WalletSettingsComponent implements OnInit {
 
 
     const dangerZone = {
-      name: 'Danger Zone',
+      name: 'Danger zone',
       icon: 'part-alert',
       settings: [],
       errors: []

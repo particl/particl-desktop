@@ -2,27 +2,22 @@
 
 // ------ UI ------ //
 
-.subtitle {
-  @extend %subtitle;
-  &:first-of-type {
-    margin-top: 0;
-  }
-}
-
 hr.divider {
-  margin: 24px -24px;
+  margin: 16px -24px;
   border: 0;
-  border-bottom: 1px solid $bg-shadow;
+  border-bottom: 1px solid var(--bg-muted);
 }
 
 // ------ LAYOUT ------ //
-
+/*
 .tab-bar {
   left: $multiwallet-width;
 }
+*/
 
 
 .mat-card {
+  padding: 16px 24px;
   margin-bottom: 16px;
   .section {
     & > .title {
@@ -67,14 +62,13 @@ hr.divider {
 .option { // main description of setting option
   @extend %box-title;
   margin: 0 0 3px;
-  font-weight: 500;
   text-transform: none;
   line-height: 1.5;
   .tag {
-    border: 1px solid rgba($text-muted, 0.65);
+    border: 1px solid hsla(var(--text-muted-hsl), 0.65);
     border-radius: 4px;
     font-size: 0.6rem;
-    color: $text-muted;
+    color: var(--text-muted);
     font-weight: 500;
     text-transform: uppercase;
     display: inline-block;
@@ -108,7 +102,7 @@ mat-slider {
   margin: 2px 0 4px;
   &.error {
     .mat-icon {
-      color: $color-alert;
+      color: var(--color-alert);
     }
   }
   .mat-icon {
@@ -120,5 +114,5 @@ mat-slider {
 
 
 .switcher-option.warning {
-  background-color: $color-alert;
+  background-color: var(--color-alert);
 }
