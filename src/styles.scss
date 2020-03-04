@@ -30,7 +30,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.7. Tree browser
       3.8. Tables
     4. Typography
-      4.1. Page subtitles
+      4.1. (Sub)titles (h2, h3..)
       4.2. Paragraph styles
     5. Plug-ins
       5.1. Charts
@@ -159,7 +159,8 @@ body {
       cursor: pointer;
       background: var(--color-white);
       border-top: 1px solid var(--bg-muted);
-      padding: 0 12px 0 4px;
+      padding: 3px 8px;
+      font-size: 14px;
       line-height: 40px;
       font-weight: 500;
       .mat-icon {
@@ -364,19 +365,26 @@ h1 {
 }
 
 
-// ------ 4.1. PAGE SUBTITLES ------ //
+// ------ 4.1. (SUB)TITLES ------ //
 
-.mat-list { // 'H2' subtitles in pages (e.g. '(un)used addresses' in Receive
-  &.list-data {
-    .mat-subheader {
-      @extend %subtitle;
-      height: auto;
-      margin: 10px 0 25px !important;
-      &.first {
-        margin-top: -10px !important;
-      }
-    }
+// Grey-ish all-caps "H2" headers, usually above boxes/cards
+.section-title {
+  font-size: 14px;
+  font-family: var(--font);
+  font-weight: normal;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin: 32px 0 16px;
+  &:first-of-type {
+    margin-top: 0;
   }
+}
+
+// Bolder, all-caps "H3" headers, usually inside boxes/cards
+.box-title {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 13px;
 }
 
 

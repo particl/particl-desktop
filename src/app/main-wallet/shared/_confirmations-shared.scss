@@ -5,19 +5,11 @@
 }
 
 
-// ------ UI ------ //
-
-.title {
-  @extend %box-title;
-  margin: 6px 0;
-}
-
-
 // ------ LAYOUT ------ //
 
 .dialog-content {
-  width: 25rem;
-  padding: 20px 15px 10px;
+  width: 28rem;
+  padding: 10px 16px;
   text-align: center;
   p.info,
   p.warning {
@@ -27,66 +19,87 @@
 
 .tx-info { // info about public/blind/anon TX
   .icon {
-    font-size: 32px;
-    color: $color;
+    font-size: 28px;
+    color: var(--color-primary);
   }
-  .help-text {
-    margin: 5px auto 20px;
+  .title { // title of event (public TX, you're buying etc.)
+    @extend %box-title;
+    font-size: 15px;
+    margin: 10px 0;
+  }
+  .desc {
+    @extend %help-text;
+    margin: 0 auto 25px;
     max-width: 20rem;
   }
 }
 
 .tx-amount {
-  & > .big {
+  @extend %enable-select;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  /*
+  .icon {
+    margin-right: 6px;
+    position: relative;
+    top: 3px;
+  }
+  */
+  .big {
     font-size: 20px;
   }
-  & > .small {
-    font-size: 14px;
+  .point {
+    color: var(--text-muted);
   }
-  & > .point {
-    font-weight: bold;
-    margin: 0 2px;
+  .small {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-muted);
   }
-  & > .currency {
+  .currency {
     font-size: 17px;
     margin-left: 0.4rem;
   }
-  & > .fiat {
-    color: $text-muted;
+  .fiat {
+    color: var(--text-muted);
   }
 }
 
-.icon.arrow {
-  font-size: 18px;
+.arrow-icon {
+  font-size: 20px;
   margin: 24px 0;
-  color: mix($text-muted, $bg-shadow);
+  color: hsla(var(--text-muted-hsl), 0.5);
 }
 
 .receiver-info {
   & > .label {
-    font-weight: bold;
-    font-size: 16px;
+    font-weight: 500;
+    font-size: 18px;
     margin-bottom: 8px;
-    padding: 0 10px;
+    padding: 0 24px;
   }
   & > .address {
+    @extend %enable-select;
     display: inline-block;
-    max-width: 270px;
-    padding: 3px 8px;
-    background: $bg;
-    border-radius: 4px;
-    color: mix($text, $text-muted);
-    font-size: 13px;
+    max-width: 310px;
+    padding: 5px 10px;
+    background: hsla(var(--color-primary-hsl), 0.04);
+    border-radius: var(--radius);
+    color: var(--color-primary);
+    font-size: 15px;
     line-height: 1.4;
     white-space: normal;
     word-wrap: break-word;
+    &.blind,
+    &.private {
+      color: var(--color-secondary);
+      background: hsla(var(--color-secondary-hsl), 0.04);
+    }
   }
 }
 
 .fee-info {
-  // FIXME: switch to: @extend %help-text;
-  color: $text-muted;
-  font-size: 12px;
+  @extend %help-text;
   margin: 30px 0 0;
   & > .amount {
     margin: 0 0 0 10px;

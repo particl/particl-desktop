@@ -1,28 +1,7 @@
 @import './src/assets/_config'; // import shared colors etc.
-/*
-  Values shared among widgets
-*/
 
-.section { // overview section titles
-  header {
-    .subtitle {
-      @extend %subtitle;
-    }
-  }
-}
 
-/*
-  Shared among widgets
-*/
-
-span.point {
-  color: $color;
-}
-
-mat-card.multiple {
-  margin-bottom: 20px;
-}
-
+// FIXME @Allienworks: are these still nedeed?
 .list { // overview of listings/orders
   .total {
     .value {
@@ -39,8 +18,8 @@ mat-card.multiple {
       display: inline-block;
       width: 30px;
       margin-right: 12px;
-      background: $bg-shadow;
-      border-radius: $radius;
+      background: var(--bg-muted);
+      border-radius: var(--radius);
       text-align: center;
       font-weight: 600;
     }
@@ -48,10 +27,10 @@ mat-card.multiple {
   .desc {
     display: inline-block;
     text-transform: uppercase;
-    color: $text-muted;
+    color: var(--text-muted);
   }
   &.listings { // specifics for listings overview
-    border-right: 1px solid $bg-shadow;
+    border-right: 1px solid var(--bg-muted);
     padding-right: 32px;
     margin-right: 32px;
   }

@@ -31,9 +31,9 @@ export class GlobalSettingsComponent implements OnInit {
   currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
 
   readonly pageDetails: PageInfo = {
-    title: 'Wallet Settings',
-    description: 'Adjust settings and configuration that apply to the currently selected wallet',
-    help: ''
+    title: 'Particl Desktop Settings',
+    description: 'Adjust settings and configuration that apply to the whole Particl Desktop app',
+    help: 'For configuration of separate wallets, open the specific wallet and go to Wallet Settings page'
   } as PageInfo;
 
   private _currentGroupIdx: number = 0;
@@ -296,8 +296,8 @@ export class GlobalSettingsComponent implements OnInit {
     const globalSettings = this._store.selectSnapshot(ApplicationState.appSettings);
 
     const userInterface = {
-      name: 'User Interface',
-      icon: 'part-notification-bell',
+      name: 'User interface',
+      icon: 'part-select',
       settings: [],
       errors: []
     } as SettingGroup;
@@ -324,7 +324,7 @@ export class GlobalSettingsComponent implements OnInit {
 
     const coreNetConfig = {
       name: 'Core network connection',
-      icon: 'part-alert',
+      icon: 'part-globe',
       settings: [],
       errors: []
     } as SettingGroup;
@@ -355,8 +355,8 @@ export class GlobalSettingsComponent implements OnInit {
     } as Setting);
 
     const marketplaceConfig = {
-      name: 'App Startup Options',
-      icon: '',
+      name: 'App startup',
+      icon: 'part-rocket',
       settings: [],
       errors: []
     } as SettingGroup;

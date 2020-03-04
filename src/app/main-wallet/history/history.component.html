@@ -15,27 +15,25 @@
 
   <div class="filter">
 
-    <div class="section search-sorting">
-      <div class="subtitle first">Sorting</div>
-      <mat-form-field class="sort-by --boxed" appearance="fill">
-        <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
-          <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
-            {{ sorting.title }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
+    <h2 class="section-title">Sorting</h2>
 
-    <div class="section filter-by-type">
-      <div class="subtitle">Filter by type</div>
-      <mat-card class="filter-card">
-        <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.type" (change)="filter()">
-          <mat-radio-button class="filter-option" *ngFor="let type of types" value="{{ type.value }}" color="primary">
-            {{ type.title }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </mat-card>
-    </div>
+    <mat-form-field class="sort-by --boxed" appearance="fill">
+      <mat-select placeholder="Sort results" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+        <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+          {{ sorting.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <h2 class="section-title">Filter by type</h2>
+
+    <mat-card class="filter-card">
+      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.type" (change)="filter()">
+        <mat-radio-button class="filter-option" *ngFor="let type of types" value="{{ type.value }}" color="primary">
+          {{ type.title }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
 
     <button mat-button class="clear-filters" (click)="clear()">
       <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>

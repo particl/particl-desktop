@@ -1,6 +1,6 @@
 <div mat-dialog-title>Confirm transaction</div>
-<button class="small-close-button pull-right" mat-dialog-close>
-  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
@@ -10,46 +10,48 @@
     <div class="tx-info">
       <!-- if public -->
       <div class="public" *ngIf="txType === 'part'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-public"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-public"></mat-icon>
         <div class="title">Public transaction</div>
-        <p class="widget-help">
+        <p class="desc">
           Sender, Receiver & transaction amount will be publicly visible on the blockchain
         </p>
       </div>
       <!-- if blind / anon-->
       <div class="blind" *ngIf="txType === 'blind'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-blind"></mat-icon>
         <div class="title">Blind transaction</div>
-        <p class="widget-help">
+        <p class="desc">
           Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
         </p>
       </div>
       <div class="anon" *ngIf="txType === 'anon'">
-        <mat-icon class="icon public" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-anon"></mat-icon>
         <div class="title">Anon transaction</div>
-        <p class="widget-help">
+        <p class="desc">
           Sender, Receiver & transaction amount will be hidden on the blockchain for highest privacy
         </p>
       </div>
-    </div>
+    </div><!-- .tx-info -->
 
     <div class="tx-amount">
+      <!--img src="./assets/images/coins/PART.svg" alt="PART" class="icon"-->
       <span class="big">{{ requestedWhole }}</span>
-      <span *ngIf="requestedFraction.length > 0">
+      <ng-container *ngIf="requestedFraction.length > 0">
         <span class="point">.</span>
         <span class="small">{{ requestedFraction }}</span>&ensp;
-      </span>
+      </ng-container>
       <span class="currency">PART</span>
     </div>
 
-    <mat-icon class="icon arrow" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
+    <mat-icon class="arrow-icon" fontSet="partIcon" fontIcon="part-arrow-down"></mat-icon>
 
     <div class="receiver-info">
       <div class="label" *ngIf="receiverName !== ''">{{ receiverName }}</div>
-      <div class="label" *ngIf="!targetAddress">Balance Transfer</div>
-      <code class="address"> {{ targetAddress }} </code>
+      <div class="label" *ngIf="!targetAddress">Converting balance</div>
+      <code class="address" *ngIf="targetAddress" [ngClass]="txType">{{ targetAddress }}</code>
     </div>
 
+    <!-- FIXME @dev: this applies only for Exchange, no? -->
     <p class="widget-help" *ngIf="isSubtractingFee">
       The transaction fee will be subtracted from the amount requested.
     </p>
@@ -68,7 +70,7 @@
     <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary" mat-dialog-close (click)="confirm()">
+  <button mat-raised-button color="primary" [ngClass]="txType" mat-dialog-close (click)="confirm()">
     <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
     Confirm &amp; Send
   </button>

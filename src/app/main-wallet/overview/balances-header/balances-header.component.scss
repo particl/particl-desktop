@@ -3,26 +3,25 @@
 
 .balance-overview {
   display: flex;
-  padding: 20px 35px;
-  @include break(l) {
-    padding: 24px 50px;
-  }
+  padding: 20px var(--paddingH);
   .balance-item {
-    border-right: 1px solid $bg-shadow;
-    margin-right: 3%;
+    border-right: 1px solid var(--bg-muted);
+    margin-right: 2.5%;
     flex: 1 1 250px;
   }
   table.balances {
+    @extend %enable-select;
     flex: 1 0 200px;
     th {
-      @extend %lighter;
+      color: var(--text-muted);
       font-weight: 400;
       text-align: left;
       line-height: 1.35;
     }
     td {
-      text-align: right;
+      font-family: var(--font-mono);
       font-weight: 500;
+      text-align: right;
     }
   }
 }
@@ -31,25 +30,26 @@
 .balance {
   @extend %enable-select;
   display: inline-block;
-  padding-top: 12px;
-  & > .point {
-    color: $color;
-    margin: 0 2px;
+  padding-top: 14px;
+  @include break(l) {
+    padding-top: 10px;
   }
   & > .big {
     font-size: 22px;
     @include break(l) {
-      font-size: 28px;
+      font-size: 26px;
     }
   }
   & > .small {
-    font-size: 11px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
     @include break(l) {
       font-size: 15px;
     }
   }
   & > .description {
-    @extend %lighter;
+    color: var(--text-muted);
     text-transform: uppercase;
     margin-top: 6px;
   }
@@ -58,7 +58,7 @@
   &.horizontal {
     padding: 0;
     small {
-      @extend %lighter;
+      color: var(--text-muted);
       font-weight: 400;
     }
   }

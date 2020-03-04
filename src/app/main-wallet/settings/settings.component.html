@@ -10,7 +10,6 @@
   </app-page-intro>
 
   <ng-container *ngTemplateOutlet="content"></ng-container>
-
 </div>
 
 
@@ -18,7 +17,7 @@
 
   <div class="container" fxLayout="row" fxLayoutGap="30px">
 
-    <div class="sidebar" fxFlex="250px">
+    <div class="sidebar" fxFlex="270px">
 
       <div class="radio-switcher">
         <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
@@ -36,7 +35,7 @@
     <div class="row" fxFlex="100%">
       <div class="third">
         <ng-container *ngIf="currentGroup.settings.length > 0">
-          <h2 class="subtitle"> {{ currentGroup.name }} </h2>
+          <h2 class="section-title"> {{ currentGroup.name }} </h2>
           <mat-card>
             <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
               <div class="item" [ngSwitch]="setting.type">
@@ -141,7 +140,7 @@
             </ng-container>
           </mat-card>
         </ng-container>
-      </div>
+      </div><!-- .third -->
     </div><!-- .row -->
   </div><!-- .container -->
 

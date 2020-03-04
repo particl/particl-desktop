@@ -2,12 +2,14 @@
 
 // ------ FILTER ------ //
 
-.section {
-  .subtitle { // title
-    @extend %subtitle;
-    margin: 36px 0 14px;
-    &.first {
-      margin-top: 0;
+.filter {
+  .buttons { // main call-to-action buttons above filter
+    margin-bottom: 32px;
+    button {
+      margin-bottom: 8px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
   }
 }
@@ -15,21 +17,6 @@
 .filter-card {
   padding: 0;
   margin-bottom: 16px;
-
-  // search & sorting
-  .search-sorting & {
-    padding: 10px 20px;
-    .filter-input {
-      width: 100%;
-    }
-    .icon-input {
-      .mat-icon {
-        top: 5px;
-        right: 2px;
-        font-size: 14px;
-      }
-    }
-  }
 
   // checkboxes
   .checkbox {

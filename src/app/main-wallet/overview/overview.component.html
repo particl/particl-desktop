@@ -1,20 +1,15 @@
 <balances-list></balances-list>
 
-<div class="overview">
-  <div class="overview-content">
-    <div class="recent-transactions section">
-      <header>
-        <div class="subtitle">Recent Transactions</div>
-      </header>
-      <transaction-table [showPagination]="false" [count]="6">
-      </transaction-table>
-    </div><!-- .recent-transactions -->
+<div class="overview container-block">
 
-  </div><!-- .overview-content -->
+  <div class="content">
+    <h2 class="section-title">Recent Transactions</h2>
+    <transaction-table [showPagination]="false" [count]="7"></transaction-table>
+  </div><!-- .content -->
 
-
-  <div class="overview-sidebar">
+  <div class="sidebar">
     <widget-coldstake></widget-coldstake>
     <widget-stakinginfo></widget-stakinginfo>
-  </div>
+  </div><!-- .sidebar -->
+
 </div>

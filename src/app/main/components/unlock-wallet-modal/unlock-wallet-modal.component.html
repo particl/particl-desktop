@@ -1,34 +1,39 @@
 <div mat-dialog-title class="title">Unlock your wallet</div>
 
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+</button>
+
+
 <mat-dialog-content class="modal-content">
   <p class="lead">
-    Please enter your password to unlock the wallet:
+    Please enter your password to unlock the wallet
   </p>
 
   <div class="enter-password" [@.disabled]="disableAnimation">
 
-    <mat-form-field>
-      <input matInput name="password"
-              id="password"
+    <mat-form-field class="password-field --plain --larger" appearance="fill">
+      <input matInput name="password" id="password"
               [type]="showPass ? 'text' : 'password'"
               [appFocusTimeout]="true"
               [(ngModel)]="password"
               placeholder="Enter your password" />
+      <button mat-button matSuffix class="small"
+              (click)="showPass = !showPass"
+              [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
+              [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+        <mat-icon fontSet="partIcon" [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+      </button>
     </mat-form-field>
 
-    <span class="show-password">
-      <mat-checkbox type="checkbox" name="showpass" value="password" [(ngModel)]="showPass" tabindex="-1">Show password</mat-checkbox>
-    </span>
-
     <mat-expansion-panel class="additional-options" [expanded]="false">
+
       <mat-expansion-panel-header>
-        <mat-panel-title>
-          Additional unlock options
-        </mat-panel-title>
+        Additional unlock options
       </mat-expansion-panel-header>
 
       <div class="unlock-timeout">
-        <strong>Unlock for</strong>
+        <strong>Unlock duration</strong>
         <input  name="customTimeout"
                 class="duration-input"
                 [disabled]="!timeoutIsEditable || unlockForStaking"
@@ -44,7 +49,7 @@
         <mat-checkbox type="checkbox" name="stakeonly" value="stakeonly" [(ngModel)]="unlockForStaking">
           <strong>Unlock for Staking only</strong>
         </mat-checkbox>
-        <p class="widget-help">
+        <p class="help-text">
           Unlock indefinitely for staking only &ndash; for spending your coins, you would need to do a full unlock
         </p>
       </span>
@@ -55,12 +60,7 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
-
-  <button type="button" mat-button mat-dialog-close>
-    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-    Cancel
-  </button>
+<mat-dialog-actions fxLayoutAlign="end center">
 
   <button color="warn" mat-raised-button appDebounceClick (debounceClick)="unlock()" [disabled]="(password.length === 0) || isProcessing">
     <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
