@@ -23,7 +23,7 @@
       <div class="radio-switcher">
         <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
           <input type="radio" name="option" (change)="changeSelectedGroup(groupIdx)">
-          <div class="switcher-option" *ngIf="group.settings.length > 0" [class.warning]="group.errors.length">
+          <div class="switcher-option" *ngIf="group.settings.length > 0" [class.--with-error]="group.errors.length">
             <mat-icon class="icon" fontSet="partIcon" [fontIcon]="group.icon"></mat-icon>
             <span class="name">{{ group.name }}</span>
           </div>
@@ -36,10 +36,12 @@
     <div class="row" fxFlex="100%">
       <div class="third">
         <ng-container *ngIf="currentGroup.settings.length > 0">
-          <h2 class="subtitle"> {{ currentGroup.name }} </h2>
+          <h2 class="section-title"> {{ currentGroup.name }} </h2>
           <mat-card>
             <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
-              <div class="item" [ngSwitch]="setting.type">
+              <div class="item" [ngSwitch]="setting.type" [ngClass]="setting.errorMsg ? '--with-error' : ''">
+
+                <!-- ========= BOOLEAN ========= -->
 
                 <ng-container *ngSwitchCase="settingType.BOOLEAN">
                   <mat-checkbox
@@ -58,6 +60,8 @@
                   <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
 
+                <!-- ========= NUMBER ========= -->
+
                 <ng-container *ngSwitchCase="settingType.NUMBER">
                   <h4 class="option">
                     {{ setting.title }}
@@ -65,6 +69,7 @@
                     <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
                   </h4>
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                   <mat-form-field floatLabel="never">
                     <input matInput type="number" *ngIf="!setting.limits"
                       [disabled]="setting.isDisabled"
@@ -78,8 +83,9 @@
                       [(ngModel)]="setting.newValue"
                       (change)="settingChangedValue(settingIdx)">
                   </mat-form-field>
-                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
+
+                <!-- ========= STRING ========= -->
 
                 <ng-container *ngSwitchCase="settingType.STRING">
                   <h4 class="option">
@@ -88,15 +94,17 @@
                     <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
                   </h4>
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                  <mat-form-field class="full-width">
+                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+                  <mat-form-field class="full-width --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
                     <input matInput
                       [placeholder]="setting.limits?.placeholder"
                       [disabled]="setting.isDisabled"
                       [(ngModel)]="setting.newValue"
                       (change)="settingChangedValue(settingIdx)">
                   </mat-form-field>
-                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
+
+                <!-- ========= SELECT ========= -->
 
                 <ng-container *ngSwitchCase="settingType.SELECT">
                   <h4 class="option">
@@ -105,6 +113,7 @@
                     <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
                   </h4>
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                   <mat-form-field>
                     <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
                       <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
@@ -112,8 +121,9 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
+
+                <!-- ========= BUTTON ========= -->
 
                 <ng-container *ngSwitchCase="settingType.BUTTON">
                   <h4 class="option">
@@ -122,6 +132,7 @@
                     <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
                   </h4>
                   <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
+                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                   <p class="buttons">
                     <button mat-raised-button
                       color="{{ setting.limits ? setting.limits.color || 'primary' : 'primary' }}"
@@ -133,7 +144,6 @@
                     {{ setting.title }}
                     </button>
                   </p>
-                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                 </ng-container>
               </div>
 
