@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { termsObj } from 'app/startup/terms/terms-txt';
-// import { AppStateModel, APP_MODE } from 'app/core/store/app.models';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -55,30 +54,10 @@ export class LoadingComponent implements OnInit, OnDestroy {
     }
 
     this._router.navigate(['/main/extra/help']);
-
-    // const mode = this._store.selectSnapshot(state => (<AppStateModel>state.global).appMode);
-    // switch (mode) {
-    //   case APP_MODE.MARKET:
-    //     this.goToMarket();
-    //     break;
-    //   default:
-    //     this.goToWallet();
-    // }
   }
 
   private goToTerms() {
     this.log.d('Going to terms');
     this._router.navigate(['loading', 'terms']);
   }
-
-  // private goToMarket() {
-  //   this.log.d('Going to terms');
-  //   this._router.navigate(['/main/market']);
-  // }
-
-  // private goToWallet() {
-  //   this.log.d('Going to terms');
-  //   this._router.navigate(['/main/wallet']);
-  // }
-
 }

@@ -8,6 +8,15 @@ import { RpcGetWalletInfo, RpcGetColdStakingInfo, PublicUTXO, BlindUTXO, AnonUTX
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 
 
+interface IWalletModel {
+  name: string;
+}
+
+interface IWalletCollectionModel {
+  wallets: IWalletModel[]
+}
+
+
 @Injectable()
 export class WalletInfoService {
 
@@ -56,6 +65,13 @@ export class WalletInfoService {
     return this._rpc.call('getcoldstakinginfo').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
       catchError(error => of({}))
+    )
+  }
+
+
+  getWalletList(): Observable<IWalletCollectionModel> {
+    return this._rpc.call('listwalletdir').pipe(
+      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2}))
     )
   }
 

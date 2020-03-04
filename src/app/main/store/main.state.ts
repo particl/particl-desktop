@@ -29,7 +29,7 @@ const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
 const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo');
 const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletStakingStateModel>('walletstakinginfo');
 const WALLET_UTXOS_TOKEN = new StateToken<WalletUTXOStateModel>('walletutxos');
-const WALLET_SETTINGS_STATE_TOKEN = new StateToken<WalletUTXOStateModel>('walletsettings');
+const WALLET_SETTINGS_STATE_TOKEN = new StateToken<WalletSettingsStateModel>('walletsettings');
 
 
 
@@ -255,8 +255,10 @@ export class WalletUTXOState {
 
         const resultKeys = Object.keys(result);
         for (const resKey of resultKeys) {
-          if ((resKey in currentState) && (result[resKey].length > 0)) {
-            if (
+          if (resKey in currentState) {
+            if (!result[resKey].length) {
+              updatedValues[resKey] = [];
+            } else if (
               (currentState[resKey].length !== result[resKey].length) ||
               (xorWith((val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)).length > 0)
             ) {

@@ -70,6 +70,8 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit() {
+    // @TODO zaSmilingIdiot 2020-02-28 -> is this really still necessary,
+    //    particularly now that we have paste functionality on the Mac via the inclusion of the shortcut keys in Electron?
     // Paste Event Handle: using rxjs's fromEvent instead of HostListener
     // Prevents Angular change detection running for each event (whether the event handled or not) when using HostListener
     fromEvent(document, 'keydown').pipe(
