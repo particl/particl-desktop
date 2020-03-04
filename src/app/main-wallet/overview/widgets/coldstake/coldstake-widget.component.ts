@@ -41,7 +41,6 @@ enum TextContent {
 })
 export class ColdstakeWidgetComponent implements OnDestroy {
 
-  @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
   @Select(WalletStakingState.getValue('cold_staking_enabled')) isActivated: Observable<boolean>;
 
   isUnlocked: boolean = false;

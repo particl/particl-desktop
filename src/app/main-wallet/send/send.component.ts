@@ -236,6 +236,10 @@ export class SendComponent implements OnInit, OnDestroy {
     return this.tabs[this.selectedTab.value].type;
   }
 
+  get canBeProcessing(): boolean {
+    return this.isProcessing;
+  }
+
 
   ngOnDestroy() {
     this.destroy$.next();

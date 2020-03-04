@@ -118,7 +118,7 @@ export class NewAddressbookEntryModalComponent implements OnInit {
   }
 
 
-  pasteAddress(event: any) {
+  pasteAddress() {
     this.addressInput.nativeElement.focus();
     document.execCommand('paste');
   }

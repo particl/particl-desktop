@@ -27,7 +27,7 @@
         <mat-hint class="error" *ngIf="address.pending">
           Validating...
         </mat-hint>
-        <mat-hint class="error"  *ngIf="address.invalid && (address.dirty || address.touched)" class="error">
+        <mat-hint class="error" *ngIf="address.invalid && (address.dirty || address.touched)">
           <ng-container *ngIf="address.errors?.required">
             Address is required
           </ng-container>
@@ -52,7 +52,7 @@
         placeholder="Address label (e.g. owner's name)"
         required
       >
-      <mat-hint class="error"  *ngIf="label.invalid && (label.dirty || label.touched)" class="error">
+      <mat-hint class="error" *ngIf="label.invalid && (label.dirty || label.touched)">
           A label is required
       </mat-hint>
     </mat-form-field>

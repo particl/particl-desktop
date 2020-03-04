@@ -105,7 +105,7 @@
           <span class="amount" *ngIf="!txn.requires_unlock"
                 [ngClass]="{'positive': (+txn.amount) > 0, 'negative': (+txn.amount) < 0 }">
             <span class="big number">{{ txn.amountWhole }}</span><!-- inline element comment hack
-            --><span class="point">{{ txn.amountFraction.length > 0 ? '.' : '' }}</span><!--
+            --><span class="point" *ngIf="txn.amountFraction.length > 0">{{ '.' }}</span><!--
             --><small class="small number">{{ txn.amountFraction }}</small>
             <!--span class="currency">PART</span-->
           </span>
