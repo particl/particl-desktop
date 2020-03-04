@@ -5,32 +5,17 @@
 
 .modal-content {
   width: 32rem;
+  .modal-highlight {
+    padding: 6px 24px 24px;
+  }
 }
 
-// darker field with input & warning
-.enter-password {
-  background: var(--bg);
-  padding: 6px 24px 24px;
-  margin: 24px -24px 8px;
-  border-top: 1px dashed var(--bg-muted);
-  border-bottom: 1px dashed var(--bg-muted);
-
-  // boxed password input
-  .password-field {
-    margin: 0;
-  }
-
-  p.warning {
-    margin: 0 -24px;
-  }
-
-  // show/hide password button
-  button[matSuffix] {
+.password-field {
+  button[matSuffix] { // show/hide password button
     padding: 8px 12px;
     margin-right: -12px;
     .mat-icon {
       margin: 0;
     }
   }
-
 }

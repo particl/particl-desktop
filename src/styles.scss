@@ -356,6 +356,27 @@ table {
 }
 
 
+// ------ 3.9. MODALS ------ //
+
+.modal-content {
+  // darker bg for highlighting inputs (e.g. encrypt, unlock wallet, coldstaking setup..)
+  .modal-highlight {
+    background: var(--bg);
+    padding: 24px;
+    margin: 24px -24px 8px;
+    border-top: 1px dashed var(--bg-muted);
+    border-bottom: 1px dashed var(--bg-muted);
+    p.message { // warning/info messages above the input
+      margin: 0 -24px;
+    }
+    .mat-form-field {
+      margin: 0;
+    }
+  }
+
+}
+
+
 /* ------------------------------- *\
     4. TYPOGRAPHY
 \* ------------------------------- */
@@ -392,12 +413,12 @@ h1 {
 
 p {
   line-height: 1.5;
+  // Highlighted 'lead' paragraphs
+  &.lead {
+    font-size: 15px;
+  }
 }
 
-// Highlighted 'lead' paragraphs
-.lead {
-  font-size: 15px;
-}
 
 // Help descriptions
 .widget-help {
@@ -406,6 +427,47 @@ p {
   margin-bottom: 25px;
 }
 
+// NEW warning & info messages
+p.message {
+  font-weight: 500;
+  background: var(--bg);
+  padding: 16px 24px 16px 52px;
+  position: relative;
+  .mat-dialog-content & {
+    margin: 24px -24px;
+  }
+  &::before {
+    font-family: 'part';
+    font-size: 1.4em;
+    line-height: 0;
+    position: absolute;
+    top: 25px;
+    left: 24px;
+    margin-right: 8px;
+  }
+  // Info messages
+  &.--info {
+    &::before {
+      content: '\ea19'; // part-info icon
+      color: var(--color-info);
+    }
+    a {
+      color: var(--color-info);
+    }
+  }
+  // Warning messages
+  &.--warning {
+    &::before {
+      content: '\ea02'; // part-alert icon
+      color: var(--color-alert);
+    }
+    a {
+      color: var(--color-alert);
+    }
+  }
+}
+
+// TODO @Allien: replace and remove:
 // Warning & Info messages
 p.warning,
 p.info {
