@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Subject, fromEvent, merge } from 'rxjs';
-import { map, filter, tap, takeUntil, auditTime, debounceTime } from 'rxjs/operators';
+import { map, filter, tap, takeUntil, auditTime } from 'rxjs/operators';
 import { Log } from 'ng2-logger';
 import { Store, Actions, ofActionDispatched, ofActionCompleted } from '@ngxs/store';
 import { MainActions } from '../store/main.actions';
@@ -54,7 +54,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
       walletChanger$,
       walletInit$
     ).pipe(
-      debounceTime(1000),
+      auditTime(1000),
       takeUntil(this.unsubscribe$)
     ).subscribe(
       () => {
