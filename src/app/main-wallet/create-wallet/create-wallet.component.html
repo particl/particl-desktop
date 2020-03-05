@@ -1,13 +1,6 @@
 <div class="installer">
 
-  <div class="mini-sidebar"></div>
-
-  <div class="sidebar">
-    <div class="logo">
-      <img src="./assets/particl-logo{{ (isTestnet | async) ? '-testnet' : ''}}.svg" alt="Particl">
-    </div>
-
-    <mat-divider></mat-divider>
+  <wallet-menu-actions>
 
     <div class="progress">
       <div class="step first" [ngClass]="{'active': currentStep === Step.START, 'done': currentStep > Step.START}">
@@ -35,7 +28,7 @@
         <div class="desc">Summary</div>
       </div>
     </div>
-  </div>
+  </wallet-menu-actions>
 
   <div class="content">
     <mat-toolbar class="header-main">

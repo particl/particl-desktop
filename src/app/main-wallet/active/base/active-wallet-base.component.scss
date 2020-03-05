@@ -1,0 +1,45 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ MENU ITEM (Single) ------ //
+
+a.menu-item {
+  @extend %tfx;
+  display: block;
+  padding: 13px 20px;
+  text-decoration: none;
+  text-transform: uppercase;
+  outline: none;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &.active {
+    .icon { // highlight active menu item
+      color: $color !important;
+    }
+  }
+  .icon {
+    @extend %tfx;
+    margin: 0 16px 0 0;
+    color: lighten($bg-black, 15%);
+  }
+  .text {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: $color-white;
+  }
+  .tag { // order notifications
+    @extend %tfx;
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    opacity: 0.6;
+  }
+  &:hover,
+  &:focus {
+    background: darken($bg-black, 2.25%);
+    .icon {
+      color: lighten($bg-black, 30%);
+    }
+  }
+}

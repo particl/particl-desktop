@@ -11,6 +11,7 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
 import { DetailAddressComponent } from './detail-address/detail-address.component';
 import { AddressDetailModalComponent } from './address-detail-modal/address-detail-modal.component';
 import { SignVerifyAddressModalComponent } from './sign-verify-address-modal/sign-verify-address-modal.component';
+import { WalletMenuActionsComponent } from './wallet-menu-actions/wallet-menu-actions.component';
 
 
 @NgModule({
@@ -25,13 +26,15 @@ import { SignVerifyAddressModalComponent } from './sign-verify-address-modal/sig
     TransactionsTableComponent,
     DetailAddressComponent,
     AddressDetailModalComponent,
-    SignVerifyAddressModalComponent
+    SignVerifyAddressModalComponent,
+    WalletMenuActionsComponent,
   ],
   exports: [
     TransactionsTableComponent,
     DetailAddressComponent,
     AddressDetailModalComponent,
-    SignVerifyAddressModalComponent
+    SignVerifyAddressModalComponent,
+    WalletMenuActionsComponent
   ],
   entryComponents: [
     AddressDetailModalComponent,

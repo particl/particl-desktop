@@ -11,8 +11,7 @@ import { Log } from 'ng2-logger';
 
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil, concatMap, catchError, take, mapTo, map } from 'rxjs/operators';
-import { Select, Store } from '@ngxs/store';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { Store } from '@ngxs/store';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { WalletInfoStateModel } from 'app/main/store/main.models';
 import { CoreErrorModel } from 'app/core/core.models';
@@ -80,8 +79,6 @@ const RESTORE_STEPS: Step[] = [
   providers: [CreateWalletService]
 })
 export class CreateWalletComponent implements OnInit, OnDestroy {
-
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
 
   Step: typeof Step = Step; // so we can use it in HTML
 
@@ -217,7 +214,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
 
   navigateToActiveWallet(): void {
-    this._router.navigate(['/main/wallet/overview']);
+    this._router.navigate(['/main/wallet/active/overview']);
   }
 
 

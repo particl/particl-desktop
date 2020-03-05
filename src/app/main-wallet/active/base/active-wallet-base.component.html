@@ -1,0 +1,12 @@
+<wallet-menu-actions>
+  <ng-container *ngFor="let menuItem of menu">
+    <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+      <ng-container *ngIf="menuItem.icon.length > 0">
+        <mat-icon class="icon" fontSet="partIcon" [fontIcon]="menuItem.icon"></mat-icon>
+      </ng-container>
+      <span class="text">{{menuItem.text}}</span>
+    </a>
+  </ng-container>
+</wallet-menu-actions>
+
+<router-outlet></router-outlet>

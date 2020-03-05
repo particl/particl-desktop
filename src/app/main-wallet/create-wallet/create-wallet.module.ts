@@ -6,6 +6,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { CreateWalletComponent } from './create-wallet.component';
 import { WordsListComponent } from './words-list/words-list.component';
+import { WalletSharedModule } from '../shared/wallet-shared.module';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
     CommonModule,
     CoreUiModule,
     ClipboardModule,
+    WalletSharedModule,
     RouterModule.forChild(routes)
   ],
   exports: [

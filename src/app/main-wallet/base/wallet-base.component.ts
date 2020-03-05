@@ -10,7 +10,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
 import { MainActions } from 'app/main/store/main.actions';
-import { IWallet, IMenuItem } from './wallet-base.models';
+import { IWallet } from './wallet-base.models';
 import { WalletUTXOStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 
@@ -29,15 +29,6 @@ enum TextContent {
   styleUrls: ['./wallet-base.component.scss']
 })
 export class WalletBaseComponent implements OnInit, OnDestroy {
-
-  readonly menu: IMenuItem[] = [
-    {text: 'Overview', path: 'overview', icon: 'part-overview'},
-    {text: 'Send / Convert', path: 'send', icon: 'part-send'},
-    {text: 'Receive', path: 'receive', icon: 'part-receive'},
-    {text: 'History', path: 'history', icon: 'part-date'},
-    {text: 'Address Book', path: 'addressbook', icon: 'part-people'},
-    {text: 'Wallet Settings', path: 'settings', icon: 'part-tool'}
-  ];
 
   isLoadingWallets: boolean = false;
   otherWallets: IWallet[] = [];
@@ -106,7 +97,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       finalize(() => this._dialog.closeAll())
     ).subscribe(
       () => {
-        this._router.navigate(['/main/wallet/overview'], { queryParams: { date: new Date() }});
+        this._router.navigate(['/main/wallet/active/overview'], { queryParams: { date: new Date() }});
         const activatedWallet = this._store.selectSnapshot(WalletInfoState.getValue('walletname'));
         if (activatedWallet === wallet.name) {
           this._snackbar.open(TextContent.WALLET_ACTIVATE_SUCCESS, 'success');

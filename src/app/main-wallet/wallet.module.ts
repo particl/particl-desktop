@@ -15,14 +15,9 @@ const routes: Routes = [
     path: '',
     component: WalletBaseComponent,
     children: [
-      { path: 'overview', loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule) },
-      { path: 'send', loadChildren: () => import('./send/send.module').then(m => m.SendModule) },
-      { path: 'receive', loadChildren: () => import('./receive/receive.module').then(m => m.ReceiveModule) },
-      { path: 'addressbook', loadChildren: () => import('./addressbook/addressbook.module').then(m => m.AddressBookModule) },
-      { path: 'history', loadChildren: () => import('./history/history.module').then(m => m.HistoryModule) },
-      { path: 'settings', loadChildren: () => import('./settings/settings.module').then(m => m.WalletSettingsModule) },
+      { path: 'active', loadChildren: () => import('./active/active-wallet.module').then(m => m.ActiveWalletModule) },
       { path: 'create', loadChildren: () => import('./create-wallet/create-wallet.module').then(m => m.CreateWalletModule) },
-      { path: '**', redirectTo: 'overview' }
+      { path: '**', redirectTo: 'active' },
     ]
   }
 ];
