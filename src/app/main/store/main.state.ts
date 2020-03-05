@@ -115,8 +115,6 @@ export class WalletInfoState {
   @Action(MainActions.Initialize)
   onMainInitialized(ctx: StateContext<WalletInfoStateModel>) {
     // Set the initial wallet info state, with the current wallet obtained from core.
-    ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE)));
-
     return this.updateWalletInfo(ctx);
   }
 
@@ -141,19 +139,15 @@ export class WalletInfoState {
     return this._walletService.getWalletInfo().pipe(
       tap((info: RpcGetWalletInfo) => {
         if ( (typeof info === 'object')) {
-          const newState = {};
-          const currCtx = ctx.getState();
-          const keys = Object.keys(currCtx);
+          const newState = JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE));
+          const keys = Object.keys(newState);
 
           for (const key of keys) {
-            if ((key in info) && (typeof currCtx[key] === typeof info[key]) && (currCtx[key] !== info[key])) {
+            if ((key in info) && (newState[key] !== info[key])) {
               newState[key] = info[key];
             }
           }
-
-          if (Object.keys(newState).length > 0) {
-            ctx.patchState(info);
-          }
+          ctx.patchState(newState);
         }
       }),
 

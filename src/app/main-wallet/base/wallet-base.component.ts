@@ -11,7 +11,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
 import { MainActions } from 'app/main/store/main.actions';
 import { IWallet } from './wallet-base.models';
-import { WalletUTXOStateModel } from 'app/main/store/main.models';
+import { WalletUTXOStateModel, WalletInfoStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 
 
@@ -97,9 +97,20 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       finalize(() => this._dialog.closeAll())
     ).subscribe(
       () => {
-        this._router.navigate(['/main/wallet/active/overview'], { queryParams: { date: new Date() }});
-        const activatedWallet = this._store.selectSnapshot(WalletInfoState.getValue('walletname'));
-        if (activatedWallet === wallet.name) {
+        const walletData: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
+
+        // Hacky solution to ensure that a change in the wallet selection redirects to the create/restore wallet component
+        //  -> Yes, the canActivate, etc route guards exist, but do not work when switching wallets to a component
+        //     that is currently rendered.
+        let targetRoute = '/main/wallet/active/overview';
+
+        if ((walletData.walletname === null) || !walletData.hdseedid) {
+          targetRoute = '/main/wallet/create';
+        }
+
+        this._router.navigate([targetRoute]);
+
+        if (walletData.walletname === wallet.name) {
           this._snackbar.open(TextContent.WALLET_ACTIVATE_SUCCESS, 'success');
         } else {
           this._snackbar.open(TextContent.WALLET_ACTIVATE_ERROR, 'err');

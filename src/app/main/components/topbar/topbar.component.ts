@@ -13,7 +13,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
   public title: string = '';
 
-  private unsubscribe$: Subject<any> = new Subject();
+  private destroy$: Subject<any> = new Subject();
 
   constructor(
     private _router: Router,
@@ -34,7 +34,8 @@ export class TopbarComponent implements OnInit, OnDestroy {
         return route;
       }),
       filter(route => route.outlet === 'primary'),
-      flatMap(route => route.data)
+      flatMap(route => route.data),
+      takeUntil(this.destroy$)
     ).subscribe(
       (data) => {
         this.title = data['title'] || '';
@@ -44,7 +45,7 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

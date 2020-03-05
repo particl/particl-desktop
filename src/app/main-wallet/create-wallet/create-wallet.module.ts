@@ -7,10 +7,13 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { CreateWalletComponent } from './create-wallet.component';
 import { WordsListComponent } from './words-list/words-list.component';
 import { WalletSharedModule } from '../shared/wallet-shared.module';
+import { NewWalletGuard } from './wallet-new.guard';
 
 
 const routes: Routes = [
   {
+    canActivate: [NewWalletGuard],
+    canActivateChild: [NewWalletGuard],
     path: '', component: CreateWalletComponent
   }
 ];
@@ -30,6 +33,9 @@ const routes: Routes = [
   declarations: [
     CreateWalletComponent,
     WordsListComponent
+  ],
+  providers: [
+    NewWalletGuard
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

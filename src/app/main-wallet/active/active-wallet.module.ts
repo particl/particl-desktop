@@ -4,12 +4,15 @@ import { CommonModule } from '@angular/common';
 
 import { ActiveWalletBaseComponent } from './base/active-wallet-base.component';
 import { WalletSharedModule } from '../shared/wallet-shared.module';
+import { ActiveWalletGuard } from './wallet-active.guard';
 
 
 const routes: Routes = [
   {
     path: '',
     component: ActiveWalletBaseComponent,
+    canActivate: [ActiveWalletGuard],
+    canActivateChild: [ActiveWalletGuard],
     children: [
       { path: 'overview', loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule) },
       { path: 'send', loadChildren: () => import('./send/send.module').then(m => m.SendModule) },
@@ -34,6 +37,9 @@ const routes: Routes = [
   ],
   declarations: [
     ActiveWalletBaseComponent
+  ],
+  providers: [
+    ActiveWalletGuard
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -8,6 +8,7 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
 
 import { WalletBaseComponent } from './base/wallet-base.component';
 import { WalletLoadingPlaceholderComponent } from './base/wallet-loading-placeholder/wallet-loading-placeholder.component';
+import { WalletGuardService } from './wallet-guard-service';
 
 
 const routes: Routes = [
@@ -38,6 +39,9 @@ const routes: Routes = [
   declarations: [
     WalletBaseComponent,
     WalletLoadingPlaceholderComponent,
+  ],
+  providers: [
+    WalletGuardService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
