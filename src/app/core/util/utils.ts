@@ -10,7 +10,7 @@ export class PartoshiAmount {
   private amount: string = '0';
 
   constructor(amount: number) {
-    const num = Math.floor(amount);
+    const num = Math.round(amount);
     this.amount = this.isValid(+num) ? `${num}` : this.amount;
   }
 
@@ -168,7 +168,7 @@ export class Duration {
     return 'unknown'
   }
 
-  }
+}
 
 export class AddressHelper {
   addressPublicRegex: RegExp = /^[pPrR25][a-km-zA-HJ-NP-Z1-9]{25,52}$/;
