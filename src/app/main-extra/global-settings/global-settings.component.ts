@@ -344,9 +344,10 @@ export class GlobalSettingsComponent implements OnInit {
     coreNetConfig.settings.push({
       id: 'core.network.proxy',
       title: 'Connect via Proxy',
-      description: 'Directs core to connect via a socks5 proxy. Example value would be: 127.0.0.1:9050',
+      description: 'Directs core to connect via a SOCKS5 proxy.',
       isDisabled: false,
       type: SettingType.STRING,
+      limits: {placeholder: 'e.g. 127.0.0.1:9050 for Tor'},
       errorMsg: '',
       currentValue: globalSettings.proxy,
       tags: [],

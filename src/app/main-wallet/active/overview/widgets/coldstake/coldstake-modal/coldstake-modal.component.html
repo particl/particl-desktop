@@ -1,19 +1,34 @@
 <div mat-dialog-title class="title">Cold staking setup</div>
 
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+</button>
+
+
 <mat-dialog-content class="modal-content">
-  <p>
-    To activate, generate cold staking public key on your staking node and enter it below
+
+  <p class="lead">
+    To activate Cold staking, enter the&nbsp;public key of&nbsp;your staking node (or&nbsp;a&nbsp;Pool)&nbsp;below
   </p>
-  <p class="info">
-    Read more about
-    <a href="https://particl.wiki/learn/staking" target="_blank" matTooltip="Particl.wiki > Staking" tabindex="-1">(Cold) Staking</a> and check <a href="https://particl.wiki/tutorial/staking/start" target="_blank" matTooltip="Particl.wiki > Staking Tutorials" tabindex="-1">Cold staking tutorials</a> on Particl Wiki
+  <p class="help-text">
+    Cold staking delegates staking of&nbsp;your coins to&nbsp;other node (like your own Raspberri Pi/Rock64 or&nbsp;a&nbsp;public staking pool) while increasing security of&nbsp;your coins, as&nbsp;staking nodes cannot spend them.
   </p>
 
-  <mat-form-field class="cold-stake-address">
-    <input matInput [formControl]="addressField" placeholder="Enter the public key" required />
-  </mat-form-field>
+  <div class="modal-highlight">
+
+    <p class="message --info">
+      Read more about
+      <a href="https://particl.wiki/learn/staking" target="_blank" matTooltip="Particl.wiki > Staking" tabindex="-1">Particl Staking</a> and check <a href="https://particl.wiki/tutorial/staking/cold-staking#get-staking-public-key" target="_blank" matTooltip="Particl.wiki > Cold staking" tabindex="-1">Getting staking public key</a> on&nbsp;Particl Wiki
+    </p>
+    
+    <mat-form-field class="pubkey --plain --larger" appearance="fill">
+      <input matInput [formControl]="addressField" placeholder="Enter staking node's public key" required />
+    </mat-form-field>
+    
+  </div><!-- .modal-highlight -->
 
 </mat-dialog-content>
+
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <button type="button" mat-button mat-dialog-close>

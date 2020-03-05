@@ -6,6 +6,12 @@
   margin: 0 !important;
 }
 
+.modal-content {
+  .modal-highlight {
+    padding: 24px 24px 0;
+  }
+}
+
 
 // ------ UI ------ //
 
@@ -16,19 +22,7 @@ strong {
 
 // ------ LAYOUT ------ //
 
-// darker field with input & warning
-.enter-password {
-  background: var(--bg);
-  padding: 24px 24px 0;
-  margin: 24px -24px 8px;
-  border-top: 1px dashed var(--bg-muted);
-  border-bottom: 1px dashed var(--bg-muted);
-
-  // boxed password input
-  .password-field {
-    margin: 0;
-  }
-
+.password-field {
   // show/hide password button
   button[matSuffix] {
     padding: 8px 12px;
@@ -38,43 +32,43 @@ strong {
     }
   }
 
-  // toggle for more unlock options
-  .additional-options {
-    margin: 0 -24px !important;
-    border-radius: 0;
-    box-shadow: none !important;
-    background: var(--bg);
-    .mat-expansion-panel-header {
-      max-height: 48px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      &.cdk-keyboard-focused {
-        color: var(--text);
-      }
-    }
-  
-    // customize unlock duration
-    .unlock-timeout {
-      margin: 8px 0 16px;
-      .duration-input {
-        width: 50px;
-        padding: 0 0 0 8px;
-        margin: 0 8px;
-        border-radius: var(--radius);
-        border: 1px solid var(--bg-muted);
-        line-height: 2.2;
-      }
-    }
-  
-    // unlock for staking only
-    .stake-only {
-      .help-text {
-        margin: 4px 0 0 24px;
-        max-width: 390px;
-      }
-    }
-  
-  } // << .additional-options
-
 }
+
+// toggle for more unlock options
+.additional-options {
+  margin: 0 -24px !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  background: var(--bg);
+  .mat-expansion-panel-header {
+    max-height: 48px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    &.cdk-keyboard-focused {
+      color: var(--text);
+    }
+  }
+
+  // customize unlock duration
+  .unlock-timeout {
+    margin: 8px 0 16px;
+    .duration-input {
+      width: 50px;
+      padding: 0 0 0 8px;
+      margin: 0 8px;
+      border-radius: var(--radius);
+      border: 1px solid var(--bg-muted);
+      line-height: 2.2;
+    }
+  }
+
+  // unlock for staking only
+  .stake-only {
+    .help-text {
+      margin: 4px 0 0 24px;
+      max-width: 390px;
+    }
+  }
+
+} // << .additional-options
