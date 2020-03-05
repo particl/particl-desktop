@@ -17,19 +17,16 @@
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
         <div class="options">
-          <!-- TODO @allien: after implementing the switcher, does keyboard focus work on the options? -->
-          <ng-container *ngIf="!isLoadingWallets"><!-- ; else loadingWallets -->
-            <a class="item" *ngFor="let wallet of otherWallets;trackBy:trackByWalletsFn" (click)="navigateToWallet(wallet)">
-              <div class="icon">{{ wallet.initial }}</div>
-              <div class="name">{{ wallet.displayName }}</div>
-              <div class="value">Switch wallet</div>
-            </a>
-            <a class="item" (click)="navigateToCreateWallet()">
-              <div class="icon">+</div>
-              <div class="name"><em>New wallet</em></div>
-              <div class="value">Click to setup&hellip;</div>
-            </a>
-          </ng-container>
+          <a class="item" *ngFor="let wallet of otherWallets;trackBy:trackByWalletsFn" (click)="navigateToWallet(wallet)" (keyup.enter)="navigateToWallet(wallet)" tabindex="0">
+            <div class="icon">{{ wallet.initial }}</div>
+            <div class="name">{{ wallet.displayName }}</div>
+            <div class="value">Switch wallet</div>
+          </a>
+          <a class="item" (click)="navigateToCreateWallet()" (keyup.enter)="navigateToCreateWallet()" tabindex="0">
+            <div class="icon">+</div>
+            <div class="name"><em>New wallet</em></div>
+            <div class="value">Click to setup&hellip;</div>
+          </a>
         </div>
       </ng-template>
     </mat-expansion-panel>
