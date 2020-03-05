@@ -32,7 +32,6 @@ const WALLET_UTXOS_TOKEN = new StateToken<WalletUTXOStateModel>('walletutxos');
 const WALLET_SETTINGS_STATE_TOKEN = new StateToken<WalletSettingsStateModel>('walletsettings');
 
 
-
 const DEFAULT_WALLET_STATE: WalletInfoStateModel = {
   walletname: null,
   walletversion: 0,
@@ -96,12 +95,10 @@ export class WalletInfoState {
   @Action(MainActions.LoadWalletData)
   loadAllWalletData(ctx: StateContext<WalletInfoStateModel>) {
     const currentCtx = ctx.getState();
-    if (currentCtx.hdseedid) {
-      return concat(
-        ctx.dispatch(new WalletDetailActions.GetColdStakingInfo()),
-        ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
-      );
-    }
+    return concat(
+      ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
+      ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())
+    );
   }
 
 

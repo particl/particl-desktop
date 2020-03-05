@@ -1,8 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ClipboardModule } from 'ngx-clipboard';
-import { QRCodeModule } from 'angularx-qrcode';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
 
@@ -29,8 +27,6 @@ const routes: Routes = [
     CommonModule,
     CoreUiModule,
     MainSharedModule,
-    ClipboardModule,
-    QRCodeModule,
     RouterModule.forChild(routes)
   ],
   exports: [

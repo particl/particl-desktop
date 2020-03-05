@@ -1,10 +1,12 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { ActiveWalletBaseComponent } from './base/active-wallet-base.component';
 import { WalletSharedModule } from '../shared/wallet-shared.module';
 import { ActiveWalletGuard } from './wallet-active.guard';
+import { MainSharedModule } from 'app/main/components/main-shared.module';
 
 
 const routes: Routes = [
@@ -29,6 +31,8 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    CoreUiModule,
+    MainSharedModule,
     WalletSharedModule,
     RouterModule.forChild(routes)
   ],
