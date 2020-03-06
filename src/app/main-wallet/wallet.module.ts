@@ -5,7 +5,6 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
 
 import { WalletBaseComponent } from './base/wallet-base.component';
-import { WalletLoadingPlaceholderComponent } from './base/wallet-loading-placeholder/wallet-loading-placeholder.component';
 import { WalletGuardService } from './wallet-guard-service';
 
 
@@ -33,8 +32,7 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    WalletBaseComponent,
-    WalletLoadingPlaceholderComponent,
+    WalletBaseComponent
   ],
   providers: [
     WalletGuardService
