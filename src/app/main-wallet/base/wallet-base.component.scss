@@ -4,53 +4,46 @@
     UI Elements
 \* ------------------------------- */
 
-
-// ------ DIVIDER ------ //
-
-.mat-divider { // section divider
-  border-bottom: 1px solid lighten($bg-black, 5%);
-  border-top: 1px solid darken($bg-black, 5%);
-}
-
-
-// ------ SECTIONS & ITEM GROUPS ------ //
-
-.sidebar-section {
-  .sidebar-item-group {
-    padding-top: 0;
-  }
-}
-
-
 // ------ INSTANCE SWITCHER (Accordion) ------ //
 
 .instance-switcher {
-  border-bottom: 1px solid darken($bg-black, 5%);
+  box-shadow: none !important;
   border-radius: 0;
-  box-shadow: 0 1px 0 lighten($bg-black, 5%) !important;
-  background: $bg-black;
-  margin: 0 0 1px !important;
+  background: var(--bg-black);
+  margin: 0 !important;
+
   // active instance + toggle
   .switcher-toggle {
     @extend %tfx;
-    font-family: $font;
-    color: lighten($text-muted, 5%);
+    font-family: var(--font);
+    color: hsla(var(--text-muted-hsl), 0.9);
     min-height: min-content;
     max-height: min-content;
     padding: 0;
     &:hover,
     &:focus,
     &.cdk-keyboard-focused {
-      background: darken($bg-black, 2.25%) !important;
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.5) !important;
+      .item {
+        background: transparent;
+        color: hsla(var(--bg-muted-hsl), 0.7);
+      }
+      &.mat-expanded {
+        background: hsla(var(--bg-sidebar-darker-hsl), 0.8) !important;
+        .item {
+          background: transparent;
+        }
+      }
     }
     .item {
       .icon {
-        background: $color;
-        color: $color-white;
-        font-weight: 600;
+        background: var(--color-primary);
+        color: var(--color-white);
+        font-weight: 500;
       }
     }
   }
+
   // shared style for 1 instance item
   .item {
     @extend %tfx;
@@ -62,8 +55,8 @@
     font-size: 13px;
     &:hover,
     &:focus {
-      background: darken($bg-black, 2.25%);
-      color: lighten($text-muted, 20%);
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.8);
+      color: hsla(var(--bg-muted-hsl), 0.7);
       outline: none;
     }
     .icon {
@@ -82,109 +75,19 @@
     }
     .name {
       font-weight: 500;
-      color: $color-white;
+      color: var(--color-white);
     }
   }
+
   // other switchable options (inactive instances)
   .options {
-    background: darken($bg-black, 2.5%);
-    color: $text-muted;
+    color: var(--text-muted);
     line-height: 1.3;
   }
+
 }
 
-
-// ------ MENU ITEM (Single) ------ //
-
-a.menu-item {
-  @extend %tfx;
-  display: block;
-  padding: 13px 20px;
-  text-decoration: none;
-  text-transform: uppercase;
-  outline: none;
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  &.active {
-    .icon { // highlight active menu item
-      color: $color !important;
-    }
-  }
-  .icon {
-    @extend %tfx;
-    margin: 0 16px 0 0;
-    color: lighten($bg-black, 15%);
-  }
-  .text {
-    font-size: 11.5px;
-    font-weight: 500;
-    color: $color-white;
-  }
-  .tag { // order notifications
-    @extend %tfx;
-    position: absolute;
-    right: 20px;
-    top: 10px;
-    opacity: 0.6;
-  }
-  &:hover,
-  &:focus {
-    background: darken($bg-black, 2.25%);
-    .icon {
-      color: lighten($bg-black, 30%);
-    }
-  }
-}
-
-
-/* ------------------------------- *\
-    LAYOUT
-\* ------------------------------- */
-
-// ------ SIDEBAR (main menu) ------ //
-
-.sidebar { // AKA .mat-sidenav
-  width: $sidebar-width;
-  background-color: $bg-black;
-  display: flex;
-  .mat-drawer-inner-container {
-    flex-direction: row;
-    align-items: stretch;
-  }
-  .sidebar-menu {
-    flex: 1 1 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .logo {
-    flex: 0 0 50px;
-    position: relative;
-    img {
-      @extend %tfx;
-      width: 130px;
-      display: block;
-      margin: 35px auto;
-    }
-  }
-
-  .menu-links {
-    flex: 1 1 100%;
-    overflow-y: auto;
-    margin-bottom: -1px;
-    &::-webkit-scrollbar-thumb {
-      background: lighten($bg-black, 20%);
-      border-radius: 4px;
-    }
-    &::-webkit-scrollbar-track {
-      background: $bg-black;
-    }
-  }
-
-  // widgets stuck to the bottom (sidebar's footer)
-  .footer {
-    flex: 1 1 10px;
-  }
+.menu-items {
+  @extend %menu-divider;
+  padding-top: 1px; // offset divider box-shadow above
 }

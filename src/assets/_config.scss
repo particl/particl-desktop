@@ -261,10 +261,9 @@ $break-xhd: 2200px;
 }
 
 %menu-divider { // diviers in sidebar menu
-  border-top: 1px solid hsl(192, 11%, 9%);
-  box-shadow: 0 1px 0 hsl(0, 0%, 20%) inset;
+  border-top: 1px solid var(--bg-sidebar-darker);
+  box-shadow: 0 1px 0 var(--bg-sidebar-lighter) inset;
 }
-
 
 // ------ 3.3. HELPER & MISC ------ //
 

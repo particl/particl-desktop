@@ -2,9 +2,7 @@
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
     <div class="sidebar-menu">
 
-      <div class="logo">
-        <img src="./assets/particl-logo{{ (testnet | async) ? '-testnet' : ''}}.svg" alt="Particl">
-      </div>
+      <img src="./assets/particl-logo{{ (testnet | async) ? '-testnet' : ''}}.svg" class="logo" alt="Particl">
 
       <mat-divider></mat-divider>
 
@@ -17,8 +15,7 @@
         <main-version></main-version>
       </footer><!-- .pin-to-bottom -->
 
-    </div>
-
+    </div><!-- .sidebar-menu -->
   </mat-sidenav><!-- .sidebar -->
 
   <ng-content></ng-content>
