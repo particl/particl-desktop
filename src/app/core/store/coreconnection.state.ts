@@ -107,7 +107,7 @@ export class CoreConnectionState {
         // @TODO: zaSmilingIdiot 2020-01-21 -> Might be better to move this into a component/service... not necessarily ideal here
         //  Also, need to get rid of this nested-subscribe anti-pattern
         ctx.dispatch([
-          new Global.SetLoadingMessage('Application ready...'),
+          new Global.SetLoadingMessage('Application ready'),
           new AppSettings.SetActiveWallet(null),
           new Global.ChangeMode(null),
         ]).subscribe(

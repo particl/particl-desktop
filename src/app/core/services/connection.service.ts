@@ -61,13 +61,13 @@ export class ConnectionService {
           this.updateStatus(status.content);
           break;
         case 'done':
-          this.updateStatus('Starting service listeners...');
+          this.updateStatus('Starting service listeners…');
           const coreConfig = (<CoreConnectionModel>status.content);
           this._ipc.removeListeners(this.DAEMON_CHANNEL);
           this._ipc.runCommand('zmq-connect', null, {zmq_port: this.zmqPort, zmq_host: coreConfig.rpcbind}).subscribe(
             (resp) => {
               if (resp) {
-                this.updateStatus('Verifying network connection...');
+                this.updateStatus('Verifying network connection…');
               }
             },
             () => {
@@ -91,10 +91,10 @@ export class ConnectionService {
 
   private update(status: any) {
     if (status.status === 'started') {
-      this.updateStatus('Downloading new Particl Core...');
+      this.updateStatus('Downloading new Particl Core…');
     } else if (status.status === 'busy') {
       const statusCalc = Math.trunc((status.transferred / status.total) * 100);
-      this.updateStatus(`Downloading a new Particl Core...  ${statusCalc.toFixed(0)}%`);
+      this.updateStatus(`Downloading new Particl Core… ${statusCalc.toFixed(0)}%`);
     } else if (status.status === 'done') {
       // TODO: Do we need to display indication to the user if an error occurred
       this.updateStatus('Download complete');

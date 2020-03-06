@@ -1,18 +1,25 @@
-<div class="loading-wrapper">
+<div class="container">
+  <div class="content">
 
-  <img class="logo" src="assets/particl-logo.svg">
+    <img class="logo" src="assets/particl-logo.svg">
 
-  <div class="loader">
-    <span>&bull;</span><span>&bull;</span><span>&bull;</span>
-  </div>
+    <blockquote class="quote">
+      <p>To hide the signal you must generate noise.</p>
+      <footer class="author">&mdash; Ido Kaiser</footer>
+    </blockquote>
+    
+  </div><!-- .content -->
 
-  <div *ngIf="loadingMessage">
-    <span><i>{{loadingMessage | async}}</i></span>
-  </div>
 
-  <blockquote class="quote">
-    <p>To hide the signal you must generate noise.</p>
-    <footer class="author">&mdash; Ido Kaiser</footer>
-  </blockquote>
+  <div class="loading-wrapper">
 
-</div>
+    <div class="loader">
+      <span>&bull;</span><span>&bull;</span><span>&bull;</span>
+    </div>
+
+    <p class="loading-status" *ngIf="loadingMessage">
+      {{loadingMessage | async}}
+    </p>
+
+  </div><!-- .loading-wrapper -->
+</div><!-- .container -->
