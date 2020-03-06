@@ -64,6 +64,7 @@
     &:focus {
       background: darken($bg-black, 2.25%);
       color: lighten($text-muted, 20%);
+      outline: none;
     }
     .icon {
       background: lighten($bg-black, 10%);
@@ -72,6 +73,7 @@
       line-height: 30px;
       font-size: 16px;
       text-align: center;
+      text-transform: uppercase;
       border-radius: 50%;
       float: left;
       margin-right: 11px;
