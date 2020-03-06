@@ -94,7 +94,6 @@ export class WalletInfoState {
 
   @Action(MainActions.LoadWalletData)
   loadAllWalletData(ctx: StateContext<WalletInfoStateModel>) {
-    const currentCtx = ctx.getState();
     return concat(
       ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
       ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())

@@ -6,11 +6,12 @@ import {
   ViewChild,
   HostListener
 } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 
 import { Observable, Subject, of } from 'rxjs';
-import { takeUntil, concatMap, catchError, take, mapTo, map } from 'rxjs/operators';
+import { takeUntil, concatMap, catchError, take, mapTo, map, finalize } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { WalletInfoStateModel } from 'app/main/store/main.models';
@@ -20,6 +21,7 @@ import { MainActions } from 'app/main/store/main.actions';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { CreateWalletService } from './create-wallet.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 
 
 enum TextContent {
@@ -36,7 +38,8 @@ enum TextContent {
   ERROR_PASSWORD_MATCH = 'Recovery passphrase needs to match!',
   ERROR_SETUP_FAILED = 'An error occurred while completing the final wallet setup!',
   ERROR_UNLOCK_WALLET = 'Please ensure the wallet is unlocked in order to continue',
-  WARNING_FAILED_ADDRESS_GENERATION = 'Please create new wallet addresses manually'
+  WARNING_FAILED_ADDRESS_GENERATION = 'Please create new wallet addresses manually',
+  SETUP_PROCESSING = 'Creating your wallet & scanning for transactions'
 }
 
 
@@ -116,7 +119,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _createService: CreateWalletService,
     private _encryptService: WalletEncryptionService,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _dialog: MatDialog
   ) {
     const walletInfo = <WalletInfoStateModel>this._store.selectSnapshot(WalletInfoState);
     if (typeof walletInfo.walletname === 'string') {
@@ -133,8 +137,13 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(
       (info: WalletInfoStateModel) => {
+        const wname = info.walletname;
+        if (wname !== this.walletName) {
+          // Oh crap... the wallet has probably been changed, better reset the wallet creation process.
+          this.walletName = wname;
+          this.reset();
+        }
         this.isEncrypted = (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted');
-        this.walletName = (typeof info.walletname === 'string') ? info.walletname : this.walletName;
       }
     );
   }
@@ -389,6 +398,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
             return true;
           })
         );
+
         this._encryptService.unlock({showStakingUnlock: false, timeoutIsEditable: true, timeout: 9999}).pipe(
           take(1),
           concatMap((unlocked) => {
@@ -396,7 +406,15 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
               this._snackbar.open(TextContent.ERROR_UNLOCK_WALLET, 'warn');
               return of(false);
             }
+
+            this._dialog.open(ProcessingModalComponent, {
+              disableClose: true,
+              data: { message: TextContent.SETUP_PROCESSING }
+            });
             return this._createService.importExtKeyGenesis(this.words, this.recoveryPass).pipe(
+              finalize(() => {
+                this._dialog.closeAll();
+              }),
               concatMap(
                 () => address$.pipe(
                   concatMap((success) => this._store.dispatch(new MainActions.RefreshWalletInfo()).pipe(mapTo(success)))
