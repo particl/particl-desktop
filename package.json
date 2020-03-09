@@ -67,7 +67,7 @@
       "resources/**",
       "!node_modules/electron/**/*",
       "!node_modules/**/sqlite3*.node",
-      "node_modules/**/electron-v1.7-*/*.node"
+      "node_modules/**/electron-v5.0-*/*.node"
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",

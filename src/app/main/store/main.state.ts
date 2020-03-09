@@ -19,7 +19,7 @@ import {
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
 import { Observable, concat } from 'rxjs';
-import { concatMap, tap } from 'rxjs/operators';
+import { concatMap, tap, mapTo } from 'rxjs/operators';
 import { xorWith } from 'lodash';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 import { SettingsService } from 'app/core/services/settings.service';
@@ -99,10 +99,11 @@ export class WalletInfoState {
       return concat(
         ctx.dispatch(new WalletDetailActions.ResetAllUTXOS()),
         ctx.dispatch(new WalletDetailActions.ResetStakingInfo())
-      )
+      );
     }
 
     return concat(
+      ctx.dispatch(new MainActions.RefreshWalletInfo()),
       ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
       ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())
     );
@@ -134,13 +135,13 @@ export class WalletInfoState {
   @Action(MainActions.RefreshWalletInfo)
   refreshWalletInfo(ctx: StateContext<WalletInfoStateModel>) {
     if (ctx.getState().walletname !== null) {
-      return this.updateWalletInfo(ctx);
+      return this.updateWalletInfo(ctx, false);
     }
   }
 
 
-  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>): Observable<void> {
-    return this._walletService.getWalletInfo().pipe(
+  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>, loadSettings: boolean = true): Observable<void> {
+    const info$ = this._walletService.getWalletInfo().pipe(
       tap((info: RpcGetWalletInfo) => {
         if ( (typeof info === 'object')) {
           const newState = JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE));
@@ -153,10 +154,12 @@ export class WalletInfoState {
           }
           ctx.patchState(newState);
         }
-      }),
-
-      concatMap(info => ctx.dispatch(new WalletDetailActions.GetSettings(info.walletname)))
+      })
     );
+
+    return loadSettings ?
+        info$.pipe(concatMap(info => ctx.dispatch(new WalletDetailActions.GetSettings(info.walletname)))) :
+        info$.pipe(mapTo(undefined));
   }
 };
 
