@@ -138,7 +138,11 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     ).subscribe(
       (info: WalletInfoStateModel) => {
         const wname = info.walletname;
-        if (wname !== this.walletName) {
+        if (
+          ( (typeof wname === 'string') && [null, undefined].includes(this.walletName) ) ||
+          ( (wname === null) && (typeof this.walletName === 'string') ) ||
+          ( (typeof wname === 'string') && (typeof this.walletName === 'string') && (wname !== this.walletName) )
+        ) {
           // Oh crap... the wallet has probably been changed, better reset the wallet creation process.
           this.walletName = wname;
           this.reset();

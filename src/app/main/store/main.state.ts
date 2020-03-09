@@ -96,7 +96,10 @@ export class WalletInfoState {
   loadAllWalletData(ctx: StateContext<WalletInfoStateModel>) {
     const current = ctx.getState();
     if (!current.hdseedid || (current.walletname === null)) {
-      return;
+      return concat(
+        ctx.dispatch(new WalletDetailActions.ResetAllUTXOS()),
+        ctx.dispatch(new WalletDetailActions.ResetStakingInfo())
+      )
     }
 
     return concat(
@@ -186,6 +189,13 @@ export class WalletStakingState {
   }
 
 
+  @Action(WalletDetailActions.ResetStakingInfo)
+  onResetStakingInfo(ctx: StateContext<WalletStakingStateModel>) {
+    // Explicitly reset the state only
+    ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_STAKING_INFO_STATE)));
+  }
+
+
   @Action(WalletDetailActions.GetColdStakingInfo)
   fetchColdStakingData(ctx: StateContext<WalletStakingStateModel>) {
     return this._walletService.getColdStakingInfo().pipe(
@@ -235,6 +245,13 @@ export class WalletUTXOState {
 
   @Action(MainActions.ResetWallet)
   onResetStateToDefault(ctx: StateContext<WalletUTXOStateModel>) {
+    // Explicitly reset the state only
+    ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
+  }
+
+
+  @Action(WalletDetailActions.ResetAllUTXOS)
+  onResetAllUTXOS(ctx: StateContext<WalletUTXOStateModel>) {
     // Explicitly reset the state only
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
   }

@@ -46,8 +46,16 @@ export namespace WalletDetailActions {
     static readonly type: string = '[Wallet Details] Get Cold Staking Info';
   }
 
+  export class ResetStakingInfo {
+    static readonly type: string = '[Wallet Details] Reset Staking Info';
+  }
+
   export class GetAllUTXOS {
     static readonly type: string = '[Wallet Details] Get All Balances';
+  }
+
+  export class ResetAllUTXOS {
+    static readonly type: string = '[Wallet Details] Reset All Balances';
   }
 
   export class GetSettings {
