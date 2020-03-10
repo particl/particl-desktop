@@ -637,7 +637,8 @@ mat-toolbar.mat-toolbar {
       padding: var(--field-boxed-paddingV) 0;
     }
     // Send: Larger padding around input
-    &.--larger {
+    &.--larger,
+    &.--largest {
       font-size: 15px;
       .mat-form-field-flex {
         padding: 0 24px;
@@ -649,6 +650,9 @@ mat-toolbar.mat-toolbar {
         bottom: 52px;
         right: 14px;
       }
+    }
+    &.--largest {
+      font-size: 18px;
     }
   } // << INPUTS
 

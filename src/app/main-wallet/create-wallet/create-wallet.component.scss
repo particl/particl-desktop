@@ -6,7 +6,6 @@
 .box-title {
   @extend %box-title;
   font-size: 15px;
-  margin: 5px 0 20px;
 }
 
 .action-card {
@@ -15,11 +14,6 @@
   &:last-of-type {
     margin-bottom: 0;
   }
-}
-
-.mat-divider { // section divider
-  border-bottom: 1px solid lighten($bg-black, 5%);
-  border-top: 1px solid darken($bg-black, 5%);
 }
 
 .progress {
@@ -94,11 +88,6 @@
 }
 
 p {
-  font-size: 14px;
-  line-height: 1.45;
-  &.widget-help {
-    font-size: 13px;
-  }
   &.info,
   &.warning {
     padding: 24px 24px 24px 68px;
@@ -141,10 +130,6 @@ p {
   }
 }
 
-mat-hint.error {
-  color: $color-alert;
-}
-
 
 // ------ LAYOUT ------ //
 
@@ -168,16 +153,7 @@ mat-hint.error {
   }
 }
 
-.action-buttons {
-  margin: 6px 35px 35px;
-}
-
-
-/* ------------------------------- *\
-    Create/restore
-\* ------------------------------- */
-
-.create-or-restore {
+.container-flex-stretched {
   display: flex;
   flex-direction: column;
   padding: var(--paddingV) var(--paddingH);
@@ -187,11 +163,48 @@ mat-hint.error {
   }
   .container-flex {
     flex: 0 1 100%;
+    & > .content-wrapper {
+      margin: auto;
+    }
+    .mat-card {
+      .highlight {
+        background: hsla(var(--bg-hsl), 0.5);
+        padding: 24px;
+        margin: 24px -24px;
+        border-top: 1px dashed hsla(var(--bg-muted-hsl), 0.7);
+        border-bottom: 1px dashed hsla(var(--bg-muted-hsl), 0.7);
+        .mat-form-field {
+          margin: 0;
+        }
+        .message { // info/error messages
+          background: transparent;
+          padding: 0 24px 0 28px;
+          margin: -4px 0 16px;
+          &::before {
+            top: 8px;
+            left: 0;
+          }
+        }
+      }
+    }
   }
+  .action-buttons {
+    flex: 1 1 1%;
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0 0;
+  }
+}
+
+
+/* ------------------------------- *\
+    Create/restore
+\* ------------------------------- */
+
+.create-or-restore {
   .content-wrapper {
     display: flex;
     align-items: stretch;
-    margin: auto;
     max-width: 60rem;
     padding-bottom: 5rem; // offset page-title for vertical centering
     .half {
@@ -240,10 +253,9 @@ mat-hint.error {
     Name wallet
 \* ------------------------------- */
 
-.wallet-name {
-  @extend .action-card;
-  .mat-form-field {
-    width: 260px;
+.name-your-wallet {
+  .container-flex {
+    padding-bottom: 3rem;
   }
 }
 
