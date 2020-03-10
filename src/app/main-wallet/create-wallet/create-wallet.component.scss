@@ -1,28 +1,11 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-$installer-minisidebar-width: 54px;
-$installer-sidebar-width: (270px - $installer-minisidebar-width);
-$installer-sidebar-padding: 30px;
-$installer-header-height: 96px;
 
 // ------ UI ELEMENTS ------ //
 
-.container-block {
-  margin-top: $header-main-height;
-}
-
-.subtitle {
-  @extend %subtitle;
-  &:first-child {
-    margin-top: 12px;
-  }
-}
-
-// TODO: move to %placeholders
 .box-title {
-  text-transform: uppercase;
+  @extend %box-title;
   font-size: 15px;
-  font-weight: 700;
   margin: 5px 0 20px;
 }
 
@@ -40,16 +23,15 @@ $installer-header-height: 96px;
 }
 
 .progress {
-  padding: 30px 16px;
+  padding: 25px 8px 25px 20px;
   .step {
     margin-bottom: 16px;
     position: relative;
     .dot {
-      $size: 14px;
       display: inline-block;
-      background: lighten($bg-black, 10%);
-      width: $size;
-      height: $size;
+      border: 3px solid lighten($bg-black, 10%);
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       position: relative;
       top: 2px;
@@ -58,8 +40,7 @@ $installer-header-height: 96px;
     .desc {
       display: inline-block;
       font-size: 13px;
-      text-transform: uppercase;
-      margin-left: 16px;
+      margin-left: 18px;
       color: darken($bg, 50%);
     }
     &:not(.last):after { // lines connecting numbers
@@ -69,7 +50,7 @@ $installer-header-height: 96px;
       width: 2px;
       position: absolute;
       top: 14px;
-      bottom: -24px;
+      bottom: -20px;
       left: 6px;
       z-index: 1;
     }
@@ -82,16 +63,19 @@ $installer-header-height: 96px;
         &::after {
           content: "";
           display: block;
-          border: 1.5px solid rgba($color, 0.2);
-          width: 5px;
-          height: 5px;
+          border: 1.5px solid var(--color-primary);
+          width: 9px;
+          height: 9px;
           border-radius: 50%;
-          transform: scale(3);
+          animation: pulse-fade infinite 1s;
+          position: absolute;
+          top: -2px;
+          left: -2px;
         }
       }
       .desc {
         color: $bg;
-        font-weight: 600;
+        font-weight: 500;
       }
     }
     &.done { // finished steps
@@ -166,48 +150,17 @@ mat-hint.error {
 
 .installer {
   @extend %disable-select;
-  & > .mini-sidebar { // fake "multiwallet" placeholder
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: $installer-minisidebar-width;
-    background: darken($bg-black, 5%);
-  }
-  & > .sidebar {
-    width: $installer-sidebar-width;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: $installer-minisidebar-width;
-    background: $bg-black;
-    color: $bg;
-    .logo {
-      display: flex;
-      height: 120px;
-      img {
-        display: block;
-        margin: auto;
-      }
-    }
-    .title {
-      text-align: center;
-    }
-  }
   & > .content {
-    background: $bg;
+    background: var(--bg);
     .header-main {
-      border-bottom: 1px solid $bg-shadow;
-      background: $color-white;
-      padding-left: 35px;
-      padding-right: 26px;
+      border-bottom: 1px solid var(--bg-muted);
+      background: var(--color-white);
+      padding: 0 var(--paddingH);
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 600;
       text-transform: uppercase;
-      position: fixed;
+      position: sticky;
       top: 0;
-      left: ($installer-minisidebar-width + $installer-sidebar-width);
-      right: 0;
       z-index: 100;
     }
   }
@@ -215,7 +168,7 @@ mat-hint.error {
 
 .action-buttons {
   margin: 6px 35px 35px;
-  &.huge {
+  &.huge { // create or restore choice
     margin: 15px 0 0;
     display: flex;
     align-items: stretch;
@@ -228,30 +181,29 @@ mat-hint.error {
       .icon {
         @extend %tfx;
         font-size: 38px;
-        color: $bg-shadow;
+        color: var(--bg-muted);
       }
       .choice-title {
+        @extend %box-title;
         font-size: 15px;
-        text-transform: uppercase;
-        font-weight: 700;
         margin: 14px 0 12px;
       }
       .choice-desc {
         margin: 8px 0 26px;
-        color: $text-muted;
+        color: var(--text-muted);
       }
       &:hover {
-        background: $color-white;
+        background: var(--color-white);
         &.create {
           .icon {
             transform: scale(1.1);
-            color: $color;
+            color: var(--color-primary);
           }
         }
         &.restore {
           .icon {
             transform: rotate(45deg) scale(1.1);
-            color: $color-info;
+            color: var(--color-secondary);
           }
         }
       }
@@ -319,5 +271,14 @@ input.recovery-word {
   }
   p.lead {
     font-size: 17px;
+  }
+}
+
+
+// Animations
+@keyframes pulse-fade {
+  to {
+    transform: scale(2.1);
+    opacity: 0;
   }
 }
