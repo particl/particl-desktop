@@ -1,7 +1,6 @@
 <div class="installer">
 
   <wallet-menu-actions>
-
     <div class="progress">
       <div class="step first" [ngClass]="{'active': currentStep === Step.START, 'done': currentStep > Step.START}">
         <div class="dot"></div>
@@ -38,7 +37,7 @@
 
     <!-- STEP 0: Choose action -->
     <ng-template [ngIf]="currentStep === Step.START">
-      <div class="container-block">
+      <div class="create-or-restore">
         <app-page-intro [canHideContent]="false">
           <ng-container page-title>Create or restore wallet</ng-container>
           <ng-container page-content>
@@ -49,33 +48,33 @@
           </ng-container>
         </app-page-intro>
 
-        <div class="huge action-buttons">
-          <mat-card class="create half">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
-            <div class="choice-title">Create wallet</div>
-            <p class="choice-desc">
-              You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
-            </p>
-            <button mat-raised-button color="primary" (click)="selectAction(true);">
-              <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
-              Create new wallet
-            </button>
-          </mat-card>
-          <mat-card class="restore half">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-            <div class="choice-title">Restore wallet</div>
-            <p class="choice-desc">
-              If you already have existing wallet seed (Recovery Phrase) that you would like to restore
-            </p>
-            <button mat-raised-button color="accent" (click)="selectAction(false);">
-              <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-              Restore wallet
-            </button>
-          </mat-card>
-        </div>
-        <!-- .huge.action-buttons -->
-      </div>
-      <!-- .container-block -->
+        <div class="container-flex">
+          <div class="content-wrapper">
+            <mat-card class="create half">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+              <div class="choice-title">Create wallet</div>
+              <p class="choice-desc">
+                You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
+              </p>
+              <button mat-raised-button color="primary" (click)="selectAction(true);">
+                <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+                Create new wallet
+              </button>
+            </mat-card>
+            <mat-card class="restore half">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+              <div class="choice-title">Restore wallet</div>
+              <p class="choice-desc">
+                If you already have existing wallet seed (Recovery Phrase) that you would like to restore
+              </p>
+              <button mat-raised-button color="accent" (click)="selectAction(false);">
+                <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                Restore wallet
+              </button>
+            </mat-card>
+          </div><!-- .content-wrapper -->
+        </div><!-- .container-flex -->
+      </div><!-- .create-or-restore -->
     </ng-template>
     <!-- step 0 -->
 

@@ -23,13 +23,13 @@
 }
 
 .progress {
-  padding: 25px 8px 25px 20px;
+  padding: 18px 8px 8px 20px;
   .step {
     margin-bottom: 16px;
     position: relative;
     .dot {
       display: inline-block;
-      border: 3px solid lighten($bg-black, 10%);
+      border: 3px solid hsla(var(--bg-hsl), 0.15);
       width: 8px;
       height: 8px;
       border-radius: 50%;
@@ -46,18 +46,18 @@
     &:not(.last):after { // lines connecting numbers
       content: '';
       display: block;
-      background: lighten($bg-black, 5%);
+      background: hsla(var(--bg-hsl), 0.1);
       width: 2px;
       position: absolute;
-      top: 14px;
-      bottom: -20px;
+      top: 16px;
+      bottom: -18px;
       left: 6px;
       z-index: 1;
     }
     &.active { // active steps
       .dot {
         background: transparent;
-        border: 3px solid $color;
+        border: 3px solid var(--color-primary);
         width: 8px;
         height: 8px;
         &::after {
@@ -74,20 +74,20 @@
         }
       }
       .desc {
-        color: $bg;
+        color: var(--bg);
         font-weight: 500;
       }
     }
     &.done { // finished steps
       &:after {
-        background: rgba($color, 0.2);
+        background: hsla(var(--color-primary-hsl), 0.35);
       }
       .dot {
-        background: mix($color, $bg-black);
+        border-color: hsla(var(--color-primary-hsl), 0.35);
       }
       .desc {
         font-weight: 400;
-        color: rgba($bg, 0.8);
+        color: hsla(var(--bg-hsl), 0.75);
       }
     }
   }
@@ -150,8 +150,10 @@ mat-hint.error {
 
 .installer {
   @extend %disable-select;
+  height: 100vh;
   & > .content {
     background: var(--bg);
+    height: 100vh;
     .header-main {
       border-bottom: 1px solid var(--bg-muted);
       background: var(--color-white);
@@ -168,12 +170,31 @@ mat-hint.error {
 
 .action-buttons {
   margin: 6px 35px 35px;
-  &.huge { // create or restore choice
-    margin: 15px 0 0;
+}
+
+
+/* ------------------------------- *\
+    Create/restore
+\* ------------------------------- */
+
+.create-or-restore {
+  display: flex;
+  flex-direction: column;
+  padding: var(--paddingV) var(--paddingH);
+  height: calc(100% - var(--header-main-height) - 2 * var(--paddingV)); // fill the remaining vertical space
+  app-page-intro {
+    flex: 1 1 1%;
+  }
+  .container-flex {
+    flex: 0 1 100%;
+  }
+  .content-wrapper {
     display: flex;
     align-items: stretch;
+    margin: auto;
+    max-width: 60rem;
+    padding-bottom: 5rem; // offset page-title for vertical centering
     .half {
-      @extend %tfx;
       flex: 1 1 50%;
       text-align: center;
       margin: 0;
@@ -193,7 +214,6 @@ mat-hint.error {
         color: var(--text-muted);
       }
       &:hover {
-        background: var(--color-white);
         &.create {
           .icon {
             transform: scale(1.1);
@@ -213,6 +233,8 @@ mat-hint.error {
     }
   }
 }
+
+
 
 /* ------------------------------- *\
     Name wallet

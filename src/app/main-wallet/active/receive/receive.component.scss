@@ -8,7 +8,6 @@
 
 .container-flex {
   --padding-bottom: calc(var(--paddingV) + 45px);
-  display: flex;
   padding: var(--paddingV) var(--paddingH);
   height: calc(100vh - var(--header-main-height) - var(--tab-bar-height) - var(--paddingV) - var(--padding-bottom) - 1px);
   position: relative;
