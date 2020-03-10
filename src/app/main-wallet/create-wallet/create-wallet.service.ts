@@ -50,14 +50,20 @@ export class CreateWalletService implements OnDestroy {
   }
 
 
-  importExtKeyGenesis(words: string[], password: string): Observable<any> {
-    const params = [words.join(' '), password];
-    if (!password) {
-      params.pop();
+  importExtKeyGenesis(words: string[], password: string, doScan: boolean): Observable<any> {
+    const params: (string | boolean | number)[] = [
+      words.join(' '),
+      password.length ? password : '',
+      false,              // save_bip44_root
+      '',                 // master_label
+      ''                  // account_label
+    ];
+
+    if (!doScan) {
+      params.push(-1);  // scan_chain_from  (negative num to prevent scanning)
     }
-    return this._rpc.call('extkeygenesisimport', params).pipe(
-      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2}))
-    );
+
+    return this._rpc.call('extkeygenesisimport', params);
   }
 
 

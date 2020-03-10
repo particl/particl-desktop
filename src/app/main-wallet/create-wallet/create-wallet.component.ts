@@ -3,15 +3,14 @@ import {
   OnInit,
   OnDestroy,
   ElementRef,
-  ViewChild,
-  HostListener
+  ViewChild
 } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { Log } from 'ng2-logger';
 
-import { Observable, Subject, of } from 'rxjs';
-import { takeUntil, concatMap, catchError, take, mapTo, map, finalize } from 'rxjs/operators';
+import { Observable, Subject, of, fromEvent } from 'rxjs';
+import { takeUntil, concatMap, catchError, take, mapTo, map, finalize, filter, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { WalletInfoStateModel } from 'app/main/store/main.models';
@@ -113,6 +112,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   // mnemonic words verification
   private wordsVerification: string[] = [];
 
+  private isSettingWalletName: boolean = false;
+  @ViewChild('mainPage', {static: true}) private mainContentPage: ElementRef;
 
   constructor(
     private _router: Router,
@@ -138,16 +139,25 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     ).subscribe(
       (info: WalletInfoStateModel) => {
         const wname = info.walletname;
-        if (
-          ( (typeof wname === 'string') && [null, undefined].includes(this.walletName) ) ||
-          ( (wname === null) && (typeof this.walletName === 'string') ) ||
-          ( (typeof wname === 'string') && (typeof this.walletName === 'string') && (wname !== this.walletName) )
-        ) {
+
+        if (this.isSettingWalletName) {
+          this.isSettingWalletName = false;
+        } else if (this.walletName !== wname) {
           // Oh crap... the wallet has probably been changed, better reset the wallet creation process.
-          this.walletName = wname;
           this.reset();
         }
+        this.walletName = wname;
         this.isEncrypted = (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted');
+      }
+    );
+
+    // capture the enter button, but only for this form
+    fromEvent(this.mainContentPage.nativeElement, 'keyup').pipe(
+      filter((event: any) => !this.isBusy && event.keyCode === 13),
+      takeUntil(this.destroy$)
+    ).subscribe(
+      (event) => {
+        this.incrementStep();
       }
     );
   }
@@ -159,25 +169,13 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   }
 
 
-  // capture the enter button
-  @HostListener('window:keydown', ['$event'])
-  keyDownEvent(event: any) {
-    if (this.isBusy) {
-      return;
-    }
-    if (event.keyCode === 13) {
-      this.incrementStep();
-    }
-  }
-
-
   get currentStep(): Step {
     const steps = this.getActionSteps();
     return steps.length > 0 ? steps[this.actionIndex] : Step.START;
   }
 
   get currentWalletName(): string {
-    return this.walletName === undefined ? '' : (this.walletName || TextContent.DEFAULT_WALLET_NAME);
+    return typeof this.walletName !== 'string' ? '' : (this.walletName || TextContent.DEFAULT_WALLET_NAME);
   }
 
 
@@ -415,7 +413,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
               disableClose: true,
               data: { message: TextContent.SETUP_PROCESSING }
             });
-            return this._createService.importExtKeyGenesis(this.words, this.recoveryPass).pipe(
+            return this._createService.importExtKeyGenesis(this.words, this.recoveryPass, this.actionType === 'restore').pipe(
               finalize(() => {
                 this._dialog.closeAll();
               }),
@@ -462,6 +460,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         }
 
         obs = this._createService.createWallet(this.tempWalletName).pipe(
+          tap(() => this.isSettingWalletName = true),
           concatMap(() => this._store.dispatch(new MainActions.ChangeWallet(this.tempWalletName)).pipe(mapTo(true))),
           catchError((err: CoreErrorModel) => {
             if (err.code === -4) {
