@@ -594,6 +594,12 @@ mat-expansion-panel.mat-expansion-panel {
       right: 8px;
     }
   }
+  &.mat-form-field-disabled {
+    .mat-form-field-flex {
+      background: var(--color-white);
+      color: var(--text-muted);
+    }
+  }
   
   // Boxed, standalone variant (common)
   &.--boxed {

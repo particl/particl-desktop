@@ -4,7 +4,7 @@ body {
   margin: 0 !important;
 }
 
-.container {
+.splash-container {
   @extend %tfx;
   background: url('../../../assets/splash-bg.jpg') no-repeat bottom left var(--bg-black);
   background-size: 500px;

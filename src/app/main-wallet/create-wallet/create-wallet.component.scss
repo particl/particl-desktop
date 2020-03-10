@@ -196,7 +196,6 @@ mat-hint.error {
   }
   & > .content {
     background: $bg;
-    margin-left: ($installer-sidebar-width + $installer-minisidebar-width);
     .header-main {
       border-bottom: 1px solid $bg-shadow;
       background: $color-white;
