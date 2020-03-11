@@ -9,13 +9,3 @@
     padding: 6px 24px 24px;
   }
 }
-
-.password-field {
-  button[matSuffix] { // show/hide password button
-    padding: 8px 12px;
-    margin-right: -12px;
-    .mat-icon {
-      margin: 0;
-    }
-  }
-}

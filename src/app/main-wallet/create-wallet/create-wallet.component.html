@@ -96,23 +96,23 @@
 
         <div class="container-flex">
           <mat-card class="content-wrapper">
-            
-              <div class="box-title">Choose wallet name</div>
-              <div class="highlight">
-                <p class="message --warning" *ngIf="validation.errors && validation.dirty">
-                  Please choose a name for this wallet before continuing
-                </p>
-                <mat-form-field class="--largest --boxed full-width" appearance="fill">
-                  <input matInput #nameField #validation="ngModel" [(ngModel)]="tempWalletName" name="walletname" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
-                  <mat-hint class="error" *ngIf="!!errorString">
-                    {{ errorString }}
-                  </mat-hint>
-                </mat-form-field>
-              </div>
-              <p class="help-text">
-                Wallet name should contain only letters, numbers, spaces <code> </code>, dashes <code>-</code> and underscores <code>_</code>.
+
+            <div class="box-title">Choose wallet name</div>
+            <div class="highlight">
+              <p class="message --warning" *ngIf="validation.errors && validation.dirty">
+                Please choose a name for this wallet before continuing
               </p>
-            
+              <mat-form-field class="--largest --boxed full-width" appearance="fill">
+                <input matInput #nameField #validation="ngModel" [(ngModel)]="tempWalletName" name="walletname" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
+                <mat-hint class="error" *ngIf="!!errorString">
+                  {{ errorString }}
+                </mat-hint>
+              </mat-form-field>
+            </div>
+            <p class="help-text">
+              Wallet name should contain only letters, numbers, spaces <code> </code>, dashes <code>-</code> and underscores <code>_</code>.
+            </p>
+
           </mat-card><!-- .content-wrapper -->
         </div><!-- .container-flex -->
 
@@ -133,42 +133,58 @@
 
     <!-- STEP 2: Encrypt wallet -->
     <ng-template [ngIf]="currentStep === Step.ENCRYPT">
-      <div *ngIf="!isBusy" class="container-block">
+      <div *ngIf="!isBusy" class="encrypt-wallet container-flex-stretched">
+
         <app-page-intro [canHideContent]="false">
           <ng-container page-title>Encrypt your '{{ currentWalletName }}' wallet</ng-container>
           <ng-container page-content>
             It is recommended to encrypt your wallet before creating or restoring a wallet, in order to not leave any possible key fragments lying around.<br>
-            Note that you can safely skip this step, but it is recommended to encrypt your wallet as it protects you from unauthorized access to your coins (e.g. if someone steals your computer).
+            This affects only the current Particl wallet on your current device.
           </ng-container>
           <ng-container page-help>
-            This affects Particl wallet only on your current device.
+            Note that you can safely skip this step, but it is recommended to encrypt your wallet as it protects you from unauthorized access to your coins (e.g. if someone steals your computer).
           </ng-container>
         </app-page-intro>
 
-        <mat-card class="action-card recovery-password">
-          <div class="box-title">Choose Encryption Password</div>
-          <!-- Password -->
-          <mat-form-field class="password-input largest">
-            <input #passwordElem matInput placeholder="Enter Encryption Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="encrypt">
-            <mat-hint class="error" *ngIf="!!errorString">
-              {{ errorString }}
-            </mat-hint>
-          </mat-form-field>
-          <!-- Password comfirmation -->
-          <mat-form-field class="password-input largest">
-            <input matInput placeholder="Confirm Encryption Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="encryptVerify">
-          </mat-form-field>
-          <button mat-button class="small show-password" (click)="passwordElem.show = !passwordElem.show">
-            <mat-icon fontSet="partIcon" fontIcon="{{passwordElem.show ? 'part-anon' : 'part-public'}}"></mat-icon>
-            {{ passwordElem.show ? 'Hide' : 'Show' }} password
+        <div class="container-flex">
+          <mat-card class="content-wrapper">
+            <div class="box-title">Choose Encryption Password</div>
+            <div class="highlight">
+              <!-- FIXME @dev: errors not appearing (when passwords don't match) -->
+              <p class="message --warning" *ngIf="!!errorString">
+                {{ errorString }}
+              </p>
+              <mat-form-field class="--largest --boxed full-width" appearance="fill">
+                <input #passwordElem matInput placeholder="Enter Encryption Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="encrypt">
+                <button mat-button matSuffix class="small"
+                        (click)="passwordElem.show = !passwordElem.show"
+                        [attr.aria-label]="'Show password'" [attr.aria-pressed]="passwordElem.show"
+                        [matTooltip]="passwordElem.show ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+                  <mat-icon fontSet="partIcon" [fontIcon]="passwordElem.show ? 'part-anon' : 'part-public'"></mat-icon>
+                </button>
+              </mat-form-field>
+              <mat-form-field class="--largest --boxed full-width" appearance="fill">
+                <input matInput placeholder="Confirm Encryption Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="encryptVerify">
+              </mat-form-field>
+            </div><!-- .highlight -->
+            <p class="message --warning">
+              Do NOT forget this password or you will be unable to access your coins!
+            </p>
+          </mat-card><!-- .content-wrapper -->
+        </div><!-- .container-flex -->
+
+        <div class="action-buttons">
+          <button mat-button type="button" (click)="decrementStep()">
+            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+            Back
           </button>
-          <p class="warning bottom">
-            Do NOT forget this password or you will be unable to access your coins!
-          </p>
-        </mat-card>
-        <!-- .action-card -->
-      </div>
-      <!-- .container-block -->
+          <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="(encrypt !== encryptVerify) || isBusy">
+            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            Continue
+          </button>
+        </div><!-- .action-buttons -->
+
+      </div><!-- .container-flex-stretched -->
 
       <div *ngIf="isBusy" class="container-block preparing-wallet">
         <div class="center">
@@ -177,19 +193,8 @@
             Encrypting your wallet
           </p>
         </div>
-      </div>
-      <!-- .container-block -->
+      </div><!-- .container-block -->
 
-      <div *ngIf="!isBusy" class="action-buttons" fxLayoutAlign="space-between center">
-        <button mat-button type="button" (click)="decrementStep()">
-          <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
-          Back
-        </button>
-        <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="(encrypt !== encryptVerify) || isBusy">
-          <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-          Continue
-        </button>
-      </div>
     </ng-template>
     <!-- step 2 -->
 

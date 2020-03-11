@@ -86,7 +86,7 @@
     }
   }
 }
-
+/*
 p {
   &.info,
   &.warning {
@@ -129,7 +129,7 @@ p {
     }
   }
 }
-
+*/
 
 // ------ LAYOUT ------ //
 
@@ -157,12 +157,12 @@ p {
   display: flex;
   flex-direction: column;
   padding: var(--paddingV) var(--paddingH);
-  height: calc(100% - var(--header-main-height) - 2 * var(--paddingV)); // fill the remaining vertical space
+  min-height: calc(100% - var(--header-main-height) - 2 * var(--paddingV)); // fill the remaining vertical space
   app-page-intro {
-    flex: 1 1 1%;
+    flex: 0 1 1%;
   }
   .container-flex {
-    flex: 0 1 100%;
+    flex: 1 1 100%;
     & > .content-wrapper {
       margin: auto;
     }
@@ -174,22 +174,27 @@ p {
         border-top: 1px dashed hsla(var(--bg-muted-hsl), 0.7);
         border-bottom: 1px dashed hsla(var(--bg-muted-hsl), 0.7);
         .mat-form-field {
-          margin: 0;
+          margin-bottom: 0.75rem;
+          &:last-of-type {
+            margin: 0;
+          }
         }
         .message { // info/error messages
-          background: transparent;
-          padding: 0 24px 0 28px;
           margin: -4px 0 16px;
-          &::before {
-            top: 8px;
-            left: 0;
-          }
+        }
+      }
+      .message {
+        background: transparent;
+        padding: 0 24px 0 28px;
+        &::before {
+          top: 8px;
+          left: 0;
         }
       }
     }
   }
   .action-buttons {
-    flex: 1 1 1%;
+    flex: 0 1 1%;
     display: flex;
     justify-content: space-between;
     margin: 40px 0 0;
@@ -255,19 +260,20 @@ p {
 
 .name-your-wallet {
   .container-flex {
-    padding-bottom: 3rem;
+    padding-bottom: 3rem; // offset page-title for vertical centering
   }
 }
 
 
 /* ------------------------------- *\
-    Recovery Password
+    Encrypt wallet
 \* ------------------------------- */
 
-.recovery-password {
-  .mat-form-field {
-    width: 200px;
-    margin-right: 20px;
+.encrypt-wallet {
+  .container-flex {
+    @include break(l) {
+      padding-bottom: 5rem; // offset page-title for vertical centering
+    }
   }
 }
 

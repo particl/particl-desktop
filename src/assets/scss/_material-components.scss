@@ -636,6 +636,13 @@ mat-toolbar.mat-toolbar {
     .mat-input-element {
       padding: var(--field-boxed-paddingV) 0;
     }
+    button[matSuffix] { // show/hide password button (taken from Encrypt wallet .--larger field)
+      padding: 8px 12px;
+      margin-right: -12px;
+      .mat-icon {
+        margin: 0;
+      }
+    }
     // Send: Larger padding around input
     &.--larger,
     &.--largest {
