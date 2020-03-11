@@ -153,8 +153,9 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
     const total = this.toPartoshiAmount(0);
     total.add(this.toPartoshiAmount(+info.total_balance));
     total.add(this.toPartoshiAmount(+info.staked_balance));
-    // total.subtract(this.toPartoshiAmount(+info.immature_balance));
-    // total.subtract(this.toPartoshiAmount(+info.immature_anon_balance));
+    total.subtract(this.toPartoshiAmount(+info.unconfirmed_balance));
+    total.subtract(this.toPartoshiAmount(+info.unconfirmed_blind));
+    total.subtract(this.toPartoshiAmount(+info.unconfirmed_anon));
 
     for (const key of ['public', 'blind', 'anon']) {
       total.subtract(this.extractUTXOSpendable(utxos[key]));
