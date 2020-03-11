@@ -25,6 +25,7 @@ import {
   SendTypeToEstimateResponse
 } from './send.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 enum TextContent {
@@ -140,7 +141,7 @@ export class SendComponent implements OnInit, OnDestroy {
       tap((result) => {
         this.selectorOptions.forEach(o => {
           o.balance = typeof result[o.value] === 'number' ? result[o.value] : o.balance;
-          o.displayedBalance = `${o.balance}`;
+          o.displayedBalance = (new PartoshiAmount(o.balance * Math.pow(10, 8))).particlsString();
           if (o.value === 'blind') {
             if ((o.balance > 0) && (o.balance < 0.0001)) {
               o.help = TextContent.LOW_BALANCE_HELP;

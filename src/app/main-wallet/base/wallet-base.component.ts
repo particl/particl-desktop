@@ -36,7 +36,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private _currentWallet: IWallet = { name: '-', displayName: '-', initial: ''};
-  private _walletBalance: number = 0;
+  private _walletBalance: string = '0';
 
   @ViewChild(MatExpansionPanel, {static: true}) private walletSelector: MatExpansionPanel;
 
@@ -59,7 +59,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       map((utxos: WalletUTXOStateModel) => {
         return this.extractUTXOSpendables(utxos)
       }),
-      tap((amount) => this._walletBalance = amount),
+      tap((amount) => this._walletBalance = (new PartoshiAmount(amount * Math.pow(10, 8))).particlsString()),
       takeUntil(this.destroy$)
     );
 
@@ -79,7 +79,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
     return this._currentWallet;
   }
 
-  get currentBalance(): number {
+  get currentBalance(): string {
     return this._walletBalance;
   }
 
