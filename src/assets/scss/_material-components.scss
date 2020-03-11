@@ -28,6 +28,7 @@ Customizations and modifiers for default Material components
       2.8. Sidenav (main menu)
       2.9. Menus (contextual)
       2.10. Divider
+      2.11. Toolbars
 
     3. Forms
       3.1. Inputs
@@ -138,6 +139,11 @@ mat-tooltip-component .mat-tooltip {
   font-size: 11px;
   background: hsla(var(--bg-black-hsl), 0.75);
   padding: 5px 8px;
+  // Multi-line tooltip
+  // -- usage: <div matTooltip="First line &#13; Second line" matTooltipClass="multi-line">
+  &.multi-line {
+    white-space: pre-line;
+  }
 }
 
 
@@ -562,6 +568,13 @@ mat-expansion-panel.mat-expansion-panel {
 }
 
 
+// ------ 2.11. TOOLBAR ------ //
+
+mat-toolbar.mat-toolbar {
+  font-family: var(--font);
+}
+
+
 /* ------------------------------- *\
     3. FORMS
 \* ------------------------------- */
@@ -624,7 +637,8 @@ mat-expansion-panel.mat-expansion-panel {
       padding: var(--field-boxed-paddingV) 0;
     }
     // Send: Larger padding around input
-    &.--larger {
+    &.--larger,
+    &.--largest {
       font-size: 15px;
       .mat-form-field-flex {
         padding: 0 24px;
@@ -636,6 +650,9 @@ mat-expansion-panel.mat-expansion-panel {
         bottom: 52px;
         right: 14px;
       }
+    }
+    &.--largest {
+      font-size: 18px;
     }
   } // << INPUTS
 

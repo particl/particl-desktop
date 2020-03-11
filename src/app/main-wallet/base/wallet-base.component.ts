@@ -172,7 +172,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
 
   private processWallet(name: string): IWallet {
-    const usedName = name === null ? '-' : name;
+    const usedName = name === null ? 'New wallet…' : name;
     const dispName = usedName === '' ? TextContent.DEFAULT_WALLETNAME : usedName;
     return {
       name,

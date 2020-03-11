@@ -1,7 +1,6 @@
 <div class="installer">
 
   <wallet-menu-actions>
-
     <div class="progress">
       <div class="step first" [ngClass]="{'active': currentStep === Step.START, 'done': currentStep > Step.START}">
         <div class="dot"></div>
@@ -38,7 +37,7 @@
 
     <!-- STEP 0: Choose action -->
     <ng-template [ngIf]="currentStep === Step.START">
-      <div class="container-block">
+      <div class="create-or-restore container-flex-stretched">
         <app-page-intro [canHideContent]="false">
           <ng-container page-title>Create or restore wallet</ng-container>
           <ng-container page-content>
@@ -49,73 +48,75 @@
           </ng-container>
         </app-page-intro>
 
-        <div class="huge action-buttons">
-          <mat-card class="create half">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
-            <div class="choice-title">Create wallet</div>
-            <p class="choice-desc">
-              You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
-            </p>
-            <button mat-raised-button color="primary" (click)="selectAction(true);">
-              <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
-              Create new wallet
-            </button>
-          </mat-card>
-          <mat-card class="restore half">
-            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-            <div class="choice-title">Restore wallet</div>
-            <p class="choice-desc">
-              If you already have existing wallet seed (Recovery Phrase) that you would like to restore
-            </p>
-            <button mat-raised-button color="accent" (click)="selectAction(false);">
-              <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
-              Restore wallet
-            </button>
-          </mat-card>
-        </div>
-        <!-- .huge.action-buttons -->
-      </div>
-      <!-- .container-block -->
+        <div class="container-flex">
+          <div class="content-wrapper">
+            <mat-card class="create half">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+              <div class="choice-title">Create wallet</div>
+              <p class="choice-desc">
+                You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
+              </p>
+              <button mat-raised-button color="primary" (click)="selectAction(true);">
+                <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+                Create new wallet
+              </button>
+            </mat-card>
+            <mat-card class="restore half">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+              <div class="choice-title">Restore wallet</div>
+              <p class="choice-desc">
+                If you already have existing wallet seed (Recovery Phrase) that you would like to restore
+              </p>
+              <button mat-raised-button color="accent" (click)="selectAction(false);">
+                <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                Restore wallet
+              </button>
+            </mat-card>
+          </div><!-- .content-wrapper -->
+        </div><!-- .container-flex -->
+      </div><!-- .container-flex-stretched -->
     </ng-template>
     <!-- step 0 -->
 
 
     <!-- STEP 1: Wallet Name (Both Create & Restore wallet flow) -->
     <ng-template [ngIf]="currentStep === Step.WALLET_NAME">
-      <form #nameForm="ngForm" (ngSubmit)="incrementStep()">
+      <form #nameForm="ngForm" (ngSubmit)="incrementStep()" class="name-your-wallet container-flex-stretched">
 
-        <div class="container-block">
-          <app-page-intro [canHideContent]="false">
-            <ng-container page-title>Name your wallet</ng-container>
-            <ng-container page-content>
-              Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal and market funds.
-            </ng-container>
-            <ng-container page-help>
-              Note that your wallet will be created on successful completion of this step, but still requires further configuration to be usable.
-            </ng-container>
-          </app-page-intro>
+        <app-page-intro [canHideContent]="false">
+          <ng-container page-title>Name your wallet</ng-container>
+          <ng-container page-content>
+            Naming your wallets is useful, when you want to use multiple wallets &ndash; this helps you to separate e.g. your personal and market funds.<br>
+            Short and descriptive names work best &ndash; for example: Personal, Work, Savings etc.
+          </ng-container>
+          <ng-container page-help>
+            Note that your wallet will be created on successful completion of this step, but still requires further configuration to be usable.
+          </ng-container>
+        </app-page-intro>
 
-          <mat-card class="wallet-name">
-            <p class="warning" *ngIf="validation.errors && validation.dirty">
-              Wallet name is required
-            </p>
-            <!-- validation errors -->
-            <div class="box-title">Choose wallet name</div>
-            <mat-form-field class="largest">
-              <input matInput #nameField #validation="ngModel" [(ngModel)]="tempWalletName" name="walletname" placeholder="Wallet name (required)" required
-                maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
-              <mat-hint class="error" *ngIf="!!errorString">
-                {{ errorString }}
-              </mat-hint>
-            </mat-form-field>
-            <p class="widget-help">
-              Wallet name should contain only letters, numbers, spaces <code> </code>, dashes <code>-</code> and underscores <code>_</code>.
-            </p>
-          </mat-card>
-        </div>
-        <!-- .container-block -->
+        <div class="container-flex">
+          <mat-card class="content-wrapper">
+            
+              <div class="box-title">Choose wallet name</div>
+              <div class="highlight">
+                <p class="message --warning" *ngIf="validation.errors && validation.dirty">
+                  Please choose a name for this wallet before continuing
+                </p>
+                <mat-form-field class="--largest --boxed full-width" appearance="fill">
+                  <input matInput #nameField #validation="ngModel" [(ngModel)]="tempWalletName" name="walletname" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
+                  <mat-hint class="error" *ngIf="!!errorString">
+                    {{ errorString }}
+                  </mat-hint>
+                </mat-form-field>
+              </div>
+              <p class="help-text">
+                Wallet name should contain only letters, numbers, spaces <code> </code>, dashes <code>-</code> and underscores <code>_</code>.
+              </p>
+            
+          </mat-card><!-- .content-wrapper -->
+        </div><!-- .container-flex -->
 
-        <div class="action-buttons" fxLayoutAlign="space-between center">
+        <div class="action-buttons">
           <button mat-button type="button" (click)="decrementStep()">
             <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
             Back
@@ -124,9 +125,8 @@
             <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Continue
           </button>
-        </div>
-        <!-- .action-buttons -->
-      </form>
+        </div><!-- .action-buttons -->
+      </form><!-- .container-flex-stretched -->
     </ng-template>
     <!-- step 1 -->
 
@@ -265,7 +265,7 @@
             <p>
               If you set up a Recovery Password during wallet creation as well, enter it below:
             </p>
-            <p class="widget-help">
+            <p class="help-text">
               If you created your wallet in Particl Desktop v1.1, a bug prevented Recovery Password to be set. If that's your case, don't enter any password even if you set one up.
             </p>
             <mat-form-field class="password-input larger">
@@ -333,7 +333,7 @@
           <p class="lead">
             Preparing your wallet
           </p>
-          <!-- <p class="widget-help">
+          <!-- <p class="help-text">
             Creating your wallet &amp; scanning for transactions
           </p> -->
         </div>
