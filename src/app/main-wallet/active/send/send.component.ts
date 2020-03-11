@@ -310,11 +310,11 @@ export class SendComponent implements OnInit, OnDestroy {
               TextContent.TRANSFER_SUCCESS.replace('${amount}', displayAmount);
 
             // reset relevant input fields
-            this.amount.reset();
-            this.address.reset();
-            this.addressLabel.reset();
-            this.narration.reset();
-            this.sendingAll.reset();
+            this.amount.reset('');
+            this.address.reset('');
+            this.addressLabel.reset('');
+            this.narration.reset('');
+            this.sendingAll.reset(false);
 
             this._snackbar.open(text, '');
           },
