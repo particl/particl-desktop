@@ -3,19 +3,7 @@
 
 // ------ UI ELEMENTS ------ //
 
-.box-title {
-  @extend %box-title;
-  font-size: 15px;
-}
-
-.action-card {
-  padding: 32px 35px;
-  margin: 0 0 35px;
-  &:last-of-type {
-    margin-bottom: 0;
-  }
-}
-
+// Step progress (in sidebar)
 .progress {
   padding: 18px 8px 8px 20px;
   .step {
@@ -87,49 +75,6 @@
   }
 }
 
-p {
-  &.info,
-  &.warning {
-    padding: 24px 24px 24px 68px;
-    margin: 32px -35px;
-    &:before { // info icon
-      top: 32px;
-      left: 35px;
-    }
-    .action-card & { // messages in cards
-      margin: -32px -35px 32px;
-      padding: 20px 24px 20px 64px;
-      &.bottom {
-        margin: 32px -35px -32px;
-      }
-      &:before {
-        top: 29px;
-        left: 32px;
-      }
-    }
-  }
-  &.info {
-    background: rgba($color-info, 0.07);
-    .action-card & {
-      border-bottom: 1px solid rgba($color-info, 0.22);
-      &.bottom {
-        border-bottom: 0;
-        border-top: 1px solid rgba($color-info, 0.22);
-      }
-    }
-  }
-  &.warning {
-    background: rgba($color-alert, 0.07);
-    .action-card & {
-      border-bottom: 1px solid rgba($color-alert, 0.22);
-      &.bottom {
-        border-bottom: 0;
-        border-top: 1px solid rgba($color-alert, 0.22);
-      }
-    }
-  }
-}
-
 
 // ------ LAYOUT ------ //
 
@@ -157,12 +102,12 @@ p {
   display: flex;
   flex-direction: column;
   padding: var(--paddingV) var(--paddingH);
-  height: calc(100% - var(--header-main-height) - 2 * var(--paddingV)); // fill the remaining vertical space
+  min-height: calc(100% - var(--header-main-height) - 2 * var(--paddingV)); // fill the remaining vertical space
   app-page-intro {
-    flex: 1 1 1%;
+    flex: 0 1 1%;
   }
   .container-flex {
-    flex: 0 1 100%;
+    flex: 1 1 100%;
     & > .content-wrapper {
       margin: auto;
     }
@@ -174,22 +119,27 @@ p {
         border-top: 1px dashed hsla(var(--bg-muted-hsl), 0.7);
         border-bottom: 1px dashed hsla(var(--bg-muted-hsl), 0.7);
         .mat-form-field {
-          margin: 0;
+          margin-bottom: 0.75rem;
+          &:last-of-type {
+            margin: 0;
+          }
         }
         .message { // info/error messages
-          background: transparent;
-          padding: 0 24px 0 28px;
           margin: -4px 0 16px;
-          &::before {
-            top: 8px;
-            left: 0;
-          }
+        }
+      }
+      .message {
+        background: transparent;
+        padding: 0 24px 0 28px;
+        &::before {
+          top: 8px;
+          left: 0;
         }
       }
     }
   }
   .action-buttons {
-    flex: 1 1 1%;
+    flex: 0 1 1%;
     display: flex;
     justify-content: space-between;
     margin: 40px 0 0;
@@ -217,9 +167,7 @@ p {
         font-size: 38px;
         color: var(--bg-muted);
       }
-      .choice-title {
-        @extend %box-title;
-        font-size: 15px;
+      .box-title {
         margin: 14px 0 12px;
       }
       .choice-desc {
@@ -255,50 +203,32 @@ p {
 
 .name-your-wallet {
   .container-flex {
-    padding-bottom: 3rem;
+    padding-bottom: 3rem; // offset page-title for vertical centering
   }
 }
 
 
 /* ------------------------------- *\
-    Recovery Password
+    Encrypt wallet
 \* ------------------------------- */
 
-.recovery-password {
-  .mat-form-field {
-    width: 200px;
-    margin-right: 20px;
+.encrypt-wallet {
+  .container-flex {
+    @include break(l) {
+      padding-bottom: 5rem; // offset page-title for vertical centering
+    }
   }
 }
 
-
-/* ------------------------------- *\
-    Recovery Phrase
-\* ------------------------------- */
-
-
-app-password > div {
-  margin-top: 20px;
-}
-
-input.recovery-word {
-  max-width: 100%;
-}
-
-
-/* ------------------------------- *\
-    Preparing wallet (~ Waiting)
-\* ------------------------------- */
-
+// Loading (after wallet encryption)
 .preparing-wallet {
   text-align: center;
   display: flex;
   padding: 0 45px;
-  height: calc(100vh - #{$header-main-height});
+  height: calc(100vh - var(--header-main-height));
   position: relative;
   & > .center {
     margin: auto;
-
     .loading-spinner {
       margin: auto;
     }
@@ -309,8 +239,66 @@ input.recovery-word {
 }
 
 
+/* ------------------------------------ *\
+    Recovery Phrase, Verify & Password
+\* ------------------------------------ */
+
+.mnemonic-and-password {
+  .container-flex {
+    @include break(l) {
+      padding-bottom: 5rem; // offset page-title for vertical centering
+    }
+    p.message {
+      margin: 16px 0 18px;
+    }
+    // Mnemonic save/show
+    .mnemonic-save {
+      max-width: 60rem;
+      .dos-donts { // DO's & DONT's
+        margin-bottom: 30px;
+        ul {
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          li {
+            margin-top: 6px;
+            padding-left: 26px;
+            line-height: 1.4;
+            color: var(--text-muted);
+            position: relative;
+          }
+          .mat-icon {
+            position: absolute;
+            top: 3px;
+            left: 2px;
+            font-size: 14px;
+            &.part-check {
+              color: var(--color-success);
+            }
+            &.part-cross {
+              color: var(--color-alert);
+            }
+          }
+          strong {
+            font-weight: 500;
+            color: var(--text);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
 // Animations
-@keyframes pulse-fade {
+@keyframes pulse-fade { // current step @ progress
   to {
     transform: scale(2.1);
     opacity: 0;
