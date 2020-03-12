@@ -19,7 +19,7 @@ enum TextContent {
   DEFAULT_WALLETNAME = 'Default Wallet',
   WALLETS_LOAD_ERROR = 'Failed to load wallets',
   WALLET_LOADING = 'Activating the selected wallet',
-  WALLET_ACTIVATE_SUCCESS = 'Successfully Loaded Wallet',
+  WALLET_ACTIVATE_SUCCESS = 'Wallet loaded successfully',
   WALLET_ACTIVATE_ERROR = 'Failed to activate and load the selected wallet'
 }
 
