@@ -222,10 +222,12 @@
         <app-page-intro *ngIf="(actionFlow === 'restore') && (currentStep === Step.MNEMONIC_VERIFY)" [canHideContent]="false">
           <ng-container page-title>Restore existing '{{ currentWalletName }}' wallet</ng-container>
           <ng-container page-content>
-            For restoring your existing wallet, you will need its Recovery Phrase (and also Recovery Password if you have set it up):
+            For restoring your existing wallet, you will need its 24-word Recovery Phrase.<br>
+            If you set up a Recovery Password when creating your wallet, you will need it as well!
           </ng-container>
           <ng-container page-help>
-            <strong>Friendly reminder:</strong> Don't forget that the Recovery Phrase (and Password) are very important for keeping your funds safe. Anyone with access to them has access to your coins. If you think your Recovery Phrase (and Password) might have been exposed, it would be better to create a new wallet instead and send your coins there.
+            Keep in mind that if you don't enter the exact Recovery Phrase (and Recovery Password, if set up), a new empty wallet would be recovered.<br>
+            In case this happens to you, make sure you entered the correct seed and/or password.
           </ng-container>
         </app-page-intro>
 
@@ -296,32 +298,43 @@
             </div><!-- .mnemonic-save -->
 
 
-            <mat-card class="mnemonic-verify content-wrapper" *ngIf="currentStep === Step.MNEMONIC_VERIFY">
-              <h3 class="box-title --larger">Fill in your Recovery Phrase</h3>
-              <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
-              <p *ngIf="!!errorString" class="warning bottom">
-                {{ errorString }}
-              </p>
-            </mat-card><!-- .mnemonic-verify -->
+            <div class="content-wrapper mnemonic-enter" *ngIf="currentStep === Step.MNEMONIC_VERIFY">
+
+              <!-- CREATE > Verify | RESTORE > Enter -->
+              <mat-card class="mnemonic-verify">
+                <h3 class="box-title --larger">Fill in your Recovery Phrase</h3>
+                <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
+                <p *ngIf="!!errorString" class="warning bottom">
+                  {{ errorString }}
+                </p>
+              </mat-card><!-- .mnemonic-verify -->
+
+              <!-- RESTORE > Enter password -->
+              <mat-card class="recovery-password" *ngIf="actionFlow === 'restore'">
+                <h3 class="box-title --larger">Recovery Password</h3>
+                <p>
+                  Only in case if you set up a Recovery Password during wallet creation as well, enter it below:
+                </p>
+                <div class="highlight">
+                  <mat-form-field class="--larger --boxed" appearance="fill">
+                    <input #passwordRestoreElem matInput placeholder="Enter your password" [type]="passwordRestoreElem.show ? 'text' : 'password'"
+                      [(ngModel)]="recoveryPass">
+                    <button mat-button matSuffix class="small"
+                      (click)="passwordRestoreElem.show = !passwordRestoreElem.show"
+                      [attr.aria-label]="'Show password'" [attr.aria-pressed]="passwordRestoreElem.show"
+                      [matTooltip]="passwordRestoreElem.show ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+                      <mat-icon fontSet="partIcon" [fontIcon]="passwordRestoreElem.show ? 'part-anon' : 'part-public'"></mat-icon>
+                    </button>
+                  </mat-form-field>
+                </div><!-- .highlight -->
+                <p class="message --info">
+                  If you created your wallet in Particl Desktop v1.1, a bug prevented Recovery Password to be set. If that's your case, don't enter any password even if you set one up.
+                </p>
+              </mat-card><!-- .recovery-password -->
+
+            </div><!-- .content-wrapper @ Step.MNEMONIC_VERIFY -->
 
 
-            <mat-card class="recovery-password content-wrapper" *ngIf="actionFlow === 'restore'">
-              <h3 class="box-title --larger">Recovery Password</h3>
-              <p>
-                If you set up a Recovery Password during wallet creation as well, enter it below:
-              </p>
-              <p class="help-text">
-                If you created your wallet in Particl Desktop v1.1, a bug prevented Recovery Password to be set. If that's your case, don't enter any password even if you set one up.
-              </p>
-              <mat-form-field class="password-input larger">
-                <input #passwordRestoreElem matInput placeholder="Enter your password" [type]="passwordRestoreElem.show ? 'text' : 'password'"
-                  [(ngModel)]="recoveryPass">
-              </mat-form-field>
-              <button mat-button class="small show-password" (click)="passwordRestoreElem.show = !passwordRestoreElem.show">
-                <mat-icon fontSet="partIcon" fontIcon="{{passwordRestoreElem.show ? 'part-anon' : 'part-public'}}"></mat-icon>
-                {{ passwordRestoreElem.show ? 'Hide' : 'Show' }} password
-              </button>
-            </mat-card><!-- .recovery-password -->
 
           </ng-template>
 

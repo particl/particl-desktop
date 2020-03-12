@@ -303,10 +303,20 @@
         }
       }
     }
+    // Mnemonic verify/enter
+    .mnemonic-enter {
+      max-width: 60rem;
+      .mnemonic-verify {
+        & + .recovery-password {
+          margin-top: 30px;
+        }
+      }
+    }
 
     // Recovery password
     .recovery-password {
       max-width: 30rem;
+      margin: auto;
       p.message {
         margin-bottom: 0;
       }
