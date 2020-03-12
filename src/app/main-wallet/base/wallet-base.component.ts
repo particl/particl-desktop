@@ -30,7 +30,6 @@ enum TextContent {
 })
 export class WalletBaseComponent implements OnInit, OnDestroy {
 
-  isLoadingWallets: boolean = false;
   otherWallets: IWallet[] = [];
 
 
@@ -135,9 +134,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
 
   openedWalletSelector() {
-    this.isLoadingWallets = true;
     this._walletInfo.getWalletList().pipe(
-      finalize(() => this.isLoadingWallets = false),
       map((walletList) => walletList.wallets.sort(
         (a, b) => {
           const x = a.name.toLocaleLowerCase();
