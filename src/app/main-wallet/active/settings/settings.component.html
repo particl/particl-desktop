@@ -23,7 +23,7 @@
         <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
           <input type="radio" name="option" (change)="changeSelectedGroup(groupIdx)">
           <div class="switcher-option" *ngIf="group.settings.length > 0" [class.--with-error]="group.errors.length">
-            <mat-icon class="icon" fontSet="partIcon" [fontIcon]="group.icon"></mat-icon>
+            <mat-icon class="icon" [fontIcon]="group.icon"></mat-icon>
             <span class="name">{{ group.name }}</span>
           </div>
         </label>
@@ -139,7 +139,7 @@
                       [disabled]="setting.isDisabled"
                       (click)="settingChangedValue(settingIdx)"
                     >
-                      <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" fontSet="partIcon" [fontIcon]="setting.limits.icon"></mat-icon>
+                      <mat-icon *ngIf="setting.limits?.icon?.length > 0" class="icon" [fontIcon]="setting.limits.icon"></mat-icon>
                     {{ setting.title }}
                     </button>
                   </p>
@@ -162,7 +162,7 @@
         appDebounceClick
         (debounceClick)="clearChanges()"
       >
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+        <mat-icon class="icon" fontIcon="part-refresh"></mat-icon>
         Reset unsaved changes
       </button>
     </div>
@@ -172,7 +172,7 @@
         class="validate"
         [disabled]="!hasChanges || hasErrors || isProcessing"
         (click)="saveChanges()">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+        <mat-icon class="icon" fontIcon="part-check"></mat-icon>
         Save changes
       </button>
     </div>

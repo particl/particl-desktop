@@ -22,12 +22,12 @@
 <div class="actions" fxLayoutAlign="center center" *ngIf="!isVerification">
 
   <button mat-button *ngIf="readOnly" (click)="copyToClipBoard()" ngxClipboard [cbContent]="sourceWords.join(' ')" class="copy">
-    <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+    <mat-icon fontIcon="part-copy"></mat-icon>
     Copy to Clipboard
   </button>
 
   <button mat-button *ngIf="!readOnly" class="paste" (click)="pasteContent()">
-    <mat-icon fontSet="partIcon" fontIcon="part-past"></mat-icon>
+    <mat-icon fontIcon="part-past"></mat-icon>
     Paste
   </button>
 

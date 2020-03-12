@@ -16,8 +16,7 @@ export class AppComponent implements OnInit {
     private _iconRegistry: MatIconRegistry
   ) {
     this._iconRegistry
-      .registerFontClassAlias('partIcon', 'part-icon')
-      .registerFontClassAlias('faIcon', 'fa');
+      .registerFontClassAlias('partIcon', 'part-icon');
   }
 
   ngOnInit() {

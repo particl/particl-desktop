@@ -3,7 +3,7 @@
     <mat-tab-group (selectedTabChange)="changeCategory($event.index)" [selectedIndex]="selectedTab">
       <mat-tab *ngFor="let category of categories">
         <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" fontIcon="part-{{ category.icon }}"></mat-icon>
+          <mat-icon fontIcon="part-{{ category.icon }}"></mat-icon>
           {{ category.title }}
         </ng-template>
       </mat-tab>
@@ -36,7 +36,7 @@
     </mat-card>
 
     <button mat-button class="clear-filters" (click)="clear()">
-      <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
 

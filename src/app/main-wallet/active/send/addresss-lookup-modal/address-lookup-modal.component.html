@@ -1,6 +1,6 @@
 <div mat-dialog-title class="title">Address lookup</div>
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
-  <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 <form class="control-bar" fxLayout="row">
@@ -8,9 +8,9 @@
   <mat-form-field appearance="fill" fxFlex="1 1 100%" class="search-address icon-input --plain --larger">
     <input matInput type="text" name="query" [formControl]="queryFilter"
             placeholder="Filter by label or address...">
-    <mat-icon *ngIf="queryFilter.value" (click)="queryFilter.setValue('')" matTooltip="Clear" fontSet="partIcon"
+    <mat-icon *ngIf="queryFilter.value" (click)="queryFilter.setValue('')" matTooltip="Clear"
               fontIcon="part-clear-all"></mat-icon>
-    <mat-icon *ngIf="!queryFilter.value" fontSet="partIcon" fontIcon="part-search" matTooltip="Search">
+    <mat-icon *ngIf="!queryFilter.value" fontIcon="part-search" matTooltip="Search">
     </mat-icon>
   </mat-form-field>
 

@@ -51,24 +51,24 @@
         <div class="container-flex">
           <div class="content-wrapper">
             <mat-card class="create half">
-              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+              <mat-icon class="icon" fontIcon="part-add-account"></mat-icon>
               <div class="box-title --larger">Create wallet</div>
               <p class="choice-desc">
                 You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
               </p>
               <button mat-raised-button color="primary" (click)="selectAction(true);">
-                <mat-icon fontSet="partIcon" fontIcon="part-add-account"></mat-icon>
+                <mat-icon fontIcon="part-add-account"></mat-icon>
                 Create new wallet
               </button>
             </mat-card>
             <mat-card class="restore half">
-              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+              <mat-icon class="icon" fontIcon="part-refresh"></mat-icon>
               <div class="box-title --larger">Restore wallet</div>
               <p class="choice-desc">
                 If you already have existing wallet seed (Recovery Phrase) that you would like to restore
               </p>
               <button mat-raised-button color="accent" (click)="selectAction(false);">
-                <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                <mat-icon fontIcon="part-refresh"></mat-icon>
                 Restore wallet
               </button>
             </mat-card>
@@ -118,11 +118,11 @@
 
         <div class="action-buttons">
           <button mat-button type="button" (click)="decrementStep()">
-            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+            <mat-icon fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
           <button mat-raised-button color="primary" type="submit" [disabled]="!nameForm.form.valid || isBusy">
-            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            <mat-icon fontIcon="part-next-single"></mat-icon>
             Continue
           </button>
         </div><!-- .action-buttons -->
@@ -156,7 +156,7 @@
                         (click)="passwordElem.show = !passwordElem.show"
                         [attr.aria-label]="'Show password'" [attr.aria-pressed]="passwordElem.show"
                         [matTooltip]="passwordElem.show ? 'Hide password' : 'Show password'" matTooltipPosition="after">
-                  <mat-icon fontSet="partIcon" [fontIcon]="passwordElem.show ? 'part-anon' : 'part-public'"></mat-icon>
+                  <mat-icon [fontIcon]="passwordElem.show ? 'part-anon' : 'part-public'"></mat-icon>
                 </button>
               </mat-form-field>
               <mat-form-field class="--largest --boxed full-width" appearance="fill">
@@ -171,11 +171,11 @@
 
         <div class="action-buttons">
           <button mat-button type="button" (click)="decrementStep()">
-            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+            <mat-icon fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
           <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="(encrypt !== encryptVerify) || isBusy">
-            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            <mat-icon fontIcon="part-next-single"></mat-icon>
             Continue
           </button>
         </div><!-- .action-buttons -->
@@ -253,15 +253,15 @@
                   <h3 class="box-title --larger">You should</h3>
                   <ul>
                     <li>
-                      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+                      <mat-icon class="icon" fontIcon="part-check"></mat-icon>
                       <strong>Write down these words</strong> &ndash; physically, e.g. on paper (or ideally on specialized cryptocurrency metal seed backup products)!
                     </li>
                     <li>
-                      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+                      <mat-icon class="icon" fontIcon="part-check"></mat-icon>
                       <strong>Keep them in a safe place</strong> &ndash; make sure they won't be destroyed by elements like water!
                     </li>
                     <li>
-                      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
+                      <mat-icon class="icon" fontIcon="part-check"></mat-icon>
                       <strong>Backup them on multiple locations</strong> if possible!
                     </li>
                   </ul>
@@ -270,15 +270,15 @@
                   <h3 class="box-title --larger">You should not</h3>
                   <ul>
                     <li>
-                      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+                      <mat-icon class="icon" fontIcon="part-cross"></mat-icon>
                       <strong>Save them digitally</strong> &ndash; on your computer, mobile or cloud storages!
                     </li>
                     <li>
-                      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+                      <mat-icon class="icon" fontIcon="part-cross"></mat-icon>
                       <strong>Give them to anyone</strong> &ndash; they could steal your funds!
                     </li>
                     <li>
-                      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+                      <mat-icon class="icon" fontIcon="part-cross"></mat-icon>
                       <strong>Lose them</strong> &ndash; you could lose access to your coins in the future!
                     </li>
                   </ul>
@@ -323,7 +323,7 @@
                       (click)="passwordRestoreElem.show = !passwordRestoreElem.show"
                       [attr.aria-label]="'Show password'" [attr.aria-pressed]="passwordRestoreElem.show"
                       [matTooltip]="passwordRestoreElem.show ? 'Hide password' : 'Show password'" matTooltipPosition="after">
-                      <mat-icon fontSet="partIcon" [fontIcon]="passwordRestoreElem.show ? 'part-anon' : 'part-public'"></mat-icon>
+                      <mat-icon [fontIcon]="passwordRestoreElem.show ? 'part-anon' : 'part-public'"></mat-icon>
                     </button>
                   </mat-form-field>
                 </div><!-- .highlight -->
@@ -351,7 +351,7 @@
                         (click)="passwordElem.show = !passwordElem.show"
                         [attr.aria-label]="'Show password'" [attr.aria-pressed]="passwordElem.show"
                         [matTooltip]="passwordElem.show ? 'Hide password' : 'Show password'" matTooltipPosition="after">
-                  <mat-icon fontSet="partIcon" [fontIcon]="passwordElem.show ? 'part-anon' : 'part-public'"></mat-icon>
+                  <mat-icon [fontIcon]="passwordElem.show ? 'part-anon' : 'part-public'"></mat-icon>
                 </button>
               </mat-form-field>
               <mat-form-field class="--larger --boxed" appearance="fill" [color]="!!errorString ? 'warn' : 'primary'">
@@ -367,12 +367,12 @@
 
         <div class="action-buttons">
           <button mat-button type="button" (click)="decrementStep()" [disabled]="isBusy">
-            <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
+            <mat-icon fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
           <!-- TODO @dev: enable only after recovery phrase expansion-panel was expanded -->
           <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="isBusy">
-            <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
+            <mat-icon fontIcon="part-next-single"></mat-icon>
             Continue
           </button>
         </div><!-- .action-buttons -->
@@ -410,7 +410,7 @@
           </p>
           <div class="action-buttons">
             <button mat-raised-button color="accent" (click)="navigateToActiveWallet()">
-              <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+              <mat-icon fontIcon="part-check"></mat-icon>
               Finish setup & open Wallet
             </button>
           </div><!-- .action-buttons -->

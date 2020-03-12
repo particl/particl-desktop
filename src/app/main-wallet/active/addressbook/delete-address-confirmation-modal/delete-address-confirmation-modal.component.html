@@ -1,7 +1,7 @@
 <div mat-dialog-title>Remove Address</div>
 
 <button class="small-close-button" (click)="dialogClose()">
-  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  <mat-icon fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 
@@ -22,12 +22,12 @@
 <mat-dialog-actions fxLayoutAlign="space-between center">
 
   <button mat-button mat-dialog-close (click)="dialogClose()">
-    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
 
   <button mat-raised-button color="warn" [disabled]="isProcessing" appDebounceClick (click)="onConfirmDelete()">
-    <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+    <mat-icon fontIcon="part-circle-remove"></mat-icon>
     Yes, remove
   </button>
 

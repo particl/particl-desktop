@@ -19,11 +19,11 @@
   <div
     class="zmq icon"
     [ngClass]="zmqStatus">
-    <mat-icon class="icon" [matTooltip]="zmqStatusMessage" fontSet="partIcon" fontIcon="part-nodes"></mat-icon>
+    <mat-icon class="icon" [matTooltip]="zmqStatusMessage" fontIcon="part-nodes"></mat-icon>
   </div>
 
   <div class="warning icon" *ngIf="timeOffset !== 0">
-    <mat-icon matTooltip="Time offset: {{ timeOffset }}s" fontSet="partIcon" fontIcon="part-alert"></mat-icon>
+    <mat-icon matTooltip="Time offset: {{ timeOffset }}s" fontIcon="part-alert"></mat-icon>
   </div>
 
 </div><!-- .status-icons -->

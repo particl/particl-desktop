@@ -1,7 +1,7 @@
 <div mat-dialog-title class="title">Unlock your wallet</div>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
-  <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
@@ -22,7 +22,7 @@
               (click)="showPass = !showPass"
               [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
               [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
-        <mat-icon fontSet="partIcon" [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+        <mat-icon [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
       </button>
     </mat-form-field>
 
@@ -63,7 +63,7 @@
 <mat-dialog-actions fxLayoutAlign="end center">
 
   <button color="warn" mat-raised-button appDebounceClick (debounceClick)="unlock()" [disabled]="(password.length === 0) || isProcessing">
-    <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+    <mat-icon fontIcon="part-lock-open"></mat-icon>
     Unlock wallet
   </button>
 

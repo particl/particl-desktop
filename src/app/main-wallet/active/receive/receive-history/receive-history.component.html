@@ -1,11 +1,11 @@
 <div class="show-old">
   <button mat-button class="small" (click)="isVisible.setValue(!isVisible.value)">
     <ng-container *ngIf="isVisible.value">
-      <mat-icon fontSet="partIcon" fontIcon="part-triangle-up"></mat-icon>
+      <mat-icon fontIcon="part-triangle-up"></mat-icon>
       Hide used addresses
     </ng-container>
     <ng-container *ngIf="!isVisible.value">
-      <mat-icon fontSet="partIcon" fontIcon="part-triangle-down"></mat-icon>
+      <mat-icon fontIcon="part-triangle-down"></mat-icon>
       Show used addresses
     </ng-container>
   </button>
@@ -35,8 +35,8 @@
       <mat-form-field class="icon-input --boxed" appearance="fill">
         <input matInput type="text" [formControl]="searchQuery"
               placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-        <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-        <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+        <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontIcon="part-clear-all"></mat-icon>
+        <mat-icon *ngIf="searchQuery.value.length === 0" fontIcon="part-search"></mat-icon>
       </mat-form-field>
 
       <p class="help-text">
@@ -83,12 +83,12 @@
               <!-- Copy address -->
               <button mat-button class="tiny icon-only" matTooltip="Copy address" (click)="copyToClipBoard()"
               ngxClipboard [cbContent]="address?.address || ''">
-                <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+                <mat-icon fontIcon="part-copy"></mat-icon>
               </button>
               <!-- Sign/Verify public address only  -->
               <button mat-button class="tiny icon-only" *ngIf="address.address.length < 35" matTooltip="Sign message"
               (click)="openSignatureModal(address)" ngxClipboard>
-                <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
+                <mat-icon fontIcon="part-person-check"></mat-icon>
               </button>
             </div><!-- .address-actions -->
 

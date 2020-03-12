@@ -39,7 +39,7 @@
         <div class="buttons" fxLayout fxLayoutAlign="space-between center">
           <a mat-button href="https://particl.wiki/learn/staking#cold-staking" target="_blank"
             class="tiny" matTooltip="Learn more about Cold staking on Wiki">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
+            <mat-icon fontIcon="part-circle-info"></mat-icon>
             Info
           </a>
           <button mat-button color="accent" class="tiny"
@@ -47,14 +47,14 @@
             (click)="zap()"
             [disabled]="isProcessing"
             *ngIf="coldStakePercent < 100">
-            <mat-icon fontSet="partIcon" fontIcon="part-lightning"></mat-icon>
+            <mat-icon fontIcon="part-lightning"></mat-icon>
             Zap
           </button>
           <button mat-button color="warn" class="tiny"
             matTooltip="Disable Cold Staking"
             (click)="revert()"
             [disabled]="isProcessing">
-            <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+            <mat-icon fontIcon="part-error"></mat-icon>
             Disable
           </button>
         </div>
@@ -85,7 +85,7 @@
         <div class="buttons" fxLayout fxLayoutAlign="space-between center">
           <a mat-button href="https://particl.wiki/learn/staking#cold-staking" target="_blank"
             class="tiny" matTooltip="Learn more about Cold staking on Wiki">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
+            <mat-icon fontIcon="part-circle-info"></mat-icon>
             Info
           </a>
           <button mat-button color="accent" class="tiny"
@@ -93,14 +93,14 @@
             (click)="zap()"
             [disabled]="isProcessing"
             *ngIf="coldStakePercent < 100">
-            <mat-icon fontSet="partIcon" fontIcon="part-lightning"></mat-icon>
+            <mat-icon fontIcon="part-lightning"></mat-icon>
             Zap
           </button>
           <button mat-button color="warn" class="tiny"
             matTooltip="Disable Cold Staking"
             (click)="revert()"
             [disabled]="isProcessing">
-            <mat-icon fontSet="partIcon" fontIcon="part-error"></mat-icon>
+            <mat-icon fontIcon="part-error"></mat-icon>
             Disable
           </button>
         </div>
@@ -129,11 +129,11 @@
       </p>
       <div class="buttons">
         <a mat-button href="https://particl.wiki/learn/staking#cold-staking" target="_blank" class="full-width">
-          <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
+          <mat-icon fontIcon="part-wikipedia"></mat-icon>
           Learn more on Wiki
         </a>
         <button mat-raised-button color="accent" class="full-width" (click)="openColdStakeModal()">
-          <mat-icon fontSet="partIcon" fontIcon="part-snowflake"></mat-icon>
+          <mat-icon fontIcon="part-snowflake"></mat-icon>
           Set up Cold staking
         </button>
       </div>

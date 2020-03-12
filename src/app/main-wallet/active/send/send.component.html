@@ -6,7 +6,7 @@
       (selectedIndexChange)="selectedTab.setValue($event)">
       <mat-tab *ngFor="let tab of tabs">
         <ng-template mat-tab-label>
-          <mat-icon fontSet="partIcon" [fontIcon]="tab.icon"></mat-icon>
+          <mat-icon [fontIcon]="tab.icon"></mat-icon>
           {{ tab.title }}
         </ng-template>
       </mat-tab>
@@ -29,7 +29,7 @@
             <mat-radio-button class="balance" *ngFor="let option of selectorOptions" [value]="option.value" color="primary" fxFlex >
               <div class="name">{{ option.name }}</div>
               <div class="desc">Available balance:<span class="amount">{{ option.displayedBalance }}</span>
-                <mat-icon *ngIf="option.help.length > 0" fontSet="partIcon" fontIcon="part-circle-question" class="help-icon"
+                <mat-icon *ngIf="option.help.length > 0" fontIcon="part-circle-question" class="help-icon"
                           [matTooltip]="option.help"></mat-icon>
               </div>
             </mat-radio-button>
@@ -46,7 +46,7 @@
               Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
               addresses are hidden from public.
               <button mat-button (click)="showAdvanced = !showAdvanced" class="small advanced-options">
-                <mat-icon fontSet="partIcon" fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
+                <mat-icon fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
                 Advanced options
               </button>
             </ng-container>
@@ -97,7 +97,7 @@
                   mat-button
                   class="small"
                   matTooltip="Set default privacy level">
-                  <mat-icon fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
+                  <mat-icon fontIcon="part-refresh"></mat-icon>
                   Default
                 </button>
               </div>
@@ -137,10 +137,10 @@
                     [class.verify-error]="!address.valid"
                     placeholder="Receiver's address (required)"/>
               <button matSuffix mat-button class="small" matTooltip="Load from Address Book" matTooltipPosition="before" (click)="openAddressLookup()">
-                <mat-icon fontSet="partIcon" fontIcon="part-people"></mat-icon>
+                <mat-icon fontIcon="part-people"></mat-icon>
               </button>
               <!--button matSuffix mat-button class="small" color="warn" (click)="clearSendInputs()" matTooltip="Clear all" matTooltipPosition="before">
-                <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+                <mat-icon fontIcon="part-clear-all"></mat-icon>
               </button-->
             </mat-form-field>
 
@@ -179,7 +179,7 @@
           <!-- Send buttons -->
           <div class="actions" fxFlex="1 1 100%">
             <button mat-raised-button color="primary" class="validate" appDebounceClick (debounceClick)="onSubmit()" [disabled]="targetForm.invalid || canBeProcessing">
-              <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+              <mat-icon fontIcon="part-check"></mat-icon>
               Make payment
             </button>
           </div><!-- .actions -->
@@ -203,7 +203,7 @@
     <ng-container page-help>
       What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
       <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
-        <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
+        <mat-icon fontIcon="part-wikipedia"></mat-icon>
         Currency &amp; transaction types
       </a>
     </ng-container>
@@ -221,7 +221,7 @@
     <ng-container page-help>
       What are the differences between Blind and Anon balances? How do they affect your privacy? Learn more on Particl Wiki:
       <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
-        <mat-icon fontSet="partIcon" fontIcon="part-wikipedia"></mat-icon>
+        <mat-icon fontIcon="part-wikipedia"></mat-icon>
         Currency &amp; transaction types
       </a>
     </ng-container>

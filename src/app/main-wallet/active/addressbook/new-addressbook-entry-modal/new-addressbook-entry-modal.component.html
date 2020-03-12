@@ -1,6 +1,6 @@
 <div mat-dialog-title>Add new address</div>
 <button class="small-close-button pull-right" tabindex="-1" mat-dialog-close>
-  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  <mat-icon fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 <form [formGroup]="addAddressForm" (ngSubmit)="addAddressbookEntry()" #formDir="ngForm">
@@ -40,7 +40,7 @@
         </mat-hint>
       </mat-form-field>
       <button mat-button class="paste small" (click)="pasteAddress()">
-        <mat-icon class="cursor-pointer" fontSet="partIcon" fontIcon="part-past"></mat-icon>
+        <mat-icon class="cursor-pointer" fontIcon="part-past"></mat-icon>
         Paste
       </button>
     </div>
@@ -62,11 +62,11 @@
 
   <mat-dialog-actions fxLayoutAlign="end center">
     <button type="button" mat-button mat-dialog-close>
-      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
     </button>
     <button mat-button mat-raised-button color="primary" [disabled]="!addAddressForm.valid || isProcessing">
-      <mat-icon fontSet="partIcon" fontIcon="part-person-add"></mat-icon>
+      <mat-icon fontIcon="part-person-add"></mat-icon>
       Add Address
     </button>
   </mat-dialog-actions>

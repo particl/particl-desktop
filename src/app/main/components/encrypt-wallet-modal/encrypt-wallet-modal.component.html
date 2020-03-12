@@ -2,7 +2,7 @@
 <div mat-dialog-title *ngIf="hasPassword" class="title">Confirm your password</div>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
-  <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
@@ -34,7 +34,7 @@
                 (click)="showPass = !showPass"
                 [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
                 [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
-          <mat-icon fontSet="partIcon" [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+          <mat-icon [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
         </button>
       </mat-form-field>
     </div><!-- .modal-highlight -->
@@ -43,11 +43,11 @@
 
   <mat-dialog-actions fxLayoutAlign="space-between center">
     <button mat-button mat-dialog-close>
-      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
     </button>
     <button color="warn" mat-raised-button appDebounceClick (debounceClick)="encrypt()" [disabled]="(password.length === 0) || isProcessing">
-      <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+      <mat-icon fontIcon="part-lock-open"></mat-icon>
       Confirm password
     </button>
   </mat-dialog-actions>
@@ -77,7 +77,7 @@
                (click)="showPass = !showPass"
                [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
                [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
-          <mat-icon fontSet="partIcon" [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+          <mat-icon [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
         </button>
       </mat-form-field>
     </div><!-- .modal-highlight -->
@@ -86,11 +86,11 @@
 
   <mat-dialog-actions fxLayoutAlign="space-between center">
     <button mat-button mat-dialog-close>
-      <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+      <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
     </button>
     <button color="warn" mat-raised-button appDebounceClick (debounceClick)="confirmPass()" [disabled]="(confirmation.length === 0) || isProcessing">
-      <mat-icon fontSet="partIcon" fontIcon="part-lock-open"></mat-icon>
+      <mat-icon fontIcon="part-lock-open"></mat-icon>
       Confirm &amp; Encrypt wallet
     </button>
   </mat-dialog-actions>

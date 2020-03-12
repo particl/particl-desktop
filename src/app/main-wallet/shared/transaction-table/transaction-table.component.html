@@ -28,7 +28,7 @@
         <!-- Confirmations -->
         <div fxFlex="0 0 70px" *ngIf="(txn.confirmations <= 12)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations)">
           <div class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
-            <mat-icon fontSet="partIcon" fontIcon="part-date" class="confirmations"></mat-icon>
+            <mat-icon fontIcon="part-date" class="confirmations"></mat-icon>
             {{ txn.confirmations }}/12
           </div>
         </div>
@@ -38,9 +38,9 @@
 
             <ng-container *ngIf="txn.addressType === TypeOfAddress.MULTISIG">
               <span class="tx-type sent">
-                <mat-icon fontSet="partIcon" fontIcon="part-lock-open" color="warn"></mat-icon>
+                <mat-icon fontIcon="part-lock-open" color="warn"></mat-icon>
                 <span class="name">Multisig escrow</span>
-                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontSet="partIcon" fontIcon="part-pen-1"
+                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontIcon="part-pen-1"
                           matTooltip="{{txn.narration}}" matTooltipPosition="after"></mat-icon>
               </span>
             </ng-container>
@@ -48,39 +48,39 @@
             <ng-container *ngIf="txn.addressType !== TypeOfAddress.MULTISIG" [ngSwitch]="txn.category">
 
               <span *ngSwitchCase="'stake'" class="tx-type staked">
-                <mat-icon fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+                <mat-icon fontIcon="part-stake"></mat-icon>
                 <span class="name">Staked</span>
               </span>
 
               <span *ngSwitchCase="'orphaned_stake'" class="tx-type orphan">
-                <mat-icon fontSet="partIcon" fontIcon="part-alert" color="warn"></mat-icon>
+                <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
                 <span class="name">Orphaned Stake</span>
               </span>
 
               <span *ngSwitchCase="'send'" class="tx-type sent">
-                <mat-icon fontSet="partIcon" fontIcon="part-send" color="warn"></mat-icon>
+                <mat-icon fontIcon="part-send" color="warn"></mat-icon>
                 <span class="name">Sent</span>
-                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontSet="partIcon" fontIcon="part-pen-1"
+                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontIcon="part-pen-1"
                           matTooltip="{{txn.narration}}" matTooltipPosition="after"></mat-icon>
               </span>
 
               <span *ngSwitchCase="'unknown'" class="tx-type sent">
-                <mat-icon fontSet="partIcon" fontIcon="part-lock-open" color="warn"></mat-icon>
+                <mat-icon fontIcon="part-lock-open" color="warn"></mat-icon>
                 <span class="name">Blinded escrow</span>
-                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontSet="partIcon" fontIcon="part-pen-1"
+                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontIcon="part-pen-1"
                           matTooltip="{{txn.narration}}" matTooltipPosition="after"></mat-icon>
               </span>
 
               <span *ngSwitchCase="'receive'" class="tx-type received">
-                <mat-icon fontSet="partIcon" fontIcon="part-receive" color="primary"></mat-icon>
+                <mat-icon fontIcon="part-receive" color="primary"></mat-icon>
                 <span class="name">Received</span>
-                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontSet="partIcon" fontIcon="part-pen-1"
+                <mat-icon class="narration" *ngIf="txn.narration.length > 0" fontIcon="part-pen-1"
                           matTooltip="{{txn.narration}}" matTooltipPosition="after"></mat-icon>
               </span>
 
               <ng-container *ngSwitchCase="'internal_transfer'">
                 <span *ngIf="!txn.isListingFee" class="tx-type received">
-                  <mat-icon fontSet="partIcon" fontIcon="part-transfer" color="primary"></mat-icon>
+                  <mat-icon fontIcon="part-transfer" color="primary"></mat-icon>
                   <ng-container>
                     <span *ngIf="txn.transferType === TypeOfTransfer.PUBLIC" class="name">Converted &rarr; Public</span>
                     <span *ngIf="txn.transferType === TypeOfTransfer.BLIND" class="name">Converted &rarr; Blind</span>
@@ -90,7 +90,7 @@
                 </span>
 
                 <span *ngIf="txn.isListingFee" class="tx-type listing-fee">
-                  <mat-icon fontSet="partIcon" fontIcon="part-bag-buy"></mat-icon>
+                  <mat-icon fontIcon="part-bag-buy"></mat-icon>
                   <span class="name">Publishing fee</span>
                 </span>
               </ng-container>
@@ -111,7 +111,7 @@
           </span>
 
           <span class="amount" *ngIf="txn.requires_unlock">
-            <mat-icon fontSet="partIcon" fontIcon="part-anon" matTooltip="Unlock wallet to see private transaction details" matTooltipPosition="before"></mat-icon>
+            <mat-icon fontIcon="part-anon" matTooltip="Unlock wallet to see private transaction details" matTooltipPosition="before"></mat-icon>
           </span>
 
         </div><!-- .tx-value -->

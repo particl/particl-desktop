@@ -17,7 +17,7 @@
     <div class="buttons">
       <button mat-raised-button color="primary" [disabled]="isLoading" (click)="addNewAddress()" class="full-width"
               matTooltip="Save new address to your Address book" matTooltipPosition="above">
-        <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+        <mat-icon fontIcon="part-circle-plus"></mat-icon>
         Add new address
       </button>
     </div><!-- .buttons -->
@@ -27,8 +27,8 @@
     <mat-form-field class="icon-input --boxed" appearance="fill">
       <input matInput type="text" [formControl]="searchQuery"
             placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-      <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-      <mat-icon *ngIf="searchQuery.value.length === 0" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+      <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontIcon="part-clear-all"></mat-icon>
+      <mat-icon *ngIf="searchQuery.value.length === 0" fontIcon="part-search"></mat-icon>
     </mat-form-field>
 
     <h2 class="section-title">Filter by type</h2>
@@ -74,13 +74,13 @@
           <!-- Actions/controls -->
           <div class="address-actions">
             <button mat-button class="tiny icon-only" matTooltip="Copy address" ngxClipboard [cbContent]="address.address" (click)="copyToClipBoard()">
-              <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
+              <mat-icon fontIcon="part-copy"></mat-icon>
             </button>
             <button mat-button class="tiny icon-only" (click)="openSignatureModal(address)" matTooltip="Verify message" ngxClipboard>
-              <mat-icon fontSet="partIcon" fontIcon="part-person-check"></mat-icon>
+              <mat-icon fontIcon="part-person-check"></mat-icon>
             </button>
             <button mat-button class="tiny icon-only" color="warn" appDebounceClick (debounceClick)="deleteAddress(address)" matTooltip="Remove address">
-              <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+              <mat-icon fontIcon="part-circle-remove"></mat-icon>
             </button>
           </div>
 

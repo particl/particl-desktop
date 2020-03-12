@@ -1,6 +1,6 @@
 <div mat-dialog-title>Backup <code>{{ (walletName | async) }}</code> wallet</div>
 <button class="small-close-button" (click)="dialogClose()">
-  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+  <mat-icon fontIcon="part-circle-remove"></mat-icon>
 </button>
 
 
@@ -14,7 +14,7 @@
   </p>
   <p>
     <button mat-raised-button color="accent" (click)="selectBackupPath()">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-image-upload"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-image-upload"></mat-icon>
       Select Folder
     </button>
     &nbsp;&nbsp;
@@ -25,11 +25,11 @@
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
   <button mat-button mat-dialog-close (click)="dialogClose()">
-    <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
+    <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
   <button mat-raised-button color="primary" mat-dialog-close (click)="doConfirmed()" [disabled]="isActionDisabled">
-    <mat-icon fontSet="partIcon" fontIcon="part-archive"></mat-icon>
+    <mat-icon fontIcon="part-archive"></mat-icon>
     Backup wallet
   </button>
 </mat-dialog-actions>

@@ -14,11 +14,11 @@
     <!-- Address type (public/private)-->
     <div class="address-type">
       <ng-container *ngIf="addressType === 'public'">
-        <mat-icon fontSet="partIcon" fontIcon="part-public"></mat-icon>
+        <mat-icon fontIcon="part-public"></mat-icon>
         Public address
       </ng-container>
       <ng-container *ngIf="addressType === 'private'">
-        <mat-icon fontSet="partIcon" fontIcon="part-anon"></mat-icon>
+        <mat-icon fontIcon="part-anon"></mat-icon>
         Private address
       </ng-container>
 
@@ -40,11 +40,11 @@
       </mat-form-field>
 
       <button mat-button class="small" *ngIf="isEditing" (click)="updateLabel()" color="primary" matTooltip="Save label [Enter]" matTooltipPosition="after">
-        <mat-icon fontSet="partIcon" fontIcon="part-circle-check"></mat-icon>
+        <mat-icon fontIcon="part-circle-check"></mat-icon>
       </button>
 
       <button mat-button class="small" *ngIf="!isEditing" (click)="toggleEdit()" matTooltip="Edit label" matTooltipPosition="after">
-        <mat-icon fontSet="partIcon" fontIcon="part-pen-1"></mat-icon>
+        <mat-icon fontIcon="part-pen-1"></mat-icon>
       </button>
 
     </div><!-- .address-label -->

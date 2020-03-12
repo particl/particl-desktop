@@ -4,22 +4,22 @@
   <div class="app-bar">
 
     <button mat-button class="wallet app" routerLinkActive="--active" routerLink="wallet">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-stake"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-stake"></mat-icon>
       <div class="title">Wallet</div>
     </button>
 
     <button mat-button class="market app" routerLinkActive="--active" routerLink="market">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bag"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-bag"></mat-icon>
       <div class="title">Market</div>
     </button>
 
     <!--button mat-button class="exchange app" [ngClass]="{'--active': selectedMode === SELECTED_MODE.EXCHANGE}">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bitcointalk"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-bitcointalk"></mat-icon>
       <div class="title">Exch.</div>
     </button-->
 
     <!--button mat-button class="chat app" [ngClass]="{'--active': selectedMode === SELECTED_MODE.CHAT}">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-chat-discussion"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-chat-discussion"></mat-icon>
       <div class="title">Chat</div>
     </button-->
 
@@ -29,19 +29,19 @@
   <div class="buttons">
 
     <a mat-button class="help-support" routerLinkActive="active" routerLink="extra/help" matTooltip="Help & Support" matTooltipPosition="after">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-circle-question"></mat-icon>
     </a>
 
     <a mat-button class="settings" routerLinkActive="active" routerLink="extra/settings" matTooltip="Particl Desktop Settings" matTooltipPosition="after">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-cog"></mat-icon>
     </a>
 
     <a mat-button class="console" matTooltip="Open Console" matTooltipPosition="after" (click)="openConsoleWindow()" (keyup.enter)="openConsoleWindow()" [disabled]="(walletName | async) === null">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-console-window"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-console-window"></mat-icon>
     </a>
 
     <a mat-button class="report-bug" href="https://github.com/particl/particl-desktop/issues" target="_blank" matTooltip="Report bug" matTooltipPosition="after">
-      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-bug"></mat-icon>
+      <mat-icon class="icon" fontIcon="part-bug"></mat-icon>
     </a>
   </div><!-- .buttons -->
 
