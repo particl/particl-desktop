@@ -34,7 +34,7 @@ enum TextContent {
   ERROR_ENCRYPTION_GENERIC = 'Wallet failed to encrypt properly!',
   MNEMONIC_BACKUP = 'Did you record your words at the previous step?',
   ERROR_MNEMONIC_INVALID_WORD = 'One or more words are invalid!',
-  ERROR_PASSWORD_MATCH = 'Recovery passphrase needs to match!',
+  ERROR_PASSWORD_MATCH = 'Recovery password needs to match!',
   ERROR_SETUP_FAILED = 'An error occurred while completing the final wallet setup!',
   ERROR_UNLOCK_WALLET = 'Please ensure the wallet is unlocked in order to continue',
   WARNING_FAILED_ADDRESS_GENERATION = 'Please create new wallet addresses manually',
@@ -379,7 +379,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         if (this.actionFlow === 'create') {
           this.words = JSON.parse(JSON.stringify(this.wordsVerification));
 
-          while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 5) {
+          while (this.words.reduce((prev, curr) => prev + +(curr === ''), 0) < 6) {
             const k = Math.floor(Math.random() * this.wordsVerification.length);
             this.words[k] = '';
           }

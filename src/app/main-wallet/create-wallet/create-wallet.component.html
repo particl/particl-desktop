@@ -230,7 +230,7 @@
         </app-page-intro>
 
         <app-page-intro *ngIf="currentStep === Step.PASSWORD" [canHideContent]="false">
-          <ng-container page-title>Choose a Recovery Password <small>(optional)</small></ng-container>
+          <ng-container page-title>Choose a Recovery Password <span class="tag">(optional)</span></ng-container>
           <ng-container page-content>
             You can further increase your wallet protection by setting a Recovery Password.<br>
             It will be needed together with Recovery Phrase to access your coins.
@@ -252,7 +252,7 @@
                   <ul>
                     <li>
                       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
-                      <strong>Write down these words</strong> &ndash; physically, e.g. on paper (or ideally on specialized metal seed backup products)!
+                      <strong>Write down these words</strong> &ndash; physically, e.g. on paper (or ideally on specialized cryptocurrency metal seed backup products)!
                     </li>
                     <li>
                       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-check"></mat-icon>
@@ -282,17 +282,22 @@
                   </ul>
                 </mat-card>
               </div>
-              <mat-card>
-                <h3 class="box-title --larger">Your Recovery Phrase</h3>
-                <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
-                <p *ngIf="!!errorString" class="message --warning">
-                  {{ errorString }}
-                </p>
-              </mat-card><!-- .mnemonic-save -->
+              <mat-expansion-panel class="mnemonic">
+                <mat-expansion-panel-header class="toggle">
+                  <h3 class="box-title --larger">Your Recovery Phrase <small>(click to reveal)</small></h3>
+                </mat-expansion-panel-header>
+                <div class="content">
+                  <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
+                  <p *ngIf="!!errorString" class="message --warning">
+                    {{ errorString }}
+                  </p>
+                </div>
+              </mat-expansion-panel><!-- .mnemonic-save -->
             </div><!-- .mnemonic-save -->
 
 
             <mat-card class="mnemonic-verify content-wrapper" *ngIf="currentStep === Step.MNEMONIC_VERIFY">
+              <h3 class="box-title --larger">Fill in your Recovery Phrase</h3>
               <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
               <p *ngIf="!!errorString" class="warning bottom">
                 {{ errorString }}
@@ -301,7 +306,7 @@
 
 
             <mat-card class="recovery-password content-wrapper" *ngIf="actionFlow === 'restore'">
-              <div class="box-title --larger">Recovery Password</div>
+              <h3 class="box-title --larger">Recovery Password</h3>
               <p>
                 If you set up a Recovery Password during wallet creation as well, enter it below:
               </p>
@@ -321,33 +326,30 @@
           </ng-template>
 
           <!-- Recovery Password -->
-          <div *ngIf="currentStep === Step.PASSWORD">
-            <mat-card class="recovery-password content-wrapper">
-              <div class="box-title --larger">Choose Recovery Password</div>
-
-              <mat-form-field class="password-input largest">
+          <mat-card class="recovery-password content-wrapper" *ngIf="currentStep === Step.PASSWORD">
+            <h3 class="box-title --larger">Choose Recovery Password</h3>
+            <div class="highlight">
+              <p class="message --warning" *ngIf="!!errorString">
+                {{ errorString }}
+              </p>
+              <mat-form-field class="--larger --boxed" appearance="fill" [color]="!!errorString ? 'warn' : 'primary'">
                 <input #passwordElem matInput placeholder="Enter Recovery Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="recoveryPass">
-                <mat-hint class="error" *ngIf="!!errorString">
-                  {{ errorString }}
-                </mat-hint>
+                <button mat-button matSuffix class="small"
+                        (click)="passwordElem.show = !passwordElem.show"
+                        [attr.aria-label]="'Show password'" [attr.aria-pressed]="passwordElem.show"
+                        [matTooltip]="passwordElem.show ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+                  <mat-icon fontSet="partIcon" [fontIcon]="passwordElem.show ? 'part-anon' : 'part-public'"></mat-icon>
+                </button>
               </mat-form-field>
-
-              <mat-form-field class="password-input largest">
+              <mat-form-field class="--larger --boxed" appearance="fill" [color]="!!errorString ? 'warn' : 'primary'">
                 <input matInput placeholder="Confirm Recovery Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="recoveryPassVerify">
               </mat-form-field>
-
-              <button mat-button class="small show-password" (click)="passwordElem.show = !passwordElem.show">
-                <mat-icon fontSet="partIcon" fontIcon="{{passwordElem.show ? 'part-anon' : 'part-public'}}"></mat-icon>
-                {{ passwordElem.show ? 'Hide' : 'Show' }} password
-              </button>
-
-              <p class="message --warning">
-                If you set a Recovery Password, be sure to keep it safe along with your Recovery Phrase.
-                <br> If you forget any of these, you won't be able to access your coins!
-              </p>
-
-            </mat-card><!-- .recovery-password -->
-          </div>
+            </div><!-- .highlight -->
+            <p class="message --info">
+              If you set a Recovery Password, be sure to keep it safe along with your Recovery Phrase.
+              If you forget any of these, you won't be able to access your coins!
+            </p>
+          </mat-card><!-- .recovery-password -->
         </div><!-- .container-flex -->
 
         <div class="action-buttons">
@@ -355,6 +357,7 @@
             <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
+          <!-- TODO @dev: enable only after recovery phrase expansion-panel was expanded -->
           <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="isBusy">
             <mat-icon fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
             Continue
@@ -374,37 +377,33 @@
           <p class="lead">
             Preparing your wallet
           </p>
-          <!-- <p class="help-text">
-            Creating your wallet &amp; scanning for transactions
-          </p> -->
         </div>
       </div>
     </ng-template>
 
     <!-- STEP 6: Gratz -->
     <ng-template [ngIf]="currentStep === Step.COMPLETED">
-      <div class="container-block">
-        <app-page-intro [canHideContent]="false">
-          <ng-container page-title>Your wallet is ready</ng-container>
-          <ng-container page-content>
+      <div class="wallet-ready container-flex">
+        <mat-card class="content-wrapper">
+          <h1>Your wallet is ready</h1>
+          <p class="lead">
             Congratulations &ndash; your new wallet was created successfully!
-          </ng-container>
-          <ng-container page-info>
+          </p>
+          <p class="message --info">
             Please ensure that your Recovery Phrase (and Recovery Password if you've set it up) is written down and stored in a secure location!
-          </ng-container>
-          <ng-container page-help>
+          </p>
+          <p class="help-text">
             You can now safely close this wizard and start experiencing everything Particl has to offer!
-          </ng-container>
-        </app-page-intro>
-      </div>
-      <div class="action-buttons" fxLayoutAlign="end center">
-        <button mat-raised-button color="primary" (click)="navigateToActiveWallet()">
-          <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-          Finish setup
-        </button>
-      </div>
+          </p>
+          <div class="action-buttons" fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" (click)="navigateToActiveWallet()">
+              <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
+              Finish setup
+            </button>
+          </div><!-- .action-buttons -->
+        </mat-card><!-- .content-wrapper -->
+      </div><!-- .wallet-ready -->
     </ng-template>
-  </div>
-  <!-- .content -->
-</div>
-<!-- .installer -->
+
+  </div><!-- .content -->
+</div><!-- .installer -->

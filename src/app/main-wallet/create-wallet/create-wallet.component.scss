@@ -132,7 +132,7 @@
         background: transparent;
         padding: 0 24px 0 28px;
         &::before {
-          top: 8px;
+          top: 9px;
           left: 0;
         }
       }
@@ -251,6 +251,7 @@
     p.message {
       margin: 16px 0 18px;
     }
+
     // Mnemonic save/show
     .mnemonic-save {
       max-width: 60rem;
@@ -285,16 +286,61 @@
           }
         }
       }
+      .mnemonic { // expansion panel with seed
+        .toggle {
+          min-height: 64px;
+          max-height: 64px;
+          .box-title {
+            margin: 0;
+          }
+          small {
+            @extend %tfx;
+            color: var(--text-muted);
+          }
+        }
+        &.mat-expanded {
+          small { opacity: 0; }
+        }
+      }
+    }
+
+    // Recovery password
+    .recovery-password {
+      max-width: 30rem;
+      p.message {
+        margin-bottom: 0;
+      }
+    }
+
+  }
+} // << .mnemonic-and-password
+
+
+/* ------------------------------- *\
+    Wallet is ready!
+\* ------------------------------- */
+
+.wallet-ready.container-flex {
+  padding: var(--paddingV) var(--paddingH);
+  height: calc(100vh - var(--header-main-height) - 2 * var(--paddingV)); // fill remaining vertical space
+  text-align: center;
+  .content-wrapper {
+    max-width: 35rem;
+    margin: auto;
+    padding: 32px 24px;
+    p.message {
+      padding: 56px 24px 16px;
+      margin: 32px -24px;
+      &::before {
+        font-size: 2.1em;
+        position: absolute;
+        top: 1.2em;
+        left: 50%;
+        transform: translate(-50%, 0);
+      }
     }
   }
 }
-
-
-
-
-
-
-
 
 
 // Animations
