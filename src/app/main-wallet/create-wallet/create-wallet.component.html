@@ -150,10 +150,6 @@
           <mat-card class="content-wrapper">
             <div class="box-title --larger">Choose Encryption Password</div>
             <div class="highlight">
-              <!-- FIXME @dev: errors not appearing (when passwords don't match) -->
-              <p class="message --warning" *ngIf="!!errorString">
-                {{ errorString }}
-              </p>
               <mat-form-field class="--largest --boxed full-width" appearance="fill">
                 <input #passwordElem matInput placeholder="Enter Encryption Password" [type]="passwordElem.show ? 'text' : 'password'" [(ngModel)]="encrypt">
                 <button mat-button matSuffix class="small"
@@ -289,7 +285,6 @@
               <mat-card>
                 <h3 class="box-title --larger">Your Recovery Phrase</h3>
                 <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
-                <!-- FIXME @dev: does errors even happen on this step? can't we remove this? -->
                 <p *ngIf="!!errorString" class="message --warning">
                   {{ errorString }}
                 </p>
@@ -354,7 +349,7 @@
             </mat-card><!-- .recovery-password -->
           </div>
         </div><!-- .container-flex -->
-        
+
         <div class="action-buttons">
           <button mat-button type="button" (click)="decrementStep()" [disabled]="isBusy">
             <mat-icon fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
@@ -365,7 +360,7 @@
             Continue
           </button>
         </div><!-- .action-buttons -->
-        
+
       </div><!-- .mnemonic-and-password.container-flex-stretched -->
     </ng-template>
     <!-- End: Create Wallet flow -->

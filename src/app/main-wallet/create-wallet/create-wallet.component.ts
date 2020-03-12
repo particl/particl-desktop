@@ -492,7 +492,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
               this.errorString = TextContent.ERROR_ENCRYPTION_GENERIC;
               return of(false);
             })
-          )
+          );
         } else {
           obs = of(true);
         }
