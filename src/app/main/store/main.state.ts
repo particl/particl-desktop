@@ -275,7 +275,11 @@ export class WalletUTXOState {
               updatedValues[resKey] = [];
             } else if (
               (currentState[resKey].length !== result[resKey].length) ||
-              (xorWith((val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)).length > 0)
+              (xorWith(
+                currentState[resKey],
+                result[resKey],
+                (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
+              ).length > 0)
             ) {
               updatedValues[resKey] = result[resKey];
             }
