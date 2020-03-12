@@ -24,7 +24,7 @@
       </div>
       <div class="step last" [ngClass]="{'active': currentStep === Step.COMPLETED}">
         <div class="dot"></div>
-        <div class="desc">Summary</div>
+        <div class="desc">Wallet ready</div>
       </div>
     </div>
   </wallet-menu-actions>
@@ -102,11 +102,11 @@
               <p class="message --warning" *ngIf="validation.errors && validation.dirty">
                 Please choose a name for this wallet before continuing
               </p>
+              <p class="message --warning" *ngIf="!!errorString">
+                {{ errorString }}
+              </p>
               <mat-form-field class="--largest --boxed full-width" appearance="fill">
                 <input matInput #nameField #validation="ngModel" [(ngModel)]="tempWalletName" name="walletname" placeholder="Wallet name (required)" required maxlength="32" [class.verify-error]="validation.errors && (validation.dirty || validation.touched)" />
-                <mat-hint class="error" *ngIf="!!errorString">
-                  {{ errorString }}
-                </mat-hint>
               </mat-form-field>
             </div>
             <p class="help-text">
@@ -395,10 +395,10 @@
           <p class="help-text">
             You can now safely close this wizard and start experiencing everything Particl has to offer!
           </p>
-          <div class="action-buttons" fxLayoutAlign="end center">
-            <button mat-raised-button color="primary" (click)="navigateToActiveWallet()">
+          <div class="action-buttons">
+            <button mat-raised-button color="accent" (click)="navigateToActiveWallet()">
               <mat-icon fontSet="partIcon" fontIcon="part-check"></mat-icon>
-              Finish setup
+              Finish setup & open Wallet
             </button>
           </div><!-- .action-buttons -->
         </mat-card><!-- .content-wrapper -->

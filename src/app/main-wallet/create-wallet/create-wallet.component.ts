@@ -27,7 +27,7 @@ enum TextContent {
   DEFAULT_WALLET_NAME = 'Default Wallet',
   ERROR_GENERIC = 'An unexpected error occurred processing your last request!',
   ERROR_WALLET_NAME_INVALID = 'Invalid wallet name specified',
-  ERROR_WALLET_NAME_EXISTS = 'A wallet with that name already exists!',
+  ERROR_WALLET_NAME_EXISTS = 'A wallet with that name already exists – please choose a different name',
   ERROR_WALLET_NAME_GENERAL = 'An unexpected error occurred',
   ERROR_ENCRYPTION_MATCH = 'Encryption values do not match',
   ERROR_ENCRYPTION_PREVIOUS = 'Wallet already (previously) encrypted. Ignoring current encryption key',
