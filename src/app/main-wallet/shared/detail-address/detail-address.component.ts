@@ -19,7 +19,7 @@ enum TextContent {
   WIDGET_HELP_PRIVATE_OWN = 'This is your private address - its balance and transaction history is hidden for public on blockchain. For auditable addresses, use Public addresses instead.',
   WIDGET_HELP_PUBLIC_OTHER = '3rd-party\'s Public address (not yours) - any payments made to this address will be publicly visible on the blockchain. For increased privacy, you should ask the recipient for their Private address instead.',
   WIDGET_HELP_PRIVATE_OTHER = '3rd-party\'s Private address (not yours) - any payments made to this address will be hidden for public on the blockchain.',
-};
+}
 
 
 @Component({
@@ -77,7 +77,7 @@ export class DetailAddressComponent implements OnChanges {
           this.widgetHelpText = TextContent.WIDGET_HELP_PRIVATE_OTHER;
           break;
         default:
-          this.widgetHelpText = ''
+          this.widgetHelpText = '';
       }
     }
   }
@@ -135,7 +135,7 @@ export class DetailAddressComponent implements OnChanges {
         this.log.er('Failed to change label: ', err);
         this._snackbar.open(TextContent.UPDATE_FAILED, 'warn');
       }
-    )
+    );
   }
 
 

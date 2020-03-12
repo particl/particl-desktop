@@ -58,7 +58,7 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
     ).pipe(
       switchMap(() => this.fetchStakingInfo()),
       takeUntil(this.destroy$)
-    )
+    );
   }
 
 

@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { Log } from 'ng2-logger'
+import { Log } from 'ng2-logger';
 import { slideDown } from 'app/core-ui/core.animations';
 
 import { Store, Select } from '@ngxs/store';
@@ -157,7 +157,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
     } else if (confirm >= 5 && confirm <= 8) {
       return 'confirm-2';
     } else if (confirm >= 9 && confirm <= 12) {
-      return 'confirm-3'
+      return 'confirm-3';
     } else {
       return 'confirm-ok';
     }

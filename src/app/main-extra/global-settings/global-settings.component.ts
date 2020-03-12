@@ -43,7 +43,7 @@ export class GlobalSettingsComponent implements OnInit {
     private _store: Store,
     private _dialog: MatDialog,
     private _snackbar: SnackbarService
-  ) { };
+  ) { }
 
 
   ngOnInit() {
@@ -148,7 +148,7 @@ export class GlobalSettingsComponent implements OnInit {
         }
         setting.errorMsg = '';
         group.errors = [];
-      })
+      });
     });
 
     this.currentChanges = this.currentChanges.map(change => []);

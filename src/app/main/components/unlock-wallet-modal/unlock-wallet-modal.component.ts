@@ -81,7 +81,7 @@ export class UnlockwalletModalComponent implements AfterViewInit {
           this._snackbar.open(TextContent.UNLOCK_ERROR_FAILURE, 'err');
         }
       }
-    )
+    );
   }
 
 

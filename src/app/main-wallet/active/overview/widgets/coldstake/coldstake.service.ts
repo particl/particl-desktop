@@ -31,7 +31,7 @@ export class ColdstakeService {
 
   enableColdStaking(address: string): Observable<RpcColdStakingEnabled> {
     if (!address) {
-      return throwError('No address provided')
+      return throwError('No address provided');
     }
 
     return this.setColdStakingChangeAddress(address) as Observable<RpcColdStakingEnabled>;
@@ -42,7 +42,7 @@ export class ColdstakeService {
 
     const refund$ = this._addressService.getDefaultStealthAddress().pipe(
       concatMap((address: string) => {
-        return this.returnFundsToWallet(address, estimate)
+        return this.returnFundsToWallet(address, estimate);
       })
     );
 
@@ -69,7 +69,7 @@ export class ColdstakeService {
           const utxos = result.utxos.map(utxo => utxo.inputs);
           const action$ = defer(() => this.zapTransaction(scriptHex, result.value, utxos, true).pipe(
             map((sendTypeResult: RpcSendTypeToZap) => {
-              return {utxos, scriptHex, utxoAmount: result.value, fee: +sendTypeResult.fee || 0}
+              return {utxos, scriptHex, utxoAmount: result.value, fee: +sendTypeResult.fee || 0};
             })
           ));
           return iif(() => scriptHex.length > 0, action$, throwError('INVALID_SCRIPT'));
@@ -88,7 +88,7 @@ export class ColdstakeService {
         }
         return response[0];
       })
-    )
+    );
   }
 
 
@@ -146,7 +146,7 @@ export class ColdstakeService {
 
       concatMap((pkey: string) => {
         if (pkey.length === 0 || pkey === 'default') {
-          return of('')
+          return of('');
         }
 
         if (pkey.length > 43) {
@@ -188,7 +188,7 @@ export class ColdstakeService {
               amount: +utxo.amount,
               inputs: { tx: utxo.txid, n: utxo.vout }
             });
-          };
+          }
         });
 
         return {

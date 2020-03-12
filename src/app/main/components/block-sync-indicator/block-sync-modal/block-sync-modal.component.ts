@@ -54,7 +54,7 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
     ).pipe(
       auditTime(5000),  // do a new check every this many (milli-)seconds
       concatMap(() => {
-        return this._blockSyncService.fetchCalculatedStats()
+        return this._blockSyncService.fetchCalculatedStats();
       }),
     ).subscribe(
       this.processStats.bind(this),
@@ -118,7 +118,7 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
     }
 
     // smooth factor k = 2 / (N -1) where N > 1
-    const k = 2 / (length - ( length > 1 ? 1 : 0))
+    const k = 2 / (length - ( length > 1 ? 1 : 0));
 
     let EMA = 0;
     // EMA = array[i] * K + EMA(previous) * (1 - K)
@@ -140,10 +140,10 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
     let returnString = '';
     if (hours > 0) {
-      returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `
+      returnString += `${hours} ${hours > 1 ? 'hours' : 'hour'} `;
     }
     if (minutes > 0) {
-      returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `
+      returnString += `${minutes} ${minutes > 1 ? 'minutes' : 'minute'} `;
     } else if (hours === 0 && seconds > 0) {
       returnString += `Any minute now!`;
     }

@@ -45,7 +45,7 @@ export class CountdownTimerComponent implements OnDestroy, AfterViewInit {
             Math.floor(this._unlockedUntil - Math.floor((new Date()).getTime() / 1000))
           ),
           takeWhile(diff => diff >= 0)
-        )
+        );
       }),
 
       takeUntil(this.destroy$)
@@ -53,7 +53,7 @@ export class CountdownTimerComponent implements OnDestroy, AfterViewInit {
       (val) => {
         this._remaining = val;
       }
-    )
+    );
   }
 
 

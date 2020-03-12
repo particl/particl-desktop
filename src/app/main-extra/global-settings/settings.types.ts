@@ -10,7 +10,7 @@ export enum SettingType {
   BOOLEAN = 2,
   SELECT = 3,
   BUTTON = 4
-};
+}
 
 // Details needed to render <option> elements
 export class SelectableOption {
@@ -57,7 +57,7 @@ export class Setting {
   onChange?: ValidationFunction;  // Optional function executed when the setting is changed.
                                   //  Similar to the validation function, but run after validation.
                                   //  NOT executed when the page save function is called.
-};
+}
 
 // Provides a means to group together similar settings.
 export class SettingGroup {
@@ -66,14 +66,14 @@ export class SettingGroup {
   icon: string;
   settings: Setting[];            // The settings in this group
   errors: number[];
-};
+}
 
 // Additional information applicable to the content of the page (rendered as a tab on the Settings page)
 export class PageInfo {
   title: string;
   description: string;
   help: string;
-};
+}
 
 // Convenience means for defining text content for loading/waiting/error messages
 export enum TextContent {

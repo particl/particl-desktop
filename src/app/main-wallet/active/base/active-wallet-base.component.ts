@@ -5,7 +5,7 @@ interface IMenuItem {
   path: string;
   icon?: string;
   params?: any;
-};
+}
 
 
 @Component({

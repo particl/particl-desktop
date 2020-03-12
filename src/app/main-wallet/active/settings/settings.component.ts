@@ -47,7 +47,7 @@ export class WalletSettingsComponent implements OnInit {
     private _dialog: MatDialog,
     private _snackbar: SnackbarService,
     private _rpc: MainRpcService
-  ) { };
+  ) { }
 
 
   ngOnInit() {
@@ -152,7 +152,7 @@ export class WalletSettingsComponent implements OnInit {
         }
         setting.errorMsg = '';
         group.errors = [];
-      })
+      });
     });
 
     this.currentChanges = this.currentChanges.map(change => []);

@@ -89,7 +89,7 @@ export class AppSettingsState implements NgxsOnInit {
           // Load the failover (default) wallet
           return ctx.dispatch(new AppSettings.SetActiveWallet(''));
         })
-      )
+      );
     }
 
     if (currentWallet === wallet) {
@@ -117,7 +117,7 @@ export class AppSettingsState implements NgxsOnInit {
         const obj = {};
         obj[parts[1]] = action.value;
         ctx.patchState(obj);
-      };
+      }
     }
   }
 

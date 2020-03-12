@@ -49,6 +49,6 @@ export class MultiwalletService implements OnDestroy {
         }
         return false;
       })
-    )
+    );
   }
 }

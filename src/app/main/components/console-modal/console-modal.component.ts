@@ -28,7 +28,6 @@ import { APP_MODE } from 'app/core/store/app.models';
 })
 export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-  @ViewChild('debug', {static: false}) private commandContainer: ElementRef;
   log: any = Log.create('app-console-modal');
 
   public commandList: Command[] = [];
@@ -43,6 +42,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
   public useRunstringsParser: boolean = false;
 
   private destroy$: Subject<void> = new Subject();
+  @ViewChild('debug', {static: false}) private commandContainer: ElementRef;
 
   constructor(
     private _rpc: MainRpcService,
@@ -109,7 +109,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
       .subscribe(
         (response: any) => this.formatSuccessResponse(response),
         (error: any) => {
-          this.formatErrorResponse(error)
+          this.formatErrorResponse(error);
         }
       );
   }
@@ -135,7 +135,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
         const errorStr = String(error).toLowerCase();
         errorMessage = errorStr.includes('unknown command') || errorStr.includes('unknown subcommand') ? 'Invalid command' : error;
       } else {
-        errorMessage = (error.message) ? error.message : 'Method not found'
+        errorMessage = (error.message) ? error.message : 'Method not found';
       }
       this.snackbar.open(errorMessage);
     }
@@ -143,7 +143,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
 
   queryParserRunstrings(com: string): Array<string> {
     return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
-          .filter(cmd => cmd.trim() !== '')
+          .filter(cmd => cmd.trim() !== '');
   }
 
   queryParserCommand(com: string): Array<any> {
@@ -216,7 +216,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
       if (isQuoteMark) {
         if (quoteIdx !== -1 && delimStack[quoteIdx] !== currentChar) {
           continue;
-        };
+        }
       }
 
       // Process possible validation issues
@@ -327,18 +327,18 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
 
   scrollToBottom() {
     if (this.disableScrollDown) {
-      return
+      return;
     }
     this.commandContainer.nativeElement.scrollTop = this.commandContainer.nativeElement.scrollHeight;
   }
 
   onScroll() {
-    const element = this.commandContainer.nativeElement
-    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight
+    const element = this.commandContainer.nativeElement;
+    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
     if (this.disableScrollDown && atBottom) {
-      this.disableScrollDown = false
+      this.disableScrollDown = false;
     } else {
-      this.disableScrollDown = true
+      this.disableScrollDown = true;
     }
   }
 

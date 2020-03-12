@@ -1,5 +1,5 @@
 import {
-  AddressHelper, PartoshiAmount, Duration, DateFormatter, Fee, isPrerelease, isMainnetRelease, dataURItoBlob
+  AddressHelper, PartoshiAmount, DateFormatter, isPrerelease, isMainnetRelease, dataURItoBlob
 } from './utils';
 
 describe('AddressHelper', () => {
@@ -46,57 +46,6 @@ describe('AddressHelper', () => {
 });
 
 
-describe('Duration', () => {
-
-  const duration1 = new Duration(37771920);
-  const duration2 = new Duration(34661520);
-  const duration3 = new Duration(34056720);
-  const duration4 = new Duration(6235920);
-  const duration5 = new Duration(2650320);
-  const duration6 = new Duration(1311120);
-  const duration7 = new Duration(1296740);
-  const duration8 = new Duration(15140);
-  const duration9 = new Duration(14420);
-  const duration10 = new Duration(740);
-  const duration11 = new Duration(80);
-  const duration12 = new Duration(59);
-  const duration13 = new Duration(0);
-
-
-  it('should display the correct readable duration', () => {
-    expect(duration1.getReadableDuration()).toBe('1 years and 2 months');
-    expect(duration2.getReadableDuration()).toBe('1 years and 1 months');
-    expect(duration3.getReadableDuration()).toBe('1 years');
-    expect(duration4.getReadableDuration()).toBe('2 months and 11 days');
-    expect(duration5.getReadableDuration()).toBe('1 months');
-    expect(duration6.getReadableDuration()).toBe('15 days and 4 hours');
-    expect(duration7.getReadableDuration()).toBe('15 days');
-    expect(duration8.getReadableDuration()).toBe('4 hours and 12 minutes');
-    expect(duration9.getReadableDuration()).toBe('4 hours');
-    expect(duration10.getReadableDuration()).toBe('12 minutes');
-    expect(duration11.getReadableDuration()).toBe('1 minute');
-    expect(duration12.getReadableDuration()).toBe('less than a minute');
-    expect(duration13.getReadableDuration()).toBe('less than a minute');
-  });
-
-  it('should display the correct short format duration', () => {
-    expect(duration1.getShortReadableDuration()).toBe('1 years');
-    expect(duration2.getShortReadableDuration()).toBe('1 years');
-    expect(duration3.getShortReadableDuration()).toBe('1 years');
-    expect(duration4.getShortReadableDuration()).toBe('2 months');
-    expect(duration5.getShortReadableDuration()).toBe('1 months');
-    expect(duration6.getShortReadableDuration()).toBe('15 days');
-    expect(duration7.getShortReadableDuration()).toBe('15 days');
-    expect(duration8.getShortReadableDuration()).toBe('4 hours');
-    expect(duration9.getShortReadableDuration()).toBe('4 hours');
-    expect(duration10.getShortReadableDuration()).toBe('12 minutes');
-    expect(duration11.getShortReadableDuration()).toBe('1 minutes');
-    expect(duration12.getShortReadableDuration()).toBe('< 1 minute');
-    expect(duration13.getShortReadableDuration()).toBe('unknown');
-  });
-
-});
-
 describe('DateFormatter', () => {
   it('should return the correctly formatted date', () => {
     const df = new DateFormatter(new Date('2019-01-01 15:49:21 GMT+0'));
@@ -109,24 +58,6 @@ describe('DateFormatter', () => {
 
 });
 
-describe('Fee', () => {
-  let fee: Fee;
-
-  it('should return the correct 0 value fee amounts ', () => {
-    fee = new Fee(0);
-    expect(fee.getFee()).toBe(0);
-    expect(fee.getAmountWithFee(0)).toBe(0);
-    expect(fee.getAmountWithFee(0.1)).toBe(0.1);
-  });
-
-  it('should return the correct value when created by calculation ', () => {
-    fee = new Fee(0.1 + 0.2);
-    expect(fee.getFee()).toBe(0.3);
-    expect(fee.getAmountWithFee(0)).toBe(0.3);
-    expect(fee.getAmountWithFee(0.1)).toBe(0.4);
-  });
-
-});
 
 describe('Util Functions', () => {
 
@@ -153,7 +84,6 @@ describe('Util Functions', () => {
     expect(result.size).toBe(3);
     expect(result.type).toBe('image/jpeg');
   });
-;
 });
 
 

@@ -64,7 +64,7 @@ export class ValidAddressValidator implements AsyncValidator {
       catchError(() => of(null)),
       map((resp: ValidatedAddress | null) => {
         if (resp === null || !resp.isvalid) {
-          return {validAddress: false}
+          return {validAddress: false};
         }
         return null;
       })

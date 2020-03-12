@@ -19,16 +19,16 @@ enum TextContent {
   ACTION_VERIFY_SUCCESS = 'Message verified!',
   ACTION_VERIFY_FAIL = 'Message verification failed:\nthe supplied signature and/or message were invalid for this address!',
   ACTION_GENERIC_FAIL = 'The request failed to be completed, please try again'
-};
+}
 
 
 type ModalType = 'sign' | 'verify';
 
 
 interface SignVerifyAddressTemplateInputs {
-  address: FilteredAddress,
-  type: ModalType
-};
+  address: FilteredAddress;
+  type: ModalType;
+}
 
 
 @Component({
@@ -70,7 +70,7 @@ export class SignVerifyAddressModalComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.messageInput.nativeElement.focus();
-    }, 1)
+    }, 1);
   }
 
 

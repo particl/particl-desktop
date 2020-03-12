@@ -29,7 +29,7 @@ export class MainRpcService implements OnDestroy {
           this._currentWallet = wallet;
         }
       }
-    )
+    );
   }
 
 

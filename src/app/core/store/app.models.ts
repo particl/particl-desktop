@@ -3,7 +3,7 @@ import { NumberValueAccessor } from '@angular/forms';
 export enum APP_MODE {
   WALLET,
   MARKET
-};
+}
 
 
 export interface AppStateModel {
@@ -32,10 +32,10 @@ export interface AppSettingsStateModel {
 
 
 export interface ConnectionDetails {
-  connected: boolean,
-  rpcHostname: string,
-  rpcPort: number,
-  rpcAuth: string
+  connected: boolean;
+  rpcHostname: string;
+  rpcPort: number;
+  rpcAuth: string;
 }
 
 
@@ -60,8 +60,8 @@ export interface AppVersionsModel {
 
 
 export interface AppDataStateModel {
-  networkInfo: NetworkInfoModel,
-  appVersions: AppVersionsModel
+  networkInfo: NetworkInfoModel;
+  appVersions: AppVersionsModel;
 }
 
 

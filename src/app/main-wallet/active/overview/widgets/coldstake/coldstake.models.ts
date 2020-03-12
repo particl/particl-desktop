@@ -2,16 +2,16 @@
 export interface RpcWalletSettingsChangeAddress {
   changeaddress?: {
     coldstakingaddress: string
-  }
+  };
 }
 
 
 export interface RpcUnspentTx {
   txid: string;
-  vout: number,
-  address?: string,
+  vout: number;
+  address?: string;
   coldstaking_address?: string;
-  scriptPubKey: string,
+  scriptPubKey: string;
   amount: number;
   confirmations: number;
   spendable: boolean;
@@ -28,7 +28,7 @@ export interface ZapDetailUTXOModel {
   inputs: {
     tx: string;
     n: number;
-  }
+  };
 }
 
 
@@ -36,7 +36,7 @@ export interface ZapDetailsModel {
   spendingAddress: string;
   coldStakingAddress: string;
   value: number;
-  utxos: ZapDetailUTXOModel[]
+  utxos: ZapDetailUTXOModel[];
 }
 
 
@@ -49,7 +49,7 @@ export interface RpcColdStakingEnabled {
   changeaddress: {
     coldstakingaddress: string;
     time: number
-  }
+  };
 }
 
 

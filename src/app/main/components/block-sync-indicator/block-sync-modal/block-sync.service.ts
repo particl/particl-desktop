@@ -51,7 +51,7 @@ export class BlockSyncService {
             highestPeerBlock,
             syncPercentage,
             currentBlock
-          }
+          };
 
           return stats;
         })

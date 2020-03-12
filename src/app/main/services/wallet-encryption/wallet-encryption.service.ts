@@ -53,7 +53,7 @@ export class WalletEncryptionService implements OnDestroy {
           }),
           // prevent potential inner observable leak
           takeUntil(this.destroy$)
-        )
+        );
       }),
 
       takeUntil(this.destroy$)

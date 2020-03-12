@@ -14,7 +14,7 @@ import { PageFilter } from '../../../shared/shared.models';
 
 enum TextContent {
   ADDRESS_COPIED = 'Address copied to clipboard'
-};
+}
 
 
 @Component({
@@ -33,10 +33,6 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
   isLoading: boolean = true;
   filteredAddresses: FilteredAddress[] = [];
 
-  private destroy$: Subject<void> = new Subject();
-  private loader$: Subject<void> = new Subject();
-  private filter$: Subject<void[]> = new Subject();
-  private _addresses: FilteredAddress[] = [];
 
   readonly pageFilters: PageFilter = {
     pageSizes: [10, 25, 50],
@@ -44,6 +40,12 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
     currentPage: 0,
     resultsTotalCount: 0
   };
+
+
+  private destroy$: Subject<void> = new Subject();
+  private loader$: Subject<void> = new Subject();
+  private filter$: Subject<void[]> = new Subject();
+  private _addresses: FilteredAddress[] = [];
 
 
   constructor(
@@ -66,7 +68,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
           if (this.scrollContainer) {
             this.scrollContainer.nativeElement.scrollIntoView(true);
           }
-        }, 0)
+        }, 0);
       }),
       takeUntil(this.destroy$)
     ).subscribe();
@@ -74,7 +76,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
     this.loader$.pipe(
       filter(() => this.isVisible.value),
       tap(() => {
-        this.isLoading = true
+        this.isLoading = true;
       }),
       switchMap(() => this.loadAddresses()),
       takeUntil(this.destroy$)

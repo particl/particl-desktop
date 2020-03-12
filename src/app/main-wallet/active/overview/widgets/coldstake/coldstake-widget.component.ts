@@ -30,7 +30,7 @@ enum TextContent {
   ZAP_DETAILS_ERROR = 'Could not fetch details needed for the zap process to continue',
   ZAP_ERROR = 'An error occurred while attempting to zap to cold staking',
   ZAP_SUCCESS = 'Succesfully zapped ${amount} PART to cold staking',
-};
+}
 
 
 @Component({
@@ -121,7 +121,7 @@ export class ColdstakeWidgetComponent implements OnDestroy {
 
       (err) => {
         this.log.er('fetch revert() info failed: ', err);
-        this._snackbar.open(TextContent.REVERT_DETAILS_ERROR, 'err')
+        this._snackbar.open(TextContent.REVERT_DETAILS_ERROR, 'err');
       }
     );
   }

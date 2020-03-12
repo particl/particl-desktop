@@ -77,7 +77,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
         this.setLockedBalance(info, utxos);
         this.setPendingBalance(info);
       }
-    )
+    );
   }
 
 
@@ -177,7 +177,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
       .add( this.toPartoshiAmount(+info.unconfirmed_blind) )
       .add( this.toPartoshiAmount(+info.unconfirmed_anon) )
       .add( this.toPartoshiAmount(+info.immature_balance) )
-      .add( this.toPartoshiAmount(+info.immature_anon_balance) )
+      .add( this.toPartoshiAmount(+info.immature_anon_balance) );
 
     this.updateBalanceItem(balItem, total);
   }
@@ -195,7 +195,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
       if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
         const amount = this.toPartoshiAmount(utxo.amount);
         tempBal.add(amount);
-      };
+      }
     }
 
     return tempBal;

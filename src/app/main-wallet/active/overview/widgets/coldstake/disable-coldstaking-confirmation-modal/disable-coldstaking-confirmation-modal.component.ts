@@ -7,7 +7,7 @@ interface DisableColdstakingTemplateInputs {
   txCount: number;
   fees: number;
   errorCount: number;
-};
+}
 
 
 @Component({

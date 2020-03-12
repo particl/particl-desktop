@@ -3,8 +3,8 @@ import { Log } from 'ng2-logger';
 
 
 interface SettingLiteral {
-  [key: string]:  string | number | boolean
-};
+  [key: string]:  string | number | boolean;
+}
 
 
 @Injectable({

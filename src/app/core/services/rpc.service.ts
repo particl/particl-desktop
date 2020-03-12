@@ -119,13 +119,13 @@ export class RpcService {
         .pipe(catchError((error => {
           let err: string;
           if (typeof error._body === 'object') {
-            err =  error._body
+            err =  error._body;
           } else if (error._body) {
             err = JSON.parse(error._body);
           } else {
             err = error.error && error.error.error ? error.error.error : error.message;
           }
-          return observableThrowError(err)
-        })))
+          return observableThrowError(err);
+        })));
   }
 }

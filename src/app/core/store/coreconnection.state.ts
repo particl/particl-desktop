@@ -101,7 +101,7 @@ export class CoreConnectionState {
     ).subscribe(
       (blockchaininfo) => {
         if ('chain' in blockchaininfo) {
-          ctx.patchState({testnet: blockchaininfo.chain === 'test'})
+          ctx.patchState({testnet: blockchaininfo.chain === 'test'});
         }
 
         // @TODO: zaSmilingIdiot 2020-01-21 -> Might be better to move this into a component/service... not necessarily ideal here
@@ -132,4 +132,4 @@ export class CoreConnectionState {
     }
   }
 
-};
+}

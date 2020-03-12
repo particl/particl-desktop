@@ -37,7 +37,7 @@ export interface SendTypeToEstimateResponse {
   bytes: number;
   fee: number;
   need_hwdevice: boolean;
-  outputs_fee: any
+  outputs_fee: any;
 }
 
 

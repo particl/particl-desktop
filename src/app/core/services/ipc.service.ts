@@ -1,10 +1,8 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Log } from 'ng2-logger'
+import { Log } from 'ng2-logger';
 
 import { ObservableFactoryFunction, Receiver, ListenerEvent } from './ipc.types';
-
-// RxIPC related stuffs
 
 
 @Injectable(
@@ -12,11 +10,11 @@ import { ObservableFactoryFunction, Receiver, ListenerEvent } from './ipc.types'
 )
 export class IpcService {
 
-  log: any = Log.create('ipc.service');
+  listeners: { [id: string]: boolean } = {};
 
+  private log: any = Log.create('ipc.service');
   /* Listeners on the renderer */
   private listenerCount: number = 0;
-  listeners: { [id: string]: boolean } = {};
 
   constructor(public zone: NgZone) {
 
@@ -114,10 +112,6 @@ export class IpcService {
         });
       });
     });
-  }
-
-  private _getListenerCount(channel: string) {
-    return window.ipc.listenerCount(channel);
   }
 
 }

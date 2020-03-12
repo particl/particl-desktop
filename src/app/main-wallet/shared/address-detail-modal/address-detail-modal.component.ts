@@ -8,8 +8,8 @@ import { FilteredAddress } from '../address.models';
 
 
 interface AddressDetailModalTemplateInputs {
-  address: FilteredAddress
-};
+  address: FilteredAddress;
+}
 
 
 @Component({

@@ -31,7 +31,7 @@ export class SendService {
           part: this.extractUTXOSpendable(utxos['public']),
           blind: this.extractUTXOSpendable(utxos['blind']),
           anon: this.extractUTXOSpendable(utxos['anon'])
-        }
+        };
       })
     );
   }
@@ -96,7 +96,7 @@ export class SendService {
       if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
         const amount = new PartoshiAmount(utxo.amount * Math.pow(10, 8));
         tempBal.add(amount);
-      };
+      }
     }
 
     return tempBal.particls();

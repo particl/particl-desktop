@@ -22,14 +22,14 @@ export class NotOwnAddressValidator implements AsyncValidator {
       catchError(() => of(null)),
       map((resp: AddressInfo | null) => {
         if (resp === null) {
-          return {notOwnAddress: 'failed to validate address'}
+          return {notOwnAddress: 'failed to validate address'};
         }
         if (resp.ismine) {
-          return {notOwnAddress: 'Your own address may not be used'}
+          return {notOwnAddress: 'Your own address may not be used'};
         }
         return null;
       })
-    )
+    );
   }
 
 }

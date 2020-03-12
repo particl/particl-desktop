@@ -17,7 +17,7 @@ interface TabModel {
   title: string;
   newAddressText: string;
   activeAddress: FilteredAddress;
-};
+}
 
 
 enum TextContent {

@@ -21,7 +21,7 @@ enum TextContent {
   WALLET_LOADING = 'Activating the selected wallet',
   WALLET_ACTIVATE_SUCCESS = 'Successfully Loaded Wallet',
   WALLET_ACTIVATE_ERROR = 'Failed to activate and load the selected wallet'
-};
+}
 
 
 @Component({
@@ -56,7 +56,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
     const balance$ = this._store.select(WalletUTXOState).pipe(
       map((utxos: WalletUTXOStateModel) => {
-        return this.extractUTXOSpendables(utxos)
+        return this.extractUTXOSpendables(utxos);
       }),
       tap((amount) => this._walletBalance = (new PartoshiAmount(amount * Math.pow(10, 8))).particlsString()),
       takeUntil(this.destroy$)
@@ -154,7 +154,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
           )) {
             this.otherWallets.push(this.processWallet(wallet.name));
           }
-        })
+        });
       },
       () => {
         this._snackbar.open(TextContent.WALLETS_LOAD_ERROR, 'warn');
@@ -175,7 +175,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       name,
       displayName: dispName,
       initial: dispName[0]
-    }
+    };
   }
 
 
@@ -195,7 +195,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
         }
         if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
           tempBal.add(new PartoshiAmount(utxo.amount * Math.pow(10, 8)));
-        };
+        }
       }
     }
     return tempBal.particls();

@@ -10,7 +10,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
 
 interface DeleteModalTemplateInputs {
-  address: FilteredAddress
+  address: FilteredAddress;
 }
 
 enum TextContent {

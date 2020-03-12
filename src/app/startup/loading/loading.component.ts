@@ -37,7 +37,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
         }
         this.getNextRoute();
       }
-    )
+    );
   }
 
   ngOnDestroy() {

@@ -13,7 +13,7 @@ interface IWalletModel {
 }
 
 interface IWalletCollectionModel {
-  wallets: IWalletModel[]
+  wallets: IWalletModel[];
 }
 
 
@@ -33,7 +33,7 @@ export class WalletInfoService {
     return this._rpc.call('getwalletinfo').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
       catchError(error => of({}))
-    )
+    );
   }
 
 
@@ -47,7 +47,7 @@ export class WalletInfoService {
         }
         return true;
       })
-    )
+    );
   }
 
 
@@ -65,14 +65,14 @@ export class WalletInfoService {
     return this._rpc.call('getcoldstakinginfo').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: retryAttempts})),
       catchError(error => of({}))
-    )
+    );
   }
 
 
   getWalletList(): Observable<IWalletCollectionModel> {
     return this._rpc.call('listwalletdir').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2}))
-    )
+    );
   }
 
 

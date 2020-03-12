@@ -7,7 +7,7 @@ export interface FilteredAddressCount {
   total: number;
   num_receive: number;
   num_send: number;
-};
+}
 
 
 export interface FilteredAddress {
@@ -17,20 +17,20 @@ export interface FilteredAddress {
   root: string;
   path?: string;
   id?: number;
-};
+}
 
 
 export enum AddressFilterSortDirection {
   ASC = 0,
   DESC = 1
-};
+}
 
 
 export enum AddressFilterOwnership {
   NO_FILTER = 0,
   OWNED = 1,
   NOT_OWNED = 2
-};
+}
 
 
 export interface ValidatedAddress {
@@ -63,7 +63,7 @@ export interface AddressInfo {
   hex?: string;
   pubkey?: string;
   pubkeys?: string[];
-  labels?: Array<{name: string, purpose: 'send' | 'receive'}>,
+  labels?: Array<{name: string, purpose: 'send' | 'receive'}>;
   timestamp?: number;
 }
 

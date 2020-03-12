@@ -61,7 +61,7 @@ export class ApplicationState implements NgxsOnInit {
       upnp: coreState.upnp,
       language: settingState.language,
       marketActive: settingState.marketActive
-    } as SettingsViewModel
+    } as SettingsViewModel;
   }
 
 
@@ -85,7 +85,7 @@ export class ApplicationState implements NgxsOnInit {
   setApplicationLoadingMessage(ctx: StateContext<AppStateModel>, action: Global.SetLoadingMessage) {
     ctx.patchState({
       loadingMessage: action.message
-    })
+    });
   }
 
 
@@ -116,4 +116,4 @@ export class ApplicationState implements NgxsOnInit {
     ctx.patchState({appMode: checkedMode});
   }
 
-};
+}

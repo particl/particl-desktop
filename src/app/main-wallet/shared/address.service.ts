@@ -140,8 +140,8 @@ export class AddressService {
       map((addresses: FilteredAddress[]) => {
         return addresses.map(addr => {
           const address = typeof addr.address === 'string' ? addr.address : '';
-          return { address, label: addr.label, type: (<AddressType>(address.length > 35 ? 'private' : 'public')) }
-        })
+          return { address, label: addr.label, type: (<AddressType>(address.length > 35 ? 'private' : 'public')) };
+        });
       })
     );
   }
@@ -151,7 +151,7 @@ export class AddressService {
     return this._rpc.call('filteraddresses', [-1]).pipe(
       concatMap((addrCounts: FilteredAddressCount) => {
         if (+addrCounts.num_receive > 0) {
-          return this.fetchFilteredAddresses(0, +addrCounts.num_receive)
+          return this.fetchFilteredAddresses(0, +addrCounts.num_receive);
         }
 
         return of([] as FilteredAddress[]);
@@ -227,7 +227,7 @@ export class AddressService {
         })
       );
     } else {
-      resp = of(addressTypes)
+      resp = of(addressTypes);
     }
 
     return resp.pipe(
@@ -245,7 +245,7 @@ export class AddressService {
                     ++addresses.public.id;
                     return addresses;
                   })
-                )
+                );
               }
 
               return of(addresses);

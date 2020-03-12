@@ -16,7 +16,7 @@ interface ICategory {
 
 interface ISorting {
   title: string;
-  value: SortFilterType
+  value: SortFilterType;
 }
 
 

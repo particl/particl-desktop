@@ -142,7 +142,7 @@ export class WordsListComponent implements  OnInit {
       (response) => {
         this.wordListDump = response.words;
       }
-    )
+    );
   }
 
   private validateWord(word: string, index: number): void {

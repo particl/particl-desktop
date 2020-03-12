@@ -83,97 +83,11 @@ export class PartoshiAmount {
   }
 }
 
-export class Fee {
-  private _fee: PartoshiAmount;
-  constructor(private fee: number) {
-    this._fee = new PartoshiAmount(fee * Math.pow(10, 8));
-  }
-
-  public getFee(): number {
-    return this._fee.particls();
-  }
-
-  public getAmountWithFee(amount: number, isAddition: boolean = true): number {
-    const total = new PartoshiAmount(amount * Math.pow(10, 8));
-    if (isAddition) {
-      return total.add(this._fee).particls();
-    }
-    return total.subtract(this._fee).particls();
-  }
-}
-
-export class Duration {
-
-  constructor(private duration: number) {
-    /*
-      test time formatter
-      this.log.d(`setting expectedtime 1 year and 6 months = ${this.formatTime(47304000)}`);
-      this.log.d(`setting expectedtime 10 months and 11 days = ${this.formatTime(27247838)}`);
-      this.log.d(`setting expectedtime 1 minute = ${this.formatTime(60)}`);
-    */
-  }
-
-  public getReadableDuration(): String {
-    return this.formatTime(this.duration);
-  }
-
-  public getShortReadableDuration(): String {
-    return this.shortFormatTime(this.duration);
-  }
-
-  // seconds into readable format
-  private formatTime(seconds: number): String {
-    const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365/*days*/));
-    const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5/*months*/)) - years * 12;
-    const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24/*hours*/)) - months * 30.5;
-    const hours: number =  Math.floor(seconds / (60 /*s*/ * 60/*min*/)) - days * 24;
-    const minutes: number =  Math.floor(seconds / (60/*s*/)) - hours * 60;
-
-    if (years > 0) {
-      return  years + ' years' + (months > 0 ? ' and ' + Math.ceil(months) + ' months' : '');
-    } else if (months > 0) {
-      return  months + ' months' + (days > 0 ? ' and ' + Math.ceil(days) + ' days' : '');
-    } else if (days > 0) {
-      return  days + ' days' + (hours > 0 ? ' and ' + Math.ceil(hours) + ' hours' : '');
-    } else if (hours > 0) {
-      return  hours + ' hours' + (minutes > 0 ? ' and ' + Math.ceil(minutes) + ' minutes' : '');
-    } else if (minutes > 0) {
-      return  minutes + (minutes > 1 ? ' minutes' : ' minute');
-    } else {
-      return 'less than a minute'
-    }
-  }
-
-  // seconds into short & readable format
-  private shortFormatTime(seconds: number): String {
-    const years: number = Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hour*/ * 365/*days*/));
-    const months: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24 /*hours*/ * 30.5/*months*/)) - years * 12;
-    const days: number =  Math.floor(seconds / (60 /*s*/ * 60 /*min*/ * 24/*hours*/)) - months * 30.5;
-    const hours: number =  Math.floor(seconds / (60 /*s*/ * 60/*min*/)) - days * 24;
-    const minutes: number =  Math.floor(seconds / (60/*s*/)) - hours * 60;
-
-    if (years > 0) {
-      return  years + ' years';
-    } else if (months > 0) {
-      return  months + ' months';
-    } else if (days > 0) {
-      return  days + ' days';
-    } else if (hours > 0) {
-      return  hours + ' hours';
-    } else if (minutes > 0) {
-      return  minutes + ' minutes';
-    } else if (seconds > 0) {
-      return  '< 1 minute' ;
-    }
-    return 'unknown'
-  }
-
-}
 
 export class AddressHelper {
-  addressPublicRegex: RegExp = /^[pPrR25][a-km-zA-HJ-NP-Z1-9]{25,52}$/;
-  addressPrivateRegex: RegExp = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/
-  addressBothRegex: RegExp = /^[pPrR25tT][a-km-zA-HJ-NP-Z1-9]{25,}$/;
+  addressPublicRegex: RegExp = /^[pPrR25][a-km-zA-HJ-NP-Z1-9]{25,52}$/ ;
+  addressPrivateRegex: RegExp = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/ ;
+  addressBothRegex: RegExp = /^[pPrR25tT][a-km-zA-HJ-NP-Z1-9]{25,}$/ ;
 
   testAddress(address: string, type?: string): boolean {
     return this[(type ? type === 'public'
@@ -208,7 +122,7 @@ export class DateFormatter {
       ((this.date.getMonth() + 1) < 10 ? '0' + (this.date.getMonth() + 1) : (this.date.getMonth() + 1)) + '-' +
       this.date.getFullYear()
       + (onlyShowDate === false ?  ' ' + this.hourSecFormatter() : '')
-    )
+    );
   }
 
   public hourSecFormatter() {
@@ -216,7 +130,7 @@ export class DateFormatter {
         (this.date.getHours() < 10 ? '0' + this.date.getHours() : this.date.getHours()) + ':' +
         (this.date.getMinutes() < 10 ? '0' + this.date.getMinutes() : this.date.getMinutes()) + ':' +
         (this.date.getSeconds() < 10 ? '0' + this.date.getSeconds() : this.date.getSeconds())
-      )
+      );
   }
 }
 
@@ -653,7 +567,7 @@ export const isPrerelease = (release?: string): boolean => {
   }
 
   return found;
-}
+};
 
 export const isMainnetRelease = (release?: string): boolean => {
   let version = release;
@@ -662,7 +576,7 @@ export const isMainnetRelease = (release?: string): boolean => {
   }
 
   return !version.includes('testnet');
-}
+};
 
 
 export const genericPollingRetryStrategy = ({

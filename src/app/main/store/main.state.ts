@@ -161,7 +161,7 @@ export class WalletInfoState {
         info$.pipe(concatMap(info => ctx.dispatch(new WalletDetailActions.GetSettings(info.walletname)))) :
         info$.pipe(mapTo(undefined));
   }
-};
+}
 
 
 @State<WalletStakingStateModel>({
@@ -334,7 +334,7 @@ export class WalletSettingsState {
         const obj = {};
         obj[action.key] = action.value;
         ctx.patchState(obj);
-      };
+      }
     }
   }
 
@@ -361,4 +361,4 @@ export class MainState {
   setInitializeState(ctx: StateContext<MainStateModel>, {init}: MainActions.Initialize) {
     ctx.patchState({isInitialized: init});
   }
-};
+}

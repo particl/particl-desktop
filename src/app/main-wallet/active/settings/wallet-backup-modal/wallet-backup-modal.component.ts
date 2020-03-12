@@ -12,13 +12,13 @@ import { WalletInfoState } from 'app/main/store/main.state';
 })
 export class WalletBackupModalComponent {
 
+  @Output() onConfirmation: EventEmitter<string> = new EventEmitter<string>();
+
   @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
 
   private _error: string = '';
   private _filePath: string;
 
-
-  @Output() onConfirmation: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
     private dialogRef: MatDialogRef<WalletBackupModalComponent>,

@@ -11,10 +11,11 @@ export class PageIntroComponent implements OnInit, AfterViewInit {
   @Input() childPageAlias: string = '';
   @Input() canHideContent: boolean = true;
 
-  @ViewChild('pageContent', { static: false }) pageContentRef: ElementRef;
-  private viewKey: string;
   public hasPageContent: boolean = false;
   public showPageContent: boolean = false;
+
+  @ViewChild('pageContent', { static: false }) pageContentRef: ElementRef;
+  private viewKey: string;
 
   constructor(
     private _router: Router,

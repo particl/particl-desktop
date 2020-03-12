@@ -42,7 +42,7 @@ export class BlockSyncIndicatorComponent implements OnInit, OnDestroy {
           tap(() => {
               this.isSyncing = false;
           })
-        )
+        );
       }),
       takeUntil(this.destroy$)
     ).subscribe();

@@ -18,7 +18,7 @@ interface IPoll {
 
 interface ClientVersionRelease {
   tag_name: string;
-};
+}
 
 @Injectable({
   providedIn: 'root'

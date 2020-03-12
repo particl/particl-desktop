@@ -48,21 +48,21 @@ export class StatusComponent implements OnInit, OnDestroy {
         switch (true) {
           case !smsg.connected || !hashblock.connected:
             this._zmqStyle = 'zmq-alert';
-            if (!smsg.connected) { services.push('SMSG') }
-            if (!hashblock.connected) { services.push('HashBlock') }
+            if (!smsg.connected) { services.push('SMSG'); }
+            if (!hashblock.connected) { services.push('HashBlock'); }
             msg = `Service Unavailable`;
             break;
 
           case smsg.error || hashblock.error:
-            if (smsg.error) { services.push('SMSG') }
-            if (hashblock.error) { services.push('HashBlock') }
+            if (smsg.error) { services.push('SMSG'); }
+            if (hashblock.error) { services.push('HashBlock'); }
             this._zmqStyle = 'zmq-warning';
             msg = `Service Error`;
             break;
 
           case (smsg.retryCount > 0) || (hashblock.retryCount > 0):
-            if (smsg.retryCount > 0) { services.push('SMSG') }
-            if (hashblock.retryCount > 0) { services.push('HashBlock') }
+            if (smsg.retryCount > 0) { services.push('SMSG'); }
+            if (hashblock.retryCount > 0) { services.push('HashBlock'); }
             this._zmqStyle = 'zmq-info';
             msg = `Retrying Connection`;
             break;
@@ -100,7 +100,7 @@ export class StatusComponent implements OnInit, OnDestroy {
 
     ).pipe(
       takeUntil(this.destroy$)
-    ).subscribe()
+    ).subscribe();
   }
 
   ngOnDestroy() {

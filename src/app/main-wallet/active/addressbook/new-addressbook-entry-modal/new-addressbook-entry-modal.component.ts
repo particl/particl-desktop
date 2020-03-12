@@ -19,7 +19,7 @@ enum TextContent {
 
 function properAddressValidator(regex: RegExp): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
-    return regex.test(control.value) ? null : {properAddress: 'Invalid address provided'}
+    return regex.test(control.value) ? null : {properAddress: 'Invalid address provided'};
   };
 }
 
