@@ -1,11 +1,11 @@
 <div mat-dialog-title>Remove Address</div>
 
-<button class="small-close-button" (click)="dialogClose()">
-  <mat-icon fontIcon="part-circle-remove"></mat-icon>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<div mat-dialog-content class="dialog-content">
+<mat-dialog-content class="modal-content">
 
   <p class="lead">
     Are you certain you want to delete this address from your Address book?
@@ -16,7 +16,7 @@
     <div class="string">{{ data.address.address }}</div>
   </div>
 
-</div>
+</mat-dialog-content>
 
 
 <mat-dialog-actions fxLayoutAlign="space-between center">

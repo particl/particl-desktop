@@ -1,18 +1,5 @@
 @import './src/assets/config'; // import shared colors etc.
 
-.mat-dialog-content {
-  max-width: 500px;
-}
-
-.address {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .address-field {
-    flex: 1 1 100%;
-  }
-  .paste {
-    flex: 0 0 50px;
-    margin-left: 12px;
-  }
+.modal-content {
+  max-width: 34rem;
 }

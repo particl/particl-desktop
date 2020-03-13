@@ -1,8 +1,7 @@
 @import './src/assets/config'; // import shared colors etc.
 
-.dialog-content {
-  width: 530px;
-  margin: 0 -24px;
+.modal-content {
+  width: 35rem;
   p.lead {
     margin-top: 0;
   }
@@ -13,8 +12,8 @@
   text-align: center;
   border: 2px dashed hsla(var(--color-alert-hsl), 0.15);
   border-radius: 4px;
-  padding: 24px;
-  margin: 24px 0 0;
+  padding: 48px 24px;
+  margin: 24px 0 16px;
   .label {
     font-size: 20px;
     font-weight: 500;
