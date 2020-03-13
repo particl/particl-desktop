@@ -14,11 +14,11 @@
         <div class="dot"></div>
         <div class="desc">Encrypt wallet</div>
       </div>
-      <div class="step" [ngClass]="{'active': currentStep === Step.MNEMONIC_INITIAL, 'done': currentStep > Step.MNEMONIC_INITIAL}">
+      <div class="step" [ngClass]="{'active': [Step.MNEMONIC_INITIAL, Step.MNEMONIC_VERIFY, (actionFlow === 'create' ? -1 : Step.PASSWORD)].includes(currentStep), 'done': currentStep > (actionFlow === 'create' ? Step.MNEMONIC_VERIFY : Step.PASSWORD)}">
         <div class="dot"></div>
         <div class="desc">Recovery Phrase</div>
       </div>
-      <div class="step" [ngClass]="{'active': currentStep === Step.PASSWORD, 'done': currentStep > Step.PASSWORD}">
+      <div class="step" *ngIf="actionFlow === 'create'" [ngClass]="{'active': currentStep === Step.PASSWORD, 'done': currentStep > Step.PASSWORD}">
         <div class="dot"></div>
         <div class="desc">Recovery Password</div>
       </div>
@@ -370,8 +370,7 @@
             <mat-icon fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
-          <!-- TODO @dev: enable only after recovery phrase expansion-panel was expanded -->
-          <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="isBusy || ((currentStep === Step.MNEMONIC_INITIAL) && !wordsListOpened )">
+          <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="isBusy || !isSeedWordsValid || ((currentStep === Step.MNEMONIC_INITIAL) && !wordsListOpened )">
             <mat-icon fontIcon="part-next-single"></mat-icon>
             Continue
           </button>

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd, ActivatedRouteSnapshot } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, map, flatMap } from 'rxjs/operators';
 
@@ -22,6 +22,9 @@ export class TopbarComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    // Get the initial title value: its not set when this component is first created, so needs to be initialized on component init.
+    this.title = this.findTitleValue(this._route.snapshot);
+
     this._router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map((event: NavigationEnd) => {
@@ -47,5 +50,21 @@ export class TopbarComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  private findTitleValue(route: ActivatedRouteSnapshot): string {
+    if (route.data && route.data.title) {
+      if (typeof route.data.title === 'string') {
+        return route.data.title;
+      }
+      return '';
+    }
+
+    if (route.firstChild) {
+      return this.findTitleValue(route.firstChild);
+    }
+
+    return '';
   }
 }

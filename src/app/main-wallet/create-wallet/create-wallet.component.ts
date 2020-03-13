@@ -184,6 +184,10 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
     return this.actionType;
   }
 
+  get isSeedWordsValid(): boolean {
+    return !((this.words.length === 0) || (this.words.filter(word => word.trim().length === 0).length > 0));
+  }
+
 
   async selectAction(doCreate: boolean): Promise<void> {
     this.actionType = doCreate ? 'create' : 'restore';
@@ -537,6 +541,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
                 return of(valid);
               })
             );
+          } else {
+            this.errorString = TextContent.ERROR_MNEMONIC_INVALID_WORD;
           }
         }
         break;
