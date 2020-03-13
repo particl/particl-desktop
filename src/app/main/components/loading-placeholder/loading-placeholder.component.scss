@@ -9,22 +9,28 @@
     $items: 7;
     max-width: none;
     .item {
-      box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
-      background: $color-white;
+      box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
+      background: var(--color-white);
       padding: 0 24px;
       height: 50px;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       .placeholder {
-        background: mix($bg, $bg-shadow);
-        border-radius: $radius;
+        background: hsla(var(--bg-muted-hsl), 0.5);
+        border-radius: var(--radius);
         display: inline-block;
         height: 10px;
-        width: 50%;
+        width: 40%;
         &.date {
-          width: 95%;
+          width: 88%;
+        }
+        &.icon {
+          width: 16px;
+          height: 16px;
+          margin-right: 12px;
+          border-radius: 50%;
         }
         &.type {
-          width: 50%;
+          width: 30%;
         }
         &.value {
           text-align: right;
