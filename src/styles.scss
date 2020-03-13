@@ -300,17 +300,13 @@ body {
   .mat-icon {
     position: absolute;
     right: 0;
+    top: calc(50% - 9px);
     font-size: 16px;
     line-height: 2.9em;
     cursor: pointer;
   }
   .mat-form-field-underline {
     background-color: var(--bg-muted);
-  }
-  &.--larger {
-    .mat-icon {
-      top: 8px;
-    }
   }
 }
 
@@ -374,7 +370,10 @@ table {
       margin: 0 -24px;
     }
     .mat-form-field {
-      margin: 0;
+      margin-bottom: 16px;
+      &:last-of-type {
+        margin: 0;
+      }
     }
   }
 

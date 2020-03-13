@@ -1,13 +1,13 @@
 <div mat-dialog-title *ngIf="isSigning">Sign message</div>
 <div mat-dialog-title *ngIf="!isSigning">Verify message</div>
 
-<button class="small-close-button" mat-dialog-close>
-  <mat-icon fontIcon="part-circle-remove"></mat-icon>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
 <form [formGroup]="addressForm">
-  <div mat-dialog-content class="dialog-content">
+  <div mat-dialog-content class="modal-content">
 
     <ng-container *ngIf="isSigning">
       <p class="lead">
@@ -27,42 +27,41 @@
       </p>
     </ng-container>
 
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Address</mat-label>
-      <input matInput
-        type="text"
-        formControlName="address"
-      >
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Message</mat-label>
-      <textarea matInput
-        formControlName="message"
-        rows="5"
-        placeholder="Enter message to sign/verify"
-        #messageInput
-        required
-      ></textarea>
-      <mat-hint class="error" *ngIf="message.invalid && (message.dirty || message.touched)">
+    <div class="modal-highlight">
+      <mat-form-field appearance="fill" class="--boxed" matTooltip="Address" matTooltipPosition="before">
+        <mat-icon matPrefix fontIcon="part-qr"></mat-icon>
+        <input matInput
+          type="text"
+          formControlName="address"
+        >
+      </mat-form-field>
+      <p class="message --warning" *ngIf="message.invalid && (message.dirty || message.touched)">
         A message is required
-      </mat-hint>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Signature</mat-label>
-      <input matInput
-        formControlName="signature"
-        [placeholder]="signMessagePlaceholder"
-        #signatureInput
-      >
-      <mat-hint class="error" *ngIf="signature.invalid && (signature.dirty || signature.touched)">
+      </p>
+      <mat-form-field appearance="fill" class="textarea --boxed" matTooltip="Message" matTooltipPosition="before">
+        <mat-icon matPrefix fontIcon="part-chat"></mat-icon>
+        <textarea matInput
+          formControlName="message"
+          rows="3"
+          placeholder="Enter message to sign/verify"
+          #messageInput
+          required
+        ></textarea>
+      </mat-form-field>
+      <p class="message --warning" *ngIf="signature.invalid && (signature.dirty || signature.touched)">
         A signature is required
-      </mat-hint>
-    </mat-form-field>
+      </p>
+      <mat-form-field appearance="fill" class="--boxed" matTooltip="Signature" matTooltipPosition="before">
+        <mat-icon matPrefix fontIcon="part-pen-2"></mat-icon>
+        <input matInput
+          formControlName="signature"
+          [placeholder]="signMessagePlaceholder"
+          #signatureInput
+        >
+      </mat-form-field>
+    </div><!-- .highlight -->
 
-  </div>
+  </div><!-- .dialog-content -->
 
 
   <mat-dialog-actions fxLayoutAlign="space-between center">

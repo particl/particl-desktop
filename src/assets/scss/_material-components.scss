@@ -96,6 +96,8 @@ mat-icon.mat-icon {
   font-size: 16px;
   &.material-icons {
     font-family: "part" !important; // overwrite Material icons by ours by default
+    font-weight: 400 !important;
+    line-height: 1;
   }
 }
 
@@ -639,6 +641,15 @@ mat-toolbar.mat-toolbar {
     .mat-input-element {
       padding: var(--field-boxed-paddingV) 0;
     }
+    [matPrefix] {
+      &.mat-icon {
+        font-size: 1.25em;
+        color: var(--text-muted);
+        margin-right: 0.8em;
+        position: relative;
+        top: -0.1em;
+      }
+    }
     button[matSuffix] { // show/hide password button (taken from Encrypt wallet .--larger field)
       padding: 8px 12px;
       margin-right: -12px;
@@ -707,6 +718,22 @@ mat-toolbar.mat-toolbar {
       }
     }
   } // << SELECTS
+
+
+  // --- TEXTAREAS ---
+
+  &.textarea { // TODO: any better way to select a Textarea?
+    .mat-form-field-flex {
+      padding: 4px 2px 4px 16px; // lower padding, so that scrollbar is on the edge
+      .mat-input-element {
+        padding-right: var(--field-boxed-paddingV);
+        width: calc(100% - var(--field-boxed-paddingV));
+      }
+    }
+  }
+  // << TEXTAREAS
+
+
 
 }
 
