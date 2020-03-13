@@ -89,6 +89,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   public tempWalletName: string;
   public errorString: string = '';
   public isBusy: boolean = false;
+  wordsListOpened: boolean = false;
 
   // encrypt password
   encrypt: string = '';
@@ -355,6 +356,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         break;
 
       case Step.MNEMONIC_INITIAL:
+        this.wordsListOpened = false;
         this.recoveryPass = '';
         this.recoveryPassVerify = '';
         this.words = [];

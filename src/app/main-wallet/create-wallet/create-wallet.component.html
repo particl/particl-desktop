@@ -284,7 +284,7 @@
                   </ul>
                 </mat-card>
               </div>
-              <mat-expansion-panel class="mnemonic">
+              <mat-expansion-panel class="mnemonic" (opened)="wordsListOpened = true;">
                 <mat-expansion-panel-header class="toggle">
                   <h3 class="box-title --larger">Your Recovery Phrase <small>(click to reveal)</small></h3>
                 </mat-expansion-panel-header>
@@ -371,7 +371,7 @@
             Back
           </button>
           <!-- TODO @dev: enable only after recovery phrase expansion-panel was expanded -->
-          <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="isBusy">
+          <button mat-raised-button color="primary" (click)="incrementStep()" [disabled]="isBusy || ((currentStep === Step.MNEMONIC_INITIAL) && !wordsListOpened )">
             <mat-icon fontIcon="part-next-single"></mat-icon>
             Continue
           </button>
