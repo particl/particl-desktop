@@ -6,44 +6,23 @@
 
 // ------ ALERTS/NOTIFICATIONS ------ //
 
-mat-card.notification {
-  padding: 12px 28px;
-  background: $bg;
-  box-shadow: 0 1px $bg-shadow !important;
-  border-left: 6px solid transparent;
-  border-radius: 0;
-  position: fixed;
-  top: 0;
-  left: $sidebar-width;
-  right: $scrollbar-width;
-  z-index: 20;
-  &.info {
-    border-left: 6px solid $color;
-    .title .tag {
-      background: $color;
-    }
-  }
-  &.alert {
-    border-left: 6px solid $color-alert;
-    .title .tag {
-      background: $color-alert;
-    }
-  }
-  .title {
-    font-size: 13px;
-    font-weight: 600;
+.notification {
+  background: hsla(var(--color-info-hsl), 0.03);
+  box-shadow: 0 2px 20px -16px inset;
+  border-bottom: 1px solid var(--bg-muted);
+  padding: 8px calc(var(--paddingH) - 16px) 8px var(--paddingH);
+  font-size: 13px;
+  .text {
+    font-weight: 500;
     margin: 0;
-    .tag {
-      background: $text;
-      color: $color-white;
-      border-radius: 99px;
-      padding: 0 6px;
-      margin: 0 1px;
-      font-size: 12px;
-      font-weight: 700;
+    padding-left: 24px;
+    .mat-icon {
+      position: absolute;
+      left: var(--paddingH);
+      color: var(--color-info);
     }
-    .button {
-      margin-left: 8px;
-    }
+  }
+  .button {
+    font-size: inherit;
   }
 }
