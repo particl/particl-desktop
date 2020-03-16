@@ -12,7 +12,8 @@
 
   <div class="modal-highlight" [@.disabled]="disableAnimation">
 
-    <mat-form-field class="password-field --plain --larger" appearance="fill">
+    <mat-form-field class="password-field --boxed --larger" appearance="fill">
+      <mat-icon matPrefix fontIcon="part-lock"></mat-icon>
       <input matInput name="password" id="password"
               [type]="showPass ? 'text' : 'password'"
               [appFocusTimeout]="true"

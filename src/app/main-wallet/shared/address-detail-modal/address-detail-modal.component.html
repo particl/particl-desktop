@@ -2,9 +2,8 @@
 <div mat-dialog-title *ngIf="address?.owned === 'false'">Saved address details</div>
 <div mat-dialog-title *ngIf="address?.owned === 'true'">Your used address details</div>
 
-
-<button class="small-close-button" mat-dialog-close>
-  <mat-icon fontIcon="part-circle-remove"></mat-icon>
+<button mat-button color="warn" class="modal-close" mat-dialog-close>
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">

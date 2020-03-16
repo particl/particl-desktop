@@ -300,17 +300,13 @@ body {
   .mat-icon {
     position: absolute;
     right: 0;
+    top: calc(50% - 9px);
     font-size: 16px;
     line-height: 2.9em;
     cursor: pointer;
   }
   .mat-form-field-underline {
     background-color: var(--bg-muted);
-  }
-  &.--larger {
-    .mat-icon {
-      top: 8px;
-    }
   }
 }
 
@@ -371,10 +367,21 @@ table {
     border-top: 1px dashed var(--bg-muted);
     border-bottom: 1px dashed var(--bg-muted);
     p.message { // warning/info messages above the input
-      margin: 0 -24px;
+      margin: 0;
+      padding: 0 0 10px 28px;
+      &::before {
+        top: 10px;
+        left: 0;
+      }
     }
     .mat-form-field {
-      margin: 0;
+      margin-bottom: 16px;
+      &:last-of-type {
+        margin: 0;
+      }
+      & + p.message {
+        margin-top: 24px;
+      }
     }
   }
 
