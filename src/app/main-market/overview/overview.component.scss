@@ -97,6 +97,13 @@
     }
   } // << .header
 
+  // Activity content
+  .content {
+    padding: 20px 24px 16px;
+    background: hsla(var(--bg-hsl), 0.7);
+    border-top: 1px dashed var(--bg-muted);
+  }
+
   // Buyer-specific actions
   &.--buyer {
     .notifications {
