@@ -546,6 +546,10 @@ h1 {
   &:first-of-type {
     margin-top: 0;
   }
+  @include break(l) {
+    font-size: 16px;
+    margin: 46px 0 18px;
+  }
 }
 
 // Bolder, all-caps "H3" headers, usually inside boxes/cards

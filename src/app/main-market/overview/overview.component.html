@@ -1,16 +1,61 @@
 <div class="overview container-block without-tab-bar">
 
-  <app-page-intro>
-    <ng-container page-title>Market Overview</ng-container>
-    <ng-container page-content>
-      Welcome to the world of tomorrow!
-    </ng-container>
-    <ng-container page-help>
-      ...
-    </ng-container>
-  </app-page-intro>
+  <!-- FIXME @dev: implement these, pretty please :) -->
+  <mat-card class="stats-overview">
 
-  <h2 class="section-title">Latest Buyer Activity</h2>
+    <div class="stat item">
+      <!-- number of available listings on all connected markets -->
+      <div class="value">513</div>
+      <div class="key">Listings<br>for sale</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stat item">
+      <div class="value">2</div>
+      <div class="key">Connected<br>Markets</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stat item">
+      <!-- all orders in progress (for this wallet), both buy and sell ones -->
+      <div class="value">5</div>
+      <div class="key">Active<br>Orders</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="stat item">
+      <!-- all proposals currently available for voting (even those which user voted on) -->
+      <div class="value">1</div>
+      <div class="key">Active<br>Proposals</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <table class="balances item">
+      <tr>
+        <th>Spendable Anon</th>
+        <td>190<small>.5173</small></td>
+      </tr>
+      <tr>
+        <th>Locked in Escrow</th>
+        <td>15<small>.4137</small></td>
+      </tr>
+      <tr>
+        <th>Total Balance</th>
+        <td>270<small>.6513</small></td>
+      </tr>
+    </table>
+
+  </mat-card><!-- .stats-overview -->
+
+
+
+  <h2 class="section-title">
+    Latest Buyer Activity
+  </h2>
   
   <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
   <mat-expansion-panel class="activity-group --buyer">
@@ -47,7 +92,10 @@
   </mat-expansion-panel><!-- .activity-group -->
 
 
-  <h2 class="section-title">Latest Seller Activity</h2>
+
+  <h2 class="section-title">
+    Latest Seller Activity
+  </h2>
 
   <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
   <mat-expansion-panel class="activity-group --seller">
@@ -118,7 +166,10 @@
   </mat-expansion-panel><!-- .activity-group -->
 
 
-  <h2 class="section-title">Community Activity</h2>
+
+  <h2 class="section-title">
+    Community Activity
+  </h2>
 
   <!-- TODO: probably just a link to Proposals page? -->
   <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
@@ -137,5 +188,6 @@
       sss
     </div>
   </mat-expansion-panel><!-- .activity-group -->
+
 
 </div><!-- .container-block -->

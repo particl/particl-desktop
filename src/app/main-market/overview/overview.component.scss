@@ -1,5 +1,60 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+// Stats overview
+.stats-overview {
+  margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) var(--paddingV);
+  padding: 18px var(--paddingH);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .divider {
+    width: 1px;
+    height: 4rem;
+    background: var(--bg-muted);
+  }
+  // stats
+  .stat {
+    display: flex;
+    align-items: center;
+    .value {
+      font-size: 26px;
+      margin-right: 0.9rem;
+      @include break(l) {
+        font-size: 28px;
+        margin-right: 1.1rem;
+      }
+    }
+    .key {
+      color: var(--text-muted);
+    }
+  }
+  // balances
+  .balances {
+    width: 25%;
+    th,
+    td {
+      margin: 0;
+      padding: 0;
+    }
+    th {
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    td {
+      text-align: right;
+      font-weight: 500;
+      font-family: var(--font-mono);
+      small {
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+    }
+  }
+}
+
+
+// Latest activities
 .activity-group {
   .header {
     max-height: 60px;
