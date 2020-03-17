@@ -10,16 +10,132 @@
     </ng-container>
   </app-page-intro>
 
+  <h2 class="section-title">Latest Buyer Activity</h2>
+  
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --buyer">
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">2</div>
+          <mat-icon fontIcon="part-hamburger"></mat-icon>
+        </div>
+        <div class="title">Orders requiring attention</div>
+        <div class="desc">Updated orders that need payment or delivery confirmation</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
+
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --buyer">
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">23</div>
+          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+        </div>
+        <div class="title">New replies to questions</div>
+        <div class="desc">Seller responded to question you asked on their Listing</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
 
 
+  <h2 class="section-title">Latest Seller Activity</h2>
+
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --seller">
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">2</div>
+          <mat-icon fontIcon="part-hamburger"></mat-icon>
+        </div>
+        <div class="title">New bids on Listings</div>
+        <div class="desc">Buyer wants to buy your Product &ndash; approve or reject their bid</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
+
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --seller --no-new" disabled>
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">0</div>
+          <mat-icon fontIcon="part-hamburger"></mat-icon>
+        </div>
+        <div class="title">Orders requiring attention</div>
+        <div class="desc">Updated orders that need payment or need to be shipped</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
+
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --seller">
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">8</div>
+          <mat-icon fontIcon="part-chat"></mat-icon>
+        </div>
+        <div class="title">New questions on Listings</div>
+        <div class="desc">Buyer asked a question about your Listing</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
+
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --seller">
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">12</div>
+          <mat-icon fontIcon="part-bag"></mat-icon>
+        </div>
+        <div class="title">Expired Listings</div>
+        <div class="desc">These Listings were taken off the Market &ndash; relist them if needed</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
 
 
+  <h2 class="section-title">Community Activity</h2>
 
-
+  <!-- TODO: probably just a link to Proposals page? -->
+  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
+  <mat-expansion-panel class="activity-group --community">
+    <mat-expansion-panel-header class="header">
+      <div class="header-content">
+        <div class="icon">
+          <div class="notifications">5</div>
+          <mat-icon fontIcon="part-notification-speaker"></mat-icon>
+        </div>
+        <div class="title">New Proposals</div>
+        <div class="desc">Community member submitted a new Proposal for voting</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content highlight">
+      sss
+    </div>
+  </mat-expansion-panel><!-- .activity-group -->
 
 </div><!-- .container-block -->
-
-
-
-
-
