@@ -127,6 +127,10 @@ a.menu-item {
     top: 10px;
     opacity: 0.6;
   }
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
   &:hover,
   &:focus {
     background: hsla(var(--bg-sidebar-darker-hsl), 0.5);

@@ -25,7 +25,6 @@ const zmqDefaultPort = 36750;
 exports.start = function (doReindex = false, zmqPort = zmqDefaultPort) {
 
   let options = _options.get();
-  const config = daemonConfig.getConfig();
 
   if (+options.addressindex !== 1) {
     const daemonSettings = daemonConfig.getSettings();

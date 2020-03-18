@@ -1,19 +1,20 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
-import { MatExpansionPanel } from '@angular/material/expansion';
 import { Store } from '@ngxs/store';
-import { Subject, merge } from 'rxjs';
-import { takeUntil, tap, map, finalize } from 'rxjs/operators';
-import { WalletInfoService } from 'app/main/services/wallet-info/wallet-info.service';
-import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
+import { MarketState } from '../store/market.state';
+import { WalletInfoState } from 'app/main/store/main.state';
 import { MainActions } from 'app/main/store/main.actions';
-import { IWallet } from './market-base.models';
-import { WalletUTXOStateModel, WalletInfoStateModel } from 'app/main/store/main.models';
-import { PartoshiAmount } from 'app/core/util/utils';
+import { Subject } from 'rxjs';
+import { takeUntil, tap, finalize } from 'rxjs/operators';
+
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { IWallet } from './market-base.models';
+import { StartedStatus } from '../store/market.models';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { MarketActions } from '../store/market.actions';
 
 
 enum TextContent {
@@ -28,6 +29,7 @@ interface IMenuItem {
   text: string;
   path: string;
   icon?: string;
+  alwaysEnabled: boolean;
 }
 
 
@@ -40,62 +42,67 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   otherIdentities: IWallet[] = [];
 
   readonly menu: IMenuItem[] = [
-    {text: 'Overview', path: 'overview', icon: 'part-overview'},
-    {text: 'Markets', path: 'management', icon: 'part-add-account'},
-    {text: 'Listings', path: 'listings', icon: 'part-listings'},
-    {text: 'Purchases', path: 'buy', icon: 'part-bag-buy'},
-    {text: 'Sell', path: 'sell', icon: 'part-bag-sell'},
-    {text: 'Proposals', path: 'proposals', icon: 'part-notification-speaker'},
-    {text: 'Market Settings', path: 'settings', icon: 'part-tool'}
+    {text: 'Overview', path: 'overview', icon: 'part-overview', alwaysEnabled: false},
+    {text: 'Markets', path: 'management', icon: 'part-add-account', alwaysEnabled: false},
+    {text: 'Listings', path: 'listings', icon: 'part-listings', alwaysEnabled: false},
+    {text: 'Purchases', path: 'buy', icon: 'part-bag-buy', alwaysEnabled: false},
+    {text: 'Sell', path: 'sell', icon: 'part-bag-sell', alwaysEnabled: false},
+    {text: 'Proposals', path: 'proposals', icon: 'part-notification-speaker', alwaysEnabled: false},
+    {text: 'Market Settings', icon: 'part-tool', path: 'settings', alwaysEnabled: true}
   ];
 
   private destroy$: Subject<void> = new Subject();
-  private _currentWallet: IWallet = { name: '-', displayName: '-', initial: ''};
-  private _walletBalance: string = '0';
+  private _currentWallet: IWallet = { name: '-', displayName: '-', initial: '', balance: '0'};
+  private startedStatus: StartedStatus = StartedStatus.STOPPED;
 
-  @ViewChild(MatExpansionPanel, {static: true}) private walletSelector: MatExpansionPanel;
 
   constructor(
     private _store: Store,
     private _router: Router,
-    private _walletInfo: WalletInfoService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog
   ) { }
 
 
   ngOnInit() {
-    const wallet$ = this._store.select(WalletInfoState.getValue('walletname')).pipe(
-      tap((walletName: string) => this._currentWallet = this.processWallet(walletName)),
-      takeUntil(this.destroy$)
-    );
 
-    const balance$ = this._store.select(WalletUTXOState).pipe(
-      map((utxos: WalletUTXOStateModel) => {
-        return this.extractUTXOSpendables(utxos);
+    this._store.select(MarketState.startedStatus).pipe(
+      tap((status) => {
+        if (this.startedStatus === status) {
+          // ignore initial market state update, as well as routing based on same state update
+          return;
+        }
+
+        this.startedStatus = status;
+
+        if (status === StartedStatus.PENDING) {
+          this._router.navigate(['/main/market/loading']);
+        } else if (status === StartedStatus.STARTED) {
+          this._router.navigate(['/main/market/overview']);
+        } else {
+          this._router.navigate(['/main/market/settings']);
+        }
       }),
-      tap((amount) => this._walletBalance = (new PartoshiAmount(amount * Math.pow(10, 8))).particlsString()),
-      takeUntil(this.destroy$)
-    );
-
-
-    merge(wallet$, balance$).pipe(
       takeUntil(this.destroy$)
     ).subscribe();
+
+    this._store.dispatch(new MarketActions.StartMarketService());
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+    this._store.dispatch(new MarketActions.StopMarketService());
+  }
+
+
+  get isStarted(): boolean {
+    return this.startedStatus === StartedStatus.STARTED;
   }
 
 
   get currentIdentity(): IWallet {
     return this._currentWallet;
-  }
-
-  get currentBalance(): string {
-    return this._walletBalance;
   }
 
 
@@ -116,7 +123,6 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   identitySelected(identity: IWallet) {
 
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.MARKET_LOADING}});
-    this.cleanupWalletSelector();
 
     this._store.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
       finalize(() => this._dialog.closeAll())
@@ -135,71 +141,5 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
         this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
       }
     );
-  }
-
-
-  openedIdentitySelector() {
-    this._walletInfo.getWalletList().pipe(
-      map((walletList) => walletList.wallets.sort(
-        (a, b) => {
-          const x = a.name.toLocaleLowerCase();
-          const y = b.name.toLocaleLowerCase();
-          return x < y ? -1 : x > y ? 1 : 0;
-        })
-      )
-    ).subscribe(
-      (wallets) => {
-        wallets.forEach((wallet) => {
-          const wName = wallet.name.toLowerCase();
-          const isTestnet = wName.startsWith('testnet/') || wName.startsWith('testnet\\') || (wName === 'testnet');
-          if (!(isTestnet || (wName === this._currentWallet.name))) {
-            this.otherIdentities.push(this.processWallet(wallet.name));
-          }
-        });
-      },
-      () => {
-        this._snackbar.open(TextContent.IDENTITY_LOAD_ERROR, 'warn');
-      }
-    );
-  }
-
-
-  closedIdentitySelector() {
-    this.cleanupWalletSelector();
-  }
-
-
-  private processWallet(name: string): IWallet {
-    const n = typeof name === 'string' ? name : '???';
-    return {
-      name: n,
-      displayName: n,
-      initial: n[0]
-    };
-  }
-
-
-  // @TODO: zaSmilingIdiot 2020-03-02 -> memoize this in the state to make balances easier to obtain from other components
-  private extractUTXOSpendables(state: WalletUTXOStateModel): number {
-    const tempBal = new PartoshiAmount(0);
-
-    for (const utxo of state.anon) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount * Math.pow(10, 8)));
-      }
-    }
-    return tempBal.particls();
-  }
-
-
-  private cleanupWalletSelector() {
-    this.otherIdentities = [];
-    if (this.walletSelector && this.walletSelector.opened) {
-      this.walletSelector.close();
-    }
   }
 }

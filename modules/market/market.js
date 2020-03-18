@@ -4,103 +4,132 @@ const cookie = require('../rpc/cookie');
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs').Observable;
-const importer = require('./importer/importer');
+// const importer = require('./importer/importer');
 
 // Stores the child process
 let child = undefined;
+let doStartupCheck = true;
 
-let _options = {};
-
-
-const removeIpcListeners = function() {
-  rxIpc.removeListeners('start-market');
-  rxIpc.removeListeners('stop-market');
-}
 
 exports.init = function() {
   exports.destroy();
-  rxIpc.registerListener('start-market', function(walletName, portNum) {
+  rxIpc.registerListener('start-market', function(appPort, zmqPort) {
     return Observable.create(observer => {
-      exports.start(walletName, portNum);
-      observer.complete(true);
+      if (child !== undefined) {
+        // if doStartCheckup === true, it means that the child process has not yet started correctly.
+        observer.next(!doStartupCheck);
+        return;
+      }
+
+      start(appPort, zmqPort);
+
+      if (!child) {
+        observer.error({code: -1, message: 'Generic start failure'});
+        observer.complete();
+      }
+
+      child.on('close', code => {
+        log.info('market process ended.');
+        if (doStartupCheck) {
+          // market process is shutdown before obtaining the "ready" signal
+          observer.next(false);
+          observer.complete();
+        }
+      });
+
+      child.stdout.on('data', data => {
+        console.log(data.toString('utf8'));
+        if (doStartupCheck && data.toString('utf8').includes('App is ready!')) {
+          doStartupCheck = false;
+          observer.next(true);
+          observer.complete();
+        }
+
+      });
+      child.stderr.on('data', data => {
+        console.log(data.toString('utf8'));
+        if (doStartupCheck) {
+          observer.error('An unexpected error occurred');
+          observer.complete();
+        }
+      });
     });
   });
 
   rxIpc.registerListener('stop-market', function() {
     return Observable.create(observer => {
-      exports.stop();
-      observer.complete(true);
+      stop();
+      observer.complete();
     });
   });
 }
 
+
 exports.destroy = function() {
-  exports.stop();
-  removeIpcListeners();
+  stop();
+  rxIpc.removeListeners('start-market');
+  rxIpc.removeListeners('stop-market');
 }
 
-exports.start = function(walletName, portNum) {
-  _options = config.getConfig();
 
-  if (!_options.skipmarket && !child) {
-    log.info('market process starting.');
+function start(appPort, zmqPort) {
+  log.info('market process start requested');
 
-    const isTestnet = Boolean(+_options.testnet);
-    const cookieFile = cookie.getCookieName(_options);
+  const _options = config.getConfig();
 
-    const marketOptions = {
-      ELECTRON_VERSION: process.versions.electron,
-      DEFAULT_WALLET: String(walletName) || '',
-      DEFAULT_MARKETPLACE_NAME: 'DEFAULT',
-      RPCHOSTNAME: _options.rpcbind || 'localhost',
-      RPC_PORT: _options.port,
-      TESTNET: isTestnet,
-      RPCCOOKIEFILE: cookieFile,
-      STANDALONE: true,
-      SOCKETIO_ENABLED: true
-    };
+  const isTestnet = Boolean(+_options.testnet);
+  const cookieFile = cookie.getCookieName(_options);
 
-    if ( (typeof portNum === 'number') && (portNum > 0)) {
-      marketOptions.APP_PORT = portNum;
-    }
+  const marketOptions = {
+    ELECTRON_VERSION: process.versions.electron,
+    RPCHOSTNAME: _options.rpcbind || 'localhost',
+    RPC_PORT: _options.port,
+    TESTNET: isTestnet,
+    RPCCOOKIEFILE: cookieFile,
+    SOCKETIO_ENABLED: true,
+    APP_HOST: 'http://localhost',
+    APP_URL_PREFIX: '/api'
+  };
 
-    if (isTestnet) {
-      marketOptions.TESTNET_PORT = _options.port;
-      marketOptions.DEFAULT_MARKETPLACE_PRIVATE_KEY = '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek';
-      marketOptions.DEFAULT_MARKETPLACE_ADDRESS = 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA';
-    } else {
-      marketOptions.MAINNET_PORT = _options.port;
-      marketOptions.NODE_ENV = 'PRODUCTION';
-      marketOptions.SWAGGER_ENABLED = false;
-      // DEFAULT_MARKETPLACE_PRIVATE_KEY and DEFAULT_MARKETPLACE_ADDRESS for now are extracted from the default MP environment
-    }
-
-    if (_options.rpcuser) {
-      marketOptions.RPCUSER = _options.rpcuser;
-    }
-    if (_options.rpcpassword) {
-      marketOptions.RPCPASSWORD = _options.rpcpassword;
-    }
-
-    child = market.start(marketOptions);
-
-    child.on('close', code => {
-      log.info('market process ended.');
-    });
-
-    child.stdout.on('data', data => console.log(data.toString('utf8')));
-    child.stderr.on('data', data => console.log(data.toString('utf8')));
-
-    importer.init();
+  if (typeof _options.rpcuser === 'string' && _options.rpcuser.length) {
+    marketOptions.RPCUSER = _options.rpcuser;
   }
+  if (typeof _options.rpcpassword === 'string' && _options.rpcpassword.length) {
+    marketOptions.RPCPASSWORD = _options.rpcpassword;
+  }
+
+  if ( (typeof appPort === 'number') && (appPort > Math.floor(0))) {
+    marketOptions.APP_PORT = Math.floor(appPort);
+  }
+
+  if ( (typeof zmqPort === 'number') && (zmqPort > Math.floor(0))) {
+    marketOptions.ZMQ_PORT = Math.floor(zmqPort);
+  }
+
+  if (isTestnet) {
+    marketOptions.TESTNET_PORT = _options.port;
+    marketOptions.DEFAULT_MARKETPLACE_PRIVATE_KEY = '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek';
+    marketOptions.DEFAULT_MARKETPLACE_ADDRESS = 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA';
+  } else {
+    marketOptions.MAINNET_PORT = _options.port;
+    marketOptions.NODE_ENV = 'PRODUCTION';
+    marketOptions.SWAGGER_ENABLED = false;
+    // DEFAULT_MARKETPLACE_PRIVATE_KEY and DEFAULT_MARKETPLACE_ADDRESS for now are extracted from the default MP environment
+  }
+
+  child = market.start(marketOptions);
+
+  // importer.init();
 }
 
-exports.stop = async function() {
-  if (!_options.skipmarket && child) {
+
+function stop() {
+  if (child) {
     log.info('market process stopping.');
     market.stop();
-    child = null;
+    child = undefined;
+    doStartupCheck = true;
 
-    importer.destroy();
+    // importer.destroy();
   }
 }

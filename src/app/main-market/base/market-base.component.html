@@ -1,17 +1,13 @@
 <main-layout-default>
   <ng-container ngProjectAs="menu">
 
-    <mat-expansion-panel
-      class="instance-switcher no-padding arrow-colored"
-      (afterExpand)="openedIdentitySelector()"
-      (afterCollapse)="closedIdentitySelector()"
-    >
+    <mat-expansion-panel class="instance-switcher no-padding arrow-colored">
       <mat-expansion-panel-header class="switcher-toggle">
         <div class="item">
           <!-- TODO: offer various colors for wallets/whatever to easily tell them apart? -->
           <div class="icon">{{ currentIdentity.initial }}</div>
           <div class="name">{{ currentIdentity.displayName }}</div>
-          <div class="value">{{ currentBalance }} PART</div>
+          <div class="value">{{ currentIdentity.balance }} PART</div>
         </div>
       </mat-expansion-panel-header>
 
@@ -20,7 +16,7 @@
           <a class="item" *ngFor="let identity of otherIdentities;trackBy:trackByIdentityFn" (click)="identitySelected(identity)" (keyup.enter)="identitySelected(identity)" tabindex="0">
             <div class="icon">{{ identity.initial }}</div>
             <div class="name">{{ identity.displayName }}</div>
-            <div class="value">Switch Market</div>
+            <div class="value">Switch Identity</div>
           </a>
         </div>
       </ng-template>
@@ -28,12 +24,25 @@
     </mat-expansion-panel>
 
     <div class="menu-items">
-      <a class="menu-item" *ngFor="let menuItem of menu;trackBy:trackByMenuFn" routerLinkActive="active" [routerLink]="menuItem.path">
-        <ng-container *ngIf="menuItem.icon.length > 0">
-          <mat-icon class="icon" [fontIcon]="menuItem.icon"></mat-icon>
+      <ng-container *ngFor="let menuItem of menu; trackBy:trackByMenuFn">
+        <ng-container *ngIf="(isStarted || menuItem.alwaysEnabled); else menuDeactivated">
+          <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+            <ng-container *ngIf="menuItem.icon.length > 0">
+              <mat-icon class="icon" [fontIcon]="menuItem.icon"></mat-icon>
+            </ng-container>
+            <span class="text">{{menuItem.text}}</span>
+          </a>
         </ng-container>
-        <span class="text">{{menuItem.text}}</span>
-      </a>
+
+        <ng-template #menuDeactivated>
+          <a class="menu-item disabled" routerLinkActive="" [routerLink]="null">
+            <ng-container *ngIf="menuItem.icon.length > 0">
+              <mat-icon class="icon" [fontIcon]="menuItem.icon"></mat-icon>
+            </ng-container>
+            <span class="text">{{menuItem.text}}</span>
+          </a>
+        </ng-template>
+      </ng-container>
     </div>
 
   </ng-container>

@@ -1,11 +1,14 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NgxsModule } from '@ngxs/store';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
 
+import { MarketState } from './store/market.state';
 import { MarketBaseComponent } from './base/market-base.component';
 import { AlphaMainnetWarningComponent } from './base/alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { MarketService } from './services/market-rpc/market.service';
 
 
 const routes: Routes = [
@@ -20,6 +23,7 @@ const routes: Routes = [
       { path: 'sell', loadChildren: () => import('./sell/sell.module').then(m => m.SellModule) },
       { path: 'proposals', loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsModule) },
       { path: 'settings', loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule) },
+      { path: 'loading', loadChildren: () => import('./loading/loading.module').then(m => m.LoadingModule) },
       { path: '**', redirectTo: 'overview' },
     ]
   }
@@ -31,6 +35,9 @@ const routes: Routes = [
     CommonModule,
     CoreUiModule,
     MainSharedModule,
+    NgxsModule.forFeature(
+      [MarketState]
+    ),
     RouterModule.forChild(routes)
   ],
   exports: [
@@ -42,6 +49,9 @@ const routes: Routes = [
   ],
   entryComponents: [
     AlphaMainnetWarningComponent
+  ],
+  providers: [
+    MarketService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
