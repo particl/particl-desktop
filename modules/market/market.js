@@ -6,9 +6,12 @@ const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs').Observable;
 // const importer = require('./importer/importer');
 
+// @TODO: zaSmilingIdiot 2020-03-18 -> This entire process is a mess, and needs to be done over! It works for its current purpose, but is really brittle, crappy code!
+
 // Stores the child process
 let child = undefined;
-let doStartupCheck = true;
+let isStarted = null;
+let timeoutMonitor = null;
 
 
 exports.init = function() {
@@ -16,8 +19,10 @@ exports.init = function() {
   rxIpc.registerListener('start-market', function(appPort, zmqPort) {
     return Observable.create(observer => {
       if (child !== undefined) {
-        // if doStartCheckup === true, it means that the child process has not yet started correctly.
-        observer.next(!doStartupCheck);
+        if (isStarted !== null) {
+          observer.next(isStarted);
+          observer.complete();
+        }
         return;
       }
 
@@ -30,29 +35,38 @@ exports.init = function() {
 
       child.on('close', code => {
         log.info('market process ended.');
-        if (doStartupCheck) {
+        if ((isStarted === null) && !observer.closed) {
           // market process is shutdown before obtaining the "ready" signal
           observer.next(false);
           observer.complete();
         }
+        resetTimeoutCheck();
       });
 
       child.stdout.on('data', data => {
         console.log(data.toString('utf8'));
-        if (doStartupCheck && data.toString('utf8').includes('App is ready!')) {
-          doStartupCheck = false;
+
+        if ((isStarted === null) && data.toString().includes('App is ready!')) {
+          isStarted = true;
+          resetTimeoutCheck();
           observer.next(true);
           observer.complete();
         }
-
       });
-      child.stderr.on('data', data => {
-        console.log(data.toString('utf8'));
-        if (doStartupCheck) {
-          observer.error('An unexpected error occurred');
+
+      child.stderr.on('data', data => console.log(data.toString('utf8')));
+
+      // If app is not started correctly in x seconds, stop and return a fail
+      timeoutMonitor = setTimeout(function () {
+        if (isStarted === null) {
+          stop();
+        }
+        resetTimeoutCheck();
+        if (!observer.closed) {
+          observer.error('MP_STARTUP_FAILURE');
           observer.complete();
         }
-      });
+      }, 15 * 1000);
     });
   });
 
@@ -128,8 +142,18 @@ function stop() {
     log.info('market process stopping.');
     market.stop();
     child = undefined;
-    doStartupCheck = true;
+    isStarted = null;
+
+    resetTimeoutCheck();
 
     // importer.destroy();
+  }
+}
+
+
+function resetTimeoutCheck() {
+  if (timeoutMonitor !== null) {
+    clearTimeout(timeoutMonitor);
+    timeoutMonitor = null;
   }
 }

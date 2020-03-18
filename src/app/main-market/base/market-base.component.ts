@@ -66,6 +66,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this._router.navigate(['/main/market/loading']);
+
     this._store.select(MarketState.startedStatus).pipe(
       tap((status) => {
         if (this.startedStatus === status) {
@@ -75,11 +77,9 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
         this.startedStatus = status;
 
-        if (status === StartedStatus.PENDING) {
-          this._router.navigate(['/main/market/loading']);
-        } else if (status === StartedStatus.STARTED) {
+        if (status === StartedStatus.STARTED) {
           this._router.navigate(['/main/market/overview']);
-        } else {
+        } else if (status !== StartedStatus.PENDING) {
           this._router.navigate(['/main/market/settings']);
         }
       }),
