@@ -201,6 +201,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "8.4.1",
     "@angular-devkit/build-angular": "~0.803.21",
     "@angular/animations": "^8.2.14",
     "@angular/cdk": "^8.2.3",
