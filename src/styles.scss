@@ -298,6 +298,10 @@ body {
         color: var(--color-primary) !important;
       }
     }
+    &.disabled { // disabled items (eg. when Market is loading)
+      opacity: 0.4;
+      pointer-events: none;
+    }
     .icon {
       @extend %tfx;
       margin: 0 16px 0 0;

@@ -7,11 +7,11 @@
       The Particl Marketplace is starting up
     </ng-template>
     <ng-template [ngIf]="startedStatus !== StartedStatus.PENDING">
-      <mat-icon fontIcon="part-circle-cross"></mat-icon>
-      The Particl Marketplace failed to start correctly!! Perhaps a setting needs to be adjusted??
+      <mat-icon fontIcon="part-alert"></mat-icon>
+      The Particl Marketplace failed to start correctly! Perhaps a setting needs to be adjusted?
     </ng-template>
   </div>
-  <button *ngIf="startedStatus !== StartedStatus.PENDING" class="button" mat-button color="accent" (click)="restartMarketplace()">
+  <button *ngIf="startedStatus !== StartedStatus.PENDING" class="button" mat-button color="warn" (click)="restartMarketplace()">
     <mat-icon fontIcon="part-alert"></mat-icon>
     Restart The Particl Marketplace
   </button>
