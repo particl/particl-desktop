@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { merge, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { environment } from 'environments/environment';
@@ -29,8 +29,6 @@ export class VersionComponent implements OnInit, OnDestroy {
 
   private log: any = Log.create('version.component.id: ' + Math.floor((Math.random() * 1000) + 1));
   private destroy$: Subject<void> = new Subject();
-  private isMarketActive: boolean = false;
-  private _marketVersion: string = environment.marketVersion;
 
 
   constructor(
@@ -74,10 +72,6 @@ export class VersionComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-
-  get marketVersion(): string {
-    return this.isMarketActive ? this._marketVersion : '';
-  }
 
   get preRelease(): string {
     return environment.preRelease || '';

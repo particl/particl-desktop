@@ -27,7 +27,6 @@ const APP_SETTINGS_TOKEN = new StateToken<CoreConnectionModel>('settings');
   defaults: {
     activatedWallet: '',
     language: 'en_us',
-    marketActive: false,
     zmqPort: 36750
   }
 })

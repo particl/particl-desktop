@@ -60,7 +60,6 @@ export class ApplicationState implements NgxsOnInit {
       proxy: coreState.proxy,
       upnp: coreState.upnp,
       language: settingState.language,
-      marketActive: settingState.marketActive
     } as SettingsViewModel;
   }
 

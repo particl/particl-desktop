@@ -26,7 +26,6 @@ export interface CoreConnectionModel {
 export interface AppSettingsStateModel {
   activatedWallet: string;
   language: string;
-  marketActive: boolean;
   zmqPort: number;
 }
 
@@ -43,7 +42,6 @@ export interface SettingsViewModel {
   proxy: string;
   upnp: boolean;
   language: string;
-  marketActive: boolean;
 }
 
 

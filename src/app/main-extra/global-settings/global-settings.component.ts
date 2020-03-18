@@ -355,27 +355,7 @@ export class GlobalSettingsComponent implements OnInit {
       validate: this.validateIPAddressPort
     } as Setting);
 
-    const marketplaceConfig = {
-      name: 'App startup',
-      icon: 'part-rocket',
-      settings: [],
-      errors: []
-    } as SettingGroup;
-
-    marketplaceConfig.settings.push({
-      id: 'global.marketActive',
-      title: 'Launch Marketplace',
-      description: 'Launch the Particl Marketplace service by default when the application starts. This starts the service in the background regardless of whether in wallet or market mode',
-      isDisabled: false,
-      type: SettingType.BOOLEAN,
-      errorMsg: '',
-      currentValue: globalSettings.marketActive,
-      tags: [],
-      restartRequired: false
-    } as Setting);
-
     this.settingGroups.push(userInterface);
-    this.settingGroups.push(marketplaceConfig);
     this.settingGroups.push(coreNetConfig);
   }
 
