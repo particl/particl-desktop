@@ -253,7 +253,7 @@ mat-expansion-panel.mat-expansion-panel {
       right: 16px;
     }
     &.mat-expanded {
-      background: hsla(var(--bg-sidebar-darker-hsl), 0.4);
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.4) !important;
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)

@@ -20,6 +20,8 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       2.3. Tab/control bars
       2.4. Filters (sidebars)
       2.5. Radio switchers (sidebar submenu)
+      2.6. Instance switcher (wallet selection)
+      2.7. App sidebar menu
     3. UI elements
       3.1. Buttons
       3.2. Addresses
@@ -189,6 +191,140 @@ body {
     }
   }
 }
+
+
+// ------ 2.6. INSTANCE SWITCHER (wallet selection) ------ //
+
+.instance-switcher {
+  box-shadow: none !important;
+  border-radius: 0;
+  background: var(--bg-black) !important;
+  margin: 0 !important;
+
+  // active instance + toggle
+  .switcher-toggle {
+    @extend %tfx;
+    font-family: var(--font);
+    color: hsla(var(--text-muted-hsl), 0.9);
+    min-height: min-content;
+    max-height: min-content;
+    padding: 0;
+    &:hover,
+    &:focus,
+    &.cdk-keyboard-focused {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.5) !important;
+      .item {
+        background: transparent;
+        color: hsla(var(--bg-muted-hsl), 0.7);
+      }
+      &.mat-expanded {
+        background: hsla(var(--bg-sidebar-darker-hsl), 0.8) !important;
+        .item {
+          background: transparent;
+        }
+      }
+    }
+    .item {
+      .icon {
+        background: var(--color-primary);
+        color: var(--color-white);
+        font-weight: 500;
+      }
+    }
+  }
+
+  // shared style for 1 instance item
+  .item {
+    @extend %tfx;
+    cursor: pointer;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 22px 10px 13px;
+    font-size: 13px;
+    &:hover,
+    &:focus {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.8) !important;
+      color: hsla(var(--bg-muted-hsl), 0.7);
+      outline: none;
+    }
+    .icon {
+      background: lighten($bg-black, 10%);
+      width: 28px;
+      height: 28px;
+      line-height: 30px;
+      font-size: 16px;
+      text-align: center;
+      text-transform: uppercase;
+      border-radius: 50%;
+      float: left;
+      margin-right: 11px;
+      position: relative;
+      top: 2px;
+    }
+    .name {
+      font-weight: 500;
+      color: var(--color-white);
+    }
+  }
+
+  // other switchable options (inactive instances)
+  .options {
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+
+}
+
+
+// ------ 2.7. APP SIDEBAR MENU ------ //
+
+.menu-items {
+  @extend %menu-divider;
+  padding-top: 1px; // offset divider box-shadow above
+  // single menu item
+  .menu-item {
+    @extend %tfx;
+    padding: 13px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    outline: none;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &.active {
+      .icon { // highlight active menu item
+        color: var(--color-primary) !important;
+      }
+    }
+    .icon {
+      @extend %tfx;
+      margin: 0 16px 0 0;
+      color: hsla(var(--bg-hsl), 0.2);
+    }
+    .text {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--color-white);
+    }
+    .tag { // order notifications
+      @extend %tfx;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      opacity: 0.6;
+    }
+    &:hover,
+    &:focus {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.5);
+      .icon {
+        color: hsla(var(--bg-hsl), 0.35);
+      }
+    }
+  }
+}
+
 
 
 /* ------------------------------- *\
@@ -409,6 +545,10 @@ h1 {
   margin: 32px 0 16px;
   &:first-of-type {
     margin-top: 0;
+  }
+  @include break(l) {
+    font-size: 16px;
+    margin: 46px 0 18px;
   }
 }
 

@@ -46,20 +46,20 @@
     </div>
 
   </ng-container>
-
+  
+  <main-topbar></main-topbar>
 
   <!-- Alpha mainnet warning -->
-  <mat-card class="notification" class="alert">
-    <mat-card-title class="title">
+  <div class="notification" fxLayout fxLayoutAlign="space-between center">
+    <div class="text">
+      <mat-icon fontIcon="part-circle-info"></mat-icon>
       The Particl Marketplace is still in development - use it at your own risk!
-      <button class="button" mat-button color="warn" (click)="openWarningMessage()">
-        <mat-icon fontIcon="part-alert"></mat-icon>
-        Click here to read all the details first!
-      </button>
-    </mat-card-title>
-  </mat-card><!-- .notification -->
-
-  <main-topbar></main-topbar>
+    </div>
+    <button class="button" mat-button color="accent" (click)="openWarningMessage()">
+      <mat-icon fontIcon="part-alert"></mat-icon>
+      Click here to read all the details first!
+    </button>
+  </div><!-- .notification -->
 
   <router-outlet></router-outlet>
 </main-layout-default>
