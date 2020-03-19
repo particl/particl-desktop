@@ -64,7 +64,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
     this.log.d(`transaction-table created`);
 
     const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashtx')).pipe(
-      auditTime(zmqOptions.throlledSeconds * 1000), // Prevent flooding during a block sync for example
+      auditTime(zmqOptions.throttledSeconds * 1000), // Prevent flooding during a block sync for example
       distinctUntilChanged(),
       skip(1),  // skip the first, as this will trigger on first access of the store value
       takeUntil(this.destroy$)

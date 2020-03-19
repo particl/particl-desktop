@@ -1,4 +1,4 @@
 module.exports = {
   required: ['hashblock', 'smsg', 'hashtx'],
-  throlledSeconds: 10
+  throttledSeconds: 10
 }

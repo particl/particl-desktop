@@ -46,7 +46,7 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
     this.monitor$ = merge(
       this.blockWatcher$.pipe(
-        auditTime(zmqOptions.throlledSeconds * 1000),
+        auditTime(zmqOptions.throttledSeconds * 1000),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       ),

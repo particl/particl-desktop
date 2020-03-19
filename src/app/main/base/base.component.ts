@@ -34,7 +34,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     const blockWatcher$ = this._actions$.pipe(
       ofActionDispatched(ZMQ.UpdateStatus),
       filter((action: ZMQ.UpdateStatus) => action.field === 'hashtx'),
-      auditTime(zmqOptions.throlledSeconds * 1000), // rate-limited to max every x seconds
+      auditTime(zmqOptions.throttledSeconds * 1000), // rate-limited to max every x seconds
       takeUntil(this.unsubscribe$)
     );
 
