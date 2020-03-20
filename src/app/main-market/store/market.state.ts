@@ -12,7 +12,10 @@ const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
 @State<MarketStateModel>({
   name: MARKET_STATE_TOKEN,
   defaults: {
-    started: StartedStatus.STOPPED
+    started: StartedStatus.STOPPED,
+    profile: null,
+    identities: [],
+    identity: null
   }
 })
 export class MarketState {

@@ -55,8 +55,8 @@ export class CreateWalletService implements OnDestroy {
       words.join(' '),
       password.length ? password : '',
       false,              // save_bip44_root
-      '',                 // master_label
-      ''                  // account_label
+      'Master Key',       // master_label
+      'Default Account'   // account_label
     ];
 
     if (!doScan) {
