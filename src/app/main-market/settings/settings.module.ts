@@ -6,7 +6,7 @@ import { MarketSettingsComponent } from './settings.component';
 
 
 const routes: Routes = [
-  { path: '', component: MarketSettingsComponent, data: { title: 'Overview'} }
+  { path: '', component: MarketSettingsComponent, data: { title: 'Market Settings'} }
 ];
 
 

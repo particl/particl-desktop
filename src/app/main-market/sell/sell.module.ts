@@ -6,7 +6,7 @@ import { SellComponent } from './sell.component';
 
 
 const routes: Routes = [
-  { path: '', component: SellComponent, data: { title: 'Overview'} }
+  { path: '', component: SellComponent, data: { title: 'Seller\'s Admin'} }
 ];
 
 

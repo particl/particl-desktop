@@ -6,7 +6,7 @@ import { OverviewComponent } from './overview.component';
 
 
 const routes: Routes = [
-  { path: '', component: OverviewComponent, data: { title: 'Your Market Overview'} }
+  { path: '', component: OverviewComponent, data: { title: 'Market Overview'} }
 ];
 
 
