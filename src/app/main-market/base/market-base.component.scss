@@ -4,6 +4,12 @@
     UI Elements
 \* ------------------------------- */
 
+// ------ SIDEBAR MENU ITEMS ------ //
+
+/*
+  Styles for menu items/links are moved to `/src/styles.scss` (section 2.7)
+*/
+
 // ------ ALERTS/NOTIFICATIONS ------ //
 
 .notification {
@@ -25,9 +31,4 @@
   .button {
     font-size: inherit;
   }
-}
-
-.menu-item.disabled {
-  opacity: 0.6;
-  pointer-events: none;
 }

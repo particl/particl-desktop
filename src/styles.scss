@@ -298,6 +298,10 @@ body {
         color: var(--color-primary) !important;
       }
     }
+    &.disabled { // disabled items (eg. when Market is loading)
+      opacity: 0.4;
+      pointer-events: none;
+    }
     .icon {
       @extend %tfx;
       margin: 0 16px 0 0;
@@ -404,26 +408,24 @@ body {
   border: 2px dashed var(--bg-muted);
   background: hsla(var(--color-white-hsl), 0.5);
   p {
-    @extend %lightest;
+    color: hsla(var(--text-muted-hsl), 0.7) !important;
   }
   button {
     margin-top: 12px;
   }
-  .widget-help {
+  .help-text {
     margin: 0;
     text-transform: none;
-    font-size: 12px;
     .mat-icon {
-      font-size: 13px;
       margin: 0 4px;
+      line-height: 0;
       position: relative;
-      top: 2px;
+      top: 4px;
     }
     .mat-button {
       .mat-icon {
         top: -2px;
         margin: 0 5px 0 0;
-        font-size: 16px;
       }
     }
   }

@@ -1,1 +1,103 @@
-<h2>Purchases component</h2>
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-cart"></mat-icon>
+          Your cart
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-hamburger"></mat-icon>
+          Buy Orders
+          <!-- FIXME @dev:
+          <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span-->
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-heart-outline"></mat-icon>
+          Favourites
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+
+<!-- =========== CART =========== -->
+
+<div class="your-cart container-block" *ngIf="tabLabels[selectedTab] == 'cart'">
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Your Cart</ng-container>
+    <ng-container page-content>
+      Your Cart info
+    </ng-container>
+    <ng-container page-help>
+      ...
+    </ng-container>
+  </app-page-intro>
+
+  <app-checkout-process (onOrderPlaced)="changeTab($event)"></app-checkout-process>
+</div><!-- "Your cart" tab -->
+
+
+
+<!-- =========== ORDERS =========== -->
+
+<div class="orders container-block" *ngIf="tabLabels[selectedTab] == 'orders'">
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Buy Orders</ng-container>
+    <ng-container page-content>
+      This is where you manage the orders you're in the process of buying from other vendors on the marketplace.
+    </ng-container>
+    <ng-container page-info *ngIf="hasEncryptedWallet">
+      As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
+    </ng-container>
+    <ng-container page-help>
+      Each step of the purchasing process needs to be confirmed in this page (i.e. marking an order as "Delivered").
+    </ng-container>
+  </app-page-intro>
+
+  <app-orders type="buy"></app-orders>
+</div><!-- "Orders" tab -->
+
+
+
+<!-- =========== FAVORITES =========== -->
+
+<div class="favorites container-block"
+     *ngIf="tabLabels[selectedTab] == 'favourites'">
+
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
+    <ng-container page-title>Your Favourites</ng-container>
+    <ng-container page-content>
+      Save your favourite Listings to easily access them later on.
+    </ng-container>
+    <ng-container page-help>
+      Note that marketplace Listings have a limited lifetime (they expire after some time), so make sure to check back here often as they might not be available on the marketplace anymore.
+    </ng-container>
+  </app-page-intro>
+
+  <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
+    <p>
+      You don't have any favourites yet
+    </p>
+    <p class="help-text">
+      To add an item to favourites, click on the <mat-icon class="icon" fontIcon="part-heart-outline-add"></mat-icon> icon
+    </p>
+  </div><!-- .no-results -->
+
+  <div *ngIf="favorites !== undefined && favorites.length != 0" class="grid-container">
+    <ng-container *ngFor="let favorite of favorites">
+
+      <mat-card class="listing">
+        <app-listing-item [listing]="favorite"></app-listing-item>
+      </mat-card>
+
+    </ng-container>
+  </div>
+
+</div><!-- "Favorites" tab -->
