@@ -641,21 +641,38 @@ mat-toolbar.mat-toolbar {
     .mat-input-element {
       padding: var(--field-boxed-paddingV) 0;
     }
-    [matPrefix] {
+    [matPrefix],
+    [matSuffix] {
       &.mat-icon {
-        font-size: 1.25em;
+        font-size: 16px; // 1.25em
         color: var(--text-muted);
-        margin-right: 0.8em;
         position: relative;
-        top: -0.1em;
+        top: -1px; // -0.1em
       }
     }
-    button[matSuffix] { // show/hide password button (taken from Encrypt wallet .--larger field)
-      padding: 8px 12px;
-      margin-right: -12px;
+    [matPrefix] {
+      &.mat-icon {
+        margin-right: 0.8em;
+      }
+    }
+    [matSuffix] {
+      &.mat-icon {
+        margin-left: 0.8em;
+      }
+    }
+    button[matSuffix],
+    button[matPrefix] { // show/hide password button (taken from Encrypt wallet .--larger field)
+      padding: 8px;
       .mat-icon {
         margin: 0;
+        font-size: 16px;
       }
+    }
+    button[matPrefix] {
+      margin-left: -8px;
+    }
+    button[matSuffix] {
+      margin-right: -8px;
     }
     // Send: Larger padding around input
     &.--larger,
@@ -684,6 +701,11 @@ mat-toolbar.mat-toolbar {
     .mat-form-field-infix {
       padding: var(--field-boxed-paddingV) 0;
     }
+    .mat-form-field-wrapper {
+      .mat-select-arrow-wrapper {
+        transform: none;
+      }
+    }
 
     &.--larger {
       font-size: 15px;
@@ -709,9 +731,6 @@ mat-toolbar.mat-toolbar {
         font-weight: 500;
       }
       .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
-        .mat-select-arrow-wrapper {
-          transform: none;
-        }
         .mat-form-field-subscript-wrapper {
           top: 100%;
         }

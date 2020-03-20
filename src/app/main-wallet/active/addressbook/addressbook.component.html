@@ -22,16 +22,22 @@
       </button>
     </div><!-- .buttons -->
 
-    <h2 class="section-title">Search</h2>
+    <h2 class="section-title">
+      Search
+    </h2>
 
-    <mat-form-field class="icon-input --boxed" appearance="fill">
+    <mat-form-field class="--plain" appearance="fill">
       <input matInput type="text" [formControl]="searchQuery"
             placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-      <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontIcon="part-clear-all"></mat-icon>
-      <mat-icon *ngIf="searchQuery.value.length === 0" fontIcon="part-search"></mat-icon>
+      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
     </mat-form-field>
 
-    <h2 class="section-title">Filter by type</h2>
+    <h2 class="section-title">
+      Filter by type
+    </h2>
 
     <mat-form-field class="filter-type --boxed" appearance="fill">
       <mat-select placeholder="All types" name="type" (selectionChange)="filterQuery.setValue($event.value)" value="all">

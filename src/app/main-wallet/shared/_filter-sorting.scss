@@ -5,8 +5,11 @@
 .filter {
   .buttons { // main call-to-action buttons above filter
     margin-bottom: 32px;
+    @include break(l) {
+      margin-bottom: 46px;
+    }
     button {
-      margin-bottom: 8px;
+      margin-bottom: 12px;
       &:last-of-type {
         margin-bottom: 0;
       }
@@ -45,21 +48,21 @@
       width: 100%;
       margin: 0 -16px;
       padding: 6px 16px;
-      font-family: $font;
+      font-family: var(--font);
       &:hover {
-        background: $bg-hover;
+        background: var(--bg-hover);
       }
       &.mat-radio-checked .amount {
-        color: $color-white;
-        background: $color;
+        color: var(--color-white);
+        background: var(--color-primary);
       }
     }
     .amount {
       @extend %tfx;
       font-weight: 600;
       text-align: center;
-      background: $bg-shadow;
-      border-radius: $radius;
+      background: var(--bg-muted);
+      border-radius: var(--radius);
       float: right;
       display: block;
       width: 20px;

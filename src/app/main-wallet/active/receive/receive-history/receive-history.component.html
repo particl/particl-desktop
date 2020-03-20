@@ -31,12 +31,17 @@
   <div class="filter">
 
     <div class="section search-sorting">
-      <h2 class="section-title">Search addresses</h2>
-      <mat-form-field class="icon-input --boxed" appearance="fill">
+      <h2 class="section-title">
+        Search addresses
+      </h2>
+
+      <mat-form-field class="--boxed" appearance="fill">
         <input matInput type="text" [formControl]="searchQuery"
               placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
-        <mat-icon *ngIf="searchQuery.value.length > 0" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after" fontIcon="part-clear-all"></mat-icon>
-        <mat-icon *ngIf="searchQuery.value.length === 0" fontIcon="part-search"></mat-icon>
+        <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+        </button>
+        <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
       </mat-form-field>
 
       <p class="help-text">

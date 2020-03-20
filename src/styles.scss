@@ -25,7 +25,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
     3. UI elements
       3.1. Buttons
       3.2. Addresses
-      3.3. Loading info
+      3.3. Loading info / bar
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
@@ -117,12 +117,6 @@ body {
   float: left;
   .without-tab-bar & {
     top: calc(var(--header-main-height) + var(--paddingV) + 1px);
-  }
-  button.full-width {
-    margin-top: 10px;
-    &:first-of-type {
-      margin-top: 0;
-    }
   }
 }
 
@@ -356,7 +350,7 @@ body {
 }
 
 
-// ------ 3.3. LOADING INFO ------ //
+// ------ 3.3. LOADING INFO / BAR ------ //
 
 .loading-container {
   text-align: center;
@@ -397,6 +391,18 @@ body {
   }
 }
 
+.loading-bar {
+  .mat-progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: calc(var(--multiwallet-width) + var(--sidebar-width));
+    right: var(--scrollbar-width);
+    width: auto;
+    height: 6px;
+    border-top: 2px solid var(--color-white);
+    box-shadow: 0 0 20px hsla(var(--bg-black-hsl), 0.2);
+  }
+}
 
 // ------ 3.4. NO RESULTS (no TXs, no addresses, ..) ------ //
 
