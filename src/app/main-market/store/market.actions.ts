@@ -8,4 +8,9 @@ export namespace MarketActions {
   export class StopMarketService {
     static readonly type: string = '[Market] Stop Market Service';
   }
+
+
+  export class LoadIdentities {
+    static readonly type: string = '[Market] Load Identities';
+  }
 }

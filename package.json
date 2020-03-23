@@ -192,7 +192,7 @@
     "node-unzip-2": "^0.2.1",
     "particl-bot-manager": "^0.0.14",
     "particl-market-import-core": "^0.0.11",
-    "particl-marketplace": "^0.2.7",
+    "particl-marketplace": "./particl-marketplace-0.3.0.tgz",
     "particl-zmq": "^1.0.4",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",

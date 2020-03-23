@@ -46,10 +46,10 @@ exports.init = function() {
       child.stdout.on('data', data => {
         console.log(data.toString('utf8'));
 
-        // @TODO: zaSMilingIdiot 2020-03-20 -> Replace this with a more applicable string.
+        // @TODO: zaSmilingIdiot 2020-03-20 -> Replace this with a more applicable string.
         //  The problem is that the 'App is ready' string is output before the app is actually ready,
         //    and technically, the 'bootstrap(), DONE!' string is a debug() loglevel output.
-        if ((isStarted === null) && data.toString().includes('bootstrap(), DONE!')) {
+        if ((isStarted === null) && data.toString().includes('bootstrap(), DONE')) {
           isStarted = true;
           resetTimeoutCheck();
           observer.next(true);

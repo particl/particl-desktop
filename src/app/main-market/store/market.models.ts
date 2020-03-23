@@ -13,11 +13,32 @@ export interface Profile {
 }
 
 
+export interface ProfileResp {
+  id: number;
+  name: string;
+  address: string;
+}
+
+
 export interface Identity {
+  id: number;
   name: string;
   displayName: string;
   path: string;
   icon: string;
+}
+
+
+export interface IdentityResp {
+  address: string;
+  hdseedid: string;
+  id: number;
+  mnemonic: string | null;
+  passphrase: string | null;
+  path: string;
+  profileId: number;
+  type: 'MARKET' | 'PROFILE';
+  wallet: string;
 }
 
 

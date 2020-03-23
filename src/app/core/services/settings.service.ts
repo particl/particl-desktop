@@ -37,6 +37,13 @@ export class SettingsService {
   }
 
 
+  fetchMarketSettings(): SettingLiteral {
+    const settings = this.fetchSettings();
+    const resp = Object.prototype.toString.call(settings.market) === '[object Object]' ? settings.market : {};
+    return resp;
+  }
+
+
   saveGlobalSetting(key: string, value: boolean | string | number): boolean {
     // @TODO: zaSmilingIdiot 2020-01-14 -> potential for conflicts to happen... not "thread safe"
 
@@ -70,6 +77,19 @@ export class SettingsService {
     localStorage.setItem('settings', JSON.stringify(saved));
 
     return true;
+  }
+
+
+  saveMarketSetting(key: string, value: boolean | string | number): boolean {
+    // @TODO: zaSmilingIdiot 2020-02-10 -> potential for conflicts to happen... not "thread safe"
+    if (!['boolean', 'string', 'number'].includes(typeof value)) {
+      return false;
+    }
+    const saved = this.fetchSettings();
+    const market = Object.prototype.toString.call(saved.market) === '[object Object]' ? saved.market : {};
+    market[key] = value;
+    saved.market = market;
+    localStorage.setItem('settings', JSON.stringify(saved));
   }
 
 
