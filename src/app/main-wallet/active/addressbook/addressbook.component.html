@@ -26,7 +26,7 @@
       Search
     </h2>
 
-    <mat-form-field class="--plain" appearance="fill">
+    <mat-form-field class="--boxed" appearance="fill">
       <input matInput type="text" [formControl]="searchQuery"
             placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
       <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
