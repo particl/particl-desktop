@@ -10,7 +10,7 @@
   </p>
 
   <div class="row" fxLayout fxLayoutGap="20px">
-    
+
     <div class="illustration">
       <img src="./assets/images/illustrations/blockchain-sync.svg" alt="Blockchain syncing">
     </div>
@@ -30,10 +30,10 @@
           <td>{{ estimatedTimeLeft }}</td>
         </tr>
       </table>
-      <p>
+      <p *ngIf="syncPercentage < 100">
         Please wait for Particl blockchain to finish syncing with the network. Until then, you won't be able to spend PART and see your latest transactions and current balance.
       </p>
-      <p class="help-text">
+      <p class="help-text" *ngIf="syncPercentage < 100">
         This will take a moment. You can safely close this window and wait until sync finishes in background.
       </p>
     </div><!-- .text -->
