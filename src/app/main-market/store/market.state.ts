@@ -6,6 +6,7 @@ import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
 import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
+import { MainActions } from 'app/main/store/main.actions';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -23,9 +24,23 @@ const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
 export class MarketState {
 
   @Selector()
-  static startedStatus(state: MarketStateModel) {
+  static startedStatus(state: MarketStateModel): StartedStatus {
     return state.started;
   }
+
+
+  @Selector()
+  static currentIdentity(state: MarketStateModel): Identity {
+    return state.identity !== null ? state.identity : { id: -1, name: '-', displayName: '-', icon: '', path: '' };
+  }
+
+
+  @Selector()
+  static filteredIdentitiesList(state: MarketStateModel): Identity[] {
+    if (state.identity === null) { return state.identities; }
+    return state.identities.filter(id => id.id !== state.identity.id);
+  }
+
 
   constructor(
     private _marketService: MarketService,
@@ -109,6 +124,8 @@ export class MarketState {
       const profileId = state.profile.id;
 
       return this._marketService.call('identity', ['list', profileId]).pipe(
+        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
+        catchError(() => of([])),
         map((identityList: IdentityResp[]) => {
           const ids: Identity[] = [];
           identityList.forEach((idItem: IdentityResp) => {
@@ -129,41 +146,47 @@ export class MarketState {
 
         tap(identities => {
           ctx.patchState({identities});
-          console.log('@@@@@ IDENTITIES: ', identities);
-          // if (identities.length > 0) {
-          //   const newState = {
-          //     identities: identities
-          //   };
 
+          if (identities.length > 0) {
+            const selectedIdentity = ctx.getState().identity;
 
-          //   const selectedIdentity = ctx.getState().identity;
+            if (selectedIdentity) {
+              const found = identities.find(id => id.id === selectedIdentity.id);
+              if (found !== undefined) {
+                // current selected identity is in the list so nothing to do.
+                return;
+              }
+            }
 
-          //   if (selectedIdentity) {
-          //     const found = identities.find(id => id.id === selectedIdentity.id);
-          //     if (found !== undefined) {
-          //       // current selected identity is in the list so nothing to do.
-          //       ctx.patchState(newState);
-          //       return;
-          //     }
-          //   }
+            // Selected identity is not in the list returned, or there is no selected identity
+            const settings = this._settingsService.fetchMarketSettings();
+            const savedID = +settings.defaultID || 0;
 
-          //   // Selected identity is not in the list returned, or there is no selected identity
-          //   const settings = this._settingsService.fetchMarketSettings();
-          //   const savedID = +settings.defaultID || 0;
+            if (savedID) {
+              const saved = identities.find(id => id.id === savedID);
+              if (saved !== undefined) {
+                ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
+                return;
+              }
+            }
 
-          //   if (savedID) {
-          //     const saved = identities.find(id => id.id === savedID);
-          //     if (saved !== undefined) {
-          //       newState['identity'] = saved;
-          //       ctx.patchState(newState);
-          //       return;
-          //     }
-          //   }
-
-          //   // saved ID not working... now get first identity out
-
-          // }
+            // So no valid current identity and no saved identity... now get first identity from list
+            const selected = identities.sort((a, b) => a.id - b.id)[0];
+            ctx.dispatch(new MarketActions.SetCurrentIdentity(selected));
+          } else {
+            ctx.dispatch(new MarketActions.SetCurrentIdentity(null));
+          }
         })
+      );
+    }
+  }
+
+
+  @Action(MarketActions.SetCurrentIdentity)
+  setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketActions.SetCurrentIdentity) {
+    if (identity === null || (Number.isInteger(+identity.id) && (+identity.id > 0))) {
+      return ctx.dispatch(new MainActions.ChangeWallet(identity.path)).pipe(
+        tap(() => ctx.patchState({identity}))
       );
     }
   }

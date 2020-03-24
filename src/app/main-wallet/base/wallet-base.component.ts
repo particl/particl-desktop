@@ -147,10 +147,14 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
         wallets.forEach((wallet) => {
           const wName = wallet.name.toLowerCase();
           if (!(
+            // prevent testnet wallets on mainnet
             wName.startsWith('testnet/') ||
             wName.startsWith('testnet\\') ||
             (wName === 'testnet') ||
-            (wName === this._currentWallet.name)
+            // avoid including the current active wallet
+            (wallet.name === this._currentWallet.name) ||
+            // avoid market profiles (that are technically wallets but shouldn't be used as them)
+            (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
           )) {
             this.otherWallets.push(this.processWallet(wallet.name));
           }
@@ -170,11 +174,20 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
   private processWallet(name: string): IWallet {
     const usedName = name === null ? 'New wallet…' : name;
-    const dispName = usedName === '' ? TextContent.DEFAULT_WALLETNAME : usedName;
+    let dispName = usedName === '' ? TextContent.DEFAULT_WALLETNAME : usedName;
+    let initial = dispName[0];
+    if (dispName.includes('/')) {
+      let dispNameParts = dispName.split('/');
+      if (dispNameParts.length > 2) {
+        dispNameParts = [dispNameParts[dispNameParts.length - 2 ], dispNameParts[dispNameParts.length - 1 ]];
+        initial = (dispNameParts[dispNameParts.length - 1])[0];
+      }
+      dispName = dispNameParts.join('/');
+    }
     return {
       name,
+      initial,
       displayName: dispName,
-      initial: dispName[0]
     };
   }
 
