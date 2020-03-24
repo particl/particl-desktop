@@ -1,7 +1,26 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+.mat-dialog-title {
+  margin-bottom: 2rem;
+}
+
 .modal-content {
-  max-width: 490px;
+  max-width: 700px;
+}
+
+.row {
+  padding: 24px 0 6px;
+  .text {
+    flex: 1 1 100%;
+  }
+  .illustration {
+    flex: 0 0 15rem;
+    padding-left: 0.5rem;
+    img {
+      display: block;
+      max-width: 100%;
+    }
+  }
 }
 
 .subtitle {
@@ -12,16 +31,19 @@
 }
 
 table.sync-progress {
-  margin: 10px 0 30px;
+  width: 100%;
+  margin-bottom: 24px;
   th,
   td {
-    padding: 3px 20px 3px 0;
-    font-size: 13px;
+    padding: 1px 0;
+    font-size: 15px;
   }
   th {
-    color: $text-muted;
-    text-align: left;
+    width: 160px;
+    color: var(--text-muted);
+    text-align: right;
     font-weight: 400;
+    padding-right: 12px;
   }
   td {
     font-weight: 500;

@@ -11,8 +11,8 @@ import { PeerCalculatedStats } from './block-sync.models';
 
 
 enum TextContent {
-  BLOCK_CHECK = 'Calculating current blocks',
-  SYNC_COMPLETE = 'DONE',
+  BLOCK_CHECK = 'Calculating…',
+  SYNC_COMPLETE = 'Done',
 }
 
 

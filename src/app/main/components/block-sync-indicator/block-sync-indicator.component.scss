@@ -4,14 +4,14 @@
   cursor: pointer;
   padding: 12px 24px 14px;
   &:hover {
-    @include gradient(rgba($color-alert, 0.1), transparent);
+    @include gradient(hsla(var(--color-info-hsl), 0.1), transparent);
   }
 
   .sync-info { // spinner with text
     font-size: 11px;
     text-transform: uppercase;
     margin: 0;
-    color: $text-muted;
+    color: var(--text-muted);
 
     // spinner
     .syncing-spinner {
@@ -23,7 +23,7 @@
 
     // text
     .highlight {
-      color: lighten($text-muted, 40%);
+      color: var(--color-white);
       font-weight: 500;
     }
 
