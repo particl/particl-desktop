@@ -1,0 +1,36 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+/* -------------- CONTROL BAR -------------- */
+
+.control-bar {
+  padding: 0 calc(var(--paddingH) - 16px); // offset inputs' side padding
+
+  // Search
+  .search-listings {
+    //margin-bottom: -2px; // offset default border-bottom
+  }
+
+  // Filter buttons
+  .filter-buttons {
+    flex: 0 1 150px;
+    display: flex;
+    padding-left: 8px;
+    border-left: 1px solid var(--bg-muted);
+    justify-content: flex-end;
+    align-items: center;
+    .filter-button {
+      line-height: 36px;
+      .mat-icon {
+        margin: 0;
+      }
+      &.flagged {
+        &.mat-button-toggle-checked {
+          background: hsla(var(--color-info-hsl), 0.1);
+          color: var(--color-info);
+        }
+      }
+    }
+  }
+  
+} // << .control-bar

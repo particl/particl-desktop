@@ -37,7 +37,6 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
     5. Plug-ins
       5.1. Charts
     6. Misc.
-      6.1. Info/warning messages (releases etc.)
 
 */
 
@@ -90,14 +89,6 @@ body {
   z-index: 100;
   height: calc(var(--tab-bar-height) + 1px);
   background: hsla(var(--bg-hsl), 0.87);
-  .buttons {
-    flex: 1 0 100px;
-    padding: 0 20px; // offset side padding
-    border-bottom: 1px solid var(--bg-muted);
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
 }
 
 // sticky control bars (eg. on Listings page)
@@ -357,9 +348,9 @@ body {
   position: fixed;
   z-index: 10;
   top: var(--header-main-height);
-  left: var(--sidebar-width);
-  right: 0;
-  bottom: 8px;
+  left: calc(var(--multiwallet-width) + var(--sidebar-width));
+  right: var(--scrollbar-width);
+  bottom: 0;
   display: flex;
   background: hsla(var(--bg-hsl), 0.9);
   pointer-events: none;
@@ -381,12 +372,14 @@ body {
       }
     }
     .title {
-      font-size: 17px;
+      font-size: 18px;
       text-transform: uppercase;
       font-weight: 600;
+      margin: 0 0 14px;
     }
     p {
-      margin: 12px;
+      margin: 0;
+      font-size: 13px;
     }
   }
 }
@@ -434,6 +427,7 @@ body {
   }
   p {
     color: var(--text-muted) !important;
+    margin-top: 0;
     &.help-text {
       color: hsla(var(--text-muted-hsl), 0.7) !important;
       font-size: 13px;
@@ -443,14 +437,14 @@ body {
       .mat-icon {
         margin: 0 4px;
         line-height: 0;
-      position: relative;
-      top: 4px;
-    }
-    .mat-button {
-      .mat-icon {
-        top: -2px;
-        margin: 0 5px 0 0;
+        position: relative;
+        top: 4px;
       }
+      .mat-button {
+        .mat-icon {
+          top: -2px;
+          margin: 0 5px 0 0;
+        }
       }
     }
   }
@@ -779,67 +773,3 @@ kbd {
 /* ------------------------------- *\
     6. MISC
 \* ------------------------------- */
-
-// ------ 6.1. Info/warning messages (releases etc.) ------ //
-
-.mat-sidenav-container {
-  // when top notification present (new release/announcement), push status bar etc. below
-  &.with-top-notification {
-    .header-main { // status bar
-      top: 61px;
-    }
-    /*
-    .balance-overview { // Overview
-      margin-top: 125px;
-    }
-    */
-    .tab-bar,
-    .control-bar {
-      top: 125px;
-    }
-    .with-tab-bar { // content containers
-      //margin-top: 175px;
-      .filter {
-        top: 210px;
-      }
-    }
-    .without-tab-bar { // content containers w/o tabs
-      //margin-top: 125px;
-      .filter {
-        top: 160px;
-      }
-    }
-    /*
-    app-listing {
-      .container-block.with-control-bar {
-        margin-top: 180px;
-      }
-    }
-    */
-    app-send {
-      .from-box {
-        .sticky {
-          top: 205px;
-        }
-      }
-    }
-    app-receive {
-      .container-flex {
-        &.with-tab-bar {
-          height: calc(100vh - 290px);
-          @include break(l) {
-            height: calc(100vh - 310px);
-          }
-        }
-      }
-    }
-    /*
-    app-add-item,
-    app-help {
-      .container-block {
-        margin-top: 125px;
-      }
-    }
-    */
-  }
-}

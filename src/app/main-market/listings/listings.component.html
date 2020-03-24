@@ -1,1 +1,145 @@
-<h2>Listings component</h2>
+<!-- Do not remove the below class it is using for test case -->
+<app-header class="test-case-container">
+  <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between stretch">
+
+    <!-- Search-->
+    <mat-form-field appearance="fill" class="search-listings --plain" fxFlex="1 1 25%">
+      <mat-icon matPrefix fontIcon="part-search"></mat-icon>
+      <input matInput id="searchbar" type="text" placeholder="Search Listings…"><!-- [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
+        (keyup.escape)="filters.search = ''; clearAndLoadPage()" -->
+    </mat-form-field>
+
+    <!-- Filtering -->
+    <div class="filter-by category" fxFlex="1 1 25%">
+      <mat-icon fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
+      <app-category-tree
+        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+        (onChange)="onCategoryChange($event)"
+        [options]="_rootCategoryList?.subCategoryList"
+        [selected]="selectedCategory">
+      </app-category-tree>
+    </div>
+
+    <div class="filter-by seller-country" fxFlex="1 1 25%">
+      <mat-icon fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
+      <mat-select-search
+        [options]="countryList?.countries"
+        [defaultOption]="'All seller countries'"
+        [isLexigraphicalOrder]="true"
+        [showValueOf]="'name'"
+        (onChange)="onCountryChange($event)">
+      </mat-select-search>
+    </div>
+
+    <div class="filter-by buyer-country" fxFlex="1 1 25%">
+      <mat-icon fontIcon="part-globe" fxFlex="0 0 16px" matTooltip="Select your country to calculate exact shipping & escrow prices" matTooltipPosition="below"></mat-icon>
+      <mat-select-search
+        fxFlex="1 1 100%"
+        [options]="countryList?.countries"
+        [defaultOption]="'Your country'"
+        [isLexigraphicalOrder]="true"
+        [showValueOf]="'name'"
+        [defaultSelectedValue]="this.selectedCountry"
+        (onChange)="changeLocation($event)">
+      </mat-select-search>
+    </div>
+
+    <div class="filter-buttons">
+
+      <button mat-button class="refresh filter-button small" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()" matTooltip="{{ (newListArrived && !flagged) ? 'New listings available' : 'Refresh listings'}}">
+        <mat-icon fontIcon="part-refresh"></mat-icon>
+      </button>
+
+      <mat-button-toggle class="flagged filter-button small" type="checkbox" value="reported-only" matTooltip="{{ flagged ? 'Show all Listings' : 'Show reported Listings only'}}" (change)="toggleFlag($event)">
+        <mat-icon fontIcon="part-flag"></mat-icon>
+      </mat-button-toggle>
+
+    </div><!-- .filter-buttons -->
+
+  </div><!-- .control-bar -->
+</app-header>
+
+
+<div class="container-block with-control-bar">
+  <app-page-intro>
+    <ng-container page-title>Particl Open Marketplace</ng-container>
+    <ng-container page-content>
+      Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
+      Keep in mind, that you can buy Listings here only with your private Anon balance.
+    </ng-container>
+    <ng-container page-help>
+      You can check your current Anon balance in the sidebar (under active Wallet name). If you need more Anon funds, convert it in Wallet app, under Send / Convert &rarr; Convert page.
+    </ng-container>
+  </app-page-intro>
+
+  <!-- Do not remove the below class it is using for test case -->
+  <div class="content grid-container test-case-container"><!-- infiniteScroll
+       [infiniteScrollContainer]="pagination.infinityScrollSelector"
+       [fromRoot]="true"
+       (scrolled)="loadNextPage()" -->
+
+    <div class="loading-container" *ngIf="isLoadingBig">
+      <div class="loading-info">
+        <div class="loading-image">
+          <img src="./assets/particl-logo-symbol.svg">
+        </div>
+        <h4 class="title">
+          Hang on, we're loading the listings
+        </h4>
+        <p class="help-text">
+          This might take a while
+        </p>
+      </div>
+    </div><!-- .loading-container -->
+
+    <ng-container *ngFor="let page of pages;let pageIdx = index;">
+      <ng-container *ngFor="let item of page.listings">
+
+        <mat-card class="listing">
+          <app-listing-item [listing]="item" (reportListingComplete)="refreshListingsFrom(pageIdx)"></app-listing-item>
+        </mat-card>
+
+      </ng-container>
+    </ng-container>
+
+    <div class="no-results" *ngIf="hasEmptySearch">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
+      <p>
+        Sorry, no matching Listings found
+      </p>
+      <p class="help-text">
+        Try a different, less specific search
+      </p>
+    </div><!-- .no-results -->
+
+    <div class="no-results" *ngIf="isInitialState">
+      <img class="illustration" src="./assets/images/illustrations/no-listings.svg" alt="Market is syncing">
+      <p>
+        No Listings on the Marketplace
+      </p>
+      <p class="help-text">
+        If you launched the Marketplace recently, Listings might not load yet.<br>
+        Please wait a few minutes and then:
+      </p>
+      <button mat-button color="primary" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()">
+        <mat-icon fontIcon="part-refresh"></mat-icon>
+        Refresh Listings
+      </button>
+    </div><!-- .no-results -->
+
+    <div class="no-results --smaller" *ngIf="noMoreListings">
+      <p>
+        This is the end
+      </p>
+      <p class="help-text">
+        You've reached the end of the Marketplace supply
+      </p>
+    </div><!-- .no-results -->
+  </div><!-- .content -->
+
+
+</div><!-- .container-block -->
+
+<div class="loading-bar">
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

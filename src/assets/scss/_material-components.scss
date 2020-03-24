@@ -630,6 +630,9 @@ mat-toolbar.mat-toolbar {
   &.--plain {
     margin-bottom: 0;
     border-radius: 0;
+    .mat-form-field-flex {
+      background: transparent;
+    }
   }
 
   // --- INPUTS ---
@@ -932,20 +935,25 @@ mat-option.mat-option {
 
 // ------ 3.7. TOGGLE BUTTONS ------ //
 
-mat-button-toggle {
-  &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
-    &.mat-button-toggle-appearance-standard {
-      background: transparent;
-      border: 0;
-      color: var(--text-muted);
-      .mat-button-toggle-label-content {
-        line-height: 36px;
+.mat-button-toggle {
+  &.mat-button-toggle-appearance-standard {
+    &.mat-button-toggle-standalone {
+      &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
+        background: transparent;
+        border: 0;
+        color: var(--text-muted);
+        .mat-button-toggle-label-content {
+          line-height: 36px;
+        }
+        &:hover,
+        &:focus {
+          background: hsla(var(--text-hsl), .04);
+          color: var(--text);
+        }
+        &.mat-button-toggle-checked {
+          color: var(--text);
+        }
       }
-    }
-  }
-  &.icon-only {
-    .mat-icon {
-      margin: 0;
     }
   }
 }
