@@ -79,7 +79,13 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
         this.startedStatus = status;
 
         if (status === StartedStatus.STARTED) {
-          this._router.navigate(['/main/market/overview']);
+          // Check if navigation was made to one of the 'alwaysEnabled' paths... prevent further navigation if it was.
+          const currentPathParts = this._router.url.split('/');
+          const lastPath = currentPathParts[currentPathParts.length - 1];
+          const didNavigate = this.menu.findIndex(m => m.alwaysEnabled && m.path === lastPath);
+          if (didNavigate === -1) {
+            this._router.navigate(['/main/market/overview']);
+          }
         } else if (status !== StartedStatus.PENDING) {
           this._router.navigate(['/main/market/settings']);
         }

@@ -47,4 +47,9 @@ export interface MarketStateModel {
   profile: Profile;
   identities: Identity[];
   identity: Identity;
+  settings: {
+    port: number;
+    defaultProfileID: number;
+    defaultIdentityID: number;
+  };
 }

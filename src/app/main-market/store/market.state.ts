@@ -1,4 +1,4 @@
-import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
+import { State, StateToken, Action, StateContext, Selector, NgxsOnInit } from '@ngxs/store';
 import { of, defer, iif } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketService } from '../services/market-rpc/market.service';
@@ -18,10 +18,15 @@ const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
     started: StartedStatus.STOPPED,
     profile: null,
     identities: [],
-    identity: null
+    identity: null,
+    settings: {
+      port: 3000,
+      defaultIdentityID: 0,
+      defaultProfileID: 0
+    }
   }
 })
-export class MarketState {
+export class MarketState implements NgxsOnInit {
 
   @Selector()
   static startedStatus(state: MarketStateModel): StartedStatus {
@@ -42,10 +47,33 @@ export class MarketState {
   }
 
 
+  @Selector()
+  static settings(state: MarketStateModel) {
+    return state.settings;
+  }
+
+
   constructor(
     private _marketService: MarketService,
     private _settingsService: SettingsService
   ) {}
+
+
+  ngxsOnInit(ctx: StateContext<MarketStateModel>) {
+    const storedSettings = this._settingsService.fetchMarketSettings();
+    const stateSettings = ctx.getState().settings;
+
+    const newStateSettings = JSON.parse(JSON.stringify(stateSettings));
+
+    const stateKeys = Object.keys(stateSettings);
+    for (const key of stateKeys) {
+      if (typeof storedSettings[key] === typeof stateSettings[key] ) {
+        newStateSettings[key] = storedSettings[key];
+      }
+    }
+
+    ctx.patchState({settings: newStateSettings});
+  }
 
 
   @Action(MarketActions.StartMarketService)
@@ -65,8 +93,7 @@ export class MarketState {
     });
 
     const profile$ = defer(() => {
-      const settings = this._settingsService.fetchMarketSettings();
-      const savedProfileId = +settings.defaultProfile || 0;
+      const savedProfileId = +ctx.getState().settings.defaultProfileID;
 
       return this._marketService.call('profile', ['list']).pipe(
         retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 5})),
@@ -80,10 +107,9 @@ export class MarketState {
             }
           }
 
-          // no saved profile or previously saved profile doesn't exist anymore
+          // no saved profile -OR- previously saved profile doesn't exist anymore -> revert to loading the default profile
           const defaultProfile = profileList.find(profileItem => profileItem.name === 'DEFAULT');
           if (defaultProfile !== undefined) {
-            this._settingsService.saveMarketSetting('defaultProfile', defaultProfile.id);
             ctx.patchState({profile: {id: defaultProfile.id, name: defaultProfile.name}});
             return of(true);
           }
@@ -94,7 +120,7 @@ export class MarketState {
       );
     });
 
-    return this._marketService.startMarketService().pipe(
+    return this._marketService.startMarketService(ctx.getState().settings.port).pipe(
       catchError((err) => {
         ctx.patchState({started: StartedStatus.FAILED});
         return of(false);
@@ -159,8 +185,7 @@ export class MarketState {
             }
 
             // Selected identity is not in the list returned, or there is no selected identity
-            const settings = this._settingsService.fetchMarketSettings();
-            const savedID = +settings.defaultID || 0;
+            const savedID = ctx.getState().settings.defaultIdentityID;
 
             if (savedID) {
               const saved = identities.find(id => id.id === savedID);
@@ -170,7 +195,7 @@ export class MarketState {
               }
             }
 
-            // So no valid current identity and no saved identity... now get first identity from list
+            // No valid current identity and no saved identity... get first identity from list
             const selected = identities.sort((a, b) => a.id - b.id)[0];
             ctx.dispatch(new MarketActions.SetCurrentIdentity(selected));
           } else {

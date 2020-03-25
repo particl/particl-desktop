@@ -27,11 +27,9 @@ export class MarketService {
   }
 
 
-  startMarketService(): Observable<boolean> {
+  startMarketService(marketPort: number): Observable<boolean> {
     const settings: AppSettingsStateModel = this._store.selectSnapshot(AppSettingsState);
 
-    // TODO: zaSmilingIdiot: 2020-03-17 -> Set market port dynamically based on settings
-    const marketPort = 3000;
     return this._ipc.runCommand('start-market', null, marketPort, settings.zmqPort).pipe(
       tap((started: boolean) => {
         this.isConnected = Boolean(started);  // ensure null response is converted accordingly
