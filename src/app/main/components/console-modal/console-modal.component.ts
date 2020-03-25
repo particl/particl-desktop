@@ -4,29 +4,22 @@ import {
   HostListener,
   ViewChild,
   ElementRef,
-  AfterViewChecked,
-  OnDestroy
+  AfterViewChecked
 } from '@angular/core';
-import { MatDialogRef } from '@angular/material';
-import { Store } from '@ngxs/store';
 import { Log } from 'ng2-logger';
-import { Subject, merge } from 'rxjs';
-import { tap, takeUntil } from 'rxjs/operators';
 import { isFinite, isPlainObject, isArray } from 'lodash';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { DateFormatter } from 'app/core/util/utils';
 import { Command } from './command.model';
-import { ApplicationState } from 'app/core/store/app.state';
-import { APP_MODE } from 'app/core/store/app.models';
 
 
 @Component({
   templateUrl: './console-modal.component.html',
   styleUrls: ['./console-modal.component.scss']
 })
-export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
   log: any = Log.create('app-console-modal');
 
@@ -37,41 +30,21 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
   public disableScrollDown: boolean = false;
   public waitingForRPC: boolean = true;
   public historyCount: number = 0;
-  public activeTab: string = '_rpc';
-  public marketTabEnabled: boolean = false;
   public useRunstringsParser: boolean = false;
 
-  private destroy$: Subject<void> = new Subject();
   @ViewChild('debug', {static: false}) private commandContainer: ElementRef;
 
   constructor(
     private _rpc: MainRpcService,
-    private _store: Store,
-    private dialog: MatDialogRef<ConsoleModalComponent>,
     private snackbar: SnackbarService
   ) { }
 
   ngOnInit() {
-    this.getCurrentTime();
-
-    merge(
-      this._store.select(ApplicationState.appMode).pipe(
-        tap((mode) => {
-          this.marketTabEnabled = mode === APP_MODE.MARKET;
-        })
-      )
-    ).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe();
+    this.currentTime = this.getDateFormat();
   }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   rpcCall() {
@@ -82,7 +55,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
     let callableParams: (string|number|boolean|null)[];
 
     if (this.useRunstringsParser) {
-      let params = this.queryParserRunstrings(this.command);
+      const params = this.queryParserRunstrings(this.command);
       commandString = 'runstrings';
       if (params.length > 0) {
         params.splice(1, 0, '');
@@ -90,11 +63,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
 
       callableParams = params;
 
-      if (this.activeTab === 'market') {
-        commandString = params.shift();
-        params = params.length > 1 ? params.filter(cmd => cmd.trim() !== '') : [];
-        callableParams = params.map((param) => isFinite(+param) ? +param : param);
-      }
     } else {
       const params = this.queryParserCommand(this.command);
       if (!params.length) {
@@ -105,7 +73,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
       callableParams = params;
     }
 
-    this[this.activeTab].call(commandString, callableParams)
+    this._rpc.call(commandString, callableParams)
       .subscribe(
         (response: any) => this.formatSuccessResponse(response),
         (error: any) => {
@@ -130,14 +98,8 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
       this.command = '';
       this.scrollToBottom();
     } else {
-      let errorMessage: string;
-      if (this.activeTab === 'market') {
-        const errorStr = String(error).toLowerCase();
-        errorMessage = errorStr.includes('unknown command') || errorStr.includes('unknown subcommand') ? 'Invalid command' : error;
-      } else {
-        errorMessage = (error.message) ? error.message : 'Method not found';
-      }
-      this.snackbar.open(errorMessage);
+      const errorMessage = (error.message) ? error.message : 'Method not found';
+      this.snackbar.open(errorMessage, 'warn');
     }
   }
 
@@ -311,16 +273,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
     return (typeof text === 'object');
   }
 
-  clearCommands() {
-    this.commandList = [];
-  }
-
-  /* Time stuff */
-
-  getCurrentTime() {
-    this.currentTime = this.getDateFormat();
-  }
-
   getDateFormat() {
     return new DateFormatter(new Date()).hourSecFormatter();
   }
@@ -355,17 +307,6 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
     this.command = this.commandHistory[this.historyCount];
   }
 
-  selectTab(tabIndex: number) {
-    if (tabIndex === 1 && !this.marketTabEnabled) {
-      return;
-    }
-    const currentTab = this.activeTab;
-    this.activeTab = tabIndex === 1 ? 'market' : '_rpc';
-    if (this.activeTab === currentTab) {
-      return;
-    }
-    this.commandList = [];
-  }
 
   // capture the enter button
   @HostListener('window:keydown', ['$event'])
@@ -377,15 +318,11 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
       this.disableScrollDown = false;
       this.rpcCall();
     } else if (event.ctrlKey && event.keyCode === 76) {
-      this.clearCommands();
+      this.commandList = [];
       // Up and Down arrow KeyPress to manage command history
     } else if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
       this.manageCommandHistory(event.keyCode);
     }
-  }
-
-  close(): void {
-    this.dialog.close();
   }
 
 }
