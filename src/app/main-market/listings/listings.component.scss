@@ -34,3 +34,76 @@
   }
   
 } // << .control-bar
+
+
+/* -------------- CONTENT AREA / LAYOUT -------------- */
+
+.container-block {
+  --grid-gutter: 2%;
+  --grid-columns: 4;
+  @include break(l) {
+    --grid-columns: 5;
+  }
+  @include break-from(1700px) {
+    --grid-columns: 6;
+  }
+}
+
+.grid-container {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: stretch;
+  margin: 0 calc(-1 * var(--grid-gutter)) 0 0;
+  width: calc(100% + var(--grid-gutter));
+}
+
+
+
+/* -------------- LISTING ITEM -------------- */
+
+mat-card.listing {
+  --card-padding: 16px;
+  // width: 100% / no. of columns - (grid gutter + card's side padding):
+  flex: 0 0 calc((100% / var(--grid-columns) - var(--grid-gutter)) - 2 * var(--card-padding));
+  padding: var(--card-padding);
+  margin: 0 var(--grid-gutter) 32px 0;
+  border-radius: 0;
+  .mat-card-header {
+    display: block;
+    height: 77px;
+    .mat-card-title,
+    .mat-card-subtitle {
+      margin: 0 0 8px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .mat-card-title {
+      font-size: 15px;
+      line-height: 1.3;
+    }
+    .mat-card-subtitle {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+  }
+  .mat-card-actions {
+    margin-bottom: -16px;
+    .mat-button {
+      margin: 0;
+      font-size: 13px;
+      small {
+        font-weight: 400;
+      }
+      .part-cryptocurrency-particl {
+        font-size: 11px;
+        position: relative;
+        top: -1px;
+        margin: 0 0 0 3px;
+      }
+    }
+  }
+}
+
+
