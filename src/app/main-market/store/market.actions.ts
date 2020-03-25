@@ -20,4 +20,9 @@ export namespace MarketActions {
     static readonly type: string = '[Market] Set Current Identity';
     constructor(public identity: Identity) {}
   }
+
+  export class SetSetting {
+    static readonly type: string = '[Market] Save Market Setting';
+    constructor(public key: string, public value: string | boolean | number) {}
+  }
 }

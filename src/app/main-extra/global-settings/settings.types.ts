@@ -1,6 +1,7 @@
 
 export type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
 export type ValidationFunction = (value: any, setting: Setting) => string | void;
+export type FormatFunction = () => any;
 
 // Indicates the distinct type of the setting. Impacts the visual rendering of the setting, as well
 //  as functionality (eg: BUTTON types are ignored when performing save functionality)
@@ -57,6 +58,8 @@ export class Setting {
   onChange?: ValidationFunction;  // Optional function executed when the setting is changed.
                                   //  Similar to the validation function, but run after validation.
                                   //  NOT executed when the page save function is called.
+  formatValue?: FormatFunction;   // Optional function executed to format the setting when changing it.
+                                  //  Applied on field value change only before other values are applied.
 }
 
 // Provides a means to group together similar settings.

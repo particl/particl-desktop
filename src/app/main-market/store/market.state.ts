@@ -4,7 +4,7 @@ import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operator
 import { MarketService } from '../services/market-rpc/market.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
-import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp } from './market.models';
+import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 
@@ -48,7 +48,7 @@ export class MarketState implements NgxsOnInit {
 
 
   @Selector()
-  static settings(state: MarketStateModel) {
+  static settings(state: MarketStateModel): MarketSettings {
     return state.settings;
   }
 
@@ -215,4 +215,18 @@ export class MarketState implements NgxsOnInit {
       );
     }
   }
+
+
+  @Action(MarketActions.SetSetting)
+  changeMarketSetting(ctx: StateContext<MarketStateModel>, action: MarketActions.SetSetting) {
+    const currentState = JSON.parse(JSON.stringify(ctx.getState().settings));
+
+    if ( Object.keys(currentState).includes(action.key) && (typeof currentState[action.key] === typeof action.value) ) {
+      if (this._settingsService.saveMarketSetting(action.key, action.value)) {
+        currentState[action.key] = action.value;
+        ctx.patchState({settings: currentState});
+      }
+    }
+  }
+
 }

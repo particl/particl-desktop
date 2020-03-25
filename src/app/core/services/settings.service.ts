@@ -90,6 +90,8 @@ export class SettingsService {
     market[key] = value;
     saved.market = market;
     localStorage.setItem('settings', JSON.stringify(saved));
+
+    return true;
   }
 
 

@@ -4,6 +4,11 @@
     UI Elements
 \* ------------------------------- */
 
+
+// Inherit Global settings' styles (no need to duplicate them)
+@import '../../main-extra/global-settings/global-settings.component.scss';
+
+
 // ------ ALERTS/NOTIFICATIONS ------ //
 
 .notification {

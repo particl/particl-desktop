@@ -29,6 +29,13 @@ export interface Identity {
 }
 
 
+export interface MarketSettings {
+  port: number;
+  defaultProfileID: number;
+  defaultIdentityID: number;
+}
+
+
 export interface IdentityResp {
   address: string;
   hdseedid: string;
@@ -47,9 +54,5 @@ export interface MarketStateModel {
   profile: Profile;
   identities: Identity[];
   identity: Identity;
-  settings: {
-    port: number;
-    defaultProfileID: number;
-    defaultIdentityID: number;
-  };
+  settings: MarketSettings;
 }
