@@ -6,10 +6,12 @@
 .control-bar {
   padding: 0 calc(var(--paddingH) - 16px); // offset inputs' side padding
 
+  /*
   // Search
   .search-listings {
     //margin-bottom: -2px; // offset default border-bottom
   }
+  */
 
   // Filter buttons
   .filter-buttons {
@@ -39,13 +41,21 @@
 /* -------------- CONTENT AREA / LAYOUT -------------- */
 
 .container-block {
-  --grid-gutter: 2%;
   --grid-columns: 4;
+  --grid-gutter: 2%;
   @include break(l) {
     --grid-columns: 5;
   }
   @include break-from(1700px) {
     --grid-columns: 6;
+    --grid-gutter: 1.75%;
+  }
+  @include break-from(2000px) {
+    --grid-columns: 7;
+  }
+  @include break-from(2300px) {
+    --grid-columns: 8;
+    --grid-gutter: 1.5%;
   }
 }
 
@@ -63,11 +73,26 @@
 
 mat-card.listing {
   --card-padding: 16px;
-  // width: 100% / no. of columns - (grid gutter + card's side padding):
+  // container width / no. of columns - (grid gutter + card's side padding):
   flex: 0 0 calc((100% / var(--grid-columns) - var(--grid-gutter)) - 2 * var(--card-padding));
   padding: var(--card-padding);
   margin: 0 var(--grid-gutter) 32px 0;
   border-radius: 0;
+  .mat-card-image {
+    height: 0;
+    overflow: hidden;
+    padding-top: calc(100% + 32px); // locking 1:1 aspect ratio + offsetting side paddings for a perfect square
+    position: relative;
+    .img {
+      position: absolute; // fill in available space (= square container)
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // let image cover its container..
+      object-position: center; // ..and center it
+    }
+  }
   .mat-card-header {
     display: block;
     height: 77px;
