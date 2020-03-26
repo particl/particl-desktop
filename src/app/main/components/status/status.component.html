@@ -19,7 +19,7 @@
   <div
     class="zmq icon"
     [ngClass]="zmqStatus">
-    <mat-icon class="icon" [matTooltip]="zmqStatusMessage" fontIcon="part-nodes"></mat-icon>
+    <mat-icon [matTooltip]="zmqStatusMessage" fontIcon="part-nodes"></mat-icon>
   </div>
 
   <div class="warning icon" *ngIf="timeOffset !== 0">

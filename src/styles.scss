@@ -279,7 +279,7 @@ body {
     flex-direction: row;
     align-items: center;
     &.active {
-      .icon { // highlight active menu item
+      .mat-icon { // highlight active menu item
         color: var(--color-primary) !important;
       }
     }
@@ -287,7 +287,7 @@ body {
       opacity: 0.4;
       pointer-events: none;
     }
-    .icon {
+    .mat-icon {
       @extend %tfx;
       margin: 0 16px 0 0;
       color: hsla(var(--bg-hsl), 0.2);
@@ -307,7 +307,7 @@ body {
     &:hover,
     &:focus {
       background: hsla(var(--bg-sidebar-darker-hsl), 0.5);
-      .icon {
+      .mat-icon {
         color: hsla(var(--bg-hsl), 0.35);
       }
     }
@@ -678,7 +678,7 @@ p.info {
 
 p.warning {
   &::before {
-    content: '\ea02'; // part-alert icon
+    content: '\ea03'; // part-alert icon
     color: var(--color-alert);
   }
   a {
@@ -688,7 +688,7 @@ p.warning {
 
 p.info {
   &::before {
-    content: '\ea19'; // part-info icon
+    content: '\ea25'; // part-info icon
     color: var(--color-info);
   }
   a {

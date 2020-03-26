@@ -15,13 +15,6 @@
     cursor: pointer;
   }
 
-  // Console
-  &.console {
-    position: relative;
-    top: 1px;
-    cursor: pointer;
-  }
-
   // ZMQ warnings
   &.zmq {
     &.zmq-alert {

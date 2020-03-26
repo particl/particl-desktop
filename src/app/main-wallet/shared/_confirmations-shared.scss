@@ -18,7 +18,7 @@
 }
 
 .tx-info { // info about public/blind/anon TX
-  .icon {
+  .mat-icon {
     font-size: 28px;
     color: var(--color-primary);
   }
@@ -38,13 +38,6 @@
   @extend %enable-select;
   font-family: var(--font-mono);
   font-weight: 500;
-  /*
-  .icon {
-    margin-right: 6px;
-    position: relative;
-    top: 3px;
-  }
-  */
   .big {
     font-size: 20px;
   }
