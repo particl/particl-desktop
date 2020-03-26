@@ -179,6 +179,11 @@ mat-card.mat-card {
   font-family: var(--font);
   box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
   padding: 24px;
+  .mat-card-header {
+    .mat-card-header-text {
+      margin: 0;
+    }
+  }
   &.not-rounded {
     border-radius: 0;
   }

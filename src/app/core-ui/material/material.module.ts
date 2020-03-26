@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule, MatSliderModule,
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatExpansionModule, MatGridListModule, MatIconModule, MatBadgeModule, MatSliderModule,
   MatListModule,
   MatMenuModule,
   MatProgressBarModule,
@@ -42,6 +42,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatMenuModule,
     MatProgressBarModule,
     MatIconModule,
+    MatBadgeModule,
     MatSliderModule,
     MatSidenavModule,
     MatGridListModule,
@@ -77,6 +78,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatMenuModule,
     MatProgressBarModule,
     MatIconModule,
+    MatBadgeModule,
     MatSliderModule,
     MatSidenavModule,
     MatGridListModule,
