@@ -234,7 +234,7 @@ body {
       outline: none;
     }
     .icon {
-      background: lighten($bg-black, 10%);
+      background: hsla(var(--text-muted-hsl), 0.3);
       width: 28px;
       height: 28px;
       line-height: 30px;
@@ -706,7 +706,7 @@ code {
   color: var(--color-secondary);
   background: hsla(var(--color-secondary-hsl), 0.15);
   padding: 2px 6px;
-  border-radius: $radius;
+  border-radius: var(--radius);
 }
 
 kbd {
@@ -736,7 +736,7 @@ kbd {
     stroke-width: 2px;
   }
   .nv-legend-text {
-    fill: $text;
+    fill: var(--text);
   }
 }
 

@@ -6,7 +6,7 @@ $installer-sidebar-padding: 30px;
 $installer-header-height: 96px;
 
 .container-block {
-  margin-top: $header-main-height;
+  margin-top: var(--header-main-height);
   .page-intro {
     p {
       margin-bottom: 0;
@@ -15,10 +15,11 @@ $installer-header-height: 96px;
 }
 
 .mat-divider { // section divider
-  border-bottom: 1px solid lighten($bg-black, 5%);
-  border-top: 1px solid darken($bg-black, 5%);
+  @extend %menu-divider;
 }
 
+/*
+// TODO @allien: still needed? seems redundant..
 .progress {
   margin-left: -15px;
   padding: 30px 0;
@@ -26,14 +27,14 @@ $installer-header-height: 96px;
     margin-bottom: 16px;
     position: relative;
     .number {
-      $size: 28px;
+      --size: 28px;
       display: inline-block;
       background: lighten($bg-black, 10%);
-      width: $size;
-      height: $size;
+      width: var(--size);
+      height: var(--size);
       border-radius: 50%;
       text-align: center;
-      line-height: $size;
+      line-height: var(--size);
       position: relative;
       z-index: 10;
     }
@@ -81,6 +82,7 @@ $installer-header-height: 96px;
     }
   }
 }
+*/
 
 .terms {
   @extend %disable-select;
@@ -89,17 +91,17 @@ $installer-header-height: 96px;
     top: 0;
     bottom: 0;
     left: 0;
-    width: $installer-minisidebar-width;
-    background: darken($bg-black, 5%);
+    width: var(--multiwallet-width);
+    background: var(--bg-sidebar-darker);
   }
   & > .sidebar {
-    width: $installer-sidebar-width;
+    width: var(--sidebar-width);
     position: fixed;
     top: 0;
     bottom: 0;
-    left: $installer-minisidebar-width;
-    background: $bg-black;
-    color: $bg;
+    left: var(--multiwallet-width);
+    background: var(--bg-sidebar);
+    color: var(--bg);
     .logo {
       display: flex;
       height: 120px;
@@ -110,11 +112,11 @@ $installer-header-height: 96px;
     }
   }
   & > .content {
-    background: $bg;
-    margin-left: ($installer-sidebar-width + $installer-minisidebar-width);
+    background: var(--bg);
+    margin-left: calc(var(--multiwallet-width) + var(--sidebar-width));
     .header-main {
-      border-bottom: 1px solid $bg-shadow;
-      background: $color-white;
+      border-bottom: 1px solid var(--bg-muted);
+      background: var(--color-white);
       padding-left: 35px;
       padding-right: 26px;
       font-size: 15px;
@@ -122,7 +124,7 @@ $installer-header-height: 96px;
       text-transform: uppercase;
       position: fixed;
       top: 0;
-      left: ($installer-minisidebar-width + $installer-sidebar-width);
+      left: calc(var(--multiwallet-width) + var(--sidebar-width));
       right: 0;
       z-index: 100;
     }
@@ -134,6 +136,8 @@ $installer-header-height: 96px;
   line-height: 1.5;
 }
 
+/*
+// TODO @allien: still needed? seems redundant..
 .action-buttons {
   margin: 6px 35px 35px;
   &.huge {
@@ -149,7 +153,7 @@ $installer-header-height: 96px;
       .icon {
         @extend %tfx;
         font-size: 38px;
-        color: $bg-shadow;
+        color: var(--bg-muted);
       }
       .choice-title {
         font-size: 15px;
@@ -159,20 +163,20 @@ $installer-header-height: 96px;
       }
       .choice-desc {
         margin: 8px 0 26px;
-        color: $text-muted;
+        color: var(--text-muted);
       }
       &:hover {
-        background: $color-white;
+        background: var(--color-white);
         &.create {
           .icon {
             transform: scale(1.1);
-            color: $color;
+            color: var(--color-primary);
           }
         }
         &.restore {
           .icon {
             transform: rotate(45deg) scale(1.1);
-            color: $color-info;
+            color: var(--color-info);
           }
         }
       }
@@ -182,6 +186,7 @@ $installer-header-height: 96px;
     }
   }
 }
+*/
 
 .confirmation-checkbox {
   margin-right: 12px;

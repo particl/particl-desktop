@@ -1,26 +1,26 @@
 <div mat-dialog-title>Backup <code>{{ (walletName | async) }}</code> wallet</div>
-<button class="small-close-button" (click)="dialogClose()">
-  <mat-icon fontIcon="part-circle-remove"></mat-icon>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<div mat-dialog-content class="dialog-content">
+<mat-dialog-content class="dialog-content">
   <p class="lead">
     Select a location where the backup of the wallet should be made:
   </p>
-  <p class="info message">
+  <p class="message --info">
     It is strongly recommended to not leave the backup on the same machine as the primary wallet.<br>
     Note that this creates a file named <code>wallet.dat</code> in the selected folder.
   </p>
   <p>
     <button mat-raised-button color="accent" (click)="selectBackupPath()">
-      <mat-icon class="icon" fontIcon="part-image-upload"></mat-icon>
+      <mat-icon fontIcon="part-image-upload"></mat-icon>
       Select Folder
     </button>
     &nbsp;&nbsp;
-    <span>{{ filePath }}</span>
+    <span class="file-path">{{ filePath }}</span>
   </p>
-</div>
+</mat-dialog-content>
 
 
 <mat-dialog-actions fxLayoutAlign="space-between center">

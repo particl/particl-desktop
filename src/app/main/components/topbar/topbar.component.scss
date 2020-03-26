@@ -2,35 +2,33 @@
 
 
 .header-main {
-  border-bottom: 1px solid $bg-shadow;
-  padding-left: 35px;
-  padding-right: 26px;
-  font-family: $font;
+  border-bottom: 1px solid var(--bg-muted);
+  padding: 0 var(--paddingH);
+  font-family: var(--font);
   font-size: 15px;
   text-transform: uppercase;
   position: sticky;
   top: 0;
   z-index: 100;
-  @include break(l) {
-    padding: 0 calc(50px - #{$scrollbar-width}) 0 50px;
-  }
   .title {
-    font-weight: 700;
+    font-weight: 600;
     display: inline-block;
   }
+  /* TODO @allien: no longer needed?
   .right {
     text-align: right;
     .spendable-balance { // available blind balance for spending on Market
       display: inline-block;
-      border-right: 1px solid $bg-shadow;
+      border-right: 1px solid var(--bg-muted);
       margin-right: 24px;
       padding: 15px 24px 15px 0;
       .mat-icon {
         margin-right: 8px;
         position: relative;
         top: 2px;
-        color: $text-muted;
+        color: var(--text-muted);
       }
     }
   }
+  */
 }

@@ -23,7 +23,7 @@
       display: inline-block;
       font-size: 13px;
       margin-left: 18px;
-      color: darken($bg, 50%);
+      color: var(--text-muted);
     }
     &:not(.last):after { // lines connecting numbers
       content: '';

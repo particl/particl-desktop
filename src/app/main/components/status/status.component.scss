@@ -2,11 +2,10 @@
 
 .status-icons {
   display: inline-block;
-  border-left: 1px solid $bg-shadow;
-  padding: 15px 0 15px 22px;
-  @include break(l) {
-    padding: 15px 0 15px 36px;
-  }
+  border-left: 1px solid var(--bg-muted);
+  padding-left: calc(var(--paddingH) / 1.25);
+  height: var(--header-main-height);
+  line-height: var(--header-main-height);
 }
 
 .icon {
@@ -26,22 +25,22 @@
   // ZMQ warnings
   &.zmq {
     &.zmq-alert {
-      color: $color-alert;
+      color: var(--color-alert);
     }
     &.zmq-warning {
-      color: $color-warning;
+      color: var(--color-warning);
     }
     &.zmq-info {
-      color: $color-info;
+      color: var(--color-info);
     }
     &.zmq-connected {
-      color: $text;
+      color: var(--text);
     }
   }
 
   // Time offset warning
   &.warning {
-    color: $color-alert;
+    color: var(--color-alert);
     position: relative;
     top: 1px;
     .mat-icon {

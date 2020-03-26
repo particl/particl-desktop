@@ -21,47 +21,6 @@ Global SCSS config file defining app-wide settings (included in every page)
     1. Variables
 \* ------------------------------- */
 
-$font: 'Inter_UI', sans-serif;
-$font-mono: 'Office_Code_Pro', monospace;
-
-// main colors
-$color: #45d492; // primary green-ish color
-$secondary: #1597dd; // new blue
-$tertiary: #5949a7; // new purple
-
-$color-success: #4f8a10;
-$color-alert: #d4292e;
-$color-warning: #f1a500; // yellow-ish
-$color-info: #108cda; // blue-ish (e.g. status cold staking icon)
-$color-white: #fff;
-$color-ugly: #ff69b4;
-
-// text colors
-$text: #232728; // default text color
-$text-muted: #747c82; // grey (for section titles, descriptions etc.)
-
-// bg/element colors
-$bg: #fafafa; // light grey bg color
-$bg-hover: darken($bg, 2%);
-$bg-black: $text; // sidebar
-$bg-shadow: #dcdcdc; // lines, box shadows etc.
-
-// UI
-$radius: 4px; // default border-radius
-
-// layouts
-$header-main-height: 64px;
-$tab-bar-height: 48px;
-$control-bar-height: 55px;
-
-$multiwallet-width: 56px;
-$sidebar-width: 220px; // main navigation
-$filter-width: 230px; // sidebar in content area (filter/sort, search)
-$scrollbar-width: 6px;
-
-$padding: 35px; // spacing between elements
-$padding-l: 50px; // ..for large screens
-
 // Breakpoints (see _mixins.scss for details)
 $break-l: 1500px;
 $break-xl: 1700px;
@@ -73,9 +32,7 @@ $break-xhd: 2200px;
   Override SASS' handling of HSL(a) color functions, don't touch it and let CSS handle it itself.
   This will enable the trick with variable alpha channels for CSS color variables (see below).
 */
-//@function hsl($args...) { @return #{'hsl(#{$args})'}; }
 @function hsla($args...) { @return #{'hsla(#{$args})'}; }
-
 
 :root {
 
@@ -152,6 +109,15 @@ $break-xhd: 2200px;
   --bg-appbar: hsl(192, 7%, 10%); // dark appbar bg
   --bg-appbar-hsl: 192, 7%, 10%;
 
+  // TX confirmations
+  --color-confirms-0-pct: var(--color-alert);
+  --color-confirms-0-pct-hsl: var(--color-alert-hsl);
+  --color-confirms-25-pct: hsl(16, 75%, 50%);
+  --color-confirms-25-pct-hsl: 16, 75%, 50%;
+  --color-confirms-75-pct: hsl(30, 87%, 49%);
+  --color-confirms-75-pct-hsl: 30, 87%, 49%;
+  --color-confirms-100-pct: var(--color-warning);
+  --color-confirms-100-pct-hsl: var(--color-warning-hsl);
 
   /* ---------- LAYOUT & UI ---------- */
 
@@ -177,7 +143,6 @@ $break-xhd: 2200px;
     --paddingV: 40px;
     --paddingH: 50px;
   }
-
 }
 
 
@@ -189,7 +154,6 @@ $break-xhd: 2200px;
 
 // Import themes
 @import 'theme-default';
-
 
 
 /* ------------------------------- *\
