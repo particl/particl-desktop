@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketSettingsComponent } from './settings.component';
+import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,11 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    MarketSettingsComponent
+    MarketSettingsComponent,
+    MarketConsoleModalComponent
+  ],
+  entryComponents: [
+    MarketConsoleModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -8,7 +8,7 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
 import { MarketState } from './store/market.state';
 import { MarketBaseComponent } from './base/market-base.component';
 import { AlphaMainnetWarningComponent } from './base/alpha-mainnet-warning/alpha-mainnet-warning.component';
-import { MarketService } from './services/market-rpc/market.service';
+import { MarketRpcService } from './services/market-rpc/market-rpc.service';
 
 
 const routes: Routes = [
@@ -51,7 +51,7 @@ const routes: Routes = [
     AlphaMainnetWarningComponent
   ],
   providers: [
-    MarketService
+    MarketRpcService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

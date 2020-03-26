@@ -1,7 +1,7 @@
 import { State, StateToken, Action, StateContext, Selector, NgxsOnInit } from '@ngxs/store';
 import { of, defer, iif } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
-import { MarketService } from '../services/market-rpc/market.service';
+import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
 import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings } from './market.models';
@@ -54,7 +54,7 @@ export class MarketState implements NgxsOnInit {
 
 
   constructor(
-    private _marketService: MarketService,
+    private _marketService: MarketRpcService,
     private _settingsService: SettingsService
   ) {}
 

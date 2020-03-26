@@ -12,7 +12,7 @@ import { environment } from 'environments/environment';
 
 
 @Injectable()
-export class MarketService {
+export class MarketRpcService {
 
   private log: any = Log.create('market.service id:' + Math.floor((Math.random() * 1000) + 1));
   private url: string = `http://${environment.marketHost}:${environment.marketPort}/api/`;
@@ -28,9 +28,9 @@ export class MarketService {
 
 
   startMarketService(marketPort: number): Observable<boolean> {
-    const settings: AppSettingsStateModel = this._store.selectSnapshot(AppSettingsState);
+    const appSettings: AppSettingsStateModel = this._store.selectSnapshot(AppSettingsState);
 
-    return this._ipc.runCommand('start-market', null, marketPort, settings.zmqPort).pipe(
+    return this._ipc.runCommand('start-market', null, marketPort, appSettings.zmqPort).pipe(
       tap((started: boolean) => {
         this.isConnected = Boolean(started);  // ensure null response is converted accordingly
 

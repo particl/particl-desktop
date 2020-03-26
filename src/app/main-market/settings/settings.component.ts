@@ -8,6 +8,7 @@ import { tap, takeUntil, take, finalize, concatMap } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
 
 import { MarketActions } from '../store/market.actions';
 import { StartedStatus, MarketSettings } from '../store/market.models';
@@ -267,7 +268,10 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
 
   launchMarketConsole() {
-    // TODO!!!!!!!!!!!! IMPLEMENT THIS
+    if (this.startedStatus !== StartedStatus.STARTED) {
+      return;
+    }
+    this._dialog.open(MarketConsoleModalComponent);
   }
 
 
