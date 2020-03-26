@@ -534,13 +534,16 @@ mat-expansion-panel.mat-expansion-panel {
       color: var(--text-muted);
     }
   }
-  &.smaller { // smaller line height for menu items
+  &.--smaller { // smaller line height for menu items
     .mat-menu-item {
       height: 36px;
       line-height: 36px;
+      span {
+        font-size: 13px;
+      }
     }
   }
-  &.with-images { // menu options with images (e.g. Logos in Market selector)
+  &.--with-images { // menu options with images (e.g. Logos in Market selector)
     .image {
       width: 24px;
       height: 24px;

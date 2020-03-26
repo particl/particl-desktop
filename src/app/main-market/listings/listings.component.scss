@@ -118,6 +118,26 @@ mat-card.listing {
     .mat-button {
       margin: 0;
       font-size: 13px;
+      &.add-to-cart {
+        &:hover,
+        &:focus {
+          .part-cart-plus {
+            display: inline-block;
+          }
+          .part-cart {
+            display: none;
+          }
+        }
+        .part-cart-plus {
+          display: none;
+        }
+      }
+      &.more-options {
+        .mat-icon {
+          font-size: 13px;
+          color: var(--text-muted);
+        }
+      }
       small {
         font-weight: 400;
       }

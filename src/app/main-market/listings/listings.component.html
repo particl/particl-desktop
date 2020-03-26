@@ -111,25 +111,22 @@
           <mat-card-actions fxLayoutAlign="space-between center">
             <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart">
               <mat-icon fontIcon="part-cart"></mat-icon>
+              <mat-icon fontIcon="part-cart-plus"></mat-icon>
               652.<small>8431</small>
               <mat-icon fontIcon="part-cryptocurrency-particl"></mat-icon>
             </button>
-            <button mat-button class="more-options small icon-only" [matMenuTriggerFor]="menu" aria-label="Secondary Listing actions">
-              <mat-icon fontIcon="part-overview"></mat-icon>
+            <button mat-button class="more-options tiny icon-only" [matMenuTriggerFor]="menu" aria-label="Secondary Listing actions">
+              <mat-icon fontIcon="part-more-horizontal"></mat-icon>
             </button>
           </mat-card-actions>
-          <mat-menu #menu="matMenu">
+          <mat-menu #menu="matMenu" class="--smaller">
             <button mat-menu-item>
               <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
               <span>Report as inapropriate</span>
             </button>
             <button mat-menu-item>
-              <mat-icon fontIcon="part-label"></mat-icon>
-              <span>More from [Category name]</span>
-            </button>
-            <button mat-menu-item>
-              <mat-icon fontIcon="part-chat-discussion" matBadge="8" matBadgeColor="accent"></mat-icon>
-              <span>Ask a question</span>
+              <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+              <span>Questions &amp; Answers (8)</span>
             </button>
             <button mat-menu-item>
               <mat-icon fontIcon="part-heart-outline"></mat-icon>
