@@ -33,7 +33,7 @@
   <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center">
     <mat-form-field fxFlex="1 1 100%" appearance="fill" class="command-input --plain --larger">
       <mat-icon matPrefix fontIcon="part-console"></mat-icon>
-      <input matInput [(ngModel)]="command" placeholder="Enter command…" [appFocusTimeout]="true">
+      <input #commandInput matInput [(ngModel)]="command" placeholder="Enter command…" [appFocusTimeout]="true">
     </mat-form-field>
     <mat-checkbox [(ngModel)]="useRunstringsParser" class="confirmation-checkbox" fxFlex="0 1 200px">
       <small>Use runstrings (deprecated)</small>

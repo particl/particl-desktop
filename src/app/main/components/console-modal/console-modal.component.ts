@@ -1,13 +1,15 @@
 import {
   Component,
   OnInit,
-  HostListener,
   ViewChild,
   ElementRef,
-  AfterViewChecked
+  AfterViewChecked,
+  OnDestroy
 } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { isFinite, isPlainObject, isArray } from 'lodash';
+import { Subject, fromEvent } from 'rxjs';
+import { finalize, takeUntil, filter, map } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
@@ -15,24 +17,33 @@ import { DateFormatter } from 'app/core/util/utils';
 import { Command } from './command.model';
 
 
+enum TextContent {
+  FORMAT_ERROR = 'There appears to be a formatting error',
+  INVALID_COMMAND = 'Method not found'
+}
+
+
 @Component({
   templateUrl: './console-modal.component.html',
   styleUrls: ['./console-modal.component.scss']
 })
-export class ConsoleModalComponent implements OnInit, AfterViewChecked {
+export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   log: any = Log.create('app-console-modal');
 
   public commandList: Command[] = [];
-  public commandHistory: Array<string> = [];
   public command: string;
   public currentTime: string;
   public disableScrollDown: boolean = false;
   public waitingForRPC: boolean = true;
-  public historyCount: number = 0;
   public useRunstringsParser: boolean = false;
 
   @ViewChild('debug', {static: false}) private commandContainer: ElementRef;
+  @ViewChild('commandInput', {static: true}) private commandInput: ElementRef;
+
+  private destroy$: Subject<void> = new Subject();
+  private commandHistory: Array<string> = [];
+  private historyCount: number = 0;
 
   constructor(
     private _rpc: MainRpcService,
@@ -41,11 +52,80 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.currentTime = this.getDateFormat();
+
+    fromEvent(this.commandInput.nativeElement, 'keydown').pipe(
+      filter((event: any) => [13, 38, 40].includes(event.keyCode) || (event.ctrlKey && event.keyCode === 76)),
+      map((event: any) => {
+        event.preventDefault();
+        return event.keyCode;
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(
+      (keyCode: number) => {
+        switch (keyCode) {
+          case 13:
+            if (this.command && this.waitingForRPC) {
+              this.disableScrollDown = false;
+              this.rpcCall();
+            }
+            break;
+
+          case 76:
+            // ctrl+L to clear the output
+            this.commandList = [];
+            break;
+
+          case 38:
+            if ((this.commandHistory.length > 0) && (this.historyCount > 0)) {
+              this.historyCount--;
+              this.command = this.commandHistory[this.historyCount];
+            }
+            break;
+
+          case 40:
+            if ((this.commandHistory.length > 0) && (this.historyCount <= this.commandHistory.length)) {
+              this.historyCount++;
+              this.command = this.commandHistory[this.historyCount];
+            }
+            break;
+        }
+      }
+    );
   }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
+  isJson(text: any) {
+    return (typeof text === 'object');
+  }
+
+
+  scrollToBottom() {
+    if (this.disableScrollDown) {
+      return;
+    }
+    this.commandContainer.nativeElement.scrollTop = this.commandContainer.nativeElement.scrollHeight;
+  }
+
+
+  onScroll() {
+    const element = this.commandContainer.nativeElement;
+    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
+    if (this.disableScrollDown && atBottom) {
+      this.disableScrollDown = false;
+    } else {
+      this.disableScrollDown = true;
+    }
+  }
+
 
   rpcCall() {
     this.waitingForRPC = false;
@@ -66,49 +146,55 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
     } else {
       const params = this.queryParserCommand(this.command);
       if (!params.length) {
-        this.formatErrorResponse({message: 'There appears to be a formatting error'});
+        this.formatErrorResponse({message: TextContent.FORMAT_ERROR});
         return;
       }
       commandString = String(params.shift());
       callableParams = params;
     }
 
-    this._rpc.call(commandString, callableParams)
-      .subscribe(
+    this._rpc.call(commandString, callableParams).pipe(
+      finalize(() => {
+        this.waitingForRPC = true;
+        this.scrollToBottom();
+      })
+    ).subscribe(
         (response: any) => this.formatSuccessResponse(response),
-        (error: any) => {
-          this.formatErrorResponse(error);
-        }
+        (error: any) => this.formatErrorResponse(error)
       );
   }
 
-  formatSuccessResponse(response: any) {
-    this.waitingForRPC = true;
+
+  private formatSuccessResponse(response: any) {
     this.commandList.push(new Command(1, this.command, this.getDateFormat()),
       new Command(2, response, this.getDateFormat(), 200));
     this.command = '';
     this.scrollToBottom();
   }
 
-  formatErrorResponse(error: any) {
-    this.waitingForRPC = true;
+  private formatErrorResponse(error: any) {
     if (error.code === -1) {
       this.commandList.push(new Command(1, this.command, this.getDateFormat()),
         new Command(2, error.message, this.getDateFormat(), -1));
       this.command = '';
-      this.scrollToBottom();
     } else {
-      const errorMessage = (error.message) ? error.message : 'Method not found';
+      const errorMessage = (error.message) ? error.message : TextContent.INVALID_COMMAND;
       this.snackbar.open(errorMessage, 'warn');
     }
   }
 
-  queryParserRunstrings(com: string): Array<string> {
+  private queryParserRunstrings(com: string): Array<string> {
     return com.trim().replace(/\s+(?=[^[\]]*\])|\s+(?=[^{\]]*\})|(("[^"]*")|\s)/g, '$1').split(' ')
           .filter(cmd => cmd.trim() !== '');
   }
 
-  queryParserCommand(com: string): Array<any> {
+
+  private getDateFormat() {
+    return new DateFormatter(new Date()).hourSecFormatter();
+  }
+
+
+  private queryParserCommand(com: string): Array<any> {
     let parseError = false;
     let lastTokenPos = -1;
     const delimStack: string[] = [];
@@ -268,61 +354,4 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
     return correctedTokens;
   }
-
-  isJson(text: any) {
-    return (typeof text === 'object');
-  }
-
-  getDateFormat() {
-    return new DateFormatter(new Date()).hourSecFormatter();
-  }
-
-  scrollToBottom() {
-    if (this.disableScrollDown) {
-      return;
-    }
-    this.commandContainer.nativeElement.scrollTop = this.commandContainer.nativeElement.scrollHeight;
-  }
-
-  onScroll() {
-    const element = this.commandContainer.nativeElement;
-    const atBottom = element.scrollHeight - element.scrollTop === element.clientHeight;
-    if (this.disableScrollDown && atBottom) {
-      this.disableScrollDown = false;
-    } else {
-      this.disableScrollDown = true;
-    }
-  }
-
-  manageCommandHistory(code: number) {
-    if (code === 38) {
-      if (this.historyCount > 0) {
-        this.historyCount--;
-      }
-    } else {
-      if (this.historyCount <= this.commandHistory.length) {
-        this.historyCount++;
-      }
-    }
-    this.command = this.commandHistory[this.historyCount];
-  }
-
-
-  // capture the enter button
-  @HostListener('window:keydown', ['$event'])
-  keyDownEvent(event: any) {
-    if ([13, 38, 40].includes(event.keyCode)) {
-      event.preventDefault();
-    }
-    if (event.keyCode === 13 && this.command && this.waitingForRPC) {
-      this.disableScrollDown = false;
-      this.rpcCall();
-    } else if (event.ctrlKey && event.keyCode === 76) {
-      this.commandList = [];
-      // Up and Down arrow KeyPress to manage command history
-    } else if ([38, 40].includes(event.keyCode) && this.commandHistory.length > 0) {
-      this.manageCommandHistory(event.keyCode);
-    }
-  }
-
 }
