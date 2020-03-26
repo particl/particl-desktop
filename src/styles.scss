@@ -627,7 +627,7 @@ p.message {
   // Info messages
   &.--info {
     &::before {
-      content: '\ea19'; // part-info icon
+      content: '\ea25'; // part-info icon
       color: var(--color-info);
     }
     a {
@@ -637,7 +637,7 @@ p.message {
   // Warning messages
   &.--warning {
     &::before {
-      content: '\ea02'; // part-alert icon
+      content: '\ea03'; // part-alert icon
       color: var(--color-alert);
     }
     a {

@@ -37,7 +37,7 @@
           </div>
           <div class="right" fxFlex="70%">
             <a mat-button matTooltip="Display address' public information on Block Explorer" [disabled]="isLoading || (activeAddress.address.length === 0)" href="https://explorer{{ (isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{activeAddress.address}}" target="_blank">
-              <mat-icon fontIcon="part-info"></mat-icon>
+              <mat-icon fontIcon="part-zoom-in"></mat-icon>
               Show on Explorer
             </a>
             <button mat-raised-button [color]="addressType === 'public' ? 'primary' : 'accent'" ngxClipboard [cbContent]="activeAddress.address || ''" [disabled]="isLoading || (activeAddress.address.length === 0)" (click)="copyToClipBoard()">

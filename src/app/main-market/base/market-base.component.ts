@@ -46,7 +46,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   readonly menu: IMenuItem[] = [
     {text: 'Overview', path: 'overview', icon: 'part-overview', alwaysEnabled: false},
     {text: 'Markets', path: 'management', icon: 'part-add-account', alwaysEnabled: false},
-    {text: 'Listings', path: 'listings', icon: 'part-listings', alwaysEnabled: false},
+    {text: 'Listings', path: 'listings', icon: 'part-shop', alwaysEnabled: false},
     {text: 'Purchases', path: 'buy', icon: 'part-bag-buy', alwaysEnabled: false},
     {text: 'Sell', path: 'sell', icon: 'part-bag-sell', alwaysEnabled: false},
     {text: 'Proposals', path: 'proposals', icon: 'part-notification-speaker', alwaysEnabled: false},

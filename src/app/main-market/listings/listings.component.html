@@ -11,7 +11,7 @@
 
     <!-- Filtering -->
     <div class="filter-by category" fxFlex="1 1 25%">
-      <mat-icon fontIcon="part-label" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
+      <mat-icon fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
       <app-category-tree
         *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
         (onChange)="onCategoryChange($event)"
@@ -21,7 +21,7 @@
     </div>
 
     <div class="filter-by seller-country" fxFlex="1 1 25%">
-      <mat-icon fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
+      <mat-icon fontIcon="part-filter-2" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
       <mat-select-search
         [options]="countryList?.countries"
         [defaultOption]="'All seller countries'"
