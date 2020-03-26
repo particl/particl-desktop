@@ -4,14 +4,14 @@
     <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-hamburger"></mat-icon>
+          <mat-icon fontIcon="part-recipe"></mat-icon>
           Orders
           <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span>
         </ng-template>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-listings"></mat-icon>
+          <mat-icon fontIcon="part-stock"></mat-icon>
           Listings
         </ng-template>
       </mat-tab>
