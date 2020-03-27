@@ -106,11 +106,9 @@ body {
   top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV) + 1px); // 1px for border
   width: var(--filter-width);
   float: left;
-  /*
   .without-tab-bar & {
     top: calc(var(--header-main-height) + var(--paddingV) + 1px);
   }
-  */
   .buttons { // main call-to-action buttons above filter
     margin-bottom: 32px;
     @include break(l) {

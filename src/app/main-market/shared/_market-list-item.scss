@@ -27,8 +27,6 @@
     }
     .info {
       .box-title {
-        font-size: 15px;
-        font-weight: 500;
         text-transform: none;
         margin: 0 0 6px;
       }
@@ -67,6 +65,9 @@
       line-height: 1.5;
       font-size: 13px;
       margin: 0;
+    }
+    .box-title {
+      margin: 18px 0 6px;
     }
     .keys {
       .public {

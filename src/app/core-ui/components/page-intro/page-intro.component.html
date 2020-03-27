@@ -10,11 +10,16 @@
 
   <h1><ng-content select="[page-title]"></ng-content></h1>
   <div class="content" #pageContent>
-    <p><ng-content select="[page-content]"></ng-content></p>
-    <p class="info" #pageInfo>
+    <p class="desc">
+      <ng-content select="[page-content]"></ng-content>
+    </p>
+    <p class="message --info" #pageInfo>
       <ng-content select="[page-info]"></ng-content>
     </p>
-    <p class="widget-help">
+    <p class="message --warning" #pageWarning>
+      <ng-content select="[page-warning]"></ng-content>
+    </p>
+    <p class="help-text">
       <ng-content select="[page-help]"></ng-content>
     </p>
   </div>

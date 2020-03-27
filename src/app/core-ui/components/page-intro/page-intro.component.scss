@@ -8,6 +8,9 @@
   // collapsed (hidden) state styles
   &.collapsed {
     padding: calc(var(--paddingV) / 1.5) var(--paddingH);
+    .intro-toggle {
+      margin-top: 0;
+    }
     h1 {
       font-size: 1.55em;
     }
@@ -20,7 +23,7 @@
   .intro-toggle {
     @extend %tfx;
     float: right;
-    margin-right: -12px;
+    margin: -12px -12px 0 0;
     opacity: 0.5;
     &:hover,
     &:focus {
@@ -48,15 +51,17 @@
   // content with help text (toggle-able)
   .content {
     margin-top: 16px;
-    p {
+    .desc {
       line-height: 1.5;
+      @include break(l) {
+        font-size: 14.5px;
+      }
     }
-  }
-  .widget-help {
-    margin-bottom: 0;
-  }
-
-  .info:empty {
-    display: none;
+    .help-text {
+      margin-bottom: 0;
+    }
+    .message:empty {
+      display: none;
+    }
   }
 }
