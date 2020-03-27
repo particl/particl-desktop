@@ -224,7 +224,7 @@ mat-tab-group.mat-tab-group {
 
 mat-expansion-panel.mat-expansion-panel {
   @extend mat-card.mat-card;
-  margin-bottom: 4px;
+  margin: 0 0 4px;
   overflow: hidden;
   padding: 0;
   border-radius: 0;

@@ -6,16 +6,23 @@
 */
 
 .market {
-  $header-height: 90px;
+  --header-height: 85px;
+  &.mat-expanded {
+    //margin: 16px 0;
+  }
   .mat-expansion-panel-header {
-    min-height: $header-height;
+    min-height: var(--header-height);
     padding-left: 0;
     .photo {
+      flex: 0 0 var(--header-height);
+      height: var(--header-height);
       margin-right: 24px;
       img {
         width: 100%;
         height: 100%;
         display: block;
+        object-fit: cover;
+        object-position: center;
       }
     }
     .info {
@@ -31,13 +38,22 @@
         color: var(--color-primary);
       }
       .tag {
-        @extend %lighter;
-        border: 1px solid var(--text-muted);
+        color: var(--text-muted);
+        border: 1px solid hsla(var(--text-muted-hsl), 0.7);
         border-radius: var(--radius);
         text-transform: uppercase;
         font-size: 85%;
         padding: 1px 6px;
         margin-right: 8px;
+        &.admin {
+          color: var(--color-secondary);
+          border-color: hsla(var(--color-secondary-hsl), 0.8);
+          .mat-icon {
+            font-size: 11px;
+            position: relative;
+            top: 1px;
+          }
+        }
       }
     }
   }
@@ -80,7 +96,7 @@
   }
   .action-buttons {
     border-top: 1px solid var(--bg-muted);
-    padding: 16px 18px;
+    padding: 12px 18px;
     .left {
       margin-top: 3px;
       button {
