@@ -270,11 +270,10 @@ export class GlobalSettingsComponent implements OnInit {
       from(actions).pipe(
         concatMap((action) => this._store.dispatch(action))
       ).subscribe(
-        () => {
-          observer.next(restartRequired);
-        },
+        null,
         null,
         () => {
+          observer.next(restartRequired);
           observer.complete();
         }
       );

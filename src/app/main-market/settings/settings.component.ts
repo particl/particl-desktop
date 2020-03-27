@@ -11,14 +11,28 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
 
 import { MarketActions } from '../store/market.actions';
-import { StartedStatus, MarketSettings } from '../store/market.models';
+import { StartedStatus, MarketSettings, MarketStateModel } from '../store/market.models';
 import {
   PageInfo,
-  TextContent,
+  TextContent as DefaultTextContent,
   SettingType,
   SettingGroup,
   Setting
 } from 'app/main-extra/global-settings/settings.types';
+
+
+enum TextContent {
+  FAILED_SAVE = 'An error occurred saving this value'
+}
+
+interface MarketSetting extends Setting {
+  waitForServiceStart: boolean;
+  _isDisabled: boolean;
+}
+
+interface MarketSettingGroup extends SettingGroup {
+  settings: MarketSetting[];
+}
 
 
 @Component({
@@ -31,7 +45,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   STARTEDSTATUS: typeof StartedStatus = StartedStatus;  // Template typings
   settingType: (typeof SettingType) = SettingType;      // Template typings
 
-  settingGroups: SettingGroup[] = [];
+  settingGroups: MarketSettingGroup[] = [];
   isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
   currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
 
@@ -41,45 +55,44 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     help: 'For configuration of global app settings, click the settings icon in bottom right corner'
   } as PageInfo;
 
-  private _currentGroupIdx: number = 0;
-
 
   private destroy$: Subject<void> = new Subject();
+  private _currentGroupIdx: number = 0;
+  private isWaitingForStartCall: boolean = false;
+
 
   constructor(
     private _store: Store,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
   ) {
-    this._store.select(MarketState.startedStatus).pipe(
-      tap((status) => this.startedStatus = status),
-      takeUntil(this.destroy$)
-    ).subscribe();
-  }
+    const groups = this.loadPageData();
 
-
-  ngOnInit() {
-    this.loadPageData();
-
-    // Perform relevant data binding
-    this.settingGroups.forEach((group: SettingGroup) => {
-      group.settings.forEach((setting: Setting) => {
-        if (setting.validate) {
-          setting.validate = setting.validate.bind(this);
-        }
-        if (setting.onChange) {
-          setting.onChange = setting.onChange.bind(this);
-        }
-        if (setting.formatValue) {
-          setting.formatValue = setting.formatValue.bind(setting);
-        } else {
-          setting.formatValue = () => setting.newValue;
-        }
+    groups.forEach((group: MarketSettingGroup) => {
+      group.settings.forEach((setting: MarketSetting) => {
+        this.bindSettingFunctions(setting);
       });
 
       this.currentChanges.push([]);
     });
+
+    this.settingGroups = groups;
     this.clearChanges();
+  }
+
+
+  ngOnInit() {
+    this._store.select(MarketState).pipe(
+      tap((storeState: MarketStateModel) => {
+        if (this.startedStatus !== storeState.started) {
+          this.startedStatus = storeState.started;
+        }
+        if (!this.isProcessing) {
+          this.updateOnServiceStatusChange();
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 
 
@@ -156,7 +169,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     if ((setting.currentValue !== setting.newValue) && (changeIdx === -1)) {
       this.currentChanges[groupIdx].push(settingIdx);
     } else if ((setting.currentValue === setting.newValue) && (changeIdx !== -1)) {
-      this.currentChanges[groupIdx].splice(changeIdx, 1);
+      this.currentChanges[groupIdx] = this.currentChanges[groupIdx].filter(idx => idx !== settingIdx);
     }
 
     this.isProcessing = false;
@@ -171,10 +184,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
     this.settingGroups.forEach(group => {
       group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          setting.newValue = setting.currentValue;
-        }
-        setting.errorMsg = '';
+        this.resetSetting(setting);
         group.errors = [];
       });
     });
@@ -191,12 +201,12 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
    */
   saveChanges() {
     if (this.isProcessing) {
-      this._snackbar.open(TextContent.ERROR_BUSY_PROCESSING, 'err');
+      this._snackbar.open(DefaultTextContent.ERROR_BUSY_PROCESSING, 'err');
       return;
     }
     this.isProcessing = true;
 
-    this.disableUI(TextContent.SAVING);
+    this.disableUI(DefaultTextContent.SAVING);
 
     // Validation of each changed setting ensures current settings are not in an error state
     let hasError = false;
@@ -220,7 +230,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     });
 
     if (!hasChanged || hasError) {
-      const errMsg = !hasChanged ? TextContent.SAVE_NOT_NEEDED : TextContent.ERROR_INVALID_ITEMS;
+      const errMsg = !hasChanged ? DefaultTextContent.SAVE_NOT_NEEDED : DefaultTextContent.ERROR_INVALID_ITEMS;
       this.isProcessing = false;
       this.enableUI();
       this._snackbar.open(errMsg, 'err');
@@ -237,33 +247,46 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       (doRestart: boolean) => {
 
         // Change current settings in case it has not been done
-        this.settingGroups.forEach(group => {
-          group.settings.forEach(setting => {
-            if ( !(setting.type === SettingType.BUTTON)) {
-              setting.currentValue = setting.newValue;
+        const refreshedGroups = this.loadPageData();
+
+        this.settingGroups.forEach((group, groupIdx) => {
+          group.settings.forEach((setting, settingIdx) => {
+            if (setting.type !== SettingType.BUTTON) {
+              const updatedSetting = refreshedGroups[groupIdx].settings[settingIdx];
+
+              if (setting.id === updatedSetting.id) {
+                if (setting.newValue !== updatedSetting.currentValue) {
+                  setting.errorMsg = TextContent.FAILED_SAVE;
+                  group.errors.push(settingIdx);
+                } else {
+                  setting.errorMsg = '';
+                  group.errors = group.errors.filter(si => si !== settingIdx);
+                  this.currentChanges[groupIdx] = this.currentChanges[groupIdx].filter(si => si !== settingIdx);
+                }
+              }
             }
-            setting.errorMsg = '';
           });
-          group.errors = [];
         });
 
-        // reset the list of current changes
-        this.currentChanges = this.currentChanges.map(change => []);
-        this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
+        if (!this.hasChanges) {
+          this._snackbar.open(DefaultTextContent.SAVE_SUCCESSFUL);
 
-        if (doRestart) {
-          this.actionRestartApplication();
+          if (doRestart) {
+            this.restartMarketplace();
+          }
+        } else {
+          this._snackbar.open(DefaultTextContent.SAVE_FAILED, 'err');
         }
       },
       (err) => {
-        this._snackbar.open(TextContent.SAVE_FAILED, 'err');
+        this._snackbar.open(DefaultTextContent.SAVE_FAILED, 'err');
       }
     );
   }
 
 
   restartMarketplace() {
-    this._store.dispatch(new MarketActions.StartMarketService());
+    this._store.dispatch(new MarketActions.RestartMarketService());
   }
 
 
@@ -313,11 +336,10 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       from(actions).pipe(
         concatMap((action) => this._store.dispatch(action))
       ).subscribe(
-        () => {
-          observer.next(restartRequired);
-        },
+        null,
         null,
         () => {
+          observer.next(restartRequired);
           observer.complete();
         }
       );
@@ -325,23 +347,19 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   }
 
 
-  private actionRestartApplication() {
-    this._store.dispatch(new MarketActions.StopMarketService());
-    // Give the MP service some time to shut down correctly
-    setTimeout(() => this.restartMarketplace(), 1500);
-  }
+  private loadPageData(): MarketSettingGroup[] {
 
+    const groups: MarketSettingGroup[] = [];
 
-  private loadPageData() {
+    const marketState: MarketStateModel = this._store.selectSnapshot(MarketState);
+    const marketSettings: MarketSettings = marketState.settings;
 
-    const marketSettings: MarketSettings = this._store.selectSnapshot(MarketState.settings);
-
-    const connectionDetails = {
+    const connectionDetails: MarketSettingGroup = {
       name: 'Connection Details',
       icon: 'part-globe',
       settings: [],
       errors: []
-    } as SettingGroup;
+    };
 
 
     connectionDetails.settings.push({
@@ -357,10 +375,29 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       restartRequired: true,
       validate: this.validatePortNumber,
       formatValue: this.formatPortSetting,
-    } as Setting);
+      waitForServiceStart: false,
+    } as MarketSetting);
 
 
-    this.settingGroups.push(connectionDetails);
+    connectionDetails.settings.push({
+      id: 'profile.defaultIdentityID',
+      title: 'Default Identity',
+      description: 'Set the selected identity as the initial selected identity',
+      isDisabled: false,
+      type: SettingType.SELECT,
+      errorMsg: '',
+      options: marketState.identities.map(id => ({text: id.displayName, value: id.id})),
+      currentValue: marketSettings.defaultIdentityID,
+      tags: [],
+      restartRequired: false,
+      formatValue: this.formatPortSetting,
+      waitForServiceStart: true
+    } as MarketSetting);
+
+
+    groups.push(connectionDetails);
+
+    return groups;
 
   }
 
@@ -374,6 +411,62 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   private validatePortNumber(value: any, setting: Setting): string | null {
     const port = +value;
     return port > 0 && port <= 65535 ? null : 'Invalid port number';
+  }
+
+
+  private updateOnServiceStatusChange() {
+    const isEnabled = this.startedStatus === StartedStatus.STARTED;
+
+    if (!isEnabled && !this.isWaitingForStartCall) {
+      this.isWaitingForStartCall = true;
+
+      for (const settingGroup of this.settingGroups) {
+        for (const setting of settingGroup.settings) {
+          if (setting.waitForServiceStart) {
+            setting._isDisabled = setting.isDisabled;
+            setting.isDisabled = true;
+          }
+        }
+      }
+    } else if (isEnabled && !this.isProcessing && (this.startedStatus !== StartedStatus.PENDING)) {
+      this.isWaitingForStartCall = false;
+
+      const settingData = this.loadPageData();
+
+      this.settingGroups.forEach((group, groupIdx) => {
+        group.settings.forEach((setting, settingIdx) => {
+          if (setting.waitForServiceStart) {
+            const updatedSetting = settingData[groupIdx].settings[settingIdx];
+            this.bindSettingFunctions(updatedSetting);
+            this.resetSetting(updatedSetting);
+            this.settingGroups[groupIdx].settings[settingIdx] = updatedSetting;
+          }
+        });
+      });
+    }
+  }
+
+
+  private bindSettingFunctions(setting: MarketSetting) {
+    if (setting.validate) {
+      setting.validate = setting.validate.bind(this);
+    }
+    if (setting.onChange) {
+      setting.onChange = setting.onChange.bind(this);
+    }
+    if (setting.formatValue) {
+      setting.formatValue = setting.formatValue.bind(setting);
+    } else {
+      setting.formatValue = () => setting.newValue;
+    }
+  }
+
+
+  private resetSetting(setting: MarketSetting) {
+    if (setting.type !== SettingType.BUTTON) {
+      setting.newValue = setting.currentValue;
+    }
+    setting.errorMsg = '';
   }
 
 }

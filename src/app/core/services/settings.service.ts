@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Log } from 'ng2-logger';
 
 
 interface SettingLiteral {
@@ -11,8 +10,6 @@ interface SettingLiteral {
   providedIn: 'root'
 })
 export class SettingsService {
-
-  private log: any = Log.create('settings-state.service id:' + Math.floor((Math.random() * 1000) + 1));
 
   constructor() { }
 
@@ -37,10 +34,17 @@ export class SettingsService {
   }
 
 
-  fetchMarketSettings(): SettingLiteral {
+  fetchMarketSettings(profileID?: number): SettingLiteral {
     const settings = this.fetchSettings();
     const resp = Object.prototype.toString.call(settings.market) === '[object Object]' ? settings.market : {};
-    return resp;
+    if (!profileID) {
+      delete resp['profileData'];
+      return resp;
+    }
+
+    return Object.prototype.toString.call(resp.profileData) === '[object Object]' &&
+      Object.prototype.toString.call(resp.profileData[`${profileID}`]) === '[object Object]' ?
+      resp.profileData[`${profileID}`] || {} : {};
   }
 
 
@@ -80,14 +84,28 @@ export class SettingsService {
   }
 
 
-  saveMarketSetting(key: string, value: boolean | string | number): boolean {
+  saveMarketSetting(key: string, value: boolean | string | number, profileID?: number): boolean {
     // @TODO: zaSmilingIdiot 2020-02-10 -> potential for conflicts to happen... not "thread safe"
     if (!['boolean', 'string', 'number'].includes(typeof value)) {
       return false;
     }
     const saved = this.fetchSettings();
     const market = Object.prototype.toString.call(saved.market) === '[object Object]' ? saved.market : {};
-    market[key] = value;
+    if (profileID !== undefined) {
+
+      if (!(typeof profileID === 'number' && Number.isSafeInteger(profileID))) {
+        return false;
+      }
+
+      const profileData = Object.prototype.toString.call(market.profileData) === '[object Object]' ? market.profileData : {};
+      const idStr = `${profileID}`;
+      const profile = Object.prototype.toString.call(profileData[idStr]) === '[object Object]' ? profileData[idStr] : {};
+      profile[key] = value;
+      profileData[idStr] = profile;
+      market.profileData = profileData;
+    } else {
+      market[key] = value;
+    }
     saved.market = market;
     localStorage.setItem('settings', JSON.stringify(saved));
 

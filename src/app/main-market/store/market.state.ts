@@ -1,5 +1,5 @@
-import { State, StateToken, Action, StateContext, Selector, NgxsOnInit } from '@ngxs/store';
-import { of, defer, iif } from 'rxjs';
+import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
+import { of, defer, iif, timer } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { SettingsService } from 'app/core/services/settings.service';
@@ -12,21 +12,40 @@ import { MainActions } from 'app/main/store/main.actions';
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
 
 
+const DEFAULT_STATE_VALUES: MarketStateModel = {
+  started: StartedStatus.STOPPED,
+  profile: null,
+  identities: [],
+  identity: null,
+  settings: {
+    port: 3000,
+    defaultIdentityID: 0,
+    defaultProfileID: 0
+  }
+};
+
+
 @State<MarketStateModel>({
   name: MARKET_STATE_TOKEN,
-  defaults: {
-    started: StartedStatus.STOPPED,
-    profile: null,
-    identities: [],
-    identity: null,
-    settings: {
-      port: 3000,
-      defaultIdentityID: 0,
-      defaultProfileID: 0
-    }
-  }
+  defaults: JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES))
 })
-export class MarketState implements NgxsOnInit {
+export class MarketState {
+
+  /**
+     * NB!!!! Once the Market state is loaded into the global store, it remains there permanently through the running of the application.
+     * Which means:
+     *
+     * 1. Keep this as light-weight as possible:
+     *    - do not store anything here that is not imperative for general MP operation;
+     *    - make certain that there is exactly that which is needed (if certain circumstances require additional info, load it as needed);
+     *    - if in doubt, don't store it;
+     *    - ensure that there is nothing sensitive left in as part of the default store state.
+     *
+     * 2. If using ngxsOnInit(), remember that it is called only the first time the state is added to the global store!
+     *    - So despite the market module potentially being "loaded" multuple times, this function will only execute on the 1st market load.
+     *    - for clean separation, we should be bootstrapping this module as another whole app inside this one...
+     *      We'll get to this goal eventually... or at least thats the current foward direction.
+     */
 
   @Selector()
   static startedStatus(state: MarketStateModel): StartedStatus {
@@ -59,28 +78,13 @@ export class MarketState implements NgxsOnInit {
   ) {}
 
 
-  ngxsOnInit(ctx: StateContext<MarketStateModel>) {
-    const storedSettings = this._settingsService.fetchMarketSettings();
-    const stateSettings = ctx.getState().settings;
-
-    const newStateSettings = JSON.parse(JSON.stringify(stateSettings));
-
-    const stateKeys = Object.keys(stateSettings);
-    for (const key of stateKeys) {
-      if (typeof storedSettings[key] === typeof stateSettings[key] ) {
-        newStateSettings[key] = storedSettings[key];
-      }
-    }
-
-    ctx.patchState({settings: newStateSettings});
-  }
-
-
   @Action(MarketActions.StartMarketService)
   startMarketServices(ctx: StateContext<MarketStateModel>) {
     if ([StartedStatus.PENDING, StartedStatus.STARTED].includes(ctx.getState().started)) {
       return;
     }
+
+    this.loadSettings(ctx);
 
     ctx.patchState({started: StartedStatus.PENDING});
 
@@ -128,6 +132,8 @@ export class MarketState implements NgxsOnInit {
       concatMap((isStarted: boolean) => iif(() => isStarted, profile$, failed$)),
       tap((isSuccess) => {
         if (isSuccess) {
+          this.loadSettings(ctx, ctx.getState().profile.id);
+
           ctx.patchState({started: StartedStatus.STARTED});
           ctx.dispatch(new MarketActions.LoadIdentities());
         }
@@ -139,7 +145,16 @@ export class MarketState implements NgxsOnInit {
   @Action(MarketActions.StopMarketService)
   stopMarketServices(ctx: StateContext<MarketStateModel>) {
     this._marketService.stopMarketService();
-    ctx.patchState({started: StartedStatus.STOPPED});
+    // ctx.patchState({started: StartedStatus.STOPPED});
+    ctx.setState(JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES)));
+  }
+
+
+  @Action(MarketActions.RestartMarketService)
+  restartMarketServices(ctx: StateContext<MarketStateModel>) {
+    return ctx.dispatch(new MarketActions.StopMarketService()).pipe(
+      concatMap(() => timer(1500).pipe(tap(() => ctx.dispatch(new MarketActions.StartMarketService()))))
+    );
   }
 
 
@@ -219,14 +234,52 @@ export class MarketState implements NgxsOnInit {
 
   @Action(MarketActions.SetSetting)
   changeMarketSetting(ctx: StateContext<MarketStateModel>, action: MarketActions.SetSetting) {
-    const currentState = JSON.parse(JSON.stringify(ctx.getState().settings));
+    const currentState = ctx.getState();
+    const currentSettings = JSON.parse(JSON.stringify(currentState.settings));
+    let key = action.key;
+    let profileID: number;
 
-    if ( Object.keys(currentState).includes(action.key) && (typeof currentState[action.key] === typeof action.value) ) {
-      if (this._settingsService.saveMarketSetting(action.key, action.value)) {
-        currentState[action.key] = action.value;
-        ctx.patchState({settings: currentState});
+    if (key.startsWith('profile.')) {
+      // Save settings with for the current Profile
+      key = key.replace('profile.', '');
+      if (currentState.profile !== null) {
+        profileID = currentState.profile.id;
       }
     }
+
+    if ( Object.keys(currentSettings).includes(key) && (typeof currentSettings[key] === typeof action.value) ) {
+      if (this._settingsService.saveMarketSetting(key, action.value, profileID)) {
+        currentSettings[key] = action.value;
+        ctx.patchState({settings: currentSettings});
+      }
+    }
+  }
+
+
+  private loadSettings(ctx: StateContext<MarketStateModel>, profileId?: number) {
+
+    const stateSettings = ctx.getState().settings;
+    const newStateSettings: MarketSettings = JSON.parse(JSON.stringify(stateSettings));
+    const stateKeys = Object.keys(newStateSettings);
+
+    if (typeof profileId === 'number') {
+      const storedProfile = this._settingsService.fetchMarketSettings(profileId);
+      for (const key of stateKeys) {
+        if (typeof storedProfile[key] === typeof stateSettings[key] ) {
+          newStateSettings[key] = storedProfile[key];
+        }
+      }
+    } else {
+      const storedSettings = this._settingsService.fetchMarketSettings();
+
+      for (const key of stateKeys) {
+        if (typeof storedSettings[key] === typeof stateSettings[key] ) {
+          newStateSettings[key] = storedSettings[key];
+        }
+      }
+    }
+
+    ctx.patchState({settings: newStateSettings});
   }
 
 }

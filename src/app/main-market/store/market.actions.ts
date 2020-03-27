@@ -12,6 +12,11 @@ export namespace MarketActions {
   }
 
 
+  export class RestartMarketService {
+    static readonly type: string = '[Market] Restart Market Service';
+  }
+
+
   export class LoadIdentities {
     static readonly type: string = '[Market] Load Identities';
   }
