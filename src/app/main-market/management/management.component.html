@@ -73,15 +73,14 @@
       Search
     </h2>
 
-    <mat-card class="filter-card">
-      <mat-form-field class="icon-input --plain" appearance="fill">
-        <input matInput type="text" class="header-input" placeholder="Search markets"><!-- [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()" -->
-        <!--mat-icon *ngIf="filters.search" matTooltip="Clear" fontIcon="part-clear-all"
-                  (click)="filters.search=''; clearAndLoadPage()"></mat-icon>
-        <mat-icon *ngIf="!filters.search" matTooltip="Search" fontIcon="part-search"
-                  (click)="clearAndLoadPage()"></mat-icon-->
-      </mat-form-field>
-    </mat-card>
+    <!-- search unified with those from Address Book and Sell > Listings -->
+    <mat-form-field class="--boxed" appearance="fill">
+      <input matInput type="text" class="header-input" placeholder="Search markets" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
+      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+    </mat-form-field>
 
     <h2 class="section-title">
       Filter by type
@@ -141,12 +140,12 @@
             <img src="/assets/images/placeholder_1-1.jpg">
           </div>
           <div class="info" fxFlex="1 1 100%">
-            <div class="title">
+            <h3 class="box-title">
               <span class="name">Available Market title</span>
               <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
               <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
                         matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
-            </div>
+              </h3>
             <div class="desc">
               <span class="tag">Storefront</span>
             </div>
@@ -186,12 +185,12 @@
             <img src="/assets/images/placeholder_1-1.jpg">
           </div>
           <div class="info" fxFlex="1 1 100%">
-            <div class="title">
+            <h3 class="box-title">
               <span class="name">Joined Market title</span>
               <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
               <mat-icon fontIcon="part-notification-speaker" class="promoted"
                         matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon>
-            </div>
+            </h3>
             <div class="desc">
               <span class="tag">Community Market</span>
             </div>
@@ -243,12 +242,12 @@
             <img src="/assets/images/placeholder_1-1.jpg">
           </div>
           <div class="info" fxFlex="1 1 100%">
-            <div class="title">
+            <h3 class="box-title">
               <span class="name">My Storefront title</span>
               <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
               <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
                         matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
-            </div>
+            </h3>
             <div class="desc">
               <span class="tag">Storefront</span>
             </div>
@@ -266,7 +265,7 @@
           <div class="public" fxFlex="50%">
             <h2 class="section-title">
               Market ID
-              <button mat-button color="primary" class="small" matTooltip="Copy Market ID">
+              <button mat-button color="accent" class="small" matTooltip="Copy Market ID">
                 <mat-icon fontIcon="part-copy"></mat-icon>
                 Copy
               </button>
@@ -328,7 +327,7 @@
 <!-- // ------ CONTEXTUAL MENUS ------ // -->
 
 <!-- Promote Market -->
-<mat-menu #promote="matMenu" class="promote">
+<mat-menu #promote="matMenu" class="promote --smaller">
   <div class="heading">
     <h3 class="title">Promote Market</h3>
     <p class="help-text">Market will be pinned to top in Market browser</p>
@@ -352,7 +351,7 @@
 </mat-menu>
 
 <!-- Report Market -->
-<mat-menu #report="matMenu" class="report">
+<mat-menu #report="matMenu" class="report --smaller">
   <div class="heading">
     <h3 class="title">Report Market</h3>
     <p class="help-text">Mark this Market is inappropriate (or not)</p>

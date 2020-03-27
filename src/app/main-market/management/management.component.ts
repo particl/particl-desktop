@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -13,6 +14,8 @@ export class ManagementComponent {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['available', 'joined'];
   public showJoinMarketForm: boolean = false;
+
+  searchQuery: FormControl = new FormControl('');
 
   markets_sortings: Array<any> = [
     { title: 'By title', value: 'TITLE' },

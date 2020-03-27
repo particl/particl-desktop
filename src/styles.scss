@@ -106,8 +106,75 @@ body {
   top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV) + 1px); // 1px for border
   width: var(--filter-width);
   float: left;
+  /*
   .without-tab-bar & {
     top: calc(var(--header-main-height) + var(--paddingV) + 1px);
+  }
+  */
+  .buttons { // main call-to-action buttons above filter
+    margin-bottom: 32px;
+    @include break(l) {
+      margin-bottom: 46px;
+    }
+    button {
+      margin-bottom: 12px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+  .filter-card {
+    padding: 0;
+    margin-bottom: 16px;
+  
+    // checkboxes
+    .checkbox {
+      padding: 3px 18px;
+      &:first-of-type {
+        padding-top: 12px;
+      }
+      &:last-of-type {
+        padding-bottom: 12px;
+      }
+      &.highlight {
+        font-weight: 500;
+      }
+      .mat-checkbox {
+        margin: 3px 0;
+      }
+    }
+  
+    // radio buttons
+    .radio-group {
+      width: calc(100% - 32px);
+      padding: 8px 16px;
+      display: block;
+      .filter-option {
+        @extend %tfx;
+        width: 100%;
+        margin: 0 -16px;
+        padding: 6px 16px;
+        font-family: var(--font);
+        &:hover {
+          background: var(--bg-hover);
+        }
+        &.mat-radio-checked .amount {
+          color: var(--color-white);
+          background: var(--color-primary);
+        }
+      }
+      .amount {
+        @extend %tfx;
+        font-weight: 600;
+        text-align: center;
+        background: var(--bg-muted);
+        border-radius: var(--radius);
+        float: right;
+        display: block;
+        width: 20px;
+        padding: 0 5px;
+      }
+    }
   }
 }
 

@@ -519,7 +519,7 @@ mat-expansion-panel.mat-expansion-panel {
       text-transform: uppercase;
       font-size: 100%;
     }
-    .widget-help {
+    .help-text {
       margin: 6px 0 4px;
     }
   }
@@ -540,6 +540,7 @@ mat-expansion-panel.mat-expansion-panel {
       line-height: 36px;
       span {
         font-size: 13px;
+        font-weight: 500;
       }
     }
   }
