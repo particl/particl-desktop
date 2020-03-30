@@ -126,11 +126,15 @@
     [infiniteScrollThrottle]="50"
     (scrolled)="loadNextPage()" -->
 
-    <!--div class="no-results" [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)">
+    <div class="no-results"><!--  [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
+      <img class="illustration" src="./assets/images/illustrations/no-markets.svg" alt="No Markets found">
       <p>
-        Sorry, no Markets found
+        No Markets found
       </p>
-    </div-->
+      <p class="help-text">
+        If you're looking for a specific Market, ask any its member for the Market ID and join it manually
+      </p>
+    </div>
 
     <mat-accordion>
 

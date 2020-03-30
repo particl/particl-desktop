@@ -4,10 +4,6 @@
 
 // ------ UI ------ //
 
-.subtitle {
-  @extend %subtitle;
-}
-
 .drag-n-drop {
   border: 2px dashed var(--bg-muted);
   border-radius: 4px;
@@ -33,10 +29,6 @@
 
 // ------ LAYOUT ------ //
 
-.create-market { // stepper container (padding offset)
-  margin: -24px -24px 0;
-}
-
 form.market-form { // form = stepper content (centered)
   max-width: 40rem;
   margin: 0 auto;
@@ -44,7 +36,7 @@ form.market-form { // form = stepper content (centered)
 
 .market-details {
   .market-image {
-    margin-top: 36px;
+    padding: 24px 28px;
     .desc {
       p,
       ul {
@@ -107,4 +99,23 @@ form.market-form { // form = stepper content (centered)
     margin: 0;
   }
 }
+
+
+
+
+// NEW STYLES
+
+.market-details {
+  padding: 0;
+}
+
+/*
+.subtitle {
+  @extend %box-title;
+  padding: 22px 24px 0;
+  margin: 0 0 -0.9em 0;
+  position: relative;
+  z-index: 2;
+}
+*/
 

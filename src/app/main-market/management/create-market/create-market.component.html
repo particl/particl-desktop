@@ -6,12 +6,12 @@
       Create your Market and sell your Products on your own terms.
     </ng-container>
     <ng-container page-help>
-      Choose between many Market types, whether you want a publicly available or private Market and if you want to be sole Seller on it (Storefront) or allow anyone to sell (Community Markets).
+      Your new Market will be invite-only &ndash; choose whether you want to be the only Seller on it (Storefront) or allow any member to sell (Community Markets).<br>Optional Market Promotion can help onboard new users.
     </ng-container>
   </app-page-intro>
 
 
-  <form [formGroup]="createMarketFormGroup" class="market-form">
+  <form class="market-form"><!-- [formGroup]="createMarketFormGroup" -->
 
     <h2 class="section-title">
       Market details
@@ -19,27 +19,32 @@
 
     <mat-card class="market-details">
 
-      <mat-form-field class="full-width larger">
-        <input matInput placeholder="Market name" #name formControlName="firstCtrl" maxlength="35" required>
-        <mat-hint align="end">{{ name.value?.length || 0 }}/35</mat-hint>
-      </mat-form-field>
+      <label>
+        <mat-form-field class="--larger --plain" appearance="fill">
+          <h3 class="label">Market name</h3>
+          <input matInput placeholder="Choose a name for your Market" #name maxlength="35" required><!-- formControlName="marketName" -->
+          <mat-hint align="end">{{ name.value?.length || 0 }}/35</mat-hint>
+        </mat-form-field>
+      </label>
 
-      <mat-form-field class="full-width larger">
-        <textarea matInput #description rows="4" placeholder="Market description" #description
-                  formControlName="firstCtrl" maxlength="150" required></textarea>
-        <mat-hint align="start">Describe your Market in short, so that users will know what they'll find there</mat-hint>
-        <mat-hint align="end">{{ description.value?.length || 0 }}/150</mat-hint>
-      </mat-form-field>
+      <label>
+        <mat-form-field class="--larger --plain" appearance="fill">
+          <h3 class="label">Market description</h3>
+          <textarea matInput #description rows="4" placeholder="Describe your Market in short, so that users will know what they'll find there" maxlength="150" required></textarea><!-- formControlName="marketDescription" -->
+          <mat-hint align="end">{{ description.value?.length || 0 }}/150</mat-hint>
+        </mat-form-field>
+      </label>
 
       <div class="market-image" fxLayout>
         <div id="drag-n-drop" class="drag-n-drop" fxFlex="130px">
           <input class="hide-file" type="file" accept="image/*" multiple="true" id="fileInput">
-          <button mat-button color="primary" (click)="uploadPicture()" class="small">
+          <button mat-button color="accent" (click)="uploadPicture()" class="small">
             Upload a logo
           </button>
           <p>or drag'n'drop</p>
         </div>
         <div class="desc" fxFlex="0 1 100%">
+          <h3 class="box-title">Market logo/image</h3>
           <p>Upload your Market logo/photo for customized branding</p>
           <ul>
             <li>Square format only</li>
@@ -57,7 +62,7 @@
 
     <mat-card fxLayout fxLayoutGap="30px" class="market-type">
       <div class="half" fxFlex="50%">
-        <mat-radio-button name="market-type" value="storefront" class="larger" color="primary">
+        <mat-radio-button name="market-type" value="storefront" class="larger" color="accent">
           Storefront
         </mat-radio-button>
         <p class="help-text">
@@ -66,7 +71,7 @@
       </div>
       <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
       <div class="half" fxFlex="50%">
-        <mat-radio-button name="market-type" value="community-market" class="larger" color="primary">
+        <mat-radio-button name="market-type" value="community-market" class="larger" color="accent">
           Community Market
         </mat-radio-button>
         <p class="help-text">
@@ -85,53 +90,25 @@
     <mat-expansion-panel class="market list-item no-padding">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-          <div class="photo" fxFlex="0 0 90px">
-            <img src="/assets/images/placeholder_1-1.jpg">
+          <div class="photo">
+            <img src="/assets/images/placeholder_4-3.jpg">
           </div>
           <div class="info" fxFlex="1 1 100%">
-            <div class="title">
+            <h3 class="box-title --larger">
               <span class="name">Joined Market title</span>
-            </div>
+            </h3>
             <div class="desc">
               <span class="tag">Community Market</span>
             </div>
           </div><!-- .meta -->
         </div>
       </mat-expansion-panel-header>
-
       <div class="details">
-        <div class="subtitle">Market summary</div>
+        <h2 class="section-title">Market summary</h2>
         <p class="desc">
           This is a summary/description of a joined Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
         </p>
       </div>
-
-      <!--mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
-        <div class="left">
-          <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market">
-            <mat-icon fontSet="partIcon" fontIcon="part-cross"></mat-icon>
-            Leave
-          </button>
-          <button mat-button color="basic" class="small icon-only"
-                  [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
-            <mat-icon fontSet="partIcon" fontIcon="part-flag"></mat-icon>
-          </button>
-          <button mat-button color="basic" class="small">
-            <mat-icon fontSet="partIcon" fontIcon="part-copy"></mat-icon>
-            Copy Market ID
-          </button>
-          <button mat-button color="basic" class="small icon-only"
-                  [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
-            <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
-          </button>
-        </div>
-        <div class="right">
-          <button mat-raised-button color="primary">
-            <mat-icon fontSet="partIcon" fontIcon="part-bag"></mat-icon>
-            Browse Market
-          </button>
-        </div>
-      </mat-action-row-->
     </mat-expansion-panel><!-- .market -->
 
 
