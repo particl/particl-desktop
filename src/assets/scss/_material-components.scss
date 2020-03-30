@@ -598,6 +598,14 @@ mat-toolbar.mat-toolbar {
 .mat-form-field[appearance="fill"] {
   --field-boxed-paddingV: 16px;
   display: block;
+  .label {
+    @extend %box-title;
+    padding: 16px 0 1px;
+    margin: 0 0 -0.9em 0;
+    position: relative;
+    z-index: 2; // make sure label is on top (e.g. when character counter is present)
+    cursor: text;
+  }
   .mat-form-field-flex {
     padding: 0 16px;
     background: var(--color-white);
@@ -614,17 +622,30 @@ mat-toolbar.mat-toolbar {
   }
   .mat-form-field-subscript-wrapper {
     overflow: visible;
+    top: 12px; // move it above the field
     .mat-hint {
       position: relative;
-      // position needs to be tweaked based on the location of the label
-      bottom: 38px;
-      right: 8px;
+      top: 0;
+      right: 6px;
+      bottom: auto;
     }
   }
   &.mat-form-field-disabled {
     .mat-form-field-flex {
       background: var(--color-white);
       color: var(--text-muted);
+    }
+  }
+
+  &.--larger {
+    .label {
+      padding: 22px 0 0;
+    }
+    .mat-form-field-subscript-wrapper {
+      top: 15px; // move it above the field
+      .mat-hint {
+        right: 14px;
+      }
     }
   }
   

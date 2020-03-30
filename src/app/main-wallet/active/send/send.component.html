@@ -130,8 +130,8 @@
           <h2 class="section-title">Pay to</h2>
           <mat-card class="pay-to">
 
-            <h3 class="subtitle">Receiver's address</h3>
             <mat-form-field appearance="fill" class="address --plain --larger">
+              <h3 class="label">Receiver's address</h3>
               <input matInput type="text" formControlName="address"
                     [class.verify-success]="address.valid"
                     [class.verify-error]="!address.valid"
@@ -144,13 +144,13 @@
               </button-->
             </mat-form-field>
 
-            <h3 class="subtitle">Receiver's name</h3>
             <mat-form-field appearance="fill" class="label --plain --larger">
+              <h3 class="label">Receiver's name</h3>
               <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
             </mat-form-field>
 
-            <h3 class="subtitle">Narration</h3>
             <mat-form-field appearance="fill" class="narration --plain --larger">
+              <h3 class="label">Narration</h3>
               <input matInput type="text" formControlName="narration" maxlength="24"
                 [placeholder]="sourceType.value === 'part'
                 ? 'Send a short public message with the payment (optional)'
