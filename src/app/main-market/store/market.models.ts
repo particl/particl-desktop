@@ -33,6 +33,7 @@ export interface MarketSettings {
   port: number;
   defaultProfileID: number;
   defaultIdentityID: number;
+  userRegion: string;
 }
 
 

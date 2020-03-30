@@ -3,10 +3,11 @@ import { MatDialog } from '@angular/material';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { Observable, Subject, from } from 'rxjs';
-import { tap, takeUntil, take, finalize, concatMap } from 'rxjs/operators';
+import { Observable, Subject, from, concat, of } from 'rxjs';
+import { tap, takeUntil, take, finalize, concatMap, catchError, concatMapTo } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { RegionListService } from '../shared/shared.module';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
 
@@ -64,34 +65,73 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   constructor(
     private _store: Store,
     private _snackbar: SnackbarService,
+    private _regionService: RegionListService,
     private _dialog: MatDialog,
-  ) {
-    const groups = this.loadPageData();
-
-    groups.forEach((group: MarketSettingGroup) => {
-      group.settings.forEach((setting: MarketSetting) => {
-        this.bindSettingFunctions(setting);
-      });
-
-      this.currentChanges.push([]);
-    });
-
-    this.settingGroups = groups;
-    this.clearChanges();
-  }
+  ) { }
 
 
   ngOnInit() {
-    this._store.select(MarketState).pipe(
+    const stateChange$ = this._store.select(MarketState).pipe(
       tap((storeState: MarketStateModel) => {
+
         if (this.startedStatus !== storeState.started) {
           this.startedStatus = storeState.started;
         }
-        if (!this.isProcessing) {
-          this.updateOnServiceStatusChange();
+
+        if (this.isProcessing) {
+          return;
+        }
+
+        const isEnabled = storeState.started === StartedStatus.STARTED;
+
+        if (!isEnabled && !this.isWaitingForStartCall) {
+          this.isWaitingForStartCall = true;
+
+          for (const settingGroup of this.settingGroups) {
+            for (const setting of settingGroup.settings) {
+              if (setting.waitForServiceStart) {
+                setting._isDisabled = setting.isDisabled;
+                setting.isDisabled = true;
+              }
+            }
+          }
+        } else if (isEnabled) {
+          this.isWaitingForStartCall = false;
+
+          // reload relevant settings as the market service has now started and needs to be refreshed
+          this.loadPageData().subscribe(
+            (settingsData) => {
+              this.settingGroups.forEach((group, groupIdx) => {
+                group.settings.forEach((setting, settingIdx) => {
+                  if (setting.waitForServiceStart) {
+                    const updatedSetting = settingsData[groupIdx].settings[settingIdx];
+                    this.bindSettingFunctions(updatedSetting);
+                    this.resetSetting(updatedSetting);
+                    this.settingGroups[groupIdx].settings[settingIdx] = updatedSetting;
+                  }
+                });
+              });
+            }
+          );
         }
       }),
       takeUntil(this.destroy$)
+    );
+
+    this.loadPageData().pipe(
+      tap((groups) => {
+        groups.forEach((group: MarketSettingGroup) => {
+          group.settings.forEach((setting: MarketSetting) => {
+            this.bindSettingFunctions(setting);
+          });
+          this.currentChanges.push([]);
+        });
+
+        this.settingGroups = groups;
+        this.clearChanges();
+      }),
+      take(1),
+      concatMapTo(stateChange$)
     ).subscribe();
   }
 
@@ -208,6 +248,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
     this.disableUI(DefaultTextContent.SAVING);
 
+    let requiresRestart = false;
+
     // Validation of each changed setting ensures current settings are not in an error state
     let hasError = false;
     let hasChanged = false;
@@ -216,6 +258,9 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         if ( !(setting.type === SettingType.BUTTON)) {
           if (setting.currentValue !== setting.newValue) {
             hasChanged = true;
+            if (setting.restartRequired) {
+              requiresRestart = true;
+            }
 
             if (setting.validate) {
               const response = setting.validate(setting.newValue, setting);
@@ -237,49 +282,55 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.saveActualChanges().pipe(
-      take(1),
+    concat(
+      // save changes
+      this.saveActualChanges().pipe(
+        take(1),
+        catchError(() => {
+          this._snackbar.open(DefaultTextContent.SAVE_FAILED, 'err');
+          return of(false);
+        })
+      ),
+
+      // request and process updated settings values (determine if everything changed successfully)
+      this.loadPageData().pipe(
+        tap((refreshedGroups) => {
+          this.settingGroups.forEach((group, groupIdx) => {
+            group.settings.forEach((setting, settingIdx) => {
+              if (setting.type !== SettingType.BUTTON) {
+                const updatedSetting = refreshedGroups[groupIdx].settings[settingIdx];
+
+                if (setting.id === updatedSetting.id) {
+                  if (setting.newValue !== updatedSetting.currentValue) {
+                    setting.errorMsg = TextContent.FAILED_SAVE;
+                    group.errors.push(settingIdx);
+                  } else {
+                    setting.errorMsg = '';
+                    group.errors = group.errors.filter(si => si !== settingIdx);
+                    this.currentChanges[groupIdx] = this.currentChanges[groupIdx].filter(si => si !== settingIdx);
+                  }
+                }
+              }
+            });
+          });
+        })
+      )
+    ).pipe(
       finalize(() => {
         this.isProcessing = false;
         this.enableUI();
       })
     ).subscribe(
-      (doRestart: boolean) => {
-
-        // Change current settings in case it has not been done
-        const refreshedGroups = this.loadPageData();
-
-        this.settingGroups.forEach((group, groupIdx) => {
-          group.settings.forEach((setting, settingIdx) => {
-            if (setting.type !== SettingType.BUTTON) {
-              const updatedSetting = refreshedGroups[groupIdx].settings[settingIdx];
-
-              if (setting.id === updatedSetting.id) {
-                if (setting.newValue !== updatedSetting.currentValue) {
-                  setting.errorMsg = TextContent.FAILED_SAVE;
-                  group.errors.push(settingIdx);
-                } else {
-                  setting.errorMsg = '';
-                  group.errors = group.errors.filter(si => si !== settingIdx);
-                  this.currentChanges[groupIdx] = this.currentChanges[groupIdx].filter(si => si !== settingIdx);
-                }
-              }
-            }
-          });
-        });
-
+      () => {
         if (!this.hasChanges) {
           this._snackbar.open(DefaultTextContent.SAVE_SUCCESSFUL);
 
-          if (doRestart) {
+          if (requiresRestart) {
             this.restartMarketplace();
           }
         } else {
           this._snackbar.open(DefaultTextContent.SAVE_FAILED, 'err');
         }
-      },
-      (err) => {
-        this._snackbar.open(DefaultTextContent.SAVE_FAILED, 'err');
       }
     );
   }
@@ -347,62 +398,81 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadPageData(): MarketSettingGroup[] {
+  private loadPageData(): Observable<MarketSettingGroup[]> {
 
-    const groups: MarketSettingGroup[] = [];
+    return new Observable((observer) => {
 
-    const marketState: MarketStateModel = this._store.selectSnapshot(MarketState);
-    const marketSettings: MarketSettings = marketState.settings;
+      const groups: MarketSettingGroup[] = [];
 
-    const connectionDetails: MarketSettingGroup = {
-      name: 'Connection Details',
-      icon: 'part-globe',
-      settings: [],
-      errors: []
-    };
+      const marketState: MarketStateModel = this._store.selectSnapshot(MarketState);
+      const marketSettings: MarketSettings = marketState.settings;
 
-
-    connectionDetails.settings.push({
-      id: 'port',
-      title: 'Market Connection Port',
-      description: 'Change the port that the market application starts on',
-      isDisabled: false,
-      type: SettingType.STRING,
-      limits: {placeholder: 'example: 3000' },
-      errorMsg: '',
-      currentValue: marketSettings.port,
-      tags: [],
-      restartRequired: true,
-      validate: this.validatePortNumber,
-      formatValue: this.formatPortSetting,
-      waitForServiceStart: false,
-    } as MarketSetting);
+      const connectionDetails: MarketSettingGroup = {
+        name: 'Marketplace Defaults',
+        icon: 'part-globe',
+        settings: [],
+        errors: []
+      };
 
 
-    connectionDetails.settings.push({
-      id: 'profile.defaultIdentityID',
-      title: 'Default Identity',
-      description: 'Set the selected identity as the initial selected identity',
-      isDisabled: false,
-      type: SettingType.SELECT,
-      errorMsg: '',
-      options: marketState.identities.map(id => ({text: id.displayName, value: id.id})),
-      currentValue: marketSettings.defaultIdentityID,
-      tags: [],
-      restartRequired: false,
-      formatValue: this.formatPortSetting,
-      waitForServiceStart: true
-    } as MarketSetting);
+      connectionDetails.settings.push({
+        id: 'port',
+        title: 'Market Connection Port',
+        description: 'Change the port that the market application starts on',
+        isDisabled: false,
+        type: SettingType.STRING,
+        limits: {placeholder: 'example: 3000' },
+        errorMsg: '',
+        currentValue: marketSettings.port,
+        tags: [],
+        restartRequired: true,
+        validate: this.validatePortNumber,
+        formatValue: this.formatToNumber,
+        waitForServiceStart: false,
+      } as MarketSetting);
 
 
-    groups.push(connectionDetails);
+      connectionDetails.settings.push({
+        id: 'profile.defaultIdentityID',
+        title: 'Default Identity',
+        description: 'Set the selected identity as the initial selected identity',
+        isDisabled: false,
+        type: SettingType.SELECT,
+        errorMsg: '',
+        options: marketState.identities.map(id => ({text: id.displayName, value: id.id})),
+        currentValue: marketSettings.defaultIdentityID,
+        tags: [],
+        restartRequired: false,
+        formatValue: this.formatToNumber,
+        waitForServiceStart: true
+      } as MarketSetting);
 
-    return groups;
+
+      connectionDetails.settings.push({
+        id: 'userRegion',
+        title: 'Default Shipping Region',
+        description: 'The region to default shipping calculation costs to',
+        isDisabled: false,
+        type: SettingType.SELECT,
+        errorMsg: '',
+        options: this._regionService.getCountryList().map(c => ({text: c.name, value: c.iso})),
+        currentValue: marketSettings.userRegion,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true
+      } as MarketSetting);
+
+
+      groups.push(connectionDetails);
+
+      observer.next(groups);
+      observer.complete();
+    });
 
   }
 
 
-  private formatPortSetting() {
+  private formatToNumber() {
     // 'this' here is bound to the setting instance, so referenced like this to prevent TS issues thinking its the component instance
     return +(this['newValue']);
   }
@@ -411,39 +481,6 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   private validatePortNumber(value: any, setting: Setting): string | null {
     const port = +value;
     return port > 0 && port <= 65535 ? null : 'Invalid port number';
-  }
-
-
-  private updateOnServiceStatusChange() {
-    const isEnabled = this.startedStatus === StartedStatus.STARTED;
-
-    if (!isEnabled && !this.isWaitingForStartCall) {
-      this.isWaitingForStartCall = true;
-
-      for (const settingGroup of this.settingGroups) {
-        for (const setting of settingGroup.settings) {
-          if (setting.waitForServiceStart) {
-            setting._isDisabled = setting.isDisabled;
-            setting.isDisabled = true;
-          }
-        }
-      }
-    } else if (isEnabled && !this.isProcessing && (this.startedStatus !== StartedStatus.PENDING)) {
-      this.isWaitingForStartCall = false;
-
-      const settingData = this.loadPageData();
-
-      this.settingGroups.forEach((group, groupIdx) => {
-        group.settings.forEach((setting, settingIdx) => {
-          if (setting.waitForServiceStart) {
-            const updatedSetting = settingData[groupIdx].settings[settingIdx];
-            this.bindSettingFunctions(updatedSetting);
-            this.resetSetting(updatedSetting);
-            this.settingGroups[groupIdx].settings[settingIdx] = updatedSetting;
-          }
-        });
-      });
-    }
   }
 
 

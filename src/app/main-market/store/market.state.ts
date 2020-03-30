@@ -20,7 +20,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   settings: {
     port: 3000,
     defaultIdentityID: 0,
-    defaultProfileID: 0
+    defaultProfileID: 0,
+    userRegion: ''
   }
 };
 
