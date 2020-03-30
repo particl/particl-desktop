@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ManagementComponent } from './management.component';
+import { CreateMarketComponent } from './create-market/create-market.component';
 
 
 const routes: Routes = [
-  { path: '', component: ManagementComponent, data: { title: 'Manage Markets'} }
+  { path: '', component: ManagementComponent, data: { title: 'Manage Markets'} },
+  { path: 'create', component: CreateMarketComponent, data: { title: 'Create Market'} }
 ];
 
 
@@ -20,7 +22,8 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    ManagementComponent
+    ManagementComponent,
+    CreateMarketComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
