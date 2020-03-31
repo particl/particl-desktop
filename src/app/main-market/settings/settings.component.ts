@@ -407,32 +407,14 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       const marketState: MarketStateModel = this._store.selectSnapshot(MarketState);
       const marketSettings: MarketSettings = marketState.settings;
 
-      const connectionDetails: MarketSettingGroup = {
-        name: 'Marketplace defaults',
+      const generalSettings: MarketSettingGroup = {
+        name: 'General',
         icon: 'part-preferences',
         settings: [],
         errors: []
       };
 
-
-      connectionDetails.settings.push({
-        id: 'port',
-        title: 'Market Connection Port',
-        description: 'Change the port that the market application starts on',
-        isDisabled: false,
-        type: SettingType.STRING,
-        limits: {placeholder: 'example: 3000' },
-        errorMsg: '',
-        currentValue: marketSettings.port,
-        tags: [],
-        restartRequired: true,
-        validate: this.validatePortNumber,
-        formatValue: this.formatToNumber,
-        waitForServiceStart: false,
-      } as MarketSetting);
-
-
-      connectionDetails.settings.push({
+      generalSettings.settings.push({
         id: 'profile.defaultIdentityID',
         title: 'Default Identity',
         description: 'Set the selected identity as the initial selected identity',
@@ -447,8 +429,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: true
       } as MarketSetting);
 
-
-      connectionDetails.settings.push({
+      generalSettings.settings.push({
         id: 'userRegion',
         title: 'Default Shipping Region',
         description: 'The region to default shipping calculation costs to',
@@ -462,8 +443,35 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: true
       } as MarketSetting);
 
+      groups.push(generalSettings);
+
+
+
+      const connectionDetails: MarketSettingGroup = {
+        name: 'Network & Connection',
+        icon: 'part-globe',
+        settings: [],
+        errors: []
+      };
+
+      connectionDetails.settings.push({
+        id: 'port',
+        title: 'Market Connection Port',
+        description: 'Change the port that the Market application starts on (default: 3000)',
+        isDisabled: false,
+        type: SettingType.STRING,
+        limits: {placeholder: 'Default: 3000' },
+        errorMsg: '',
+        currentValue: marketSettings.port,
+        tags: [],
+        restartRequired: true,
+        validate: this.validatePortNumber,
+        formatValue: this.formatToNumber,
+        waitForServiceStart: false,
+      } as MarketSetting);
 
       groups.push(connectionDetails);
+
 
       observer.next(groups);
       observer.complete();
