@@ -119,30 +119,28 @@
     <mat-expansion-panel class="promote list-item no-padding">
       <mat-expansion-panel-header class="header">
         <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
-        Promote in Market browser
+        <div class="text">
+          <strong>Promote</strong> in Market browser
+        </div>
       </mat-expansion-panel-header>
-      <div class="details" fxLayout fxLayoutGap="30px">
+      <div class="details" fxLayout fxLayoutGap="46px">
         <div class="desc" fxFlex="60%">
           <p>
-            Markets <strong>are not</strong> listed in the Market browser by default.
-          </p>
-          <p>
-            You can promote your Market to publish it to Market browser for a few days and onboard more potential Buyers.
+            Markets are not listed in the Market browser by default. You can promote your Market to publish it to Market browser for a few days and onboard more potential Buyers.
           </p>
           <p class="help-text">
             This fee goes back to the stakers on Particl network for their support.
           </p>
         </div>
         <div class="form" fxFlex="40%">
-          <div class="subtitle">Days to promote</div>
-          <mat-form-field class="full-width">
-            <mat-label>Select duration</mat-label>
+          <h3 class="box-title">Days to promote</h3>
+          <mat-form-field class="promo-duration --plain full-width" appearance="fill">
             <mat-select [(value)]="promoDuration">
-              <mat-option>Select duration</mat-option>
-              <mat-option value="1 day">1 day</mat-option>
-              <mat-option value="3 days">3 days</mat-option>
-              <mat-option value="5 days">5 days</mat-option>
-              <mat-option value="7 days">1 week</mat-option>
+              <mat-option value="none">Select duration</mat-option>
+              <mat-option value="1d">1 day</mat-option>
+              <mat-option value="3d">3 days</mat-option>
+              <mat-option value="5d">5 days</mat-option>
+              <mat-option value="7d">1 week</mat-option>
             </mat-select>
           </mat-form-field>
           <table class="full-width">

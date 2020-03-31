@@ -9,15 +9,9 @@
   border-radius: 4px;
   background: var(--bg);
   height: 130px;
-  margin: 0 24px 0 0;
+  margin: 0 32px 0 0;
   padding: 32px 4px 25px;
   text-align: center;
-  .mat-icon {
-    display: block;
-    margin-bottom: 16px;
-    font-size: 24px;
-    color: var(--bg-muted);
-  }
   p {
     margin: 6px 0 0;
     color: var(--text-muted);
@@ -38,12 +32,10 @@ form.market-form { // form = stepper content (centered)
   .market-image {
     padding: 24px 28px;
     .desc {
+      padding-top: 8px;
       p,
       ul {
-        @extend %lighter;
-      }
-      ul {
-        padding-left: 24px;
+        color: var(--text-muted);
       }
     }
   }
@@ -61,30 +53,35 @@ form.market-form { // form = stepper content (centered)
 
 .promote { // promote your Market
   .header {
-    font-size: 105%;
-    font-weight: 500;
+    font-size: 15px;
+    color: var(--text-muted);
+    strong {
+      font-weight: 500;
+      color: var(--text);
+    }
     .mat-icon {
-      @extend %lighter;
-      margin-right: 12px;
+      color: var(--color-secondary);
+      margin-right: 16px;
     }
   }
   .details {
     border-top: 1px dashed var(--bg-muted);
-    padding: 8px 24px 0;
-    font-size: 100%;
-    .form {
-      .subtitle {
-        margin: 14px 0;
-      }
+    padding: 8px 24px 24px;
+    font-size: 13px;
+    .box-title {
+      margin: 14px 0 0;
+    }
+    .promo-duration { // select
+      margin: 6px 0 14px;
     }
     table {
       width: 100%;
       border-spacing: 0;
       th {
-        @extend %lighter;
+        color: var(--text-muted);
         font-weight: 500;
         text-align: left;
-        padding: 3px 0;
+        padding: 2px 0;
       }
       td {
         text-align: right;
@@ -94,7 +91,7 @@ form.market-form { // form = stepper content (centered)
 }
 
 .actions { // next/prev buttons
-  margin-top: 36px;
+  margin-top: var(--paddingV);
   button {
     margin: 0;
   }
