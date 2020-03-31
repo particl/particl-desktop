@@ -638,8 +638,11 @@ mat-toolbar.mat-toolbar {
   }
 
   &.--larger {
-    .label {
+    .label { // manually added labels, e.g. on Send page
       padding: 22px 0 0;
+    }
+    .mat-form-field-flex {
+      padding: 0 24px;
     }
     .mat-form-field-subscript-wrapper {
       top: 15px; // move it above the field
@@ -749,10 +752,12 @@ mat-toolbar.mat-toolbar {
           top: 1px;
         }
       }
+      /*
       .mat-select-arrow-wrapper {
         position: relative;
-        top: 9px;
+        top: 0;
       }
+      */
     }
 
     // Boxed, standalone variant

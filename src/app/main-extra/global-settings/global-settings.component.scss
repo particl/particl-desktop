@@ -38,28 +38,43 @@ hr.divider {
 // ------ FORMS ------ //
 
 .item {
-  padding: 22px 28px;
+  @extend %tfx;
+  --item-paddingH: 24px;
+  --item-paddingV: 22px;
   &.--with-error {
-    animation: pulse-color-alert infinite 1.5s;
     background: hsla(var(--color-alert-hsl), 0.015);
+  }
+  label,
+  .label {
+    display: block;
+    padding: var(--item-paddingV) var(--item-paddingH) 0;
+    &.checkbox,
+    &.button {
+     padding-bottom: var(--item-paddingV);
+     border-bottom: 1px solid var(--bg-muted);
+    }
+  }
+  .mat-form-field { // shared for form fields
+    display: block;
+    margin: 4px calc(-1 * var(--item-paddingH)) 0;
+    width: calc(100% + 2 * var(--item-paddingH));
   }
 }
 
 .option { // main description of setting option
-  @extend %box-title;
-  margin: 0 0 3px;
+  font-size: 15px;
+  font-weight: 500;
   text-transform: none;
   line-height: 1.5;
+  margin: 0 0 3px;
   .tag {
     border: 1px solid hsla(var(--text-muted-hsl), 0.65);
     border-radius: 4px;
-    font-size: 0.6rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
-    font-weight: 500;
     text-transform: uppercase;
-    display: inline-block;
     padding: 0 6px;
-    margin-left: 5px;
+    margin-left: 6px;
     position: relative;
     top: -1px;
   }

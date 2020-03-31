@@ -408,8 +408,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       const marketSettings: MarketSettings = marketState.settings;
 
       const connectionDetails: MarketSettingGroup = {
-        name: 'Marketplace Defaults',
-        icon: 'part-globe',
+        name: 'Marketplace defaults',
+        icon: 'part-preferences',
         settings: [],
         errors: []
       };
