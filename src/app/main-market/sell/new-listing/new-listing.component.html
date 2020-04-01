@@ -128,8 +128,8 @@
       <h2 class="section-title">Pricing <!--&amp; Quantity--></h2>
       <mat-card class="pricing no-padding">
 
-        <label>
-          <h3 class="label --larger">Product price</h3>
+        <label class="--larger">
+          <h3 class="label">Product price</h3>
           <mat-form-field appearance="fill" class="--plain --larger">
             <!-- min price: or do we want to support free listings? not sure.. [allien] -->
             <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price per 1 item"><!-- formControlName="basePrice" -->
@@ -137,8 +137,8 @@
           </mat-form-field>
         </label>
 
-        <label>
-          <h3 class="label --larger">Quantity</h3>
+        <label class="--larger">
+          <h3 class="label">Quantity</h3>
           <mat-form-field appearance="fill" class="--plain --larger">
             <input matInput type="number" placeholder="How many are you selling" min="1"><!-- formControlName="quantity" -->
             <span matSuffix>items in stock</span>
@@ -149,65 +149,48 @@
 
 
       <h2 class="section-title">Shipping</h2>
-      <mat-card class="shipping">
+      <mat-card class="shipping no-padding">
 
-        <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            <mat-select-search
-              class="full-width"
-              [showValueOf]="'name'"
-              [placeHolder]="'Shipping from (your country)'"
-              [isRequired]="'true'"
-              [defaultSelectedValue]="selectedCountry"
-              [isLexigraphicalOrder]="true"
-              (onChange)="onCountryChange($event)"><!-- [options]="countryList.getList()" -->
-            </mat-select-search>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="help-text">
-              From which country will you be selling and shipping your item?
-            </p>
-          </div>
-        </div>
+        <label class="--larger">
+          <h3 class="label">Shipping from</h3>
+          <p class="label-desc">From which country will you be selling and shipping your item</p>
+          <mat-select-search
+            class="full-width"
+            [showValueOf]="'name'"
+            [placeHolder]="'Shipping from (your country)'"
+            [isRequired]="'true'"
+            [defaultSelectedValue]="selectedCountry"
+            [isLexigraphicalOrder]="true"
+            (onChange)="onCountryChange($event)"><!-- [options]="countryList.getList()" -->
+          </mat-select-search>
+        </label>
 
         <mat-divider></mat-divider>
 
-        <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            <mat-form-field appearance="fill" class="--plain">
-              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic price" type="text"><!-- formControlName="domesticShippingPrice" -->
-              <span matSuffix>PART</span>
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="help-text">
-              Shipping price when sending the item inside your country.
-            </p>
-          </div>
-        </div>
+        <label class="--larger">
+          <h3 class="label">Local shipping</h3>
+          <p class="label-desc">Shipping price when sending the item inside your country</p>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price" type="number"><!-- formControlName="domesticShippingPrice" -->
+            <span matSuffix>PART</span>
+          </mat-form-field>
+        </label>
 
-        <mat-divider></mat-divider>
-
-        <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            <mat-form-field appearance="fill" class="--plain">
-              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International price" type="text"><!-- formControlName="internationalShippingPrice" -->
-              <span matSuffix>PART</span>
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="help-text">
-              Shipping price for sending the item across your borders, worldwide.
-            </p>
-          </div>
-        </div>
+        <label class="--larger">
+          <h3 class="label">International shipping</h3>
+          <p class="label-desc">Shipping price for sending the item worldwide</p>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price" type="number"><!-- formControlName="internationalShippingPrice" -->
+            <span matSuffix>PART</span>
+          </mat-form-field>
+        </label>
 
       </mat-card><!-- .shipping -->
 
     </div><!-- .right -->
   </div><!-- .row -->
 
-  <p class="warning" *ngIf="!canPublish">
+  <p class="message --warning" *ngIf="!canPublish">
     <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
   </p>
 

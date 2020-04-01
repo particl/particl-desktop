@@ -598,18 +598,29 @@ mat-toolbar.mat-toolbar {
 
 // New customized "filled" inputs/selects etc.
 label {
+  cursor: text;
   .label {
     @extend %box-title;
     padding: 16px 0 1px;
     margin: 0 0 -0.9em 0;
     position: relative;
     z-index: 2; // make sure label is on top (e.g. when character counter is present)
-    cursor: text;
+  }
+  .label-desc {
+    color: var(--text-muted);
+    margin: 14px 0 0;
+    padding: 0 16px;
   }
   & > .label {
     padding: 15px 16px 0;
-    &.--larger {
+  }
+  &.--larger {
+    & > .label {
       padding: 21px 24px 0;
+    }
+    & > .label-desc {
+      padding: 0 24px;
+      margin: 17px 0 0;
     }
   }
 }
@@ -794,7 +805,7 @@ label {
       margin: 0 0 12px; // push textarea lower, so it doesn't overlap with the .label
     }
     .mat-form-field-flex {
-      padding: 4px 2px 4px 16px; // lower padding, so that scrollbar is on the edge
+      padding: 0 2px 4px 16px; // lower padding, so that scrollbar is on the edge
       .mat-input-element {
         padding-top: 0;
         padding-right: var(--field-boxed-paddingV);
@@ -803,7 +814,7 @@ label {
     }
     &.--larger {
       .mat-form-field-flex {
-        padding: 4px 6px 10px 24px;
+        padding: 0 6px 10px 24px;
       }
     }
   }
