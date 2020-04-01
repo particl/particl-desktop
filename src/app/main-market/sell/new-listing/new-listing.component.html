@@ -15,12 +15,15 @@
     <div class="left column" fxFlex="50">
 
       <h2 class="section-title">Product details</h2>
-      <mat-card class="details">
+      <mat-card class="details no-padding">
 
-        <mat-form-field class="full-width">
-          <input matInput placeholder="Product name" #title><!-- formControlName="title" -->
-          <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
-        </mat-form-field>
+        <label>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <h3 class="label">Product name</h3>
+            <input matInput placeholder="Short and descriptive" #title><!-- formControlName="title" -->
+            <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
+          </mat-form-field>
+        </label>
 
         <app-category-tree
           class="category-overlay"
@@ -30,15 +33,21 @@
           [selected]="selectedCategory">
         </app-category-tree>
 
-        <mat-form-field class="full-width">
-          <textarea matInput #summary rows="3" placeholder="Summary (short description)"></textarea><!-- formControlName="shortDescription" -->
-          <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
-        </mat-form-field>
+        <label>
+          <mat-form-field appearance="fill" class="textarea --plain --larger">
+            <h3 class="label">Summary</h3>
+            <textarea matInput #summary rows="3" placeholder="Short Product summary"></textarea><!-- formControlName="shortDescription" -->
+            <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
+          </mat-form-field>
+        </label>
 
-        <mat-form-field class="full-width">
-          <textarea matInput #description rows="12" placeholder="Description"></textarea><!-- formControlName="longDescription" -->
-          <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
-        </mat-form-field>
+        <label>
+          <mat-form-field appearance="fill" class="textarea --plain --larger">
+            <h3 class="label">Full description</h3>
+            <textarea matInput #description rows="12" placeholder="In-depth description of your Product"></textarea><!-- formControlName="longDescription" -->
+            <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
+          </mat-form-field>
+        </label>
 
       </mat-card><!-- .details -->
 
@@ -117,35 +126,25 @@
 
 
       <h2 class="section-title">Pricing <!--&amp; Quantity--></h2>
-      <mat-card class="pricing">
+      <mat-card class="pricing no-padding">
 
-        <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            <!-- TODO: add another input for fiat value and inter-connect the two: -->
-            <mat-form-field class="full-width">
-              <mat-icon matPrefix fontIcon="part-cryptocurrency-particl"></mat-icon>
-              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price" type="text"><!-- formControlName="basePrice" -->
-              <span matSuffix>PART</span>
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="help-text">
-              Price per 1 item
-            </p>
-          </div>
-        </div>
+        <label>
+          <h3 class="label --larger">Product price</h3>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <!-- min price: or do we want to support free listings? not sure.. [allien] -->
+            <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price per 1 item"><!-- formControlName="basePrice" -->
+            <span matSuffix>PART</span>
+          </mat-form-field>
+        </label>
 
-        <!--div class="row" fxLayout="row" fxLayoutGap="25px">
-          <div class="half" fxFlex="50">
-            // FIXME: implement quantity functionality:
-            <mat-form-field class="auto-width">
-              <input matInput type="number" placeholder="Quantity in stock" min="1" formControlName="quantity">
-            </mat-form-field>
-          </div>
-          <div class="half" fxFlex="50">
-            <p class="help-text">Enter amount of items in stock. This will help you manage your inventory. In other words: how many items are you selling?</p>
-          </div>
-        </div-->
+        <label>
+          <h3 class="label --larger">Quantity</h3>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <input matInput type="number" placeholder="How many are you selling" min="1"><!-- formControlName="quantity" -->
+            <span matSuffix>items in stock</span>
+          </mat-form-field>
+        </label>
+
       </mat-card><!-- .pricing -->
 
 
@@ -153,38 +152,54 @@
       <mat-card class="shipping">
 
         <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <mat-select-search
-            class="half full-width" fxFlex="50%"
-            [showValueOf]="'name'"
-            [placeHolder]="'Shipping from (your country)'"
-            [isRequired]="'true'"
-            [defaultSelectedValue]="selectedCountry"
-            [isLexigraphicalOrder]="true"
-            (onChange)="onCountryChange($event)"><!-- [options]="countryList.getList()" -->
-          </mat-select-search>
-          <p fxFlex="50%" class="help-text half">
-            From which country will you be selling and shipping your item?
-          </p>
+          <div class="half" fxFlex="50">
+            <mat-select-search
+              class="full-width"
+              [showValueOf]="'name'"
+              [placeHolder]="'Shipping from (your country)'"
+              [isRequired]="'true'"
+              [defaultSelectedValue]="selectedCountry"
+              [isLexigraphicalOrder]="true"
+              (onChange)="onCountryChange($event)"><!-- [options]="countryList.getList()" -->
+            </mat-select-search>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="help-text">
+              From which country will you be selling and shipping your item?
+            </p>
+          </div>
         </div>
 
-        <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <mat-form-field fxFlex="50%" class="half auto-width">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic price" type="text"><!-- formControlName="domesticShippingPrice" -->
-            <span matSuffix>PART</span>
-          </mat-form-field>
-          <p fxFlex="50%" class="help-text half">
-            Shipping price when sending the item inside your country.
-          </p>
-        </div>
+        <mat-divider></mat-divider>
 
         <div class="row" fxLayout="row" fxLayoutGap="25px">
-          <mat-form-field fxFlex="50%" class="half auto-width">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International price" type="text"><!-- formControlName="internationalShippingPrice" -->
-            <span matSuffix>PART</span>
-          </mat-form-field>
-          <p fxFlex="50%" class="help-text half">
-            Shipping price for sending the item across your borders, worldwide.
-          </p>
+          <div class="half" fxFlex="50">
+            <mat-form-field appearance="fill" class="--plain">
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic price" type="text"><!-- formControlName="domesticShippingPrice" -->
+              <span matSuffix>PART</span>
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="help-text">
+              Shipping price when sending the item inside your country.
+            </p>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            <mat-form-field appearance="fill" class="--plain">
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International price" type="text"><!-- formControlName="internationalShippingPrice" -->
+              <span matSuffix>PART</span>
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="help-text">
+              Shipping price for sending the item across your borders, worldwide.
+            </p>
+          </div>
         </div>
 
       </mat-card><!-- .shipping -->
