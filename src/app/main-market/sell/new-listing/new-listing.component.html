@@ -1,1 +1,219 @@
-<p>new-listing works!</p>
+<div class="container-block"><!-- [formGroup]="itemFormGroup" -->
+
+  <app-page-intro>
+    <ng-container page-title>Add new Listing for sale</ng-container>
+    <ng-container page-content>
+      Publish a new Product for sale on Particl Open Marketplace and/or any other Markets you've joined.
+    </ng-container>
+    <ng-container page-help>
+      To join or create new Markets, go to "Manage Markets" page.
+    </ng-container>
+  </app-page-intro>
+
+  <div class="row" fxLayout="row" fxLayoutGap="30px">
+
+    <div class="left column" fxFlex="50">
+
+      <h2 class="section-title">Product details</h2>
+      <mat-card class="details">
+
+        <mat-form-field class="full-width">
+          <input matInput placeholder="Product name" #title><!-- formControlName="title" -->
+          <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
+        </mat-form-field>
+
+        <app-category-tree
+          class="category-overlay"
+          *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
+          (onChange)="onCategoryChange($event)"
+          [options]="_rootCategoryList?.subCategoryList"
+          [selected]="selectedCategory">
+        </app-category-tree>
+
+        <mat-form-field class="full-width">
+          <textarea matInput #summary rows="3" placeholder="Summary (short description)"></textarea><!-- formControlName="shortDescription" -->
+          <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+          <textarea matInput #description rows="12" placeholder="Description"></textarea><!-- formControlName="longDescription" -->
+          <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
+        </mat-form-field>
+
+      </mat-card><!-- .details -->
+
+
+      <h2 class="section-title">Publish to</h2>
+      <mat-card class="publish-to">
+        <p class="help-text">
+          Select at least 1 Market where the Product will be published. You can publish to as many Markets you want, but there's a listing fee for each of them.
+        </p>
+        <div class="scrollable checkbox-group full-width with-hover padded">
+          <!-- TODO: list connected Markets - Particl Open Marketplace first, the rest alphabetically -->
+          <mat-checkbox checked="checked">Particl Open Marketplace (default)</mat-checkbox>
+          <mat-checkbox>Allien's Exquisite Spices</mat-checkbox>
+          <mat-checkbox>BIO FOODS</mat-checkbox>
+          <mat-checkbox>Ceci n'est pas un Commerce</mat-checkbox>
+          <mat-checkbox>Decentralizement</mat-checkbox>
+          <mat-checkbox>Hardware Crypto Secrets</mat-checkbox>
+          <mat-checkbox>Particl Community Market</mat-checkbox>
+          <mat-checkbox>Running out of Fantasy</mat-checkbox>
+          <mat-checkbox>Yet another Market Name</mat-checkbox>
+        </div>
+        <p class="help-text">
+          Product will be published to: <strong>2 Markets</strong>
+        </p>
+      </mat-card><!-- .pricing -->
+
+    </div><!-- .left -->
+
+
+    <div class="right column" fxFlex="50">
+
+      <h2 class="section-title">Product gallery</h2>
+      <mat-card class="photos">
+        <div id="drag-n-drop" class="drag-n-drop">
+          <input class="file-input" type="file" accept="image/*" multiple="true" id="fileInput">
+          <button mat-button color="primary" (click)="uploadPicture()">
+            <mat-icon fontIcon="part-select"></mat-icon>
+            Upload a photo
+          </button>
+          <p>or drag'n'drop it here</p>
+        </div>
+        <p class="help-text">
+          Upload photos of your Product (first photo will be set as main, featured image). Be sure to upload high quality &amp; focused images in good lighting where possible. Max file size per image is 2 MB.
+        </p>
+        <div class="gallery" fxLayout="row wrap">
+
+          <div *ngFor="let image of images"
+              class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+            <div class="photo" fxFLex>
+              <img src="{{ image.thumbnail }}">
+              <div class="icons">
+                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image)">
+                </mat-icon>
+                <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon-->
+              </div>
+            </div>
+          </div>
+
+          <div *ngFor="let picture of picturesToUpload ; index as i" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+            <!-- TODO: maybe not gif, but removing is 'unsafe' -->
+            <div class="photo" fxFLex>
+              <img src="{{ picture }}">
+              <div class="icons">
+                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removePicture(i)">
+                </mat-icon>
+                <!-- TODO: Fix set as featured img -->
+                <!-- <mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon> -->
+              </div>
+            </div>
+          </div>
+
+        </div><!-- .gallery -->
+      </mat-card><!-- .photos -->
+
+
+      <h2 class="section-title">Pricing <!--&amp; Quantity--></h2>
+      <mat-card class="pricing">
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            <!-- TODO: add another input for fiat value and inter-connect the two: -->
+            <mat-form-field class="full-width">
+              <mat-icon matPrefix fontIcon="part-cryptocurrency-particl"></mat-icon>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price" type="text"><!-- formControlName="basePrice" -->
+              <span matSuffix>PART</span>
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="help-text">
+              Price per 1 item
+            </p>
+          </div>
+        </div>
+
+        <!--div class="row" fxLayout="row" fxLayoutGap="25px">
+          <div class="half" fxFlex="50">
+            // FIXME: implement quantity functionality:
+            <mat-form-field class="auto-width">
+              <input matInput type="number" placeholder="Quantity in stock" min="1" formControlName="quantity">
+            </mat-form-field>
+          </div>
+          <div class="half" fxFlex="50">
+            <p class="help-text">Enter amount of items in stock. This will help you manage your inventory. In other words: how many items are you selling?</p>
+          </div>
+        </div-->
+      </mat-card><!-- .pricing -->
+
+
+      <h2 class="section-title">Shipping</h2>
+      <mat-card class="shipping">
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <mat-select-search
+            class="half full-width" fxFlex="50%"
+            [showValueOf]="'name'"
+            [placeHolder]="'Shipping from (your country)'"
+            [isRequired]="'true'"
+            [defaultSelectedValue]="selectedCountry"
+            [isLexigraphicalOrder]="true"
+            (onChange)="onCountryChange($event)"><!-- [options]="countryList.getList()" -->
+          </mat-select-search>
+          <p fxFlex="50%" class="help-text half">
+            From which country will you be selling and shipping your item?
+          </p>
+        </div>
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <mat-form-field fxFlex="50%" class="half auto-width">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic price" type="text"><!-- formControlName="domesticShippingPrice" -->
+            <span matSuffix>PART</span>
+          </mat-form-field>
+          <p fxFlex="50%" class="help-text half">
+            Shipping price when sending the item inside your country.
+          </p>
+        </div>
+
+        <div class="row" fxLayout="row" fxLayoutGap="25px">
+          <mat-form-field fxFlex="50%" class="half auto-width">
+            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International price" type="text"><!-- formControlName="internationalShippingPrice" -->
+            <span matSuffix>PART</span>
+          </mat-form-field>
+          <p fxFlex="50%" class="help-text half">
+            Shipping price for sending the item across your borders, worldwide.
+          </p>
+        </div>
+
+      </mat-card><!-- .shipping -->
+
+    </div><!-- .right -->
+  </div><!-- .row -->
+
+  <p class="warning" *ngIf="!canPublish">
+    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  </p>
+
+  <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
+    <div class="left">
+      <button mat-button routerLink="" color="warn"><!-- (click)="backToSell()" -->
+        <mat-icon fontIcon="part-cross"></mat-icon>
+        Back to Listings
+      </button>
+    </div>
+    <div class="right">
+      <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
+        <mat-icon fontIcon="part-date"></mat-icon>
+        {{ isExistingTemplate() ? 'Update' : 'Save' }}
+      </button>
+
+      <button [disabled]="!itemFormGroup?.valid" mat-raised-button color="primary" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+        <mat-icon fontIcon="part-check"></mat-icon>
+        {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish' }}
+      </button>
+    </div>
+  </div><!-- .action-buttons -->
+
+</div>

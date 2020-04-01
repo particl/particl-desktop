@@ -12,4 +12,8 @@ export class NewListingComponent implements OnInit {
   ngOnInit() {
   }
 
+  isExistingTemplate() {
+    return false; // FIXME, I'm useless :)
+  }
+
 }
