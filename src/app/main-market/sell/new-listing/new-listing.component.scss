@@ -93,3 +93,14 @@
   }
 }
 
+
+// ------ PRICING ------ //
+
+// "≈" in pricing (PART ≈ fiat)
+.asymp {
+  border-bottom: 1px solid var(--bg-muted);
+  padding: 0 0 1.35em;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+

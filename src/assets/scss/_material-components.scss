@@ -697,9 +697,13 @@ label {
     }
     .mat-input-element {
       padding: var(--field-boxed-paddingV) 0;
+      margin: 0;
     }
     [matPrefix],
     [matSuffix] {
+      &:not(button) {
+        color: var(--text-muted); // mute text's color
+      }
       &.mat-icon {
         font-size: 16px; // 1.25em
         color: var(--text-muted);
@@ -708,13 +712,15 @@ label {
       }
     }
     [matPrefix] {
+      margin-right: 8px;
       &.mat-icon {
-        margin-right: 0.8em;
+        //margin-right: 0.8em;
       }
     }
     [matSuffix] {
+      margin-left: 8px;
       &.mat-icon {
-        margin-left: 0.8em;
+        //margin-left: 0.8em;
       }
     }
     button[matSuffix],

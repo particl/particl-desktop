@@ -128,20 +128,36 @@
       <h2 class="section-title">Pricing <!--&amp; Quantity--></h2>
       <mat-card class="pricing no-padding">
 
-        <label class="--larger">
-          <h3 class="label">Product price</h3>
-          <mat-form-field appearance="fill" class="--plain --larger">
-            <!-- min price: or do we want to support free listings? not sure.. [allien] -->
-            <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Product price per 1 item"><!-- formControlName="basePrice" -->
-            <span matSuffix>PART</span>
-          </mat-form-field>
-        </label>
-
+        <div class="row"><!-- fxLayout fxLayoutAlign="stretch end" -->
+          <div class="half"><!-- fxFlex="49%" -->
+            <label class="--larger">
+              <h3 class="label">Product price</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>PART</span>
+                <!-- min price: or do we want to support free listings? not sure.. [allien] -->
+                <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="price per 1 item"><!-- formControlName="basePrice" -->
+              </mat-form-field>
+            </label>
+          </div>
+          <!--div class="asymp" fxFlex="2%">
+            <span>&asymp;</span>
+          </div>
+          <div class="half" fxFlex="49%">
+            <label class="--larger">
+              <h3 class="label">&nbsp;</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>USD</span>
+                <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="price per 1 item">
+              </mat-form-field>
+            </label>
+          </div-->
+        </div>
+        
         <label class="--larger">
           <h3 class="label">Quantity</h3>
           <mat-form-field appearance="fill" class="--plain --larger">
+            <span matPrefix>Items in stock:</span>
             <input matInput type="number" placeholder="How many are you selling" min="1"><!-- formControlName="quantity" -->
-            <span matSuffix>items in stock</span>
           </mat-form-field>
         </label>
 
@@ -170,20 +186,50 @@
         <label class="--larger">
           <h3 class="label">Local shipping</h3>
           <p class="label-desc">Shipping price when sending the item inside your country</p>
-          <mat-form-field appearance="fill" class="--plain --larger">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="Domestic shipping price" type="number"><!-- formControlName="domesticShippingPrice" -->
-            <span matSuffix>PART</span>
-          </mat-form-field>
         </label>
+        <div class="row"><!-- fxLayout fxLayoutAlign="stretch end" -->
+          <div class="half"><!-- fxFlex="49%" -->
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <span matPrefix>PART</span>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number"><!-- formControlName="domesticShippingPrice" -->
+            </mat-form-field>
+          </div>
+          <!--div class="asymp" fxFlex="2%">
+            <span>&asymp;</span>
+          </div>
+          <div class="half" fxFlex="49%">
+            <label class="--larger">
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>USD</span>
+                <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number">
+              </mat-form-field>
+            </label>
+          </div-->
+        </div>
 
         <label class="--larger">
           <h3 class="label">International shipping</h3>
           <p class="label-desc">Shipping price for sending the item worldwide</p>
-          <mat-form-field appearance="fill" class="--plain --larger">
-            <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="International shipping price" type="number"><!-- formControlName="internationalShippingPrice" -->
-            <span matSuffix>PART</span>
-          </mat-form-field>
         </label>
+        <div class="row"><!-- fxLayout fxLayoutAlign="stretch end" -->
+          <div class="half"><!-- fxFlex="49%" -->
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <span matPrefix>PART</span>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number"><!-- formControlName="internationalShippingPrice" -->
+            </mat-form-field>
+          </div>
+          <!--div class="asymp" fxFlex="2%">
+            <span>&asymp;</span>
+          </div>
+          <div class="half" fxFlex="49%">
+            <label class="--larger">
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>USD</span>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number">
+              </mat-form-field>
+            </label>
+          </div-->
+        </div>
 
       </mat-card><!-- .shipping -->
 
