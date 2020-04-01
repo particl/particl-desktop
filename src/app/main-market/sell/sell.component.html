@@ -38,11 +38,11 @@
   <div class="filter">
 
     <div class="buttons">
-      <button mat-raised-button color="primary" (click)="addItem()" class="full-width">
+      <button mat-raised-button color="primary" routerLink="new-listing" class="full-width"><!-- (click)="addItem()" -->
         <mat-icon fontIcon="part-circle-plus"></mat-icon>
         Add new Listing
       </button>
-      <button mat-raised-button color="accent" (click)="importListings()" class="full-width">
+      <button mat-raised-button color="accent" routerLink="import-listings" class="full-width"><!-- (click)="importListings()" -->
         <mat-icon fontIcon="part-image-upload"></mat-icon>
         Import Listings
       </button>
