@@ -21,7 +21,7 @@ const routes: Routes = [
       { path: 'listings', loadChildren: () => import('./listings/listings.module').then(m => m.ListingsModule) },
       { path: 'buy', loadChildren: () => import('./buy/buy.module').then(m => m.BuyModule) },
       { path: 'sell', loadChildren: () => import('./sell/sell.module').then(m => m.SellModule) },
-      { path: 'proposals', loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsModule) },
+      //{ path: 'proposals', loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsModule) },
       { path: 'settings', loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule) },
       { path: 'loading', loadChildren: () => import('./loading/loading.module').then(m => m.LoadingModule) },
       { path: '**', redirectTo: 'overview' },

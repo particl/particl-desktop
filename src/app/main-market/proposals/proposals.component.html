@@ -1,1 +1,141 @@
-<h2>Proposals component</h2>
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
+          Active proposals
+        </ng-template>
+      </mat-tab>
+      <!-- <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-rocket"></mat-icon>
+          Planned proposals
+        </ng-template>
+      </mat-tab> -->
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="icon" fontSet="partIcon" fontIcon="part-document"></mat-icon>
+          Past proposals
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</app-header>
+
+
+<div class="container-block">
+  <app-page-intro>
+    <ng-container page-title>Community Proposals</ng-container>
+    <ng-container page-content>
+      As part of Particl's decentralized governance mechanism, you can submit and vote on any Particl-related proposal.<br>
+      Once a proposal is submitted, every PART holder can vote on it.
+    </ng-container>
+    <ng-container page-help>
+      Anyone can submit and vote on proposals in a provably fair manner. The weight of your vote is equal to your PART balance.
+    </ng-container>
+  </app-page-intro>
+
+  <div class="filter">
+
+    <button mat-raised-button color="primary" class="full-width" (click)="addProposal()"
+            matTooltip="Add new voting proposal" matTooltipPosition="above">
+      <mat-icon fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+      Submit new proposal
+    </button>
+
+    <!-- .search-sorting -->
+    <!-- <div class="section search-sorting to-do">
+      <div class="subtitle">Search & Sort</div>
+      <mat-card class="filter-card">
+
+        <mat-form-field class="icon-input search-address">
+          <input matInput type="text" [(ngModel)]="query" [ngModelOptions]="{standalone: true}"
+                placeholder="Search proposals" (keyup.escape)="query = ''">
+          <mat-icon *ngIf="query" (click)="query=''" fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+          <mat-icon *ngIf="!query" fontSet="partIcon" fontIcon="part-search"></mat-icon>
+        </mat-form-field>
+
+        <mat-form-field class="sort-by filter-input" floatLabel="never">
+          <mat-select placeholder="Sort proposals" [(ngModel)]="filters.sort" (change)="filter()">
+            <mat-option *ngFor="let sorting of sortings" [value]="sorting.value">
+              {{ sorting.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </mat-card>
+
+      <div class="subtitle">Filter</div>
+      <mat-card class="filter-card">
+        <mat-form-field class="filter-by filter-input" floatLabel="never">
+          <mat-select placeholder="All proposals" [(ngModel)]="filters.filter" (change)="filter()">
+            <mat-option *ngFor="let filtering of filterings" [value]="filtering.value">
+              {{ filtering.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-checkbox class="only-official">Show official proposals only</mat-checkbox>
+      </mat-card>
+    </div> -->
+    <!-- .search-sorting -->
+
+  </div><!-- .sidebar -->
+
+
+  <div class="content with-filter">
+
+    <div *ngIf="tabLabels[selectedTab] === 'active'">
+      <app-proposal-details
+        [proposal]="proposal"
+        [selectedTab]="tabLabels[selectedTab]"
+        *ngFor="let proposal of activeProposals;">
+      </app-proposal-details>
+      <!-- FIXME: implement no results -->
+      <div class="no-results" *ngIf="activeProposals?.length == 0">
+        <p>
+          No active proposals at the moment
+        </p>
+        <p class="widget-help">
+          If you have a Proposal for Particl, you can always submit it to Particl network:<br>
+          <button mat-button (click)="addProposal()">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Submit new proposal
+          </button>
+        </p>
+      </div><!-- .no-results -->
+    </div>
+
+
+    <div *ngIf="tabLabels[selectedTab] === 'past'">
+      <app-proposal-details
+        [proposal]="proposal"
+        [selectedTab]="tabLabels[selectedTab]"
+        *ngFor="let proposal of pastProposals;">
+      </app-proposal-details>
+
+      <!-- FIXME: implement no results -->
+      <div class="no-results" *ngIf="pastProposals?.length == 0">
+        <p>
+          No past proposals at the moment
+        </p>
+        <p class="widget-help">
+          If you have a Proposal for Particl, you can always submit it to Particl network:<br>
+          <button mat-button (click)="addProposal()">
+            <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-plus"></mat-icon>
+            Submit new proposal
+          </button>
+        </p>
+      </div><!-- .no-results -->
+    </div>
+
+    <!--
+      *ngIf="tabLabels[selectedTab] == 'active'"
+      *ngIf="tabLabels[selectedTab] == 'past'"
+    -->
+  </div><!-- .content -->
+
+
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" class="loading-bar"></mat-progress-bar>
+
+</div><!-- .container-block -->
