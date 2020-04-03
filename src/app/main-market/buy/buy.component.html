@@ -143,34 +143,34 @@
     <mat-expansion-panel class="order list-item no-padding">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-          <div class="photo" fxFlex="0 0 80px">
-            <img src="{{ listingImage }}">
+          <div class="photo">
+            <img src="./assets/images/placeholder_4-3.jpg"><!-- src="{{ listingImage }}" -->
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">{{ title }}</div>
-            <div class="hash id">{{ order?.OrderItem?.id }}</div>
-            <div class="hash" matTooltip="Order Hash: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">{{ order?.hash }}</div>
+            <div class="name">Order name<!--{{ title }}--></div>
+            <div class="hash id">12<!--{{ order?.OrderItem?.id }}--></div>
+            <div class="hash" matTooltip="Order Hash: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">FS13<!--{{ order?.hash }}--></div>
             <div class="origin-market">
               <!-- TODO: implement display of Market where item was bought -->
               Particl Open Marketplace
             </div>
           </div>
           <div class="status-wrap" fxFlex="0 0 140px">
-            <div class="status {{ order?.step }} {{ order?.type }}">
-              <span class="dot"></span>{{ order?.step }}
+            <div class="status bidding"><!-- {{ order?.step }} {{ order?.type }} -->
+              <span class="dot"></span> bidding<!-- {{ order?.step }} -->
             </div>
           </div>
         </div>
       </mat-expansion-panel-header>
     
       <div class="status-info">
-        <p>{{ orderActivity?.status_info }}</p>
+        <p><!--{{ orderActivity?.status_info }}--> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aperiam ut ab iure. Recusandae.</p>
         <div *ngIf="showShippingInfo" class="additional-info">
-          <p *ngIf="(memo.length > 0)">
+          <p><!-- *ngIf="(memo.length > 0)" -->
             <span class="title">Shipping info from Seller</span>
             <code class="more-info">{{ memo }}</code>
           </p>
-          <p *ngIf="!(memo.length > 0)">
+          <p><!-- *ngIf="!(memo.length > 0)" -->
             <span class="title">Shipping info from Seller</span>
             <em>&nbsp; No information provided</em>
           </p>
@@ -180,13 +180,13 @@
             <span class="title">Escrow TX ID</span>
           </p>
           <p>
-            <code class="additional-extra-info"><!--{{ additionalInfo.transactionID }}--></code>
+            <code class="additional-extra-info"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</code>
           </p>
         </div>
         <div class="additional-info"><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
           <p>
             <span class="title">Reason for rejection</span>
-            <code class="more-info"><!--{{ additionalInfo.rejectMessage }}--></code>
+            <code class="more-info"><!--{{ additionalInfo.rejectMessage }}-->Not in stock</code>
           </p>
         </div>
       </div>

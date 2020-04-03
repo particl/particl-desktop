@@ -1,0 +1,216 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ LISTS (shared for listings & orders) ------ //
+
+.list-item { // Listing/Order
+  --list-item-size: 90px;
+  @include break(l) {
+    --list-item-size: 100px;
+  }
+  @include break(xl) {
+    --list-item-size: 110px;
+  }
+  padding: 0;
+  margin-bottom: var(--card-spacing) !important;
+  .header {
+    min-height: var(--list-item-size) !important;
+    max-height: var(--list-item-size) !important;
+    padding: 0 24px 0 0;
+  }
+  .header-wrapper {
+    width: 100%;
+    padding-right: 24px;
+    .photo {
+      flex: 0 0 var(--list-item-size);
+      height: var(--list-item-size);
+      margin-right: 24px;
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+      }
+    }
+    .meta {
+      color: var(--text-muted);
+      .name {
+        color: var(--text);
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 1.4;
+        margin-bottom: 4px;
+      }
+    }
+  }
+  .status-info {
+    border-top: 1px solid var(--bg-muted);
+    padding: 20px 30px;
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-muted);
+    p {
+      margin: 0;
+    }
+  }
+  .detail {
+    font-size: 13px;
+    font-family: var(--font);
+    color: var(--text-muted);
+    padding: 24px 30px;
+    border-top: 1px dashed var(--bg-muted);
+    .title {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .description {
+      p {
+        white-space: pre-line;
+        word-wrap: break-word;
+      }
+    }
+    table {
+      color: var(--text-muted);
+      border-collapse: collapse;
+      th {
+        vertical-align: top;
+        text-align: right;
+        font-weight: 600;
+        padding-right: 7px;
+      }
+      td {
+        vertical-align: top;
+      }
+    }
+  }
+  mat-action-row {
+    padding: 16px 18px;
+    .left {
+      margin-top: 3px;
+      button {
+        margin: 0 4px 0 0;
+      }
+    }
+  }
+  .status-wrap {
+    text-align: right;
+  }
+  .status {
+    background: var(--bg);
+    border-radius: 4px;
+    text-align: center;
+    color: var(--text);
+    text-transform: uppercase;
+    font-weight: 500;
+    padding: 7px 18px 7px 10px;
+    display: inline-block;
+    margin-top: 0;
+    position: relative;
+    &::before { // status' "arrow" shape
+      content: '';
+      display: block;
+      width: 0;
+      height: 0;
+      top: 0;
+      left: -27px;
+      border: 14.5px solid var(--bg);
+      border-color: transparent var(--bg) transparent transparent;
+      position: absolute;
+    }
+    .dot { // status indicator
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      position: relative;
+      top: -1px;
+      margin-right: 8px;
+    }
+    // listings
+    &.unpublished .dot {
+      background: var(--bg-muted);
+    }
+    &.pending .dot {
+      background: var(--color-warning);
+    }
+    &.published .dot {
+      background: var(--color-success);
+    }
+    &.expired .dot {
+      background: var(--color-alert);
+    }
+    // orders
+    &.bidding .dot {
+      background: var(--color-warning);
+    }
+    &.payment .dot {
+      background: var(--color-confirms-25-pct);
+    }
+    &.escrow .dot {
+      background: var(--color-alert);
+    }
+    &.packaging .dot {
+      background: var(--color-alert);
+    }
+    &.shipping .dot {
+      background: var(--color-success);
+    }
+    &.complete {
+      color: hsla(var(--text-hsl, 0.5));
+      .dot {
+        background: hsla(var(--color-info-hsl, 0.5));
+      }
+    }
+    &.rejected,
+    &.cancelled {
+      color: hsla(var(--text-hsl, 0.5));
+      .dot {
+        background: var(--bg-muted);
+      }
+    }
+    // animated notifications in Order statuses
+    &.sell.bidding,
+    &.buy.payment,
+    &.sell.escrow,
+    &.sell.packaging,
+    &.buy.shipping {
+      // + in Listing statuses..
+      // @TODO we can use blink animation for own expired listing in future.
+      // &.expired
+      // {
+      .dot::after {
+        content: '';
+        animation: pulse-fade 1s infinite;
+        width: 7px;
+        height: 7px;
+        display: block;
+        border-radius: 50%;
+        border: 2px solid var(--bg-muted);
+        position: absolute;
+        top: -2px;
+        left: -2px;
+      }
+    }
+    &.sell.bidding .dot::after {
+      border-color: var(--color-warning);
+    }
+    &.buy.payment .dot::after {
+      border-color: var(--color-confirms-25-pct);
+    }
+    &.sell.escrow .dot::after {
+      border-color: var(--color-alert);
+    }
+    &.sell.packaging .dot::after {
+      border-color: var(--color-alert);
+    }
+    &.buy.shipping .dot::after {
+      border-color: var(--color-success);
+    }
+    &.expired .dot::after {
+      border-color: var(--color-alert);
+    }
+  }
+}

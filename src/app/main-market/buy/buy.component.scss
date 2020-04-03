@@ -11,6 +11,8 @@
 
 /* --- ↓↓↓ --- following code to become shared/orders-overview/order-item component --- ↓↓↓ --- */
 
+@import './src/app/main-market/shared/order+listing-list-item'; // import shared colors etc.
+
 // ------ ORDER ITEM ------ //
 
 h3 {
@@ -44,26 +46,10 @@ table.contact-info {
 }
 
 
-// ------ _ORDER (shared) ------ //
+// ------ _ORDER (shared @ exchange, buy, bots..) ------ //
 
-$photo-size: 80px;
-
-.list-item {
-  .header-wrapper {
-    .photo { // crop orders's image to square
-      min-height: $photo-size;
-      max-height: $photo-size;
-      height: $photo-size;
-    }
-  }
-}
 
 .order {
-  .header {
-    min-height: $photo-size !important;
-    max-height: $photo-size !important;
-    padding: 0 24px 0 0;
-  }
   .hash { // order 'ID'
     font-size: 90%;
     font-family: var(--font-mono);
@@ -135,7 +121,7 @@ $dot-size: 11px;
   height: 1px;
   display: block;
   background: $color;
-  box-shadow: 0 0 2px 0 $color;
+  box-shadow: 0 0 1px 0 $color;
 }
 
 // Display progress (steps) of Order and in which stage it is
