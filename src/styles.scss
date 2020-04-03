@@ -124,7 +124,7 @@ body {
   .filter-card {
     padding: 0;
     margin-bottom: 16px;
-  
+
     // checkboxes
     .checkbox {
       padding: 3px 18px;
@@ -141,7 +141,7 @@ body {
         margin: 3px 0;
       }
     }
-  
+
     // radio buttons
     .radio-group {
       --radio-paddingH: 16px;
@@ -805,45 +805,45 @@ kbd {
 
 // ------ 5.1. Charts ------ //
 
-.nvd3-svg {
-  // Pie/donut chart
-  .nv-slice {
-    stroke: var(--color-white);
-    stroke-width: 2px;
-  }
-  .nv-legend-text {
-    fill: var(--text);
-  }
-}
+// .nvd3-svg {
+//   // Pie/donut chart
+//   .nv-slice {
+//     stroke: var(--color-white);
+//     stroke-width: 2px;
+//   }
+//   .nv-legend-text {
+//     fill: var(--text);
+//   }
+// }
 
-.nvtooltip { // tooltips
-  z-index: 1000;
-  font-family: var(--font);
-  font-size: 12px;
-  color: var(--color-white);
-  background: hsla(var(--bg-black-hsl), 0.85);
-  border-radius: var(--radius);
-  padding: 1px 4px;
-  .legend-color-guide > div {
-    height: 6px;
-    width: 6px;
-    margin-right: 2px;
-    display: inline-block;
-    border-radius: var(--radius);
-    position: relative;
-    top: -1px;
-  }
-  .key {
-    font-weight: 500;
-    margin: 0 3px;
-  }
-  .value {
-    font-size: 10px;
-    color: hsla(var(--bg-black-hsl), 0.5);
-    position: relative;
-    top: 1px;
-  }
-}
+// .nvtooltip { // tooltips
+//   z-index: 1000;
+//   font-family: var(--font);
+//   font-size: 12px;
+//   color: var(--color-white);
+//   background: hsla(var(--bg-black-hsl), 0.85);
+//   border-radius: var(--radius);
+//   padding: 1px 4px;
+//   .legend-color-guide > div {
+//     height: 6px;
+//     width: 6px;
+//     margin-right: 2px;
+//     display: inline-block;
+//     border-radius: var(--radius);
+//     position: relative;
+//     top: -1px;
+//   }
+//   .key {
+//     font-weight: 500;
+//     margin: 0 3px;
+//   }
+//   .value {
+//     font-size: 10px;
+//     color: hsla(var(--bg-black-hsl), 0.5);
+//     position: relative;
+//     top: 1px;
+//   }
+// }
 
 
 /* ------------------------------- *\

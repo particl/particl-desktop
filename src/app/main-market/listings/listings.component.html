@@ -92,7 +92,7 @@
        [fromRoot]="true"
        (scrolled)="loadNextPage()" -->
 
-    <div class="loading-container" *ngIf="isLoadingBig">
+    <!-- <div class="loading-container" *ngIf="isLoadingBig">
       <div class="loading-info">
         <div class="loading-image">
           <img src="./assets/particl-logo-symbol.svg">
@@ -104,7 +104,7 @@
           This might take a while
         </p>
       </div>
-    </div><!-- .loading-container -->
+    </div>-->  <!--.loading-container -->
 
     <!--ng-container *ngFor="let page of pages;let pageIdx = index;">
       <ng-container *ngFor="let item of page.listings"-->
@@ -112,7 +112,7 @@
         <ng-template #listingItem><!-- template here just for layout testing -->
         <mat-card class="listing">
           <div mat-card-image>
-            <img class="img" src="./assets/images/placeholder_4-3.jpg" alt="<listing name here>">
+            <img class="img" src="./assets/images/placeholder_4-3.jpg" alt="TODO: listing name here">
           </div>
           <mat-card-header>
             <mat-card-title>
