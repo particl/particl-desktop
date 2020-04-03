@@ -10,6 +10,11 @@ export class BuyComponent {
   public selectedTab: number = 0;
   public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
 
+  // ----- ↓↓↓ ORDERS component ↓↓↓ ----- //
+  searchQuery: FormControl = new FormControl('');
+  filterQuery: FormControl = new FormControl('all');
+  // ----- ↑↑↑ ORDERS component ↑↑↑ ----- //
+
   public filters: any = {
     search: undefined,
     sort:   undefined,

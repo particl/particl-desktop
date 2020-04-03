@@ -1,4 +1,215 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+/* --- ↓↓↓ --------- following code to become shared/orders-overview component --------- ↓↓↓ --- */
 
 
+
+/* --- ↑↑↑ ----------- above code to become shared/orders-overview component ----------- ↑↑↑ --- */
+
+
+
+
+/* --- ↓↓↓ --- following code to become shared/orders-overview/order-item component --- ↓↓↓ --- */
+
+// ------ ORDER ITEM ------ //
+
+h3 {
+  text-align: center;
+}
+
+.title {
+  margin-top: 14px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+table.contact-info {
+  th {
+    text-align: right;
+    vertical-align: top;
+    padding-right: 7px;
+  }
+  td {
+    word-break: break-word;
+  }
+}
+
+.additional-extra-info {
+  @extend %enable-select;
+  // color: darken($color, 7%);
+  // background: rgba($color, 0.1);
+  padding: 3px 8px;
+  border-radius: var(--radius);
+}
+
+
+// ------ _ORDER (shared) ------ //
+
+$photo-size: 80px;
+
+.list-item {
+  .header-wrapper {
+    .photo { // crop orders's image to square
+      min-height: $photo-size;
+      max-height: $photo-size;
+      height: $photo-size;
+    }
+  }
+}
+
+.order {
+  .header {
+    min-height: $photo-size !important;
+    max-height: $photo-size !important;
+    padding: 0 24px 0 0;
+  }
+  .hash { // order 'ID'
+    font-size: 90%;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--color-white);
+    line-height: 1.4;
+    text-transform: uppercase;
+    background: var(--text-muted);
+    border-radius: 4px;
+    display: inline-block;
+    padding: 1px 8px;
+    margin-right: 10px;
+    &.id {
+      margin: 0 -5px 0 0;
+      background: var(--bg);
+      color: var(--text-muted);
+      padding: 1px 12px 1px 8px;
+      font-weight: 400;
+    }
+  }
+  .origin-market {
+    display: inline-block;
+  }
+  .status-info {
+    text-align: center;
+  }
+  .additional-info {
+    margin-top: 8px;
+    .title {
+      font-size: 13px;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .more-info {
+      @extend %enable-select;
+      margin-left: 10px;
+      color: var(--color-primary);
+      background: hsla(var(--color-primary-hsl), 0.1);
+      padding: 3px 8px;
+      border-radius: var(--radius);
+    }
+  }
+  .action-buttons {
+    .single .mat-icon {
+      margin: 0;
+    }
+  }
+}
+
+
+// ------ PROGRESS GRAPH ------ //
+
+$dot-size: 11px;
+
+%progress-dot { // progress step indicator "dot"
+  width: $dot-size;
+  height: $dot-size;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@mixin progress-line($color) { // "done" progress between two Order steps
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 50.5%;
+  width: 100%;
+  height: 1px;
+  display: block;
+  background: $color;
+  box-shadow: 0 0 2px 0 $color;
+}
+
+// Display progress (steps) of Order and in which stage it is
+.progress-graph {
+  margin: 4px 0 -11px;
+  .step {
+    text-align: center;
+    // finished step
+    &.done {
+      position: relative;
+      &::after { // draw the progress line to next step (which has to be either finished as well or active)
+        @include progress-line(var(--color-primary));
+      }
+      .dot {
+        background: var(--color-primary);
+      }
+    }
+    // current, active step
+    &.active {
+      .dot {
+        background: var(--color-primary);
+        position: relative;
+        &::before { // highlight current "dot" to indicate active step
+          @extend %progress-dot;
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: scale(1.7);
+          background: hsla(var(--color-primary, 0.35));
+        }
+      }
+      .value {
+        font-weight: 500;
+      }
+      &.completed { // when Order is done, no need to highlight "Completed" step anymore
+        .dot {
+          &::before {
+            content: none;
+          }
+        }
+      }
+    }
+    // upcoming steps
+    &.upcoming {
+      .value {
+        color: var(--text-muted);
+      }
+    }
+    // rejected bid scenario
+    &.rejected {
+      &.bidding {
+        position: relative;
+        &::after { // recolor the progress bar from "bid => rejected" to red
+          @include progress-line(var(--color-alert));
+        }
+      }
+      .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
+        background: var(--color-alert);
+      }
+    }
+    .value { // name of step
+      font-size: 90%;
+      margin-bottom: 2px;
+    }
+    .dot { // step indicator "dot"
+      @extend %progress-dot;
+      background: var(--bg-muted);
+    }
+  }
+  & + .detail {
+    padding: 30px 30px 24px;
+  }
+}
+
+
+/* --- ↑↑↑ ----- above code to become shared/orders-overview/order-item component ----- ↑↑↑ --- */
