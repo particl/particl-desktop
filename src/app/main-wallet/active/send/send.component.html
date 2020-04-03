@@ -130,33 +130,36 @@
           <h2 class="section-title">Pay to</h2>
           <mat-card class="pay-to">
 
-            <mat-form-field appearance="fill" class="address --plain --larger">
+            <label class="--larger">
               <h3 class="label">Receiver's address</h3>
-              <input matInput type="text" formControlName="address"
-                    [class.verify-success]="address.valid"
-                    [class.verify-error]="!address.valid"
-                    placeholder="Receiver's address (required)"/>
-              <button matSuffix mat-button class="small" matTooltip="Load from Address Book" matTooltipPosition="before" (click)="openAddressLookup()">
-                <mat-icon fontIcon="part-people"></mat-icon>
-              </button>
-              <!--button matSuffix mat-button class="small" color="warn" (click)="clearSendInputs()" matTooltip="Clear all" matTooltipPosition="before">
-                <mat-icon fontIcon="part-clear-all"></mat-icon>
-              </button-->
-            </mat-form-field>
+              <mat-form-field appearance="fill" class="address --plain --larger">
+                <input matInput type="text" formControlName="address"
+                [class.verify-success]="address.valid"
+                [class.verify-error]="!address.valid"
+                placeholder="Receiver's address (required)"/>
+                <button matSuffix mat-button class="small" matTooltip="Load from Address Book" matTooltipPosition="before" (click)="openAddressLookup()">
+                  <mat-icon fontIcon="part-people"></mat-icon>
+                </button>
+              </mat-form-field>
+            </label>
 
-            <mat-form-field appearance="fill" class="label --plain --larger">
-              <h3 class="label">Receiver's name</h3>
-              <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
-            </mat-form-field>
+            <label>
+              <mat-form-field appearance="fill" class="address-label --plain --larger">
+                <h3 class="label">Receiver's name</h3>
+                <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
+              </mat-form-field>
+            </label>
 
-            <mat-form-field appearance="fill" class="narration --plain --larger">
-              <h3 class="label">Narration</h3>
-              <input matInput type="text" formControlName="narration" maxlength="24"
-                [placeholder]="sourceType.value === 'part'
-                ? 'Send a short public message with the payment (optional)'
-                : 'Send a short private message with the payment (optional)'">
-              <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
-            </mat-form-field>
+            <label>
+              <mat-form-field appearance="fill" class="narration --plain --larger">
+                <h3 class="label">Narration</h3>
+                <input matInput type="text" formControlName="narration" maxlength="24"
+                  [placeholder]="sourceType.value === 'part'
+                  ? 'Send a short public message with the payment (optional)'
+                  : 'Send a short private message with the payment (optional)'">
+                <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
+              </mat-form-field>
+            </label>
 
           </mat-card><!-- .pay-to -->
         </ng-container><!-- << Send -->
@@ -197,8 +200,7 @@
   <app-page-intro [childPageAlias]="'send-send'">
     <ng-container page-title>Send payment</ng-container>
     <ng-container page-content>
-      Send payments to anyone.<br>
-      You can adjust the level of privacy of your transactions by selecting balances listed in "Pay from".
+      Send payments to anyone. You can adjust the level of privacy of your transactions by selecting balances listed in "Pay from".
     </ng-container>
     <ng-container page-help>
       What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:

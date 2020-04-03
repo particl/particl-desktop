@@ -187,6 +187,9 @@ mat-card.mat-card {
   &.not-rounded {
     border-radius: 0;
   }
+  &.no-padding {
+    padding: 0;
+  }
 }
 
 
@@ -594,18 +597,36 @@ mat-toolbar.mat-toolbar {
 \* ------------------------------- */
 
 // New customized "filled" inputs/selects etc.
-
-.mat-form-field[appearance="fill"] {
-  --field-boxed-paddingV: 16px;
-  display: block;
+label {
+  cursor: text;
   .label {
     @extend %box-title;
     padding: 16px 0 1px;
     margin: 0 0 -0.9em 0;
     position: relative;
     z-index: 2; // make sure label is on top (e.g. when character counter is present)
-    cursor: text;
   }
+  .label-desc {
+    color: var(--text-muted);
+    margin: 14px 0 0;
+    padding: 0 16px;
+  }
+  & > .label {
+    padding: 15px 16px 0;
+  }
+  &.--larger {
+    & > .label {
+      padding: 21px 24px 0;
+    }
+    & > .label-desc {
+      padding: 0 24px;
+      margin: 17px 0 0;
+    }
+  }
+}
+.mat-form-field[appearance="fill"] {
+  --field-boxed-paddingV: 16px;
+  display: block;
   .mat-form-field-flex {
     padding: 0 16px;
     background: var(--color-white);
@@ -676,9 +697,13 @@ mat-toolbar.mat-toolbar {
     }
     .mat-input-element {
       padding: var(--field-boxed-paddingV) 0;
+      margin: 0;
     }
     [matPrefix],
     [matSuffix] {
+      &:not(button) {
+        color: var(--text-muted); // mute text's color
+      }
       &.mat-icon {
         font-size: 16px; // 1.25em
         color: var(--text-muted);
@@ -687,13 +712,15 @@ mat-toolbar.mat-toolbar {
       }
     }
     [matPrefix] {
+      margin-right: 8px;
       &.mat-icon {
-        margin-right: 0.8em;
+        //margin-right: 0.8em;
       }
     }
     [matSuffix] {
+      margin-left: 8px;
       &.mat-icon {
-        margin-left: 0.8em;
+        //margin-left: 0.8em;
       }
     }
     button[matSuffix],
@@ -780,11 +807,20 @@ mat-toolbar.mat-toolbar {
   // --- TEXTAREAS ---
 
   &.textarea { // TODO: any better way to select a Textarea?
+    .label {
+      margin: 0 0 12px; // push textarea lower, so it doesn't overlap with the .label
+    }
     .mat-form-field-flex {
-      padding: 4px 2px 4px 16px; // lower padding, so that scrollbar is on the edge
+      padding: 0 2px 4px 16px; // lower padding, so that scrollbar is on the edge
       .mat-input-element {
+        padding-top: 0;
         padding-right: var(--field-boxed-paddingV);
         width: calc(100% - var(--field-boxed-paddingV));
+      }
+    }
+    &.--larger {
+      .mat-form-field-flex {
+        padding: 0 6px 10px 24px;
       }
     }
   }

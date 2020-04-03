@@ -1,0 +1,122 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+// ------ GALLERY ------ //
+
+.photos {
+  .drag-n-drop {
+    border: 2px dashed var(--bg-muted);
+    border-radius: 4px;
+    background: var(--bg);
+    margin-bottom: 16px;
+    padding: 30px 24px;
+    text-align: center;
+    .file-input {
+      @extend %hide;
+    }
+    p {
+      color: var(--text-muted);
+      margin: 6px 0 0;
+    }
+  }
+  .gallery {
+    margin: 0 -10px;
+  }
+  .photo-wrapper {
+    position: relative;
+    margin: 10px;
+    background: repeating-linear-gradient(45deg, var(--bg), var(--bg) 5px, hsla(var(--bg-muted-hsl), 0.5) 5px, hsla(var(--bg-muted-hsl), 0.5) 7px);
+    height: 123px;
+    overflow: hidden;
+    &:hover .icons {
+      opacity: 1;
+    }
+    &.featured {
+      box-shadow: 0 0 0 2px var(--color-primary);
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      display: block;
+      object-fit: cover;
+      object-position: center center;
+    }
+    .icons {
+      @extend %tfx;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      .mat-icon {
+        @extend %tfx;
+        background: var(--color-white);
+        border-radius: 50%;
+        box-shadow: 0 0 6px hsla(var(--bg-black-hsl, 0.25));
+        padding: 6px;
+        cursor: pointer;
+        &:hover {
+          &.delete {
+            color: var(--color-alert);
+          }
+          &.featured {
+            color: var(--color-primary);
+          }
+        }
+      }
+    }
+  }
+} // << .photos
+
+
+.publish-to {
+  .scrollable {
+    margin: 18px -24px;
+    max-height: 160px;
+    overflow-y: scroll;
+    border-top: 1px dashed var(--bg-muted);
+    border-bottom: 1px dashed var(--bg-muted);
+    background: hsla(var(--bg-hsl), 0.5);
+    padding: 10px 0;
+    .mat-checkbox {
+      &.mat-checkbox-checked {
+        font-weight: 500;
+      }
+      .mat-checkbox-layout {
+        padding: 3px 24px;
+      }
+    }
+  }
+  strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+}
+
+
+// ------ PRICING ------ //
+
+// "≈" in pricing (PART ≈ fiat)
+.asymp {
+  border-bottom: 1px solid var(--bg-muted);
+  padding: 0 0 1.35em;
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+
+// ------ ERRORS ------ //
+
+p.message {
+  @include gradientH(var(--color-alert), var(--color-confirms-25-pct));
+  box-shadow: 0 2px 20px -15px inset black;
+  padding: 16px var(--paddingH) 16px calc(var(--paddingH) + 30px);
+  font-size: 13px;
+  color: var(--color-white);
+  margin: 24px 0;
+  border-radius: var(--radius);
+  &::before {
+    left: var(--paddingH);
+    color: var(--color-whitre);
+  }
+}

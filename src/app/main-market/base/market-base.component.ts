@@ -48,7 +48,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     {text: 'Browse Markets', path: 'listings', icon: 'part-shop', alwaysEnabled: false},
     {text: 'Purchases', path: 'buy', icon: 'part-cart-2', alwaysEnabled: false},
     {text: 'Sell', path: 'sell', icon: 'part-stock', alwaysEnabled: false},
-    {text: 'Proposals', path: 'proposals', icon: 'part-notification-speaker', alwaysEnabled: false},
+    //{text: 'Proposals', path: 'proposals', icon: 'part-notification-speaker', alwaysEnabled: false},
     {text: 'Manage Markets', path: 'management', icon: 'part-bullet-list', alwaysEnabled: false},
     {text: 'Market Settings', icon: 'part-tool', path: 'settings', alwaysEnabled: true}
   ];
