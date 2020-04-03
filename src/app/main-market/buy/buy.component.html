@@ -87,19 +87,17 @@
 
     <mat-card class="filter-card">
       <div class="checkbox highlight">
-        <mat-checkbox color="primary">Orders requiring attention</mat-checkbox><!-- [(ngModel)]="additionalFilter.requiredAttention" (change)="loadOrders()" -->
+        <mat-checkbox color="primary">Orders requiring action</mat-checkbox><!-- [(ngModel)]="additionalFilter.requiredAttention" (change)="loadOrders()" -->
       </div>
       <div class="checkbox">
         <!-- TODO: change here - instead of "hide completed", we'll do this: hide Completed and Rejected by default, show them when this is checked: -->
         <mat-checkbox color="primary">Show inactive &amp; archived</mat-checkbox><!-- [(ngModel)]="additionalFilter.hideCompleted" (change)="loadOrders()" -->
       </div>
-    </mat-card>
 
-    <h2 class="section-title">Filter by status</h2>
+      <mat-divider></mat-divider>
 
-    <mat-card class="filter-card">
-      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.status" (change)="loadOrders()">
-        <mat-radio-button class="filter-option" *ngFor="let status of order_filters?.filters" value="{{ status.value }}" [disabled]="status.count === 0" color="primary">
+      <mat-radio-group class="radio-group block-radio"><!-- [(ngModel)]="filters.status" (change)="loadOrders()" -->
+        <mat-radio-button class="filter-option" *ngFor="let status of statusFilters" value="{{ status.value }}" color="accent" [ngClass]="{ 'empty': status.count === '0' }">
           {{ status.title }}
           <span class="amount">{{ status.count }}</span>
         </mat-radio-button>

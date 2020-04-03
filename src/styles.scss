@@ -144,33 +144,44 @@ body {
   
     // radio buttons
     .radio-group {
-      width: calc(100% - 32px);
-      padding: 8px 16px;
+      --radio-paddingH: 16px;
+      width: 100%;
+      padding: 8px 0;
       display: block;
       .filter-option {
         @extend %tfx;
         width: 100%;
-        margin: 0 -16px;
-        padding: 6px 16px;
         font-family: var(--font);
         &:hover {
           background: var(--bg-hover);
+          .amount {
+            color: var(--text);
+            background: var(--bg-muted);
+          }
         }
-        &.mat-radio-checked .amount {
-          color: var(--color-white);
-          background: var(--color-primary);
+        &.mat-radio-checked {
+          .amount {
+            color: var(--color-white);
+            background: var(--color-secondary);
+          }
+        }
+        .mat-radio-label {
+          position: relative;
+          padding: 6px var(--radio-paddingH);
+          width: calc(100% - calc(2 * var(--radio-paddingH)));
         }
       }
       .amount {
         @extend %tfx;
-        font-weight: 600;
-        text-align: center;
-        background: var(--bg-muted);
+        font-weight: 500;
+        color: var(--text-muted);
+        background: hsla(var(--bg-muted-hsl), 0.4);
         border-radius: var(--radius);
-        float: right;
-        display: block;
-        width: 20px;
-        padding: 0 5px;
+        position: absolute;
+        right: var(--radio-paddingH);
+        top: 7px;
+        display: inline-block;
+        padding: 1px 6px;
       }
     }
   }

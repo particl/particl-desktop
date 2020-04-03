@@ -29,7 +29,7 @@
 
     <mat-card class="filter-card">
       <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.type" (change)="filter()">
-        <mat-radio-button class="filter-option" *ngFor="let type of types" value="{{ type.value }}" color="primary">
+        <mat-radio-button class="filter-option" *ngFor="let type of types" value="{{ type.value }}" color="accent">
           {{ type.title }}
         </mat-radio-button>
       </mat-radio-group>
