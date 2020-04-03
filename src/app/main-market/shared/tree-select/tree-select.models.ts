@@ -2,7 +2,7 @@
 
 /** Flat category node with expandable and level information */
 export class ItemFlatNode {
-  id: number;
+  id: number | string;
   item: string;
   level: number;
   expandable: boolean;
@@ -10,13 +10,13 @@ export class ItemFlatNode {
 
 
 export class InputItem {
-  id: number;
+  id: number | string;
   name: string;
   children: InputItem[];
 }
 
 export class ItemNode {
-  id: number;
+  id: number | string;
   item: string;
   children: ItemNode[];
 }

@@ -1,56 +1,70 @@
-<!-- Do not remove the below class it is using for test case -->
-<app-header class="test-case-container">
+<app-header>
   <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between stretch">
 
+
+    <div class="search-listings --plain" fxFlex="1 1 20%">
+      <button mat-button *ngIf="marketsList.length === 0">
+        {{ activeMarket ? activeMarket.name : '' }}
+      </button>
+      <button mat-button *ngIf="marketsList.length > 0" [matMenuTriggerFor]="markets">
+        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+        {{ activeMarket ? activeMarket.name : '' }}
+      </button>
+    </div>
+
+    <mat-menu #markets="matMenu" class="smaller with-images">
+      <button mat-menu-item *ngFor="let market of marketsList" (click)="changeMarket(market)">
+        <img class="image" width="25" height="25" src="/assets/images/placeholder_1-1.jpg">
+        {{ market.name }}
+      </button>
+    </mat-menu>
+
     <!-- Search-->
-    <mat-form-field appearance="fill" class="search-listings --plain" fxFlex="1 1 25%">
+    <mat-form-field appearance="fill" class="search-listings --plain" fxFlex="1 1 20%">
       <mat-icon matPrefix fontIcon="part-search"></mat-icon>
-      <input matInput id="searchbar" type="text" placeholder="Search Listings…"><!-- [(ngModel)]="filters.search" (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()"
-        (keyup.escape)="filters.search = ''; clearAndLoadPage()" -->
+      <input matInput type="text" [formControl]="searchQuery" placeholder="Search Listings…">
     </mat-form-field>
 
     <!-- Filtering -->
-    <div class="filter-by category" fxFlex="1 1 25%">
+
+    <div class="filter-by category" fxFlex="1 1 20%">
       <mat-icon fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
-      <app-category-tree
-        *ngIf="_rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-        (onChange)="onCategoryChange($event)"
-        [options]="_rootCategoryList?.subCategoryList"
-        [selected]="selectedCategory">
-      </app-category-tree>
+      <tree-select
+        [data$]="categoriesList$"
+        [singleSelection]="false"
+        [isParentNodesSelectable]="true"
+        placeholderLabel="Select Category"
+        (onClosed)="filterCategory.setValue($event)">
+      </tree-select>
     </div>
 
-    <div class="filter-by seller-country" fxFlex="1 1 25%">
+    <div class="filter-by seller-country" fxFlex="1 1 20%">
       <mat-icon fontIcon="part-filter-2" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
-      <mat-select-search
-        [options]="countryList?.countries"
-        [defaultOption]="'All seller countries'"
-        [isLexigraphicalOrder]="true"
-        [showValueOf]="'name'"
-        (onChange)="onCountryChange($event)">
-      </mat-select-search>
+      <tree-select
+        [data$]="countryList$"
+        [singleSelection]="true"
+        placeholderLabel="Select Origin Country"
+        (onClosed)="filterSourceRegion.setValue($event)">
+      </tree-select>
     </div>
 
-    <div class="filter-by buyer-country" fxFlex="1 1 25%">
+    <div class="filter-by buyer-country" fxFlex="1 1 20%">
       <mat-icon fontIcon="part-globe" fxFlex="0 0 16px" matTooltip="Select your country to calculate exact shipping & escrow prices" matTooltipPosition="below"></mat-icon>
-      <mat-select-search
-        fxFlex="1 1 100%"
-        [options]="countryList?.countries"
-        [defaultOption]="'Your country'"
-        [isLexigraphicalOrder]="true"
-        [showValueOf]="'name'"
-        [defaultSelectedValue]="this.selectedCountry"
-        (onChange)="changeLocation($event)">
-      </mat-select-search>
+      <tree-select
+        [data$]="countryList$"
+        [singleSelection]="true"
+        placeholderLabel="Select Destination Country"
+        (onClosed)="filterTargetRegion.setValue($event)">
+      </tree-select>
     </div>
 
     <div class="filter-buttons">
 
-      <button mat-button class="refresh filter-button small" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()" matTooltip="{{ (newListArrived && !flagged) ? 'New listings available' : 'Refresh listings'}}">
+      <button mat-button class="refresh filter-button small" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
         <mat-icon fontIcon="part-refresh"></mat-icon>
       </button>
 
-      <mat-button-toggle class="flagged filter-button small" type="checkbox" value="reported-only" matTooltip="{{ flagged ? 'Show all Listings' : 'Show reported Listings only'}}" (change)="toggleFlag($event)">
+      <mat-button-toggle class="flagged filter-button small" type="checkbox" value="reported-only" [matTooltip]="filterFlagged.value ? 'Show all Listings' : 'Show reported Listings only'" (change)="filterFlagged.setValue(!filterFlagged.value)">
         <mat-icon fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
 
@@ -72,8 +86,8 @@
     </ng-container>
   </app-page-intro>
 
-  <!-- Do not remove the below class it is using for test case -->
-  <div class="content grid-container test-case-container"><!-- infiniteScroll
+
+  <div class="content grid-container"><!-- infiniteScroll
        [infiniteScrollContainer]="pagination.infinityScrollSelector"
        [fromRoot]="true"
        (scrolled)="loadNextPage()" -->
@@ -142,6 +156,7 @@
         </ng-template>
 
         <!-- just for layout testing.. -->
+        <!-- <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
@@ -150,38 +165,41 @@
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
+        <ng-container *ngTemplateOutlet="listingItem"></ng-container> -->
 
       <!--/ng-container>
     </ng-container-->
 
-    <div class="no-results" *ngIf="hasEmptySearch">
-      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
-      <p>
-        Sorry, no matching Listings found
-      </p>
-      <p class="help-text">
-        Try a different, less specific search
-      </p>
+    <div class="no-results" *ngIf="listings.length === 0">
+
+      <ng-container *ngIf="!isSearching; else searchingBanner">
+        <img class="illustration" src="./assets/images/illustrations/no-listings.svg" alt="Market is syncing">
+        <p>
+          No Listings on the Marketplace
+        </p>
+        <p class="help-text">
+          If you launched the Marketplace recently, Listings might not load yet.<br>
+          Please wait a few minutes and then:
+        </p>
+        <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()">
+          <mat-icon fontIcon="part-refresh"></mat-icon>
+          Refresh Listings
+        </button>
+      </ng-container>
+
+      <ng-template #searchingBanner>
+        <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
+        <p>
+          Sorry, no matching Listings found
+        </p>
+        <p class="help-text">
+          Try a different, less specific search
+        </p>
+      </ng-template>
+
     </div><!-- .no-results -->
 
-    <div class="no-results" *ngIf="isInitialState">
-      <img class="illustration" src="./assets/images/illustrations/no-listings.svg" alt="Market is syncing">
-      <p>
-        No Listings on the Marketplace
-      </p>
-      <p class="help-text">
-        If you launched the Marketplace recently, Listings might not load yet.<br>
-        Please wait a few minutes and then:
-      </p>
-      <button mat-button color="primary" [ngClass]="{'new-listings-available': (newListArrived && !flagged)}" (click)="clearAndLoadPage()">
-        <mat-icon fontIcon="part-refresh"></mat-icon>
-        Refresh Listings
-      </button>
-    </div><!-- .no-results -->
-
-    <div class="no-results --smaller" *ngIf="noMoreListings">
+    <div class="no-results --smaller" *ngIf="reachedListingsEnd">
       <p>
         This is the end
       </p>
@@ -195,5 +213,5 @@
 </div><!-- .container-block -->
 
 <div class="loading-bar">
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" color="accent"></mat-progress-bar>
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoadingListings" color="accent"></mat-progress-bar>
 </div><!-- .loading-bar -->

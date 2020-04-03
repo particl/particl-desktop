@@ -28,7 +28,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   @Input() isParentNodesSelectable: boolean = true;
   @Input() placeholderLabel: string = '';
   @Input() initialSelection: number[] = [];
-  @Output() onClosed: EventEmitter<number[]> = new EventEmitter();
+  @Output() onClosed: EventEmitter<Array<number | string>> = new EventEmitter();
 
   selectionLabel: string = '';
   treeControl: FlatTreeControl<ItemFlatNode>;
@@ -59,7 +59,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
     this.checklistSelection = new SelectionModel<ItemFlatNode>(!this.singleSelection /* multiple */);
     this.selectionLabel = this.placeholderLabel;
 
-    let defaultItemsSelected: number[] = JSON.parse(JSON.stringify(this.initialSelection));
+    let defaultItemsSelected: Array<number | string> = JSON.parse(JSON.stringify(this.initialSelection));
 
     if (this.data$ !== undefined) {
       this.data$.pipe(

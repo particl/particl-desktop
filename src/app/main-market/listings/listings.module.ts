@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { MarketSharedModule } from '../shared/shared.module';
 import { ListingsComponent } from './listings.component';
 
 
@@ -15,6 +16,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     CoreUiModule,
+    MarketSharedModule
   ],
   exports: [
     RouterModule
