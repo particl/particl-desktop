@@ -65,6 +65,8 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
       this.data$.pipe(
         takeUntil(this.destroy$)
       ).subscribe(data => {
+        this.checklistSelection.selected.forEach(s => defaultItemsSelected.push(s.id));
+        this.checklistSelection.clear();
         this.dataSource.data = this.buildNodeTree(data, 0);
 
         if (defaultItemsSelected.length > 0) {
@@ -79,10 +81,9 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
           );
 
           defaultItemsSelected = [];
-
-          // setting of the correct labels, etc
-          this.cleanupPanel(false);
         }
+        // setting of the correct labels, etc
+        this.cleanupPanel(false);
       });
     }
   }
