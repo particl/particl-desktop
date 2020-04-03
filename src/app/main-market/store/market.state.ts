@@ -174,10 +174,10 @@ export class MarketState {
             if (idItem.type === 'MARKET') {
               const idName = String(idItem.wallet.split(`${state.profile.name}/`)[1]);
               ids.push({
-                name: idName,
+                name: idItem.wallet,
                 displayName: idName,
                 icon: idName[0],
-                path: idItem.wallet,
+                path: idItem.path,
                 id: idItem.id
               });
             }
@@ -192,12 +192,25 @@ export class MarketState {
           if (identities.length > 0) {
             const selectedIdentity = ctx.getState().identity;
 
-            if (selectedIdentity) {
+            if (selectedIdentity !== null) {
               const found = identities.find(id => id.id === selectedIdentity.id);
               if (found !== undefined) {
                 // current selected identity is in the list so nothing to do.
                 return;
               }
+            } else {
+              // MP is tarting up, so check if the current "global" wallet is set AND is a market related wallet,
+              //  setting that one as the current if found.
+              const globalSettings = this._settingsService.fetchGlobalSettings();
+              if ((typeof globalSettings.activatedWallet === 'string') && (globalSettings.activatedWallet.length > 0)) {
+                const savedName = globalSettings.activatedWallet;
+                const saved = identities.find(id => id.name === savedName);
+                if (saved) {
+                  ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
+                  return;
+                }
+              }
+
             }
 
             // Selected identity is not in the list returned, or there is no selected identity
@@ -226,7 +239,7 @@ export class MarketState {
   @Action(MarketActions.SetCurrentIdentity)
   setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketActions.SetCurrentIdentity) {
     if (identity === null || (Number.isInteger(+identity.id) && (+identity.id > 0))) {
-      return ctx.dispatch(new MainActions.ChangeWallet(identity.path)).pipe(
+      return ctx.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
         tap(() => ctx.patchState({identity}))
       );
     }

@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
 import { MarketActions } from '../store/market.actions';
 import { Subject, Observable, concat } from 'rxjs';
-import { takeUntil, tap,  map, startWith } from 'rxjs/operators';
+import { takeUntil, tap,  map, startWith, finalize } from 'rxjs/operators';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
@@ -56,6 +56,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private startedStatus: StartedStatus = StartedStatus.STOPPED;
 
+  @ViewChild(MatExpansionPanel, {static: true}) private identitySelector: MatExpansionPanel;
+
 
   constructor(
     private _store: Store,
@@ -98,7 +100,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       this._store.select(WalletUTXOState),
       this._store.select(MarketState.currentIdentity)
     ).pipe(
-      map((temp) => {
+      map(() => {
         const utxos: WalletUTXOStateModel = this._store.selectSnapshot(WalletUTXOState);
         return this.extractSpendableBalance(utxos);
       }),
@@ -137,9 +139,15 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   identitySelected(identity: Identity) {
 
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.MARKET_LOADING}});
-    this._store.dispatch(new MarketActions.SetCurrentIdentity(identity)).subscribe(
+    this._store.dispatch(new MarketActions.SetCurrentIdentity(identity)).pipe(
+      finalize(() => this._dialog.closeAll())
+    ).subscribe(
       () => {
         const walletData: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
+        if (this.identitySelector && this.identitySelector.opened) {
+          this.identitySelector.close();
+        }
+
         this._router.navigate(['/main/market']);
 
         if (walletData.walletname === identity.name) {
@@ -148,7 +156,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
           this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
         }
       },
-      () => {
+      (err) => {
         this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
       }
     );

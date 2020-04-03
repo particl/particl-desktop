@@ -12,7 +12,6 @@ export class ItemFlatNode {
 export class InputItem {
   id: number;
   name: string;
-  parent: number;
   children: InputItem[];
 }
 
