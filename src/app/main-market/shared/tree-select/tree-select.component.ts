@@ -76,9 +76,11 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
           }
           this.treeControl.dataNodes.filter(
             flatNode => defaultItemsSelected.includes(flatNode.id)
-          ).forEach(
-            node => node.expandable ? this.itemSelectionToggle(node) : this.leafItemSelectionToggle(node)
-          );
+          ).forEach(node => {
+            if (!this.checklistSelection.isSelected(node)) {
+              node.expandable ? this.itemSelectionToggle(node) : this.leafItemSelectionToggle(node);
+            }
+          });
 
           defaultItemsSelected = [];
         }
@@ -99,6 +101,9 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
 
 
   showPanel() {
+    if (this.treeControl.dataNodes.length === 0) {
+      return;
+    }
     if (this.overlayElement === undefined) {
       const positionStrategy = this._overlay.position()
       .flexibleConnectedTo(this.itemListLabel)
