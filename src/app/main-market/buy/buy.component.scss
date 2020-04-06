@@ -15,42 +15,14 @@
 
 // ------ ORDER ITEM ------ //
 
-h3 {
-  text-align: center;
-}
-
-.title {
-  margin-top: 14px;
-  &:first-of-type {
-    margin-top: 0;
-  }
-}
-
-table.contact-info {
-  th {
-    text-align: right;
-    vertical-align: top;
-    padding-right: 7px;
-  }
-  td {
-    word-break: break-word;
-  }
-}
-
-.additional-extra-info {
-  @extend %enable-select;
-  // color: darken($color, 7%);
-  // background: rgba($color, 0.1);
-  padding: 3px 8px;
-  border-radius: var(--radius);
-}
-
-
-// ------ _ORDER (shared @ exchange, buy, bots..) ------ //
-
-
 .order {
-  .hash { // order 'ID'
+  // --- Header ---
+  .qty {
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .hash { // order hash-ID
     font-size: 90%;
     font-family: var(--font-mono);
     font-weight: 600;
@@ -62,7 +34,7 @@ table.contact-info {
     display: inline-block;
     padding: 1px 8px;
     margin-right: 10px;
-    &.id {
+    &.id { // order sequence-ID
       margin: 0 -5px 0 0;
       background: var(--bg);
       color: var(--text-muted);
@@ -73,26 +45,30 @@ table.contact-info {
   .origin-market {
     display: inline-block;
   }
+  // --- Content ---
   .status-info {
-    text-align: center;
-  }
-  .additional-info {
-    margin-top: 8px;
-    .title {
-      font-size: 13px;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 30px;
+    .text { // order no., status text
+      .item-title {
+        font-size: 20px;
+        color: var(--text);
+        font-weight: 500;
+        margin: 0 0 12px;
+      }
     }
-    .more-info {
+    .order-info { // ID, order created/updated
       @extend %enable-select;
-      margin-left: 10px;
-      color: var(--color-primary);
-      background: hsla(var(--color-primary-hsl), 0.1);
-      padding: 3px 8px;
-      border-radius: var(--radius);
+      text-align: right;
+      margin: 0 0 0 30px;
+      flex: 0 0 180px;
+      font-size: 11px;
+      line-height: 1.6;
     }
   }
+  // --- Buttons ---
   .action-buttons {
     .single .mat-icon {
       margin: 0;
@@ -151,7 +127,7 @@ $dot-size: 11px;
           top: 0;
           left: 0;
           transform: scale(1.7);
-          background: hsla(var(--color-primary, 0.35));
+          background: hsla(var(--color-primary-hsl), 0.35);
         }
       }
       .value {

@@ -115,7 +115,8 @@
   <!-- Orders > list -->
   <div class="orders section with-filter">
 
-    <div class="no-results"><!-- *ngIf="orders?.length === 0" -->
+    <!-- *ngIf="orders?.length === 0" -->
+    <!--div class="no-results">
       <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
       <p>
         You don't have any market orders yet
@@ -123,10 +124,10 @@
       <p class="help-text">
         Visit the Marketplace and start buying or selling today!
       </p>
-    </div>
+    </div-->
 
     <!-- when searching/filtering: -->
-    <div class="no-results">
+    <!--div class="no-results">
       <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
       <p>
         No Orders found
@@ -134,7 +135,7 @@
       <p class="help-text">
         You don't have any Orders matching your search/filter
       </p>
-    </div>
+    </div-->
 
     <!--app-order-item *ngFor="let order of orders" [order]="order" (onOrderUpdated)="orderItemUpdated($event)"></app-order-item-->
 
@@ -147,7 +148,11 @@
             <img src="./assets/images/placeholder_4-3.jpg"><!-- src="{{ listingImage }}" -->
           </div>
           <div class="meta" fxFlex="1 1 100%">
-            <div class="name">Order name<!--{{ title }}--></div>
+            <div class="name">
+              Order name<!--{{ title }}-->
+              <!-- TODO: replace with buy quantity when implemented -->
+              <span class="qty">&times;1</span>
+            </div>
             <div class="hash id">12<!--{{ order?.OrderItem?.id }}--></div>
             <div class="hash" matTooltip="Order Hash: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">FS13<!--{{ order?.hash }}--></div>
             <div class="origin-market">
@@ -164,32 +169,16 @@
       </mat-expansion-panel-header>
     
       <div class="status-info">
-        <p><!--{{ orderActivity?.status_info }}--> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aperiam ut ab iure. Recusandae.</p>
-        <div *ngIf="showShippingInfo" class="additional-info">
-          <p><!-- *ngIf="(memo.length > 0)" -->
-            <span class="title">Shipping info from Seller</span>
-            <code class="more-info">{{ memo }}</code>
-          </p>
-          <p><!-- *ngIf="!(memo.length > 0)" -->
-            <span class="title">Shipping info from Seller</span>
-            <em>&nbsp; No information provided</em>
-          </p>
+        <div class="text">
+          <h2 class="item-title">Order #12<!--{{ order?.OrderItem?.id }}--></h2>
+          <p>Order has been paid for and it's waiting for Seller to package and ship it to you<!--{{ orderActivity?.status_info }}--></p>
         </div>
-        <div class="additional-info"><!-- *ngIf="additionalInfo.transactionID.length > 0" -->
-          <p>
-            <span class="title">Escrow TX ID</span>
-          </p>
-          <p>
-            <code class="additional-extra-info"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</code>
-          </p>
-        </div>
-        <div class="additional-info"><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
-          <p>
-            <span class="title">Reason for rejection</span>
-            <code class="more-info"><!--{{ additionalInfo.rejectMessage }}-->Not in stock</code>
-          </p>
-        </div>
-      </div>
+        <p class="order-info">
+          ID: FS1351FD5<!--{{ order?.hashDetail }}--><br>
+          Updated: 2020-04-06 16:05<!--{{order?.updated}}--><br>
+          Created: 2020-04-01 21:43<!--{{order?.added}}-->
+        </p>
+      </div><!-- .status-info -->
     
       <div class="progress-graph" fxLayout>
         <!-- TODO: finished steps as `.done` -->
@@ -234,68 +223,88 @@
         </div>
       </div-->
     
-      <div class="detail" fxLayout="row" fxLayoutGap="30px">
-    
-        <div class="buyer-info" fxFlex="65%">
-          <div class="title">Shipping address</div>
-          <app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address>
-          <ng-container><!-- *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)" -->
-            <div class="title">Contact information</div>
-            <table class="contact-info">
-              <tr><!-- *ngIf="(contactDetails.email.length > 0)" -->
-                <th>E-mail address</th>
-                <td><!--{{contactDetails.email}}--></td>
-              </tr>
-              <tr><!-- *ngIf="(contactDetails.phone.length > 0)" -->
-                <th>Telephone number</th>
-                <td><!--{{contactDetails.phone}}--></td>
-              </tr>
+      <div class="detail">
+
+        <div class="additional-info"><!-- *ngIf="showShippingInfo" -->
+          <p><!-- *ngIf="(memo.length > 0)" -->
+            <span class="title">Shipping info from Seller</span>
+            <code class="more-info">{{ memo }}</code>
+          </p>
+          <p><!-- *ngIf="!(memo.length > 0)" -->
+            <span class="title">Shipping info from Seller</span>
+            <em>&nbsp; No information provided</em>
+          </p>
+        </div>
+        <div class="additional-info"><!-- *ngIf="additionalInfo.transactionID.length > 0" -->
+          <p>
+            <span class="title">Escrow TX ID</span>
+          </p>
+          <p>
+            <code class="additional-extra-info"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</code>
+          </p>
+        </div>
+        <div class="additional-info"><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
+          <p>
+            <span class="title">Rejected for</span>
+            <code class="more-info"><!--{{ additionalInfo.rejectMessage }}-->Not in stock</code>
+          </p>
+        </div>
+
+        <div class="item-details" fxLayout fxLayoutGap="30px">
+
+          <div class="buyer-info" fxFlex="auto">
+            <div class="title">Shipping address</div>
+            <!--app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address-->
+            <p class="shipping-info">
+              Martin Allien<br>Staking Lane 324/Q4<br>Cryptocity<br>Blockstate<br>5135-46<br>Somewhereville
+            </p>
+            <p class="contact-info"><!-- *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)" -->
+              <span><!-- *ngIf="(contactDetails.email.length > 0)" -->
+                E-mail: my.name@buyer-central.com<!--{{contactDetails.email}}-->
+              </span>
+              <br>
+              <span><!-- *ngIf="(contactDetails.phone.length > 0)" -->
+                Phone: +548 1843 1548 3511<!--{{contactDetails.phone}}-->
+              </span>
+            </p>
+          </div><!-- .buyer-info -->
+      
+          <div class="info" fxFlex="auto">
+            <div class="title">Price<!-- & Qty--></div>
+            <table class="prices">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Particl (PART)</th>
+                  <th>US Dollar (USD)<!-- TODO: replace with user selected fiat countervalue currency --></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Price (&times;1 item)<!-- TODO: when implemented, replace with buy quantity --></th>
+                  <td>4.213<!--{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }}</small>--></td>
+                  <td>3.41</td>
+                </tr>
+                <tr>
+                  <th>Shipping</th>
+                  <td>2.53<!--{{ pricingInfo.shippingInt }}{{ pricingInfo.shippingSep }}<small>{{ pricingInfo.shippingFraction }}</small>--></td>
+                  <td>0.84</td>
+                </tr>
+                <tr class="total">
+                  <th>Total price</th>
+                  <td>13.486<!--{{ pricingInfo.totalInt }}{{ pricingInfo.totalSep }}<small>{{ pricingInfo.totalFraction }}</small>--></td>
+                  <td>8.5</td>
+                </tr>
+                <tr class="escrow">
+                  <th>Escrow payment</th>
+                  <td>6.743<!--{{ pricingInfo.escrowInt }}{{ pricingInfo.escrowSep }}<small>{{ pricingInfo.escrowFraction }}</small>--></td>
+                  <td>4.25</td>
+                </tr>
+              </tbody>
             </table>
-          </ng-container>
-        </div><!-- .buyer-info -->
-    
-        <div class="info" fxFlex="35%">
-          <div class="title">Order progress</div>
-          <table class="progress">
-            <tr>
-              <th>Created</th>
-              <td>{{order?.added}}</td>
-            </tr>
-            <tr>
-              <th>Updated</th>
-              <td>{{order?.updated}}</td>
-            </tr>
-          </table>
-          <div class="title">Price<!-- & Qty--></div>
-          <table class="prices">
-            <!--tr>
-              <th>Quantity</th>
-              <td>2</td>
-            </tr-->
-            <tr>
-              <th>Listing price</th>
-              <td><!--{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }}</small>--> PART
-              </td>
-            </tr>
-            <tr>
-              <th>Shipping</th>
-              <td><!--{{ pricingInfo.shippingInt }}{{ pricingInfo.shippingSep }}<small>{{ pricingInfo.shippingFraction }}</small>--> PART
-              </td>
-            </tr>
-            <tr>
-              <th>Escrow</th>
-              <td><!--{{ pricingInfo.escrowInt }}{{ pricingInfo.escrowSep }}<small>{{ pricingInfo.escrowFraction }}</small>--> PART
-              </td>
-            </tr>
-            <tr>
-              <th>Total price</th>
-              <td>
-                <!--{{ pricingInfo.totalInt }}{{ pricingInfo.totalSep }}<small>{{ pricingInfo.totalFraction }}</small>--> PART
-              </td>
-            </tr>
-          </table>
-        </div><!-- .info -->
-    
+          </div><!-- .info -->
+
+        </div><!-- .item-details -->
       </div><!-- .detail -->
     
       <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">

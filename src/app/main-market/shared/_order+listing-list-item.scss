@@ -43,7 +43,7 @@
       }
     }
   }
-  .status-info {
+  .status-info { // first/intro part in panel's detail
     border-top: 1px solid var(--bg-muted);
     padding: 20px 30px;
     font-size: 13px;
@@ -53,17 +53,12 @@
       margin: 0;
     }
   }
-  .detail {
+  .detail { // "main" detail part (below .status-info)
     font-size: 13px;
-    font-family: var(--font);
-    color: var(--text-muted);
     padding: 24px 30px;
     border-top: 1px dashed var(--bg-muted);
     .title {
-      font-size: 13px;
-      text-transform: uppercase;
-      font-weight: 500;
-      color: var(--text);
+      @extend %box-title;
       margin-bottom: 10px;
     }
     .description {
@@ -98,7 +93,7 @@
   .status-wrap {
     text-align: right;
   }
-  .status {
+  .status { // order/listing status in header
     background: var(--bg);
     border-radius: 4px;
     text-align: center;
