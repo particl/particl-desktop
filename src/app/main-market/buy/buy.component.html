@@ -76,7 +76,7 @@
 
     <mat-form-field class="--boxed" appearance="fill">
       <input matInput type="text" [formControl]="searchQuery"
-            placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+            placeholder="Search Orders" (keyup.escape)="searchQuery.setValue('')">
       <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
         <mat-icon fontIcon="part-clear-all"></mat-icon>
       </button>
@@ -154,14 +154,14 @@
               <span class="qty">&times;1</span>
             </div>
             <div class="hash id">12<!--{{ order?.OrderItem?.id }}--></div>
-            <div class="hash" matTooltip="Order Hash: {{ order?.hashDetail }}" matTooltipPosition="right" [ngStyle]="{'background-color': '#' + order?.hashDetail}">FS13<!--{{ order?.hash }}--></div>
+            <div class="hash" [ngStyle]="{'background-color': '#' + order?.hashDetail}">FS13<!--{{ order?.hash }}--></div>
             <div class="origin-market">
               <!-- TODO: implement display of Market where item was bought -->
               Particl Open Marketplace
             </div>
           </div>
           <div class="status-wrap" fxFlex="0 0 140px">
-            <div class="status bidding"><!-- {{ order?.step }} {{ order?.type }} -->
+            <div class="status bidding"><!-- remove "bidding" class, add: {{ order?.step }} {{ order?.type }} -->
               <span class="dot"></span> bidding<!-- {{ order?.step }} -->
             </div>
           </div>
@@ -225,35 +225,32 @@
     
       <div class="detail">
 
-        <div class="additional-info"><!-- *ngIf="showShippingInfo" -->
-          <p><!-- *ngIf="(memo.length > 0)" -->
-            <span class="title">Shipping info from Seller</span>
-            <code class="more-info">{{ memo }}</code>
-          </p>
-          <p><!-- *ngIf="!(memo.length > 0)" -->
-            <span class="title">Shipping info from Seller</span>
-            <em>&nbsp; No information provided</em>
-          </p>
-        </div>
-        <div class="additional-info"><!-- *ngIf="additionalInfo.transactionID.length > 0" -->
-          <p>
-            <span class="title">Escrow TX ID</span>
-          </p>
-          <p>
-            <code class="additional-extra-info"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</code>
-          </p>
-        </div>
-        <div class="additional-info"><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
-          <p>
-            <span class="title">Rejected for</span>
-            <code class="more-info"><!--{{ additionalInfo.rejectMessage }}-->Not in stock</code>
-          </p>
-        </div>
+        <div class="highlights"><!-- TODO: show only if anything below is active: -->
+          <table>
+            <tr><!-- *ngIf="showShippingInfo" -->
+              <th>Shipping details</th>
+              <!--td>{{ memo }}</td--><!-- *ngIf="(memo.length > 0)" -->
+              <td><em>Seller didn't provide any additional info</em></td><!-- *ngIf="!(memo.length > 0)" -->
+            </tr>
+            <tr><!-- *ngIf="additionalInfo.transactionID.length > 0" -->
+              <th>Escrow TXID</th>
+              <td>
+                <div class="txid">
+                  <a href="https://explorer.particl.io/tx/45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068" target="_blank" title="Open in Block Explorer"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</a>
+                </div>
+              </td>
+            </tr>
+            <tr><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
+              <th>Rejected for</th>
+              <td><!--{{ additionalInfo.rejectMessage }}-->Not in stock</td>
+            </tr>
+          </table>
+        </div><!-- .highlights -->
 
         <div class="item-details" fxLayout fxLayoutGap="30px">
 
           <div class="buyer-info" fxFlex="auto">
-            <div class="title">Shipping address</div>
+            <div class="item-subtitle">Shipping address</div>
             <!--app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address-->
             <p class="shipping-info">
               Martin Allien<br>Staking Lane 324/Q4<br>Cryptocity<br>Blockstate<br>5135-46<br>Somewhereville
@@ -270,7 +267,7 @@
           </div><!-- .buyer-info -->
       
           <div class="info" fxFlex="auto">
-            <div class="title">Price<!-- & Qty--></div>
+            <div class="item-subtitle">Price<!-- & Qty--></div>
             <table class="prices">
               <thead>
                 <tr>

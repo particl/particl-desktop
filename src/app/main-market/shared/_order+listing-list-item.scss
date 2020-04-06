@@ -57,9 +57,10 @@
     font-size: 13px;
     padding: 24px 30px;
     border-top: 1px dashed var(--bg-muted);
-    .title {
-      @extend %box-title;
-      margin-bottom: 10px;
+    .item-subtitle {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 28px 0 14px;
     }
     .description {
       p {
@@ -72,8 +73,8 @@
       border-collapse: collapse;
       th {
         vertical-align: top;
-        text-align: right;
-        font-weight: 600;
+        text-align: left;
+        font-weight: 500;
         padding-right: 7px;
       }
       td {

@@ -16,6 +16,7 @@
 // ------ ORDER ITEM ------ //
 
 .order {
+
   // --- Header ---
   .qty {
     color: var(--text-muted);
@@ -45,11 +46,12 @@
   .origin-market {
     display: inline-block;
   }
+
   // --- Content ---
-  .status-info {
+  .status-info { // first/intro part in panel's detail
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     padding: 30px;
     .text { // order no., status text
       .item-title {
@@ -68,13 +70,43 @@
       line-height: 1.6;
     }
   }
+  .highlights { // shipping details, escrow TXID, rejection reason
+    @extend %enable-select;
+    background: hsla(var(--bg-muted-hsl), 0.2);
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    table {
+      width: 100%;
+      th {
+        min-width: 110px;
+        color: var(--text);
+      }
+      td {
+        .txid {
+          overflow: hidden;
+          width: calc(100% - 44px);
+          text-overflow: ellipsis;
+          a {
+            @extend %tfx;
+            color: var(--text-muted);
+            &:hover,
+            &:focus {
+              color: var(--text);
+            }
+          }
+        }
+      }
+    }
+  }
+
   // --- Buttons ---
   .action-buttons {
     .single .mat-icon {
       margin: 0;
     }
   }
-}
+
+} // << .order
 
 
 // ------ PROGRESS GRAPH ------ //
