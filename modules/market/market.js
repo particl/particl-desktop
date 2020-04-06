@@ -133,8 +133,8 @@ function start(appPort, zmqPort) {
 
   if (isTestnet) {
     marketOptions.TESTNET_PORT = _options.port;
-    marketOptions.DEFAULT_MARKETPLACE_PRIVATE_KEY = '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek';
-    marketOptions.DEFAULT_MARKETPLACE_ADDRESS = 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA';
+    marketOptions.APP_DEFAULT_MARKETPLACE_PRIVATE_KEY = '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek';
+    marketOptions.APP_DEFAULT_MARKETPLACE_ADDRESS = 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA';
   } else {
     marketOptions.MAINNET_PORT = _options.port;
     marketOptions.NODE_ENV = 'PRODUCTION';

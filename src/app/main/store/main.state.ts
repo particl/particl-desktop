@@ -132,6 +132,12 @@ export class WalletInfoState {
   }
 
 
+  @Action(MainActions.ChangeSmsgWallet)
+  changeSmsgWallet(ctx: StateContext<WalletInfoStateModel>, action: MainActions.ChangeSmsgWallet) {
+    return this._walletService.setSmsgActiveWallet(action.walletname);
+  }
+
+
   @Action(MainActions.RefreshWalletInfo)
   refreshWalletInfo(ctx: StateContext<WalletInfoStateModel>) {
     if (ctx.getState().walletname !== null) {

@@ -13,6 +13,12 @@ export namespace MainActions {
   }
 
 
+  export class ChangeSmsgWallet {
+    static readonly type: string = '[Main] Change Smsg Active Wallet';
+    constructor(public walletname: string) {}
+  }
+
+
   export class RefreshWalletInfo {
     /**
      * Request an update of the base wallet model data only:

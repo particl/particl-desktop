@@ -146,7 +146,6 @@ export class MarketState {
   @Action(MarketActions.StopMarketService)
   stopMarketServices(ctx: StateContext<MarketStateModel>) {
     this._marketService.stopMarketService();
-    // ctx.patchState({started: StartedStatus.STOPPED});
     ctx.setState(JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES)));
   }
 
@@ -198,19 +197,6 @@ export class MarketState {
                 // current selected identity is in the list so nothing to do.
                 return;
               }
-            } else {
-              // MP is tarting up, so check if the current "global" wallet is set AND is a market related wallet,
-              //  setting that one as the current if found.
-              const globalSettings = this._settingsService.fetchGlobalSettings();
-              if ((typeof globalSettings.activatedWallet === 'string') && (globalSettings.activatedWallet.length > 0)) {
-                const savedName = globalSettings.activatedWallet;
-                const saved = identities.find(id => id.name === savedName);
-                if (saved) {
-                  ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
-                  return;
-                }
-              }
-
             }
 
             // Selected identity is not in the list returned, or there is no selected identity
@@ -219,6 +205,19 @@ export class MarketState {
             if (savedID) {
               const saved = identities.find(id => id.id === savedID);
               if (saved !== undefined) {
+                ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
+                return;
+              }
+            }
+
+
+            // MP is starting up, no valid current nor default identity is set.
+            //    So check if the current "global" wallet is set AND is a market related wallet
+            const globalSettings = this._settingsService.fetchGlobalSettings();
+            if ((typeof globalSettings.activatedWallet === 'string') && (globalSettings.activatedWallet.length > 0)) {
+              const savedName = globalSettings.activatedWallet;
+              const saved = identities.find(id => id.name === savedName);
+              if (saved) {
                 ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
                 return;
               }
@@ -240,7 +239,8 @@ export class MarketState {
   setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketActions.SetCurrentIdentity) {
     if (identity === null || (Number.isInteger(+identity.id) && (+identity.id > 0))) {
       return ctx.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
-        tap(() => ctx.patchState({identity}))
+        tap(() => ctx.patchState({identity})),
+        concatMap(() => ctx.dispatch(new MainActions.ChangeSmsgWallet(identity.name)))
       );
     }
   }

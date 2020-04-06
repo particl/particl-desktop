@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable, of, forkJoin } from 'rxjs';
-import { retryWhen, catchError, map } from 'rxjs/operators';
+import { retryWhen, catchError, map, mapTo } from 'rxjs/operators';
 
 import { MainRpcService } from '../main-rpc/main-rpc.service';
 import { RpcGetWalletInfo, RpcGetColdStakingInfo, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
@@ -96,6 +96,18 @@ export class WalletInfoService {
         blind: blind$,
         anon: anon$
       }
+    );
+  }
+
+
+  setSmsgActiveWallet(name: string): Observable<boolean> {
+    const params = [];
+    if (typeof name === 'string') {
+      params.push(name);
+    }
+    return this._rpc.call('smsgsetwallet', params).pipe(
+      mapTo(true),
+      catchError(() => of(false))
     );
   }
 
