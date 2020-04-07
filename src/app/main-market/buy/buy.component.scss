@@ -2,8 +2,6 @@
 
 /* --- ↓↓↓ --------- following code to become shared/orders-overview component --------- ↓↓↓ --- */
 
-
-
 /* --- ↑↑↑ ----------- above code to become shared/orders-overview component ----------- ↑↑↑ --- */
 
 
@@ -53,12 +51,18 @@
     justify-content: space-between;
     align-items: center;
     padding: 30px;
+    @include break(l) {
+      padding: var(--paddingV) var(--paddingH);
+    }
     .text { // order no., status text
-      .item-title {
+      .item-title { // order no.
         font-size: 20px;
         color: var(--text);
         font-weight: 500;
         margin: 0 0 12px;
+        @include break(l) {
+          font-size: 22px;
+        }
       }
     }
     .order-info { // ID, order created/updated
@@ -75,6 +79,11 @@
     background: hsla(var(--bg-muted-hsl), 0.2);
     padding: 16px 24px;
     border-radius: var(--radius);
+    @include break(l) {
+      padding: 20px 30px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
     table {
       width: 100%;
       th {
@@ -86,6 +95,9 @@
           overflow: hidden;
           width: calc(100% - 44px);
           text-overflow: ellipsis;
+          @include break(l) {
+            width: 100%;
+          }
           a {
             @extend %tfx;
             color: var(--text-muted);
@@ -93,6 +105,72 @@
             &:focus {
               color: var(--text);
             }
+          }
+        }
+      }
+    }
+  }
+  .item-details { // shipping & pricing
+    color: var(--text-muted);
+    @include break(xl) {
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .buyer-info { // shipping address, contact info
+      .shipping-info {
+        small {
+          @extend %tfx;
+          opacity: 0;
+          display: inline-block;
+          margin-left: 3px;
+          font-weight: 500;
+        }
+        &:hover {
+          small {
+            opacity: 1;
+          }
+        }
+      }
+      .contact-info {
+        margin-bottom: 0;
+      }
+    }
+    .pricing-info { // pricing breakdown
+      max-width: 50%;
+      table.prices {
+        width: 100%;
+        max-width: 100%;
+        tr {
+          th,
+          td {
+            padding: 1px 0 0;
+            border-bottom: 1px solid transparent;
+          }
+        }
+        tbody {
+          tr {
+            &:hover {
+              th,
+              td {
+                color: var(--text);
+                border-bottom: 1px solid var(--bg-muted);
+              }
+            }
+          }
+        }
+        .amount {
+          font-family: var(--font-mono);
+          font-size: 90%;
+          text-align: right;
+          &.total,
+          &.escrow {
+            font-weight: 500;
+          }
+        }
+        tfoot {
+          th {
+            text-align: right;
+            padding: 0;
           }
         }
       }
@@ -192,8 +270,14 @@ $dot-size: 11px;
       }
     }
     .value { // name of step
-      font-size: 90%;
+      font-size: 13px;
       margin-bottom: 2px;
+      @include break(l) {
+        margin-bottom: 4px;
+      }
+      @include break(xl) {
+        font-size: 15px;
+      }
     }
     .dot { // step indicator "dot"
       @extend %progress-dot;
@@ -202,6 +286,9 @@ $dot-size: 11px;
   }
   & + .detail {
     padding: 30px 30px 24px;
+    @include break(l) {
+      padding: var(--paddingV) var(--paddingH);
+    }
   }
 }
 

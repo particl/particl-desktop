@@ -250,55 +250,64 @@
         <div class="item-details" fxLayout fxLayoutGap="30px">
 
           <div class="buyer-info" fxFlex="auto">
-            <div class="item-subtitle">Shipping address</div>
+            <div class="item-subtitle">Shipping details</div>
             <!--app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address-->
             <p class="shipping-info">
-              Martin Allien<br>Staking Lane 324/Q4<br>Cryptocity<br>Blockstate<br>5135-46<br>Somewhereville
+              Martin Allien<small>&ndash; Name</small><br>
+              Staking Lane 324/Q4<small>&ndash; Street</small><br>
+              Cryptocity<small>&ndash; City</small><br>
+              Blockstate<small>&ndash; State</small><br>
+              5135-46<small>&ndash; ZIP</small><br>
+              Somewhereville<small>&ndash; Country</small>
             </p>
             <p class="contact-info"><!-- *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)" -->
               <span><!-- *ngIf="(contactDetails.email.length > 0)" -->
-                E-mail: my.name@buyer-central.com<!--{{contactDetails.email}}-->
+                <a href="mailto:my.name@buyer-central.com">my.name@buyer-central.com</a><!--{{contactDetails.email}}-->
               </span>
               <br>
               <span><!-- *ngIf="(contactDetails.phone.length > 0)" -->
-                Phone: +548 1843 1548 3511<!--{{contactDetails.phone}}-->
+                +548 1843 1548 3511<!--{{contactDetails.phone}}-->
               </span>
             </p>
           </div><!-- .buyer-info -->
       
-          <div class="info" fxFlex="auto">
-            <div class="item-subtitle">Price<!-- & Qty--></div>
+          <div class="pricing-info" fxFlex="auto">
+            <div class="item-subtitle">Pricing</div>
             <table class="prices">
-              <thead>
+              <tfoot>
                 <tr>
                   <th></th>
-                  <th>Particl (PART)</th>
-                  <th>US Dollar (USD)<!-- TODO: replace with user selected fiat countervalue currency --></th>
+                  <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+                  <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span> // TODO: replace with user selected fiat countervalue currency (when implemented) </th-->
                 </tr>
-              </thead>
+              </tfoot>
               <tbody>
+                <!-- TODO: all amounts will be rounded and forced to 4 decimals again (the former split to whole numbers and decimals is not needed) -->
                 <tr>
                   <th>Price (&times;1 item)<!-- TODO: when implemented, replace with buy quantity --></th>
-                  <td>4.213<!--{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }}</small>--></td>
-                  <td>3.41</td>
+                  <td class="amount part">4.2130<!--{{ pricingInfo.baseInt }}{{ pricingInfo.baseSep }}<small>{{ pricingInfo.baseFraction }}</small>--></td>
+                  <!--td class="amount fiat">3.4100</td-->
                 </tr>
                 <tr>
                   <th>Shipping</th>
-                  <td>2.53<!--{{ pricingInfo.shippingInt }}{{ pricingInfo.shippingSep }}<small>{{ pricingInfo.shippingFraction }}</small>--></td>
-                  <td>0.84</td>
+                  <td class="amount part">2.5300<!--{{ pricingInfo.shippingInt }}{{ pricingInfo.shippingSep }}<small>{{ pricingInfo.shippingFraction }}</small>--></td>
+                  <!--td class="amount fiat">0.8400</td-->
                 </tr>
                 <tr class="total">
                   <th>Total price</th>
-                  <td>13.486<!--{{ pricingInfo.totalInt }}{{ pricingInfo.totalSep }}<small>{{ pricingInfo.totalFraction }}</small>--></td>
-                  <td>8.5</td>
+                  <td class="total amount part">13.4860<!--{{ pricingInfo.totalInt }}{{ pricingInfo.totalSep }}<small>{{ pricingInfo.totalFraction }}</small>--></td>
+                  <!--td class="total amount fiat">8.5000</td-->
                 </tr>
                 <tr class="escrow">
                   <th>Escrow payment</th>
-                  <td>6.743<!--{{ pricingInfo.escrowInt }}{{ pricingInfo.escrowSep }}<small>{{ pricingInfo.escrowFraction }}</small>--></td>
-                  <td>4.25</td>
+                  <td class="escrow amount part">6.7430<!--{{ pricingInfo.escrowInt }}{{ pricingInfo.escrowSep }}<small>{{ pricingInfo.escrowFraction }}</small>--></td>
+                  <!--td class="escrow amount fiat">4.2500</td-->
                 </tr>
               </tbody>
             </table>
+            <p>
+              Escrow payment will be automatically returned after sucessfull completion of the Order.
+            </p>
           </div><!-- .info -->
 
         </div><!-- .item-details -->
