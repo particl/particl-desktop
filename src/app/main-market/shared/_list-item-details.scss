@@ -1,6 +1,15 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-// ------ LISTS (shared for listings & orders) ------ //
+/*
+
+  LIST ITEM DETAILS
+    Contents of list items in Material's Expansion Panels
+
+  - Market Listings & Orders
+  - Exchange history
+  - Bots
+
+*/
 
 .list-item { // Listing/Order
   --list-item-size: 90px;
@@ -44,11 +53,34 @@
     }
   }
   .status-info { // first/intro part in panel's detail
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-top: 1px solid var(--bg-muted);
-    padding: 20px 30px;
     font-size: 13px;
     font-family: var(--font);
     color: var(--text-muted);
+    padding: 30px;
+    @include break(l) {
+      padding: var(--paddingV) var(--paddingH);
+    }
+    .item-info { // title and status text
+      @extend %enable-select;
+      text-align: right;
+      margin: 0 0 0 30px;
+      flex: 0 0 180px;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+    .item-title { // order no.
+      font-size: 20px;
+      color: var(--text);
+      font-weight: 500;
+      margin: 0 0 12px;
+      @include break(l) {
+        font-size: 22px;
+      }
+    }
     p {
       margin: 0;
       @include break(xl) {
@@ -58,8 +90,16 @@
   }
   .detail { // "main" detail part (below .status-info)
     font-size: 13px;
-    padding: 24px 30px;
+    padding: 30px 30px 24px;
     border-top: 1px dashed var(--bg-muted);
+    color: var(--text-muted);
+    @include break(l) {
+      padding: var(--paddingV) var(--paddingH);
+    }
+    @include break(xl) {
+      font-size: 15px;
+      line-height: 1.5;
+    }
     .item-subtitle { // subtitles for sections in detail
       font-size: 16px;
       font-weight: 500;
@@ -84,17 +124,53 @@
       }
     }
     table {
+      width: 100%;
+      max-width: 100%;
       color: var(--text-muted);
       border-collapse: collapse;
-      th {
-        vertical-align: top;
-        text-align: left;
-        font-weight: 500;
-        padding-right: 7px;
+      tr {
+        th,
+        td {
+          vertical-align: top;
+          padding: 1px 0 0;
+          border-bottom: 1px solid transparent;
+        }
+        th {
+          text-align: left;
+          font-weight: 500;
+          padding-right: 7px;
+        }
       }
-      td {
-        vertical-align: top;
+      tbody {
+        tr {
+          &:hover {
+            th,
+            td {
+              color: var(--text);
+              border-bottom: 1px solid var(--bg-muted);
+            }
+          }
+        }
       }
+      .amount {
+        font-family: var(--font-mono);
+        font-size: 90%;
+        text-align: right;
+        &.total,
+        &.escrow {
+          font-weight: 500;
+        }
+      }
+      tfoot {
+        th {
+          text-align: right;
+          padding: 0;
+          font-weight: 500;
+        }
+      }
+    }
+    .pricing-info { // pricing breakdown
+      max-width: 50%;
     }
   }
   mat-action-row {

@@ -20,13 +20,19 @@ export class SellComponent {
 
   listing_sortings: Array<any> = [
     { title: 'By title', value: 'TITLE' },
-    { title: 'By state', value: 'STATE' }
+    { title: 'By status', value: 'STATE' }
   ];
 
-  listing_filtering: Array<any> = [
-    { title: 'All listings',  value: '' },
+  listing_filtering_status: Array<any> = [
+    { title: 'All Listings',  value: '' },
     { title: 'Published',     value: true },
     { title: 'Unpublished',   value: false }
+  ];
+
+  listing_filtering_market: Array<any> = [
+    { title: 'All Markets',     value: 'one' },
+    { title: 'Particl Open Marketplace',     value: 'two' },
+    { title: 'Sneaky Market',   value: 'three' }
   ];
 
 

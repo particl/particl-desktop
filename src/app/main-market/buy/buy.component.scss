@@ -9,7 +9,7 @@
 
 /* --- ↓↓↓ --- following code to become shared/orders-overview/order-item component --- ↓↓↓ --- */
 
-@import './src/app/main-market/shared/order+listing-list-item'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // import shared colors etc.
 
 // ------ ORDER ITEM ------ //
 
@@ -46,34 +46,6 @@
   }
 
   // --- Content ---
-  .status-info { // first/intro part in panel's detail
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 30px;
-    @include break(l) {
-      padding: var(--paddingV) var(--paddingH);
-    }
-    .text { // order no., status text
-      .item-title { // order no.
-        font-size: 20px;
-        color: var(--text);
-        font-weight: 500;
-        margin: 0 0 12px;
-        @include break(l) {
-          font-size: 22px;
-        }
-      }
-    }
-    .order-info { // ID, order created/updated
-      @extend %enable-select;
-      text-align: right;
-      margin: 0 0 0 30px;
-      flex: 0 0 180px;
-      font-size: 11px;
-      line-height: 1.6;
-    }
-  }
   .highlights { // shipping details, escrow TXID, rejection reason
     @extend %enable-select;
     background: hsla(var(--bg-muted-hsl), 0.2);
@@ -111,11 +83,6 @@
     }
   }
   .item-details { // shipping & pricing
-    color: var(--text-muted);
-    @include break(xl) {
-      font-size: 15px;
-      line-height: 1.5;
-    }
     .buyer-info { // shipping address, contact info
       .shipping-info {
         small {
@@ -133,46 +100,6 @@
       }
       .contact-info {
         margin-bottom: 0;
-      }
-    }
-    .pricing-info { // pricing breakdown
-      max-width: 50%;
-      table.prices {
-        width: 100%;
-        max-width: 100%;
-        tr {
-          th,
-          td {
-            padding: 1px 0 0;
-            border-bottom: 1px solid transparent;
-          }
-        }
-        tbody {
-          tr {
-            &:hover {
-              th,
-              td {
-                color: var(--text);
-                border-bottom: 1px solid var(--bg-muted);
-              }
-            }
-          }
-        }
-        .amount {
-          font-family: var(--font-mono);
-          font-size: 90%;
-          text-align: right;
-          &.total,
-          &.escrow {
-            font-weight: 500;
-          }
-        }
-        tfoot {
-          th {
-            text-align: right;
-            padding: 0;
-          }
-        }
       }
     }
   }
@@ -238,6 +165,7 @@ $dot-size: 11px;
           left: 0;
           transform: scale(1.7);
           background: hsla(var(--color-primary-hsl), 0.35);
+          animation: progress-pulse 1.5s infinite;
         }
       }
       .value {
@@ -284,13 +212,16 @@ $dot-size: 11px;
       background: var(--bg-muted);
     }
   }
-  & + .detail {
-    padding: 30px 30px 24px;
-    @include break(l) {
-      padding: var(--paddingV) var(--paddingH);
-    }
-  }
 }
 
+@keyframes progress-pulse {
+  0%,
+  100% {
+    transform: scale(1.7);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
 
 /* --- ↑↑↑ ----- above code to become shared/orders-overview/order-item component ----- ↑↑↑ --- */

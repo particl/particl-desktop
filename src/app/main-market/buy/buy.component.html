@@ -116,7 +116,7 @@
   <div class="orders section with-filter">
 
     <!-- *ngIf="orders?.length === 0" -->
-    <!--div class="no-results">
+    <div class="no-results">
       <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
       <p>
         You don't have any market orders yet
@@ -124,10 +124,10 @@
       <p class="help-text">
         Visit the Marketplace and start buying or selling today!
       </p>
-    </div-->
+    </div>
 
     <!-- when searching/filtering: -->
-    <!--div class="no-results">
+    <div class="no-results">
       <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
       <p>
         No Orders found
@@ -135,7 +135,7 @@
       <p class="help-text">
         You don't have any Orders matching your search/filter
       </p>
-    </div-->
+    </div>
 
     <!--app-order-item *ngFor="let order of orders" [order]="order" (onOrderUpdated)="orderItemUpdated($event)"></app-order-item-->
 
@@ -173,7 +173,7 @@
           <h2 class="item-title">Order #12<!--{{ order?.OrderItem?.id }}--></h2>
           <p>Order has been paid for and it's waiting for Seller to package and ship it to you<!--{{ orderActivity?.status_info }}--></p>
         </div>
-        <p class="order-info">
+        <p class="item-info">
           ID: FS1351FD5<!--{{ order?.hashDetail }}--><br>
           Updated: 2020-04-06 16:05<!--{{order?.updated}}--><br>
           Created: 2020-04-01 21:43<!--{{order?.added}}-->
@@ -250,7 +250,7 @@
         <div class="item-details" fxLayout fxLayoutGap="30px">
 
           <div class="buyer-info" fxFlex="auto">
-            <div class="item-subtitle">Shipping details</div>
+            <h3 class="item-subtitle">Shipping details</h3>
             <!--app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address-->
             <p class="shipping-info">
               Martin Allien<small>&ndash; Name</small><br>
@@ -272,7 +272,7 @@
           </div><!-- .buyer-info -->
       
           <div class="pricing-info" fxFlex="auto">
-            <div class="item-subtitle">Pricing</div>
+            <h3 class="item-subtitle">Pricing</h3>
             <table class="prices">
               <tfoot>
                 <tr>
