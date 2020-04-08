@@ -21,10 +21,10 @@
 <!-- ====== FRESH RECEIVE ADDRESS ====== -->
 
 <ng-template #addressTemplate let-addressType="type" let-newText="newAddressText">
-  <div class="container-flex with-tab-bar">
-
-    <mat-card class="receive-address">
-      <ng-container *ngIf="![null, undefined].includes(activeAddress.address); else emptyAddress">
+  <ng-container *ngIf="![null, undefined].includes(activeAddress.address); else emptyAddress">
+    
+    <div class="container-flex with-tab-bar">
+      <mat-card class="receive-address">
         <div class="address-details">
           <detail-address [address]="activeAddress"></detail-address>
         </div>
@@ -46,19 +46,31 @@
             </button>
           </div>
         </div><!-- .buttons -->
-      </ng-container>
+      </mat-card><!-- .receive-address -->
+    </div><!-- .container-flex -->
+  </ng-container>
 
-      <ng-template #emptyAddress>
-        <p> Seems like there are no addresses available. Please generate a new one</p>
-        <button mat-button [color]="addressType === 'public' ? 'primary' : 'accent'" matTooltip="Generate fresh address" [disabled]="isLoading" (click)="generateAddress(addressType)">
-          <mat-icon fontIcon="part-plus"></mat-icon>
-          {{ newText }}
-        </button>
-      </ng-template>
+  <ng-template #emptyAddress>
+    <div class="container-block with-tab-bar">
+      <div class="no-results">
+        <img class="illustration" src="./assets/images/illustrations/no-tx-address.svg" alt="No address found">
+        <p>
+          No address found
+        </p>
+        <p class="help-text">
+          Seems like you don't have any {{ addressType}} address yet<br>
+          Please generate your first one:
+        </p>
+        <p>
+          <button mat-button [color]="addressType === 'public' ? 'primary' : 'accent'" matTooltip="Generate fresh address" [disabled]="isLoading" (click)="generateAddress(addressType)">
+            <mat-icon fontIcon="part-plus"></mat-icon>
+            {{ newText }}
+          </button>
+        </p>
+      </div><!-- .no-results -->
+    </div><!-- .container-block -->
+  </ng-template>
 
-    </mat-card><!-- .receive-address -->
-
-  </div><!-- .container-flex -->
 
   <receive-history *ngIf="![null, undefined].includes(activeAddress.address);" [activeAddress]="activeAddress"></receive-history>
 

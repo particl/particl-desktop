@@ -61,10 +61,14 @@
 
     <ng-container *ngIf="!isLoading else loading">
       <div class="no-results" *ngIf="filteredAddresses.length === 0">
+        <img class="illustration" src="./assets/images/illustrations/no-tx-address.svg" alt="No address found">
         <p>
-          No addresses found
+          No address found
         </p>
-      </div>
+        <p class="help-text">
+          You don't have any matching {{ addressType}} address
+        </p>
+      </div><!-- .no-results -->
 
       <div class="list-data" *ngIf="filteredAddresses.length > 0">
         <h2 class="section-title">Used addresses</h2>
