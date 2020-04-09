@@ -29,17 +29,7 @@
 
 <!-- =========== CART =========== -->
 
-<div class="your-cart container-block" *ngIf="tabLabels[selectedTab] == 'cart'">
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
-    <ng-container page-title>Your Cart</ng-container>
-    <ng-container page-content>
-      Your Cart info
-    </ng-container>
-    <ng-container page-help>
-      ...
-    </ng-container>
-  </app-page-intro>
-
+<div class="your-cart" *ngIf="tabLabels[selectedTab] == 'cart'">
   <app-checkout-process (onOrderPlaced)="changeTab($event)"></app-checkout-process>
 </div><!-- "Your cart" tab -->
 

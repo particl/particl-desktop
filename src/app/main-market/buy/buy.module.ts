@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { BuyComponent } from './buy.component';
+import { CheckoutProcessComponent } from './checkout-process/checkout-process.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    BuyComponent
+    BuyComponent,
+    CheckoutProcessComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
