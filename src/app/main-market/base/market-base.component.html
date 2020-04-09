@@ -55,10 +55,15 @@
       <mat-icon fontIcon="part-circle-info"></mat-icon>
       The Particl Marketplace is still in development - use it at your own risk!
     </div>
-    <button class="button" mat-button color="accent" (click)="openWarningMessage()">
-      <mat-icon fontIcon="part-alert"></mat-icon>
-      Click here to read all the details first!
-    </button>
+    <div class="buttons">
+      <button class="button" mat-button color="warn" (click)="openWarningMessage()">
+        <mat-icon fontIcon="part-alert"></mat-icon>
+        Click here to read all the details first!
+      </button>
+      <button class="button tiny icon-only" mat-button matTooltip="Dismiss for this session">
+        <mat-icon fontIcon="part-cross"></mat-icon>
+      </button>
+    </div>
   </div><!-- .notification -->
 
   <router-outlet></router-outlet>
