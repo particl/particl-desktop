@@ -30,12 +30,25 @@
           <td>{{ estimatedTimeLeft }}</td>
         </tr>
       </table>
-      <p *ngIf="syncPercentage < 100">
-        Please wait for Particl blockchain to finish syncing with the network. Until then, you won't be able to spend PART and see your latest transactions and current balance.
-      </p>
-      <p class="help-text" *ngIf="syncPercentage < 100">
-        This will take a moment. You can safely close this window and wait until sync finishes in background.
-      </p>
+
+      <ng-container *ngIf="syncPercentage < 100">
+        <p>
+          Please wait for Particl blockchain to finish syncing with the network. Until then, you won't be able to spend PART and see your latest transactions and current balance.
+        </p>
+        <p class="help-text">
+          This will take a moment. You can safely close this window and wait until sync finishes in background.
+        </p>
+      </ng-container>
+
+      <ng-container *ngIf="syncPercentage == 100">
+        <p class="lead">
+          Blockchain sync is now completed!
+        </p>
+        <p class="help-text">
+          You can safely close this window and dive into the Particl experience!
+        </p>
+      </ng-container>
+      
     </div><!-- .text -->
 
   </div><!-- .row -->
