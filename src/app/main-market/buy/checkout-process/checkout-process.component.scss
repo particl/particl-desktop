@@ -1,0 +1,18 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.no-results {
+  p {
+    margin: 0;
+  }
+}
+
+
+section.shipping {
+  margin-top: var(--paddingV);
+  h2 {
+    font-size: 1.55em;
+    font-weight: 500;
+    margin: 16px 0 0;
+  }
+}
+
