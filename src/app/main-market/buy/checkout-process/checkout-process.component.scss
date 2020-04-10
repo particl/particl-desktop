@@ -6,13 +6,137 @@
   }
 }
 
+// ------------------------ CART ------------------------ //
 
-section.shipping {
-  margin-top: var(--paddingV);
-  h2 {
-    font-size: 1.55em;
-    font-weight: 500;
-    margin: 16px 0 0;
+.--cart-layout { // table-like layout, but with flexbox and mat-cards
+  --cart-item-size: 90px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  & > .photo {
+    flex: 0 0 var(--cart-item-size);
+    margin-right: 24px;
+  }
+  & > .title {
+    flex: 1 1 100%;
+  }
+  & > .price {
+    flex: 0 0 120px;
+    text-align: right;
+  }
+  & > .qty {
+    flex: 0 0 50px;
+    text-align: right;
+  }
+  & > .shipping {
+    flex: 0 0 120px;
+    text-align: right;
+  }
+  & > .total {
+    flex: 0 0 130px;
+    text-align: right;
+  }
+  & > .remove {
+    flex: 0 0 60px;
   }
 }
+
+.cart-header { // headers for cart "columns"
+  text-transform: uppercase;
+  font-size: 11px;
+  margin: 0 0 8px;
+}
+
+// 1 item in cart
+.cart-item {
+  margin-bottom: var(--card-spacing);
+  padding: 0;
+  .photo {
+    height: var(--cart-item-size);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+    }
+    .overlay {
+      @extend %tfx;
+      opacity: 0;
+      background: hsla(var(--bg-black-hsl), 0.3);
+      line-height: var(--cart-item-size);
+      text-align: center;
+      color: var(--color-white);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      .mat-icon {
+        line-height: inherit;
+        text-shadow: 0 0 5px hsla(var(--text-hsl), 0.3);
+      }
+    }
+    &:hover {
+      .overlay {
+        opacity: 1;
+      }
+    }
+  }
+  .title {
+    .name {
+      margin: 0 0 8px;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .meta {
+    }
+  }
+  .amount { // all the prices (item, shipping, total)
+    display: block;
+    font-family: var(--font-mono);
+    &.part {
+      color: var(--text);
+    }
+  }
+  .price {}
+  .qty {}
+  .shipping {}
+  .total {
+    font-weight: 500;
+  }
+  .remove {
+    text-align: center;
+  }
+}
+
+
+// ---------------------- SHIPPING ---------------------- //
+
+.shipping-pricing {
+  margin-top: var(--paddingV);
+}
+
+section {
+  .section-header {
+    h2 {
+      font-size: 1.55em;
+      font-weight: 500;
+      margin: 16px 0 0;
+    }
+  }
+
+  &.shipping {
+    margin-right: var(--paddingH);
+  }
+
+  &.pricing {
+  }
+
+} // << section
+
 

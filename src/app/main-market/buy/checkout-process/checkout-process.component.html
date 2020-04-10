@@ -6,32 +6,110 @@
 
     <app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
       <ng-container page-title>Your Cart</ng-container>
-      <ng-container page-content>
-        Manage items in your Cart.
-      </ng-container>
-      <!--ng-container page-info *ngIf="hasEncryptedWallet">
-      </ng-container>
       <ng-container page-help>
-      </ng-container-->
+        Manage items in your Cart and submit your Order(s) when you're satisfied.
+      </ng-container>
     </app-page-intro>
 
-    <div [hidden]="cart?.countOfItems === 0">
-      <table class="cart-items">
+    <section class="cart">
 
-        <thead>
-        <!-- @TODO if quantity required then add this label before total  -->
-        <!-- <th>Quantity</th> -->
-        <tr>
-          <th>Items</th>
-          <th>Price</th>
-          <th *ngIf="listCache?.selectedCountry">Shipping Price</th>
-          <th class="text-right">Total</th>
-          <th></th>
-        </tr>
-        </thead>
+      <div class="cart-header --cart-layout">
+        <div class="photo">Preview</div>
+        <div class="title">Title</div>
+        <div class="price">Price</div>
+        <div class="qty">Qty</div>
+        <div class="shipping">Shipping</div>
+        <div class="total">Total</div>
+        <div class="remove"></div>
+      </div>
+
+      <mat-card class="cart-item --cart-layout">
+        <!-- TODO: on `.photo` click, open Listing detail modal: -->
+        <div class="photo">
+          <div class="overlay">
+            <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          </div>
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="title">
+          <!-- TODO: on `H3` click, open Listing detail modal: -->
+          <h3 class="name">Listing name goes here</h3>
+          <div class="meta">
+            <span class="market">Particl Open Marketplace</span>
+            <span class="category">Furniture Things</span>
+          </div>
+          <div class="info">
+            <span class="expires-soon">Expires soon!</span>
+            <span class="expired">Sorry, this Listing already expired</span>
+          </div>
+        </div>
+        <div class="price">
+          <span class="amount part">5<small>.3513</small> P</span>
+          <span class="amount fiat">1<small>.6413</small> $</span>
+        </div>
+        <div class="qty">1 &times;</div>
+        <div class="shipping">
+          <span class="amount part">0<small>.3513</small> P</span>
+          <span class="amount fiat">0<small>.1413</small> $</span>
+        </div>
+        <div class="total">
+          <span class="amount part">7<small>.3513</small> P</span>
+          <span class="amount fiat">2<small>.6413</small> $</span>
+        </div>
+        <div class="remove">
+          <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
+            <mat-icon fontIcon="part-circle-remove"></mat-icon>
+          </button>
+        </div>
+      </mat-card><!-- .cart-item -->
+
+      <!-- Another one, just for testing (it's the same, can be removed) -->
+      <mat-card class="cart-item --cart-layout">
+        <!-- TODO: on `.photo` click, open Listing detail modal: -->
+        <div class="photo">
+          <div class="overlay">
+            <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          </div>
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="title">
+          <!-- TODO: on `H3` click, open Listing detail modal: -->
+          <h3 class="name">This one is a bit more longer than the other..</h3>
+          <div class="meta">
+            <span class="market">Sneaky Market Longer As Well</span>
+            <span class="category">Oh, what would we do</span>
+          </div>
+          <div class="info">
+            <span class="expires-soon">Expires soon!</span>
+            <span class="expired">Sorry, this Listing already expired</span>
+          </div>
+        </div>
+        <div class="price">
+          <span class="amount part">55841<small>.3513</small> P</span>
+          <span class="amount fiat">1151<small>.6413</small> $</span>
+        </div>
+        <div class="qty">1 &times;</div>
+        <div class="shipping">
+          <span class="amount part">6510<small>.3513</small> P</span>
+          <span class="amount fiat">2510<small>.1413</small> $</span>
+        </div>
+        <div class="total">
+          <span class="amount part">8237<small>.3513</small> P</span>
+          <span class="amount fiat">3512<small>.6413</small> $</span>
+        </div>
+        <div class="remove">
+          <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
+            <mat-icon fontIcon="part-circle-remove"></mat-icon>
+          </button>
+        </div>
+      </mat-card><!-- .cart-item -->
+
+    </section><!-- .cart -->
+
+    <div [hidden]="cart?.countOfItems === 0">
+      <!--table class="cart-items">
 
         <tbody>
-        <!-- TODO: make component -->
         <tr *ngFor="let listing of cart?.listings" [ngClass]="{expired: checkExpired(listing)}">
           <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
               (click)="openListing(listing)">
@@ -42,12 +120,10 @@
               <div class="title">
                 {{listing.title}}
               </div>
-              <!-- errors, e.g. expired items in cart -->
               <div class="error message" *ngIf="listing.errorMessage">
                 <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
                 {{listing.errorMessage}}
               </div>
-              <!-- expires soon warning -->
               <div class="warning message" *ngIf="listing.isAboutToExpire">
                 <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
                 Listing expires in {{listing.expireIn}}
@@ -65,18 +141,6 @@
             {{ listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringInteger()}}{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringSep()}}<small>{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringFraction()}}</small>
             PART
           </td>
-          <!--<td class="quantity cell">1 &times;</td>-->
-
-          <!-- @TODO if quantity required then we can uncomment the code   -->
-          <!--  <td class="quantity cell to-do">
-              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                <button mat-button class="small">-</button>
-                <mat-form-field class="auto-width">
-                  <input matInput type="number" value="1" min="1" formControlName="firstCtrl">
-                </mat-form-field>
-                <button mat-button class="small">+</button>
-              </div>
-            </td> -->
           <td *ngIf="!listCache?.selectedCountry" class="total cell">
             {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
             PART
@@ -93,9 +157,9 @@
           </td>
         </tr>
         </tbody>
-      </table>
+      </table-->
 
-      <div class="order-detail" fxLayout fxLayoutAlign="space-between start">
+      <!--div class="order-detail" fxLayout fxLayoutAlign="space-between start">
         <div class="subtotal-notice" fxFlex="0 1 500px">
           {{ listCache?.selectedCountry ? (
             "Subtotal doesn't include escrow costs. You can review these in the summary before placing your order."
@@ -113,38 +177,30 @@
               {{ cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.particlsString() }} PART
             </td>
           </tr>
-          <!--tr><td class="desc to-do">Shipping total</td><td class="value">2.<small>153</small> PART</td></tr>
-          <tr><td class="desc to-do">Escrow (?)</td><td class="value">170 PART</td></tr>
-          <tr><td class="desc total to-do">Total</td><td class="value total">342.<small>153</small> PART</td></tr-->
         </table>
-      </div><!-- .order-detail -->
+      </div--><!-- .order-detail -->
 
       <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
         <button mat-button (click)="clearCart()">
           <mat-icon fontIcon="part-clear-all"></mat-icon>
           Clear cart
         </button>
-        <!-- [disabled]="!cartFormGroup.valid" -->
-        <!--button mat-raised-button color="primary">
-          <mat-icon fontIcon="part-next-single"></mat-icon>
-          Continue to shipping
-        </button-->
       </div>
     </div>
 
 
-    <!-- =========== SHIPPING =========== -->
+    <!-- =========== SHIPPING & PRICING =========== -->
     
-    <section class="shipping" fxLayout="row" fxLayoutGap="35px">
+    <div class="shipping-pricing" fxLayout="row">
       
-      <div class="section-info" fxFlex="40%">
-        <h2>Shipping details</h2>
-        <p>Choose an address where your Order should be delivered</p>
-        <p class="help-text">You can save your frequently used addresses to your private Shipping profiles</p>
-      </div><!-- .section-info -->
+      <section class="shipping" fxFlex="60%">
 
+        <div class="section-header">
+          <h2>Shipping details</h2>
+          <p>Choose an address where your Order should be delivered</p>
+          <p class="help-text">You can save your frequently used addresses to your private Shipping profiles</p>
+        </div><!-- .section-header -->
 
-      <div class="shipping-info" fxFlex="60%">
         <mat-card>
           <div class="title">Choose shipping profile</div>
           <mat-form-field class="full-width">
@@ -214,9 +270,24 @@
           </div>
 
         </mat-card>
-      </div><!-- .shipping-info -->
+      </section><!-- .shipping -->
 
-    </section><!-- .shipping -->
+      <section class="pricing" fxFlex="40%">
+
+        <div class="section-header">
+          <h2>Pricing overview</h2>
+          <p>Review pricing of your Order, before you submit it</p>
+          <!--p class="help-text">You can save your frequently used addresses to your private Shipping profiles</p-->
+        </div><!-- .section-header -->
+
+        <mat-card>
+          pricing here
+        </mat-card>
+
+      </section><!-- .pricing -->
+
+    </div><!-- .shipping-pricing -->
+
 
     <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
       <button mat-button>
