@@ -589,6 +589,55 @@ table {
   &.full-width {
     width: 100%;
   }
+
+  // Pricing table (Buy/Sell > Orders; Buy > Checkout)
+  &.prices {
+    width: 100%;
+    max-width: 100%;
+    color: var(--text-muted);
+    border-collapse: collapse;
+    tr {
+      th,
+      td {
+        vertical-align: top;
+        padding: 1px 0 0;
+        line-height: 1.5;
+        border-bottom: 1px solid transparent;
+      }
+      th {
+        text-align: left;
+        font-weight: 500;
+        padding-right: 7px;
+      }
+    }
+    tbody {
+      tr {
+        &:hover {
+          th,
+          td {
+            color: var(--text);
+            border-bottom: 1px solid var(--bg-muted);
+          }
+        }
+      }
+    }
+    .amount {
+      font-family: var(--font-mono);
+      font-size: 90%;
+      text-align: right;
+      &.total,
+      &.escrow {
+        font-weight: 500;
+      }
+    }
+    tfoot {
+      th {
+        text-align: right;
+        padding: 0;
+        font-weight: 500;
+      }
+    }
+  }
 }
 
 

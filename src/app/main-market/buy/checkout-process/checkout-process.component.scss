@@ -115,8 +115,6 @@
 }
 
 
-// ---------------------- SHIPPING ---------------------- //
-
 .shipping-pricing {
   margin-top: var(--paddingV);
 }
@@ -130,11 +128,48 @@ section {
     }
   }
 
+  // ---------------------- SHIPPING ---------------------- //
+
   &.shipping {
     margin-right: var(--paddingH);
   }
 
+
+  // ----------------------- PRICING ---------------------- //
+
   &.pricing {
+    --pricing-paddingH: 24px;
+    .mat-card {
+      padding: 14px var(--pricing-paddingH) 18px;
+    }
+    table.prices { // extends default table.pricing styles in `styles.scss [3.8.]`
+      margin: 0 calc(-1 * var(--pricing-paddingH)) 8px;
+      width: calc(100% + calc(2 * var(--pricing-paddingH)));
+      max-width: none;
+      tr {
+        & > * {
+          padding: 4px 0 3px;
+          &:first-child {
+            padding-left: var(--pricing-paddingH);
+          }
+          &:last-child {
+            padding-right: var(--pricing-paddingH);
+          }
+        }
+        &.subtotal {
+          color: var(--text);
+        }
+        &.total {
+          color: var(--text);
+          font-weight: 500;
+        }
+      }
+    }
+    .mat-divider {
+      position: static;
+      margin: 8px calc(-1 * var(--pricing-paddingH)) 18px;
+      width: calc(100% + calc(2 * var(--pricing-paddingH)));
+    }
   }
 
 } // << section
