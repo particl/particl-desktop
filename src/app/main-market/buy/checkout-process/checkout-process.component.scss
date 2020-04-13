@@ -52,6 +52,7 @@
 .cart-item {
   margin-bottom: var(--card-spacing);
   padding: 0;
+  border-radius: 0;
   .photo {
     height: var(--cart-item-size);
     overflow: hidden;
@@ -121,6 +122,7 @@
 
 section {
   .section-header {
+    margin: 0 0 24px;
     h2 {
       font-size: 1.55em;
       font-weight: 500;
@@ -170,6 +172,13 @@ section {
       margin: 8px calc(-1 * var(--pricing-paddingH)) 18px;
       width: calc(100% + calc(2 * var(--pricing-paddingH)));
     }
+  }
+
+
+  // ----------------------- SUBMIT ORDER ---------------------- //
+
+  &.submit-order {
+    margin-top: 36px;
   }
 
 } // << section

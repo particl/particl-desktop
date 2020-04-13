@@ -200,51 +200,94 @@
 
         <div class="section-header">
           <h2>Shipping details</h2>
-          <p>Choose an address where your Order should be delivered</p>
-          <p class="help-text">You can save your frequently used addresses to your private Shipping profiles</p>
+          <p class="help-text">
+            Choose an address where your Order should be delivered.<br>
+            You can save your frequently used addresses to your private Shipping profiles.
+          </p>
         </div><!-- .section-header -->
 
-        <mat-card>
-          <div class="title">Choose shipping profile</div>
-          <mat-form-field class="full-width">
-            <mat-select matNativeControl [(value)]="selectedAddress" [(ngModel)]="selectedAddress" name="selectedAddress"  [ngModelOptions]="{standalone: true}"
-                        (selectionChange)="select(selectedAddress)"
-                        placeholder="Select saved shipping address profile"
-                        [disabled]="!profile?.shippingAddresses || profile?.shippingAddresses.length === 0">
-              <!-- TODO: add a new option (e.g. "Fill address manually"), which would deselect previously selected profile (so that user can go back to manually filling out the address) -->
-              <mat-option *ngFor="let address of profile?.shippingAddresses"
-                          [value]="address">
-                {{address.title}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-divider></mat-divider>
-          <div class="title">Enter shipping address</div>
-          <div class="row" fxLayout fxLayoutGap="30px">
-            <!-- FIXME: First and Last name should be required as well (waiting for dapp shell integration) -->
-            <mat-form-field class="full-width" fxFlex>
-              <input matInput placeholder="First name"><!-- formControlName="firstName" -->
+        <mat-card class="no-padding">
+          <label class="--larger">
+            <h3 class="label">Load Shipping profile</h3>
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <mat-select matNativeControl
+                placeholder="Select saved shipping address profile">
+                <!-- TODO: add a new option (e.g. "(none)"), which would deselect previously selected profile (so that user can go back to manually filling out the address) -->
+                <mat-option value="manual">(none)</mat-option>
+                <mat-option value="address">Home</mat-option>
+              </mat-select>
             </mat-form-field>
-            <mat-form-field class="full-width" fxFlex>
-              <input matInput placeholder="Last name"><!-- formControlName="lastName" -->
-            </mat-form-field>
+          </label>
+        </mat-card>
+
+        <div class="or-divider"><span>or</span></div>
+      
+        <mat-card class="no-padding">
+          <div class="row" fxLayout>
+            <label class="--larger" fxFlex="40">
+              <h3 class="label">First name</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="Your first name"/>
+              </mat-form-field>
+            </label>
+            <label class="--larger" fxFlex="60">
+              <h3 class="label">Last name</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="Your last name(s)"/>
+              </mat-form-field>
+            </label>
           </div>
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Address line 1"><!-- formControlName="addressLine1" -->
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Address line 2"><!-- formControlName="addressLine2" -->
-          </mat-form-field>
-          <mat-form-field class="full-width">
-            <input matInput placeholder="City"><!-- formControlName="city" -->
-          </mat-form-field>
-          <div class="row" fxLayout fxLayoutGap="30px">
-            <mat-form-field class="full-width" fxFlex>
-              <input matInput placeholder="ZIP / Postal code"><!-- formControlName="zipCode" -->
-            </mat-form-field>
-            <mat-form-field class="full-width" fxFlex>
-              <input matInput placeholder="State"><!-- formControlName="state" -->
-            </mat-form-field>
+          <div class="row" fxLayout>
+            <label class="--larger" fxFlex="40">
+              <h3 class="label">Address</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="Address line 1"/>
+              </mat-form-field>
+            </label>
+            <label class="--larger" fxFlex="60">
+              <h3 class="label">&nbsp;</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="Address line 2 (if applicable)"/>
+              </mat-form-field>
+            </label>
+          </div>
+          <div class="row" fxLayout>
+            <label class="--larger" fxFlex="40">
+              <h3 class="label">Postal code</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="ZIP code"/>
+              </mat-form-field>
+            </label>
+            <label class="--larger" fxFlex="60">
+              <h3 class="label">City</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="City"/>
+              </mat-form-field>
+            </label>
+          </div>
+          <div class="row" fxLayout>
+            <label class="--larger" fxFlex="40">
+              <h3 class="label">State</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text"
+                placeholder="State (if applicable)"/>
+              </mat-form-field>
+            </label>
+            <label class="--larger" fxFlex="60">
+              <h3 class="label">Country</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <mat-select placeholder="Select your country">
+                  <mat-option value="a">Cryptoland</mat-option>
+                  <mat-option value="b">Bitcoinville</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </label>
           </div>
 
           <!-- <mat-form-field class="full-width">
@@ -254,14 +297,14 @@
             </mat-select>
           </mat-form-field> -->
 
-          <mat-select-search
+          <!--mat-select-search
             [showValueOf]="'name'"
             [placeHolder]="'Select Country'"
             [isRequired]="'true'"
             [defaultSelectedValue]="selectedCountry"
             [isLexigraphicalOrder]="true"
             (onChange)="onCountryChange($event)">
-          </mat-select-search><!-- [options]= "countryList.getList()" -->
+          </mat-select-search--><!-- [options]= "countryList.getList()" -->
 
           <!--Hide shipping profile -->
           <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
@@ -279,8 +322,10 @@
 
         <div class="section-header">
           <h2>Pricing overview</h2>
-          <p>Review pricing of your Order, before you submit it</p>
-          <p class="help-text">Prices update dynamically, based on destination shipping country</p>
+          <p class="help-text">
+            Review pricing of your Order, before you submit it.<br>
+            Prices update dynamically, based on destination shipping country.
+          </p>
         </div><!-- .section-header -->
 
         <mat-card>
@@ -329,8 +374,9 @@
         <section class="submit-order">
           <div class="section-header">
             <h2>Submit your Order</h2>
-            <p>Got everything in your Cart, shipping details filled out and agree with the pricing? Submit your Order below</p>
-            <p class="help-text">You will still be presented with the Order summary before placing your Order</p>
+            <p class="help-text">
+              Got everything in your Cart, shipping details filled out and agree with the pricing? Submit your Order below.
+            </p>
           </div><!-- .section-header -->
 
           <mat-card>
