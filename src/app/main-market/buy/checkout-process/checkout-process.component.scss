@@ -131,6 +131,7 @@ section {
   // ---------------------- SHIPPING ---------------------- //
 
   &.shipping {
+    flex: 1 1 55%;
     margin-right: var(--paddingH);
   }
 
@@ -139,6 +140,7 @@ section {
 
   &.pricing {
     --pricing-paddingH: 24px;
+    flex: 1 1 45%;
     .mat-card {
       padding: 14px var(--pricing-paddingH) 18px;
     }
@@ -156,9 +158,7 @@ section {
             padding-right: var(--pricing-paddingH);
           }
         }
-        &.subtotal {
-          color: var(--text);
-        }
+        &.subtotal,
         &.total {
           color: var(--text);
           font-weight: 500;

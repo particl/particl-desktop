@@ -196,7 +196,7 @@
     
     <div class="shipping-pricing" fxLayout="row">
       
-      <section class="shipping" fxFlex="60%">
+      <section class="shipping">
 
         <div class="section-header">
           <h2>Shipping details</h2>
@@ -275,12 +275,12 @@
         </mat-card>
       </section><!-- .shipping -->
 
-      <section class="pricing" fxFlex="40%">
+      <section class="pricing">
 
         <div class="section-header">
           <h2>Pricing overview</h2>
           <p>Review pricing of your Order, before you submit it</p>
-          <!--p class="help-text">You can save your frequently used addresses to your private Shipping profiles</p-->
+          <p class="help-text">Prices update dynamically, based on destination shipping country</p>
         </div><!-- .section-header -->
 
         <mat-card>
@@ -295,28 +295,28 @@
             <tbody>
               <tr class="items">
                 <th>Items' price</th>
-                <td class="amount part">55845.8026</td>
-                <td class="amount fiat">1153.2151</td>
+                <td class="amount part">55845<small>.8026</small></td>
+                <td class="amount fiat">1153<small>.2151</small></td>
               </tr>
               <tr class="shipping">
                 <th>Shipping to SA</th>
-                <td class="amount part">6510.8026</td>
-                <td class="amount fiat">2510.4926</td>
+                <td class="amount part">6510<small>.8026</small></td>
+                <td class="amount fiat">2510<small>.4926</small></td>
               </tr>
               <tr class="subtotal">
                 <th>Total price</th>
-                <td class="amount part">125613.1684</td>
-                <td class="amount fiat">3663.7077</td>
+                <td class="amount part">125613<small>.1684</small></td>
+                <td class="amount fiat">3663<small>.7077</small></td>
               </tr>
               <tr class="escrow">
                 <th>Escrow</th>
-                <td class="amount part">125613.1684</td>
-                <td class="amount fiat">3663.7077</td>
+                <td class="amount part">125613<small>.1684</small></td>
+                <td class="amount fiat">3663<small>.7077</small></td>
               </tr>
               <tr class="total">
                 <th>Total for Order</th>
-                <td class="amount part">251026.3368</td>
-                <td class="amount fiat">7327.4154</td>
+                <td class="amount part">251026<small>.3368</small></td>
+                <td class="amount fiat">7327<small>.4154</small></td>
               </tr>
             </tbody>
           </table>
@@ -326,104 +326,24 @@
           </p>
         </mat-card>
 
+        <section class="submit-order">
+          <div class="section-header">
+            <h2>Submit your Order</h2>
+            <p>Got everything in your Cart, shipping details filled out and agree with the pricing? Submit your Order below</p>
+            <p class="help-text">You will still be presented with the Order summary before placing your Order</p>
+          </div><!-- .section-header -->
+
+          <mat-card>
+            <button mat-raised-button class="full-width" color="primary" (click)="placeOrderModal()"><!-- [disabled]="!shippingFormGroup.valid" -->
+              <mat-icon fontIcon="part-next-single"></mat-icon>
+              Review &amp; Submit this Order&hellip;
+            </button>
+          </mat-card>
+        </section><!-- .submit-order -->
+
       </section><!-- .pricing -->
 
     </div><!-- .shipping-pricing -->
 
-
-    <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
-      <button mat-button>
-        <mat-icon fontIcon="part-previous-single"></mat-icon>
-        Back to cart
-      </button>
-      <button mat-raised-button color="primary" (click)="moveToConfirmation()"><!-- [disabled]="!shippingFormGroup.valid" -->
-        <mat-icon fontIcon="part-next-single"></mat-icon>
-        Continue to confirmation
-      </button>
-    </div>
   </form>
-
-
-  <!-- =========== CONFIRM & PLACE ORDER =========== -->
-
-  <form class="confirmation">
-    <table class="cart-items summary">
-      <thead>
-      <tr>
-        <th>Items</th>
-        <th>Price</th>
-        <th>Shipping</th><!--<th>Quantity</th>-->
-        <th class="text-right">Total</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let listing of cart?.listings">
-        <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
-            (click)="openListing(listing)">
-          <div class="image" fxFlex="0 0 75px">
-            <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
-          </div>
-          <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-            <div class="title">
-              {{listing.title}}
-            </div>
-            <div class="category">
-              {{listing.category.name}}
-            </div>
-          </div>
-        </td>
-        <td class="price cell">
-          {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
-          PART
-        </td>
-        <td class="shipping cell">{{listing?.shippingAmount(country)?.particlStringInteger()}}{{listing?.shippingAmount(country)?.particlStringSep()}}<small>{{listing?.shippingAmount(country)?.particlStringFraction()}}</small>
-          PART
-        </td>
-        <!--<td class="quantity cell">1 &times;</td>-->
-        <td class="total cell">{{listing?.total(country)?.particlStringInteger()}}{{listing?.total(country)?.particlStringSep()}}<small>{{listing?.total(country)?.particlStringFraction()}}</small>
-          PART
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div class="order-detail" fxLayout fxLayoutAlign="space-between start" fxLayoutGap="35px">
-      <div class="shipping-overview" fxFlex="1 1 100%">
-        <div class="title">Shipping address</div>
-        <app-shipping-address></app-shipping-address><!-- [shippingAddress]="shippingFormGroup.value" -->
-      </div>
-      <table class="subtotals" fxFlex="0 0 250px">
-        <tr>
-          <td class="desc">Subtotal</td>
-          <td class="value">{{cart?.getSubTotalWithoutShipping().particlsString()}} PART</td>
-        </tr>
-        <tr>
-          <td class="desc">Shipping total</td>
-          <td class="value">{{cart?.getShippingTotal(country).particlsString()}} PART</td>
-        </tr>
-        <tr>
-          <td class="desc">Escrow</td>
-          <td class="value">{{cart?.getEscrowTotal(country).particlsString()}} PART</td>
-        </tr>
-        <tr>
-          <td class="desc total">Total</td>
-          <td class="value total">{{cart?.getTotal(country).particlsString()}} PART</td>
-        </tr>
-      </table>
-
-    </div><!-- .order-detail -->
-
-    <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
-      <button mat-button (click)="backToShippingDetails()">
-        <mat-icon fontIcon="part-previous-single"></mat-icon>
-        Back to shipping
-      </button>
-      <button mat-raised-button color="primary" (click)="placeOrderModal()"><!-- placeOrder() moved to the modal -->
-        <mat-icon fontIcon="part-next-single"></mat-icon>
-        Place order
-      </button>
-    </div>
-  </form>
-
-
 </div><!-- container-block -->
