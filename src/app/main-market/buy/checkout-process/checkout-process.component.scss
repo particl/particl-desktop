@@ -8,8 +8,11 @@
 
 // ------------------------ CART ------------------------ //
 
-.--cart-layout { // table-like layout, but with flexbox and mat-cards
+.--cart-layout { // "fake" table-like layout, but with flexbox and mat-cards
   --cart-item-size: 90px;
+  @include break(l) {
+    --cart-item-size: 100px;
+  }
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,21 +27,51 @@
   & > .price {
     flex: 0 0 120px;
     text-align: right;
+    @include break(l) {
+      flex: 0 0 140px;
+    }
+    @include break(xl) {
+      flex: 0 0 155px;
+    }
   }
   & > .qty {
     flex: 0 0 50px;
     text-align: right;
+    @include break(l) {
+      flex: 0 0 55px;
+    }
+    @include break(xl) {
+      flex: 0 0 65px;
+    }
   }
   & > .shipping {
     flex: 0 0 120px;
     text-align: right;
+    @include break(l) {
+      flex: 0 0 135px;
+    }
+    @include break(xl) {
+      flex: 0 0 150px;
+    }
   }
   & > .total {
     flex: 0 0 130px;
     text-align: right;
+    @include break(l) {
+      flex: 0 0 140px;
+    }
+    @include break(xl) {
+      flex: 0 0 155px;
+    }
   }
   & > .remove {
     flex: 0 0 60px;
+    @include break(l) {
+      flex: 0 0 65px;
+    }
+    @include break(xl) {
+      flex: 0 0 70px;
+    }
   }
 }
 
@@ -46,6 +79,14 @@
   text-transform: uppercase;
   font-size: 11px;
   margin: 0 0 8px;
+  @include break(l) {
+    font-size: 12px;
+    margin: 0 0 10px;
+  }
+  @include break(xl) {
+    font-size: 13px;
+    margin: 0 0 12px;
+  }
 }
 
 // 1 item in cart
@@ -97,6 +138,9 @@
       color: var(--text);
       white-space: nowrap;
       display: inline-block;
+      @include break(xl) {
+        font-size: 16.5px;
+      }
     }
     .meta { // market & category info
       white-space: nowrap;
@@ -142,10 +186,13 @@
     &.part {
       color: var(--text);
     }
+    @include break(l) {
+      font-size: 14px;
+    }
+    @include break(xl) {
+      font-size: 14.5px;
+    }
   }
-  .price {}
-  .qty {}
-  .shipping {}
   .total {
     font-weight: 500;
   }
@@ -210,6 +257,12 @@ section {
       margin: 0 calc(-1 * var(--pricing-paddingH)) 8px;
       width: calc(100% + calc(2 * var(--pricing-paddingH)));
       max-width: none;
+      @include break(l) {
+        font-size: 14.5px;
+      }
+      @include break(l) {
+        font-size: 15px;
+      }
       tr {
         & > * {
           padding: 4px 0 3px;
@@ -239,6 +292,9 @@ section {
 
   &.submit-order {
     margin-top: 48px;
+    @include break(l) {
+      margin-top: 70px;
+    }
   }
 
 } // << section

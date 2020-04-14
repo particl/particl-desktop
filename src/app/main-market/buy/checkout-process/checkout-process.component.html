@@ -4,7 +4,7 @@
   
   <form>
 
-    <app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+    <app-page-intro>
       <ng-container page-title>Your Cart</ng-container>
       <ng-container page-help>
         Manage items in your Cart and submit your Order(s) when you're satisfied.
@@ -221,23 +221,6 @@
             </label>
           </div>
 
-          <!-- <mat-form-field class="full-width">
-            <mat-select formControlName="country" placeholder="Country">
-              <mat-option *ngFor="let country of countryList.getList()" value="{{country.iso}}">{{country.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field> -->
-
-          <!--mat-select-search
-            [showValueOf]="'name'"
-            [placeHolder]="'Select Country'"
-            [isRequired]="'true'"
-            [defaultSelectedValue]="selectedCountry"
-            [isLexigraphicalOrder]="true"
-            (onChange)="onCountryChange($event)">
-          </mat-select-search--><!-- [options]= "countryList.getList()" -->
-
-          <!--Hide shipping profile -->
           <div class="save-profile">
             <mat-checkbox name="save-shipping-profile" [(ngModel)]="saveShippingProfile">
               {{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
@@ -268,34 +251,36 @@
               <tr>
                 <th></th>
                 <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
-                <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span> // TODO: replace with user selected fiat countervalue currency (when implemented)</th-->
+                <!-- fiat `th` can be commented out; I was just preparing grounds :) | TODO: replace with user selected fiat countervalue currency (when implemented) -->
+                <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th>
               </tr>
             </tfoot>
             <tbody>
+              <!-- TODO: fiat `td`s can be commented out; I was just preparing grounds :) -->
               <tr class="items">
                 <th>Items' price</th>
                 <td class="amount part">55845<small>.8026</small></td>
-                <!--td class="amount fiat">1153<small>.2151</small></td-->
+                <td class="amount fiat">1153<small>.2151</small></td>
               </tr>
               <tr class="shipping">
                 <th>Shipping to SA</th>
                 <td class="amount part">6510<small>.8026</small></td>
-                <!--td class="amount fiat">2510<small>.4926</small></td-->
+                <td class="amount fiat">2510<small>.4926</small></td>
               </tr>
               <tr class="subtotal">
                 <th>Total price</th>
                 <td class="amount part">125613<small>.1684</small></td>
-                <!--td class="amount fiat">3663<small>.7077</small></td-->
+                <td class="amount fiat">3663<small>.7077</small></td>
               </tr>
               <tr class="escrow">
                 <th>Escrow</th>
                 <td class="amount part">125613<small>.1684</small></td>
-                <!--td class="amount fiat">3663<small>.7077</small></td-->
+                <td class="amount fiat">3663<small>.7077</small></td>
               </tr>
               <tr class="total">
                 <th>Total for Order</th>
                 <td class="amount part">251026<small>.3368</small></td>
-                <!--td class="amount fiat">7327<small>.4154</small></td-->
+                <td class="amount fiat">7327<small>.4154</small></td>
               </tr>
             </tbody>
           </table>
