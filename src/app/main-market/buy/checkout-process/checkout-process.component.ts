@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CheckoutProcessComponent implements OnInit {
 
+  saveShippingProfile = false;
+
   constructor() { }
 
   ngOnInit() {

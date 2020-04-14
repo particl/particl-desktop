@@ -88,13 +88,52 @@
     }
   }
   .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
     .name {
-      margin: 0 0 8px;
+      margin: 0;
       font-size: 15px;
       font-weight: 500;
       color: var(--text);
+      white-space: nowrap;
+      display: inline-block;
     }
-    .meta {
+    .meta { // market & category info
+      white-space: nowrap;
+      display: inline-block;
+      margin-top: 6px;
+      .market {
+        display: inline-block;
+        border: 1px solid hsla(var(--text-muted-hsl), 0.8);
+        padding: 2px 6px;
+        border-radius: var(--radius);
+        margin-right: 10px;
+      }
+    }
+    .info { // warning/error messages
+      margin-top: 4px;
+      .mat-icon {
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        display: inline-block;
+        font-size: 13px;
+      }
+      .message { // generic errors
+        padding: 3px 8px 3px 27px;
+        border-radius: var(--radius);
+        display: inline-block;
+        margin-top: 4px;
+        position: relative;
+        &.--error {
+          background: hsla(var(--color-alert-hsl), 0.1);
+          color: var(--color-alert);
+        }
+        &.--info {
+          background: hsla(var(--color-info-hsl), 0.1);
+          color: var(--color-info);
+        }
+      }
     }
   }
   .amount { // all the prices (item, shipping, total)
@@ -113,8 +152,7 @@
   .remove {
     text-align: center;
   }
-}
-
+} // << .cart-item
 
 .shipping-pricing {
   margin-top: var(--paddingV);
@@ -130,11 +168,33 @@ section {
     }
   }
 
+  &.cart {
+    .action-buttons {
+      margin-top: 18px;
+    }
+  }
+
   // ---------------------- SHIPPING ---------------------- //
 
   &.shipping {
     flex: 1 1 55%;
     margin-right: var(--paddingH);
+    .shipping-profile {
+      margin-bottom: var(--card-spacing);
+    }
+    .save-profile {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: hsla(var(--bg-hsl), 0.5);
+      .mat-checkbox {
+        flex: 1 1 40%;
+        padding-left: 24px;
+      }
+      label {
+        flex: 1 1 60%;
+      }
+    }
   }
 
 
@@ -178,7 +238,7 @@ section {
   // ----------------------- SUBMIT ORDER ---------------------- //
 
   &.submit-order {
-    margin-top: 36px;
+    margin-top: 48px;
   }
 
 } // << section

@@ -141,9 +141,11 @@ mat-icon.mat-icon {
 
 mat-tooltip-component .mat-tooltip {
   font-family: var(--font);
-  font-size: 11px;
-  background: hsla(var(--bg-black-hsl), 0.75);
-  padding: 5px 8px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  background: hsla(var(--bg-black-hsl), 0.775);
+  padding: 5px 10px;
   // Multi-line tooltip
   // -- usage: <div matTooltip="First line &#13; Second line" matTooltipClass="multi-line">
   &.multi-line {
@@ -779,12 +781,6 @@ label {
           top: 1px;
         }
       }
-      /*
-      .mat-select-arrow-wrapper {
-        position: relative;
-        top: 0;
-      }
-      */
     }
 
     // Boxed, standalone variant

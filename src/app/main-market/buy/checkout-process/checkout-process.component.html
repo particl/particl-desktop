@@ -33,31 +33,38 @@
           <img src="./assets/images/placeholder_4-3.jpg">
         </div>
         <div class="title">
-          <!-- TODO: on `H3` click, open Listing detail modal: -->
           <h3 class="name">Listing name goes here</h3>
-          <div class="meta">
+          <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
+          <!--div class="meta">
             <span class="market">Particl Open Marketplace</span>
             <span class="category">Furniture Things</span>
-          </div>
+          </div-->
           <div class="info">
-            <span class="expires-soon">Expires soon!</span>
-            <span class="expired">Sorry, this Listing already expired</span>
+            <span class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
+              <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
+              Expires soon &ndash; buy fast!
+            </span>
+            <!-- TODO: generic errors (and "already expired") -->
+            <span class="message --error" matTooltip="Expired Listing: This item will be automatically removed from your Cart when creating Order" matTooltipPosition="after">
+              <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
+              Sorry, this Listing already expired
+            </span>
           </div>
         </div>
         <div class="price">
-          <span class="amount part">5<small>.3513</small> P</span>
-          <span class="amount fiat">1<small>.6413</small> $</span>
+          <span class="amount part">P 5<small>.3513</small></span>
+          <span class="amount fiat">$ 1<small>.6413</small></span>
         </div>
         <!-- Quantity: keep showing "1×" until we implement qty management -->
         <div class="qty">1 &times;</div>
         <div class="shipping">
           <!-- TODO: update shipping prices dynamically based on shipping address country -->
-          <span class="amount part">0<small>.3513</small> P</span>
-          <span class="amount fiat">0<small>.1413</small> $</span>
+          <span class="amount part">P 0<small>.3513</small></span>
+          <span class="amount fiat">$ 0<small>.1413</small></span>
         </div>
         <div class="total">
-          <span class="amount part">7<small>.3513</small> P</span>
-          <span class="amount fiat">2<small>.6413</small> $</span>
+          <span class="amount part">P 7<small>.3513</small></span>
+          <span class="amount fiat">$ 2<small>.6413</small></span>
         </div>
         <div class="remove">
           <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
@@ -76,29 +83,29 @@
           <img src="./assets/images/placeholder_4-3.jpg">
         </div>
         <div class="title">
-          <!-- TODO: on `H3` click, open Listing detail modal: -->
           <h3 class="name">This one is a bit more longer than the other one, so let's crop it</h3>
+          <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
           <div class="meta">
-            <span class="market">Sneaky Market Longer As Well</span>
-            <span class="category">Oh, what would we do</span>
+            <span class="market">Sneaky Longer Market Which Fits Well</span>
+            <span class="category">This category name is longer than expected</span>
           </div>
-          <div class="info">
+          <!--div class="info">
             <span class="expires-soon">Expires soon!</span>
             <span class="expired">Sorry, this Listing already expired</span>
-          </div>
+          </div-->
         </div>
         <div class="price">
-          <span class="amount part">55841<small>.3513</small> P</span>
-          <span class="amount fiat">1151<small>.6413</small> $</span>
+          <span class="amount part">P 55841<small>.3513</small></span>
+          <span class="amount fiat">$ 1151<small>.6413</small></span>
         </div>
         <div class="qty">1 &times;</div>
         <div class="shipping">
-          <span class="amount part">6510<small>.3513</small> P</span>
-          <span class="amount fiat">2510<small>.1413</small> $</span>
+          <span class="amount part">P 6510<small>.3513</small></span>
+          <span class="amount fiat">$ 2510<small>.1413</small></span>
         </div>
         <div class="total">
-          <span class="amount part">8237<small>.3513</small> P</span>
-          <span class="amount fiat">3512<small>.6413</small> $</span>
+          <span class="amount part">P 8237<small>.3513</small></span>
+          <span class="amount fiat">$ 3512<small>.6413</small></span>
         </div>
         <div class="remove">
           <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
@@ -107,89 +114,15 @@
         </div>
       </mat-card><!-- .cart-item -->
 
-    </section><!-- .cart -->
-
-    <div [hidden]="cart?.countOfItems === 0">
-      <!--table class="cart-items">
-
-        <tbody>
-        <tr *ngFor="let listing of cart?.listings" [ngClass]="{expired: checkExpired(listing)}">
-          <td class="item" fxLayout="row" fxLayoutGap="10px" fxLayoutAling="start center"
-              (click)="openListing(listing)">
-            <div class="image" fxFlex="0 0 75px">
-              <img src="{{listing.imageCollection?.featuredImage?.thumbnail}}">
-            </div>
-            <div class="info" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="center start">
-              <div class="title">
-                {{listing.title}}
-              </div>
-              <div class="error message" *ngIf="listing.errorMessage">
-                <mat-icon fontSet="partIcon" fontIcon="part-alert"></mat-icon>
-                {{listing.errorMessage}}
-              </div>
-              <div class="warning message" *ngIf="listing.isAboutToExpire">
-                <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
-                Listing expires in {{listing.expireIn}}
-              </div>
-              <div class="category" *ngIf="!listing.errorMessage && !listing?.isAboutToExpire">
-                {{listing.category.name}}
-              </div>
-            </div>
-          </td>
-          <td class="price cell">
-            {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
-            PART
-          </td>
-          <td *ngIf="listCache?.selectedCountry" class="price cell">
-            {{ listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringInteger()}}{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringSep()}}<small>{{listing.shippingAmount(listCache?.selectedCountry?.iso)?.particlStringFraction()}}</small>
-            PART
-          </td>
-          <td *ngIf="!listCache?.selectedCountry" class="total cell">
-            {{listing.basePrice?.particlStringInteger()}}{{listing.basePrice?.particlStringSep()}}<small>{{listing.basePrice?.particlStringFraction()}}</small>
-            PART
-          </td>
-          <td *ngIf="listCache?.selectedCountry" class="total cell">
-            {{ listing.total(listCache?.selectedCountry?.iso)?.particlStringInteger()}}{{listing.total(listCache?.selectedCountry?.iso)?.particlStringSep()}}<small>{{listing.total(listCache?.selectedCountry?.iso)?.particlStringFraction()}}</small>
-            PART
-          </td>
-          <td class="remove">
-            <button mat-button color="warn" class="small" matTooltip="Remove from cart" matTooltipPosition="above"
-                    (click)="removeFromCart(listing?.id)">
-              <mat-icon fontIcon="part-circle-remove"></mat-icon>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table-->
-
-      <!--div class="order-detail" fxLayout fxLayoutAlign="space-between start">
-        <div class="subtotal-notice" fxFlex="0 1 500px">
-          {{ listCache?.selectedCountry ? (
-            "Subtotal doesn't include escrow costs. You can review these in the summary before placing your order."
-          ) : (
-            "Subtotal doesn't include shipping and escrow costs. You can review these in the summary before placing your order."
-          )}}
-        </div>
-        <table class="subtotals" fxFlex="0 0 250px">
-          <tr>
-            <td class="desc total">Subtotal</td>
-            <td *ngIf="!listCache?.selectedCountry" class="value total">
-              {{ cart?.getSubTotalWithoutShipping().particlsString() }} PART
-            </td>
-            <td *ngIf="listCache?.selectedCountry" class="value total">
-              {{ cart?.getSubTotalWithShippingTotal(listCache?.selectedCountry?.iso)?.particlsString() }} PART
-            </td>
-          </tr>
-        </table>
-      </div--><!-- .order-detail -->
-
-      <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+      <div class="action-buttons" [hidden]="cart?.countOfItems === 0">
         <button mat-button (click)="clearCart()">
           <mat-icon fontIcon="part-clear-all"></mat-icon>
           Empty Cart
         </button>
-      </div>
-    </div>
+      </div><!-- .action-buttons -->
+
+    </section><!-- .cart -->
+
 
 
     <!-- =========== SHIPPING & PRICING =========== -->
@@ -206,7 +139,7 @@
           </p>
         </div><!-- .section-header -->
 
-        <mat-card class="no-padding">
+        <mat-card class="shipping-profile no-padding">
           <label class="--larger">
             <h3 class="label">Load Shipping profile</h3>
             <mat-form-field appearance="fill" class="--plain --larger">
@@ -219,10 +152,8 @@
             </mat-form-field>
           </label>
         </mat-card>
-
-        <div class="or-divider"><span>or</span></div>
       
-        <mat-card class="no-padding">
+        <mat-card class="shipping-details no-padding">
           <div class="row" fxLayout>
             <label class="--larger" fxFlex="40">
               <h3 class="label">First name</h3>
@@ -307,13 +238,16 @@
           </mat-select-search--><!-- [options]= "countryList.getList()" -->
 
           <!--Hide shipping profile -->
-          <div class="sub-section" fxLayout fxLayoutGap="30px" fxLayoutAlign="center center">
-            <mat-checkbox fxFlex>{{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
-            </mat-checkbox><!-- formControlName="newShipping" -->
-            <mat-form-field class="full-width" fxFlex>
-              <input matInput placeholder="Shipping profile name"><!-- formControlName="title" -->
-            </mat-form-field>
-          </div>
+          <div class="save-profile">
+            <mat-checkbox name="save-shipping-profile" [(ngModel)]="saveShippingProfile">
+              {{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
+            </mat-checkbox>
+            <label>
+              <mat-form-field appearance="fill" class="--plain --larger" color="accent">
+                <input matInput type="text" placeholder="Shipping profile name" [disabled]="!saveShippingProfile" />
+              </mat-form-field>
+            </label>
+          </div><!-- .save-profile -->
 
         </mat-card>
       </section><!-- .shipping -->
@@ -334,34 +268,34 @@
               <tr>
                 <th></th>
                 <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
-                <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span><!-- // TODO: replace with user selected fiat countervalue currency (when implemented)--></th>
+                <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span> // TODO: replace with user selected fiat countervalue currency (when implemented)</th-->
               </tr>
             </tfoot>
             <tbody>
               <tr class="items">
                 <th>Items' price</th>
                 <td class="amount part">55845<small>.8026</small></td>
-                <td class="amount fiat">1153<small>.2151</small></td>
+                <!--td class="amount fiat">1153<small>.2151</small></td-->
               </tr>
               <tr class="shipping">
                 <th>Shipping to SA</th>
                 <td class="amount part">6510<small>.8026</small></td>
-                <td class="amount fiat">2510<small>.4926</small></td>
+                <!--td class="amount fiat">2510<small>.4926</small></td-->
               </tr>
               <tr class="subtotal">
                 <th>Total price</th>
                 <td class="amount part">125613<small>.1684</small></td>
-                <td class="amount fiat">3663<small>.7077</small></td>
+                <!--td class="amount fiat">3663<small>.7077</small></td-->
               </tr>
               <tr class="escrow">
                 <th>Escrow</th>
                 <td class="amount part">125613<small>.1684</small></td>
-                <td class="amount fiat">3663<small>.7077</small></td>
+                <!--td class="amount fiat">3663<small>.7077</small></td-->
               </tr>
               <tr class="total">
                 <th>Total for Order</th>
                 <td class="amount part">251026<small>.3368</small></td>
-                <td class="amount fiat">7327<small>.4154</small></td>
+                <!--td class="amount fiat">7327<small>.4154</small></td-->
               </tr>
             </tbody>
           </table>
