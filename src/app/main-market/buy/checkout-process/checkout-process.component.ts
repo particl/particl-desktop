@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+
+import { PlaceOrderModalComponent } from './place-order-modal/place-order-modal.component';
 
 @Component({
   selector: 'app-checkout-process',
@@ -9,9 +12,16 @@ export class CheckoutProcessComponent implements OnInit {
 
   saveShippingProfile = false;
 
-  constructor() { }
+  constructor(
+    private _dialog: MatDialog
+  ) { }
 
   ngOnInit() {
+  }
+
+
+  placeOrderModal(): void {
+    const dialog = this._dialog.open(PlaceOrderModalComponent);
   }
 
 }

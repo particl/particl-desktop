@@ -1,0 +1,49 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.dialog-content {
+  min-width: 550px;
+  p.lead {
+    margin-top: 0;
+  }
+}
+
+.item {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  margin-bottom: var(--card-spacing);
+  .photo {
+    --photo-size: 35px;
+    width: var(--photo-size);
+    height: var(--photo-size);
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+    margin-right: 12px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  .title {
+    font-weight: 500;
+  }
+}
+
+section {
+  margin-top: 40px;
+}
+
+.shipping {
+  .shipping-address {
+    background: hsla(var(--bg-hsl), 1);
+    padding: 10px 16px 7px;
+    border-radius: var(--radius);
+    p {
+      margin: 0 0 3px;
+      line-height: 1.35;
+    }
+  }
+}

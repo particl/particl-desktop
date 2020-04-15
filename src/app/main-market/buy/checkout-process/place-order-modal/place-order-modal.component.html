@@ -1,0 +1,114 @@
+<div mat-dialog-title>Submit Order</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="dialog-content">
+  <p class="lead">
+    Please review and submit your following Order:
+  </p>
+
+
+  <section>
+
+    <h2 class="section-title">
+      You're buying
+    </h2>
+  
+    <div class="item">
+      <div class="photo">
+        <img src="./assets/images/placeholder_4-3.jpg">
+      </div>
+      <div class="title">
+        Listing name goes here
+      </div>
+    </div>
+  
+    <div class="item">
+      <div class="photo">
+        <img src="./assets/images/placeholder_4-3.jpg">
+      </div>
+      <div class="title">
+        This one is a bit more longer than the other, so let's crop it
+      </div>
+    </div>
+
+  </section>
+
+  <section fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between start">
+
+    <div class="shipping" fxFlex="35%">
+      <h2 class="section-title">
+        Shipping details
+      </h2>    
+      <div class="shipping-address">
+        <p>Martin Allien</p>
+        <p>Super long Crypto Lane Street name like this 23/53c</p>
+        <p>Stakingville</p>
+        <p>ZIPcode&emsp;State</p>
+        <p>Cryptoland</p>
+      </div>
+    </div>
+
+    <div class="pricing" fxFlex="65%">
+      <h2 class="section-title">
+        Order price
+      </h2>
+      <table class="prices">
+        <tfoot>
+          <tr>
+            <th></th>
+            <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+            <!-- fiat `th` can be commented out; I was just preparing grounds :) | TODO: replace with user selected fiat countervalue currency (when implemented) -->
+            <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th>
+          </tr>
+        </tfoot>
+        <tbody>
+          <!-- TODO: fiat `td`s can be commented out; I was just preparing grounds :) -->
+          <tr class="items">
+            <th>Items' price</th>
+            <td class="amount part">55845<small>.8026</small></td>
+            <td class="amount fiat">1153<small>.2151</small></td>
+          </tr>
+          <tr class="shipping">
+            <th>Shipping to SA</th>
+            <td class="amount part">6510<small>.8026</small></td>
+            <td class="amount fiat">2510<small>.4926</small></td>
+          </tr>
+          <tr class="subtotal">
+            <th>Total price</th>
+            <td class="amount part">125613<small>.1684</small></td>
+            <td class="amount fiat">3663<small>.7077</small></td>
+          </tr>
+          <tr class="escrow">
+            <th>Escrow</th>
+            <td class="amount part">125613<small>.1684</small></td>
+            <td class="amount fiat">3663<small>.7077</small></td>
+          </tr>
+          <tr class="total">
+            <th>Total for Order</th>
+            <td class="amount part">251026<small>.3368</small></td>
+            <td class="amount fiat">7327<small>.4154</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+  
+
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" mat-dialog-close>
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Confirm Order &amp; Submit
+  </button>
+</mat-dialog-actions>
