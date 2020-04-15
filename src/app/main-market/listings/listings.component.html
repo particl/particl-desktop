@@ -2,12 +2,12 @@
   <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between stretch">
 
 
-    <div class="search-listings --plain" fxFlex="1 1 20%">
+    <div class="search-listings --plain" fxFlex="1 1 10%">
       <button mat-button *ngIf="marketsList.length === 0">
         {{ activeMarket ? activeMarket.name : '' }}
       </button>
       <button mat-button *ngIf="marketsList.length > 0" [matMenuTriggerFor]="markets">
-        <mat-icon class="icon" fontSet="partIcon" fontIcon="part-hamburger"></mat-icon>
+        <mat-icon fontIcon="part-hamburger"></mat-icon>
         {{ activeMarket ? activeMarket.name : '' }}
       </button>
     </div>
@@ -28,32 +28,35 @@
     <!-- Filtering -->
 
     <div class="filter-by category" fxFlex="1 1 20%">
-      <mat-icon fontIcon="part-filter" fxFlex="0 0 16px" matTooltip="Filter by categories" matTooltipPosition="below"></mat-icon>
       <tree-select
         [data$]="categoriesList$"
         [singleSelection]="false"
         [isParentNodesSelectable]="true"
-        placeholderLabel="Select Category"
+        placeholderLabel="Filter by Category"
+        prefixIcon="part-filter"
+        matTooltip="Filter by categories" matTooltipPosition="below"
         (onClosed)="filterCategory.setValue($event)">
       </tree-select>
     </div>
 
     <div class="filter-by seller-country" fxFlex="1 1 20%">
-      <mat-icon fontIcon="part-filter-2" fxFlex="0 0 16px" matTooltip="Filter by seller country & categories" matTooltipPosition="below"></mat-icon>
       <tree-select
         [data$]="countryList$"
         [singleSelection]="true"
-        placeholderLabel="Select Origin Country"
+        placeholderLabel="Origin Country"
+        prefixIcon="part-globe"
+        matTooltip="Filter by Seller's country" matTooltipPosition="below"
         (onClosed)="filterSourceRegion.setValue($event)">
       </tree-select>
     </div>
 
     <div class="filter-by buyer-country" fxFlex="1 1 20%">
-      <mat-icon fontIcon="part-globe" fxFlex="0 0 16px" matTooltip="Select your country to calculate exact shipping & escrow prices" matTooltipPosition="below"></mat-icon>
       <tree-select
         [data$]="countryList$"
         [singleSelection]="true"
-        placeholderLabel="Select Destination Country"
+        placeholderLabel="Destination Country"
+        prefixIcon="part-truck"
+        matTooltip="Select your country to calculate exact shipping & Escrow prices" matTooltipPosition="below"
         (onClosed)="filterTargetRegion.setValue($event)">
       </tree-select>
     </div>

@@ -27,6 +27,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   @Input() singleSelection: boolean = false;
   @Input() isParentNodesSelectable: boolean = true;
   @Input() placeholderLabel: string = '';
+  @Input() prefixIcon: string = '';
   @Input() initialSelection: number[] = [];
   @Output() onClosed: EventEmitter<Array<number | string>> = new EventEmitter();
 

@@ -65,6 +65,10 @@
   align-items: stretch;
   margin: 0 calc(-1 * var(--grid-gutter)) 0 0;
   width: calc(100% + var(--grid-gutter));
+  .no-results {
+    width: 100%;
+    margin-right: var(--grid-gutter);
+  }
 }
 
 
