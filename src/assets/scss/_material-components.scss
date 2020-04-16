@@ -29,6 +29,7 @@ Customizations and modifiers for default Material components
       2.9. Menus (contextual)
       2.10. Divider
       2.11. Toolbars
+      2.12. Tree browser
 
     3. Forms
       3.1. Inputs
@@ -84,6 +85,12 @@ button,
   }
   &.not-round {
     border-radius: 0;
+  }
+  &.--no-ripple {
+    .mat-button-ripple,
+    .mat-button-focus-overlay {
+      display: none;
+    }
   }
 }
 
@@ -592,6 +599,36 @@ mat-expansion-panel.mat-expansion-panel {
 mat-toolbar.mat-toolbar {
   font-family: var(--font);
 }
+
+
+// ------ 2.12. TREE BROWSER ------ //
+
+tree-select {
+  .mat-input-element {
+    cursor: pointer;
+    text-overflow: ellipsis;
+  }
+}
+
+.mat-tree {
+  .mat-checkbox-checked {
+    color: var(--color-secondary);
+    font-weight: 500;
+  }
+  .mat-checkbox-indeterminate { // some children checked, some not
+    color: var(--text);
+  }
+  // Market > Category/country filters: items clickable on their full width
+  &.--full-width-labels {
+    .mat-checkbox-layout {
+      display: block;
+    }
+    .mat-checkbox-inner-container {
+      margin-right: 4px;
+    }
+  }
+}
+
 
 
 /* ------------------------------- *\

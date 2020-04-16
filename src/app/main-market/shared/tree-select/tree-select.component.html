@@ -9,80 +9,75 @@
     (focus)="showPanel(); itemListLabel.blur()">
 </mat-form-field>
 
-
 <ng-template cdkPortal>
 
 
   <!-- !! FOR SINGLE SELECTION NODES !! -->
-  <ng-container *ngIf="singleSelection; else checkboxNodes">
 
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="panel-overlay">
+  <ng-container *ngIf="singleSelection; else checkboxNodes">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="single-select --full-width-labels">
 
       <!-- leaf node-->
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding class="subcategory">
-        <button mat-icon-button disabled></button> <!-- For spacing of a leaf node-->
+        <!--button mat-button class="arrow tiny --no-ripple" disabled></button--><!-- For spacing of a leaf node -->
         <span
-            class="checklist-leaf-node"
-            [class.single-selected]="checklistSelection.isSelected(node)"
-            (click)="leafItemSelectionToggle(node)">
+          class="checklist-leaf-node"
+          [class.single-selected]="checklistSelection.isSelected(node)"
+          (click)="leafItemSelectionToggle(node)">
           {{node.item}}
         </span>
       </mat-tree-node>
 
       <!-- parent node-->
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding class="category">
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
+        <button mat-button class="arrow tiny --no-ripple" matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
           <mat-icon class="part-icon" [ngClass]="{'part-triangle-down': treeControl.isExpanded(node), 'part-triangle-right': !treeControl.isExpanded(node)}"></mat-icon>
-        </button> <!-- For spacing, and display and toggle of the dropdown icon/anchor for a parent node-->
-
+        </button><!-- For spacing, and display and toggle of the dropdown icon/anchor for a parent node -->
         <span
-            class="checklist-leaf-node"
-            [class.single-selected]="checklistSelection.isSelected(node)"
-            (click)="itemSelectionToggle(node)">
+          class="checklist-leaf-node"
+          [class.single-selected]="checklistSelection.isSelected(node)"
+          (click)="itemSelectionToggle(node)">
           {{node.item}}
         </span>
-
       </mat-tree-node>
+
     </mat-tree>
-
-  </ng-container>
-
+  </ng-container><!-- << single selection -->
 
 
   <!-- !! FOR MULTI SELECT NODES !! -->
 
   <ng-template #checkboxNodes>
-
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="panel-overlay">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="multi-select --full-width-labels">
 
       <!-- leaf node-->
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding class="subcategory">
-        <button mat-icon-button disabled></button> <!-- For spacing of a leaf node-->
+        <!--button mat-button class="arrow tiny --no-ripple" disabled></button--><!-- For spacing of a leaf node -->
         <mat-checkbox
-            class="checklist-leaf-node"
-            [checked]="checklistSelection.isSelected(node)"
-            (change)="leafItemSelectionToggle(node)">
+          class="checklist-leaf-node"
+          [checked]="checklistSelection.isSelected(node)"
+          (change)="leafItemSelectionToggle(node)">
           {{node.item}}
         </mat-checkbox>
       </mat-tree-node>
 
       <!-- parent node-->
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding class="category">
-        <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
+        <button mat-button class="arrow tiny --no-ripple" matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
           <mat-icon class="part-icon" [ngClass]="{'part-triangle-down': treeControl.isExpanded(node), 'part-triangle-right': !treeControl.isExpanded(node)}"></mat-icon>
-        </button> <!-- For spacing, and display and toggle of the dropdown icon/anchor for a parent node-->
-
+        </button><!-- For spacing, and display and toggle of the dropdown icon/anchor for a parent node -->
         <mat-checkbox
-            *ngIf="isParentNodesSelectable"
-            [checked]="descendantsAllSelected(node)"
-            [indeterminate]="descendantsPartiallySelected(node)"
-            (change)="itemSelectionToggle(node)">
+          *ngIf="isParentNodesSelectable"
+          [checked]="descendantsAllSelected(node)"
+          [indeterminate]="descendantsPartiallySelected(node)"
+          (change)="itemSelectionToggle(node)">
           {{node.item}}
         </mat-checkbox>
         <ng-container *ngIf="!isParentNodesSelectable">{{node.item}}</ng-container>
       </mat-tree-node>
-    </mat-tree>
 
-  </ng-template>
+    </mat-tree>
+  </ng-template><!-- << multi selection -->
+
 
 </ng-template>

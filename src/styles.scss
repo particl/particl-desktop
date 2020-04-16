@@ -29,8 +29,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
-      3.7. Tree browser
-      3.8. Tables
+      3.7. Tables
     4. Typography
       4.1. (Sub)titles (h2, h3..)
       4.2. Paragraph styles
@@ -564,34 +563,7 @@ body {
 }
 
 
-// ------ 3.7. TREE BORWSER ------ //
-
-.mat-tree {
-  .category { // 1st level
-    min-height: 0;
-    .mat-button {
-      font-size: 13px;
-      .mat-icon {
-        color: var(--bg-muted);
-      }
-    }
-    &[aria-expanded='true'] { // toggled category
-      .mat-icon {
-        color: var(--color-secondary);
-      }
-    }
-  }
-  .subcategory { // 2nd level
-    min-height: 0;
-    padding: 4px 40px;
-    .mat-checkbox {
-      font-size: 13px;
-    }
-  }
-}
-
-
-// ------ 3.8. TABLES ------ //
+// ------ 3.7. TABLES ------ //
 
 table {
   &.full-width {
