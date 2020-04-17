@@ -1,0 +1,37 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // import shared colors etc.
+
+.question-answer {
+  --list-item-size: 70px; // overwrite default list-item height
+  @include break(l) {
+    --list-item-size: 80px;
+  }
+  @include break(xl) {
+    --list-item-size: 90px;
+  }
+  .header-wrapper {
+    .meta {
+      font-size: 11px;
+      .name {
+        margin-bottom: 2px;
+      }
+      .origin-market {
+        margin-right: 10px;
+        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
+        padding: 1px 6px;
+        border-radius: var(--radius);
+      }
+    }
+  }
+  .status {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    .mat-icon {
+      font-size: 12px;
+      position: relative;
+      top: 1px;
+      margin-right: 3px;
+      color: var(--text-muted);
+    }
+  }
+}

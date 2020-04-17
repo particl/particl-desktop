@@ -6,6 +6,7 @@
     Contents of list items in Material's Expansion Panels
 
   - Market Listings & Orders
+  - Overview > Q/A's
   - Exchange history
   - Bots
 
@@ -29,6 +30,8 @@
   .header-wrapper {
     width: 100%;
     padding-right: 24px;
+    place-content: center space-between;
+    align-items: center;
     .photo {
       flex: 0 0 var(--list-item-size);
       height: var(--list-item-size);

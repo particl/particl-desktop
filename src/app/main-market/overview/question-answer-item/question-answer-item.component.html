@@ -1,0 +1,30 @@
+<mat-expansion-panel class="question-answer list-item no-padding">
+
+  <mat-expansion-panel-header class="header">
+    <div class="header-wrapper">
+      <div class="photo">
+        <img src="./assets/images/placeholder_4-3.jpg">
+      </div>
+      <div class="meta" fxFlex="1 1 100%">
+        <div class="name">
+          Listing name
+        </div>
+        <!-- TODO: implement display of Market where item is published -->
+        <span class="origin-market">Particl Open Marketplace</span>
+        <span class="category">Furniture Incinerators</span>
+      </div>
+      <div class="status-wrap" fxFlex="0 0 140px">
+        <div class="status" [matTooltip]="type === 'question' ? 'New questions' : 'New replies'" matTooltipPosition="before">
+          <mat-icon fontIcon="part-chat" *ngIf="type === 'question'"></mat-icon>
+          <mat-icon fontIcon="part-chat-discussion" *ngIf="type === 'reply'"></mat-icon>
+          2
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="detail">
+    ..
+  </div>
+
+</mat-expansion-panel>

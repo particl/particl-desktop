@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { OverviewComponent } from './overview.component';
+import { QuestionAnswerItemComponent } from './question-answer-item/question-answer-item.component';
 
 
 const routes: Routes = [
@@ -20,7 +21,8 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    OverviewComponent
+    OverviewComponent,
+    QuestionAnswerItemComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

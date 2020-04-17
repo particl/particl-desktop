@@ -240,7 +240,7 @@ mat-expansion-panel.mat-expansion-panel {
   overflow: hidden;
   padding: 0;
   border-radius: 0;
-  .mat-expansion-panel-header {
+  & > .mat-expansion-panel-header {
     font-family: var(--font);
     font-size: 100%;
     &:hover {
@@ -250,18 +250,20 @@ mat-expansion-panel.mat-expansion-panel {
       text-transform: uppercase;
       font-family: var(--font);
     }
-  }
-  .mat-expansion-indicator {
-    @extend %tfx;
-    position: relative;
-    top: -3px;
+    & > .mat-expansion-indicator {
+      @extend %tfx;
+      position: relative;
+      top: -3px;
+    }
   }
   .mat-expansion-panel-content {
     font-family: var(--font);
   }
   &.mat-expanded { // while expanded..
-    .mat-expansion-indicator {
-      top: 3px;
+    & > .mat-expansion-panel-header {
+      & > .mat-expansion-indicator {
+        top: 3px;
+      }
     }
   }
   // sidebar/instance switcher
