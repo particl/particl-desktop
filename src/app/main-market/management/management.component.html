@@ -5,13 +5,13 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontIcon="part-globe"></mat-icon>
-          Available
+          Browser
         </ng-template>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-handshake"></mat-icon>
-          Joined
+          <mat-icon fontIcon="part-shop"></mat-icon>
+          Your Markets
         </ng-template>
       </mat-tab>
     </mat-tab-group>
@@ -22,7 +22,7 @@
 <div class="container-block">
 
   <app-page-intro [childPageAlias]="tabLabels[selectedTab]" *ngIf="tabLabels[selectedTab] == 'available'">
-    <ng-container page-title>Available Markets</ng-container>
+    <ng-container page-title>Market browser</ng-container>
     <ng-container page-content>
       Manage your Markets – browse and join available Markets on Particl platform.
     </ng-container>
@@ -31,10 +31,10 @@
     </ng-container>
   </app-page-intro>
 
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]" *ngIf="tabLabels[selectedTab] == 'joined'">
-    <ng-container page-title>Joined Markets</ng-container>
+  <app-page-intro [childPageAlias]="tabLabels[selectedTab]" *ngIf="tabLabels[selectedTab] == 'owned'">
+    <ng-container page-title>Your Markets</ng-container>
     <ng-container page-content>
-      Manage and browse all the Markets you have already joined or created.
+      Manage and browse all the Markets you have created.
     </ng-container>
     <ng-container page-help>
       You can also create new Markets and/or share Storefront admin priviledges with others.
@@ -46,7 +46,7 @@
 
     <div class="buttons">
       <!-- Join Market button -->
-      <button mat-raised-button color="primary" *ngIf="!showJoinMarketForm"
+      <button mat-raised-button color="primary" *ngIf="!showJoinMarketForm && tabLabels[selectedTab] == 'available'"
               (click)="showJoinMarketForm = true"
               class="join-button-toggle full-width"
               matTooltip="Join a new Market using its Market ID"
@@ -55,14 +55,14 @@
         Join via Market ID
       </button>
       <!-- Join Market form (replaces button on click) -->
-      <mat-card class="join-form" *ngIf="showJoinMarketForm">
+      <mat-card class="join-form" *ngIf="showJoinMarketForm && tabLabels[selectedTab] == 'available'">
         <!-- TODO: can we make the input auto-focused after clicking on the button above? -->
         <input type="text" placeholder="Enter Market ID"
                (keyup.escape)="showJoinMarketForm = false">
         <button mat-raised-button color="primary" class="join-button">Join</button>
       </mat-card>
 
-      <button mat-raised-button color="accent" class="full-width" routerLink="create">
+      <button mat-raised-button color="primary" class="full-width" routerLink="create" *ngIf="tabLabels[selectedTab] == 'owned'">
         <mat-icon fontIcon="part-circle-plus"></mat-icon>
         Create new Market
       </button>
@@ -75,7 +75,7 @@
 
     <!-- search unified with those from Address Book and Sell > Listings -->
     <mat-form-field class="--boxed" appearance="fill">
-      <input matInput type="text" class="header-input" placeholder="Search markets" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
+      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
       <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
         <mat-icon fontIcon="part-clear-all"></mat-icon>
       </button>
@@ -83,10 +83,17 @@
     </mat-form-field>
 
     <h2 class="section-title">
-      Filter by type
+      Filter
     </h2>
 
     <mat-card class="filter-card">
+      <mat-form-field class="--plain" appearance="fill" *ngIf="tabLabels[selectedTab] == 'available'">
+        <mat-select placeholder="Show joined & available">
+          <mat-option *ngFor="let status of markets_status" [value]="status.value">
+            {{ status.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <mat-radio-group class="radio-group block-radio"><!-- [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()" -->
         <mat-radio-button class="filter-option" *ngFor="let type of markets_filtering" value="{{ type.value }}" color="primary">
           {{ type.title }}
@@ -182,7 +189,7 @@
 
 
       <!-- Example: Joined market (remove *ngIf below when implementing) -->
-      <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'joined'">
+      <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'owned'">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo">
@@ -237,7 +244,7 @@
 
 
       <!-- Example: Own storefront (remove *ngIf below when implementing) -->
-      <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'joined'">
+      <mat-expansion-panel class="market list-item no-padding" *ngIf="tabLabels[selectedTab] == 'owned'">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
             <div class="photo">

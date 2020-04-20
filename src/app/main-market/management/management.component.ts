@@ -12,7 +12,7 @@ export class ManagementComponent {
   public isPageLoading: boolean = false;
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['available', 'joined'];
+  public tabLabels: Array<string> = ['available', 'owned'];
   public showJoinMarketForm: boolean = false;
 
   searchQuery: FormControl = new FormControl('');
@@ -20,6 +20,12 @@ export class ManagementComponent {
   markets_sortings: Array<any> = [
     { title: 'By title', value: 'TITLE' },
     { title: 'By ??', value: '??' }
+  ];
+
+  markets_status: Array<any> = [
+    { title: 'Show joined & available', value: 'all' },
+    { title: 'Joined Markets only',     value: 'joined' },
+    { title: 'Available Markets only',  value: 'available' }
   ];
 
   markets_filtering: Array<any> = [
