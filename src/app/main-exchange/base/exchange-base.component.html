@@ -1,0 +1,52 @@
+<main-layout-default>
+  <ng-container ngProjectAs="menu">
+
+    <!--mat-expansion-panel
+      class="instance-switcher no-padding arrow-colored"
+      (afterExpand)="openedWalletSelector()"
+      (afterCollapse)="closedWalletSelector()"
+    >
+      <mat-expansion-panel-header class="switcher-toggle">
+        <div class="item">
+          <div class="icon">{{ currentWallet.initial }}</div>
+          <div class="name">{{ currentWallet.displayName }}</div>
+          <div class="value">{{ currentBalance }} PART</div>
+        </div>
+      </mat-expansion-panel-header>
+
+      <ng-template matExpansionPanelContent>
+        <div class="options">
+          <a class="item" *ngFor="let wallet of otherWallets;trackBy:trackByWalletsFn" (click)="navigateToWallet(wallet)" (keyup.enter)="navigateToWallet(wallet)" tabindex="0">
+            <div class="icon">{{ wallet.initial }}</div>
+            <div class="name">{{ wallet.displayName }}</div>
+            <div class="value">Switch wallet</div>
+          </a>
+          <a class="item" (click)="navigateToCreateWallet()" (keyup.enter)="navigateToCreateWallet()" tabindex="0">
+            <div class="icon">+</div>
+            <div class="name"><em>New wallet</em></div>
+            <div class="value">Click to setup&hellip;</div>
+          </a>
+        </div>
+      </ng-template>
+
+    </mat-expansion-panel--><!-- .instance-switcher -->
+
+    <div id="wallet-menu-portal-container" class="menu-items">
+      <wallet-menu-actions>
+        <ng-container *ngFor="let menuItem of menu">
+          <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+            <ng-container *ngIf="menuItem.icon.length > 0">
+              <mat-icon [fontIcon]="menuItem.icon"></mat-icon>
+            </ng-container>
+            <span class="text">{{menuItem.text}}</span>
+          </a>
+        </ng-container>
+      </wallet-menu-actions>
+    </div>
+
+  </ng-container>
+
+  <main-topbar></main-topbar>
+
+  <router-outlet></router-outlet>
+</main-layout-default>
