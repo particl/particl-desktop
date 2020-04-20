@@ -43,6 +43,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   currentBalance: Observable<string>;
 
+  isWarningVisible: boolean = false;
+
   readonly menu: IMenuItem[] = [
     {text: 'Overview', path: 'overview', icon: 'part-overview', alwaysEnabled: false},
     {text: 'Browse Markets', path: 'listings', icon: 'part-shop', alwaysEnabled: false},
