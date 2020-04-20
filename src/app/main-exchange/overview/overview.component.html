@@ -1,1 +1,57 @@
-<p>exchange-history works!</p>
+<div class="container-block without-tab-bar">
+  <app-page-intro>
+    <ng-container page-title>Exchange overview</ng-container>
+    <ng-container page-content>
+      Exchange your Bitcoin and/or altcoins efforlessly for PART and browse your previous exchanges.
+    </ng-container>
+    <ng-container page-help>
+      To enable exchange functionality, you will need at least one active Exchange Bot &ndash; manage them in <button mat-button class="small"><mat-icon fontIcon="part-tool"></mat-icon>Exchange Bots</button>
+    </ng-container>
+  </app-page-intro>
+
+  <!-- Listings > Filter -->
+  <div class="filter">
+
+    <div class="buttons">
+      <button mat-raised-button color="primary" routerLink="new" class="full-width">
+        <mat-icon fontIcon="part-swap"></mat-icon>
+        Start new Exchange
+      </button>
+    </div><!-- .buttons -->
+
+    <h2 class="section-title">
+      Search
+    </h2>
+
+    <mat-card class="filter-card">
+
+      <mat-form-field class="--plain" appearance="fill">
+        <input matInput type="text" placeholder="Search Bots" [(ngModel)]="filters.search">
+        <button *ngIf="filters.search" matSuffix mat-button class="small" (click)="filters.search=''; clearAndLoadPage()" matTooltip="Clear" matTooltipPosition="after">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+        </button>
+        <mat-icon *ngIf="!filters.search" matSuffix fontIcon="part-search"></mat-icon>
+      </mat-form-field>
+
+    </mat-card><!-- .filter-card -->
+
+    <h2 class="section-title">
+      Filter
+    </h2>
+
+    <mat-card class="filter-card">
+      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()">
+        <mat-radio-button class="filter-option" *ngFor="let status of exchange_status" value="{{ status.value }}" color="accent">
+          {{ status.title }}
+          <span class="amount">{{ status.amount }}</span>
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card><!-- .filter-card -->
+
+    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter -->
+</div><!-- .container-block -->
