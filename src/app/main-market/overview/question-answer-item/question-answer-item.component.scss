@@ -1,5 +1,5 @@
 @import './src/assets/_config'; // import shared colors etc.
-@import './src/app/main-market/shared/list-item-details'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
 .question-answer {
   --list-item-size: 70px; // overwrite default list-item height
