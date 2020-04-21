@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, retryWhen } from 'rxjs/operators';
-import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { MarketRpcService } from '../market-rpc/market-rpc.service';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
-import { RespCategoryList, RespMarketListMarketItem } from '../shared/market.models';
-import { CategoryItem, Market } from './listings.models';
+import { RespCategoryList, RespMarketListMarketItem } from '../../shared/market.models';
+import { CategoryItem, Market } from './data.models';
 
 
 @Injectable()
-export class ListingsService {
+export class DataService {
 
   constructor(
     private _rpc: MarketRpcService

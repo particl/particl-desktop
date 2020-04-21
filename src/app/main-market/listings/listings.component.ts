@@ -6,16 +6,15 @@ import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, tak
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
-import { ListingsService } from './listings.service';
+import { DataService } from '../services/data/data.service';
 
-import { Market, CategoryItem, Country } from './listings.models';
-import { RegionListService } from '../shared/shared.module';
+import { Market, CategoryItem, Country } from '../services/data/data.models';
+import { RegionListService } from '../services/region-list/region-list.service';
 
 
 @Component({
   templateUrl: './listings.component.html',
-  styleUrls: ['./listings.component.scss'],
-  providers: [ListingsService]
+  styleUrls: ['./listings.component.scss']
 })
 export class ListingsComponent implements OnInit, OnDestroy {
 
@@ -25,7 +24,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   hasNewListings: boolean = false;    // TODO: Make this do something useful...
   isSearching: boolean = false;       // TODO: Make this do something useful...
   isLoadingListings: boolean = false; // TODO: Make this do something useful...
-  reachedListingsEnd: boolean = false;  // TODO: Make this do something useful...
 
 
   // filter/search control mechanisms
@@ -47,12 +45,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private market$: Subject<Market> = new Subject();
   private categorySource$: Subject<CategoryItem[]> = new Subject();
 
+  private pageCount: number = 0;
+
 
   private availableMarkets: Market[] = [];
 
   constructor(
     private _store: Store,
-    private _listService: ListingsService,
+    private _listService: DataService,
     private _regionService: RegionListService
   ) {
     this.categoriesList$ = this.categorySource$.asObservable().pipe(takeUntil(this.destroy$));
@@ -155,7 +155,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
     ).subscribe();
 
 
-
     merge(
       marketChange$,
       identityChange$
@@ -169,6 +168,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this.categorySource$.complete();
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  trackByListingFn(_: number, item: any) {
+    return item.id;
   }
 
 

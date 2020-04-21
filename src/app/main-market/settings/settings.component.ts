@@ -7,7 +7,7 @@ import { Observable, Subject, from, concat, of } from 'rxjs';
 import { tap, takeUntil, take, finalize, concatMap, catchError, concatMapTo } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { RegionListService } from '../shared/shared.module';
+import { RegionListService } from '../services/region-list/region-list.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
 
@@ -71,18 +71,18 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    const stateChange$ = this._store.select(MarketState).pipe(
-      tap((storeState: MarketStateModel) => {
+    const stateChange$ = this._store.select(MarketState.startedStatus).pipe(
+      tap((startedStatus: StartedStatus) => {
 
-        if (this.startedStatus !== storeState.started) {
-          this.startedStatus = storeState.started;
+        if (this.startedStatus !== startedStatus) {
+          this.startedStatus = startedStatus;
         }
 
         if (this.isProcessing) {
           return;
         }
 
-        const isEnabled = storeState.started === StartedStatus.STARTED;
+        const isEnabled = startedStatus === StartedStatus.STARTED;
 
         if (!isEnabled && !this.isWaitingForStartCall) {
           this.isWaitingForStartCall = true;

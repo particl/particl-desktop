@@ -1,4 +1,4 @@
-import { MarketType } from '../shared/market.models';
+import { MarketType } from '../../shared/market.models';
 
 
 export interface CategoryItem {
