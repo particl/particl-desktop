@@ -7,6 +7,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ExchangeBotsComponent implements OnInit {
 
+  filters: any = {
+    search:   ''
+  };
+
+  supported_coins: Array<any> = [
+    // sort alphabetically
+    { title: 'Bitcoin',   value: 'btc', },
+    { title: 'DAI',       value: 'dai', },
+    { title: 'Horizen',   value: 'zen', },
+    { title: 'Particl',   value: 'part', }
+  ];
+
+  bot_filter: Array<any> = [
+    { title: 'All bots',        value: 'all',         amount: '3' },
+    { title: 'Active bots',     value: 'active',      amount: '1' },
+    { title: 'Available bots',  value: 'available',   amount: '2' }
+  ];
+
   constructor() { }
 
   ngOnInit() {

@@ -1,1 +1,15 @@
 @import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+.coin-filter-option {
+  .icon {
+    margin: 0 4px 0 0;
+    position: relative;
+    top: 6px;
+  }
+  small {
+    margin-left: 2px;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+}
