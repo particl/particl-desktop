@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { ExchangeBotsComponent } from './exchange-bots.component';
+import { BotItemComponent } from './bot-item/bot-item.component';
 
 
 const routes: Routes = [
@@ -21,7 +22,8 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    ExchangeBotsComponent
+    ExchangeBotsComponent,
+    BotItemComponent
   ],
   entryComponents: [
   ],

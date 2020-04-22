@@ -81,11 +81,7 @@
       </div>
     </div><!-- .loading-container -->
 
-    <ng-container *ngFor="let page of pages">
-      <ng-container *ngFor="let bot of page.bots">
-        <app-bot-item [bot]="bot"></app-bot-item>
-      </ng-container>
-    </ng-container>
+    <app-bot-item [bot]="bot"></app-bot-item>
 
     <div class="no-results">
       <img class="illustration" src="./assets/images/illustrations/no-bots.svg" alt="No Bots found">
