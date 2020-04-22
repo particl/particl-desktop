@@ -114,10 +114,10 @@
 
         <ng-template #listingItem><!-- template here just for layout testing -->
         <mat-card class="listing">
-          <div mat-card-image>
+          <div mat-card-image (click)="openListingDetailModal()">
             <img class="img" src="./assets/images/placeholder_4-3.jpg" alt="TODO: listing name here">
           </div>
-          <mat-card-header>
+          <mat-card-header (click)="openListingDetailModal()">
             <mat-card-title>
               A bit longer Listing name in here, should cut off after 2 lines, just for the fun of it
             </mat-card-title>
@@ -167,8 +167,8 @@
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
         <ng-container *ngTemplateOutlet="listingItem"></ng-container> -->
+        <ng-container *ngTemplateOutlet="listingItem"></ng-container> 
 
       <!--/ng-container>
     </ng-container-->

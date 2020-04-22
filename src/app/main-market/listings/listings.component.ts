@@ -5,12 +5,14 @@ import { xor } from 'lodash';
 import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
+import { MatDialog } from '@angular/material';
 
 import { DataService } from '../services/data/data.service';
 
 import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { RegionListService } from '../services/region-list/region-list.service';
 
+import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
 
 @Component({
   templateUrl: './listings.component.html',
@@ -53,7 +55,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
   constructor(
     private _store: Store,
     private _listService: DataService,
-    private _regionService: RegionListService
+    private _regionService: RegionListService,
+    private _dialog: MatDialog
   ) {
     this.categoriesList$ = this.categorySource$.asObservable().pipe(takeUntil(this.destroy$));
     this.countryList$ = of(this._regionService.getCountryList()).pipe(
@@ -185,4 +188,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
     // TODO: IMPLEMENT THIS (currently just a placeholder for the real lookup of listings)
     return of([]);
   }
+
+  openListingDetailModal(): void {
+    const dialog = this._dialog.open(ListingDetailModalComponent);
+  }
+
 }
