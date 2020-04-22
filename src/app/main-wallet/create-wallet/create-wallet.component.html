@@ -41,7 +41,8 @@
         <app-page-intro [canHideContent]="false">
           <ng-container page-title>Create or restore wallet</ng-container>
           <ng-container page-content>
-            In order to connect to Particl network, you need to have a wallet. If you're using Particl for the first time, create a new wallet or restore existing wallet (using your Recovery Passphrase) if you have one already.
+            In order to connect to Particl network, you need to have a wallet<br>
+            This guide will walk you through a process of creating a new wallet or restoring an existing one.
           </ng-container>
           <ng-container page-help>
             You can create as many wallets as you need, for example to separate your funds.
@@ -51,7 +52,7 @@
         <div class="container-flex">
           <div class="content-wrapper">
             <mat-card class="create half">
-              <mat-icon fontIcon="part-add-account"></mat-icon>
+              <img class="illustration" src="./assets/images/illustrations/create-wallet.svg" alt="Create wallet">
               <div class="box-title --larger">Create wallet</div>
               <p class="choice-desc">
                 You don't have a&nbsp;wallet yet and/or you want to create a&nbsp;new one
@@ -62,7 +63,7 @@
               </button>
             </mat-card>
             <mat-card class="restore half">
-              <mat-icon fontIcon="part-refresh"></mat-icon>
+              <img class="illustration" src="./assets/images/illustrations/restore-wallet.svg" alt="Restore wallet">
               <div class="box-title --larger">Restore wallet</div>
               <p class="choice-desc">
                 If you already have existing wallet seed (Recovery Phrase) that you would like to restore
