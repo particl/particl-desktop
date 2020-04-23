@@ -1,18 +1,18 @@
-<!--div mat-dialog-title>
+<div mat-dialog-title>
   {{data?.listing?.title}}
   <span class="category">
     in {{data?.listing?.category.name}}
   </span>
-</div-->
+</div>
 
-<button class="small-close-button pull-right" (click)="dialogClose()">
-  <mat-icon fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 <div mat-dialog-content class="dialog-content">
   <div class="product-summary" fxLayout="row">
 
-    <div class="product-gallery" fxFlex="1 1 450px">
+    <div class="product-gallery" fxFlex="1 1 350px">
       <div class="gallery-carousel">
         <img
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail"><!-- *ngIf="images.length === 0" -->
@@ -33,7 +33,7 @@
     </div><!-- .product-gallery -->
 
     <div class="product-info" fxFlex="1 1 100%">
-      <h1>{{ data?.listing?.title }}</h1>
+      <!--h1>{{ data?.listing?.title }}</h1-->
 
       <div class="pricing">
         <div class="item price">

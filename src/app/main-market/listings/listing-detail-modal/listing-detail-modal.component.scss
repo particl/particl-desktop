@@ -1,3 +1,305 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+.fiat {
+  display: none; // hidden until implemented
+}
 
+
+// ------ GENERAL ------ //
+
+table {
+  border-spacing: 0;
+  th {
+    text-align: left;
+    font-weight: 600;
+    padding-right: 24px;
+    vertical-align: top;
+  }
+}
+
+// ------ UI ELEMENTS ------ //
+
+button.small .mat-icon {
+  margin: 0; // remove margin from buttons with icons only
+}
+
+// ------ LAYOUT ------ //
+
+:host {
+  ::ng-deep {
+    image-item {
+      & > div {
+        background-size: contain; // so all images fit whole
+        background-repeat: no-repeat;
+      }
+    }
+    gallery-nav { // recolor the nav arrows to grey
+      .g-nav-next,
+      .g-nav-prev {
+        filter: invert(10%);
+      }
+    }
+    .listing-tabs {
+      position: sticky;
+      top: 0;
+      background: var(--color-white);
+      z-index: 20;
+      .mat-tab-label {
+        width: (100% / 2);
+      }
+    }
+  }
+}
+
+.dialog-content {
+  margin: -24px -24px 0 !important;
+  width: 950px;
+  height: 72vh;
+  max-height: none;
+  background: var(--bg);
+}
+
+.product-gallery {
+  margin-right: 35px;
+  .gallery-carousel {
+    img { // single product image
+      width: 100%;
+      height: auto;
+    }
+  }
+  gallery { // multiple product images in gallery
+    background: none;
+  }
+}
+
+.product-summary { // container for upper part (gallery, name, meta)
+  margin: 0 -24px;
+  padding: 24px;
+  background: var(--color-white);
+}
+
+.product-info {
+  line-height: 1.7;
+  margin-right: -24px;
+
+  h1 { // product name
+    font-size: 1.7em;
+    line-height: 1.4;
+  }
+
+  // Price info
+  .pricing {
+    .item {
+      .title {
+        @extend %lighter;
+        text-transform: uppercase;
+      }
+      .value {
+        &.part {
+          font-size: 2em;
+          font-weight: 500;
+          line-height: 1.2;
+          margin: 0;
+        }
+        .currency {
+          font-size: 60%;
+          font-weight: 400;
+          margin-left: 0.4rem;
+        }
+        .mat-icon {
+          font-size: 14px;
+          position: relative;
+          top: 2px;
+          margin-right: 2px;
+        }
+      }
+    }
+  }
+
+  // meta table (shipping, category, sold from & date added)
+  table.meta {
+    th.title {
+      @extend %lighter;
+      font-weight: 500;
+      padding: 4px 24px 0 0;
+    }
+    td {
+      padding: 4px 0 0;
+    }
+    .mat-icon {
+      @extend %lighter;
+      font-size: 14px;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+    }
+    tr {
+      // "Expires soon" warning
+      &.expires-soon {
+        .mat-icon {
+          @extend %reset;
+          color: var(--color-alert);
+        }
+        .title {
+          @extend %reset;
+        }
+        .value {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+// Text description
+p.description {
+  word-wrap: break-word;
+  &.summary {
+    @extend %enable-select;
+    font-weight: 500;
+    color: var(--text);
+    font-size: 110%;
+    margin: 24px 0 24px -30px;
+    padding: 18px 40px 18px 30px;
+    background: var(--bg);
+  }
+  &.detailed {
+    @extend %enable-select;
+    white-space: pre-line;
+    margin: -14px 0;
+  }
+}
+
+.product-details {
+  margin: 0 -24px;
+
+  // Tabs' content
+  .tab-content {
+    min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
+    padding: 24px 32px;
+    line-height: 1.55;
+
+    .subtitle {
+      @extend %subtitle;
+      margin-top: 0;
+    }
+    /*
+    &.shipping {
+      padding: 24px; // make shipping table full-width
+    }
+    */
+  }
+
+  // Shipping & escrow
+  table.shipping-escrow {
+    width: calc(100% + 48px);
+    margin: 0 -24px;
+    font-size: 110%;
+    thead {
+      th {
+        @extend %lighter;
+        font-weight: 500;
+        padding: 0 12px 12px;
+        vertical-align: bottom;
+        &:first-child {
+          padding-left: 24px;
+        }
+        &:last-child {
+          padding-right: 24px;
+        }
+      }
+    }
+    tbody {
+      tr {
+        & > * {
+          &:first-child {
+            padding-left: 24px;
+          }
+          &:last-child {
+            padding-right: 24px;
+          }
+        }
+        th {
+          font-weight: 700;
+          small {
+            @extend %lighter;
+            font-size: 90%;
+            font-weight: 400;
+            display: block;
+          }
+        }
+        th,
+        td {
+          @extend %tfx;
+          border-top: 1px solid var(--bg-muted);
+          padding: 12px;
+          max-width: 150px; // space out cells ~evenly
+        }
+        &:hover:not(.help-text) {
+          th,
+          td {
+            background: hsla(var(--color-primary-hsl), 0.03);
+          }
+        }
+        &.help-text {
+          td {
+            vertical-align: top;
+            small {
+              @extend %lighter;
+            }
+          }
+        }
+      }
+    }
+    strong {
+      font-weight: 500;
+    }
+    .price {
+      &.part {
+        display: block;
+        strong {
+          font-size: 110%;
+        }
+      }
+    }
+    small.currency {
+      font-size: 90%;
+      margin-left: 0.3rem;
+    }
+  }
+
+}
+
+mat-dialog-actions {
+  padding: 12px 24px;
+  margin: 0 -24px -24px;
+  border-top: 1px solid var(--bg-muted);
+
+  // Listing governance
+  .reporting {
+    display: inline-block;
+    .title {
+      @extend %lighter;
+      margin-right: 6px;
+    }
+    .voted {
+      @extend %lighter;
+    }
+    .voted-icon {
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+      font-size: 14px;
+      line-height: 0;
+    }
+    button {
+      margin: 0 4px 0 0;
+      .mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+  app-favorite { // add/remove from favs icon
+    margin-right: 6px;
+  }
+}
