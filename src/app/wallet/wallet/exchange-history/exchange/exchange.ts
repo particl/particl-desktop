@@ -127,7 +127,9 @@ export class Exchange {
     this.availableOffers = [];
     this.selectedOffer = null;
 
-    let offerFromBots = this.availableBots.filter((bot) => !!bot.currencies.find((currency) => currency.symbol === this.selectedCurrency.symbol));
+    const offerFromBots = this.availableBots.filter(
+      (bot) => !!bot.currencies.find((currency) => currency.symbol === this.selectedCurrency.symbol)
+    );
 
     this.completedRequests = 0;
     this.botRequestSubscriptions = [];
