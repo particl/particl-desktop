@@ -19,6 +19,11 @@ table {
 
 // ------ UI ELEMENTS ------ //
 
+button.modal-close {
+  top: 7px !important;
+  z-index: 30 !important;
+}
+
 button.small .mat-icon {
   margin: 0; // remove margin from buttons with icons only
 }
@@ -54,17 +59,25 @@ button.small .mat-icon {
 .dialog-content {
   margin: -24px -24px 0 !important;
   width: 950px;
-  height: 72vh;
+  height: calc(100vh - 120px);
   max-height: none;
   background: var(--bg);
 }
 
 .product-gallery {
-  margin-right: 35px;
+  --photo-size: 350px;
+  flex: 1 0 var(--photo-size);
+  min-height: var(--photo-size);
+  margin-right: var(--paddingH);
   .gallery-carousel {
+    width: 100%;
+    height: 100%;
     img { // single product image
       width: 100%;
-      height: auto;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center;
     }
   }
   gallery { // multiple product images in gallery
@@ -79,6 +92,7 @@ button.small .mat-icon {
 }
 
 .product-info {
+  flex: 0 1 100%;
   line-height: 1.7;
   margin-right: -24px;
 
@@ -154,8 +168,8 @@ button.small .mat-icon {
 // Text description
 p.description {
   word-wrap: break-word;
+  @extend %enable-select;
   &.summary {
-    @extend %enable-select;
     font-weight: 500;
     color: var(--text);
     font-size: 110%;
@@ -163,10 +177,15 @@ p.description {
     padding: 18px 40px 18px 30px;
     background: var(--bg);
   }
+  &.lead {
+    font-weight: 500;
+    font-size: 16px;
+  }
   &.detailed {
-    @extend %enable-select;
     white-space: pre-line;
-    margin: -14px 0;
+    margin: 0;
+    color: var(--text-muted);
+    line-height: 1.6;
   }
 }
 
@@ -176,28 +195,50 @@ p.description {
   // Tabs' content
   .tab-content {
     min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
-    padding: 24px 32px;
+    padding: var(--paddingV) var(--paddingH);
     line-height: 1.55;
+    font-size: 14px;
 
     .subtitle {
       @extend %subtitle;
       margin-top: 0;
     }
-    /*
-    &.shipping {
-      padding: 24px; // make shipping table full-width
+    .mat-card {
+      padding: var(--paddingV) var(--paddingH);
     }
-    */
+    
+    .gallery {
+      --image-margin: 5px;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 calc(-1 * var(--image-margin));
+      width: calc(100% + 2 * var(--image-margin));
+      .image {
+        --image-size: 176px;
+        @include break(l) {
+          --image-size: 170px;
+        }
+        flex: 0 0 var(--image-size);
+        height: var(--image-size);
+        margin: var(--image-margin);
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          display: block;
+        }
+      }
+    }
   }
 
   // Shipping & escrow
   table.shipping-escrow {
-    width: calc(100% + 48px);
-    margin: 0 -24px;
-    font-size: 110%;
+    width: calc(100% + 2 * var(--paddingH));
+    margin: -8px calc(-1 * var(--paddingH));
     thead {
       th {
-        @extend %lighter;
+        color: var(--text-muted);
         font-weight: 500;
         padding: 0 12px 12px;
         vertical-align: bottom;
@@ -220,9 +261,9 @@ p.description {
           }
         }
         th {
-          font-weight: 700;
+          font-weight: 500;
           small {
-            @extend %lighter;
+            color: var(--text-muted);
             font-size: 90%;
             font-weight: 400;
             display: block;
@@ -235,18 +276,9 @@ p.description {
           padding: 12px;
           max-width: 150px; // space out cells ~evenly
         }
-        &:hover:not(.help-text) {
-          th,
-          td {
-            background: hsla(var(--color-primary-hsl), 0.03);
-          }
-        }
         &.help-text {
           td {
             vertical-align: top;
-            small {
-              @extend %lighter;
-            }
           }
         }
       }

@@ -1,9 +1,9 @@
-<div mat-dialog-title>
+<!--div mat-dialog-title>
   {{data?.listing?.title}}
   <span class="category">
     in {{data?.listing?.category.name}}
   </span>
-</div>
+</div-->
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
@@ -12,7 +12,7 @@
 <div mat-dialog-content class="dialog-content">
   <div class="product-summary" fxLayout="row">
 
-    <div class="product-gallery" fxFlex="1 1 350px">
+    <div class="product-gallery">
       <div class="gallery-carousel">
         <img
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail"><!-- *ngIf="images.length === 0" -->
@@ -32,8 +32,8 @@
       </div>
     </div><!-- .product-gallery -->
 
-    <div class="product-info" fxFlex="1 1 100%">
-      <!--h1>{{ data?.listing?.title }}</h1-->
+    <div class="product-info">
+      <h1>{{ data?.listing?.title }}</h1>
 
       <div class="pricing">
         <div class="item price">
@@ -55,7 +55,7 @@
       <table class="meta">
         <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
           <th class="title">
-            <mat-icon fontSet="partIcon" fontIcon="part-circle-alert"></mat-icon>
+            <mat-icon fontIcon="part-circle-alert"></mat-icon>
             Expires soon
           </th>
           <td class="value">
@@ -64,7 +64,7 @@
         </tr>
         <tr>
           <th class="title">
-            <mat-icon fontSet="partIcon" fontIcon="part-truck"></mat-icon>
+            <mat-icon fontIcon="part-truck"></mat-icon>
             Shipping
           </th>
           <td class="value">
@@ -73,7 +73,7 @@
         </tr>
         <tr>
           <th class="title">
-            <mat-icon fontSet="partIcon" fontIcon="part-label"></mat-icon>
+            <mat-icon fontIcon="part-label"></mat-icon>
             Category
           </th>
           <td class="value">
@@ -82,7 +82,7 @@
         </tr>
         <tr>
           <th class="title">
-            <mat-icon fontSet="partIcon" fontIcon="part-globe"></mat-icon>
+            <mat-icon fontIcon="part-globe"></mat-icon>
             Sold from
           </th>
           <td class="value">
@@ -92,7 +92,7 @@
         </tr>
         <tr>
           <th class="title">
-            <mat-icon fontSet="partIcon" fontIcon="part-date"></mat-icon>
+            <mat-icon fontIcon="part-date"></mat-icon>
             Added / Expires
           </th>
           <td class="value">
@@ -105,21 +105,33 @@
   </div><!-- .product-summary -->
 
   <div class="product-details">
-    <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)">
+    <mat-tab-group class="listing-tabs" (selectedTabChange)="changeTab($event.index)" color="accent">
       <mat-tab label="Details"></mat-tab>
       <mat-tab label="Shipping &amp; Escrow"></mat-tab>
       <mat-tab label="Questions &amp; Answers"></mat-tab><!-- *ngIf="!data.buyPage" -->
     </mat-tab-group><!-- .listing-tabs -->
 
     <div class="tab-content details" *ngIf="tabLabels[selectedTab] == 'details'">
-      <h2 class="subtitle">Product info</h2>
+      <h2 class="section-title">Product info</h2>
       <mat-card>
+        <p class="lead description">{{ data?.listing?.shortDescription }}</p>
         <p class="detailed description">{{ data?.listing?.longDescription }}</p>
       </mat-card>
+      <!-- TODO: only if Listing contains multiple images, show them here. on click, trigger the fullscreen gallery if possible: -->
+      <ng-container>
+        <h2 class="section-title">Product gallery</h2>
+        <div class="gallery">
+          <ng-container *ngFor="let image of data.listing.imageCollection.images">
+            <div class="image">
+              <img src="{{ image }}">
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
     </div><!-- .tab-content.details -->
 
     <div class="tab-content shipping" *ngIf="tabLabels[selectedTab] == 'shipping'">
-      <h2 class="subtitle">Pricing details</h2>
+      <h2 class="section-title">Pricing details</h2>
       <mat-card>
         <table class="shipping-escrow">
           <thead>
@@ -200,13 +212,13 @@
             <tr class="help-text">
               <td></td>
               <td>
-                <small>Shipping price for 1 item</small>
+                Shipping price for 1 item
               </td>
               <td>
-                <small>Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered</small>
+                Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered
               </td>
               <td>
-                <small>Amount of funds needed in total for this trade (incl. the refundable escrow)</small>
+                Amount of funds needed in total for this trade (incl. the refundable escrow)
               </td>
             </tr>
           </tbody>
@@ -237,11 +249,11 @@
       <div *ngIf="!data?.listing?.VoteDetails">
         <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
         <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)" matTooltip="Item is fine and should stay on Market">
-          <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+          <mat-icon fontIcon="part-thumb-up"></mat-icon>
           Keep it
         </button>
         <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)" matTooltip="Item is inappropriate/illegal and should be removed from Market">
-          <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+          <mat-icon fontIcon="part-thumb-down"></mat-icon>
           Remove it
         </button>
       </div>
@@ -250,14 +262,14 @@
         <p *ngIf="data?.listing?.VoteDetails?.isReported">
           <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)"
             matTooltip="I've changed my mind, the item is fine and should stay on Market">
-            <mat-icon fontSet="partIcon" fontIcon="part-thumb-up"></mat-icon>
+            <mat-icon fontIcon="part-thumb-up"></mat-icon>
           </button>
           I've changed my mind, the item is fine and should stay on Market
         </p>
         <p *ngIf="!data?.listing?.VoteDetails?.isReported">
           <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)"
             matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
-            <mat-icon fontSet="partIcon" fontIcon="part-thumb-down"></mat-icon>
+            <mat-icon fontIcon="part-thumb-down"></mat-icon>
           </button>
           I've changed my mind, the item is inappropriate/illegal and should be removed from Market
         </p>
@@ -272,7 +284,7 @@
 
     <!-- if mine, show message instead of "add to cart" button -->
     <button mat-button disabled *ngIf="data?.listing?.isMine">
-      <mat-icon fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
+      <mat-icon fontIcon="part-circle-info"></mat-icon>
       This is your own listing
     </button>
   </div>
