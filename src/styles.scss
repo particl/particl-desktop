@@ -28,6 +28,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.5. Input with icon
       3.6. QR codes
       3.7. Tree browser
+      3.8. Tables
     4. Typography
       4.1. Page subtitles
       4.2. Paragraph styles
@@ -133,6 +134,12 @@ body {
   float: left;
   .without-tab-bar & {
     top: ($header-main-height + $padding);
+  }
+  button.full-width {
+    margin-top: 10px;
+    &:first-of-type {
+      margin-top: 0;
+    }
   }
 }
 
@@ -299,6 +306,15 @@ body {
 }
 
 
+// ------ 3.8. TABLES ------ //
+
+table {
+  &.full-width {
+    width: 100%;
+  }
+}
+
+
 /* ------------------------------- *\
     4. TYPOGRAPHY
 \* ------------------------------- */
@@ -326,6 +342,10 @@ h1 {
 
 // ------ 4.2. PARAGRAPH STYLES ------ //
 
+p {
+  line-height: 1.5;
+}
+
 // Highlighted 'lead' paragraphs
 .lead {
   font-size: 15px;
@@ -335,9 +355,7 @@ h1 {
 .widget-help {
   @extend %lighter;
   font-size: 93%;
-  line-height: 1.5;
   margin-bottom: 25px;
-  cursor: help;
 }
 
 // Warning & Info messages

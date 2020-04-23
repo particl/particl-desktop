@@ -30,9 +30,11 @@ import { PostListingCacheService } from 'app/core/market/market-cache/post-listi
 import { takeWhile, take } from 'rxjs/operators';
 import { PreviewListingComponent } from 'app/market/listings/preview-listing/preview-listing.component';
 import { ProcessingModalComponent } from 'app/modals/processing-modal/processing-modal.component';
+import { InsufficientFundsComponent } from 'app/modals/insufficient-funds/insufficient-funds.component';
 
 enum errorType {
-  itemExpired = 'An item in your basket has expired!'
+  itemExpired = 'An item in your basket has expired!',
+  broke = 'Not enough spendable (anon) funds available'
 }
 
 
@@ -318,14 +320,17 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
       this.dialog.closeAll();
       this.onOrderPlaced.emit(1);
     }, (error) => {
+      this.dialog.closeAll();
       if (error === errorType.itemExpired) {
         this.resetStepper();
         this.shippingFormGroup.value.id = this.cache.address.id;
         this.setDefaultCountry(this.cache.address.country);
         this.shippingFormGroup.patchValue(this.cache.address);
       }
+      if (error === errorType.broke) {
+        this.dialog.open(InsufficientFundsComponent, {data: {cart: this.cart, country: this.country}});
+      }
       this.snackbarService.open(error, 'warn');
-      this.dialog.closeAll();
       this.log.d(`Error while placing an order`);
     });
   }
@@ -412,11 +417,11 @@ export class CheckoutProcessComponent implements OnInit, OnDestroy {
   }
 
   openProcessingModal() {
-      const dialog = this.dialog.open(ProcessingModalComponent, {
-        disableClose: true,
-        data: {
-          message: 'Hang on, we are busy processing your cart'
-        }
-      });
+    const dialog = this.dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: {
+        message: 'Hang on, we are busy processing your cart'
+      }
+    });
   }
 }

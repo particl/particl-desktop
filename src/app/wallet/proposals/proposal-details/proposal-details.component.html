@@ -110,7 +110,7 @@
     <div class="text item">Select your vote for this Proposal:</div>
 
     <div class="options item">
-      <mat-form-field class="voting-options" floatPlaceholder="never">
+      <mat-form-field class="voting-options" floatLabel="never">
         <mat-select placeholder="Select to vote" [(ngModel)]="selectedOption">
           <mat-option *ngFor="let option of proposal?.options" [value]="option">
             {{ option.description }}

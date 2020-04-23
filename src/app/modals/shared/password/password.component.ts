@@ -108,7 +108,8 @@ export class PasswordComponent implements OnDestroy {
     */
   private rpc_unlock(): void {
     this.log.i('rpc_unlock: calling unlock! timeout=' + this.unlockTimeout);
-    this.checkAndFallbackToStaking();
+
+    const startingStatus = String(this._rpcState.get('getwalletinfo').encryptionstatus);
     this._rpc.call('walletpassphrase', [
         this.password,
         +(this.stakeOnly ? 0 : this.unlockTimeout),
@@ -123,8 +124,14 @@ export class PasswordComponent implements OnDestroy {
             .subscribe(
               encryptionstatus => {
                 this.log.d('rpc_unlock: success: Status value:', encryptionstatus);
-                if (String(encryptionstatus).toLowerCase().includes('unlocked')) {
+                if (String(encryptionstatus).toLowerCase().includes('unlocked') && (encryptionstatus !== startingStatus) ) {
                   this.log.d('rpc_unlock: success: unlock was called! New Status:', encryptionstatus);
+
+                  if (startingStatus === 'Unlocked, staking only') {
+                    this.fallbackToStaking();
+                  }
+
+                  this.password = '';
 
                   // hook for unlockEmitter, warn parent component that wallet is unlocked!
                   this.unlockEmitter.emit(encryptionstatus);
@@ -134,7 +141,8 @@ export class PasswordComponent implements OnDestroy {
                   }
                 }
                 this.isProcessing = false;
-              });
+              }
+            );
         },
         error => {
           this.isProcessing = false;
@@ -149,29 +157,25 @@ export class PasswordComponent implements OnDestroy {
   /**
     * If we're unlocking the wallet for a period of this.unlockTimeout, then check if it was staking
     * if(staking === true) then fallback to staking instead of locked after timeout!
-    * else lock wallet
     */
-  private checkAndFallbackToStaking(): void {
-    if (this._rpcState.get('getwalletinfo').encryptionstatus === 'Unlocked, staking only') {
+  private fallbackToStaking(): void {
+    // After unlockTimeout, unlock wallet for staking again.
 
-      const password = this.password;
-      const timeout = this.unlockTimeout;
+    let password = this.password;
 
-      // After unlockTimeout, unlock wallet for staking again.
-      setTimeout((() => {
-          this.log.d(`checkAndFallbackToStaking, falling back into staking mode!`);
+    let _sub = this._rpcState.observe('getwalletinfo', 'encryptionstatus').subscribe(
+      (encryptionstatus: string) => {
+        if (encryptionstatus === 'Locked') {
           this._rpc.call('walletpassphrase', [password, 0, true]).subscribe();
-          this.reset();
-        }).bind(this), (timeout + 1) * 1000);
+          password = '';
 
-    } else {
-      // reset after 500ms so rpc_unlock has enough time to use it!
-      setTimeout(this.reset,  500);
-    }
-  }
-
-  private reset(): void {
-    this.password = '';
+          if (_sub) {
+            _sub.unsubscribe();
+            _sub = null;
+          }
+        }
+      }
+    )
   }
 
   // emit showpassword change

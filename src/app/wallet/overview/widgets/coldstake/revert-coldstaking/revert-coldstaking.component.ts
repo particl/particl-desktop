@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 
 import { Log } from 'ng2-logger';
-import { Amount } from '../../../../../core/util/utils';
 
-import { RpcService, RpcStateService } from 'app/core/core.module';
+import { RpcService } from 'app/core/core.module';
 import { SnackbarService } from 'app/core/snackbar/snackbar.service';
 
 @Component({
@@ -27,8 +26,7 @@ export class RevertColdstakingComponent implements OnInit {
   constructor(
     private flashNotification: SnackbarService,
     private dialogRef: MatDialogRef<RevertColdstakingComponent>,
-    private _rpc: RpcService,
-    private _rpcState: RpcStateService,
+    private _rpc: RpcService
   ) { }
 
   ngOnInit() {

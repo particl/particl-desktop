@@ -14,8 +14,10 @@ import { RpcService, RpcStateService } from '../../../../../core/core.module';
 import { MarketService } from '../../../../../core/market/market.module';
 import { SnackbarService } from '../../../../../core/snackbar/snackbar.service';
 import { Command } from './command.model';
-import * as marketConfig from '../../../../../../../modules/market/config.js';
 import { isFinite, isPlainObject, isArray } from 'lodash';
+import { SettingsStateService } from 'app/settings/settings-state.service';
+import { takeWhile } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-console-modal',
@@ -42,14 +44,29 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
               private _rpcState: RpcStateService,
               private market: MarketService,
               private dialog: MatDialogRef<ConsoleModalComponent>,
-              private snackbar: SnackbarService) {
-    this.marketTabEnabled = (marketConfig.allowedWallets || []).find(
-      (wname: string) => wname.toLowerCase() === this._rpc.wallet.toLowerCase()
-    ) !== undefined;
+              private snackbar: SnackbarService,
+              private _settingsService: SettingsStateService) {
   }
 
   ngOnInit() {
     this.getCurrentTime();
+
+    if (environment.isTesting) {
+      return;
+    }
+
+    let continueListening = true;
+    this._settingsService.currentWallet().pipe(takeWhile(() => continueListening)).subscribe(
+      (wallet) => {
+        // Primary purpose of the null check is to cater for live reload...
+        //  this should not typically be needed otherwise
+        if (wallet === null) {
+          return;
+        }
+        this.marketTabEnabled = wallet.isMarketEnabled === true;
+        continueListening = false;
+      }
+    );
   }
 
   ngAfterViewChecked() {
@@ -203,15 +220,21 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
 
       // Process possible validation issues
       const lastDelim = delimStack[delimStack.length - 1];
-      if ( (currentChar === '}' && lastDelim !== '{') ||
-            (currentChar === ']' && lastDelim !== '[') ||
-            (isQuoteMark && (quoteIdx !== -1) && (currentChar !== lastDelim) )) {
+      if ( (  ( (currentChar === '}' && lastDelim !== '{') ||
+                (currentChar === ']' && lastDelim !== '[')
+              ) &&
+              ![`'`, `"`].includes(lastDelim)
+           ) ||
+            (isQuoteMark && (quoteIdx !== -1) && (currentChar !== lastDelim) )
+      ) {
         parseError = true;
         break;
       }
 
       // Now add or remove a delimiter and process possible token accordingly
-      if ([`}`, `]`].includes(currentChar) || (lastDelim === currentChar) ) {
+      if (!isQuoteMark && [`'`, `"`].includes(lastDelim) && (delimStack.length > 0)) {
+        // do nothing
+      } else if ([`}`, `]`].includes(currentChar) || (lastDelim === currentChar) ) {
         if (delimStack.length === 1) {
           if (isQuoteMark) {
             braceStart = '';
@@ -264,7 +287,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked {
         value = String(token).toLowerCase() === 'true';
       } else if (['undefined', 'null'].includes(String(token).toLowerCase())) {
         value = null;
-      } else if (token.includes('{') || token.includes('[')) {
+      } else if ( (token.includes('{') && token.includes('}')) || (token.includes('[') && token.includes(']')) ) {
         try {
           const z = JSON.parse(token);
           if (isPlainObject(z) || isArray(z)) {

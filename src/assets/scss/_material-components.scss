@@ -15,6 +15,7 @@ Customizations and modifiers for default Material components
       1.4. Sliders (range)
       1.5. Paginator
       1.6. Tooltips
+      1.7. Spinners
 
     2. Layout
       2.1. Cards
@@ -146,6 +147,18 @@ mat-tooltip-component .mat-tooltip {
 }
 
 
+.mat-progress-spinner {
+  &.tiny {
+    $spinner-size: 16px;
+    width: $spinner-size !important;
+    height: $spinner-size !important;
+    & > svg {
+      width: $spinner-size !important;
+      height: $spinner-size !important;
+    }
+  }
+}
+
 /* ------------------------------- *\
     2. LAYOUT
 \* ------------------------------- */
@@ -246,8 +259,16 @@ mat-card.mat-card {
 
 .mat-stepper-horizontal {
   font-family: $font;
+  .mat-step-label {
+    min-width: auto;
+  }
   .mat-step-label-selected {
     font-weight: 700;
+  }
+  .mat-step-icon {
+    .mat-icon {
+      font-size: 12px;
+    }
   }
   // buy/cart-shipping: remove white background
   &.no-bg {
@@ -517,6 +538,9 @@ input {
 
 .mat-select {
   font-family: $font !important;
+  .mat-select-trigger {
+    height: 1.2em; // fix overflow:hidden for our custom font
+  }
 }
 mat-option.mat-option {
   $height: 36px;
@@ -578,6 +602,17 @@ mat-option.mat-option {
 
 .mat-checkbox {
   font-family: $font !important;
+  &.align-top { // settings: don't center checkbox vertically
+    .mat-checkbox-inner-container {
+      margin: 0 12px 0 0;
+      top: 5px;
+    }
+  }
+  &.wrap { // Settings: wrap long checkbox labels
+    .mat-checkbox-layout {
+      white-space: normal;
+    }
+  }
 }
 
 

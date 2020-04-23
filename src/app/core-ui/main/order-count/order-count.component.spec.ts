@@ -6,6 +6,8 @@ import { CoreModule } from 'app/core/core.module';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { OrderCountComponent } from './order-count.component';
+import { SettingsModule } from 'app/settings/settings.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('OrderCountComponent', () => {
   let component: OrderCountComponent;
@@ -16,7 +18,9 @@ describe('OrderCountComponent', () => {
       imports: [
         CommonModule,
         CoreModule.forRoot(),
-        CoreUiModule.forRoot()
+        CoreUiModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       declarations: [OrderCountComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]

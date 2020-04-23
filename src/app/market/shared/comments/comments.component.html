@@ -3,7 +3,8 @@
     <h2 class="subtitle">Ask a question</h2>
     <mat-card>
       <mat-form-field class="full-width no-top-padding">
-        <textarea matInput placeholder="Post a new question" rows="4" #question></textarea>
+        <textarea matInput maxlength="1000" placeholder="Post a new question" rows="4" #question></textarea>
+        <mat-hint align="end">{{question.value.length}} / 1000</mat-hint>
       </mat-form-field>
       <button mat-raised-button color="primary" (click)="postQuestion(question)" [disabled]="question.value.trim() === ''">
         <mat-icon fontSet="partIcon" fontIcon="part-chat"></mat-icon>
@@ -40,7 +41,9 @@
     </div><!-- .loading-container -->
 
     <div class="no-results" *ngIf="pages[0]?.comments.length === 0">
-      No questions asked about this product yet
+      <p>
+        No questions asked about this product yet
+      </p>
     </div>
 
     <ng-container *ngFor="let page of pages; let pageIndex = index;">
@@ -48,7 +51,8 @@
         [comment]="comment"
         [commentIndex]="commentIndex + 1 + (pageIndex * 10)"
         [sellerAddress]="sellerAddress"
-        (replied)="doRefresh()">
+        [targetComments]="targetComments"
+        (refresh)="doRefresh($event)">
       </app-comment>
     </ng-container>
   </div><!-- .comments-list -->

@@ -1,29 +1,15 @@
 const log         = require('electron-log');
 const http        = require('http');
-const rxIpc       = require('rx-ipc-electron/lib/main').default;
-const Observable  = require('rxjs/Observable').Observable;
-
-const cookie      = require('./cookie');
 const _options    = require('../daemon/daemonConfig');
 
 /* spyOnRpc will output all RPC calls being made */
 const spyOnRpc = false;
 
-let HOSTNAME;
-let PORT;
-let TIMEOUT = 30000;
-let rpcOptions;
-let auth;
-
-exports.init = function() {
-  let options = _options.getConfiguration();
-
-  HOSTNAME = options.rpcbind || 'localhost';
-  PORT     = options.port;
-  auth     = cookie.getAuth(options);
-}
-
-exports.destroy = function() {
+const rpcOptions = {
+  hostname: '',
+  path:     '/',
+  method:   'POST',
+  headers:  { 'Content-Type': 'application/json' }
 }
 
 /*
@@ -31,15 +17,11 @@ exports.destroy = function() {
 */
 exports.call = function(method, params, callback) {
 
-  if (!auth) {
-    exports.init()
-  }
-
   if (!callback) {
     callback = function (){};
   }
 
-  const timeout = [ 'extkeyimportmaster', 'extkeygenesisimport'].includes(method) ? 240 * 1000 : TIMEOUT; // TODO: replace
+  const timeout = [ 'extkeyimportmaster', 'extkeygenesisimport'].includes(method) ? 240 * 1000 : 30000; // TODO: replace
   const postData = JSON.stringify({
     method: method,
     params: params
@@ -49,20 +31,17 @@ exports.call = function(method, params, callback) {
     log.debug('rpc.call:', postData);
   }
 
-  if (!rpcOptions) {
-    rpcOptions = {
-      hostname: HOSTNAME,
-      port:     PORT,
-      path:     '/',
-      method:   'POST',
-      headers:  { 'Content-Type': 'application/json' }
+  if (!rpcOptions.hostname) {
+    const settings = _options.getConfig();
+    rpcOptions.hostname = settings.rpcbind || 'localhost';
+
+    if (settings.port) {
+      rpcOptions.port = settings.port;
     }
   }
 
-  if (auth && rpcOptions.auth !== auth) {
-    rpcOptions.auth = auth
-  }
-
+  const settingsAuth = _options.getAuth();
+  rpcOptions.auth = settingsAuth || '';
   rpcOptions.headers['Content-Length'] = postData.length;
 
   const request = http.request(rpcOptions, response => {
@@ -129,6 +108,3 @@ exports.call = function(method, params, callback) {
   request.write(postData);
   request.end();
 }
-
-exports.getTimeoutDelay = () => { return TIMEOUT }
-exports.setTimeoutDelay = function(timeout) { TIMEOUT = timeout }

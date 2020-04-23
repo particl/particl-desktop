@@ -2,6 +2,7 @@ const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const Observable    = require('rxjs/Observable').Observable;
 const fs            = require('fs');
 const path          = require('path');
+const _del          = require('del');
 const log           = require('electron-log');
 const iniParser     = require('@jedmao/ini-parser').default;
 const cookie        = require('../rpc/cookie');
@@ -14,13 +15,12 @@ if (isEmptyObject(_options)) {
 }
 
 const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
-const IPC_CHANNEL_PUB = 'rpc-configuration';
-const IPC_CHANNEL_LISTEN = 'request-configuration';
+const IPC_CHANNEL_WRITE = 'write-core-config';
+const IPC_DELETE_WALLET = 'ipc-delete-wallet';
 
-const SAFE_KEYS = ['addressindex'];
+const SAFE_KEYS = ['addressindex', 'proxy', 'upnp'];
 
 let STORED_CONFIGURATION = {};
-let mainWindowRef = null;
 
 function isArray(obj) {
   return Object.prototype.toString.call(obj) === '[object Array]';
@@ -88,14 +88,14 @@ const formatSettingsOutput = function(rawConfig) {
 }
 
 const readConfigFile = function () {
-  log.debug('Attempting to read particld config from: ', conFilePath);
+  log.debug('Attempting to read particld config file');
   if (fs.existsSync(conFilePath)) {
     try {
       const p = new iniParser();
       const result = p.parse(fs.readFileSync(conFilePath, 'utf-8'));
       return deepClone(result);
     } catch (err) {
-      log.error(`particld config file parsing failed from ${conFilePath}`);
+      log.error(`particld config file parsing failed`);
       log.error(`parsing error: ${err.message}`);
     }
   }
@@ -110,6 +110,50 @@ const getSettings = function(rawOutput = false) {
     return parsedConfig;
   }
   return formatSettingsOutput(parsedConfig);
+}
+
+const loadConfiguration = () => {
+  let settings = STORED_CONFIGURATION;
+  const config = getSettings();
+  settings = config.global || {};
+
+  if ( settings.testnet || _options.testnet) {
+    settings = { ...settings, ...(config.test || {}) };
+  }
+
+  settings = { ...settings, ..._options};
+  settings.port = +(settings.rpcport ? settings.rpcport : settings.port);
+  STORED_CONFIGURATION = settings;
+
+  return STORED_CONFIGURATION;
+}
+
+
+const loadAuthentication = () => {
+  if (isEmptyObject(STORED_CONFIGURATION)) {
+    loadConfiguration();
+  }
+  const cookieAuth = cookie.getAuth(STORED_CONFIGURATION);
+  if (cookieAuth && (cookieAuth !== STORED_CONFIGURATION.auth)) {
+    STORED_CONFIGURATION.auth = cookieAuth;
+  }
+
+  return cookieAuth;
+}
+
+
+const getConfiguration = () => {
+  return STORED_CONFIGURATION;
+}
+
+
+const getAuthentication = () => {
+  return STORED_CONFIGURATION.auth;
+}
+
+
+clearAuthentication = () => {
+  delete STORED_CONFIGURATION.auth;
 }
 
 
@@ -222,7 +266,8 @@ const saveSettings = function(networkOpt) {
           if (error) {
             log.error(`Failed updating ${conFilePath}`, err.stack);
           } else {
-            log.info('Successfully set particld configuration at', conFilePath);
+            log.info('Successfully updated particld configuration');
+            loadConfiguration();
           }
         });
       }
@@ -231,101 +276,71 @@ const saveSettings = function(networkOpt) {
 }
 
 
-const getConfiguration = () => {
-  let settings;
-  if (Object.keys(STORED_CONFIGURATION).length > 0) {
-    settings = STORED_CONFIGURATION;
-  } else {
-    const config = getSettings();
-    settings = config.global || {};
-
-    if ( settings.testnet || _options.testnet) {
-      settings = { ...settings, ...(config.test || {}) };
-    }
-
-    settings = { ...settings, ..._options};
-    settings.port = +(settings.rpcport ? settings.rpcport : settings.port);
-    STORED_CONFIGURATION = settings;
-  }
-
-  if (!settings.auth) {
-    const cookieAuth = cookie.getAuth(_options);
-    if (cookieAuth) {
-      settings.auth = cookieAuth;
-      STORED_CONFIGURATION = settings;
-    }
-  }
-
-  return settings;
-}
-
-
-const emitConfiguration = () => {
-  let settings = getConfiguration();
-
-  try {
-    rxIpc.runCommand(IPC_CHANNEL_PUB, mainWindowRef.webContents, settings)
-      .subscribe(
-        (returnData) => {
-            // no return data
-        },
-        (error) => {
-          log.error("configuration emit error: " + error);
-        },
-        () => {
-            // no logging
-        }
-      );
-  } catch (error) {
-    log.error("configuration emit error: failed to run command (maybe window closed): " + error);
-  }
-}
-
-
 const destroyIpcChannels = () => {
-  rxIpc.removeListeners(IPC_CHANNEL_PUB);
-  rxIpc.removeListeners(IPC_CHANNEL_LISTEN);
+  rxIpc.removeListeners(IPC_CHANNEL_WRITE);
+  rxIpc.removeListeners(IPC_DELETE_WALLET);
 }
 
 
-const initializeIpcChannels = (mainWindow) => {
-  mainWindowRef = mainWindow;
+const initializeIpcChannels = () => {
   destroyIpcChannels();
 
-  rxIpc.registerListener(IPC_CHANNEL_PUB, () => {
-    let settings = getConfiguration();
+  rxIpc.registerListener(IPC_CHANNEL_WRITE, function(settings) {
     return Observable.create(observer => {
-      observer.next(settings);
-      observer.complete();
-    });
-  });
-
-  rxIpc.registerListener(IPC_CHANNEL_LISTEN, () => {
-    emitConfiguration();
-    return Observable.create(observer => {
+      saveSettings(settings);
       observer.complete(true);
     });
   });
+
+  rxIpc.registerListener(IPC_DELETE_WALLET, function(walletName) {
+    return Observable.create(observer => {
+      log.info(`Requested deletion of wallet named "${walletName}"`);
+      let success = false;
+
+      if (walletName !== '') {
+        // Prevents deleting the default wallet
+
+        let walletPath = cookie.getParticlPath(_options);
+        if (_options.testnet) {
+          walletPath = path.join(walletPath, 'testnet');
+        }
+
+        let pathExists = false;
+        if (fs.existsSync(path.join(walletPath, 'wallets', walletName))) {
+          pathExists = true;
+          walletPath = path.join(walletPath, 'wallets', walletName);
+        } else if (fs.existsSync(path.join(walletPath, walletName))) {
+          pathExists = true;
+          walletPath = path.join(walletPath, walletName);
+        }
+
+        if (pathExists && walletPath.endsWith(walletName) && fs.lstatSync(walletPath).isDirectory()) {
+          log.info('Found wallet folder to be deleted: ' + walletPath);
+          try {
+            const delPaths = _del.sync([walletPath], {force: true});
+            log.info('Sucessfully deleted wallet folder: ' + delPaths);
+            success = delPaths.length > 0;
+          } catch (err) {
+            log.error('Failed to delete wallet folder: ', err);
+          }
+        }
+      }
+
+      observer.next(success);
+      observer.complete();
+    });
+  });
 }
 
 
-const deleteAuthFile = () => {
-  let settings = getConfiguration();
-  cookie.clearCookieFilePath(settings);
-  if ('auth' in STORED_CONFIGURATION) {
-    try {
-      delete STORED_CONFIGURATION.auth;
-    } catch (err) {
-      STORED_CONFIGURATION.auth = null;
-    }
-  }
-}
+exports.loadConfig = loadConfiguration;
+exports.getConfig = getConfiguration;
+exports.loadAuth = loadAuthentication;
 
-
-exports.getConfiguration = getConfiguration;
-exports.init = initializeIpcChannels;
-exports.destroy = destroyIpcChannels;
 exports.getSettings = getSettings;
 exports.saveSettings = saveSettings;
-exports.send = emitConfiguration;
-exports.deleteAuthFile = deleteAuthFile;
+
+exports.getAuth = getAuthentication;
+exports.clearAuth = clearAuthentication;
+exports.destroyComms = destroyIpcChannels;
+exports.setupComms = initializeIpcChannels;

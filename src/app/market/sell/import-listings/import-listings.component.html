@@ -100,7 +100,7 @@
     <div class="stepper-content review-import-data">
 
       <mat-accordion *ngIf="listings.length > 0">
-        <h2 class="subtitle">Products found for import</h2>
+        <h2 class="subtitle">{{listings.length}} Products found for import</h2>
         <p class="info">
           Based on your product file, we've found these Products for import. Review and update their missing information, if any.
         </p>
@@ -213,7 +213,10 @@
         <!-- Title Column -->
         <ng-container matColumnDef="title">
           <th mat-header-cell *matHeaderCellDef>Listing title</th>
-          <td mat-cell *matCellDef="let listing"> {{listing.title}} </td>
+          <td mat-cell *matCellDef="let listing">
+            {{listing.title}}
+            <p class="error" *ngIf="listing.validationError">{{ listing.validationError }}</p>
+          </td>
         </ng-container>
 
         <!-- Price Column -->

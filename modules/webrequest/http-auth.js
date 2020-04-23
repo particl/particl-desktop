@@ -1,11 +1,9 @@
 const log = require('electron-log');
 const { session } = require('electron')
 const { URL } = require('url')
-
-const config = require('../daemon/daemonConfig');
 const cookie = require('../rpc/cookie');
 
-const OPTIONS = config.getConfiguration();
+let OPTIONS = {};
 
 // Modify the user agent for all requests to the following urls.
 const filter = {
@@ -14,11 +12,18 @@ const filter = {
 
 let whitelist = new Map();
 
-exports.init = function () {
-    loadDev();
-    loadMarketAuthentication();
-    loadWalletAuthentication();
+let initialized = false;
+
+exports.init = function (_options) {
+
+    if (initialized) {
+      return;
+    }
+    initialized = true;
+
+    loadBotAuthentication();
     loadGithub();
+    loadMarketAuthentication();
 
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
         // clone it
@@ -50,32 +55,57 @@ exports.init = function () {
             log.error('Not whitelisted: ' + u);
             callback({ cancel: true });
         }
-    })
+    });
+}
 
+
+exports.setAuthConfig = function(_options) {
+  OPTIONS = _options;
+  loadDev();
+  loadWalletAuthentication();
 }
 
 function isWhitelisted(url) {
-    return whitelist.has(url);
+    let isValid = whitelist.has(url);
+    if (!isValid && url.split(':')[0] === 'localhost') {
+      isValid = whitelist.has('localhost:*') && ['market', 'bot'].indexOf(whitelist.get('localhost:*').name) !== -1;
+    }
+    return isValid;
 }
 
 // Get the right authentication for the right hostname
 // e.g market vs rpc
 function getAuthentication(url) {
-  entry = whitelist.get(url);
-  if (isPlainObject(entry) && 'auth' in entry ) {
-    if (entry.name === 'wallet' && !entry.auth) {
+  let entry = whitelist.get(url);
+  if (isPlainObject(entry)) {
+    if ('auth' in entry && entry.name === 'wallet' && !entry.auth) {
       // cookie might not be grabbed just yet, so try again..
       loadWalletAuthentication();
     }
     return entry.auth;
+  } else if (url.split(':')[0] === 'localhost'){
+    entry = whitelist.get('localhost:*');
+    if (isPlainObject(entry) && ['market', 'bot'].indexOf(entry.name) !== -1) {
+      return entry.auth;
+    }
   }
 }
 
 function loadMarketAuthentication() {
     // let key = "dev1.particl.xyz:";
-    let key = "localhost:3000";
+    let key = "localhost:*";
     let value = {
         name: "market",
+        auth: "test:test"
+    }
+
+    whitelist.set(key, value);
+}
+
+function loadBotAuthentication() {
+    let key = "localhost:*";
+    let value = {
+        name: "bot",
         auth: "test:test"
     }
 
@@ -91,12 +121,6 @@ function loadWalletAuthentication() {
     }
 
     whitelist.set(key, value);
-}
-
-// when restarting, delete authentication
-exports.removeWalletAuthentication = () => {
-    let key = (OPTIONS.rpcbind || 'localhost') + ":" + OPTIONS.port;
-    whitelist.get(key).auth = undefined;
 }
 
 function loadDev() {

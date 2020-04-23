@@ -348,6 +348,15 @@ export const OrderData = {
     buy: {
       buttons: [
         {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
+        {
           'tooltip': '',
           'colour': 'primary',
           'disabled': true,
@@ -445,6 +454,15 @@ export const OrderData = {
     buy: {
       buttons: [
         {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
+        {
           'tooltip': 'Pay for your order and escrow',
           'colour': 'primary',
           'disabled': false,
@@ -454,11 +472,20 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Seller accepted your bid - please proceed to making the payment (this will lock the funds to escrow)',
+      status_info: 'Seller accepted your bid - please proceed to making the necessary escrow payment',
       notifyOnEntry: true
     },
     sell: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': 'Waiting for Buyer\'s Payment',
           'colour': 'primary',
@@ -469,7 +496,7 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Awaiting on buyer to lock funds in escrow',
+      status_info: 'Awaiting on buyer to make payment towards the escrow',
       notifyOnEntry: false
     },
   },
@@ -481,13 +508,22 @@ export const OrderData = {
     },
     filter: {
       query: 'ESCROW_LOCKED',
-      text: 'Escrow Lock',
+      text: 'Escrow Pending',
       order: 3
     },
     from_action: 'LOCK_ESCROW',
     orderStatus: 'ESCROW_LOCKED',
     buy: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': '',
           'colour': 'primary',
@@ -498,11 +534,20 @@ export const OrderData = {
           'primary': true
         }
       ],
-      status_info: 'Waiting on seller to complete escrow',
+      status_info: 'Waiting on seller to complete the escrow',
       notifyOnEntry: false
     },
     sell: {
       buttons: [
+        {
+          'tooltip': 'Cancel the bid request',
+          'colour': 'warn',
+          'disabled': false,
+          'icon': 'part-cross',
+          'text': 'Cancel bid',
+          'action': 'CANCEL',
+          'primary': false
+        },
         {
           'tooltip': 'Pay for your escrow',
           'colour': 'primary',
@@ -648,6 +693,50 @@ export const OrderData = {
       status_info: 'Order delivery confirmed by Buyer - order successfully finalized',
       notifyOnEntry: true
     }
+  },
+
+  'CANCELLED': {
+    childBidStatus: {
+      name: 'MPA_CANCEL',
+      order: 7
+    },
+    filter: {
+      query: 'BID_CANCELLED',
+      text: 'Cancelled',
+      order: 11
+    },
+    from_action: 'CANCEL',
+    orderStatus: 'BID_CANCELLED',
+    buy: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order Cancelled',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order has been cancelled',
+      notifyOnEntry: false
+    },
+    sell: {
+      buttons: [
+        {
+          'tooltip': '',
+          'colour': 'primary',
+          'disabled': true,
+          'icon': 'part-error',
+          'text': 'Order Cancelled',
+          'action': '',
+          'primary': true
+        }
+      ],
+      status_info: 'Order has been cancelled',
+      notifyOnEntry: true
+    }
   }
 };
 
@@ -672,7 +761,7 @@ export const isPrerelease = (release?: string): boolean => {
 export const isMainnetRelease = (release?: string): boolean => {
   let version = release;
   if (!release) {
-    version = environment.version;
+    version = environment.name;
   }
 
   return !version.includes('testnet');

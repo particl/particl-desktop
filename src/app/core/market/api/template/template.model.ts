@@ -69,7 +69,7 @@ export class Template {
 
   // TODO: check if expired.
   get isPublished(): boolean {
-    return this.object.ListingItems && this.object.ListingItems.length > 0;
+    return (typeof this.object.hash === 'string') && (this.object.hash.length > 0);
   }
 
   get isUnpublished(): boolean {
@@ -84,11 +84,27 @@ export class Template {
     return undefined;
   }
   setStatus(): void {
+    let status = 'unpublished';
     if (this.isPublished) {
-      this.status = !this.isTempExpired ? 'published' : 'expired';
-    } else {
-      this.status = 'unpublished';
+      if (this.checkListingItems) {
+        status = this.object.ListingItems[0].expiredAt &&
+          (this.object.ListingItems[this.object.ListingItems.length - 1].expiredAt >= +new Date())
+          ? 'published' : 'expired';
+      } else {
+        // listing item is either awaiting publishing or is expired and had no bids on it so the associated listings have been deleted
+        // ie: there are no listings
+
+        // @TODO: zaSmilingIdiot (2019-11-13):
+        //  This determines the awaiting state by checking whether the published template was generated at least x minutes ago...
+        //  This is currently needed because there is no difference between
+        //    - an awaiting template (a published template with no associated listing - still waiting for blockchain distribution), and
+        //    - an expired template with no listings (a template with expired listings removed)
+        // There needs to be a better way for this though.
+        status = this.object.generatedAt && ( (+this.object.updatedAt + (1000 * 60 * 60 * 2)) > +new Date()) ? 'awaiting' : 'expired';
+      }
     }
+
+    this.status = status;
   }
   setBasePrice(): void {
     this.basePrice = (this.object.PaymentInformation.ItemPrice
@@ -178,7 +194,7 @@ export class Template {
   }
 
   get expiredAt(): any {
-    return  this.checkListingItems ? 'Expires ' + new DateFormatter(
+    return this.checkListingItems ? new DateFormatter(
       new Date(this.object.ListingItems[0].expiredAt)
       ).dateFormatter(false).substr(0, 16) : '';
   }
@@ -191,13 +207,6 @@ export class Template {
 
   get expireIn(): String {
     return new Duration((this.object.expiredAt - Date.now()) / 1000).getReadableDuration();
-  }
-
-  get isTempExpired(): boolean {
-    if (this.checkListingItems) {
-      return this.object.ListingItems[0].expiredAt < +new Date()
-    }
-    return false;
   }
 
   get checkListingItems(): boolean {

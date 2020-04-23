@@ -1,12 +1,10 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { QRCodeModule } from 'angularx-qrcode';
 import { CommonModule } from '@angular/common';
 
 import { SharedModule } from '../shared/shared.module';
 import { CoreUiModule } from '../../core-ui/core-ui.module';
 
-import { TransactionService } from './shared/transaction.service';
 import { AddressService } from './shared/address.service';
 import { SendService } from './send/send.service';
 
@@ -27,8 +25,8 @@ import { SignatureAddressModalComponent } from './shared/signature-address-modal
 import { FixWalletModalComponent } from './send/fix-wallet-modal/fix-wallet-modal.component';
 import { WalletFixedConfirmationComponent } from './send/fix-wallet-modal/wallet-fixed-confirmation/wallet-fixed-confirmation.component';
 import { LoadingPlaceholderComponent } from 'app/core-ui/main/loading-placeholder/loading-placeholder.component';
-
-
+import { ExchangeHistoryComponent } from './exchange-history/exchange-history.component';
+import { ExchangeComponent } from './exchange-history/exchange/exchange.component';
 
 @NgModule({
   imports: [
@@ -52,7 +50,9 @@ import { LoadingPlaceholderComponent } from 'app/core-ui/main/loading-placeholde
     SignatureAddressModalComponent,
     FixWalletModalComponent,
     WalletFixedConfirmationComponent,
-    LoadingPlaceholderComponent
+    LoadingPlaceholderComponent,
+    ExchangeHistoryComponent,
+    ExchangeComponent
   ],
   exports: [
     TransactionsTableComponent,
@@ -61,8 +61,9 @@ import { LoadingPlaceholderComponent } from 'app/core-ui/main/loading-placeholde
     ReceiveComponent,
     SendComponent,
     HistoryComponent,
-    AddressBookComponent
-
+    AddressBookComponent,
+    ExchangeHistoryComponent,
+    ExchangeComponent
   ],
   entryComponents: [
     AddAddressLabelComponent,

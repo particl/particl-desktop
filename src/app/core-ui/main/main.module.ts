@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule, OnDestroy } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { MatIconModule } from '@angular/material';
@@ -30,7 +30,8 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'wallet', pathMatch: 'full' },
       { path: 'wallet', loadChildren: '../../wallet/wallet.module#WalletViewsModule'},
-      { path: 'market', loadChildren: '../../market/market.module#MarketModule'}
+      { path: 'market', loadChildren: '../../market/market.module#MarketModule'},
+      { path: 'bot', loadChildren: '../../bot/bot.module#BotModule'}
     ]
   }
 ];
@@ -71,13 +72,6 @@ const routes: Routes = [
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class MainModule implements OnDestroy {
-  constructor(
-  ) {
-    console.log('MainModule launched!');
-  }
-
-  ngOnDestroy() {
-    console.log('MainModule destroyed!');
-  }
- }
+export class MainModule {
+  constructor() {}
+}

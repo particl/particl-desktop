@@ -10,9 +10,7 @@ import * as marketConfig from '../../../modules/market/config.js';
 
 export interface IWallet {
   name: string;
-  fakename: string;
   displayname: string;
-  alreadyLoaded?: boolean;
   isMarketEnabled?: boolean;
 }
 
@@ -23,12 +21,18 @@ export class MultiwalletService implements OnDestroy {
   );
   private destroyed: boolean = false;
   private hasList: boolean = false;
+  private _initialized: boolean = false;
 
   private timer: any = interval(1000);
   private _list: BehaviorSubject<Array<IWallet>> = new BehaviorSubject([]);
 
-  constructor(
-    private _rpc: RpcService) {
+  constructor(private _rpc: RpcService) { }
+
+  initialize() {
+    if (this._initialized) {
+      return;
+    }
+    this._initialized = true;
     this.listen();
   }
 
@@ -41,13 +45,37 @@ export class MultiwalletService implements OnDestroy {
     // subscribe to server side stream
     // and load the wallets in _list.
     this.timer.pipe(takeWhile(() => this.destroyed ? false : !this.hasList)).subscribe(() => {
-      this.findAvailableWallets();
+      if (this._rpc.enabled) {
+        this.requestAvailableWallets().subscribe(
+          (wallets: IWallet[]) => {
+            this._list.next(wallets);
+            this.hasList = true;
+          },
+          (error) => this.log.er('listwalletdir: ', error)
+        );
+      }
     });
   }
 
-  refreshWalletList() {
-    if (this.hasList && !this.destroyed) {
-      this.findAvailableWallets();
+  get initComplete(): boolean {
+    return this.hasList;
+  }
+
+  refreshWalletList(): Observable<Array<IWallet>> {
+    if (this._initialized && !this.destroyed) {
+      const request = this.requestAvailableWallets();
+      request.subscribe(
+        (wallets) => {
+          this._list.next(wallets);
+          this.hasList = true;
+        }
+      )
+      return request;
+    } else {
+      return new Observable((observer) => {
+        observer.error('multiwallets not available');
+        observer.complete();
+      });
     }
   }
 
@@ -57,7 +85,9 @@ export class MultiwalletService implements OnDestroy {
   get list(): Observable<Array<IWallet>> {
     return this._list
       .asObservable()
-      .pipe(distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
+      .pipe(
+        takeWhile(() => !this.destroyed),
+        distinctUntilChanged((x, y: any) => _.isEqual(x, y))); // deep compare
   }
 
   /**
@@ -73,10 +103,11 @@ export class MultiwalletService implements OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this._list.complete();
   }
 
-  private findAvailableWallets() {
-    this._rpc.call('listwalletdir', [])
+  private requestAvailableWallets(): Observable<IWallet[]> {
+    return this._rpc.call('listwalletdir', [])
       .pipe(
         map((response: any) => {
           response.wallets.forEach(wallet => {
@@ -86,17 +117,17 @@ export class MultiwalletService implements OnDestroy {
             ) !== undefined;
           });
           return _.orderBy(response.wallets, 'name', 'asc');
-        })
-      )
-      .subscribe(
-        (wallets: IWallet[]) => {
+        }),
+
+        map((wallets: IWallet[]) => {
           const filteredWallets = wallets.filter(
-            (w: IWallet) => !(w.name.toLowerCase().startsWith('testnet/'))
+            (w: IWallet) => {
+              const wName = w.name.toLowerCase();
+              return !(wName.startsWith('testnet/') || wName.startsWith('testnet\\') || (wName === 'testnet') );
+            }
           );
-          this._list.next(filteredWallets);
-          this.hasList = true;
-        },
-        (error) => this.log.er('listwalletdir: ', error)
+          return filteredWallets;
+        })
       );
   }
 }

@@ -9,7 +9,7 @@
       <mat-icon fontSet="partIcon" fontIcon="part-cart" *ngIf="wallet.isMarketEnabled"></mat-icon>
     </button>
 
-    <button mat-raised-button color="primary" routerLink="/installer/create" routerLinkActive="active" matTooltip="Add new wallet" matTooltipPosition="after">
+    <button mat-raised-button color="primary" (click)="goToWalletCreation()" matTooltip="Add new wallet" matTooltipPosition="after">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-small-plus"></mat-icon>
     </button>
 
@@ -17,8 +17,12 @@
 
   <div class="buttons">
 
-    <a mat-button class="help-support" routerLinkActive="active" routerLink="wallet/help" matTooltip="Help & Support" matTooltipPosition="after">
+    <a mat-button class="help-support" routerLinkActive="active" routerLink="/wallet/main/wallet/help" matTooltip="Help & Support" matTooltipPosition="after">
       <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-question"></mat-icon>
+    </a>
+
+    <a mat-button class="settings" routerLinkActive="active" routerLink="/settings" matTooltip="Configure Settings" matTooltipPosition="after">
+      <mat-icon class="icon" fontSet="partIcon" fontIcon="part-cog"></mat-icon>
     </a>
 
     <a mat-button class="report-bug" href="https://github.com/particl/particl-desktop/issues" target="_blank" matTooltip="Report bug" matTooltipPosition="after">

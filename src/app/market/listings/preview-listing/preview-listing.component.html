@@ -15,11 +15,11 @@
     <div class="product-gallery" fxFlex="1 1 450px">
       <div class="gallery-carousel">
         <img
-          *ngIf="data?.listing?.imageCollection?.imageItems?.length === 0"
+          *ngIf="images.length === 0"
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail">
 
         <gallery
-          *ngIf="data?.listing?.imageCollection?.imageItems?.length"
+          *ngIf="images.length > 0"
           gallerize
           [gestures]="false"
           [style.height.px]="380"
@@ -27,8 +27,8 @@
           [thumbWidth]= "80"
           [thumbHeight]="80"
           [loadingMode]="'indeterminate'"
-          [thumb]="data?.listing?.imageCollection?.imageItems?.length > 1"
-          [items]="data?.listing?.imageCollection?.imageItems">
+          [thumb]="images.length > 1"
+          [items]="images">
         </gallery>
       </div>
     </div><!-- .product-gallery -->
@@ -167,7 +167,7 @@
             </tr>
             <tr>
               <th>
-                Worldwide 
+                Worldwide
                 <small>Shipping carrier</small>
               </th>
               <!-- international shipping -->
@@ -216,7 +216,7 @@
     </div><!-- .tab-content.shipping-->
 
     <div class="tab-content" *ngIf="tabLabels[selectedTab] == 'questions'">
-      <app-comments 
+      <app-comments
         type="LISTINGITEM_QUESTION_AND_ANSWERS"
         [target]="this.data.listing.hash"
         [sellerAddress]="this.data.listing.listing.seller">

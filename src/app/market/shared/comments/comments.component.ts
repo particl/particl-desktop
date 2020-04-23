@@ -2,11 +2,13 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { CommentService } from 'app/core/market/api/comment/comment.service';
 import { ModalsHelperService } from 'app/modals/modals.module';
+import { MarketNotificationService } from 'app/core/market/market-notification/market-notification.service';
 import { SnackbarService } from 'app/core/core.module';
 import { Subscription, Subject } from 'rxjs';
 
 import * as _ from 'lodash';
-import { take } from 'rxjs/operators';
+import { take, delay } from 'rxjs/operators';
+import { environment } from 'environments/environment';
 
 interface IPage {
   pageNumber: number,
@@ -29,9 +31,10 @@ export class CommentsComponent implements OnDestroy, OnInit {
 
   public commentCount: any;
 
-  private refresh: Subject<any> = new Subject<any>();
+  public refresh: Subject<any> = new Subject<any>();
 
   private commentCount$: Subscription;
+  private comment$: Subscription;
 
   public isLoading: boolean = true;
   public pages: Array<IPage> = [];
@@ -40,23 +43,39 @@ export class CommentsComponent implements OnDestroy, OnInit {
     infinityScrollSelector: '.mat-dialog-content'
   };
 
+  private targetComments: any[];
+
   constructor(
     private commentService: CommentService,
     private modals: ModalsHelperService,
-    private snackbar: SnackbarService
+    private snackbar: SnackbarService,
+    private notification: MarketNotificationService
   ) {}
 
   ngOnInit() {
-    this.commentCount$ = this.commentService.watchCommentCount(this.type, this.target, '', this.refresh)
-      .subscribe((count) => {
-        this.commentCount = count;
+    if (!environment.isTesting) {
+      this.commentCount$ = this.commentService.watchCommentCount(this.type, this.target, '', this.refresh)
+        .subscribe((count) => {
+          this.commentCount = count;
+        });
+      this.loadPage(0);
+      this.comment$ = this.notification.onEvent('NEW_COMMENT').pipe(delay(500))
+      .subscribe((comment) => {
+        if (comment.type === this.type && comment.target === this.target) {
+          this.doRefresh(true);
+        }
       });
-    this.loadPage(0);
+      this.targetComments = this.notification.getTargetUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.target);
+    }
   }
 
   ngOnDestroy() {
     if (this.commentCount$) {
       this.commentCount$.unsubscribe();
+    }
+
+    if (this.comment$) {
+      this.comment$.unsubscribe();
     }
 
     for (const page of this.pages) {
@@ -68,8 +87,11 @@ export class CommentsComponent implements OnDestroy, OnInit {
     this.refresh.complete();
   }
 
-  public doRefresh() {
-    this.refresh.next();
+  public doRefresh(refreshComments: boolean) {
+    this.targetComments = this.notification.getTargetUnread('LISTINGITEM_QUESTION_AND_ANSWERS', this.target);
+    if (refreshComments) {
+      this.refresh.next();
+    }
   }
 
   postQuestion(question: any) {
@@ -83,7 +105,7 @@ export class CommentsComponent implements OnDestroy, OnInit {
             this.snackbar.open('Question successfully posted');
           },
           (error) => {
-            this.snackbar.open('Error posting question');
+            this.snackbar.open('Error posting question, ' + error);
             this.log.error(error);
           }
         );
@@ -91,7 +113,7 @@ export class CommentsComponent implements OnDestroy, OnInit {
   }
 
   loadPage(pageNumber: number) {
-    const commentPage$ = this.commentService.watch(pageNumber, this.pagination.maxPerPage, 1, this.type, this.target, '', this.refresh)
+    const commentPage$ = this.commentService.watch(pageNumber, this.pagination.maxPerPage, this.type, this.target, '', this.refresh)
       .subscribe((comments: Array<any>) => {
         this.isLoading = false;
 

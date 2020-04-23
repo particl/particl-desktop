@@ -12,6 +12,8 @@ import { SnackbarService } from '../../core/snackbar/snackbar.service';
 
 import { BuyComponent } from './buy.component';
 import { RpcWithStateModule } from 'app/core/rpc/rpc.module';
+import { SettingsModule } from 'app/settings/settings.module';
+import { MultiwalletModule } from 'app/multiwallet/multiwallet.module';
 
 describe('BuyComponent', () => {
   let component: BuyComponent;
@@ -28,7 +30,9 @@ describe('BuyComponent', () => {
         RouterTestingModule,
         BrowserAnimationsModule,
         MarketModule.forRoot(),
-        RpcWithStateModule.forRoot()
+        RpcWithStateModule.forRoot(),
+        MultiwalletModule.forRoot(),
+        SettingsModule.forRoot()
       ],
       providers: [ SnackbarService ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
