@@ -62,6 +62,7 @@ button.small .mat-icon {
   height: calc(100vh - 120px);
   max-height: none;
   background: var(--bg);
+  overflow-y: scroll; // always show vertical scrollbar, so content doesn't jump
 }
 
 .product-gallery {
@@ -87,7 +88,7 @@ button.small .mat-icon {
 
 .product-summary { // container for upper part (gallery, name, meta)
   margin: 0 -24px;
-  padding: 24px;
+  padding: 14px 24px 6px;
   background: var(--color-white);
 }
 
@@ -97,34 +98,74 @@ button.small .mat-icon {
   margin-right: -24px;
 
   h1 { // product name
-    font-size: 1.7em;
+    font-size: 22px;
     line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .short-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin: 0;
+  }
+  .expires-soon {
+    font-weight: 500;
+    margin: 14px 0 0 0;
+    .mat-icon {
+      color: var(--color-info);
+      position: relative;
+      top: 3px;
+      margin-right: 4px;
+      &::after { // pulsating "ripple"
+        content: "";
+        display: block;
+        border: 2px solid hsla(var(--color-info-hsl), 0.7);
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 0;
+        border-radius: 50%;
+        animation: pulse-disappear 1.75s infinite;
+      }
+    }
   }
 
   // Price info
   .pricing {
+    background: var(--bg);
+    border-radius: var(--radius);
+    margin: 24px var(--paddingH) 24px 0;
+    padding: 18px 24px;
+    display: flex;
     .item {
+      margin-right: 24px;
+      border-right: 1px solid hsla(var(--bg-muted-hsl), 0.6);
+      padding-right: 32px;
+      &:last-of-type {
+        border: none;
+        margin: 0;
+        padding: 0;
+      }
       .title {
-        @extend %lighter;
+        color: var(--text-muted);
         text-transform: uppercase;
+        margin-bottom: 2px;
       }
       .value {
-        &.part {
-          font-size: 2em;
-          font-weight: 500;
+        .big {
+          font-size: 18px;
           line-height: 1.2;
           margin: 0;
         }
         .currency {
-          font-size: 60%;
+          font-size: 15px;
           font-weight: 400;
-          margin-left: 0.4rem;
+          margin-left: 5px;
         }
-        .mat-icon {
-          font-size: 14px;
-          position: relative;
-          top: 2px;
-          margin-right: 2px;
+      }
+      &.price {
+        .title, 
+        .big {
+          font-weight: 500;
         }
       }
     }
@@ -169,14 +210,6 @@ button.small .mat-icon {
 p.description {
   word-wrap: break-word;
   @extend %enable-select;
-  &.summary {
-    font-weight: 500;
-    color: var(--text);
-    font-size: 110%;
-    margin: 24px 0 24px -30px;
-    padding: 18px 40px 18px 30px;
-    background: var(--bg);
-  }
   &.lead {
     font-weight: 500;
     font-size: 16px;
@@ -333,5 +366,17 @@ mat-dialog-actions {
   }
   app-favorite { // add/remove from favs icon
     margin-right: 6px;
+  }
+}
+
+@keyframes pulse-disappear {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
   }
 }

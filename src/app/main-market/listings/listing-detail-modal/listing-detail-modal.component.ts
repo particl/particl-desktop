@@ -28,10 +28,11 @@ export class ListingDetailModalComponent implements OnInit {
         ]
       },
       basePrice: 865,
+      inStock: '4–10',
       isAboutToExpire: true,
       expireIn: '23 hours 24 minutes',
       domesticShippingPrice: 20,
-      internationalShippingPrice: 1000,
+      internationalShippingPrice: 25.6,
       escrowPriceDomestic: 885,
       escrowPriceInternational: 1865,
       totalAmountDomestic: 1770,
@@ -40,6 +41,7 @@ export class ListingDetailModalComponent implements OnInit {
         name: 'Business / Corporate'
       },
       country: 'US',
+      buyersCountry: 'CZ',
       createdAt: '22-04-2020',
       expiredTime: '24-04-2020',
       hash: 'sdfjsndf',

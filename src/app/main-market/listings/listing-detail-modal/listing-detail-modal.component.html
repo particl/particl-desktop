@@ -17,6 +17,7 @@
         <img
           [src]="data?.listing?.imageCollection?.featuredImage?.thumbnail"><!-- *ngIf="images.length === 0" -->
 
+        <!-- TODO: can we push the thumbnails in gallery to right side (instead of below)? -->
         <!--gallery
           *ngIf="images.length > 0"
           gallerize
@@ -34,43 +35,57 @@
 
     <div class="product-info">
       <h1>{{ data?.listing?.title }}</h1>
+      <p class="short-desc">
+        {{ data?.listing?.shortDescription }}
+      </p>
+      <p class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
+        <span matTooltip="Last chance to buy this Listing before it becomes unavailable" matTooltipPosition="after">
+          <mat-icon fontIcon="part-circle-info"></mat-icon>
+          Expires in {{ data?.listing?.expireIn }}
+        </span>
+      </p>
 
       <div class="pricing">
         <div class="item price">
           <div class="title">Price</div>
-          <div class="value part">
-            <span class="number big">{{ data?.listing?.basePrice }}<!-- .particlStringInteger() --></span><!--span class="point big">{{ data?.listing?.basePrice.particlStringSep() }}</span><span class="number small">{{ data?.listing?.basePrice.particlStringFraction() }}</span-->
+          <div class="value">
+            <span class="big">{{ data?.listing?.basePrice }}</span>
             <span class="currency">PART</span>
           </div>
           <div class="value fiat">
             <span class="fiat">~ {{price?.usd}} xx EUR</span>
           </div>
         </div>
+        <div class="item shipping">
+          <div class="title">Shipping to {{ data?.listing?.buyersCountry }}</div>
+          <div class="value">
+            <span class="big">{{ data?.listing?.internationalShippingPrice }}</span>
+            <span class="currency">PART</span>
+          </div>
+          <div class="value fiat">
+            <span class="fiat">~ {{price?.usd}} xx EUR</span>
+          </div>
+        </div>
+        <!-- we can hide this for now or leave it here with "N/A" instead of the proper value for the time being (just to tease for future updates ;) -->
+        <div class="item in-stock">
+          <div class="title">In stock</div>
+          <div class="value">
+            <span class="big">{{ data?.listing?.inStock }}</span>
+            <span class="currency">&times;</span>
+          </div>
+        </div>
       </div><!-- .pricing -->
 
-      <p class="summary description">
-        {{ data?.listing?.shortDescription }}
-      </p>
-
       <table class="meta">
-        <tr class="expires-soon" *ngIf="data?.listing?.isAboutToExpire">
-          <th class="title">
-            <mat-icon fontIcon="part-circle-alert"></mat-icon>
-            Expires soon
-          </th>
-          <td class="value">
-            {{ data?.listing?.expireIn }}
-          </td>
-        </tr>
-        <tr>
+        <!--tr>
           <th class="title">
             <mat-icon fontIcon="part-truck"></mat-icon>
             Shipping
           </th>
           <td class="value">
-            {{ data?.listing?.domesticShippingPrice }}<!-- .particlsString() --> &ndash; {{ data?.listing?.internationalShippingPrice }}<!-- .particlsString() --> <small>PART</small>
+            {{ data?.listing?.domesticShippingPrice }} &ndash; {{ data?.listing?.internationalShippingPrice }} <small>PART</small>
           </td>
-        </tr>
+        </tr-->
         <tr>
           <th class="title">
             <mat-icon fontIcon="part-label"></mat-icon>
