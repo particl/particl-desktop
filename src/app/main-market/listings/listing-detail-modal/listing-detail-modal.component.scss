@@ -24,9 +24,6 @@ button.modal-close {
   z-index: 30 !important;
 }
 
-button.small .mat-icon {
-  margin: 0; // remove margin from buttons with icons only
-}
 
 // ------ LAYOUT ------ //
 
@@ -50,7 +47,7 @@ button.small .mat-icon {
       background: var(--color-white);
       z-index: 20;
       .mat-tab-label {
-        width: (100% / 2);
+        width: (100% / 3);
       }
     }
   }
@@ -65,39 +62,42 @@ button.small .mat-icon {
   overflow-y: scroll; // always show vertical scrollbar, so content doesn't jump
 }
 
-.product-gallery {
-  --photo-size: 350px;
-  flex: 1 0 var(--photo-size);
-  min-height: var(--photo-size);
-  margin-right: var(--paddingH);
-  .gallery-carousel {
-    width: 100%;
-    height: 100%;
-    img { // single product image
-      width: 100%;
-      height: 100%;
-      display: block;
-      object-fit: contain;
-      object-position: center;
-    }
-  }
-  gallery { // multiple product images in gallery
-    background: none;
-  }
-}
 
-.product-summary { // container for upper part (gallery, name, meta)
+// Container for upper part (gallery, name, meta)
+.product-summary {
   margin: 0 -24px;
   padding: 14px 24px 6px;
   background: var(--color-white);
+
+  // Featured photo/gallery
+  .product-gallery {
+    --photo-size: 350px;
+    flex: 1 0 var(--photo-size);
+    height: var(--photo-size);
+    margin-right: var(--paddingH);
+    .gallery-carousel {
+      width: 100%;
+      height: 100%;
+      img { // single product image
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: contain;
+        object-position: center;
+      }
+    }
+    gallery { // multiple product images in gallery
+      background: none;
+    }
+  }
 }
 
+// Main product info (on top)
 .product-info {
   flex: 0 1 100%;
   line-height: 1.7;
   margin-right: -24px;
-
-  h1 { // product name
+  h1 {
     font-size: 22px;
     line-height: 1.4;
     margin-bottom: 4px;
@@ -173,54 +173,24 @@ button.small .mat-icon {
 
   // meta table (shipping, category, sold from & date added)
   table.meta {
-    th.title {
-      @extend %lighter;
+    .title {
+      color: var(--text-muted);
       font-weight: 500;
-      padding: 4px 24px 0 0;
+      padding: 3px 24px 0 0;
     }
     td {
-      padding: 4px 0 0;
+      padding: 3px 0 0;
     }
     .mat-icon {
-      @extend %lighter;
+      color: hsla(var(--text-muted-hsl), 0.45);
       font-size: 14px;
       margin-right: 6px;
       position: relative;
       top: 2px;
     }
-    tr {
-      // "Expires soon" warning
-      &.expires-soon {
-        .mat-icon {
-          @extend %reset;
-          color: var(--color-alert);
-        }
-        .title {
-          @extend %reset;
-        }
-        .value {
-          font-weight: 500;
-        }
-      }
-    }
   }
-}
+} // << .product-info
 
-// Text description
-p.description {
-  word-wrap: break-word;
-  @extend %enable-select;
-  &.lead {
-    font-weight: 500;
-    font-size: 16px;
-  }
-  &.detailed {
-    white-space: pre-line;
-    margin: 0;
-    color: var(--text-muted);
-    line-height: 1.6;
-  }
-}
 
 .product-details {
   margin: 0 -24px;
@@ -231,36 +201,48 @@ p.description {
     padding: var(--paddingV) var(--paddingH);
     line-height: 1.55;
     font-size: 14px;
+  }
 
-    .subtitle {
-      @extend %subtitle;
-      margin-top: 0;
+  .mat-card {
+    padding: var(--paddingV) var(--paddingH);
+  }
+
+  // Text description
+  .description {
+    word-wrap: break-word;
+    @extend %enable-select;
+    &.lead {
+      font-weight: 500;
+      font-size: 16px;
     }
-    .mat-card {
-      padding: var(--paddingV) var(--paddingH);
+    &.detailed {
+      white-space: pre-line;
+      margin: 0;
+      color: var(--text-muted);
+      line-height: 1.6;
     }
-    
-    .gallery {
-      --image-margin: 5px;
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0 calc(-1 * var(--image-margin));
-      width: calc(100% + 2 * var(--image-margin));
-      .image {
-        --image-size: 176px;
-        @include break(l) {
-          --image-size: 170px;
-        }
-        flex: 0 0 var(--image-size);
-        height: var(--image-size);
-        margin: var(--image-margin);
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          display: block;
-        }
+  }
+  
+  .gallery {
+    --image-margin: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 calc(-1 * var(--image-margin));
+    width: calc(100% + 2 * var(--image-margin));
+    .image {
+      --image-size: 176px;
+      @include break(l) {
+        --image-size: 170px;
+      }
+      flex: 0 0 var(--image-size);
+      height: var(--image-size);
+      margin: var(--image-margin);
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
       }
     }
   }
@@ -304,7 +286,6 @@ p.description {
         }
         th,
         td {
-          @extend %tfx;
           border-top: 1px solid var(--bg-muted);
           padding: 12px;
           max-width: 150px; // space out cells ~evenly
@@ -344,11 +325,11 @@ mat-dialog-actions {
   .reporting {
     display: inline-block;
     .title {
-      @extend %lighter;
+      color: var(--text-muted);
       margin-right: 6px;
     }
     .voted {
-      @extend %lighter;
+      color: var(--text-muted);
     }
     .voted-icon {
       margin-right: 4px;
