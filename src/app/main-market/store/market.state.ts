@@ -4,7 +4,7 @@ import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operator
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
-import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings } from './market.models';
+import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings, Profile } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 
@@ -56,7 +56,15 @@ export class MarketState {
 
   @Selector()
   static currentIdentity(state: MarketStateModel): Identity {
-    return state.identity !== null ? state.identity : { id: -1, name: '-', displayName: '-', icon: '', path: '' };
+    const nullIdentity: Identity = { id: 0, name: '-', displayName: '-', icon: '', path: '' };
+    return state.identity !== null ? state.identity : nullIdentity;
+  }
+
+
+  @Selector()
+  static currentProfile(state: MarketStateModel): Profile {
+    const nullProfile: Profile = { id: 0, name: '-'};
+    return state.profile !== null ? state.profile : nullProfile;
   }
 
 

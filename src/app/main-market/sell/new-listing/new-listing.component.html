@@ -1,16 +1,16 @@
-<div class="container-block"><!-- [formGroup]="itemFormGroup" -->
+<div class="container-block">
 
   <app-page-intro>
     <ng-container page-title>Add new Listing for sale</ng-container>
     <ng-container page-content>
-      Publish a new Product for sale on Particl Open Marketplace and/or any other Markets you've joined.
+      Publish a new Product for sale on Particl Open Marketplace or any other Markets you've joined.
     </ng-container>
     <ng-container page-help>
       To join or create new Markets, go to "Manage Markets" page.
     </ng-container>
   </app-page-intro>
 
-  <div class="row" fxLayout="row" fxLayoutGap="30px">
+  <form [formGroup]="templateForm" class="row" fxLayout="row" fxLayoutGap="30px">
 
     <div class="left column" fxFlex="50">
 
@@ -20,59 +20,28 @@
         <label>
           <mat-form-field appearance="fill" class="--plain --larger">
             <h3 class="label">Product name</h3>
-            <input matInput placeholder="Short and descriptive" #title><!-- formControlName="title" -->
-            <mat-hint align="end">{{ title.value?.length || 0 }}/50</mat-hint>
+            <input matInput #title placeholder="Short and descriptive" formControlName="title">
+            <mat-hint align="end">{{ title.value.length }}/{{MAX_TITLE}}</mat-hint>
           </mat-form-field>
         </label>
-
-        <app-category-tree
-          class="category-overlay"
-          *ngIf="readyCategorySelect && _rootCategoryList?.subCategoryList && _rootCategoryList?.subCategoryList.length"
-          (onChange)="onCategoryChange($event)"
-          [options]="_rootCategoryList?.subCategoryList"
-          [selected]="selectedCategory">
-        </app-category-tree>
 
         <label>
           <mat-form-field appearance="fill" class="textarea --plain --larger">
             <h3 class="label">Summary</h3>
-            <textarea matInput #summary rows="3" placeholder="Short Product summary"></textarea><!-- formControlName="shortDescription" -->
-            <mat-hint align="end">{{ summary.value?.length || 0 }}/200</mat-hint>
+            <textarea matInput #summary rows="3" placeholder="Short Product summary" formControlName="shortDescription"></textarea>
+            <mat-hint align="end">{{ summary.value.length }}/{{MAX_SHORT_DESCRIPTION}}</mat-hint>
           </mat-form-field>
         </label>
 
         <label>
           <mat-form-field appearance="fill" class="textarea --plain --larger">
             <h3 class="label">Full description</h3>
-            <textarea matInput #description rows="12" placeholder="In-depth description of your Product"></textarea><!-- formControlName="longDescription" -->
-            <mat-hint align="end">{{ description.value?.length || 0 }}/1000</mat-hint>
+            <textarea matInput #description rows="12" placeholder="In-depth description of your Product" formControlName="longDescription"></textarea>
+            <mat-hint align="end">{{ description.value?.length }}/{{MAX_LONG_DESCRIPTION}}</mat-hint>
           </mat-form-field>
         </label>
 
       </mat-card><!-- .details -->
-
-
-      <h2 class="section-title">Publish to</h2>
-      <mat-card class="publish-to">
-        <p class="help-text">
-          Select at least 1 Market where the Product will be published. You can publish to as many Markets you want, but there's a listing fee for each of them.
-        </p>
-        <div class="scrollable checkbox-group full-width with-hover padded">
-          <!-- TODO: list connected Markets - Particl Open Marketplace first, the rest alphabetically -->
-          <mat-checkbox checked="checked">Particl Open Marketplace (default)</mat-checkbox>
-          <mat-checkbox>Allien's Exquisite Spices</mat-checkbox>
-          <mat-checkbox>BIO FOODS</mat-checkbox>
-          <mat-checkbox>Ceci n'est pas un Commerce</mat-checkbox>
-          <mat-checkbox>Decentralizement</mat-checkbox>
-          <mat-checkbox>Hardware Crypto Secrets</mat-checkbox>
-          <mat-checkbox>Particl Community Market</mat-checkbox>
-          <mat-checkbox>Running out of Fantasy</mat-checkbox>
-          <mat-checkbox>Yet another Market Name</mat-checkbox>
-        </div>
-        <p class="help-text">
-          Product will be published to: <strong>2 Markets</strong>
-        </p>
-      </mat-card><!-- .pricing -->
 
     </div><!-- .left -->
 
@@ -81,9 +50,9 @@
 
       <h2 class="section-title">Product gallery</h2>
       <mat-card class="photos">
-        <div id="drag-n-drop" class="drag-n-drop">
-          <input class="file-input" type="file" accept="image/*" multiple="true" id="fileInput">
-          <button mat-button color="primary" (click)="uploadPicture()">
+        <div class="drag-n-drop" #dropArea>
+          <input class="file-input" type="file" accept="image/*" multiple="true" #fileInputSelector>
+          <button mat-button color="primary" (click)="addImage()">
             <mat-icon fontIcon="part-select"></mat-icon>
             Upload a photo
           </button>
@@ -94,12 +63,12 @@
         </p>
         <div class="gallery" fxLayout="row wrap">
 
-          <div *ngFor="let image of images"
+          <div *ngFor="let image of images.value"
               class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
-            <div class="photo" fxFLex>
-              <img src="{{ image.thumbnail }}">
+            <div class="photo" fxFlex>
+              <img src="{{ image.url }}">
               <div class="icons">
-                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image)">
+                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image.id)">
                 </mat-icon>
                 <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
                 </mat-icon-->
@@ -107,12 +76,12 @@
             </div>
           </div>
 
-          <div *ngFor="let picture of picturesToUpload ; index as i" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+          <div *ngFor="let picture of imagesPending.value ; index as i" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
             <!-- TODO: maybe not gif, but removing is 'unsafe' -->
-            <div class="photo" fxFLex>
+            <div class="photo" fxFlex>
               <img src="{{ picture }}">
               <div class="icons">
-                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removePicture(i)">
+                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removePendingImage(i)">
                 </mat-icon>
                 <!-- TODO: Fix set as featured img -->
                 <!-- <mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
@@ -134,8 +103,7 @@
               <h3 class="label">Product price</h3>
               <mat-form-field appearance="fill" class="--plain --larger">
                 <span matPrefix>PART</span>
-                <!-- min price: or do we want to support free listings? not sure.. [allien] -->
-                <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="price per 1 item"><!-- formControlName="basePrice" -->
+                <input matInput type="text" formControlName="basePrice" type="text" placeholder="price per 1 item">
               </mat-form-field>
             </label>
           </div>
@@ -152,14 +120,14 @@
             </label>
           </div-->
         </div>
-        
-        <label class="--larger">
+
+        <!-- <label class="--larger">
           <h3 class="label">Quantity</h3>
           <mat-form-field appearance="fill" class="--plain --larger">
             <span matPrefix>Items in stock:</span>
-            <input matInput type="number" placeholder="How many are you selling" min="1"><!-- formControlName="quantity" -->
+            <input matInput type="number" placeholder="How many are you selling" min="1">
           </mat-form-field>
-        </label>
+        </label> -->
 
       </mat-card><!-- .pricing -->
 
@@ -170,15 +138,15 @@
         <label class="--larger">
           <h3 class="label">Shipping from</h3>
           <p class="label-desc">From which country will you be selling and shipping your item</p>
-          <mat-select-search
-            class="full-width"
-            [showValueOf]="'name'"
-            [placeHolder]="'Shipping from (your country)'"
-            [isRequired]="'true'"
-            [defaultSelectedValue]="selectedCountry"
-            [isLexigraphicalOrder]="true"
-            (onChange)="onCountryChange($event)"><!-- [options]="countryList.getList()" -->
-          </mat-select-search>
+          <tree-select *ngIf="(regionList$ | async).length > 0"
+            [data$]="regionList$"
+            [singleSelection]="true"
+            [initialSelection]="[sourceRegion.value]"
+            placeholderLabel="Shipping from (your region)"
+            prefixIcon="part-globe"
+            matTooltip="The region from which the item will be shipped" matTooltipPosition="below"
+            (onClosed)="sourceRegion.setValue($event[0] || '')">
+          </tree-select>
         </label>
 
         <mat-divider></mat-divider>
@@ -191,7 +159,7 @@
           <div class="half"><!-- fxFlex="49%" -->
             <mat-form-field appearance="fill" class="--plain --larger">
               <span matPrefix>PART</span>
-              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number"><!-- formControlName="domesticShippingPrice" -->
+              <input matInput type="text" formControlName="priceShipLocal" type="text" placeholder="Local shipping price">
             </mat-form-field>
           </div>
           <!--div class="asymp" fxFlex="2%">
@@ -208,6 +176,22 @@
         </div>
 
         <label class="--larger">
+          <h3 class="label">Shipping destination</h3>
+          <p class="label-desc">To which countries can your item be shipped (leave empty for all)</p>
+          <tree-select *ngIf="(regionList$ | async).length > 0"
+            [data$]="regionList$"
+            [singleSelection]="false"
+            [initialSelection]="targetRegions.value"
+            placeholderLabel="Shipping destinations"
+            prefixIcon="part-truck"
+            matTooltip="The region(s) to which the item will be shipped" matTooltipPosition="below"
+            (onClosed)="targetRegions.setValue($event)">
+          </tree-select>
+        </label>
+
+        <mat-divider></mat-divider>
+
+        <label class="--larger">
           <h3 class="label">International shipping</h3>
           <p class="label-desc">Shipping price for sending the item worldwide</p>
         </label>
@@ -215,7 +199,7 @@
           <div class="half"><!-- fxFlex="49%" -->
             <mat-form-field appearance="fill" class="--plain --larger">
               <span matPrefix>PART</span>
-              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number"><!-- formControlName="internationalShippingPrice" -->
+              <input matInput type="text" formControlName="priceShipIntl" type="text" placeholder="Intl shipping price">
             </mat-form-field>
           </div>
           <!--div class="asymp" fxFlex="2%">
@@ -234,28 +218,28 @@
       </mat-card><!-- .shipping -->
 
     </div><!-- .right -->
-  </div><!-- .row -->
+  </form><!-- .row -->
 
-  <p class="message --warning" *ngIf="!canPublish">
-    <strong>Error:</strong> maximum Listing size exceeded &ndash; try to reduce image or text sizes
+  <p class="message --warning" *ngIf="errorMessage.length > 0">
+    <strong>Error:</strong> {{ errorMessage }}
   </p>
 
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
-      <button mat-button routerLink="" color="warn"><!-- (click)="backToSell()" -->
+      <button mat-button [routerLink]="['../']" color="warn">
         <mat-icon fontIcon="part-cross"></mat-icon>
         Back to Listings
       </button>
     </div>
-    <div class="right">
-      <button [disabled]="!itemFormGroup?.valid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
+    <div class="right" *ngIf="(saveButtonText.length > 0) && (publishButtonText.length > 0)">
+      <button [disabled]="templateForm.invalid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
         <mat-icon fontIcon="part-date"></mat-icon>
-        {{ isExistingTemplate() ? 'Update' : 'Save' }}
+        {{ saveButtonText }}
       </button>
 
-      <button [disabled]="!itemFormGroup?.valid" mat-raised-button color="primary" (click)="saveAndPublish()" *ngIf="!['awaiting', 'published'].includes(preloadedTemplate?.status)">
+      <button [disabled]="templateForm.invalid" mat-raised-button color="primary" (click)="publishTemplate()">
         <mat-icon fontIcon="part-check"></mat-icon>
-        {{ isExistingTemplate() ? 'Update & Publish' : 'Save & Publish' }}
+        {{ publishButtonText }}
       </button>
     </div>
   </div><!-- .action-buttons -->

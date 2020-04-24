@@ -2,9 +2,11 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { MarketSharedModule } from '../shared/shared.module';
 import { SellComponent } from './sell.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
+import { SellService } from './sell.service';
 
 
 const routes: Routes = [
@@ -19,6 +21,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     CoreUiModule,
+    MarketSharedModule,
   ],
   exports: [
     RouterModule
@@ -27,6 +30,9 @@ const routes: Routes = [
     SellComponent,
     NewListingComponent,
     ImportListingsComponent
+  ],
+  providers: [
+    SellService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

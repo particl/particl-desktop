@@ -1,5 +1,5 @@
 <!-- Do not remove the below class it is using for test case -->
-<app-header class="test-case-container">
+<app-header>
   <div class="tab-bar">
     <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
       <mat-tab>
@@ -38,7 +38,7 @@
   <div class="filter">
 
     <div class="buttons">
-      <button mat-raised-button color="primary" routerLink="new-listing" class="full-width"><!-- (click)="addItem()" -->
+      <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
         <mat-icon fontIcon="part-circle-plus"></mat-icon>
         Add new Listing
       </button>
@@ -175,7 +175,7 @@
             </div>
           </div>
         </mat-expansion-panel-header>
-      
+
         <div class="status-info">
           <div class="text">
             <h2 class="item-title">Expired<!--{{ status?.status }}--> Listing</h2>
@@ -187,7 +187,7 @@
             Expires: 2020-05-11 15:86<!--{{ listing?.expiredAt }}-->
           </p>
         </div>
-      
+
         <div class="detail" fxLayout="row" fxLayoutGap="30px">
           <div class="description" fxFlex="55%">
             <h3 class="item-subtitle">Published on</h3>
@@ -224,7 +224,7 @@
             </table>
           </div>
         </div>
-      
+
         <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
           <div class="left">
             <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)" class="small"><!-- *ngIf="listing?.isUnpublished" -->
