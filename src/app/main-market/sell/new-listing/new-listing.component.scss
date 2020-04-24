@@ -1,5 +1,9 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+.row {
+  margin-bottom: var(--paddingV);
+}
+
 
 // ------ GALLERY ------ //
 
