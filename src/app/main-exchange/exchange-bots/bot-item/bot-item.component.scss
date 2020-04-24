@@ -1,0 +1,63 @@
+@import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+.bot {
+  .header {
+    .status {
+      .dot {
+        background: var(--color-primary);
+      }
+    }
+  }
+  .detail {
+    .item-subtitle {
+      margin: 0 0 14px;
+    }
+    .bot-info {
+      margin-right: var(--paddingH);
+    }
+  }
+  &.bot-disabled {
+    .header {
+      img {
+        filter: saturate(0%);
+        opacity: 0.7;
+      }
+      .status {
+        .dot {
+          background: var(--bg-muted);
+        }
+      }
+    }
+  }
+}
+
+.coins {
+  background: var(--bg);
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  .coin {
+    --size: 21px;
+    @include break(l) {
+      --size: 24px;
+    }
+    @include break(xl) {
+      --size: 28px;
+    }
+    display: inline-block;
+    margin: 5px 3px 0 3px;
+    width: var(--size);
+    height: var(--size);
+  }
+}
+
+.author-info {
+  table {
+    @extend %enable-select;
+  }
+  th {
+    text-align: left;
+    font-weight: 500;
+    vertical-align: top;
+  }
+}

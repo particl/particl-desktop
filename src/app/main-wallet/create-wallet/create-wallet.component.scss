@@ -161,11 +161,11 @@
       flex: 1 1 50%;
       text-align: center;
       margin: 0;
-      padding: 36px 46px 46px;
-      .mat-icon {
-        @extend %tfx;
-        font-size: 38px;
-        color: var(--bg-muted);
+      padding: 36px 46px;
+      .illustration {
+        width: 100%;
+        max-height: 145px;
+        margin-bottom: 15px;
       }
       .box-title {
         margin: 14px 0 12px;
@@ -173,20 +173,6 @@
       .choice-desc {
         margin: 8px 0 26px;
         color: var(--text-muted);
-      }
-      &:hover {
-        &.create {
-          .mat-icon {
-            transform: scale(1.1);
-            color: var(--color-primary);
-          }
-        }
-        &.restore {
-          .mat-icon {
-            transform: rotate(45deg) scale(1.1);
-            color: var(--color-secondary);
-          }
-        }
       }
       &:last-of-type {
         margin-left: 30px;

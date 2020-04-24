@@ -6,8 +6,9 @@ import { MarketSharedModule } from '../shared/shared.module';
 import { ListingsComponent } from './listings.component';
 
 
+
 const routes: Routes = [
-  { path: '', component: ListingsComponent, data: { title: 'Browse Markets'} }
+  { path: '', component: ListingsComponent, data: { title: 'Browse Listings'} }
 ];
 
 
