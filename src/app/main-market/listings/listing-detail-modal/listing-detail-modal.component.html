@@ -57,6 +57,10 @@
           </div>
         </div>
         <div class="item shipping">
+          <!-- TODO: Shipping price
+            a) if destination country set: display what's below, ie. price for that country (local or intl)
+            b) if country isn't set: display title as "Shipping" only, price will be a range (local - intl), as we currently have it in 2.3.0
+          -->
           <div class="title">Shipping to {{ data?.listing?.buyersCountry }}</div>
           <div class="value">
             <span class="big">{{ data?.listing?.internationalShippingPrice }}</span>

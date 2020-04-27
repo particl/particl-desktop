@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { OverviewComponent } from './overview.component';
+import { MarketSharedModule } from '../shared/shared.module';
 import { QuestionAnswerItemComponent } from './question-answer-item/question-answer-item.component';
 
 
@@ -16,6 +17,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     CoreUiModule,
+    MarketSharedModule
   ],
   exports: [
     RouterModule
