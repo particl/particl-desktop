@@ -258,15 +258,63 @@
       </mat-card>
     </div><!-- .tab-content.shipping-->
 
-    <div class="tab-content" *ngIf="tabLabels[selectedTab] == 'questions'">
-      <app-comments
-        type="LISTINGITEM_QUESTION_AND_ANSWERS"
-        [target]="this.data.listing.hash"
-        [sellerAddress]="this.data.listing.listing.seller">
-      </app-comments>
-    </div><!-- .tab-content.comments -->
-  </div><!-- .product-details -->
+    <div class="tab-content questions-answers" *ngIf="tabLabels[selectedTab] == 'questions'">
+      <h2 class="section-title">Questions &amp; answers</h2>
 
+      <mat-expansion-panel class="question-answer list-item no-padding">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper">
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="question">
+                Root Question content goes here, if it's too long, we can crop it no problem. It's just for the users to see a short preview of the question..
+              </div>
+            </div>
+            <div class="status-wrap" fxFlex="0 0 100px">
+              <div class="status" matTooltip="Messages in thread" matTooltipPosition="before">
+                <!-- TODO: if Seller hasn't yet replied: -->
+                <mat-icon fontIcon="part-chat"></mat-icon>
+                <!-- TODO: else if Seller has replied: -->
+                <mat-icon fontIcon="part-check"></mat-icon>
+                2
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+        <div class="detail">
+          <!-- FIXME: why doesn't this show up?! -->
+          <app-question-answer-thread></app-question-answer-thread>
+          <app-question-answer-thread></app-question-answer-thread>
+        </div><!-- .detail -->
+      </mat-expansion-panel><!-- .question-answer -->
+
+      <div class="no-results --smaller --horizontal">
+        <img class="illustration" src="./assets/images/illustrations/no-questions.svg" alt="No Questions asked yet">
+        <div class="text">
+          <p>
+            No Questions asked yet
+          </p>
+          <p class="help-text">
+            Are you missing details from Product's description or do you have some question for the Seller? Ask your questions below:
+          </p>
+        </div>
+      </div><!-- .no-results -->
+
+      <h2 class="section-title">Ask a new question</h2>
+      <!-- TODO: last item is always the reply form -->
+      <label class="item reply-form">
+        <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
+        <mat-form-field appearance="fill" class="post-reply --boxed --larger" color="primary">
+          <mat-icon matPrefix fontIcon="part-language"></mat-icon>
+          <input matInput type="text" placeholder="Ask a question…">
+          <button matSuffix mat-button class="small" matTooltip="Reply" color="primary" matTooltipPosition="before">
+            <mat-icon fontIcon="part-arrow-right"></mat-icon>
+          </button>
+        </mat-form-field>
+      </label>
+      
+    </div><!-- .tab-content.questions-answers -->
+
+  </div><!-- .product-details -->
 </div><!-- .dialog-content -->
 
 

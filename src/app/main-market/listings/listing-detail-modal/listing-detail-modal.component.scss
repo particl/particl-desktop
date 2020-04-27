@@ -1,4 +1,5 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
 .fiat {
   display: none; // hidden until implemented
@@ -313,6 +314,41 @@ button.modal-close {
       margin-left: 0.3rem;
     }
   }
+
+  // Questions & answers
+  .questions-answers {
+    .question-answer {
+      --list-item-size: 60px;
+      .meta {
+        padding-left: 24px;
+        overflow: hidden;
+        .question {
+          color: var(--text);
+          font-size: 15px;
+          font-weight: 500;
+          line-height: 1.4;
+          white-space: nowrap;
+          margin: 0 !important;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      .status { // number of replies in thread
+        padding-top: 4px;
+        padding-bottom: 4px;
+        .mat-icon {
+          font-size: 12px;
+          position: relative;
+          top: 1px;
+          margin-right: 3px;
+          color: var(--text-muted);
+          &.part-check {
+            color: var(--color-primary);
+          }
+        }
+      }
+    }
+  } // << .questions-answers
 
 }
 
