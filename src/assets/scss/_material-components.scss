@@ -974,7 +974,7 @@ mat-option.mat-option {
 // ------ 3.5. RADIOS ------ //
 
 .mat-radio-button {
-  font-family: var(--font);
+  font-family: var(--font) !important;
   &.mat-radio-checked {
     font-weight: 500;
   }
@@ -996,6 +996,9 @@ mat-option.mat-option {
   font-family: var(--font);
   // send: full-width clickable radios
   &.block-radio {
+    .mat-radio-button {
+      display: block;
+    }
     .mat-radio-button .mat-radio-label,
     .mat-radio-button .mat-radio-label-content {
       width: 100%;

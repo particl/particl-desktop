@@ -1,7 +1,7 @@
 @import './src/assets/config'; // import shared colors etc.
 @import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
-// --------- CHOOSE COINs --------- //
+// --------- CHOOSE COINS --------- //
 
 .coin-filter-option { // specific coin selector with coin icons
   .icon {
@@ -52,6 +52,86 @@
     margin: 0 36px;
   }
 }
+
+.centered { // for "get offers" button
+  text-align: center;
+  margin: var(--paddingV) var(--paddingH);
+}
+
+
+// --------- CHOOSE EXCHANGE --------- //
+
+.choose-exchange {
+  --option-paddingV: 12px;
+  max-width: 40rem;
+  margin: calc(1.5 * var(--paddingV)) auto 0;
+
+  // fake table layout via flex
+  .exchange-header,
+  .exchange {
+    display: flex;
+    .name {
+      flex: 0 0 40%;
+    }
+    .rate {
+      flex: 0 0 30%;
+      text-align: right;
+    }
+    .amount {
+      flex: 0 0 30%;
+      text-align: right;
+    }
+  }
+  .exchange-header {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .exchanges {
+    padding: var(--option-paddingV) 0;
+    display: block;
+    .option {
+      padding: 0 16px;
+      &:hover,
+      &:focus {
+        background: hsla(var(--bg-hsl), 0.8);
+      }
+      &.mat-radio-checked {
+        .amount {
+          color: var(--color-secondary);
+          font-weight: 600;
+        }
+      }
+    }
+    .exchange {
+      padding: var(--option-paddingV) 0;
+      .name {
+        font-size: 15px;
+        .tag {
+          color: var(--color-secondary);
+          font-weight: 500;
+          font-size: 11px;
+          text-transform: uppercase;
+          border: 1px solid var(--color-secondary);
+          border-radius: var(--radius);
+          padding: 1px 5px;
+          margin-left: 4px;
+          &:empty {
+            display: none;
+          }
+        }
+      }
+      .rate,
+      .amount {
+        color: var(--text-muted);
+      }
+    }
+  }
+}
+
+
 
 
 

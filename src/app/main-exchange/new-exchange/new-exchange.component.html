@@ -20,20 +20,18 @@
         </div>
         <h3 class="box-title --larger">Send</h3>
       </header>
-      <div class="inputs row" >
-        <mat-form-field class="--plain --larger" appearance="fill">
-          <mat-select placeholder="Input coin" [(ngModel)]="filters.sort" (selectionChange)="filter()">
-            <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
-              <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
-              {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="--plain --larger" appearance="fill">
-          <input matInput type="text" placeholder="Enter amount">
-          <mat-icon matSuffix fontIcon="part-stake"></mat-icon>
-        </mat-form-field>
-      </div>
+      <mat-form-field class="--plain --larger" appearance="fill">
+        <mat-select placeholder="Select coin/token" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+          <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
+            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="--plain --larger" appearance="fill">
+        <input matInput type="text" placeholder="Enter amount">
+        <mat-icon matSuffix fontIcon="part-stake"></mat-icon>
+      </mat-form-field>
     </mat-card><!-- .choose-coin -->
 
     <mat-icon fontIcon="part-transfer"></mat-icon>
@@ -45,26 +43,54 @@
         </div>
         <h3 class="box-title --larger">Receive</h3>
       </header>
-      <div class="inputs row" >
-        <mat-form-field class="--plain --larger" appearance="fill">
-          <mat-select placeholder="Output coin" [(ngModel)]="filters.sort" (selectionChange)="filter()">
-            <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
-              <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
-              {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field class="--plain --larger" appearance="fill">
-          <input matInput type="text" placeholder="Enter amount">
-          <mat-icon matSuffix fontIcon="part-stake"></mat-icon>
-        </mat-form-field>
-      </div>
+      <mat-form-field class="--plain --larger" appearance="fill">
+        <mat-select placeholder="Select coin/token" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+          <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
+            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="--plain --larger" appearance="fill">
+        <input matInput type="text" placeholder="Enter amount">
+        <mat-icon matSuffix fontIcon="part-stake"></mat-icon>
+      </mat-form-field>
     </mat-card><!-- .choose-coin -->
 
-  </div><!-- .row -->
+  </div><!-- .choose-coins -->
+
+  <div class="centered">
+    <!-- TODO: enable button only after coins are chosen above -->
+    <button mat-raised-button color="primary">
+      <mat-icon fontIcon="part-hamburger-chaos-list"></mat-icon>
+      Get offers from Exchanges
+    </button>
+  </div>
+
+  <!-- TODO: hidden until "get offers" button clicked -->
+  <div class="choose-exchange">
+    <div class="exchange-header">
+      <div class="name">Exchange name</div>
+      <div class="rate">Exchange rate</div>
+      <div class="amount">Approx. amount</div>
+    </div>
+    <mat-card class="no-padding">
+      <mat-radio-group class="exchanges block-radio">
+        <mat-radio-button class="option" *ngFor="let option of exchanges_list" [value]="option.value" color="accent">
+          <div class="exchange">
+            <div class="name">{{ option.title }} <span class="tag">{{ option.tag }}</span></div>
+            <div class="rate">{{ option.rate }} BTC/PART</div><!-- (input coin) / (output coin) -->
+            <div class="amount">{{ option.amount }} PART</div>
+          </div>
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
+  </div><!-- .choose-exchange -->
+
+
   
 
-  <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+  <!--div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
     <button mat-button>
       <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
@@ -73,7 +99,7 @@
       <mat-icon fontIcon="part-arrow-right"></mat-icon>
       Next
     </button>
-  </div><!-- .action-buttons -->
+  </div--><!-- .action-buttons -->
 
 
 </div><!-- .container-block -->
