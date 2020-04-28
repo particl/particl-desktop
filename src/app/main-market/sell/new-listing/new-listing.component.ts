@@ -2,15 +2,15 @@ import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } fr
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subject, BehaviorSubject, of, throwError, defer, iif } from 'rxjs';
-import { take, map, concatMap, tap, catchError, takeUntil, finalize } from 'rxjs/operators';
+import { Observable, BehaviorSubject, of, defer, iif, throwError } from 'rxjs';
+import { take, map, concatMap, tap, finalize, mapTo, catchError, last } from 'rxjs/operators';
 import { RegionListService } from '../../services/region-list/region-list.service';
 import { SellService } from '../sell.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { amountValidator, totalValueValidator } from './new-listing.validators';
 import { Country } from '../../services/data/data.models';
-import { NewTemplateData, ListingTemplate } from '../sell.models';
+import { NewTemplateData, ListingTemplate, UpdateTemplateData } from '../sell.models';
 
 
 enum TextContent {
@@ -45,8 +45,7 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly MAX_SHORT_DESCRIPTION: number = 200;
   readonly MAX_LONG_DESCRIPTION: number = 8000;
 
-  private destroy$: Subject<void> = new Subject();
-  private templateID: FormControl = new FormControl(0);
+  private listingTemplate: ListingTemplate = null;
 
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
   @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
@@ -81,53 +80,25 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
       this.regionList$.next(regions);
     });
 
-    this.templateID.valueChanges.pipe(
-      // fetch the latest template if there is one to fetch
-      concatMap((templateId: number) => {
-        if (templateId) {
-          return this._sellService.fetchTemplate(templateId).pipe(
-            catchError(() => {
-              return throwError('template fetch failed');
-            })
-          );
-        }
-        return of(null);
-      }),
-
-      // ensure that the parsing of any fetched template is done correctly
-      tap((existing: ListingTemplate) => {
-        if (!existing) {
-          if (this.templateID.value) {
-            // failed to save an existing form
-            throwError('failed to save template changes');
-          } else {
-            // new template
-            this.saveButtonText = TextContent.BUTTON_LABEL_SAVE;
-            this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_NEW;
-          }
-          return;
-        }
-
-        this.setFormValues(existing);
-        this.imagesPending.setValue([]);
-      }),
-
-      // finally, ensure that the regionList, if it has not been set yet, is built correctly
-      concatMap(() => iif(() => this.regionList$.value.length === 0, regions$)),
-      takeUntil(this.destroy$)
-    ).subscribe(
-      null,
-      (err) => this.errorMessage = err === 'template fetch failed' ?
-          TextContent.ERROR_EXISTING_TEMPLATE_FETCH : TextContent.ERROR_FAILED_SAVE
-    );
-
     this._route.queryParams.pipe(
       take(1),
       map(params => +params['templateID']),
-      tap((id: number) => {
-        this.templateID.setValue(id || 0);
-      })
-    ).subscribe();
+      concatMap((id: number) => {
+        let load$ = of(null);
+        if (id) {
+          load$ = this.loadTemplate(id);
+        } else {
+          this.saveButtonText = TextContent.BUTTON_LABEL_SAVE;
+          this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_NEW;
+        }
+        return load$.pipe(
+          concatMap(() => iif(() => this.regionList$.value.length === 0, regions$)),
+        );
+      }),
+    ).subscribe(
+      null,
+      (err) => this.errorMessage = TextContent.ERROR_EXISTING_TEMPLATE_FETCH
+    );
   }
 
 
@@ -149,8 +120,6 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.regionList$.complete();
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
 
@@ -184,15 +153,20 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    this.doTemplateSave().subscribe(
-      (templateID) => this.templateID.setValue(templateID),
-      () => this._snackbar.open(TextContent.ERROR_FAILED_SAVE)
-    );
+    this.doTemplateSave().subscribe();
   }
 
 
   publishTemplate() {
-    // TODO
+    if (this.templateForm.invalid) {
+      return;
+    }
+
+    this.doTemplateSave().pipe(
+      last()
+    ).subscribe(
+      (template: ListingTemplate) => null // TODO: open publish modal here
+    );
   }
 
 
@@ -216,6 +190,9 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this._sellService.removeTemplateImage(imageId).subscribe(
       () => {
+        if (this.errorMessage === TextContent.ERROR_MAX_SIZE) {
+          this.errorMessage = '';
+        }
         this.images.setValue(this.images.value.filter((img: {id: number, url: string}) => img.id !== imageId));
       },
       () => this._snackbar.open(TextContent.ERROR_IMAGE_REMOVAL)
@@ -279,7 +256,7 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  private doTemplateSave(): Observable<number> {
+  private doTemplateSave(): Observable<ListingTemplate> {
 
     const dialog = this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
@@ -289,30 +266,25 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
     let update$: Observable<number>;
 
     const controls = this.templateForm.controls;
-    const fieldNames = Object.keys(controls);
-
-    const modified = {};
-    for (const fieldName of fieldNames) {
-      // The check for the additional fieldnames here occurs because their values are set programatically,
-      //  (and not via direct user modification). Angular cannot detect such modification as being dirty, so for now,
-      //  just force these to be included in the fields to be updated.
-      if (controls[fieldName].dirty || ['sourceRegion', 'targetRegions'].includes(fieldName)) {
-        modified[fieldName] = controls[fieldName].value;
+    const controlKeys = Object.keys(controls);
+    for (const field of controlKeys) {
+      if (typeof controls[field].value === 'string') {
+        controls[field].setValue(controls[field].value.trim());
       }
     }
 
-    if (+this.templateID.value <= 0) {
+    if (this.listingTemplate === null) {
       // perform save
       const newTemplateData: NewTemplateData = {
-        title: modified['title'] || '',
-        shortDescription: modified['shortDescription'] || '',
-        longDescription: modified['longDescription'] || '',
-        basePrice: +modified['basePrice'] || 0,
-        domesticShippingPrice: +modified['priceShipLocal'] || 0,
-        foreignShippingPrice: +modified['priceShipIntl'] || 0,
+        title: controls['title'].value || '',
+        shortDescription: controls['shortDescription'].value || '',
+        longDescription: controls['longDescription'].value || '',
+        basePrice: +controls['basePrice'].value || 0,
+        domesticShippingPrice: +controls['priceShipLocal'].value || 0,
+        foreignShippingPrice: +controls['priceShipIntl'].value || 0,
         images: this.imagesPending.value.map((image: string) => ({type: 'LOCAL', encoding: 'BASE64', data: image})),
-        shippingFrom: modified['sourceRegion'],
-        shippingTo: modified['targetRegions'],
+        shippingFrom: controls['sourceRegion'].value,
+        shippingTo: controls['targetRegions'].value,
         escrowType: 'MAD_CT',
         escrowBuyerRatio: 100,
         escrowSellerRatio: 100,
@@ -322,17 +294,91 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
 
       update$ = this._sellService.createNewTemplate(newTemplateData);
     } else {
-      // TODO perform update
-      update$ = of(this.templateID.value);
+      // perform update operations
+      const updateData: UpdateTemplateData = {};
+      updateData.images = this.imagesPending.value.map(img => ({type: 'LOCAL', encoding: 'BASE64', data: img}));
+
+      if (
+        (controls['title'].value !== this.listingTemplate.information.title) ||
+        (controls['shortDescription'].value !== this.listingTemplate.information.summary) ||
+        (controls['longDescription'].value !== this.listingTemplate.information.description)
+      ) {
+        updateData.info = {
+          title: controls['title'].value,
+          shortDescription: controls['shortDescription'].value,
+          longDescription: controls['longDescription'].value
+        };
+      }
+
+      if (
+        (controls['basePrice'].value !== this.listingTemplate.price.basePrice.particlsString()) ||
+        (controls['priceShipLocal'].value !== this.listingTemplate.price.shippingLocal.particlsString()) ||
+        (controls['priceShipIntl'].value !== this.listingTemplate.price.shippingInternational.particlsString())
+      ) {
+        updateData.payment = {
+          basePrice: +controls['basePrice'].value,
+          domesticShippingPrice: +controls['priceShipLocal'].value,
+          foreignShippingPrice: +controls['priceShipIntl'].value,
+          currency: 'PART',
+          salesType: 'SALE'
+        };
+      }
+
+      if (controls['sourceRegion'].value !== this.listingTemplate.location.countryCode) {
+        updateData.shippingFrom = controls['sourceRegion'].value;
+      }
+
+      updateData.shippingTo = {
+        add: [],
+        remove: []
+      };
+
+      const existingDestinationCodes = (this.listingTemplate.shippingDestinations || []).filter(dest => {
+        return dest.type === 'SHIPS';
+      }).map(dest => dest.countryCode);
+
+      existingDestinationCodes.forEach(dest => {
+        if (!controls['targetRegions'].value.includes(dest)) {
+          updateData.shippingTo.remove.push(dest);
+        }
+      });
+
+      controls['targetRegions'].value.forEach((dest: string) => {
+        if (!existingDestinationCodes.includes(dest)) {
+          updateData.shippingTo.add.push(dest);
+        }
+      });
+
+      update$ = this._sellService.updateExistingTemplate(this.listingTemplate.id, updateData).pipe(mapTo(this.listingTemplate.id));
     }
 
     return update$.pipe(
-      finalize(() => this._dialog.getDialogById(dialog.id).close())
+      concatMap((id: number) => iif(
+        () => +id > 0,
+        defer(() =>
+          this.loadTemplate(id).pipe(
+            catchError(() => {
+              this._snackbar.open(TextContent.ERROR_FAILED_SAVE);
+              return throwError('save error');
+            }),
+            concatMap((template: ListingTemplate) => {
+              return this._sellService.getTemplateSize(template.id).pipe(
+                catchError(() => of(null)),
+                tap((resp) => null),  // TODO: set error message here
+                mapTo(template)
+              );
+            })
+          )
+        )
+      )),
+      finalize(() => this._dialog.getDialogById(dialog.id).close()),
     );
   }
 
 
-  private setFormValues(template: ListingTemplate) {
+  private setFormValues(template: ListingTemplate): void {
+    this.imagesPending.setValue([]);
+
     this.saveButtonText = TextContent.BUTTON_LABEL_UPDATE;
     this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_EXISTING;
 
@@ -345,9 +391,9 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
     this.templateForm.controls['longDescription'].setValue(
       typeof template.information.description === 'string' ? template.information.description : ''
     );
-    this.templateForm.controls['basePrice'].setValue(template.price.basePrice.particls());
-    this.templateForm.controls['priceShipLocal'].setValue(template.price.shippingLocal.particls());
-    this.templateForm.controls['priceShipIntl'].setValue(template.price.shippingInternational.particls());
+    this.templateForm.controls['basePrice'].setValue(template.price.basePrice.particlsString());
+    this.templateForm.controls['priceShipLocal'].setValue(template.price.shippingLocal.particlsString());
+    this.templateForm.controls['priceShipIntl'].setValue(template.price.shippingInternational.particlsString());
     this.templateForm.controls['sourceRegion'].setValue(
       typeof template.location.countryCode === 'string' ? template.location.countryCode : ''
     );
@@ -363,5 +409,18 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }).filter(img => !!(img && img.id && img.url));
     this.templateForm.controls['images'].setValue(savedImages);
+  }
+
+
+  private loadTemplate(id: number): Observable<ListingTemplate> {
+    if (id) {
+      return this._sellService.fetchTemplate(id).pipe(
+        tap((template: ListingTemplate) => {
+          this.listingTemplate = template;
+          this.setFormValues(template);
+        })
+      );
+    }
+    return of(null);
   }
 }

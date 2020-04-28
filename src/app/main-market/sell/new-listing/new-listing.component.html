@@ -145,7 +145,7 @@
               [initialSelection]="[sourceRegion.value]"
               placeholderLabel="Shipping from (your country)"
               prefixIcon="part-globe"
-              largerInput="true"
+              [labelStyles]="['--larger']"
               matTooltip="The region from which the item will be shipped" matTooltipPosition="below"
               (onClosed)="sourceRegion.setValue($event[0] || '')">
             </tree-select>
@@ -193,7 +193,7 @@
               [initialSelection]="targetRegions.value"
               placeholderLabel="Shipping everywhere"
               prefixIcon="part-airplane"
-              largerInput="true"
+              [labelStyles]="['--larger']"
               matTooltip="The region(s) to which the item can be shipped" matTooltipPosition="below"
               (onClosed)="targetRegions.setValue($event)">
             </tree-select>
@@ -246,12 +246,12 @@
       </button>
     </div>
     <div class="right" *ngIf="(saveButtonText.length > 0) && (publishButtonText.length > 0)">
-      <button [disabled]="templateForm.invalid" mat-button matTooltip="Save template changes" (click)="saveTemplate()">
+      <button [disabled]="templateForm.invalid" mat-button matTooltip="Save template changes" appDebounceClick (debounceClick)="saveTemplate()">
         <mat-icon fontIcon="part-date"></mat-icon>
         {{ saveButtonText }}
       </button>
 
-      <button [disabled]="templateForm.invalid" mat-raised-button color="primary" (click)="publishTemplate()">
+      <button [disabled]="templateForm.invalid" mat-raised-button color="primary" appDebounceClick (debounceClick)="publishTemplate()">
         <mat-icon fontIcon="part-check"></mat-icon>
         {{ publishButtonText }}
       </button>

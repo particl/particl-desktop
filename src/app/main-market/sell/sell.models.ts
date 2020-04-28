@@ -28,6 +28,28 @@ export interface NewTemplateData {
 }
 
 
+export interface UpdateTemplateData {
+  info?: {
+    title: string;
+    shortDescription: string;
+    longDescription: string;
+  };
+  images?: Array<{type: IMAGE_PROTOCOL, encoding: IMAGE_ENCODING, data: string}>;
+  payment?: {
+    salesType: SALES_TYPE;
+    currency: CURRENCY_TYPE;
+    basePrice: number;
+    domesticShippingPrice: number;
+    foreignShippingPrice: number;
+  };
+  shippingFrom?: string;
+  shippingTo?: {
+    add: string[],
+    remove: string[];
+  };
+}
+
+
 export interface TemplateInformation {
   id: number;
   title: string;
@@ -91,5 +113,5 @@ export interface ListingTemplate {
   images: TemplateImage[];
   price: TemplatePricing;
   payment: TemplatePaymentInfo;
-  linkedListingItems: any[];
+  hasLinkedListings: boolean;
 }

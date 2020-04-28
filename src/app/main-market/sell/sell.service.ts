@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError, from } from 'rxjs';
-import { map, retryWhen, concatMap, mapTo, catchError, last } from 'rxjs/operators';
+import { map, concatMap, mapTo, catchError, last, concatAll } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
-import { genericPollingRetryStrategy, PartoshiAmount } from 'app/core/util/utils';
-import { NewTemplateData, ListingTemplate, TemplateShippingDestination, TemplateImage } from './sell.models';
+import { PartoshiAmount } from 'app/core/util/utils';
+import { NewTemplateData, ListingTemplate, TemplateShippingDestination, TemplateImage, UpdateTemplateData } from './sell.models';
 import { RespListingTemplate } from '../shared/market.models';
 
 
@@ -24,9 +24,7 @@ export class SellService {
     const marketPort = this._store.selectSnapshot(MarketState.settings).port;
 
     return this._rpc.call('template', ['get', templateId]).pipe(
-      retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2})),
       map((resp: RespListingTemplate) => {
-
         if (Object.keys(resp.ItemInformation).length <= 0) {
           throwError('Invalid template');
           return;
@@ -39,6 +37,11 @@ export class SellService {
 
   removeTemplateImage(imageID: number): Observable<void> {
     return this._rpc.call('template', ['image', 'remove', imageID]);
+  }
+
+
+  getTemplateSize(templateId: number): Observable<any> {
+    return this._rpc.call('template', ['size', templateId]);
   }
 
 
@@ -74,7 +77,9 @@ export class SellService {
         });
 
         (data.images || []).forEach(image => {
-          queries.push(['image', 'add', templateID, '', image.type, image.encoding, image.data]);
+          const imageParts = image.data.split(',');
+          const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
+          queries.push(['image', 'add', templateID, '', image.type, image.encoding, imgData]);
         });
 
         return from(queries).pipe(
@@ -86,6 +91,68 @@ export class SellService {
       last(),  // wait for all of the requests to complete before emitting
     );
 
+  }
+
+
+  updateExistingTemplate(templateID: number, details: UpdateTemplateData): Observable<void> {
+    const updates$: Observable<any>[] = [];
+    if (details.info) {
+      const rpc$ = this._rpc.call('template', [
+        'information',
+        'update',
+        templateID,
+        details.info.title || '',
+        details.info.shortDescription || '',
+        details.info.longDescription || '',
+        2   // @TODO!!!!!!!! NB!!!!!! FORCING CATEGORY HERE WHILE WAITING FOR UPDATED MP CODE. REMOVE!!!
+      ]);
+      updates$.push(rpc$);
+    }
+    if (details.payment) {
+      const args = [
+        'payment',
+        'update',
+        templateID,
+        details.payment.salesType,
+        details.payment.currency,
+        details.payment.basePrice,
+        details.payment.domesticShippingPrice,
+        details.payment.foreignShippingPrice
+      ];
+      updates$.push(this._rpc.call('template', args));
+    }
+    if (details.shippingFrom) {
+      updates$.push(this._rpc.call('template', ['location', 'update', templateID, details.shippingFrom]));
+    }
+    if (details.shippingTo) {
+      if (details.shippingTo.add) {
+        details.shippingTo.add.forEach(dest =>
+          updates$.push(this._rpc.call('template', ['shipping', 'add', templateID, dest, 'SHIPS']))
+        );
+      }
+      if (details.shippingTo.remove) {
+        details.shippingTo.remove.forEach(dest =>
+          updates$.push(this._rpc.call('template', ['shipping', 'remove', templateID, dest, 'SHIPS']))
+        );
+      }
+    }
+    if (details.images) {
+      details.images.forEach(image => {
+        const imageParts = image.data.split(',');
+        const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
+        updates$.push(this._rpc.call('template', ['image', 'add', templateID, '', image.type, image.encoding, imgData]));
+      });
+    }
+
+    if (updates$.length <= 0) {
+      // prevent error
+      updates$.push(of(null));
+    }
+
+    return from(updates$).pipe(
+      concatAll(),
+      last()
+    );
   }
 
 
@@ -153,7 +220,7 @@ export class SellService {
         shippingLocal: new PartoshiAmount(shipLocal * Math.pow(10, 8)),
         shippingInternational: new PartoshiAmount(shipIntl * Math.pow(10, 8))
       },
-      linkedListingItems: []
+      hasLinkedListings: (source.ListingItems || []).length > 0
     };
 
     return templ;
