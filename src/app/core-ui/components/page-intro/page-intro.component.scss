@@ -51,15 +51,15 @@
   // content with help text (toggle-able)
   .content {
     margin-top: 16px;
+    p {
+      color: var(--text-muted);
+      margin: 6px 0 0;
+    }
     .desc {
       line-height: 1.5;
       @include break(l) {
         font-size: 14.5px;
       }
-    }
-    .help-text {
-      margin-bottom: 0;
-      // .mat-button margin fix is defined in _material-components.scss
     }
     .message:empty {
       display: none;

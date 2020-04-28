@@ -1,1 +1,79 @@
-<p>new-exchange works!</p>
+<div class="container-block without-tab-bar">
+  <app-page-intro>
+    <ng-container page-title>New Exchange</ng-container>
+    <ng-container page-content>
+      Easily convert your BTC/altcoins and PART &ndash; select the desired coin and amount to receive and pay with any supported currency
+    </ng-container>
+    <ng-container page-help>
+      <!-- FIXME: button should point to exchange-bots -->
+      To enable exchange functionality, you will need at least one active Exchange Bot &ndash; manage them in <button mat-button class="small" routerLink="bots"><mat-icon fontIcon="part-tool"></mat-icon>Exchange Bots</button>
+    </ng-container>
+  </app-page-intro>
+
+
+  <div class="choose-coins row" fxLayout fxLayoutAlign="space-between center">
+
+    <mat-card class="choose-coin" fxFlex="50%">
+      <header>
+        <div class="icon">
+          <mat-icon fontIcon="part-arrow-up"></mat-icon>
+        </div>
+        <h3 class="box-title --larger">Send</h3>
+      </header>
+      <div class="inputs row" >
+        <mat-form-field class="--plain --larger" appearance="fill">
+          <mat-select placeholder="Input coin" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+            <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
+              <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+              {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="--plain --larger" appearance="fill">
+          <input matInput type="text" placeholder="Enter amount">
+          <mat-icon matSuffix fontIcon="part-stake"></mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card><!-- .choose-coin -->
+
+    <mat-icon fontIcon="part-transfer"></mat-icon>
+
+    <mat-card class="choose-coin" fxFlex="50%">
+      <header>
+        <div class="icon">
+          <mat-icon fontIcon="part-arrow-down"></mat-icon>
+        </div>
+        <h3 class="box-title --larger">Receive</h3>
+      </header>
+      <div class="inputs row" >
+        <mat-form-field class="--plain --larger" appearance="fill">
+          <mat-select placeholder="Output coin" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+            <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
+              <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+              {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="--plain --larger" appearance="fill">
+          <input matInput type="text" placeholder="Enter amount">
+          <mat-icon matSuffix fontIcon="part-stake"></mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card><!-- .choose-coin -->
+
+  </div><!-- .row -->
+  
+
+  <div class="action-buttons" fxLayoutAlign="space-between center" fxLayoutGap="8px">
+    <button mat-button>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-raised-button color="primary">
+      <mat-icon fontIcon="part-arrow-right"></mat-icon>
+      Next
+    </button>
+  </div><!-- .action-buttons -->
+
+
+</div><!-- .container-block -->

@@ -1,1 +1,66 @@
 @import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+// --------- CHOOSE COINs --------- //
+
+.coin-filter-option { // specific coin selector with coin icons
+  .icon {
+    margin: 0 4px 0 0;
+    position: relative;
+    top: 6px;
+  }
+  small {
+    margin-left: 2px;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+}
+
+.choose-coins {
+  --icon-size: 64px;
+  margin: calc(var(--icon-size) / 2) auto 0;
+  max-width: 40rem;
+  .choose-coin {
+    padding: 0;
+    header {
+      text-align: center;
+      .icon {
+        box-shadow: 0 0 8px var(--bg-muted);
+        border-radius: 50%;
+        background: var(--color-white);
+        width: var(--icon-size);
+        height: var(--icon-size);
+        display: flex;
+        margin: calc(-1 * var(--icon-size) / 2) auto 18px;
+        .mat-icon {
+          margin: auto;
+          font-size: 24px;
+          &.part-arrow-up {
+            color: var(--color-secondary);
+          }
+          &.part-arrow-down {
+            color: var(--color-tertiary);
+          }
+        }
+      }
+    }
+  }
+  .part-transfer { // decorative "swap" icon between coin choosers
+    font-size: 24px;
+    color: hsla(var(--text-muted-hsl), 0.5);
+    animation: rotate 5s infinite linear;
+    margin: 0 36px;
+  }
+}
+
+
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
