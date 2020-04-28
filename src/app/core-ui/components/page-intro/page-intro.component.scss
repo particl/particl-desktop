@@ -59,6 +59,7 @@
     }
     .help-text {
       margin-bottom: 0;
+      // .mat-button margin fix is defined in _material-components.scss
     }
     .message:empty {
       display: none;

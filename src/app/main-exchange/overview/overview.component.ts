@@ -37,6 +37,14 @@ export class ExchangeOverviewComponent implements OnInit {
     search:   ''
   };
 
+  supported_coins: Array<any> = [
+    // sort alphabetically
+    { title: 'Bitcoin',   value: 'btc', },
+    { title: 'DAI',       value: 'dai', },
+    { title: 'Horizen',   value: 'zen', },
+    { title: 'Particl',   value: 'part', }
+  ];
+
   exchange_status: Array<any> = [
     { title: 'All exchanges', value: 'all',         amount: '3' },
     { title: 'Active',        value: 'active',      amount: '1' },

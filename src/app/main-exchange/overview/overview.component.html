@@ -21,27 +21,45 @@
       </button>
     </div><!-- .buttons -->
 
-    <h2 class="section-title">
+    <!--h2 class="section-title">
       Search
     </h2>
 
     <mat-card class="filter-card">
 
       <mat-form-field class="--plain" appearance="fill">
-        <input matInput type="text" placeholder="Search Bots" [(ngModel)]="filters.search">
+        <input matInput type="text" placeholder="Search Exchanges" [(ngModel)]="filters.search">
         <button *ngIf="filters.search" matSuffix mat-button class="small" (click)="filters.search=''; clearAndLoadPage()" matTooltip="Clear" matTooltipPosition="after">
           <mat-icon fontIcon="part-clear-all"></mat-icon>
         </button>
         <mat-icon *ngIf="!filters.search" matSuffix fontIcon="part-search"></mat-icon>
       </mat-form-field>
 
-    </mat-card><!-- .filter-card -->
+    </mat-card--><!-- .filter-card -->
 
     <h2 class="section-title">
       Filter
     </h2>
 
     <mat-card class="filter-card">
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select placeholder="All input coins" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+          <mat-option value="all">All input coins</mat-option>
+          <mat-option class="coin-filter-option" *ngFor="let coin of supported_coins" [value]="coin.value">
+            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select placeholder="All output coins" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+          <mat-option value="all">All output coins</mat-option>
+          <mat-option class="coin-filter-option" *ngFor="let coin of supported_coins" [value]="coin.value">
+            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()">
         <mat-radio-button class="filter-option" *ngFor="let status of exchange_status" value="{{ status.value }}" color="accent">
           {{ status.title }}
