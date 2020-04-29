@@ -21,9 +21,9 @@ export class NewExchangeComponent implements OnInit {
 
   exchanges_list: Array<any> = [
     // sort by best rate?
-    { title: 'SimpleSwap',  value: 'simpleswap',  amount: '0.5413',   rate: '145.5163',   tag: 'Best rate' },
-    { title: 'Changelly',   value: 'changelly',   amount: '0.5315',   rate: '146.5413',   tag: '' },
-    { title: 'StealthEx',   value: 'stealthex',   amount: '0.5138',   rate: '147.1052',   tag: '' }
+    { title: 'SimpleSwap', image: './assets/images/placeholder_4-3.jpg', value: 'simpleswap', amount: '0.5413', rate: '145.5163', tag: 'Best rate' },
+    { title: 'Changelly', image: './assets/images/placeholder_4-3.jpg', value: 'changelly', amount: '0.5315', rate: '146.5413', tag: '' },
+    { title: 'StealthEx', image: './assets/images/placeholder_4-3.jpg', value: 'stealthex', amount: '0.5138', rate: '147.1052', tag: '' }
   ];
 
   constructor() { }

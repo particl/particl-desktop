@@ -486,7 +486,7 @@ body {
   font-size: 18px;
   text-transform: uppercase;
   text-align: center;
-  padding: 145px 0;
+  padding: 145px var(--paddingH);
   border: 1px dashed var(--bg-muted);
   background: hsla(var(--color-white-hsl), 0.45);
   @include break(l) {
@@ -529,7 +529,7 @@ body {
     margin-top: 12px;
   }
   &.--smaller {
-    padding: 50px 0;
+    padding: 50px var(--paddingH);
     @include break(l) {
       padding: 75px 0;
     }

@@ -61,14 +61,28 @@
 
   <div class="centered">
     <!-- TODO: enable button only after coins are chosen above -->
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="accent">
       <mat-icon fontIcon="part-hamburger-chaos-list"></mat-icon>
-      Get offers from Exchanges
+      Get Exchange offers
     </button>
   </div>
 
+  
   <!-- TODO: hidden until "get offers" button clicked -->
   <div class="choose-exchange">
+    <!-- TODO: when loading offers.. then hide -->
+    <!--div class="no-results --smaller --horizontal">
+      <img class="illustration" src="./assets/images/illustrations/loading_animated.svg" alt="Loading Exchange offers">
+      <div class="text">
+        <p>
+          Loading Exchange offers
+        </p>
+        <p class="help-text">
+          Please wait a while until your bots get current exchange offers for your coin swap&hellip;
+        </p>
+      </div>
+    </div--><!-- .no-results -->
+    <!-- TODO: when offers loaded (show all below) -->
     <div class="exchange-header">
       <div class="name">Exchange name</div>
       <div class="rate">Exchange rate</div>
@@ -78,6 +92,7 @@
       <mat-radio-group class="exchanges block-radio">
         <mat-radio-button class="option" *ngFor="let option of exchanges_list" [value]="option.value" color="accent">
           <div class="exchange">
+            <div class="image"><img src="{{ option.image }}" alt="{{ option.title }}"></div>
             <div class="name">{{ option.title }} <span class="tag">{{ option.tag }}</span></div>
             <div class="rate">{{ option.rate }} BTC/PART</div><!-- (input coin) / (output coin) -->
             <div class="amount">{{ option.amount }} PART</div>
@@ -86,6 +101,14 @@
       </mat-radio-group>
     </mat-card>
   </div><!-- .choose-exchange -->
+
+  <div class="centered">
+    <!-- TODO: enable button only after coins are chosen above -->
+    <button mat-raised-button color="primary">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Confirm &amp; Exchange coins
+    </button>
+  </div>
 
 
   
