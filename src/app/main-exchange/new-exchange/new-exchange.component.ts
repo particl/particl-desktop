@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+
+import { ExchangePayModalComponent } from './exchange-pay-modal/exchange-pay-modal.component';
 
 @Component({
   selector: 'app-new-exchange',
@@ -26,9 +29,15 @@ export class NewExchangeComponent implements OnInit {
     { title: 'StealthEx', image: './assets/images/placeholder_4-3.jpg', value: 'stealthex', amount: '0.5138', rate: '147.1052', tag: '' }
   ];
 
-  constructor() { }
+  constructor(
+    private _dialog: MatDialog
+  ) { }
 
   ngOnInit() {
+  }
+
+  openExchangePayModal(): void {
+    const dialog = this._dialog.open(ExchangePayModalComponent);
   }
 
 }

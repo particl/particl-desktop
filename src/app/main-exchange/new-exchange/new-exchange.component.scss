@@ -53,9 +53,13 @@
   }
 }
 
-.centered { // for "get offers" button
+.centered { // for "get offers" button + "confirm & pay"
   text-align: center;
   margin: var(--paddingV) var(--paddingH);
+  .help-text {
+    max-width: 30rem;
+    margin: 0 auto 24px;
+  }
 }
 
 
@@ -146,10 +150,6 @@
     }
   }
 }
-
-
-
-
 
 
 @keyframes rotate {

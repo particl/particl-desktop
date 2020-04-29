@@ -103,8 +103,11 @@
   </div><!-- .choose-exchange -->
 
   <div class="centered">
+    <p class="help-text">
+      Note: final amount of received coins might be slightly different due to market fluctuations and possible exchange fees
+    </p>
     <!-- TODO: enable button only after coins are chosen above -->
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" (click)="openExchangePayModal()">
       <mat-icon fontIcon="part-check"></mat-icon>
       Confirm &amp; Exchange coins
     </button>
