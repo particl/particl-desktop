@@ -1,0 +1,116 @@
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+<div mat-dialog-content class="dialog-content">
+  <p class="lead">
+    Current Identity
+  </p>
+  <p>
+    {{ currentIdentity }}
+  </p>
+
+  <p class="lead">
+    Current Balance
+  </p>
+  <p>
+    {{ currentBalance }}
+  </p>
+  <div class="row" fxLayout fxLayoutAlign="center center">
+
+    <div class="full-width" fxFlex="50%">
+
+      <div class="full-width">
+        <mat-form-field class="--plain" appearance="fill">
+          <mat-select placeholder="Select Market" [formControl]="selectedMarket">
+            <mat-option *ngFor="let market of availableMarkets" [value]="market.id">
+              {{ market.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="full-width">
+        <tree-select
+          [data$]="availableCategories$"
+          [singleSelection]="true"
+          [isParentNodesSelectable]="false"
+          placeholderLabel="Select a category"
+          prefixIcon="part-filter"
+          [labelStyles]="['--larger']"
+          (onClosed)="selectedCategory.setValue($event[0] || '')">
+        </tree-select>
+      </div>
+
+      <div class="full-width">
+        <mat-form-field class="full-width" fxFlex="50%">
+          <mat-label>Select expiry time</mat-label>
+          <mat-select [formControl]="selectedDuration">
+            <mat-option value ="">None</mat-option>
+            <mat-option *ngFor="let duration of availableDurations" [value]="duration.value">
+              {{ duration.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="full-width">
+        <div>
+          <button type="button" mat-button (click)="estimateFee()" [disabled]="!!!selectedCategory.value || !!!selectedDuration.value">
+            <mat-icon fontIcon="part-cross"></mat-icon>
+              Estimate Publish Fee
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="full-width" fxFlex="50%">
+      <p class="widget-help">
+        Each Listing is published to Market for a limited time. This helps fight spam and outdated Listings. Fees are proportional to duration.
+      </p>
+      <p class="widget-help" *ngIf="!hasEstimateError && (feeEstimate !== null)">
+        Complete the options to obtain an estimate publishing fee.
+      </p>
+      <ng-container *ngIf="hasEstimateError; else hasFee">
+        <p class="warning">
+          There was an error fetching the fee estimate, please check that:
+        </p>
+        <ul class="checks">
+          <li>You have a <strong>spendable Public balance</strong></li>
+          <li>You have a network connection</li>
+          <li>The daemon is running</li>
+          <li>You have peers connected</li>
+          <li>Your wallet is unlocked</li>
+        </ul>
+      </ng-container>
+
+
+      <ng-template #hasFee>
+        <ng-container *ngIf="feeEstimate !== null">
+          <p *ngIf="feeEstimate >= 0">
+            Fee is estimated at: PART {{ feeEstimate }}
+          </p>
+          <p *ngIf="feeEstimate < 0">
+            Calculating Fee...
+          </p>
+        </ng-container>
+      </ng-template>
+    </div>
+
+  </div>
+</div><!-- .dialog-content -->
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doPublish()" [disabled]="!!!selectedCategory.value || !!!selectedDuration.value || hasEstimateError">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Publish
+  </button>
+</mat-dialog-actions>

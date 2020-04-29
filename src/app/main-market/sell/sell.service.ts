@@ -156,6 +156,14 @@ export class SellService {
   }
 
 
+  publishTemplate(
+    templateID: number, marketID: number, categoryID: number, duration: number, estimateOnly: boolean = true
+  ): Observable<any> {
+    // TODO: update when the new API is available, to add categoryID in here
+    return this._rpc.call('template', ['post', templateID, duration, marketID, estimateOnly]);
+  }
+
+
   private buildTemplate(source: RespListingTemplate, marketPort?: number): ListingTemplate {
     const itemInfo = source.ItemInformation;
 

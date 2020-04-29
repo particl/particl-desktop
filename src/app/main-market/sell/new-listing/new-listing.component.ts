@@ -1,16 +1,18 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, BehaviorSubject, of, defer, iif, throwError } from 'rxjs';
 import { take, map, concatMap, tap, finalize, mapTo, catchError, last } from 'rxjs/operators';
 import { RegionListService } from '../../services/region-list/region-list.service';
 import { SellService } from '../sell.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { amountValidator, totalValueValidator } from './new-listing.validators';
 import { Country } from '../../services/data/data.models';
 import { NewTemplateData, ListingTemplate, UpdateTemplateData } from '../sell.models';
+import { PublishTemplateModalComponent } from './publish-template-modal/publish-template-modal.component';
 
 
 enum TextContent {
@@ -23,7 +25,10 @@ enum TextContent {
   BUTTON_LABEL_PUBLISH_NEW = 'Save and Publish',
   BUTTON_LABEL_PUBLISH_EXISTING = 'Update and Publish',
   IMAGE_SELECTION_FAILED = 'One or more images were not included in for selection',
-  PROCESSING_TEMPLATE_SAVE = 'Saving the current changes'
+  PROCESSING_TEMPLATE_SAVE = 'Saving the current changes',
+  PROCESSING_TEMPLATE_PUBLISH = 'Publishing the template to the selected market',
+  PUBLISH_FAILED = 'Failed to publish the template',
+  PUBLISH_SUCCESS = 'Successfully created a listing!'
 }
 
 
@@ -53,10 +58,12 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _regionService: RegionListService,
     private _sellService: SellService,
     private _snackbar: SnackbarService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _unlocker: WalletEncryptionService,
   ) {
     this.templateForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_TITLE)]),
@@ -165,7 +172,40 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
     this.doTemplateSave().pipe(
       last()
     ).subscribe(
-      (template: ListingTemplate) => null // TODO: open publish modal here
+      (template: ListingTemplate) => {
+        const dialog = this._dialog.open(
+          PublishTemplateModalComponent,
+          {data: {templateID: this.listingTemplate.id}}
+        );
+        dialog.componentInstance.isConfirmed.pipe(
+          take(1),
+          concatMap((resp) => this._unlocker.unlock({timeout: 20}).pipe(
+            concatMap((unlocked) => {
+              const publish$ = defer(() => {
+                this._dialog.open(ProcessingModalComponent, {
+                  disableClose: true,
+                  data: { message: TextContent.PROCESSING_TEMPLATE_PUBLISH }
+                });
+
+                return this._sellService.publishTemplate(this.listingTemplate.id, resp.market, resp.category, resp.duration, false).pipe(
+                  finalize(() => this._dialog.closeAll())
+                );
+              });
+              return iif(() => unlocked, publish$);
+            })
+          ))
+        ).subscribe(
+          (value) => {
+            this._snackbar.open(TextContent.PUBLISH_SUCCESS);
+            this._router.navigate(['../'], {relativeTo: this._route});
+          },
+          (err) => {
+            this._snackbar.open(TextContent.PUBLISH_FAILED, 'err');
+          }
+        );
+
+        dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
+      }
     );
   }
 
@@ -364,7 +404,7 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
             concatMap((template: ListingTemplate) => {
               return this._sellService.getTemplateSize(template.id).pipe(
                 catchError(() => of(null)),
-                tap((resp) => null),  // TODO: set error message here
+                tap((resp) => null),  // TODO: set error message here (based on the currently unknown response data)
                 mapTo(template)
               );
             })

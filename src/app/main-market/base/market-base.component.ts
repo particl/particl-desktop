@@ -149,8 +149,6 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
           this.identitySelector.close();
         }
 
-        // this._router.navigate(['/main/market']);
-
         if (walletData.walletname === identity.name) {
           this._snackbar.open(TextContent.MARKET_ACTIVATE_SUCCESS, 'success');
         } else {

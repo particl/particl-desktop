@@ -7,6 +7,7 @@ import { SellComponent } from './sell.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { SellService } from './sell.service';
+import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
 
 
 const routes: Routes = [
@@ -29,7 +30,11 @@ const routes: Routes = [
   declarations: [
     SellComponent,
     NewListingComponent,
-    ImportListingsComponent
+    ImportListingsComponent,
+    PublishTemplateModalComponent
+  ],
+  entryComponents: [
+    PublishTemplateModalComponent
   ],
   providers: [
     SellService
