@@ -489,14 +489,8 @@ body {
   padding: 145px 0;
   border: 1px dashed var(--bg-muted);
   background: hsla(var(--color-white-hsl), 0.45);
-  &.--smaller {
-    padding: 50px 0;
-  }
   @include break(l) {
     padding: 220px 0;
-    &.--smaller {
-      padding: 75px 0;
-    }
   }
   .illustration {
     display: block;
@@ -533,6 +527,26 @@ body {
   }
   button {
     margin-top: 12px;
+  }
+  &.--smaller {
+    padding: 50px 0;
+    @include break(l) {
+      padding: 75px 0;
+    }
+  }
+  &.--horizontal { // more compact, horizontal layout (text besides illustration) - in Listing > Q/A
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    .illustration {
+      max-width: 8rem;
+      margin: 0 2rem 0 0;
+      @include break(xl) {
+        max-width: 10rem;
+        margin: 0 3rem 0 0;
+      }
+    }
   }
 }
 

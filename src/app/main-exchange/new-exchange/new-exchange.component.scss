@@ -1,1 +1,146 @@
 @import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+// --------- CHOOSE COINS --------- //
+
+.coin-filter-option { // specific coin selector with coin icons
+  .icon {
+    margin: 0 4px 0 0;
+    position: relative;
+    top: 6px;
+  }
+  small {
+    margin-left: 2px;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+}
+
+.choose-coins {
+  --icon-size: 64px;
+  margin: calc(var(--icon-size) / 2) auto 0;
+  max-width: 40rem;
+  .choose-coin {
+    padding: 0;
+    header {
+      text-align: center;
+      .icon {
+        box-shadow: 0 0 8px var(--bg-muted);
+        border-radius: 50%;
+        background: var(--color-white);
+        width: var(--icon-size);
+        height: var(--icon-size);
+        display: flex;
+        margin: calc(-1 * var(--icon-size) / 2) auto 18px;
+        .mat-icon {
+          margin: auto;
+          font-size: 24px;
+          &.part-arrow-up {
+            color: var(--color-secondary);
+          }
+          &.part-arrow-down {
+            color: var(--color-tertiary);
+          }
+        }
+      }
+    }
+  }
+  .part-transfer { // decorative "swap" icon between coin choosers
+    font-size: 24px;
+    color: hsla(var(--text-muted-hsl), 0.5);
+    animation: rotate 5s infinite linear;
+    margin: 0 36px;
+  }
+}
+
+.centered { // for "get offers" button
+  text-align: center;
+  margin: var(--paddingV) var(--paddingH);
+}
+
+
+// --------- CHOOSE EXCHANGE --------- //
+
+.choose-exchange {
+  --option-paddingV: 12px;
+  max-width: 40rem;
+  margin: calc(1.5 * var(--paddingV)) auto 0;
+
+  // fake table layout via flex
+  .exchange-header,
+  .exchange {
+    display: flex;
+    .name {
+      flex: 0 0 40%;
+    }
+    .rate {
+      flex: 0 0 30%;
+      text-align: right;
+    }
+    .amount {
+      flex: 0 0 30%;
+      text-align: right;
+    }
+  }
+  .exchange-header {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+
+  .exchanges {
+    padding: var(--option-paddingV) 0;
+    display: block;
+    .option {
+      padding: 0 16px;
+      &:hover,
+      &:focus {
+        background: hsla(var(--bg-hsl), 0.8);
+      }
+      &.mat-radio-checked {
+        .amount {
+          color: var(--color-secondary);
+          font-weight: 600;
+        }
+      }
+    }
+    .exchange {
+      padding: var(--option-paddingV) 0;
+      .name {
+        font-size: 15px;
+        .tag {
+          color: var(--color-secondary);
+          font-weight: 500;
+          font-size: 11px;
+          text-transform: uppercase;
+          border: 1px solid var(--color-secondary);
+          border-radius: var(--radius);
+          padding: 1px 5px;
+          margin-left: 4px;
+          &:empty {
+            display: none;
+          }
+        }
+      }
+      .rate,
+      .amount {
+        color: var(--text-muted);
+      }
+    }
+  }
+}
+
+
+
+
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

@@ -62,32 +62,26 @@
           <p class="help-text">
             Upload high quality photos of your Product with good lighting and ideally with white background only. Square format (1:1) works best, with max size of 2 MB.
           </p>
-          <div class="gallery" fxLayout="row wrap">
+          <div class="gallery">
 
-            <div *ngFor="let image of images.value"
-                class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
-              <div class="photo" fxFlex>
-                <img src="{{ image.url }}">
-                <div class="icons">
-                  <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image.id)">
-                  </mat-icon>
-                  <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
-                  </mat-icon-->
-                </div>
+            <div *ngFor="let image of images.value" class="photo-wrapper">
+              <img src="{{ image.url }}">
+              <div class="icons">
+                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image.id)">
+                </mat-icon>
+                <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon-->
               </div>
             </div>
 
-            <div *ngFor="let picture of imagesPending.value ; index as i" class="photo-wrapper" fxFlex="0 0 123px" fxLayoutAlign="center center">
+            <div *ngFor="let picture of imagesPending.value ; index as i" class="photo-wrapper">
               <!-- TODO: maybe not gif, but removing is 'unsafe' -->
-              <div class="photo" fxFlex>
-                <img src="{{ picture }}">
-                <div class="icons">
-                  <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removePendingImage(i)">
-                  </mat-icon>
-                  <!-- TODO: Fix set as featured img -->
-                  <!-- <mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
-                  </mat-icon> -->
-                </div>
+              <img src="{{ picture }}">
+              <div class="icons">
+                <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removePendingImage(i)">
+                </mat-icon>
+                <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
+                </mat-icon-->
               </div>
             </div>
 
