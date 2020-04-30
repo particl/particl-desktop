@@ -5,7 +5,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { BuyComponent } from './buy.component';
 import { CheckoutProcessComponent } from './checkout-process/checkout-process.component';
 import { PlaceOrderModalComponent } from './checkout-process/place-order-modal/place-order-modal.component';
-
+import { MarketSharedModule } from '../shared/shared.module';
 
 const routes: Routes = [
   { path: '', component: BuyComponent, data: { title: 'Purchases'} }
@@ -17,6 +17,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     CoreUiModule,
+    MarketSharedModule
   ],
   exports: [
     RouterModule
