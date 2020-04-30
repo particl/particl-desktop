@@ -126,29 +126,6 @@
     [fromRoot]="true"
     (scrolled)="loadNextPage()" -->
 
-    <!-- no listings at all -->
-    <!-- [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
-    <div class="no-results">
-      <img class="illustration" src="./assets/images/illustrations/no-listings.svg" alt="No Listings">
-      <p>
-        You don't have any Listings yet
-      </p>
-      <p class="help-text">
-        Start selling by clicking on either "Add new Listing" or "Import Listings" button
-      </p>
-    </div><!-- .no-results -->
-
-    <!-- no listings matching search -->
-    <div class="no-results" *ngIf="filters.search">
-      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
-      <p>
-        No matching Listings found
-      </p>
-      <p class="help-text">
-        You don't have any Listings matching your search
-      </p>
-    </div><!-- .no-results -->
-
     <mat-accordion><!-- *ngFor="let page of pages;let pageIndex = index;" -->
       <!--app-seller-listing *ngFor="let listing of page.listings; let listingIndex = index" [listing]="listing" (onDelete)="deleteListing(pageIndex, listingIndex)"></app-seller-listing-->
 
@@ -254,9 +231,30 @@
 
       <!-- ------ ↑↑↑ ------ following code to become listing-item ------ ↑↑↑ ------ -->
 
-
-
     </mat-accordion>
+
+    <!-- no listings at all -->
+    <!-- [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
+    <div class="no-results">
+      <img class="illustration" src="./assets/images/illustrations/no-listings.svg" alt="No Listings">
+      <p>
+        You don't have any Listings yet
+      </p>
+      <p class="help-text">
+        Start selling by clicking on either "Add new Listing" or "Import Listings" button
+      </p>
+    </div><!-- .no-results -->
+
+    <!-- no listings matching search -->
+    <div class="no-results" *ngIf="filters.search">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
+      <p>
+        No matching Listings found
+      </p>
+      <p class="help-text">
+        You don't have any Listings matching your search
+      </p>
+    </div><!-- .no-results -->
 
   </div><!-- .listings-list -->
 </div><!-- .container-block -->

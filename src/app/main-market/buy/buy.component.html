@@ -105,28 +105,6 @@
   <!-- Orders > list -->
   <div class="orders section with-filter">
 
-    <!-- *ngIf="orders?.length === 0" -->
-    <div class="no-results">
-      <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
-      <p>
-        You don't have any market orders yet
-      </p>
-      <p class="help-text">
-        Visit the Marketplace and start buying or selling today!
-      </p>
-    </div>
-
-    <!-- when searching/filtering: -->
-    <div class="no-results">
-      <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
-      <p>
-        No Orders found
-      </p>
-      <p class="help-text">
-        You don't have any Orders matching your search/filter
-      </p>
-    </div>
-
     <!--app-order-item *ngFor="let order of orders" [order]="order" (onOrderUpdated)="orderItemUpdated($event)"></app-order-item-->
 
     <!-- ------ ↓↓↓ ------ following code to become shared/orders-overview/order-item component ------ ↓↓↓ ------ -->
@@ -330,6 +308,28 @@
     </mat-expansion-panel>
     
     <!-- ------ ↑↑↑ -------- above code to become shared/orders-overview/order-item component -------- ↑↑↑ ------ -->
+
+    <!-- *ngIf="orders?.length === 0" -->
+    <div class="no-results">
+      <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
+      <p>
+        You don't have any market orders yet
+      </p>
+      <p class="help-text">
+        Visit the Marketplace and start buying or selling today!
+      </p>
+    </div>
+
+    <!-- when searching/filtering: -->
+    <div class="no-results">
+      <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
+      <p>
+        No Orders found
+      </p>
+      <p class="help-text">
+        You don't have any Orders matching your search/filter
+      </p>
+    </div>
 
   </div><!-- .orders.list -->
 
