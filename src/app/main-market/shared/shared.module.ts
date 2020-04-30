@@ -5,7 +5,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { QuestionAnswerThreadComponent } from './question-answer-thread/question-answer-thread.component';
 import { OrderListItemComponent } from './order-list-item/order-list-item.component';
 import { ListingListItemComponent } from './listing-list-item/listing-list-item.component';
-
+import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
 
 @NgModule({
   imports: [
@@ -16,15 +16,18 @@ import { ListingListItemComponent } from './listing-list-item/listing-list-item.
     TreeSelectComponent,
     QuestionAnswerThreadComponent,
     OrderListItemComponent,
-    ListingListItemComponent
+    ListingListItemComponent,
+    ListingDetailModalComponent
   ],
   exports: [
     TreeSelectComponent,
     QuestionAnswerThreadComponent,
     OrderListItemComponent,
-    ListingListItemComponent
+    ListingListItemComponent,
+    ListingDetailModalComponent
   ],
   entryComponents: [
+    ListingDetailModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

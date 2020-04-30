@@ -25,8 +25,7 @@
       </div>
 
       <mat-card class="cart-item --cart-layout">
-        <!-- TODO: on `.photo` click, open Listing detail modal: -->
-        <div class="photo">
+        <div class="photo" (click)="openListingDetailModal()">
           <div class="overlay">
             <mat-icon fontIcon="part-zoom-in"></mat-icon>
           </div>
@@ -75,8 +74,7 @@
 
       <!-- Another one, just for testing (it's the same, can be removed) -->
       <mat-card class="cart-item --cart-layout">
-        <!-- TODO: on `.photo` click, open Listing detail modal: -->
-        <div class="photo">
+        <div class="photo" (click)="openListingDetailModal()">
           <div class="overlay">
             <mat-icon fontIcon="part-zoom-in"></mat-icon>
           </div>

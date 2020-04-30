@@ -79,8 +79,7 @@
         <mat-icon fontIcon="part-pen-1"></mat-icon>
         Edit
       </button>
-      <!-- TODO: new one - open proper "listing detail" modal (as if someone clicked on it from the Marketplace) -->
-      <button mat-button matTooltip="Open this listing" class="small">
+      <button mat-button matTooltip="Open this listing" class="small" (click)="openListingDetailModal()">
         <mat-icon fontIcon="part-zoom-in"></mat-icon>
         Open
       </button>
