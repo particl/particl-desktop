@@ -6,6 +6,7 @@ import { QuestionAnswerThreadComponent } from './question-answer-thread/question
 import { OrderListItemComponent } from './order-list-item/order-list-item.component';
 import { ListingListItemComponent } from './listing-list-item/listing-list-item.component';
 import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
+import { OrdersPageComponent } from './orders-page/orders-page.component';
 
 @NgModule({
   imports: [
@@ -17,14 +18,16 @@ import { ListingDetailModalComponent } from './listing-detail-modal/listing-deta
     QuestionAnswerThreadComponent,
     OrderListItemComponent,
     ListingListItemComponent,
-    ListingDetailModalComponent
+    ListingDetailModalComponent,
+    OrdersPageComponent
   ],
   exports: [
     TreeSelectComponent,
     QuestionAnswerThreadComponent,
     OrderListItemComponent,
     ListingListItemComponent,
-    ListingDetailModalComponent
+    ListingDetailModalComponent,
+    OrdersPageComponent
   ],
   entryComponents: [
     ListingDetailModalComponent

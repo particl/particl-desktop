@@ -1,0 +1,102 @@
+<app-page-intro *ngIf="type === 'buy'"><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+  <ng-container page-title>Buy Orders</ng-container>
+  <ng-container page-content>
+    This is where you manage the orders you're in the process of buying from other vendors on the marketplace.
+  </ng-container>
+  <ng-container page-info *ngIf="hasEncryptedWallet">
+    As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
+  </ng-container>
+  <ng-container page-help>
+    Each step of the purchasing process needs to be confirmed in this page (i.e. marking an order as "Delivered").
+  </ng-container>
+</app-page-intro>
+
+<app-page-intro *ngIf="type === 'sell'"><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+  <ng-container page-title>Sell Orders</ng-container>
+  <ng-container page-content>
+    Manage your orders which you're selling to Buyers.
+  </ng-container>
+  <ng-container page-info *ngIf="hasEncryptedWallet">
+    As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
+  </ng-container>
+  <ng-container page-help>
+    Each step of the selling process needs to be confirmed in this page (i.e. marking an order as "Shipped").
+  </ng-container>
+</app-page-intro>
+
+
+<!-- Orders > Filter -->
+<div class="filter">
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="searchQuery"
+          placeholder="Search Orders" (keyup.escape)="searchQuery.setValue('')">
+    <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+  <h2 class="section-title">
+    Filter
+  </h2>
+
+  <mat-card class="filter-card">
+    <div class="checkbox highlight">
+      <mat-checkbox color="primary">Orders requiring action</mat-checkbox>
+    </div>
+    <div class="checkbox">
+      <!-- TODO: change here - instead of "hide completed", we'll do this: hide Completed and Rejected by default, show them when this is checked: -->
+      <mat-checkbox color="primary">Show inactive &amp; archived</mat-checkbox>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-radio-group class="radio-group block-radio">
+      <mat-radio-button class="filter-option" *ngFor="let status of statusFilters" value="{{ status.value }}" color="accent" [ngClass]="{ 'empty': status.count === '0' }">
+        {{ status.title }}
+        <span class="amount">{{ status.count }}</span>
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+<!-- Orders > list -->
+<div class="orders section with-filter">
+
+  <app-order-list-item></app-order-list-item>
+
+  <!-- *ngIf="orders?.length === 0" -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
+    <p>
+      You don't have any market orders yet
+    </p>
+    <p class="help-text">
+      Visit the Marketplace and start buying or selling today!
+    </p>
+  </div>
+
+  <!-- when searching/filtering: -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/images/illustrations/no-orders.svg" alt="No Orders found">
+    <p>
+      No Orders found
+    </p>
+    <p class="help-text">
+      You don't have any Orders matching your search/filter
+    </p>
+  </div>
+
+</div><!-- .orders.list -->

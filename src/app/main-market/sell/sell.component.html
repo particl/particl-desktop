@@ -5,19 +5,29 @@
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontIcon="part-recipe"></mat-icon>
-          Orders
+          Sell Orders
           <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span>
         </ng-template>
       </mat-tab>
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontIcon="part-stock"></mat-icon>
-          Listings
+          Your Listings
         </ng-template>
       </mat-tab>
     </mat-tab-group>
   </div>
 </app-header>
+
+
+
+<!-- =========== ORDERS =========== -->
+
+<!-- Do not remove the below class it is using for test case -->
+<div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
+  <app-orders-page type="sell"></app-orders-page>
+</div><!-- "Orders" tab -->
+
 
 
 <!-- =========== LISTINGS =========== -->
@@ -102,20 +112,6 @@
 
   </div><!-- .filter -->
 
-  <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isPageLoading">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        Hang on, we're loading your listings
-      </p>
-      <p class="help-text">
-        This might take a while
-      </p>
-    </div>
-  </div><!-- .loading-container -->
 
   <!-- Listings > list -->
   <div class="listings section with-filter">
@@ -126,11 +122,9 @@
     [fromRoot]="true"
     (scrolled)="loadNextPage()" -->
 
-    <mat-accordion><!-- *ngFor="let page of pages;let pageIndex = index;" -->
-      <!--app-seller-listing *ngFor="let listing of page.listings; let listingIndex = index" [listing]="listing" (onDelete)="deleteListing(pageIndex, listingIndex)"></app-seller-listing-->
+    <mat-accordion>
       <app-listing-list-item></app-listing-list-item>
       <app-listing-list-item></app-listing-list-item>
-
     </mat-accordion>
 
     <!-- no listings at all -->
@@ -157,6 +151,22 @@
     </div><!-- .no-results -->
 
   </div><!-- .listings-list -->
+
+  <!-- .loading-container -->
+  <div class="loading-container" *ngIf="isPageLoading">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        Hang on, we're loading your listings
+      </p>
+      <p class="help-text">
+        This might take a while
+      </p>
+    </div>
+  </div><!-- .loading-container -->
+
 </div><!-- .container-block -->
 
 
@@ -165,24 +175,3 @@
   <!-- FIXME: implement and uncomment:
   <mat-progress-bar mode="indeterminate" color="accent" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading"></mat-progress-bar-->
 </div><!-- .loading-bar -->
-
-
-<!-- =========== ORDERS =========== -->
-
-<!-- Do not remove the below class it is using for test case -->
-<div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
-    <ng-container page-title>Sell Orders</ng-container>
-    <ng-container page-content>
-      Manage your orders which you're selling to Buyers.
-    </ng-container>
-    <ng-container page-info *ngIf="hasEncryptedWallet">
-      As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
-    </ng-container>
-    <ng-container page-help>
-      Each step of the selling process needs to be confirmed in this page (i.e. marking an order as "Shipped").
-    </ng-container>
-  </app-page-intro>
-
-  <app-orders type="sell"></app-orders>
-</div><!-- "Orders" tab -->
