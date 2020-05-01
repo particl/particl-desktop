@@ -204,7 +204,7 @@
       background: var(--color-warning);
     }
     &.payment .dot {
-      background: var(--color-confirms-25-pct);
+      background: var(--color-confirms-33-pct);
     }
     &.escrow .dot {
       background: var(--color-alert);
@@ -255,7 +255,7 @@
       border-color: var(--color-warning);
     }
     &.buy.payment .dot::after {
-      border-color: var(--color-confirms-25-pct);
+      border-color: var(--color-confirms-33-pct);
     }
     &.sell.escrow .dot::after {
       border-color: var(--color-alert);

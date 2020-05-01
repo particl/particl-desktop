@@ -127,7 +127,7 @@
 // ------ ERRORS ------ //
 
 p.message {
-  @include gradientH(var(--color-alert), var(--color-confirms-25-pct));
+  @include gradientH(var(--color-alert), var(--color-confirms-33-pct));
   box-shadow: 0 2px 20px -15px inset black;
   padding: 16px var(--paddingH) 16px calc(var(--paddingH) + 30px);
   font-size: 13px;

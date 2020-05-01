@@ -13,8 +13,22 @@
 
   .logo {
     width: 130px;
-    display: block;
     margin: 35px auto;
+    position: relative;
+    img {
+      display: block;
+    }
+    .network-tag { // display network (e.g. "testnet") if not on mainnet
+      color: var(--color-primary);
+      text-transform: uppercase;
+      font-weight: 600;
+      position: absolute;
+      background: hsla(var(--bg-black-hsl), 0.8);
+      font-size: 11px;
+      padding: 5px 8px;
+      bottom: -8px;
+      left: -8px;
+    }
   }
 
   .menu-links {

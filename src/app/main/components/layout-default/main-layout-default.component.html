@@ -2,7 +2,10 @@
   <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
     <div class="sidebar-menu">
 
-      <img src="./assets/particl-logo{{ (testnet | async) ? '-testnet' : ''}}.svg" class="logo" alt="Particl">
+      <div class="logo">
+        <div class="network-tag" *ngIf="(testnet | async)">testnet</div>
+        <img src="./assets/particl-logo.svg" alt="Particl">
+      </div>
 
       <mat-divider></mat-divider>
 
