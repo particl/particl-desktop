@@ -23,7 +23,7 @@
       <mat-form-field class="--plain --larger" appearance="fill">
         <mat-select placeholder="Select coin/token" [(ngModel)]="filters.sort" (selectionChange)="filter()">
           <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
-            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
           </mat-option>
         </mat-select>
@@ -46,7 +46,7 @@
       <mat-form-field class="--plain --larger" appearance="fill">
         <mat-select placeholder="Select coin/token" [(ngModel)]="filters.sort" (selectionChange)="filter()">
           <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
-            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
           </mat-option>
         </mat-select>

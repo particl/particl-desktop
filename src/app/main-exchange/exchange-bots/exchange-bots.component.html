@@ -41,7 +41,7 @@
         <mat-select placeholder="All supported coins/tokens" [(ngModel)]="filters.sort" (selectionChange)="filter()">
           <mat-option value="all">All supported coins/tokens</mat-option>
           <mat-option class="coin-filter-option" *ngFor="let coin of supported_coins" [value]="coin.value">
-            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
           </mat-option>
         </mat-select>
@@ -84,7 +84,7 @@
     <app-bot-item [bot]="bot"></app-bot-item>
 
     <div class="no-results">
-      <img class="illustration" src="./assets/images/illustrations/no-bots.svg" alt="No Bots found">
+      <img class="illustration" src="./assets/app-exchange/illustrations/no-bots.svg" alt="No Bots found">
       <p>
         No matching Bots found
       </p>
