@@ -11,6 +11,7 @@
       </ng-container>
     </app-page-intro>
 
+    <!-- TODO: hide .cart-header when Cart is empty -->
     <section class="cart">
 
       <div class="cart-header --cart-layout">
@@ -120,6 +121,18 @@
       </div><!-- .action-buttons -->
 
     </section><!-- .cart -->
+
+    <div class="no-results --smaller --horizontal">
+      <img class="illustration" src="./assets/app-market/illustrations/empty-cart.svg" alt="Your Cart is empty">
+      <div class="text">
+        <p>
+          Your Cart is empty
+        </p>
+        <p class="help-text">
+          Why don't you head over to Listings page and populate your Cart with some Products?
+        </p>
+      </div>
+    </div><!-- .no-results -->
 
 
 
