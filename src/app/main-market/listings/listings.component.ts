@@ -12,7 +12,7 @@ import { DataService } from '../services/data/data.service';
 import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { RegionListService } from '../services/region-list/region-list.service';
 
-import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent } from './../shared/listing-detail-modal/listing-detail-modal.component';
 
 @Component({
   templateUrl: './listings.component.html',

@@ -1,0 +1,94 @@
+<mat-expansion-panel class="listing list-item no-padding">
+  <mat-expansion-panel-header class="header">
+    <div class="header-wrapper">
+      <div class="photo">
+        <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+      </div>
+      <div class="meta" fxFlex="1 1 100%">
+        <div class="name">Listing title<!--{{ listing?.title }}--></div>
+        <!-- TODO: if published on 1 market, display it's name; if on multiple display "X Markets" (as shown below) -->
+        <span class="published-markets">2 Markets</span>
+        <span class="category">Some Category<!--{{ listing?.category.name }}--></span>
+      </div>
+      <div class="status-wrap" fxFlex="0 0 140px"><!-- *ngFor="let status of getStatus(listing?.status)" -->
+        <div class="status expired"><!-- remove "expired" class, add: {{ status?.class }} -->
+          <span class="dot"></span>Expired<!--{{ status?.status }}-->
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="status-info">
+    <div class="text">
+      <h2 class="item-title">Expired<!--{{ status?.status }}--> Listing</h2>
+      <p>Listing is expired or something, relist it to publish it on the Market once again<!--{{ listing?.shortDescription }}--></p>
+    </div>
+    <p class="item-info">
+      Category: Some Category<!--{{ listing?.category.name }}--><br>
+      Created: 2020-05-01 15:84<!--{{ listing?.createdAt }}--><br>
+      Expires: 2020-05-11 15:86<!--{{ listing?.expiredAt }}-->
+    </p>
+  </div>
+
+  <div class="detail" fxLayout="row" fxLayoutGap="30px">
+    <div class="description" fxFlex="55%">
+      <h3 class="item-subtitle">Published on</h3>
+      <ul class="listing-info">
+        <li>Particl Open Marketplace</li>
+        <li>Sneaky Market</li>
+      </ul>
+    </div><!-- .description -->
+    <div class="pricing-info" fxFlex="45%">
+      <h3 class="item-subtitle">Pricing</h3>
+      <table class="prices">
+        <tfoot>
+          <th></th>
+          <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+          <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th-->
+        </tfoot>
+        <tbody>
+          <tr>
+            <th>Price per item</th>
+            <td class="amount part">15.2154<!--{{ listing?.basePrice.particlsString() }}--></td>
+            <!--td class="amount fiat">3.5165</td-->
+          </tr>
+          <tr>
+            <th>Local shipping (CZ)<!--{{ listing?.country }}--></th>
+            <td class="amount part">2.5410<!--{{ listing?.domesticShippingPrice.particlsString() }}--></td>
+            <!--td class="amount fiat">0.6518</td-->
+          </tr>
+          <tr>
+            <th>Worldwide shipping</th>
+            <td class="amount part">5.4115<!--{{ listing?.internationalShippingPrice.particlsString() }}--></td>
+            <!--td class="amount fiat">0.9410</td-->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+    <div class="left">
+      <button mat-button color="warn" matTooltip="Delete listing" (click)="confirmDeleteListing(listing)" class="small"><!-- *ngIf="listing?.isUnpublished" -->
+        <mat-icon fontIcon="part-cross"></mat-icon>
+      </button>
+      <button mat-button matTooltip="Clone listing" (click)="addItem(listing?.id, true)" class="small">
+        <mat-icon fontIcon="part-copy"></mat-icon>
+      </button>
+      <button mat-button matTooltip="Edit listing details" (click)="addItem(listing?.id)" class="small"><!-- *ngIf="listing?.isUnpublished" -->
+        <mat-icon fontIcon="part-pen-1"></mat-icon>
+        Edit
+      </button>
+      <button mat-button matTooltip="Open this listing" class="small" (click)="openListingDetailModal()">
+        <mat-icon fontIcon="part-zoom-in"></mat-icon>
+        Open
+      </button>
+    </div>
+    <!--div class="right" *ngFor="let status of getStatus(listing?.status)">
+      <button mat-raised-button color="{{ status?.action_color }}" matTooltip="{{ status?.action_tooltip }}" (click)="action(listing)" [disabled]="status?.action_disabled">
+        <mat-icon fontIcon="{{ status?.action_icon }}"></mat-icon>
+        {{ status?.action_button }}
+      </button>
+    </div-->
+  </mat-action-row>
+</mat-expansion-panel><!-- .listing -->

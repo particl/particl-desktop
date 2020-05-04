@@ -38,15 +38,15 @@
       }
     }
     &.confirm-1 { // 1-4 confirmations
-      color: var(--color-confirms-25-pct);
+      color: var(--color-confirms-33-pct);
       .confirmation-tag {
-        background: hsla(var(--color-confirms-25-pct-hsl), 0.15);
+        background: hsla(var(--color-confirms-33-pct-hsl), 0.15);
       }
     }
     &.confirm-2 { // 5-8 conf.
-      color: var(--color-confirms-50-pct);
+      color: var(--color-confirms-66-pct);
       .confirmation-tag {
-        background: hsla(var(--color-confirms-50-pct-hsl), 0.15);
+        background: hsla(var(--color-confirms-66-pct-hsl), 0.15);
       }
     }
     &.confirm-3 { // 9-12 conf.

@@ -53,40 +53,37 @@
   }
 }
 
-.centered { // for "get offers" button
+.centered { // for "get offers" button + "confirm & pay"
   text-align: center;
   margin: var(--paddingV) var(--paddingH);
+  .help-text {
+    max-width: 30rem;
+    margin: 0 auto 24px;
+  }
 }
 
 
 // --------- CHOOSE EXCHANGE --------- //
 
 .choose-exchange {
-  --option-paddingV: 12px;
+  --option-paddingV: 10px;
   max-width: 40rem;
   margin: calc(1.5 * var(--paddingV)) auto 0;
 
-  // fake table layout via flex
-  .exchange-header,
-  .exchange {
-    display: flex;
-    .name {
-      flex: 0 0 40%;
-    }
-    .rate {
-      flex: 0 0 30%;
-      text-align: right;
-    }
-    .amount {
-      flex: 0 0 30%;
-      text-align: right;
-    }
-  }
   .exchange-header {
     color: var(--text-muted);
     text-transform: uppercase;
     font-size: 11px;
     margin-bottom: 8px;
+    display: flex;
+    .name {
+      flex: 0 0 47%;
+    }
+    .rate,
+    .amount {
+      flex: 0 0 26.5%;
+      text-align: right;
+    }
   }
 
   .exchanges {
@@ -106,8 +103,27 @@
       }
     }
     .exchange {
+      display: flex;
+      align-items: center;
       padding: var(--option-paddingV) 0;
+      .image {
+        --image-size: 5%;
+        flex: 0 0 var(--image-size);
+        padding-top: var(--image-size);
+        margin: 0 1.5% 0 0.5%;
+        position: relative;
+        img {
+          position: absolute;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+          object-position: center;
+        }
+      }
       .name {
+        flex: 0 0 40%;
         font-size: 15px;
         .tag {
           color: var(--color-secondary);
@@ -118,6 +134,8 @@
           border-radius: var(--radius);
           padding: 1px 5px;
           margin-left: 4px;
+          position: relative;
+          top: -1px;
           &:empty {
             display: none;
           }
@@ -125,15 +143,13 @@
       }
       .rate,
       .amount {
+        flex: 0 0 26.5%;
+        text-align: right;
         color: var(--text-muted);
       }
     }
   }
 }
-
-
-
-
 
 
 @keyframes rotate {

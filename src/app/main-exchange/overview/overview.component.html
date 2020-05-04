@@ -46,7 +46,7 @@
         <mat-select placeholder="All input coins" [(ngModel)]="filters.sort" (selectionChange)="filter()">
           <mat-option value="all">All input coins</mat-option>
           <mat-option class="coin-filter-option" *ngFor="let coin of supported_coins" [value]="coin.value">
-            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
           </mat-option>
         </mat-select>
@@ -55,7 +55,7 @@
         <mat-select placeholder="All output coins" [(ngModel)]="filters.sort" (selectionChange)="filter()">
           <mat-option value="all">All output coins</mat-option>
           <mat-option class="coin-filter-option" *ngFor="let coin of supported_coins" [value]="coin.value">
-            <img src="./assets/images/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
+            <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
           </mat-option>
         </mat-select>
@@ -114,10 +114,10 @@
 
               <div class="meta" fxFlex="1 1 100%">
                 <div class="name">
-                  <img class="coin" src="./assets/images/coins/{{ exchange?.currency_from.toUpperCase() }}.svg">
+                  <img class="coin" src="./assets/app-exchange/coins/{{ exchange?.currency_from.toUpperCase() }}.svg">
                   {{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from.toUpperCase() }}
                   -&gt;
-                  <img class="coin" src="./assets/images/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
+                  <img class="coin" src="./assets/app-exchange/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
                   ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to.toUpperCase() }}
                 </div>
                 
@@ -141,7 +141,7 @@
             <table class="exchange-details outgoing full-width">
               <tr>
                 <td rowspan="2" class="direction-img">
-                  <img src="./assets/images/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin">
+                  <img src="./assets/app-exchange/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
                 </td>
                 <th>Send {{ exchange?.currency_from.toUpperCase() }} to</th>
@@ -160,7 +160,7 @@
               <tr>
                 <td rowspan="2" class="direction-img">
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-                  <img src="./assets/images/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin">
+                  <img src="./assets/app-exchange/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin">
                 </td>
                 <th>Receive {{ exchange?.currency_to.toUpperCase() }} to</th>
                 <td><input type="text" readonly value="{{ exchange?.address_to }}" class="value highlight address"></td>
@@ -203,7 +203,7 @@
 
 
       <div class="no-results"><!-- *ngIf="pages[0]?.exchanges.length === 0" -->
-        <img class="illustration" src="./assets/images/illustrations/no-exchanges.svg" alt="No past Exchanges found">
+        <img class="illustration" src="./assets/app-exchange/illustrations/no-exchanges.svg" alt="No past Exchanges found">
         <p>
           No past Exchanges found
         </p>

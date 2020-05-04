@@ -1,0 +1,107 @@
+@import './src/assets/config'; // import shared colors etc.
+
+.mat-dialog-title {
+  margin: -8px -24px 15px !important;
+  padding: 0 var(--paddingH);
+}
+
+button.modal-close {
+  top: 14px !important;
+}
+
+.dialog-content {
+  background: var(--bg);
+  margin: 0 -24px !important;
+  padding: var(--paddingV) var(--paddingH);
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px solid var(--bg-muted);
+  width: 640px;
+}
+
+
+.spending-buying {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  .mat-card {
+    flex: 1 1 50%;
+    font-size: 22px;
+    font-weight: 500;
+    text-align: center;
+    padding: 0 24px 24px;
+    .icon {
+      --icon-size: 48px;
+      box-shadow: 0 0 8px var(--bg-muted);
+      border-radius: 50%;
+      background: var(--color-white);
+      width: var(--icon-size);
+      height: var(--icon-size);
+      display: flex;
+      margin: calc(-1 * var(--icon-size) / 2) auto 18px;
+      .coin {
+        width: calc(var(--icon-size) - 8px);
+        margin: auto;
+      }
+    }
+    .box-title {
+      color: var(--text-muted);
+    }
+  }
+  .part-arrow-right {
+    font-size: 24px;
+    color: hsla(var(--text-muted-hsl), 0.5);
+    margin: 0 24px;
+  }
+}
+
+p.lead {
+  color: var(--text-muted);
+  margin: 26px 0;
+  text-align: center;
+}
+
+.payment-details {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .qr-code {
+    --qr-size: 200px;
+    display: block;
+    width: var(--qr-size);
+    height: var(--qr-size);
+    margin-right: 30px;
+  }
+  .text {
+    flex: 1 1 100%;
+    font-size: 15px;
+    .box-title {
+      color: var(--text-muted);
+      margin: 0;
+    }
+    .amount {
+      @extend %enable-select;
+      font-weight: 500;
+      font-size: 20px;
+      margin: 0 0 16px;
+    }
+    .address {
+      @extend %enable-select;
+      display: inline-block;
+      margin: 6px 0 0;
+      padding: 0 24px 0 0;
+      word-break: break-all;
+      white-space: normal;
+      color: var(--text);
+    }
+    .help-text {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.mat-dialog-actions {
+  padding: 12px 16px;
+  margin: 0 -24px -24px;
+}

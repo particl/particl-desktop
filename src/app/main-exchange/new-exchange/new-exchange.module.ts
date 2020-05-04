@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 
 import { NewExchangeComponent } from './new-exchange.component';
+import { ExchangePayModalComponent } from './exchange-pay-modal/exchange-pay-modal.component';
 
 
 const routes: Routes = [
@@ -21,9 +22,11 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    NewExchangeComponent
+    NewExchangeComponent,
+    ExchangePayModalComponent
   ],
   entryComponents: [
+    ExchangePayModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -12,8 +12,6 @@ import { MarketRpcService } from './services/market-rpc/market-rpc.service';
 import { DataService } from './services/data/data.service';
 import { RegionListService } from './services/region-list/region-list.service';
 
-import { ListingDetailModalComponent } from './listings/listing-detail-modal/listing-detail-modal.component';
-
 
 const routes: Routes = [
   {
@@ -48,12 +46,10 @@ const routes: Routes = [
   ],
   declarations: [
     MarketBaseComponent,
-    AlphaMainnetWarningComponent,
-    ListingDetailModalComponent
+    AlphaMainnetWarningComponent
   ],
   entryComponents: [
-    AlphaMainnetWarningComponent,
-    ListingDetailModalComponent
+    AlphaMainnetWarningComponent
   ],
   providers: [
     MarketRpcService,

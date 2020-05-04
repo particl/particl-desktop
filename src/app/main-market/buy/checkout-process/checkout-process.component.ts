@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
+import { ListingDetailModalComponent } from './../../shared/listing-detail-modal/listing-detail-modal.component';
 import { PlaceOrderModalComponent } from './place-order-modal/place-order-modal.component';
 
 @Component({
@@ -19,6 +20,10 @@ export class CheckoutProcessComponent implements OnInit {
   ngOnInit() {
   }
 
+
+  openListingDetailModal(): void {
+    const dialog = this._dialog.open(ListingDetailModalComponent);
+  }
 
   placeOrderModal(): void {
     const dialog = this._dialog.open(PlaceOrderModalComponent);
