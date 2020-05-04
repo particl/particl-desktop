@@ -18,7 +18,7 @@
                   "-version"
                 ],
                 "output": [
-                  "Particl Core Daemon",
+                  "Particl Core version",
                   "0.19.1.1"
                 ]
               }
@@ -38,7 +38,7 @@
                   "-version"
                 ],
                 "output": [
-                  "Particl Core Daemon",
+                  "Particl Core version",
                   "0.19.1.1"
                 ]
               }
@@ -58,7 +58,7 @@
                   "-version"
                 ],
                 "output": [
-                  "Particl Core Daemon",
+                  "Particl Core version",
                   "0.19.1.1"
                 ]
               }
@@ -80,7 +80,7 @@
                   "-version"
                 ],
                 "output": [
-                  "Particl Core Daemon",
+                  "Particl Core version",
                   "0.19.1.1"
                 ]
               }
@@ -102,7 +102,7 @@
                   "-version"
                 ],
                 "output": [
-                  "Particl Core Daemon",
+                  "Particl Core version",
                   "0.19.1.1"
                 ]
               }
