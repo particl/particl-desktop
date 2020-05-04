@@ -134,3 +134,26 @@ export interface RespListingTemplate {
   Profile: any;
   ChildListingItemTemplate: any;
 }
+
+
+export interface RespCategoryAdd {
+  id: number;
+  key: string;
+  name: string;
+  market: string;
+  description: string;
+  parentItemCategoryId: number;
+  updatedAt: number;
+  createdAt: number;
+  ParentItemCategory: {
+    id: number;
+    key: string;
+    name: string;
+    market: string;
+    description: string;
+    parentItemCategoryId: number | null;
+    updatedAt: number;
+    createdAt: number;
+  },
+  ChildItemCategories: any[];
+}

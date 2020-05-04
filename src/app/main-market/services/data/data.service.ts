@@ -16,12 +16,12 @@ export class DataService {
   ) {}
 
 
-  loadCategories(marketKey: string): Observable<CategoryItem[]> {
+  loadCategories(marketKey: string): Observable<{categories: CategoryItem[]; rootId: number}> {
     return this._rpc.call('category', ['list']).pipe(
       retryWhen(genericPollingRetryStrategy()),
       map((category: RespCategoryList) => {
         const parsed = this.parseCategories(category, marketKey);
-        return parsed.children;
+        return {categories: parsed.children, rootId: category.id};
       })
     );
   }

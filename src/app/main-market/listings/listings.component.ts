@@ -100,11 +100,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
         return selectedMarket;
       }),
       concatMap((market: Market) => iif(() => !!market,
-        // @TODO: zaSmilingIdiot 2020-04-03 -> change to use activeMarket receiveAddress
-        // Its not using the receive address at present because we're not using custom categories right now.
-        this._listService.loadCategories('').pipe(
-          tap((categories: CategoryItem[]) => {
-            this.categorySource$.next(categories);
+        this._listService.loadCategories(market.receiveAddress).pipe(
+          tap((categories) => {
+            this.categorySource$.next(categories.categories);
           })
         )
       )),

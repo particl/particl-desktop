@@ -8,7 +8,7 @@ import { MarketState } from '../store/market.state';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { NewTemplateData, ListingTemplate, TemplateShippingDestination, TemplateImage, UpdateTemplateData } from './sell.models';
-import { RespListingTemplate } from '../shared/market.models';
+import { RespListingTemplate, RespCategoryAdd } from '../shared/market.models';
 
 
 @Injectable()
@@ -161,6 +161,15 @@ export class SellService {
   ): Observable<any> {
     // TODO: update when the new API is available, to add categoryID in here
     return this._rpc.call('template', ['post', templateID, duration, marketID, estimateOnly]);
+  }
+
+
+  createNewCategory(name: string, parentID: number, marketID: number): Observable<number> {
+    return this._rpc.call('category', ['add', marketID, name, '', parentID]).pipe(
+      map((resp: RespCategoryAdd) => {
+        return resp.id;
+      })
+    );
   }
 
 

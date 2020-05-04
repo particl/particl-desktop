@@ -169,10 +169,17 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    // for @Allien: temporarily.
+    // TODO: Remoe this once saving/editing/etc of templates works (once the API is ready)
+    // const dialog = this._dialog.open(
+    //   PublishTemplateModalComponent,
+    //   {data: {templateID: 100}}
+    // );
+
     this.doTemplateSave().pipe(
       last()
     ).subscribe(
-      (template: ListingTemplate) => {
+      () => {
         const dialog = this._dialog.open(
           PublishTemplateModalComponent,
           {data: {templateID: this.listingTemplate.id}}
@@ -195,11 +202,11 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
             })
           ))
         ).subscribe(
-          (value) => {
+          () => {
             this._snackbar.open(TextContent.PUBLISH_SUCCESS);
             this._router.navigate(['../'], {relativeTo: this._route});
           },
-          (err) => {
+          () => {
             this._snackbar.open(TextContent.PUBLISH_FAILED, 'err');
           }
         );

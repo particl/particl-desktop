@@ -40,6 +40,29 @@
           [labelStyles]="['--larger']"
           (onClosed)="selectedCategory.setValue($event[0] || '')">
         </tree-select>
+
+        <div>
+          <button mat-mini-fab [disabled]="!isCategoryCreatable" (click)="canCreateCategoryToggled.setValue(!canCreateCategoryToggled.value)">
+            <mat-icon matTooltip="Add New Category" matTooltipPosition="right" fontIcon="part-circle-plus"></mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="full-width" *ngIf="isCategoryCreatable && canCreateCategoryToggled.value">
+        <mat-checkbox [(ngModel)]="useRootCategory">Create as root category</mat-checkbox>
+        <tree-select
+          [data$]="availableCategories$"
+          [singleSelection]="true"
+          [isParentNodesSelectable]="true"
+          placeholderLabel="Select parent category"
+          prefixIcon="part-filter"
+          [labelStyles]="['--larger']"
+          (onClosed)="newCategoryRoot.setValue($event[0] || 0);">
+        </tree-select>
+        <input matInput type="text" placeholder="Category Name" [(ngModel)]="newCategoryName">
+        <button [disabled]="!isCategoryCreatable || (newCategoryName.length === 0)" appDebounceClick debounceTime="100" (debounceClick)="addNewCategory()">
+          Add Category
+        </button>
       </div>
 
       <div class="full-width">
