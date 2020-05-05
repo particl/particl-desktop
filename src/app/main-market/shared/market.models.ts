@@ -154,6 +154,6 @@ export interface RespCategoryAdd {
     parentItemCategoryId: number | null;
     updatedAt: number;
     createdAt: number;
-  },
+  };
   ChildItemCategories: any[];
 }

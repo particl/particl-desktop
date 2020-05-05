@@ -1,12 +1,13 @@
 import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { OverlayConfig, OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener, MatTree } from '@angular/material/tree';
 
 import { Observable, Subject, Subscription, merge } from 'rxjs';
-import { takeUntil, take, mapTo } from 'rxjs/operators';
+import { takeUntil, take, mapTo, debounceTime, distinctUntilChanged, startWith, tap, skip } from 'rxjs/operators';
 
 import { InputItem, ItemNode, ItemFlatNode } from './tree-select.models';
 
@@ -32,7 +33,10 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   @Input() initialSelection: number[] = [];
   @Output() onClosed: EventEmitter<Array<number | string>> = new EventEmitter();
 
+  @ViewChild(MatTree, {static: false}) matTreeNode: MatTree<any>;
+
   selectionLabel: string = '';
+  userSearchInput: FormControl = new FormControl('');
   treeControl: FlatTreeControl<ItemFlatNode>;
   dataSource: MatTreeFlatDataSource<ItemNode, ItemFlatNode>;
   checklistSelection: SelectionModel<ItemFlatNode>;
@@ -40,7 +44,6 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private close$: Subscription;
-  private treeFlattener: MatTreeFlattener<ItemNode, ItemFlatNode>;
 
 
   @ViewChild(CdkPortal, {static: true}) private portal: CdkPortal;
@@ -51,9 +54,11 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   constructor(
     private _overlay: Overlay
   ) {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+    const treeFlattener: MatTreeFlattener<ItemNode, ItemFlatNode> = new MatTreeFlattener(
+      this.transformer, this.getLevel, this.isExpandable, this.getChildren
+    );
     this.treeControl = new FlatTreeControl<ItemFlatNode>(this.getLevel, this.isExpandable);
-    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, treeFlattener);
   }
 
 
@@ -90,6 +95,41 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
         this.cleanupPanel(false);
       });
     }
+    this.userSearchInput.valueChanges.pipe(
+      startWith(''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      skip(1),
+      tap((searchStr: string) => {
+        const lcaseInput = searchStr.toLowerCase();
+        const levels = {};
+
+        if (!searchStr.length) {
+          // no need to check for visibility: everything becomes visible
+          this.treeControl.dataNodes.forEach(flatNode => flatNode.isVisible = true);
+        } else {
+
+          for (let ii = this.treeControl.dataNodes.length - 1; ii >= 0; ii--) {
+            const flatNode = this.treeControl.dataNodes[ii];
+            const isMatching = flatNode.item.toLowerCase().includes(lcaseInput);
+
+            flatNode.isVisible = !flatNode.expandable
+                ? isMatching    // child(leaf) node
+                : (isMatching && this.isParentNodesSelectable) || !!levels[`${flatNode.level + 1}`]; // parent node
+
+            levels[`${flatNode.level}`] = levels[`${flatNode.level}`] || flatNode.isVisible;
+            if (flatNode.expandable) {
+              levels[`${flatNode.level + 1}`] = false;
+            }
+          }
+        }
+        if (this.overlayElement.hasAttached()) {
+          // do another check to ensure that the overlay is visible bfore trying to re-render nodes
+          this.matTreeNode.renderNodeChanges(this.treeControl.dataNodes);
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 
 
@@ -219,6 +259,8 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
         this.selectionLabel = this.placeholderLabel;
     }
 
+    this.userSearchInput.setValue('');
+
     if (emitResult) {
       this.onClosed.emit(selected.map((flatNode) => flatNode.id));
     }
@@ -256,6 +298,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
     flatNode.id = node.id;
     flatNode.item = node.item;
     flatNode.level = level;
+    flatNode.isVisible = true;
     flatNode.expandable = !!node.children;
     return flatNode;
   }
