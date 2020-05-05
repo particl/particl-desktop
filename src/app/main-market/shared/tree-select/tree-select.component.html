@@ -15,8 +15,8 @@
 
   <!-- !! FOR SINGLE SELECTION NODES !! -->
 
-  <ng-container *ngIf="singleSelection; else checkboxNodes">
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="single-select --full-width-labels">
+  <ng-container *ngIf="singleSelection; else checkboxNodes" [@transformPanelWrap]>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="single-select --full-width-labels" [@transformPanel]="'showing'">
 
       <!-- leaf node-->
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding class="subcategory">
@@ -52,7 +52,7 @@
   <!-- !! FOR MULTI SELECT NODES !! -->
 
   <ng-template #checkboxNodes>
-    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="multi-select --full-width-labels">
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="multi-select --full-width-labels" [@transformPanel]="'showing'">
 
       <!-- leaf node-->
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding class="subcategory">

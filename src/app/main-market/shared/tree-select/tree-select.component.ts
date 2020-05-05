@@ -5,7 +5,7 @@ import { CdkPortal } from '@angular/cdk/portal';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener, MatTree } from '@angular/material/tree';
-
+import { matSelectAnimations } from '@angular/material/select';
 import { Observable, Subject, Subscription, merge } from 'rxjs';
 import { takeUntil, take, mapTo, debounceTime, distinctUntilChanged, startWith, tap, skip } from 'rxjs/operators';
 
@@ -20,7 +20,11 @@ enum TextContent {
 @Component({
   selector: 'tree-select',
   templateUrl: './tree-select.component.html',
-  styleUrls: ['./tree-select.component.scss']
+  styleUrls: ['./tree-select.component.scss'],
+  animations: [
+    matSelectAnimations.transformPanelWrap,
+    matSelectAnimations.transformPanel
+  ]
 })
 export class TreeSelectComponent implements OnInit, OnDestroy {
 
@@ -169,6 +173,11 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
       });
 
       this.overlayElement = this._overlay.create(overlayConfig);
+    }
+
+    if (this.overlayElement.hasAttached()) {
+      // has already been attached
+      return;
     }
 
     this.overlayElement.attach(this.portal);
