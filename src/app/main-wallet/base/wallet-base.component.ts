@@ -17,6 +17,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 
 enum TextContent {
   DEFAULT_WALLETNAME = 'Default Wallet',
+  UNKNOWN_WALLET = 'New wallet…',
   WALLETS_LOAD_ERROR = 'Failed to load wallets',
   WALLET_LOADING = 'Activating the selected wallet',
   WALLET_ACTIVATE_SUCCESS = 'Wallet loaded successfully',
@@ -173,7 +174,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
 
   private processWallet(name: string): IWallet {
-    const usedName = name === null ? 'New wallet…' : name;
+    const usedName = name === null ?  TextContent.UNKNOWN_WALLET : name;
     let dispName = usedName === '' ? TextContent.DEFAULT_WALLETNAME : usedName;
     let initial = dispName[0];
     if (dispName.includes('/')) {
