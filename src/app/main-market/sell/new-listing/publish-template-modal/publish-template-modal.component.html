@@ -51,7 +51,7 @@
       <mat-icon fontIcon="part-circle-plus"></mat-icon>
       Add new Category
     </mat-expansion-panel-header>
-    <div class="detail"><!-- *ngIf="isCategoryCreatable && canCreateCategoryToggled.value" -->
+    <div class="detail">
       <p class="help-text">
         Only create new (sub)categories when absolutely necessary, like when selling specialized products.
       </p>
@@ -64,7 +64,6 @@
           [isParentNodesSelectable]="true"
           placeholderLabel="Select parent category"
           prefixIcon="part-filter"
-          [labelStyles]="['']"
           (onClosed)="newCategoryRoot.setValue($event[0] || 0);">
         </tree-select>
       </div>
@@ -115,8 +114,8 @@
         <li>You have peers connected</li>
         <li>Your wallet is unlocked</li>
       </ul>
-    </ng-container>  
-  
+    </ng-container>
+
     <ng-template #hasFee>
       <ng-container *ngIf="feeEstimate !== null">
         <p *ngIf="feeEstimate >= 0">

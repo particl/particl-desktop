@@ -217,6 +217,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
     ).subscribe(
       () => {
         // force a refresh of the market categories
+        this.newCategoryName = '';
         this.selectedMarket.setValue(this.selectedMarket.value);
         this._snackbar.open(TextContent.CATEGORY_ADD_SUCCESS);
       },
