@@ -1,132 +1,141 @@
+<div mat-dialog-title fxLayout fxLayoutAlign="space-between center">
+  Publishing Listing
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity which will publish the Listing" matTooltipPosition="before">
+    <!-- @TODO: take first letter from currentIdentity (until we have avatars ready ;) -->
+    <div class="avatar">P</div>
+    <div class="text">
+      <div class="identity-name">{{ currentIdentity }}</div>
+      <div class="available-balance">Public balance: {{ currentBalance }}</div>
+    </div>
+  </div>
+</div><!-- mat-dialog-title -->
+
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content">
-  <p class="lead">
-    Current Identity
-  </p>
-  <p>
-    {{ currentIdentity }}
-  </p>
 
-  <p class="lead">
-    Current Balance
-  </p>
-  <p>
-    {{ currentBalance }}
-  </p>
-  <div class="row" fxLayout fxLayoutAlign="center center">
 
-    <div class="full-width" fxFlex="50%">
+<mat-dialog-content class="dialog-content">
 
-      <div class="full-width">
-        <mat-form-field class="--plain" appearance="fill">
-          <mat-select placeholder="Select Market" [formControl]="selectedMarket">
-            <mat-option *ngFor="let market of availableMarkets" [value]="market.id">
-              {{ market.name }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+  <h2 class="section-title">Publish to&hellip;</h2>
+  <mat-card class="publish-to no-padding">
+    <label class="--larger">
+      <mat-form-field class="--plain --larger" appearance="fill">
+        <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+        <mat-select placeholder="Select Market" [formControl]="selectedMarket">
+          <mat-option *ngFor="let market of availableMarkets" [value]="market.id">
+            {{ market.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </label>
+  </mat-card><!-- .publish-to -->
 
-      <div class="full-width">
-        <tree-select
-          [data$]="availableCategories$"
-          [singleSelection]="true"
-          [isParentNodesSelectable]="false"
-          placeholderLabel="Select a category"
-          prefixIcon="part-filter"
-          [labelStyles]="['--larger']"
-          (onClosed)="selectedCategory.setValue($event[0] || '')">
-        </tree-select>
-
-        <div>
-          <button mat-mini-fab [disabled]="!isCategoryCreatable" (click)="canCreateCategoryToggled.setValue(!canCreateCategoryToggled.value)">
-            <mat-icon matTooltip="Add New Category" matTooltipPosition="right" fontIcon="part-circle-plus"></mat-icon>
-          </button>
-        </div>
-      </div>
-
-      <div class="full-width" *ngIf="isCategoryCreatable && canCreateCategoryToggled.value">
-        <mat-checkbox [(ngModel)]="useRootCategory">Create as root category</mat-checkbox>
+  <h2 class="section-title">Pick a Category</h2>
+  <mat-card class="select-category no-padding">
+    <label>
+      <tree-select
+        [data$]="availableCategories$"
+        [singleSelection]="true"
+        [isParentNodesSelectable]="false"
+        placeholderLabel="Select a category"
+        prefixIcon="part-filter"
+        [labelStyles]="['--larger']"
+        (onClosed)="selectedCategory.setValue($event[0] || '')">
+      </tree-select>
+    </label>
+  </mat-card><!-- .select-category -->
+  <mat-expansion-panel [disabled]="!isCategoryCreatable" class="create-category no-padding">
+    <mat-expansion-panel-header (click)="canCreateCategoryToggled.setValue(!canCreateCategoryToggled.value)">
+      <mat-icon fontIcon="part-circle-plus"></mat-icon>
+      Add new Category
+    </mat-expansion-panel-header>
+    <div class="detail"><!-- *ngIf="isCategoryCreatable && canCreateCategoryToggled.value" -->
+      <p class="help-text">
+        Only create new (sub)categories when absolutely necessary, like when selling specialized products.
+      </p>
+      <div fxLayout fxLayoutGap="10px" fxLayoutAlign="space-between center" class="hierarchy">
+        <mat-checkbox [(ngModel)]="useRootCategory">New top-level category</mat-checkbox>
+        <span class="or">or</span>
         <tree-select
           [data$]="availableCategories$"
           [singleSelection]="true"
           [isParentNodesSelectable]="true"
           placeholderLabel="Select parent category"
           prefixIcon="part-filter"
-          [labelStyles]="['--larger']"
+          [labelStyles]="['']"
           (onClosed)="newCategoryRoot.setValue($event[0] || 0);">
         </tree-select>
-        <input matInput type="text" placeholder="Category Name" [(ngModel)]="newCategoryName">
-        <button [disabled]="!isCategoryCreatable || (newCategoryName.length === 0)" appDebounceClick debounceTime="100" (debounceClick)="addNewCategory()">
-          Add Category
+      </div>
+      <mat-form-field appearance="fill" class="new-category-name">
+        <mat-icon matPrefix fontIcon="part-language"></mat-icon>
+        <input matInput type="text" placeholder="New Category name" [(ngModel)]="newCategoryName">
+        <button matSuffix mat-raised-button color="accent" class="small" [disabled]="!isCategoryCreatable || (newCategoryName.length === 0)" appDebounceClick debounceTime="100" (debounceClick)="addNewCategory()" matTooltip="Create Category" matTooltipPosition="before">
+          <mat-icon fontIcon="part-circle-plus"></mat-icon>
         </button>
-      </div>
-
-      <div class="full-width">
-        <mat-form-field class="full-width" fxFlex="50%">
-          <mat-label>Select expiry time</mat-label>
-          <mat-select [formControl]="selectedDuration">
-            <mat-option value ="">None</mat-option>
-            <mat-option *ngFor="let duration of availableDurations" [value]="duration.value">
-              {{ duration.title }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="full-width">
-        <div>
-          <button type="button" mat-button (click)="estimateFee()" [disabled]="!!!selectedCategory.value || !!!selectedDuration.value">
-            <mat-icon fontIcon="part-cross"></mat-icon>
-              Estimate Publish Fee
-          </button>
-        </div>
-      </div>
-
+      </mat-form-field>
     </div>
+  </mat-expansion-panel>
+
+  <h2 class="section-title">Publish duration</h2>
+  <mat-card class="publish-duration">
+
+    <p class="help-text">
+      Each Listing is published to Market for a limited time. This helps fight spam and outdated Listings. Fees are proportional to duration.
+    </p>
+    <div class="row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between center">
+      <mat-form-field appearance="fill">
+        <mat-select [formControl]="selectedDuration">
+          <!-- @TODO: do we really need "none" value? I'd remove it, no? (Allien) -->
+          <mat-option value ="">None</mat-option>
+          <mat-option *ngFor="let duration of availableDurations" [value]="duration.value">
+            {{ duration.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button type="button" mat-button (click)="estimateFee()" [disabled]="!!!selectedCategory.value || !!!selectedDuration.value">
+        <mat-icon fontIcon="part-stake"></mat-icon>
+        Estimate publish fee
+      </button>
+    </div><!-- .row -->
 
 
-    <div class="full-width" fxFlex="50%">
-      <p class="widget-help">
-        Each Listing is published to Market for a limited time. This helps fight spam and outdated Listings. Fees are proportional to duration.
+    <p class="widget-help" *ngIf="!hasEstimateError && (feeEstimate !== null)">
+      Complete the options to obtain an estimate publishing fee.
+    </p>
+    <ng-container *ngIf="hasEstimateError; else hasFee">
+      <p class="warning">
+        There was an error fetching the fee estimate, please check that:
       </p>
-      <p class="widget-help" *ngIf="!hasEstimateError && (feeEstimate !== null)">
-        Complete the options to obtain an estimate publishing fee.
-      </p>
-      <ng-container *ngIf="hasEstimateError; else hasFee">
-        <p class="warning">
-          There was an error fetching the fee estimate, please check that:
+      <ul class="checks">
+        <li>You have a <strong>spendable Public balance</strong></li>
+        <li>You have a network connection</li>
+        <li>The daemon is running</li>
+        <li>You have peers connected</li>
+        <li>Your wallet is unlocked</li>
+      </ul>
+    </ng-container>  
+  
+    <ng-template #hasFee>
+      <ng-container *ngIf="feeEstimate !== null">
+        <p *ngIf="feeEstimate >= 0">
+          Fee is estimated at: PART {{ feeEstimate }}
         </p>
-        <ul class="checks">
-          <li>You have a <strong>spendable Public balance</strong></li>
-          <li>You have a network connection</li>
-          <li>The daemon is running</li>
-          <li>You have peers connected</li>
-          <li>Your wallet is unlocked</li>
-        </ul>
+        <p *ngIf="feeEstimate < 0">
+          Calculating Fee...
+        </p>
       </ng-container>
+    </ng-template>
+  </mat-card><!-- .publish-duration -->
 
 
-      <ng-template #hasFee>
-        <ng-container *ngIf="feeEstimate !== null">
-          <p *ngIf="feeEstimate >= 0">
-            Fee is estimated at: PART {{ feeEstimate }}
-          </p>
-          <p *ngIf="feeEstimate < 0">
-            Calculating Fee...
-          </p>
-        </ng-container>
-      </ng-template>
-    </div>
+</mat-dialog-content><!-- .dialog-content -->
 
-  </div>
-</div><!-- .dialog-content -->
 
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
+
   <button type="button" mat-button mat-dialog-close>
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
@@ -134,6 +143,7 @@
 
   <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doPublish()" [disabled]="!!!selectedCategory.value || !!!selectedDuration.value || hasEstimateError">
     <mat-icon fontIcon="part-check"></mat-icon>
-    Publish
+    Publish Listing
   </button>
+
 </mat-dialog-actions>
