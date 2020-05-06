@@ -235,7 +235,7 @@ mat-tab-group.mat-tab-group {
 // ------ 2.3. EXPANSION PANELS ------ //
 
 mat-expansion-panel.mat-expansion-panel {
-  @extend mat-card.mat-card;
+  @extend %mat-card;
   margin: 0 0 4px;
   overflow: hidden;
   padding: 0;
@@ -671,6 +671,7 @@ label {
   .mat-form-field-flex {
     padding: 0 16px;
     background: var(--color-white);
+    align-items: center;
   }
   .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
     padding-bottom: 0;
@@ -697,6 +698,39 @@ label {
       background: var(--color-white);
       color: var(--text-muted);
     }
+  }
+  // Prefixes & suffixes
+  [matPrefix],
+  [matSuffix] {
+    &:not(button) {
+      color: var(--text-muted); // mute text's color
+    }
+    &.mat-icon {
+      font-size: 16px; // 1.25em
+      color: var(--text-muted);
+      position: relative;
+      top: -1px; // -0.1em
+    }
+  }
+  [matPrefix] {
+    margin-right: 8px;
+  }
+  [matSuffix] {
+    margin-left: 8px;
+  }
+  button[matSuffix],
+  button[matPrefix] { // show/hide password button (taken from Encrypt wallet .--larger field)
+    padding: 8px;
+    .mat-icon {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+  button[matPrefix] {
+    margin-left: -8px;
+  }
+  button[matSuffix] {
+    margin-right: -8px;
   }
 
   &.--larger {
@@ -733,50 +767,9 @@ label {
   // --- INPUTS ---
 
   &.mat-form-field-type-mat-input {
-    .mat-form-field-flex {
-      align-items: center;
-    }
     .mat-input-element {
       padding: var(--field-boxed-paddingV) 0;
       margin: 0;
-    }
-    [matPrefix],
-    [matSuffix] {
-      &:not(button) {
-        color: var(--text-muted); // mute text's color
-      }
-      &.mat-icon {
-        font-size: 16px; // 1.25em
-        color: var(--text-muted);
-        position: relative;
-        top: -1px; // -0.1em
-      }
-    }
-    [matPrefix] {
-      margin-right: 8px;
-      &.mat-icon {
-        //margin-right: 0.8em;
-      }
-    }
-    [matSuffix] {
-      margin-left: 8px;
-      &.mat-icon {
-        //margin-left: 0.8em;
-      }
-    }
-    button[matSuffix],
-    button[matPrefix] { // show/hide password button (taken from Encrypt wallet .--larger field)
-      padding: 8px;
-      .mat-icon {
-        margin: 0;
-        font-size: 16px;
-      }
-    }
-    button[matPrefix] {
-      margin-left: -8px;
-    }
-    button[matSuffix] {
-      margin-right: -8px;
     }
     // Send: Larger padding around input
     &.--larger,
