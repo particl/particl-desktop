@@ -13,12 +13,12 @@
 */
 
 .list-item { // Listing/Order
-  --list-item-size: 90px;
+  --list-item-size: 80px;
   @include break(l) {
-    --list-item-size: 100px;
+    --list-item-size: 85px;
   }
   @include break(xl) {
-    --list-item-size: 110px;
+    --list-item-size: 90px;
   }
   padding: 0;
   margin-bottom: var(--card-spacing) !important;
@@ -63,7 +63,7 @@
         }
         @include break(xl) {
           font-size: 18px;
-          margin-bottom: 8px;
+          margin-bottom: 5px;
         }
       }
     }

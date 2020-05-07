@@ -2,21 +2,10 @@
 @import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
 .question-answer {
-  --list-item-size: 70px; // overwrite default list-item height
-  @include break(l) {
-    --list-item-size: 80px;
-  }
-  @include break(xl) {
-    --list-item-size: 90px;
-  }
 
   // header / toggle
   .header-wrapper {
     .meta {
-      font-size: 11px;
-      .name {
-        margin-bottom: 2px;
-      }
       .origin-market {
         margin-right: 10px;
         border: 1px solid hsla(var(--text-muted-hsl), 0.6);
@@ -26,12 +15,12 @@
     }
   }
   .status { // number of replies in thread
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 6px;
+    padding-bottom: 6px;
     .mat-icon {
-      font-size: 12px;
+      font-size: 14px;
       position: relative;
-      top: 1px;
+      top: 2px;
       margin-right: 3px;
       color: var(--text-muted);
     }

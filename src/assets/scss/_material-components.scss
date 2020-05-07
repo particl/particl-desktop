@@ -257,6 +257,7 @@ mat-expansion-panel.mat-expansion-panel {
     }
   }
   .mat-expansion-panel-content {
+    font: inherit !important;
     font-family: var(--font);
   }
   &.mat-expanded { // while expanded..
