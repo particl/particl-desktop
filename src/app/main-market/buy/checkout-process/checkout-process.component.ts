@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { ListingDetailModalComponent } from './../../shared/listing-detail-modal/listing-detail-modal.component';
-import { PlaceOrderModalComponent } from './place-order-modal/place-order-modal.component';
+import { PlaceBidModalComponent } from './../place-bid-modal/place-bid-modal.component';
 
 @Component({
   selector: 'app-checkout-process',
@@ -25,8 +25,8 @@ export class CheckoutProcessComponent implements OnInit {
     const dialog = this._dialog.open(ListingDetailModalComponent);
   }
 
-  placeOrderModal(): void {
-    const dialog = this._dialog.open(PlaceOrderModalComponent);
+  openPlaceBidModal(): void {
+    const dialog = this._dialog.open(PlaceBidModalComponent);
   }
 
 }

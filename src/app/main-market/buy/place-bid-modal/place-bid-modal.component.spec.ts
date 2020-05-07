@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlaceOrderModalComponent } from './place-order-modal.component';
+import { PlaceBidModalComponent } from './place-bid-modal.component';
 
-describe('PlaceOrderModalComponent', () => {
-  let component: PlaceOrderModalComponent;
-  let fixture: ComponentFixture<PlaceOrderModalComponent>;
+describe('PlaceBidModalComponent', () => {
+  let component: PlaceBidModalComponent;
+  let fixture: ComponentFixture<PlaceBidModalComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PlaceOrderModalComponent ]
+      declarations: [ PlaceBidModalComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PlaceOrderModalComponent);
+    fixture = TestBed.createComponent(PlaceBidModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

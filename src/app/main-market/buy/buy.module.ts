@@ -4,10 +4,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { BuyComponent } from './buy.component';
 import { CheckoutProcessComponent } from './checkout-process/checkout-process.component';
-import { PlaceOrderModalComponent } from './checkout-process/place-order-modal/place-order-modal.component';
 import { MarketSharedModule } from '../shared/shared.module';
 import { BuyOrdersPageComponent } from './buy-orders-page/buy-orders-page.component';
 import { BuyOrderListItemComponent } from './buy-order-list-item/buy-order-list-item.component';
+import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
 
 const routes: Routes = [
   { path: '', component: BuyComponent, data: { title: 'Purchases'} }
@@ -29,12 +29,12 @@ const routes: Routes = [
   declarations: [
     BuyComponent,
     CheckoutProcessComponent,
-    PlaceOrderModalComponent,
+    PlaceBidModalComponent,
     BuyOrdersPageComponent,
     BuyOrderListItemComponent
   ],
   entryComponents: [
-    PlaceOrderModalComponent
+    PlaceBidModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

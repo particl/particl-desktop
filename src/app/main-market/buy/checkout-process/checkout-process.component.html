@@ -157,8 +157,8 @@
               <mat-select matNativeControl
                 placeholder="Select saved shipping address profile">
                 <!-- TODO: add a new option (e.g. "(none)"), which would deselect previously selected profile (so that user can go back to manually filling out the address) -->
-                <mat-option value="manual">(none)</mat-option>
-                <mat-option value="address">Home</mat-option>
+                <mat-option class="--larger" value="manual">(none)</mat-option>
+                <mat-option class="--larger" value="address">Home</mat-option>
               </mat-select>
             </mat-form-field>
           </label>
@@ -213,7 +213,7 @@
               </mat-form-field>
             </label>
           </div>
-          <div class="row" fxLayout>
+          <div class="row" fxLayout fxLayoutAlign="stretch flex-end">
             <label class="--larger" fxFlex="40">
               <h3 class="label">State</h3>
               <mat-form-field appearance="fill" class="--plain --larger">
@@ -310,7 +310,7 @@
           </div><!-- .section-header -->
 
           <mat-card>
-            <button mat-raised-button class="full-width" color="primary" (click)="placeOrderModal()"><!-- [disabled]="!shippingFormGroup.valid" -->
+            <button mat-raised-button class="full-width" color="primary" (click)="openPlaceBidModal()"><!-- [disabled]="!shippingFormGroup.valid" -->
               <mat-icon fontIcon="part-next-single"></mat-icon>
               Review &amp; Submit this Order&hellip;
             </button>
