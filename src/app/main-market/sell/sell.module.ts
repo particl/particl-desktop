@@ -8,6 +8,8 @@ import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { SellService } from './sell.service';
 import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
+import { SellOrdersPageComponent } from './sell-orders-page/sell-orders-page.component';
+import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
 
 
 const routes: Routes = [
@@ -25,13 +27,17 @@ const routes: Routes = [
     MarketSharedModule,
   ],
   exports: [
-    RouterModule
+    RouterModule,
+    SellOrdersPageComponent,
+    SellOrderListItemComponent
   ],
   declarations: [
     SellComponent,
     NewListingComponent,
     ImportListingsComponent,
-    PublishTemplateModalComponent
+    PublishTemplateModalComponent,
+    SellOrdersPageComponent,
+    SellOrderListItemComponent
   ],
   entryComponents: [
     PublishTemplateModalComponent

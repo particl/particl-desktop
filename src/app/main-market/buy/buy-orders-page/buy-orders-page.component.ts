@@ -9,11 +9,11 @@ export interface Filter {
 }
 
 @Component({
-  selector: 'app-orders-page',
-  templateUrl: './orders-page.component.html',
-  styleUrls: ['./orders-page.component.scss']
+  selector: 'app-buy-orders-page',
+  templateUrl: './buy-orders-page.component.html',
+  styleUrls: ['./buy-orders-page.component.scss']
 })
-export class OrdersPageComponent implements OnInit {
+export class BuyOrdersPageComponent implements OnInit {
 
   @Input() type: string;
 

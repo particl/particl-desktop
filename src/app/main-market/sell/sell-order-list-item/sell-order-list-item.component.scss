@@ -1,0 +1,215 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+// ------ ORDER ITEM ------ //
+
+.order {
+
+  // --- Header ---
+  .qty {
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+  .hash { // order hash-ID
+    font-size: 90%;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--color-white);
+    line-height: 1.4;
+    text-transform: uppercase;
+    background: var(--text-muted);
+    border-radius: 4px;
+    display: inline-block;
+    padding: 1px 8px;
+    margin-right: 10px;
+    &.id { // order sequence-ID
+      margin: 0 -5px 0 0;
+      background: var(--bg);
+      color: var(--text-muted);
+      padding: 1px 12px 1px 8px;
+      font-weight: 400;
+    }
+  }
+  .origin-market {
+    display: inline-block;
+  }
+
+  // --- Content ---
+  .highlights { // shipping details, escrow TXID, rejection reason
+    @extend %enable-select;
+    background: hsla(var(--bg-muted-hsl), 0.2);
+    padding: 16px 24px;
+    border-radius: var(--radius);
+    @include break(l) {
+      padding: 20px 30px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    table {
+      width: 100%;
+      th {
+        min-width: 110px;
+        color: var(--text);
+      }
+      td {
+        .txid {
+          overflow: hidden;
+          width: calc(100% - 44px);
+          text-overflow: ellipsis;
+          @include break(l) {
+            width: 100%;
+          }
+          a {
+            @extend %tfx;
+            color: var(--text-muted);
+            &:hover,
+            &:focus {
+              color: var(--text);
+            }
+          }
+        }
+      }
+    }
+  }
+  .item-details { // shipping & pricing
+    .buyer-info { // shipping address, contact info
+      .shipping-info {
+        small {
+          @extend %tfx;
+          opacity: 0;
+          display: inline-block;
+          margin-left: 3px;
+          font-weight: 500;
+        }
+        &:hover {
+          small {
+            opacity: 1;
+          }
+        }
+      }
+      .contact-info {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  // --- Buttons ---
+  .action-buttons {
+    .single .mat-icon {
+      margin: 0;
+    }
+  }
+
+} // << .order
+
+
+// ------ PROGRESS GRAPH ------ //
+
+$dot-size: 11px;
+
+%progress-dot { // progress step indicator "dot"
+  width: $dot-size;
+  height: $dot-size;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+@mixin progress-line($color) { // "done" progress between two Order steps
+  content: "";
+  position: absolute;
+  bottom: 10px;
+  left: 50.5%;
+  width: 100%;
+  height: 1px;
+  display: block;
+  background: $color;
+  box-shadow: 0 0 1px 0 $color;
+}
+
+// Display progress (steps) of Order and in which stage it is
+.progress-graph {
+  margin: 4px 0 -11px;
+  .step {
+    text-align: center;
+    // finished step
+    &.done {
+      position: relative;
+      &::after { // draw the progress line to next step (which has to be either finished as well or active)
+        @include progress-line(var(--color-primary));
+      }
+      .dot {
+        background: var(--color-primary);
+      }
+    }
+    // current, active step
+    &.active {
+      .dot {
+        background: var(--color-primary);
+        position: relative;
+        &::before { // highlight current "dot" to indicate active step
+          @extend %progress-dot;
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          transform: scale(1.7);
+          background: hsla(var(--color-primary-hsl), 0.35);
+          animation: progress-pulse 1.5s infinite;
+        }
+      }
+      .value {
+        font-weight: 500;
+      }
+      &.completed { // when Order is done, no need to highlight "Completed" step anymore
+        .dot {
+          &::before {
+            content: none;
+          }
+        }
+      }
+    }
+    // upcoming steps
+    &.upcoming {
+      .value {
+        color: var(--text-muted);
+      }
+    }
+    // rejected bid scenario
+    &.rejected {
+      &.bidding {
+        position: relative;
+        &::after { // recolor the progress bar from "bid => rejected" to red
+          @include progress-line(var(--color-alert));
+        }
+      }
+      .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
+        background: var(--color-alert);
+      }
+    }
+    .value { // name of step
+      font-size: 13px;
+      margin-bottom: 2px;
+      @include break(l) {
+        margin-bottom: 4px;
+      }
+      @include break(xl) {
+        font-size: 15px;
+      }
+    }
+    .dot { // step indicator "dot"
+      @extend %progress-dot;
+      background: var(--bg-muted);
+    }
+  }
+}
+
+@keyframes progress-pulse {
+  0%,
+  100% {
+    transform: scale(1.7);
+  }
+  50% {
+    transform: scale(1);
+  }
+}

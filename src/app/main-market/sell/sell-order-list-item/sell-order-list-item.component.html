@@ -1,0 +1,200 @@
+<mat-expansion-panel class="order list-item no-padding">
+  <mat-expansion-panel-header class="header">
+    <div class="header-wrapper">
+      <div class="photo">
+        <img src="./assets/images/placeholder_4-3.jpg"><!-- src="{{ listingImage }}" -->
+      </div>
+      <div class="meta" fxFlex="1 1 100%">
+        <div class="name">
+          Order name<!--{{ title }}-->
+          <!-- TODO: replace with buy quantity when implemented -->
+          <span class="qty">&times;1</span>
+        </div>
+        <div class="hash id">12<!--{{ order?.OrderItem?.id }}--></div>
+        <div class="hash" [ngStyle]="{'background-color': '#' + order?.hashDetail}">FS13<!--{{ order?.hash }}--></div>
+        <div class="origin-market">
+          <!-- TODO: implement display of Market where item was bought -->
+          Particl Open Marketplace
+        </div>
+      </div>
+      <div class="status-wrap" fxFlex="0 0 140px">
+        <div class="status bidding"><!-- remove "bidding" class, add: {{ order?.step }} {{ order?.type }} -->
+          <span class="dot"></span> bidding<!-- {{ order?.step }} -->
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel-header>
+
+  <div class="status-info">
+    <div class="text">
+      <h2 class="item-title">Order #12<!--{{ order?.OrderItem?.id }}--></h2>
+      <p>Order has been paid for and it's waiting for Seller to package and ship it to you<!--{{ orderActivity?.status_info }}--></p>
+    </div>
+    <p class="item-info">
+      ID: FS1351FD5<!--{{ order?.hashDetail }}--><br>
+      Updated: 2020-04-06 16:05<!--{{order?.updated}}--><br>
+      Created: 2020-04-01 21:43<!--{{order?.added}}-->
+    </p>
+  </div><!-- .status-info -->
+
+  <div class="progress-graph" fxLayout>
+    <!-- TODO: finished steps as `.done` -->
+    <div class="bidding step done" fxFlex>
+      <div class="value">Bidding</div>
+      <div class="dot"></div>
+    </div>
+    <div class="payment step done" fxFlex>
+      <div class="value">Payment</div>
+      <div class="dot"></div>
+    </div>
+    <!-- TODO: active steps as `.active` -->
+    <div class="escrow step active" fxFlex>
+      <div class="value">Escrow Lock</div>
+      <div class="dot"></div>
+    </div>
+    <!-- TODO: future steps as `.upcoming` -->
+    <div class="packaging step upcoming" fxFlex>
+      <div class="value">Packaging</div>
+      <div class="dot"></div>
+    </div>
+    <div class="shipping step upcoming" fxFlex>
+      <div class="value">Shipping</div>
+      <div class="dot"></div>
+    </div>
+    <!-- TODO: when order is completed, keep this Completed step as `.active` -->
+    <div class="completed step upcoming" fxFlex>
+      <div class="value">Completed</div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  
+  <!-- TODO: when rejected, mark Bidding as `.rejected` (obviously show only Bidding & Rejected steps) -->
+  <!--div class="progress-graph" fxLayout>
+    <div class="bidding step rejected" fxFlex>
+      <div class="value">Bidding</div>
+      <div class="dot"></div>
+    </div>
+    <div class="rejected step" fxFlex>
+      <div class="value">Rejected</div>
+      <div class="dot"></div>
+    </div>
+  </div-->
+
+  <div class="detail">
+
+    <div class="highlights"><!-- TODO: show only if anything below is active: -->
+      <table>
+        <tr><!-- *ngIf="showShippingInfo" -->
+          <th>Shipping details</th>
+          <!--td>{{ memo }}</td--><!-- *ngIf="(memo.length > 0)" -->
+          <td><em>Seller didn't provide any additional info</em></td><!-- *ngIf="!(memo.length > 0)" -->
+        </tr>
+        <tr><!-- *ngIf="additionalInfo.transactionID.length > 0" -->
+          <th>Escrow TXID</th>
+          <td>
+            <div class="txid">
+              <a href="https://explorer.particl.io/tx/45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068" target="_blank" title="Open in Block Explorer"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</a>
+            </div>
+          </td>
+        </tr>
+        <tr><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
+          <th>Rejected for</th>
+          <td><!--{{ additionalInfo.rejectMessage }}-->Not in stock</td>
+        </tr>
+      </table>
+    </div><!-- .highlights -->
+
+    <div class="item-details" fxLayout fxLayoutGap="30px">
+
+      <div class="buyer-info" fxFlex="auto">
+        <h3 class="item-subtitle">Shipping details</h3>
+        <!--app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address-->
+        <p class="shipping-info">
+          Martin Allien<small>&ndash; Name</small><br>
+          Staking Lane 324/Q4<small>&ndash; Street</small><br>
+          Cryptocity<small>&ndash; City</small><br>
+          Blockstate<small>&ndash; State</small><br>
+          5135-46<small>&ndash; ZIP</small><br>
+          Somewhereville<small>&ndash; Country</small>
+        </p>
+        <p class="contact-info"><!-- *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)" -->
+          <span><!-- *ngIf="(contactDetails.email.length > 0)" -->
+            <a href="mailto:my.name@buyer-central.com">my.name@buyer-central.com</a><!--{{contactDetails.email}}-->
+          </span>
+          <br>
+          <span><!-- *ngIf="(contactDetails.phone.length > 0)" -->
+            +548 1843 1548 3511<!--{{contactDetails.phone}}-->
+          </span>
+        </p>
+      </div><!-- .buyer-info -->
+  
+      <div class="pricing-info" fxFlex="auto">
+        <h3 class="item-subtitle">Pricing</h3>
+        <table class="prices">
+          <tfoot>
+            <tr>
+              <th></th>
+              <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+              <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span> // TODO: replace with user selected fiat countervalue currency (when implemented) </th-->
+            </tr>
+          </tfoot>
+          <tbody>
+            <!-- TODO: all amounts will be rounded and forced to 4 decimals again (the former split to whole numbers and decimals is not needed) -->
+            <tr>
+              <th>Price (&times;1 item)<!-- TODO: when implemented, replace with buy quantity --></th>
+              <td class="amount part">4<small>.2130</small></td>
+              <!--td class="amount fiat">3<small>.4100</small></td-->
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td class="amount part">2<small>.5300</small></td>
+              <!--td class="amount fiat">0<small>.8400</small></td-->
+            </tr>
+            <tr class="total">
+              <th>Total price</th>
+              <td class="total amount part">13<small>.4860</small></td>
+              <!--td class="total amount fiat">8<small>.5000</small></td-->
+            </tr>
+            <tr class="escrow">
+              <th>Escrow payment</th>
+              <td class="escrow amount part">6<small>.7430</small></td>
+              <!--td class="escrow amount fiat">4<small>.2500</small></td-->
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Escrow payment will be automatically returned after sucessfull delivery of the Order.
+        </p>
+      </div><!-- .info -->
+
+    </div><!-- .item-details -->
+  </div><!-- .detail -->
+
+  <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+    <div class="left">
+      <button *ngFor="let actionable of secondaryActions"
+              mat-button color="{{actionable.colour}}"
+              [disabled]="actionable.disabled || actionable.locked"
+              appDebounceClick
+              (debounceClick)="executeAction(actionable)"
+              class="small">
+        <mat-icon fontSet="partIcon" fontIcon="{{actionable.icon}}"></mat-icon>
+        {{ actionable.text }}
+      </button>
+      <button mat-button matTooltip="Preview listing" class="small" (click)="openListingDetailModal()">
+        <mat-icon fontIcon="part-zoom-in"></mat-icon>
+        Open
+      </button>
+    </div>
+    <div class="right">
+      <button *ngFor="let actionable of primaryActions"
+              mat-raised-button color="{{actionable.colour}}" matTooltip="{{ actionable.tooltip }}"
+              [disabled]="actionable.disabled || actionable.locked"
+              appDebounceClick
+              (debounceClick)="executeAction(actionable)">
+        <mat-icon fontSet="partIcon" fontIcon="{{ actionable.icon }}"></mat-icon>
+        {{ actionable.text }}
+      </button>
+    </div>
+  </mat-action-row>
+</mat-expansion-panel>
