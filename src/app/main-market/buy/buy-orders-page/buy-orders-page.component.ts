@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 
@@ -14,8 +14,6 @@ export interface Filter {
   styleUrls: ['./buy-orders-page.component.scss']
 })
 export class BuyOrdersPageComponent implements OnInit {
-
-  @Input() type: string;
 
   searchQuery: FormControl = new FormControl('');
   filterQuery: FormControl = new FormControl('all');
