@@ -1,19 +1,15 @@
 @import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
 .question-answer {
-  --list-item-size: 60px;
-  .meta {
-    padding-left: 24px;
-    overflow: hidden;
-    .question {
+  --list-item-size: min-content; // scale dynamicly based on content's size
+  .question {
+    padding: 16px 0 16px 24px;
+    .text {
+      font-size: 13px;
       color: var(--text);
-      font-size: 15px;
-      font-weight: 500;
       line-height: 1.4;
-      white-space: nowrap;
       margin: 0 !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
   }
   .status { // number of replies in thread
@@ -30,34 +26,61 @@
       }
     }
   }
+  .detail {
+    padding: 24px;
+  }
+}
+
+.meta {
+  display: block;
+  font-size: 12px;
+  margin: 8px 0 0;
+  .user {
+    font-weight: 500;
+    color: var(--color-primary);
+    background: hsla(var(--color-primary-hsl), 0.1);
+    padding: 3px 6px;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    .mat-icon {
+      font-size: 11px;
+      margin-right: 6px;
+      position: relative;
+      top: 1px;
+    }
+    .id-full {
+      display: none;
+    }
+    &:hover {
+      .id-full {
+        display: inline-block;
+      }
+      .id-short {
+        display: none;
+      }
+    }
+  }
+  .time-date {
+    font-size: 11.5px;
+    margin-left: 12px;
+  }
 }
 
 
 .thread {
   .item {
     
-    // main/base question
-    &.root {
-      margin-bottom: 12px;
-      p {
-        font-size: 15px;
-        font-weight: 500;
-        color: var(--text);
-      }
-    }
-    
     // replies to original question
     &.child {
-      margin: 0 0 0 10px;
-      border-left: 2px solid var(--bg-muted);
-      padding: 10px 24px;
+      margin: 0 0 24px 24px;
     }
     
     // reply form
     &.reply-form {
       display: block;
-      padding: 4px 0 0 10px;
       color: var(--text);
+      margin: 0 -24px -24px;
+      border-top: 1px dashed var(--bg-muted);
     }
     
     // seller's replies
@@ -77,40 +100,6 @@
     // shared stuff
     p {
       margin: 0;
-    }
-    .meta {
-      display: block;
-      font-size: 12px;
-      margin: 6px 0 0;
-      .user {
-        font-weight: 500;
-        color: var(--color-primary);
-        background: hsla(var(--color-primary-hsl), 0.1);
-        padding: 3px 6px;
-        border-radius: var(--radius);
-        font-family: var(--font-mono);
-        .mat-icon {
-          font-size: 11px;
-          margin-right: 6px;
-          position: relative;
-          top: 1px;
-        }
-        .id-full {
-          display: none;
-        }
-        &:hover {
-          .id-full {
-            display: inline-block;
-          }
-          .id-short {
-            display: none;
-          }
-        }
-      }
-      .time-date {
-        font-size: 11.5px;
-        margin-left: 12px;
-      }
     }
   } // << .item
 }

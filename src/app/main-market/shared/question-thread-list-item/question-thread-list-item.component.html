@@ -1,9 +1,17 @@
-<mat-expansion-panel class="question-answer list-item">
+<mat-expansion-panel class="question-answer list-item no-padding">
   <mat-expansion-panel-header class="header">
     <div class="header-wrapper">
-      <div class="meta" fxFlex="1 1 100%">
-        <div class="question">
+      <div class="question" fxFlex="1 1 100%">
+        <div class="text">
           Root Question content goes here, if it's too long, we can crop it no problem. It's just for the users to see a short preview of the question..
+        </div>
+        <div class="meta">
+          <span class="user">
+            <mat-icon fontIcon="part-person"></mat-icon>
+            <span class="id-short">Pf7D</span>
+            <span class="id-full">Pf7D14fgd5sfd1gd5fg1sd31eP</span>
+          </span>
+          <span class="time-date">2020-04-17 15:10:14</span>
         </div>
       </div>
       <div class="status-wrap" fxFlex="0 0 100px">
@@ -22,21 +30,6 @@
     <!-- TODO: group questions & related replies to `section.thread` -->
     <section class="thread">
 
-      <!-- TODO: "main" question is `.root` -->
-      <div class="root item">
-        <p>
-          Root Question content goes here, if it's too long, we can crop it no problem. It's just for the users to see a short preview of the question..
-        </p>
-        <div class="meta">
-          <span class="user">
-            <mat-icon fontIcon="part-person"></mat-icon>
-            <span class="id-short">Pf7D</span>
-            <span class="id-full">Pf7D14fgd5sfd1gd5fg1sd31eP</span>
-          </span>
-          <span class="time-date">2020-04-17 15:10:14</span>
-        </div>
-      </div><!-- .root.item -->
-
       <!-- TODO: following replies/answers are `.child` + those from seller are `.seller` -->
       <div class="child seller item">
         <p>
@@ -45,10 +38,9 @@
         <div class="meta">
           <!-- TODO: seller's reply has a "Seller" next to the ID + different icon -->
           <span class="user">
-            Seller
             <mat-icon fontIcon="part-circle-user"></mat-icon>
-            <span class="id-short">Pf7D</span>
-            <span class="id-full">Pf7D14fgd5sfd1gd5fg1sd31eP</span>
+            <span class="id-short">Seller</span>
+            <span class="id-full">Seller</span>
           </span>
           <span class="time-date">2020-04-17 16:17:14</span>
         </div>
@@ -71,7 +63,7 @@
       <!-- TODO: last item is always the reply form -->
       <label class="item reply-form">
         <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
-        <mat-form-field appearance="fill" class="post-reply --plain" [color]="type === 'question' ? 'accent' : 'primary'">
+        <mat-form-field appearance="fill" class="post-reply --plain --larger" [color]="type === 'question' ? 'accent' : 'primary'">
           <mat-icon matPrefix fontIcon="part-language"></mat-icon>
           <input matInput type="text" placeholder="Reply to this thread…">
           <button matSuffix mat-button class="small" matTooltip="Reply" [color]="type === 'question' ? 'accent' : 'primary'" matTooltipPosition="before">
