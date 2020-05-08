@@ -9,10 +9,11 @@
         <div class="name">
           Listing name
         </div>
-        <!-- TODO: implement display of Market where item is published -->
+        <!-- @TODO: implement display of Market where item is published -->
         <span class="origin-market">Particl Open Marketplace</span>
         <span class="category">Furniture Incinerators</span>
       </div>
+      <!-- @TODO: if no new messages are present, hide the whole `.status-wrap` -->
       <div class="status-wrap" fxFlex="0 0 140px">
         <div class="status" [matTooltip]="type === 'question' ? 'New questions' : 'New replies'" matTooltipPosition="before">
           <mat-icon fontIcon="part-chat" *ngIf="type === 'question'"></mat-icon>

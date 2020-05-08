@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-question-answer-thread',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./question-answer-thread.component.scss']
 })
 export class QuestionAnswerThreadComponent implements OnInit {
+
+  @Input() type: string;
 
   constructor() { }
 

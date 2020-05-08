@@ -52,7 +52,7 @@
     <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
     <mat-form-field appearance="fill" class="post-reply --plain" [color]="type === 'question' ? 'accent' : 'primary'">
       <mat-icon matPrefix fontIcon="part-language"></mat-icon>
-      <input matInput type="text" placeholder="Reply to this question…">
+      <input matInput type="text" placeholder="Reply to this thread…">
       <button matSuffix mat-button class="small" matTooltip="Reply" [color]="type === 'question' ? 'accent' : 'primary'" matTooltipPosition="before">
         <mat-icon fontIcon="part-arrow-right"></mat-icon>
       </button>
