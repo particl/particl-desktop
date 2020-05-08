@@ -10,6 +10,7 @@ import { SellService } from './sell.service';
 import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
 import { SellOrdersPageComponent } from './sell-orders-page/sell-orders-page.component';
 import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
+import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
 
 
 const routes: Routes = [
@@ -37,7 +38,8 @@ const routes: Routes = [
     ImportListingsComponent,
     PublishTemplateModalComponent,
     SellOrdersPageComponent,
-    SellOrderListItemComponent
+    SellOrderListItemComponent,
+    SellQuestionsComponent
   ],
   entryComponents: [
     PublishTemplateModalComponent

@@ -16,7 +16,7 @@ export interface Filter {
 export class BuyComponent {
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['cart', 'orders', 'favourites'];
+  public tabLabels: Array<string> = ['cart', 'orders', 'questions', 'favourites'];
 
   // ----- ↓↓↓ ORDERS component ↓↓↓ ----- //
   searchQuery: FormControl = new FormControl('');

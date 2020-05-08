@@ -8,6 +8,7 @@ import { MarketSharedModule } from '../shared/shared.module';
 import { BuyOrdersPageComponent } from './buy-orders-page/buy-orders-page.component';
 import { BuyOrderListItemComponent } from './buy-order-list-item/buy-order-list-item.component';
 import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
+import { BuyQuestionsComponent } from './buy-questions/buy-questions.component';
 
 const routes: Routes = [
   { path: '', component: BuyComponent, data: { title: 'Purchases'} }
@@ -31,7 +32,8 @@ const routes: Routes = [
     CheckoutProcessComponent,
     PlaceBidModalComponent,
     BuyOrdersPageComponent,
-    BuyOrderListItemComponent
+    BuyOrderListItemComponent,
+    BuyQuestionsComponent
   ],
   entryComponents: [
     PlaceBidModalComponent

@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class SellComponent {
 
   public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['orders', 'listings'];
+  public tabLabels: Array<string> = ['orders', 'listings', 'questions'];
   //private resizeEventer: any;
 
   filters: any = {

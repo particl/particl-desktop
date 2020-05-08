@@ -15,6 +15,12 @@
           Your Listings
         </ng-template>
       </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+          Questions
+        </ng-template>
+      </mat-tab>
     </mat-tab-group>
   </div>
 </app-header>
@@ -167,7 +173,16 @@
     </div>
   </div><!-- .loading-container -->
 
-</div><!-- .container-block -->
+</div><!-- "Listings" tab -->
+
+
+
+<!-- =========== QUESTIONS =========== -->
+
+<div class="questions container-block" *ngIf="tabLabels[selectedTab] == 'questions'">
+  <app-sell-questions></app-sell-questions>
+</div><!-- "Questions" tab -->
+
 
 
 <div class="loading-bar">
