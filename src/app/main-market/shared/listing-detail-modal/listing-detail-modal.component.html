@@ -261,31 +261,8 @@
     <div class="tab-content questions-answers" *ngIf="tabLabels[selectedTab] == 'questions'">
       <h2 class="section-title">Questions &amp; answers</h2>
 
-      <mat-expansion-panel class="question-answer list-item no-padding">
-        <mat-expansion-panel-header class="header">
-          <div class="header-wrapper">
-            <div class="meta" fxFlex="1 1 100%">
-              <div class="question">
-                Root Question content goes here, if it's too long, we can crop it no problem. It's just for the users to see a short preview of the question..
-              </div>
-            </div>
-            <div class="status-wrap" fxFlex="0 0 100px">
-              <div class="status" matTooltip="Messages in thread" matTooltipPosition="before">
-                <!-- TODO: if Seller hasn't yet replied: -->
-                <mat-icon fontIcon="part-chat"></mat-icon>
-                <!-- TODO: else if Seller has replied: -->
-                <mat-icon fontIcon="part-check"></mat-icon>
-                2
-              </div>
-            </div>
-          </div>
-        </mat-expansion-panel-header>
-        <div class="detail">
-          <!-- FIXME: why doesn't this show up?! -->
-          <app-question-answer-thread></app-question-answer-thread>
-          <app-question-answer-thread></app-question-answer-thread>
-        </div><!-- .detail -->
-      </mat-expansion-panel><!-- .question-answer -->
+      <app-question-thread-list-item></app-question-thread-list-item>
+      <app-question-thread-list-item></app-question-thread-list-item>
 
       <div class="no-results --smaller --horizontal">
         <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No Questions asked yet">

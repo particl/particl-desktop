@@ -27,13 +27,8 @@
 
   // detail / content
   .detail {
-    padding: var(--paddingV) var(--paddingH); // 20px are added in app-question-answer-thread
-    app-question-answer-thread {
-      display: block;
-      margin-bottom: 40px;
-      &:last-of-type {
-        margin: 0;
-      }
-    }
+    padding: 20px 24px 16px;
+    background: hsla(var(--bg-hsl), 0.7);
+    border-top: 1px dashed var(--bg-muted);
   }
 }
