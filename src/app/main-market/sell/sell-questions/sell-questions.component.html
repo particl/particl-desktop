@@ -1,1 +1,91 @@
-<p>sell-questions works!</p>
+<app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+  <ng-container page-title>Buyers' Questions</ng-container>
+  <ng-container page-content>
+    This is where unread Buyers' questions on your Listings are collected.<br>
+    You can reply to your Buyers right from here to manage all the questions with ease.
+  </ng-container>
+  <ng-container page-info *ngIf="hasEncryptedWallet">
+    <!-- @TODO: this should stay here, as comments are SMSG as well, right? -->
+    As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
+  </ng-container>
+  <ng-container page-help>
+    You can always open the Listings directly (clicking on their photo) and manage questions from there, if you prefer.
+  </ng-container>
+</app-page-intro>
+
+
+
+<!-- Questions > Filter -->
+<div class="filter">
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="searchQuery"
+          placeholder="Search Questions" (keyup.escape)="searchQuery.setValue('')">
+    <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+  <h2 class="section-title">
+    Filter
+  </h2>
+
+  <mat-card class="filter-card">
+    <div class="checkbox highlight">
+      <!-- @TODO: checked by default -->
+      <mat-checkbox color="primary">Unanswered questions only</mat-checkbox>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="All Markets" [(ngModel)]="filters.sort" (selectionChange)="clearAndLoadPage()">
+        <mat-option *ngFor="let filtering_market of listing_filtering_market" [value]="filtering_market.value">
+          {{ filtering_market.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+
+<!-- Questions > list -->
+<div class="questions section with-filter">
+
+  <!-- ############# Placeholder for Q/A list item ############# -->
+
+  <!-- *ngIf="questions?.length === 0" -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No Questions found">
+    <p>
+      No Questions from Buyers yet
+    </p>
+    <p class="help-text">
+      Looks like you're doing a great job with proper Listing descriptions or you're not selling anything yet
+    </p>
+  </div>
+
+  <!-- when searching/filtering: -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No Questions found">
+    <p>
+      No Questions found
+    </p>
+    <p class="help-text">
+      You don't have any Questions matching your search/filter
+    </p>
+  </div>
+
+</div><!-- .questions.list -->
