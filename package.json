@@ -1,7 +1,7 @@
 {
   "name": "particl-desktop-testnet",
   "productName": "Particl Desktop Testnet",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "branch": "2.3",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -191,7 +191,7 @@
     "node-unzip-2": "^0.2.1",
     "particl-bot-manager": "^0.0.15",
     "particl-market-import-core": "^0.0.11",
-    "particl-marketplace": "^0.2.7",
+    "particl-marketplace": "^0.2.8",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.3.3",
     "rxjs-compat": "^6.3.3",
