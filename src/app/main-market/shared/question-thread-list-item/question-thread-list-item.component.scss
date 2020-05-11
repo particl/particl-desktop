@@ -3,10 +3,17 @@
 
 .question-answer {
   --list-item-size: min-content; // scale dynamicly based on content's size
+  font-size: 13px;
+  line-height: 1.65;
+  @include break(xl) {
+    font-size: 15px;
+  }
   .question {
     padding: 16px 0 16px 24px;
+    @include break(xl) {
+      padding: 24px 0 24px 30px;
+    }
     .text {
-      font-size: 13px;
       color: var(--text);
       line-height: 1.4;
       margin: 0 !important;
@@ -28,6 +35,9 @@
   }
   .detail {
     padding: 24px;
+    @include break(xl) {
+      padding: 24px 24px 32px;
+    }
   }
 }
 
@@ -35,6 +45,9 @@
   display: block;
   font-size: 12px;
   margin: 8px 0 0;
+  @include break(xl) {
+    font-size: 13px;
+  }
   .user {
     font-weight: 500;
     color: var(--color-primary);
@@ -63,45 +76,38 @@
   .time-date {
     font-size: 11.5px;
     margin-left: 12px;
+    @include break(xl) {
+      font-size: 12.5px;
+    }
   }
 }
 
-
-.thread {
-  .item {
-    
-    // replies to original question
-    &.child {
-      margin: 0 0 24px 24px;
-    }
-    
-    // reply form
-    &.reply-form {
-      display: block;
-      color: var(--text);
-      margin: 0 -24px -24px;
-      border-top: 1px dashed var(--bg-muted);
-    }
-    
-    // seller's replies
-    &.seller {
-      p {
-        font-weight: 500;
-        color: var(--text);
-      }
-      .meta {
-        .user {
-          color: var(--color-secondary);
-          background: hsla(var(--color-secondary-hsl), 0.1);
-        }
-      }
-    }
-    
-    // shared stuff
+// replies to original question
+.answer {
+  margin: 0 0 24px 24px;
+  p {
+    margin: 0;
+  }
+  // seller's replies
+  &.seller {
     p {
-      margin: 0;
+      font-weight: 500;
+      color: var(--text);
     }
-  } // << .item
+    .user {
+      color: var(--color-secondary);
+      background: hsla(var(--color-secondary-hsl), 0.1);
+    }
+  }
 }
-  
-  
+
+// reply form
+.reply-form {
+  display: block;
+  color: var(--text);
+  margin: 0 -24px -24px;
+  border-top: 1px dashed var(--bg-muted);
+  @include break(xl) {
+    margin: 32px -24px -32px;
+  }
+}

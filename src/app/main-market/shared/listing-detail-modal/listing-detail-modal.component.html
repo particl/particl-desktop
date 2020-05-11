@@ -261,8 +261,10 @@
     <div class="tab-content questions-answers" *ngIf="tabLabels[selectedTab] == 'questions'">
       <h2 class="section-title">Questions &amp; answers</h2>
 
-      <app-question-thread-list-item></app-question-thread-list-item>
-      <app-question-thread-list-item></app-question-thread-list-item>
+      <mat-accordion>
+        <app-question-thread-list-item></app-question-thread-list-item>
+        <app-question-thread-list-item></app-question-thread-list-item>
+      </mat-accordion>
 
       <div class="no-results --smaller --horizontal">
         <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No Questions asked yet">

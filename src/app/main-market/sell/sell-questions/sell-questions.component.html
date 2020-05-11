@@ -87,9 +87,25 @@
       </div>
     </mat-expansion-panel-header>
     <div class="detail">
-      <app-question-thread-list-item type="question"></app-question-thread-list-item>
-      <app-question-thread-list-item type="question"></app-question-thread-list-item>
+      <mat-accordion>
+        <app-question-thread-list-item type="question"></app-question-thread-list-item>
+        <app-question-thread-list-item type="question"></app-question-thread-list-item>
+      </mat-accordion>
     </div><!-- .detail -->
+    <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+      <div class="left">
+        <button mat-button matTooltip="Preview listing" class="small" (click)="openListingDetailModal()">
+          <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          Open Listing
+        </button>
+      </div>
+      <div class="right">
+        <button mat-button color="accent">
+          <mat-icon fontIcon="part-check"></mat-icon>
+          Mark all as read
+        </button>
+      </div>
+    </mat-action-row>
   </mat-expansion-panel><!-- .question-item -->
 
 

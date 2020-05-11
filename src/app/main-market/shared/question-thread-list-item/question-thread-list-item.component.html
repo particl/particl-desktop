@@ -26,53 +26,47 @@
     </div>
   </mat-expansion-panel-header>
   <div class="detail">
-    
-    <!-- TODO: group questions & related replies to `section.thread` -->
-    <section class="thread">
 
-      <!-- TODO: following replies/answers are `.child` + those from seller are `.seller` -->
-      <div class="child seller item">
-        <p>
-          Yes, I think we can safely agreed on this.
-        </p>
-        <div class="meta">
-          <!-- TODO: seller's reply has a "Seller" next to the ID + different icon -->
-          <span class="user">
-            <mat-icon fontIcon="part-circle-user"></mat-icon>
-            <span class="id-short">Seller</span>
-            <span class="id-full">Seller</span>
-          </span>
-          <span class="time-date">2020-04-17 16:17:14</span>
-        </div>
-      </div><!-- .child.item -->
+    <div class="answer seller">
+      <p>
+        Yes, I think we can safely agreed on this.
+      </p>
+      <div class="meta">
+        <!-- TODO: seller's reply has a "Seller" next to the ID + different icon -->
+        <span class="user">
+          <mat-icon fontIcon="part-circle-user"></mat-icon>
+          <span class="id-short">Seller</span>
+          <span class="id-full">Seller</span>
+        </span>
+        <span class="time-date">2020-04-17 16:17:14</span>
+      </div>
+    </div><!-- .answer -->
 
-      <div class="child item">
-        <p>
-          Indeed! You have my vote as well! Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae veniam molestias aliquam unde enim quia optio ea et alias, ducimus impedit atque perferendis architecto. Tempore illo optio ipsa quis adipisci. Whoa, sorry for the wall of text :O
-        </p>
-        <div class="meta">
-          <span class="user">
-            <mat-icon fontIcon="part-person"></mat-icon>
-            <span class="id-short">Pf7D</span>
-            <span class="id-full">Pf7D14fgd5sfd1gd5fg1sd31eP</span>
-          </span>
-          <span class="time-date">2020-04-18 02:27:31</span>
-        </div>
-      </div><!-- .child.item -->
+    <div class="answer">
+      <p>
+        Indeed! You have my vote as well! Lorem ipsum dolor sit amet consectetur adipisicing elit. Quae veniam molestias aliquam unde enim quia optio ea et alias, ducimus impedit atque perferendis architecto. Tempore illo optio ipsa quis adipisci. Whoa, sorry for the wall of text :O
+      </p>
+      <div class="meta">
+        <span class="user">
+          <mat-icon fontIcon="part-person"></mat-icon>
+          <span class="id-short">Pf7D</span>
+          <span class="id-full">Pf7D14fgd5sfd1gd5fg1sd31eP</span>
+        </span>
+        <span class="time-date">2020-04-18 02:27:31</span>
+      </div>
+    </div><!-- .answer -->
 
-      <!-- TODO: last item is always the reply form -->
-      <label class="item reply-form">
-        <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
-        <mat-form-field appearance="fill" class="post-reply --plain --larger" [color]="type === 'question' ? 'accent' : 'primary'">
-          <mat-icon matPrefix fontIcon="part-language"></mat-icon>
-          <input matInput type="text" placeholder="Reply to this thread…">
-          <button matSuffix mat-button class="small" matTooltip="Reply" [color]="type === 'question' ? 'accent' : 'primary'" matTooltipPosition="before">
-            <mat-icon fontIcon="part-arrow-right"></mat-icon>
-          </button>
-        </mat-form-field>
-      </label>
-
-    </section><!-- .thread -->
+    <!-- TODO: last item is always the reply form -->
+    <label class="reply-form">
+      <!-- coloring based on user's side (primary for buyers, accent for sellers) - if you don't want the condition here, we can keep "accent" -->
+      <mat-form-field appearance="fill" class="post-reply --plain --larger" [color]="type === 'question' ? 'accent' : 'primary'">
+        <mat-icon matPrefix fontIcon="part-language"></mat-icon>
+        <input matInput type="text" placeholder="Reply to this thread…">
+        <button matSuffix mat-button class="small" matTooltip="Reply" [color]="type === 'question' ? 'accent' : 'primary'" matTooltipPosition="before">
+          <mat-icon fontIcon="part-arrow-right"></mat-icon>
+        </button>
+      </mat-form-field>
+    </label>
 
   </div><!-- .detail -->
 </mat-expansion-panel><!-- .question-answer -->

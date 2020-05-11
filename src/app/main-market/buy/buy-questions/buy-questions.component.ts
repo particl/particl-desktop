@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+
+import { ListingDetailModalComponent } from './../../shared/listing-detail-modal/listing-detail-modal.component';
 
 @Component({
   selector: 'app-buy-questions',
@@ -20,9 +23,15 @@ export class BuyQuestionsComponent implements OnInit {
     { title: 'Sneaky Market',   value: 'three' }
   ];
 
-  constructor() { }
+  constructor(
+    private _dialog: MatDialog
+  ) { }
 
   ngOnInit() {
+  }
+
+  openListingDetailModal(): void {
+    const dialog = this._dialog.open(ListingDetailModalComponent);
   }
 
 }
