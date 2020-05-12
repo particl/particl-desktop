@@ -1,159 +1,96 @@
 @import './src/assets/_config'; // import shared colors etc.
 
 // Stats overview
-.stats-overview {
+.balances-overview {
   margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) var(--paddingV);
-  padding: 18px var(--paddingH);
+  padding: 22px var(--paddingH);
   display: flex;
   align-items: center;
   justify-content: space-between;
   .divider {
     width: 1px;
-    height: 4rem;
+    height: 3.5rem;
     background: var(--bg-muted);
+    &.--blank {
+      background: transparent;
+    }
   }
   // stats
-  .stat {
-    display: flex;
-    align-items: center;
+  .item {
+    width: 20%;
+    &.active-identity {
+      .value {
+        font-size: 16px;
+        margin-bottom: 3px;
+      }
+    }
     .value {
-      font-size: 26px;
-      margin-right: 0.9rem;
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 2px;
       @include break(l) {
-        font-size: 28px;
-        margin-right: 1.1rem;
+      }
+      small {
+        font-size: 15px;
+        font-weight: 400;
+        color: var(--text-muted);
       }
     }
     .key {
       color: var(--text-muted);
     }
   }
-  // balances
-  .balances {
-    width: 25%;
-    th,
-    td {
-      margin: 0;
-      padding: 0;
+}
+
+.latest-activity {
+  .item {
+    @extend %tfx;
+    cursor: pointer;
+    .icon {
+      position: relative;
+      margin-bottom: 16px;
     }
-    th {
-      text-align: left;
+    .badge {
+      --badge-size: 24px;
+      position: absolute;
+      left: 12px;
+      width: var(--badge-size);
+      height: var(--badge-size);
+      line-height: var(--badge-size);
+      text-align: center;
+      color: var(--color-white);
+      font-weight: 600;
+      background: var(--bg-muted);
+      border-radius: 50%;
+    }
+    .mat-icon {
+      font-size: 24px;
+      margin-top: 12px;
       color: var(--text-muted);
-      font-weight: 400;
     }
-    td {
-      text-align: right;
+    .title {
       font-weight: 500;
-      font-family: var(--font-mono);
-      small {
-        color: var(--text-muted);
-        font-weight: 400;
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+    .help-text {
+      margin-top: 8px;
+    }
+    &.active {
+      .mat-icon,
+      .title {
+        color: var(--text);
+      }
+      &.buyer {
+        .badge {
+          background: var(--color-primary);
+        }
+      }
+      &.seller {
+        .badge {
+          background: var(--color-secondary);
+        }
       }
     }
   }
 }
-
-
-// Latest activities
-.activity-group {
-  .header {
-    max-height: 60px;
-    min-height: 60px;
-    .header-content {
-      width: 100%;
-      display: flex;
-      align-items: center;
-    }
-
-    .icon {
-      padding: 22px 32px;
-      margin: 0 24px 0 -24px;
-      border-right: 1px solid hsla(var(--bg-muted-hsl), 0.7);
-    }
-    .mat-icon {
-      display: block;
-    }
-    .notifications { // notification # badge
-      @extend %tfx;
-      text-align: center;
-      font-weight: 600;
-      color: var(--color-white);
-      font-size: 11px;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      position: absolute;
-      transform: translate(10px, -10px);
-    }
-    .title { // activity name
-      width: 35%;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    .desc {
-      width: 55%;
-      color: var(--text-muted);
-    }
-  } // << .header
-
-  // Activity content
-  .content {
-    padding: 20px 24px 16px;
-    background: hsla(var(--bg-hsl), 0.7);
-    border-top: 1px dashed var(--bg-muted);
-  }
-
-  // Buyer-specific actions
-  &.--buyer {
-    .notifications {
-      background: var(--color-primary);
-    }
-    &:hover,
-    &:focus {
-      .notifications {
-        box-shadow: 0 0 0 3px hsla(var(--color-primary-hsl), 0.25);
-      }
-    }
-  }
-
-  // Seller-specific actions
-  &.--seller {
-    .notifications {
-      background: var(--color-secondary);
-    }
-    &:hover,
-    &:focus {
-      .notifications {
-        box-shadow: 0 0 0 3px hsla(var(--color-secondary-hsl), 0.25);
-      }
-    }
-  }
-
-  // Community & Misc actions
-  &.--community {
-    .notifications {
-      background: var(--color-tertiary);
-    }
-    &:hover,
-    &:focus {
-      .notifications {
-        box-shadow: 0 0 0 3px hsla(var(--color-tertiary-hsl), 0.25);
-      }
-    }
-  }
-
-  // items without new notifications
-  &.--no-new {
-    .mat-icon {
-      color: hsla(var(--text-muted-hsl), 0.5);
-    }
-    .notifications {
-      display: none;
-    }
-    .title {
-      color: var(--text-muted);
-    }
-  }
-
-} // << .activity-group

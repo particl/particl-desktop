@@ -1,177 +1,172 @@
 <div class="overview container-block without-tab-bar">
 
   <!-- FIXME @dev: implement these, pretty please :) -->
-  <mat-card class="stats-overview">
+  <mat-card class="balances-overview">
 
-    <div class="stat item">
-      <!-- number of available listings on all connected markets -->
-      <div class="value">513</div>
-      <div class="key">Total<br>Listings</div>
+    <div class="item active-identity">
+      <div class="value">particl-market</div>
+      <div class="key">Active Market identity</div>
+    </div>
+
+    <div class="divider --blank"></div>
+
+    <div class="item">
+      <div class="value">205<small>.9410</small></div>
+      <div class="key">Total Market balance</div>
     </div>
 
     <div class="divider"></div>
 
-    <div class="stat item">
-      <!-- all Buy orders in progress (for this wallet) -->
-      <div class="value">2</div>
-      <div class="key">Buy<br>Orders</div>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="stat item">
-      <!-- all Sell orders in progress (for this wallet) -->
-      <div class="value">5</div>
-      <div class="key">Sell<br>Orders</div>
+    <div class="item">
+      <div class="value">190<small>.5173</small></div>
+      <div class="key">Spendable Anon balance</div>
     </div>
 
     <div class="divider"></div>
     
-    <div class="stat item">
-      <!-- all user's Listings currently available on Market -->
-      <div class="value">1</div>
-      <div class="key">Active<br>Listings</div>
+    <div class="item">
+      <div class="value">15<small>.5613</small></div>
+      <div class="key">Locked in Escrows</div>
     </div>
 
-    <div class="divider"></div>
+  </mat-card><!-- .balances-overview -->
 
-    <table class="balances item">
-      <tr>
-        <th>Spendable Anon</th>
-        <td>190<small>.5173</small></td>
-      </tr>
-      <tr>
-        <th>Locked in Escrow</th>
-        <td>15<small>.4137</small></td>
-      </tr>
-      <tr>
-        <th>Total Balance</th>
-        <td>270<small>.6513</small></td>
-      </tr>
-    </table>
 
-  </mat-card><!-- .stats-overview -->
+  <app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+    <ng-container page-title>Welcome to Particl Marketplace</ng-container>
+    <ng-container page-content>
+      Particl Marketplace allows anyone to buy and sell directly, privately and peer-to-peer without unnecessary middlemen
+    </ng-container>
+  </app-page-intro>
 
 
 
   <h2 class="section-title">
     Latest Buyer Activity
   </h2>
-  
-  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
-  <mat-expansion-panel class="activity-group --buyer no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="header-content">
-        <div class="icon">
-          <div class="notifications">2</div>
-          <mat-icon fontIcon="part-recipe"></mat-icon>
-        </div>
-        <div class="title">Orders requiring attention</div>
-        <div class="desc">Updated orders that need payment or delivery confirmation</div>
-      </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <mat-accordion>
-      </mat-accordion>
-    </div>
-  </mat-expansion-panel><!-- .activity-group -->
 
-  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
-  <mat-expansion-panel class="activity-group --buyer no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="header-content">
-        <div class="icon">
-          <div class="notifications">23</div>
-          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-        </div>
-        <div class="title">New replies to questions</div>
-        <div class="desc">Seller responded to question you asked on their Listing</div>
-      </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <mat-accordion>
-      </mat-accordion>
-    </div>
-  </mat-expansion-panel><!-- .activity-group -->
+  <div class="latest-activity row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between flex-start">
 
+    <!-- @TODO: on click, redirect to respective page and tab -->
+    <!-- @TODO: items with active notifications as `.active` + differentiate Buyer's (.buyer) and Seller's (.seller) -->
+    <mat-card class="active buyer item" fxFlex="25%">
+      <div class="icon">
+        <div class="badge">5</div>
+        <mat-icon fontIcon="part-recipe"></mat-icon>
+      </div>
+      <div class="title">
+        Active Buy Orders
+      </div>
+      <p class="help-text">
+        All Buy Orders currently in progress
+      </p>
+    </mat-card><!-- .item -->
+
+    <mat-card class="active buyer item" fxFlex="25%">
+      <div class="icon">
+        <div class="badge">2</div>
+        <mat-icon fontIcon="part-recipe"></mat-icon>
+      </div>
+      <div class="title">
+        <!-- @TODO: got better name that fits 1 line? :) -->
+        Urgent Buy Orders
+      </div>
+      <p class="help-text">
+        Updated Orders that need your attention
+      </p>
+    </mat-card><!-- .item -->
+
+    <mat-card class="buyer item" fxFlex="25%"><!-- not ".active" since it has no unread notifications -->
+      <div class="icon">
+        <div class="badge">0</div>
+        <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+      </div>
+      <div class="title">
+        New replies
+      </div>
+      <p class="help-text">
+        Unread Sellers' replies to your questions
+      </p>
+    </mat-card><!-- .item -->
+
+    <mat-card class="active buyer item" fxFlex="25%">
+      <div class="icon">
+        <div class="badge">4</div>
+        <mat-icon fontIcon="part-shop"></mat-icon>
+      </div>
+      <div class="title">
+        Joined Markets
+      </div>
+      <p class="help-text">
+        Total number of Markets you've joined
+      </p>
+    </mat-card><!-- .item -->
+
+  </div><!-- .latest-activity -->
 
 
   <h2 class="section-title">
     Latest Seller Activity
   </h2>
 
-  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
-  <mat-expansion-panel class="activity-group --seller no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="header-content">
-        <div class="icon">
-          <div class="notifications">2</div>
-          <mat-icon fontIcon="part-recipe"></mat-icon>
-        </div>
-        <div class="title">New bids on Listings</div>
-        <div class="desc">Buyer wants to buy your Product &ndash; approve or reject their bid</div>
-      </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <mat-accordion>
-      </mat-accordion>
-    </div>
-  </mat-expansion-panel><!-- .activity-group -->
+  <div class="latest-activity row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between flex-start">
 
-  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
-  <mat-expansion-panel class="activity-group --seller no-padding --no-new" disabled>
-    <mat-expansion-panel-header class="header">
-      <div class="header-content">
-        <div class="icon">
-          <div class="notifications">0</div>
-          <mat-icon fontIcon="part-recipe"></mat-icon>
-        </div>
-        <div class="title">Orders requiring attention</div>
-        <div class="desc">Updated orders that need payment or need to be shipped</div>
+    <!-- @TODO: on click, redirect to respective page and tab -->
+    <!-- @TODO: items with active notifications as `.active` + differentiate Buyer's (.buyer) and Seller's (.seller) -->
+    <mat-card class="active seller item" fxFlex="25%">
+      <div class="icon">
+        <div class="badge">5</div>
+        <mat-icon fontIcon="part-recipe"></mat-icon>
       </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <mat-accordion>
-        <app-order-list-item></app-order-list-item>
-      </mat-accordion>
-    </div>
-  </mat-expansion-panel><!-- .activity-group -->
+      <div class="title">
+        Active Sell Orders
+      </div>
+      <p class="help-text">
+        All Sell Orders currently in progress
+      </p>
+    </mat-card><!-- .item -->
 
-  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
-  <mat-expansion-panel class="activity-group --seller no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="header-content">
-        <div class="icon">
-          <div class="notifications">8</div>
-          <mat-icon fontIcon="part-chat"></mat-icon>
-        </div>
-        <div class="title">New questions on Listings</div>
-        <div class="desc">Buyer asked a question about your Listing</div>
+    <mat-card class="seller item" fxFlex="25%"><!-- not ".active" since it has no unread notifications -->
+      <div class="icon">
+        <div class="badge">0</div>
+        <mat-icon fontIcon="part-recipe"></mat-icon>
       </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <mat-accordion>
-      </mat-accordion>
-    </div>
-  </mat-expansion-panel><!-- .activity-group -->
+      <div class="title">
+        <!-- @TODO: got better name that fits 1 line? :) -->
+        Urgent Sell Orders
+      </div>
+      <p class="help-text">
+        Updated Orders that need your attention
+      </p>
+    </mat-card><!-- .item -->
 
-  <!-- if number of new items = 0, add class `--no-new` to expansion panel + make it [disabled] -->
-  <mat-expansion-panel class="activity-group --seller no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="header-content">
-        <div class="icon">
-          <div class="notifications">12</div>
-          <mat-icon fontIcon="part-stock"></mat-icon>
-        </div>
-        <div class="title">Expired Listings</div>
-        <div class="desc">These Listings were taken off the Market &ndash; relist them if needed</div>
+    <mat-card class="active seller item" fxFlex="25%">
+      <div class="icon">
+        <div class="badge">1</div>
+        <mat-icon fontIcon="part-chat"></mat-icon>
       </div>
-    </mat-expansion-panel-header>
-    <div class="content">
-      <mat-accordion>
-      </mat-accordion>
-    </div>
-  </mat-expansion-panel><!-- .activity-group -->
+      <div class="title">
+        New questions
+      </div>
+      <p class="help-text">
+        Unread Buyers' questions on your Listings
+      </p>
+    </mat-card><!-- .item -->
+
+    <mat-card class="active seller item" fxFlex="25%">
+      <div class="icon">
+        <div class="badge">4</div>
+        <mat-icon fontIcon="part-stock"></mat-icon>
+      </div>
+      <div class="title">
+        Expired Listings
+      </div>
+      <p class="help-text">
+        Listings needing to be re-listed on the Market
+      </p>
+    </mat-card><!-- .item -->
+
+  </div><!-- .latest-activity -->
 
 
 </div><!-- .container-block -->
