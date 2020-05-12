@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { OverviewComponent } from './overview.component';
 import { MarketSharedModule } from '../shared/shared.module';
-import { QuestionAnswerItemComponent } from './question-answer-item/question-answer-item.component';
 
 
 const routes: Routes = [
@@ -23,8 +22,7 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    OverviewComponent,
-    QuestionAnswerItemComponent
+    OverviewComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
