@@ -32,12 +32,19 @@
   </mat-card><!-- .balances-overview -->
 
 
-  <app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
-    <ng-container page-title>Welcome to Particl Marketplace</ng-container>
-    <ng-container page-content>
+  <div class="page-intro">
+    <h1 class="title">
+      Welcome to Particl Marketplace
+    </h1>
+    <p class="lead">
       Particl Marketplace allows anyone to buy and sell directly, privately and peer-to-peer without unnecessary middlemen
-    </ng-container>
-  </app-page-intro>
+    </p>
+    <p class="buttons">
+      <!-- @TODO: redirect to Listings page -->
+      <button mat-button color="primary">Explore the Market</button>
+      <a mat-button href="https://particl.wiki/learn/market/" target="_blank" color="accent">Learn more</a>
+    </p>
+  </div><!-- .page-intro -->
 
 
 
@@ -45,7 +52,7 @@
     Latest Buyer Activity
   </h2>
 
-  <div class="latest-activity row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between flex-start">
+  <div class="latest-activity row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between stretch">
 
     <!-- @TODO: on click, redirect to respective page and tab -->
     <!-- @TODO: items with active notifications as `.active` + differentiate Buyer's (.buyer) and Seller's (.seller) -->
@@ -109,7 +116,7 @@
     Latest Seller Activity
   </h2>
 
-  <div class="latest-activity row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between flex-start">
+  <div class="latest-activity row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between stretch">
 
     <!-- @TODO: on click, redirect to respective page and tab -->
     <!-- @TODO: items with active notifications as `.active` + differentiate Buyer's (.buyer) and Seller's (.seller) -->

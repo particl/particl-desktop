@@ -42,13 +42,34 @@
   }
 }
 
+.page-intro {
+  display: none;
+  @include break(l) {
+    @include gradient(var(--color-white), var(--bg));
+    display: block;
+    text-align: center;
+    padding: calc(1.5 * var(--paddingV)) var(--paddingH);
+    margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
+  }
+  .lead {
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
 .latest-activity {
   .item {
     @extend %tfx;
-    cursor: pointer;
+    @include break(l) {
+      padding: 24px 30px 30px;
+    }
     .icon {
       position: relative;
       margin-bottom: 16px;
+      @include break(l) {
+        margin-bottom: 20px;
+      }
     }
     .badge {
       --badge-size: 24px;
@@ -72,11 +93,23 @@
       font-weight: 500;
       font-size: 15px;
       color: var(--text-muted);
+      @include break(l) {
+        font-size: 16px;
+      }
     }
     .help-text {
       margin-top: 8px;
+      @include break(l) {
+        margin-top: 10px;
+        font-size: 13px;
+      }
     }
     &.active {
+      cursor: pointer;
+      &:hover,
+      &:focus {
+        box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -1px hsla(var(--text-hsl), 0.3) !important;
+      }
       .mat-icon,
       .title {
         color: var(--text);
