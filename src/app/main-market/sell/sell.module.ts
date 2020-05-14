@@ -11,6 +11,10 @@ import { PublishTemplateModalComponent } from './new-listing/publish-template-mo
 import { SellOrdersPageComponent } from './sell-orders-page/sell-orders-page.component';
 import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
 import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
+import { AcceptBidModalComponent } from './accept-bid-modal/accept-bid-modal.component';
+import { RejectBidModalComponent } from './reject-bid-modal/reject-bid-modal.component';
+import { EscrowPaymentModalComponent } from './escrow-payment-modal/escrow-payment-modal.component';
+import { OrderShippedModalComponent } from './order-shipped-modal/order-shipped-modal.component';
 
 
 const routes: Routes = [
@@ -39,10 +43,18 @@ const routes: Routes = [
     PublishTemplateModalComponent,
     SellOrdersPageComponent,
     SellOrderListItemComponent,
-    SellQuestionsComponent
+    SellQuestionsComponent,
+    AcceptBidModalComponent,
+    RejectBidModalComponent,
+    EscrowPaymentModalComponent,
+    OrderShippedModalComponent
   ],
   entryComponents: [
-    PublishTemplateModalComponent
+    PublishTemplateModalComponent,
+    AcceptBidModalComponent,
+    RejectBidModalComponent,
+    EscrowPaymentModalComponent,
+    OrderShippedModalComponent
   ],
   providers: [
     SellService

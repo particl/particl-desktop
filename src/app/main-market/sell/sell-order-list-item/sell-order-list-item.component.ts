@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
 import { ListingDetailModalComponent } from './../../shared/listing-detail-modal/listing-detail-modal.component';
+import { AcceptBidModalComponent } from './../accept-bid-modal/accept-bid-modal.component';
+import { RejectBidModalComponent } from './../reject-bid-modal/reject-bid-modal.component';
+import { EscrowPaymentModalComponent } from './../escrow-payment-modal/escrow-payment-modal.component';
+import { OrderShippedModalComponent } from './../order-shipped-modal/order-shipped-modal.component';
 
 @Component({
   selector: 'app-sell-order-list-item',
@@ -19,6 +23,22 @@ export class SellOrderListItemComponent implements OnInit {
 
   openListingDetailModal(): void {
     const dialog = this._dialog.open(ListingDetailModalComponent);
+  }
+
+  openAcceptBidModal(): void {
+    const dialog = this._dialog.open(AcceptBidModalComponent);
+  }
+
+  openRejectBidModal(): void {
+    const dialog = this._dialog.open(RejectBidModalComponent);
+  }
+
+  openEscrowPaymentModal(): void {
+    const dialog = this._dialog.open(EscrowPaymentModalComponent);
+  }
+
+  openOrderShippedModal(): void {
+    const dialog = this._dialog.open(OrderShippedModalComponent);
   }
 
 }

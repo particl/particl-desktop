@@ -9,6 +9,9 @@ import { BuyOrdersPageComponent } from './buy-orders-page/buy-orders-page.compon
 import { BuyOrderListItemComponent } from './buy-order-list-item/buy-order-list-item.component';
 import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
 import { BuyQuestionsComponent } from './buy-questions/buy-questions.component';
+import { CancelBidModalComponent } from './cancel-bid-modal/cancel-bid-modal.component';
+import { PayOrderModalComponent } from './pay-order-modal/pay-order-modal.component';
+import { ConfirmOrderDeliveredModalComponent } from './confirm-order-delivered-modal/confirm-order-delivered-modal.component';
 
 const routes: Routes = [
   { path: '', component: BuyComponent, data: { title: 'Purchases'} }
@@ -33,10 +36,16 @@ const routes: Routes = [
     PlaceBidModalComponent,
     BuyOrdersPageComponent,
     BuyOrderListItemComponent,
-    BuyQuestionsComponent
+    BuyQuestionsComponent,
+    CancelBidModalComponent,
+    PayOrderModalComponent,
+    ConfirmOrderDeliveredModalComponent
   ],
   entryComponents: [
-    PlaceBidModalComponent
+    PlaceBidModalComponent,
+    CancelBidModalComponent,
+    PayOrderModalComponent,
+    ConfirmOrderDeliveredModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

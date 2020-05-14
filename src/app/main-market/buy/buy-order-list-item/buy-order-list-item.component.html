@@ -195,6 +195,13 @@
         <mat-icon fontSet="partIcon" fontIcon="{{ actionable.icon }}"></mat-icon>
         {{ actionable.text }}
       </button>
+
+      <!-- @TODO: remove these; purely for testing >> -->
+      <button mat-button (click)="openCancelBidModal()">Cancel</button>
+      <button mat-button (click)="openPayOrderModal()">Pay</button>
+      <button mat-button (click)="openConfirmOrderDeliveredModal()">Delivered</button>
+      <!-- @TODO: << remove these; purely for testing -->
+
     </div>
   </mat-action-row>
 </mat-expansion-panel>
