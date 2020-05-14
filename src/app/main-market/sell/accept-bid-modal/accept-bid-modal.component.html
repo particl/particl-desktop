@@ -1,1 +1,36 @@
-<p>accept-bid-modal works!</p>
+<div mat-dialog-title>Accept bid</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="dialog-content">
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/accept-bid.svg" alt="Accept bid">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Are you sure you want to accept this bid?
+      </p>
+      <p class="help-text">
+        Before the payment can be made, you need to accept the bid made by the Buyer.
+      </p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Yes, accept bid
+  </button>
+</mat-dialog-actions>
