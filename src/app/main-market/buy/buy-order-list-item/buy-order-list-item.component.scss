@@ -51,6 +51,9 @@
       th {
         min-width: 110px;
         color: var(--text);
+        text-align: left;
+        font-weight: 500;
+        line-height: 1.5;
       }
       td {
         .txid {
@@ -106,11 +109,11 @@
 
 // ------ PROGRESS GRAPH ------ //
 
-$dot-size: 11px;
 
 %progress-dot { // progress step indicator "dot"
-  width: $dot-size;
-  height: $dot-size;
+  --dot-size: 10px;
+  width: var(--dot-size);
+  height: var(--dot-size);
   border-radius: 50%;
   display: inline-block;
 }
@@ -118,7 +121,7 @@ $dot-size: 11px;
 @mixin progress-line($color) { // "done" progress between two Order steps
   content: "";
   position: absolute;
-  bottom: 10px;
+  bottom: 8px;
   left: 50.5%;
   width: 100%;
   height: 1px;
@@ -129,7 +132,7 @@ $dot-size: 11px;
 
 // Display progress (steps) of Order and in which stage it is
 .progress-graph {
-  margin: 4px 0 -11px;
+  margin: 4px 0 -9px;
   .step {
     text-align: center;
     // finished step
@@ -189,7 +192,7 @@ $dot-size: 11px;
     }
     .value { // name of step
       font-size: 13px;
-      margin-bottom: 2px;
+      margin-bottom: 3px;
       @include break(l) {
         margin-bottom: 4px;
       }
