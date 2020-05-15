@@ -74,12 +74,12 @@
           </div>
         </mat-card>
       </div>
-    
+
       <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
         <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
         Clear all filters
       </button>
-    
+
     </div><!-- .filter -->
 
     <!-- Orders > list -->
@@ -125,13 +125,13 @@
 
                 <div class="meta" fxFlex="1 1 100%">
                   <div class="name">
-                    <img class="coin" src="./assets/images/coins/{{ exchange?.currency_from.toUpperCase() }}.svg">
+                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" default="assets/icons/SVG/coins/unknown.svg">
                     {{ exchange?.amount_from | particlAmount }} {{ exchange?.currency_from.toUpperCase() }}
                     -&gt;
-                    <img class="coin" src="./assets/images/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
+                    <img class="coin" src="./assets/icons/SVG/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" default="assets/icons/SVG/coins/unknown.svg">
                     ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to.toUpperCase() }}
                   </div>
-                  
+
                   <mat-spinner class="loading-spinner" [diameter]="16" color="accent" *ngIf="updateInProgress[exchange.track_id]"></mat-spinner>
                   <button mat-button class="exchange-status" (click)="requestUpdate($event, exchange, pageIndex)" [disabled]="updateInProgress[exchange.track_id]" matTooltip="Request status update" *ngIf="!exchange.tx_to && !updateInProgress[exchange.track_id]">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
@@ -147,12 +147,12 @@
 
               </div>
             </mat-expansion-panel-header>
-          
+
             <div class="detail">
               <table class="exchange-details outgoing full-width">
                 <tr>
                   <td rowspan="2" class="direction-img">
-                    <img src="./assets/images/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin">
+                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_from.toUpperCase() }}.svg" class="coin" default="assets/icons/SVG/coins/unknown.svg">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
                   </td>
                   <th>Send {{ exchange?.currency_from.toUpperCase() }} to</th>
@@ -171,7 +171,7 @@
                 <tr>
                   <td rowspan="2" class="direction-img">
                     <mat-icon class="icon" fontSet="partIcon" fontIcon="part-arrow-right"></mat-icon>
-                    <img src="./assets/images/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin">
+                    <img src="./assets/icons/SVG/coins/{{ exchange?.currency_to.toUpperCase() }}.svg" class="coin" default="assets/icons/SVG/coins/unknown.svg">
                   </td>
                   <th>Receive {{ exchange?.currency_to.toUpperCase() }} to</th>
                   <td><input type="text" readonly value="{{ exchange?.address_to }}" class="value highlight address"></td>
