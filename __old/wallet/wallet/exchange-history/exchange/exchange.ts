@@ -26,6 +26,9 @@ export class Exchange {
     return new PartoshiAmount(this.selectedOffer ? this.selectedOffer.amount_to * Math.pow(10, 8) : 0);
   }
 
+  // Bots
+  public availableBots: any[] = [];
+
   // Currencies
   public availableCurrencies: any[] = [];
   public selectedCurrency: any;
@@ -69,12 +72,12 @@ export class Exchange {
     this.loading = true;
     this.availableCurrencies = [];
 
-    let availableBots = [];
+    this.availableBots = [];
     try {
-      availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
+      this.availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
     } catch (e) {}
 
-    if (availableBots.length === 0) {
+    if (this.availableBots.length === 0) {
       this.noBots = true;
       this.loading = false;
       return;
@@ -84,8 +87,8 @@ export class Exchange {
 
     this.completedRequests = 0;
     this.botRequestSubscriptions = [];
-    this.totalBots = availableBots.length;
-    for (const bot of availableBots) {
+    this.totalBots = this.availableBots.length;
+    for (const bot of this.availableBots) {
       const sub = this.botService.command(bot.address, 'GET_SUPPORTED_CURRENCIES').subscribe(
         (response) => {
           this.completedRequests++;
@@ -95,6 +98,7 @@ export class Exchange {
             return;
           }
           const currencies = response.data;
+          bot.currencies = currencies;
 
           for (const currency of currencies) {
             if (!this.availableCurrencies.find((c) => c.symbol === currency.symbol)) {
@@ -121,23 +125,16 @@ export class Exchange {
   async getExchangeOffers() {
     this.loading = true;
     this.availableOffers = [];
+    this.selectedOffer = null;
 
-    let availableBots = [];
-    try {
-      availableBots = await this.botService.search(0, 999999, 'EXCHANGE', '', true);
-    } catch (e) {}
-
-    if (availableBots.length === 0) {
-      this.noBots = true;
-      return;
-    } else {
-      this.noBots = false;
-    }
+    const offerFromBots = this.availableBots.filter(
+      (bot) => !!bot.currencies.find((currency) => currency.symbol === this.selectedCurrency.symbol)
+    );
 
     this.completedRequests = 0;
     this.botRequestSubscriptions = [];
-    this.totalBots = availableBots.length;
-    for (const bot of availableBots) {
+    this.totalBots = offerFromBots.length;
+    for (const bot of offerFromBots) {
       const sub = this.botService.command(bot.address, 'GET_OFFER', this.selectedCurrency.symbol, 'PART', this.requiredParticls).subscribe(
         (response) => {
           this.completedRequests++;
