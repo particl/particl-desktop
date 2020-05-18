@@ -1,1 +1,62 @@
-<p>escrow-payment-modal works!</p>
+<div mat-dialog-title>Fund escrow</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close><!-- tabindex="-1" -->
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+<mat-dialog-content class="dialog-content">
+
+  <!-- TODO: show on alpha mainnet only | do we really need it when we have the banner on top of Market? -->
+  <p class="message --warning">
+    <strong>Warning:</strong> you are about to spend real PART coins on an ongoing development version of Particl Marketplace &ndash; things might break!
+  </p>
+
+  <!-- Bid confirmation-->
+  <div class="tx-confirmation">
+    <div class="tx-info">
+      <!-- if public -->
+      <div class="public">
+        <mat-icon class="icon public" fontIcon="part-stock"></mat-icon>
+        <div class="title">You're selling</div>
+        <p class="help-text">
+          Buyer locked the payment in Escrow &ndash; fund your part of the Escrow and proceed to packaging and shipping of the Order
+        </p>
+      </div>
+    </div>
+
+    <div class="tx-amount">
+      <span class="big">132</span><span class="point">.</span><span class="small">865416</span>&ensp;
+      <span class="currency">PART</span>
+      <!-- TODO: until fiat estimations are implemented, hide them -->
+      <div class="fiat">&asymp; 3.42 USD</div>
+    </div>
+
+    <mat-icon class="arrow-icon" fontIcon="part-arrow-down"></mat-icon>
+
+    <div class="receiver-info">
+      <div class="escrow-label">Escrow for</div>
+      <div class="label"><span class="qty">1&times;</span> Listing name of item being bought</div>
+      <!-- @TODO: replace "FS1351FD5" by Order's ID + "Particl Open Marketplace" by respective market -->
+      <p class="order-info">Order #FS1351FD5 from Particl Open Marketplace</p>
+    </div>
+
+    <p class="fee-info">
+      Transaction fee:
+      <span class="amount">0.05121 PART</span>
+      <span class="fiat">&asymp; 2.52 USD</span>
+    </p>
+
+  </div>
+
+
+</mat-dialog-content><!-- .dialog-content -->
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="confirm()" [disabled]="processing">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Confirm &amp; Fund
+  </button>
+</mat-dialog-actions>

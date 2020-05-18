@@ -1,0 +1,16 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../../shared/order-modals'; // shared styles for order modals (accept, reject, confirms etc.)
+
+.dialog-content {
+  p.message {
+    margin: 18px -24px 0 -24px;
+    border-top: 1px dashed var(--bg-muted);
+    padding: 24px 24px 24px 52px;
+    &::before {
+      top: 33px;
+    }
+    .mat-form-field {
+      margin: 16px 0 2px;
+    }
+  }
+}

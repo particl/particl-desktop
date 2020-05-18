@@ -1,0 +1,27 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../../../main-wallet/shared/confirmations-shared'; // shared stuff for confirmation modals
+
+.tx-info {
+  .help-text {
+    max-width: 25rem;
+  }
+}
+
+.receiver-info {
+  @extend %enable-select;
+  .escrow-label {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    margin: 0 auto 4px;
+  }
+  .qty {
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-right: 6px;
+  }
+  .order-info {
+    color: var(--text-muted);
+    margin: 0 0 32px;
+  }
+}

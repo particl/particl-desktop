@@ -1,1 +1,45 @@
-<p>order-shipped-modal works!</p>
+<div mat-dialog-title>Order shipped</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="dialog-content">
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/confirm-shipped.svg" alt="Confirm Order as shipped">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Confirm Order as shipped?
+      </p>
+      <p class="help-text">
+        You can send additional shipping information to the Buyer (like Order tracking number or a links to digital deliveries) below:
+      </p>
+    </div>
+
+  </div>
+
+  <p class="message --info">
+    <strong>Warning!</strong> If you don't ship the item to the Buyer, you will lose your Escrow deposit!
+    <mat-form-field class="full-width --boxed --larger" appearance="fill" color="accent">
+      <mat-icon matPrefix fontIcon="part-truck"></mat-icon>
+      <input matInput type="text" placeholder="Additional shipping info (e.g. tracking number)">
+    </mat-form-field>
+  </p>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Yes, Order is shipped
+  </button>
+</mat-dialog-actions>
