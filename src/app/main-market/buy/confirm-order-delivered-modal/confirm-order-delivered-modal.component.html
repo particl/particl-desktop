@@ -1,1 +1,39 @@
-<p>confirm-order-delivered-modal works!</p>
+<div mat-dialog-title>Confirm order delivery</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="dialog-content">
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/confirm-delivery.svg" alt="Confirm delivery">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Mark as delivered and complete this Order?
+      </p>
+      <p class="message --info">
+        <strong>Warning!</strong> Only confirm the delivery if you have received the item in real life &ndash; this Order involves real PART coins!
+      </p>
+      <p class="help-text">
+        Confirming successfull delivery will finalize this Order and release your funds locked in Escrow.
+      </p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Yes, I received the Order
+  </button>
+</mat-dialog-actions>

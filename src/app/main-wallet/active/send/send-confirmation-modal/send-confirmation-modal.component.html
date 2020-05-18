@@ -12,7 +12,7 @@
       <div class="public" *ngIf="txType === 'part'">
         <mat-icon fontIcon="part-public"></mat-icon>
         <div class="title">Public transaction</div>
-        <p class="desc">
+        <p class="help-text">
           Sender, Receiver & transaction amount will be publicly visible on the blockchain
         </p>
       </div>
@@ -20,21 +20,20 @@
       <div class="blind" *ngIf="txType === 'blind'">
         <mat-icon fontIcon="part-blind"></mat-icon>
         <div class="title">Blind transaction</div>
-        <p class="desc">
+        <p class="help-text">
           Sender & Receiver will be publicly visible on the blockchain, but the transaction amount will be hidden
         </p>
       </div>
       <div class="anon" *ngIf="txType === 'anon'">
         <mat-icon fontIcon="part-anon"></mat-icon>
         <div class="title">Anon transaction</div>
-        <p class="desc">
+        <p class="help-text">
           Sender, Receiver & transaction amount will be hidden on the blockchain for highest privacy
         </p>
       </div>
     </div><!-- .tx-info -->
 
     <div class="tx-amount">
-      <!--img src="./assets/images/coins/PART.svg" alt="PART" class="icon"-->
       <span class="big">{{ requestedWhole }}</span>
       <ng-container *ngIf="requestedFraction.length > 0">
         <span class="point">.</span>

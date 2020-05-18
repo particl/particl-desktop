@@ -8,12 +8,17 @@
 // ------ LAYOUT ------ //
 
 .dialog-content {
-  width: 28rem;
-  padding: 10px 16px;
+  width: 30rem;
+  padding: 0 24px 16px;
   text-align: center;
-  p.info,
-  p.warning {
-    margin: 24px -15px;
+  p.message {
+    margin: -16px -24px 24px;
+    background: transparent;
+    color: var(--text-muted);
+    text-align: left;
+    strong {
+      color: var(--text);
+    }
   }
 }
 
@@ -27,16 +32,14 @@
     font-size: 15px;
     margin: 10px 0;
   }
-  .desc {
-    @extend %help-text;
-    margin: 0 auto 25px;
+  .help-text {
+    margin: 0 auto 24px;
     max-width: 20rem;
   }
 }
 
 .tx-amount {
   @extend %enable-select;
-  font-family: var(--font-mono);
   font-weight: 500;
   .big {
     font-size: 20px;
@@ -93,14 +96,8 @@
 
 .fee-info {
   @extend %help-text;
-  margin: 30px 0 0;
+  margin: 24px 0 0;
   & > .amount {
     margin: 0 0 0 10px;
   }
-}
-
-.escrow-info {
-  @extend .fee-info;
-  margin-top: 20px;
-  padding: 0 70px;
 }
