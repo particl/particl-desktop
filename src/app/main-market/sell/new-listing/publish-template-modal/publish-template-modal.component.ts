@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject, Output, EventEmitter } from '@ang
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subject, BehaviorSubject, of, Observable, merge, iif, defer } from 'rxjs';
+import { Subject, BehaviorSubject, of, Observable, merge, iif, defer, concat } from 'rxjs';
 import { tap, takeUntil, distinctUntilChanged, map, catchError, concatMap, finalize } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
@@ -23,7 +23,8 @@ interface PublishTemplateModalInputs {
 
 enum TextContent {
   CATEGORY_ADD_SUCCESS = 'Successfully created the new category',
-  CATEGORY_ADD_FAILURE = 'An error occurred while adding the category'
+  CATEGORY_ADD_FAILURE = 'An error occurred while adding the category',
+  PUBLISH_FAILURE = 'Failed to update the template correctly'
 }
 
 
@@ -33,7 +34,7 @@ enum TextContent {
 })
 export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
-  @Output() isConfirmed: EventEmitter<{market: number, category: number, duration: number}> = new EventEmitter();
+  @Output() isConfirmed: EventEmitter<{market: number, duration: number}> = new EventEmitter();
 
   currentIdentity: string = '';
   currentBalance: string = '';
@@ -108,15 +109,11 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
         this.selectedCategory.setValue('');
         this.categories$.next([]);
         const market = this.availableMarkets.find(m => m.id === marketId);
-        // this.canCreateCategory.setValue(true);
         this.canCreateCategory.setValue((market !== undefined) && (market.type === 'STOREFRONT_ADMIN'));
       }),
       concatMap((marketId: number) => {
         if (+marketId) {
-          const market = this.availableMarkets.find(m => m.id === marketId);
-          if (market && market.id) {
-            return this._dataService.loadCategories(market.receiveAddress);
-          }
+          return this._dataService.loadCategories(+marketId);
         }
         return of({categories: [], rootId: 0});
       }),
@@ -231,7 +228,8 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
   estimateFee() {
     this.hasEstimateError = false;
     this.feeEstimate = -1;
-    this._unlocker.unlock({timeout: 10}).pipe(
+
+    const estimate$ = this._unlocker.unlock({timeout: 10}).pipe(
       concatMap(
         (unlocked: boolean) => iif(
           () => unlocked,
@@ -239,14 +237,24 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
             () => this._sellService.publishTemplate(
               +this.data.templateID,
               this.selectedMarket.value,
+              this.selectedDuration.value,
               this.selectedCategory.value,
-              this.selectedDuration.value, true
+              true
             ).pipe(
-              tap((value) => this.feeEstimate = 1.11010101) // TODO: set the estimate fee here (no idea what the response looks like)
+              tap((value) => {
+                this.feeEstimate = 1.11010101;
+              }) // TODO: set the estimate fee here (no idea what the response looks like)
             )
           )
         )
       )
+    );
+
+    concat(
+      this.saveTemplateData(),
+      estimate$,
+    ).pipe(
+      takeUntil(this.destroy$) // force close any potential leak
     ).subscribe(
       null,
       () => this.hasEstimateError = true
@@ -260,12 +268,18 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       (+this.selectedCategory.value > 0) &&
       (+this.selectedDuration.value > 0)
     ) {
-      this.isConfirmed.emit({
-        market: +this.selectedMarket.value,
-        category: +this.selectedCategory.value,
-        duration: +this.selectedDuration.value
-      });
-      this._dialogRef.close();
+      this.saveTemplateData().pipe(
+        tap(() => {
+          this.isConfirmed.emit({
+            market: +this.selectedMarket.value,
+            duration: +this.selectedDuration.value
+          });
+          this._dialogRef.close();
+        })
+      ).subscribe(
+        null,
+        () => this._snackbar.open(TextContent.PUBLISH_FAILURE, 'err')
+      );
     }
   }
 
@@ -284,5 +298,10 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
     }
 
     return tempBal.particlsString();
+  }
+
+
+  private saveTemplateData(): Observable<void> {
+    return this._sellService.setTemplateCategory(+this.data.templateID, +this.selectedCategory.value);
   }
 }

@@ -2,6 +2,7 @@
 export type MarketType = 'MARKETPLACE' | 'STOREFRONT' | 'STOREFRONT_ADMIN';
 export type SALES_TYPE = 'SALE';
 export type ESCROW_TYPE = 'MAD_CT';
+export type ESCROW_RELEASE_TYPE = 'ANON' | 'BLIND';
 export type CURRENCY_TYPE = 'PART';
 export type SHIPPING_AVAIL_TYPE = 'SHIPS' | 'DOES_NOT_SHIP' | 'ASK' | 'UNKNOWN';
 export type IMAGE_PROTOCOL = 'HTTPS' | 'LOCAL' | 'IPFS';
@@ -156,4 +157,11 @@ export interface RespCategoryAdd {
     createdAt: number;
   };
   ChildItemCategories: any[];
+}
+
+
+export interface RespTemplateSize {
+  fits: boolean;
+  messageData: number;
+  spaceLeft: number;
 }

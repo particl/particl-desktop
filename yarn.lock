@@ -8900,7 +8900,7 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.128:
+omp-lib@^0.1.131:
   version "0.1.131"
   resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.131.tgz#825046f45a5200c04c54bef9e98c9eb14de21102"
   integrity sha512-oaeo2PAK2Lhul/CkvRkGfwtilZC5ocV73tpw7N78CHpNJumM24pyp3gtHbsnOy1PRrzjCO0Wc3XKSotm6mD3GA==
@@ -9382,9 +9382,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0.tgz:
-  version "0.3.0"
-  resolved "./particl-marketplace-0.3.0.tgz#1f9808a53ef6363500665b9007530726892e5f30"
+particl-marketplace@./particl-marketplace-0.3.0-9.tgz:
+  version "0.3.0-9"
+  resolved "./particl-marketplace-0.3.0-9.tgz#55f878fa38839f6a11efc27e7a5e0e7c761e62d3"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9424,7 +9424,7 @@ particl-marketplace@./particl-marketplace-0.3.0.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.128"
+    omp-lib "^0.1.131"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.4"
     path "^0.12.7"
@@ -11523,13 +11523,8 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-"sqlite3@git+https://github.com/particl/sqlite3-offline.git":
-  version "3.2.0"
-  resolved "git+https://github.com/particl/sqlite3-offline.git#fae3ae47f64461b807e874897e76e7c69715e3d5"
-
 "sqlite3@https://github.com/particl/sqlite3-offline.git":
   version "3.2.0"
-  uid fae3ae47f64461b807e874897e76e7c69715e3d5
   resolved "https://github.com/particl/sqlite3-offline.git#fae3ae47f64461b807e874897e76e7c69715e3d5"
 
 sshpk@^1.13.2, sshpk@^1.7.0:

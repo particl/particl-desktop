@@ -100,7 +100,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         return selectedMarket;
       }),
       concatMap((market: Market) => iif(() => !!market,
-        this._listService.loadCategories(market.receiveAddress).pipe(
+        this._listService.loadCategories(+market.id).pipe(
           tap((categories) => {
             this.categorySource$.next(categories.categories);
           })

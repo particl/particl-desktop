@@ -2,6 +2,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import {
   CURRENCY_TYPE,
   ESCROW_TYPE,
+  ESCROW_RELEASE_TYPE,
   SALES_TYPE,
   SHIPPING_AVAIL_TYPE,
   IMAGE_PROTOCOL,
@@ -25,6 +26,7 @@ export interface NewTemplateData {
   escrowType: ESCROW_TYPE;
   escrowBuyerRatio: 100;
   escrowSellerRatio: 100;
+  escrowReleaseType: ESCROW_RELEASE_TYPE;
 }
 
 
@@ -33,6 +35,7 @@ export interface UpdateTemplateData {
     title: string;
     shortDescription: string;
     longDescription: string;
+    category?: number | null;
   };
   images?: Array<{type: IMAGE_PROTOCOL, encoding: IMAGE_ENCODING, data: string}>;
   payment?: {
