@@ -13,6 +13,7 @@ import { amountValidator, totalValueValidator } from './new-listing.validators';
 import { Country } from '../../services/data/data.models';
 import { NewTemplateData, ListingTemplate, UpdateTemplateData } from '../sell.models';
 import { PublishTemplateModalComponent } from './publish-template-modal/publish-template-modal.component';
+import { RespTemplateSize } from 'app/main-market/shared/market.models';
 
 
 enum TextContent {
@@ -169,13 +170,6 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // for @Allien: temporarily.
-    // TODO: Remoe this once saving/editing/etc of templates works (once the API is ready)
-    // const dialog = this._dialog.open(
-    //   PublishTemplateModalComponent,
-    //   {data: {templateID: 100}}
-    // );
-
     this.doTemplateSave().pipe(
       last()
     ).subscribe(
@@ -194,7 +188,7 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
                   data: { message: TextContent.PROCESSING_TEMPLATE_PUBLISH }
                 });
 
-                return this._sellService.publishTemplate(this.listingTemplate.id, resp.market, resp.category, resp.duration, false).pipe(
+                return this._sellService.publishTemplate(this.listingTemplate.id, resp.market, resp.duration, null, false).pipe(
                   finalize(() => this._dialog.closeAll())
                 );
               });
@@ -333,10 +327,11 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
         shippingFrom: controls['sourceRegion'].value,
         shippingTo: controls['targetRegions'].value,
         escrowType: 'MAD_CT',
+        escrowReleaseType: 'ANON',
         escrowBuyerRatio: 100,
         escrowSellerRatio: 100,
         salesType: 'SALE',
-        currency: 'PART'
+        currency: 'PART',
       };
 
       update$ = this._sellService.createNewTemplate(newTemplateData);
@@ -411,7 +406,11 @@ export class NewListingComponent implements OnInit, AfterViewInit, OnDestroy {
             concatMap((template: ListingTemplate) => {
               return this._sellService.getTemplateSize(template.id).pipe(
                 catchError(() => of(null)),
-                tap((resp) => null),  // TODO: set error message here (based on the currently unknown response data)
+                tap((resp: RespTemplateSize | null) => {
+                  if ((resp === null) || !resp.fits) {
+                    this.errorMessage = TextContent.ERROR_MAX_SIZE;
+                  }
+                }),
                 mapTo(template)
               );
             })

@@ -8,7 +8,7 @@ import { MarketState } from '../store/market.state';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { NewTemplateData, ListingTemplate, TemplateShippingDestination, TemplateImage, UpdateTemplateData } from './sell.models';
-import { RespListingTemplate, RespCategoryAdd } from '../shared/market.models';
+import { RespListingTemplate, RespCategoryAdd, RespTemplateSize } from '../shared/market.models';
 
 
 @Injectable()
@@ -40,7 +40,7 @@ export class SellService {
   }
 
 
-  getTemplateSize(templateId: number): Observable<any> {
+  getTemplateSize(templateId: number): Observable<RespTemplateSize> {
     return this._rpc.call('template', ['size', templateId]);
   }
 
@@ -53,7 +53,7 @@ export class SellService {
       data.title,
       data.shortDescription,
       data.longDescription,
-      2,  // @TODO!!!!!!!! NB!!!!!! FORCING CATEGORY HERE WHILE WAITING FOR UPDATED MP CODE. REMOVE!!!
+      null,  // category id is not provided here yet (not set here yet)
       data.salesType,
       data.currency,
       data.basePrice,
@@ -61,7 +61,8 @@ export class SellService {
       data.foreignShippingPrice,
       data.escrowType,
       data.escrowBuyerRatio,
-      data.escrowSellerRatio
+      data.escrowSellerRatio,
+      data.escrowReleaseType
     ];
 
     return this._rpc.call('template', addParams).pipe(
@@ -94,6 +95,23 @@ export class SellService {
   }
 
 
+  setTemplateCategory(templateID: number, categoryID: number): Observable<void> {
+    return this.fetchTemplate(templateID).pipe(
+        concatMap((templ: ListingTemplate) => {
+          const info: UpdateTemplateData = {
+            info: {
+              title: templ.information.title,
+              shortDescription: templ.information.summary,
+              longDescription: templ.information.description,
+              category: categoryID
+            }
+          };
+          return this.updateExistingTemplate(templateID, info);
+        })
+      );
+  }
+
+
   updateExistingTemplate(templateID: number, details: UpdateTemplateData): Observable<void> {
     const updates$: Observable<any>[] = [];
     if (details.info) {
@@ -104,7 +122,7 @@ export class SellService {
         details.info.title || '',
         details.info.shortDescription || '',
         details.info.longDescription || '',
-        2   // @TODO!!!!!!!! NB!!!!!! FORCING CATEGORY HERE WHILE WAITING FOR UPDATED MP CODE. REMOVE!!!
+        +details.info.category || null
       ]);
       updates$.push(rpc$);
     }
@@ -157,10 +175,28 @@ export class SellService {
 
 
   publishTemplate(
-    templateID: number, marketID: number, categoryID: number, duration: number, estimateOnly: boolean = true
+    templateID: number, marketID: number, duration: number, categoryID: number = null, estimateOnly: boolean = true
   ): Observable<any> {
-    // TODO: update when the new API is available, to add categoryID in here
-    return this._rpc.call('template', ['post', templateID, duration, marketID, estimateOnly]);
+
+    let obs = of();
+
+    if (+categoryID > 0) {
+      obs = this.fetchTemplate(templateID).pipe(
+        concatMap((template: ListingTemplate) => {
+          const details: UpdateTemplateData = {
+            info: {
+              title: template.information.title,
+              shortDescription: template.information.summary,
+              longDescription: template.information.description,
+              category: categoryID
+            }
+          };
+          return this.updateExistingTemplate(templateID, details);
+        })
+      );
+    }
+
+    return obs.pipe(concatMap(() => this._rpc.call('template', ['post', templateID, duration, marketID, estimateOnly])));
   }
 
 
@@ -246,15 +282,17 @@ export class SellService {
 
   private formatImagePath(path: string, port: number): string {
     const pathparts = path.split(':');
-    if (pathparts.length === 3) {
-      let final = pathparts[2];
-      const remainder = pathparts[2].split('/');
-      if ((typeof +remainder[0] === 'number') && +remainder[0]) {
-        final = remainder.slice(1).join('/');
-      }
-      return [pathparts[0], pathparts[1], String(port), final].join(':');
+
+    if (pathparts.length !== 3) {
+      return path;
     }
-    return path;
+
+    let final = pathparts[2];
+    const remainder = pathparts[2].split('/');
+    if ((typeof +remainder[0] === 'number') && +remainder[0]) {
+      final = remainder.slice(1).join('/');
+    }
+    return `${[pathparts[0], pathparts[1], String(port)].join(':')}/${final}`;
   }
 
 }
