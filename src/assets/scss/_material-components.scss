@@ -317,6 +317,18 @@ mat-expansion-panel.mat-expansion-panel {
   &.no-bg {
     background: none !important;
   }
+  // sell > import listings (custom layout)
+  &.--stepper-above-page-title {
+    .mat-horizontal-stepper-header-container {
+      margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
+      padding: 0 calc(var(--paddingH) - 24px);
+      border-bottom: 1px dashed var(--bg-muted);
+    }
+    .mat-horizontal-content-container {
+      padding: var(--paddingV) 0 0;
+      overflow: visible;
+    }
+  }
 }
 
 

@@ -17,11 +17,6 @@ export class ManagementComponent {
 
   searchQuery: FormControl = new FormControl('');
 
-  markets_sortings: Array<any> = [
-    { title: 'By title', value: 'TITLE' },
-    { title: 'By ??', value: '??' }
-  ];
-
   markets_status: Array<any> = [
     { title: 'Show joined & available', value: 'all' },
     { title: 'Joined Markets only',     value: 'joined' },
