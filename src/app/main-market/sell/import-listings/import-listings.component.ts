@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatStepper } from '@angular/material';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-import-listings',
@@ -9,14 +8,27 @@ import { MatStepper } from '@angular/material';
 })
 export class ImportListingsComponent implements OnInit {
 
+  firstFormGroup: FormGroup;
+  secondFormGroup: FormGroup;
+  thirdFormGroup: FormGroup;
+
   import_sources: Array<any> = [
     { title: 'CSV file',    icon: 'part-image-upload',   value: 'csv' },
     { title: 'WooCommerce', icon: 'part-image-upload',   value: 'woocommerce' }
   ];
 
-  constructor() { }
+  constructor(private _formBuilder: FormBuilder) {}
 
   ngOnInit() {
+    this.firstFormGroup = this._formBuilder.group({
+      firstCtrl: ['', Validators.required]
+    });
+    this.secondFormGroup = this._formBuilder.group({
+      secondCtrl: ['', Validators.required]
+    });
+    this.thirdFormGroup = this._formBuilder.group({
+      thirdCtrl: ['', Validators.required]
+    });
   }
 
 }

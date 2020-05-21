@@ -1,5 +1,9 @@
 @import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
+.action-buttons {
+  margin-top: var(--paddingV);
+}
 
 
 // ------ 1) SELECT IMPORT ------ //
@@ -60,3 +64,29 @@
     margin: 0;
   }
 }
+
+
+// ------ 2) REVIEW IMPORT DATA ------ //
+
+.imported-template {
+  --list-item-size: 60px;
+  @include break(xl) {
+    --list-item-size: 70px;
+  }
+  .header-wrapper {
+    .meta {
+      .name {
+        margin: 0;
+        @include break(xl) {
+          font-size: 16px;
+        }
+      }
+    }
+    .publish-toggle {
+      margin-left: 24px;
+      font-weight: 500;
+    }
+  }
+}
+
+
