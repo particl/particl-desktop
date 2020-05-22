@@ -1,0 +1,131 @@
+<app-page-intro childPageAlias="Sell Templates">
+  <ng-container page-title>Your Listings</ng-container>
+  <ng-container page-content>
+    This is your dashboard for selling your products on the marketplace and manage their listings.<br>
+    Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
+  </ng-container>
+  <ng-container page-help>
+    All listings created here will be publicly available on the Marketplace.
+  </ng-container>
+</app-page-intro>
+
+<!-- Listings > Filter -->
+<div class="filter">
+
+  <div class="buttons">
+    <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
+      <mat-icon fontIcon="part-circle-plus"></mat-icon>
+      Add new Listing
+    </button>
+    <button mat-raised-button color="accent" routerLink="import-listings" class="full-width">
+      <mat-icon fontIcon="part-image-upload"></mat-icon>
+      Import Listings
+    </button>
+  </div><!-- .buttons -->
+
+  <h2 class="section-title">
+    Search &amp; sort
+  </h2>
+
+  <mat-card class="filter-card">
+
+    <mat-form-field class="--plain" appearance="fill">
+      <input matInput type="text" placeholder="Search listings" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
+      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="!searchQuery.value.length" matSuffix fontIcon="part-search"></mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="Sort listings" [formControl]="sortOrder">
+        <mat-option *ngFor="let sorting of sortCriteria" [value]="sorting.value">
+          {{ sorting.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </mat-card><!-- .filter-card -->
+
+  <h2 class="section-title">
+    Filter
+  </h2>
+
+  <mat-card class="filter-card">
+    <mat-radio-group class="radio-group block-radio" [formControl]="filterStatus">
+      <mat-radio-button class="filter-option" *ngFor="let status of filterStatusCriteria" [value]="status.value" color="accent">
+        {{ status.title }}
+      </mat-radio-button>
+    </mat-radio-group>
+    <!-- <mat-divider></mat-divider> -->
+  </mat-card><!-- .filter-card -->
+
+  <button mat-button color="basic" class="clear-filters" (click)="resetControls()">
+    <mat-icon fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+<!-- Listings > list -->
+<div class="listings section with-filter">
+  <!-- infiniteScroll
+  [infiniteScrollContainer]="pagination.infinityScrollSelector"
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="50"
+  [fromRoot]="true"
+  (scrolled)="loadNextPage()" -->
+
+  <mat-accordion>
+    <app-listing-list-item></app-listing-list-item>
+    <app-listing-list-item></app-listing-list-item>
+  </mat-accordion>
+
+  <!-- no listings at all -->
+  <!-- [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
+    <p>
+      You don't have any Listings yet
+    </p>
+    <p class="help-text">
+      Start selling by clicking on either "Add new Listing" or "Import Listings" button
+    </p>
+  </div><!-- .no-results -->
+
+  <!-- no listings matching search -->
+  <div class="no-results" *ngIf="true">
+    <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
+    <p>
+      No matching Listings found
+    </p>
+    <p class="help-text">
+      You don't have any Listings matching your search
+    </p>
+  </div><!-- .no-results -->
+
+</div><!-- .listings-list -->
+
+<!-- .loading-container -->
+<div class="loading-container" *ngIf="false">
+  <div class="loading-info">
+    <div class="loading-image">
+      <img src="./assets/particl-logo-symbol.svg">
+    </div>
+    <p class="title">
+      Hang on, we're loading your listings
+    </p>
+    <p class="help-text">
+      This might take a while
+    </p>
+  </div>
+</div><!-- .loading-container -->
+
+
+
+<div class="loading-bar">
+  <mat-progress-bar mode="indeterminate" color="accent" *ngIf="true"></mat-progress-bar>
+  <!-- FIXME: implement and uncomment:
+  <mat-progress-bar mode="indeterminate" color="accent" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading"></mat-progress-bar-->
+</div><!-- .loading-bar -->

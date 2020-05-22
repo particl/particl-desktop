@@ -1,58 +1,59 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+
+interface SellTab {
+  icon: string;
+  title: string;
+  templ: string;
+}
 
 
 @Component({
   templateUrl: './sell.component.html',
-  styleUrls: ['./sell.component.scss']
+  styleUrls: ['./sell.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SellComponent {
+export class SellComponent implements OnInit {
 
-  public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['orders', 'listings', 'questions'];
-  //private resizeEventer: any;
-
-  filters: any = {
-    search:   '',
-    sort:     'DATE',
-    category: '*',
-    hashItems: ''
-  };
-
-  listing_sortings: Array<any> = [
-    { title: 'By title', value: 'TITLE' },
-    { title: 'By status', value: 'STATE' }
-  ];
-
-  listing_filtering_status: Array<any> = [
-    { title: 'All Listings',  value: '' },
-    { title: 'Published',     value: true },
-    { title: 'Unpublished',   value: false }
-  ];
-
-  listing_filtering_market: Array<any> = [
-    { title: 'All Markets',     value: 'one' },
-    { title: 'Particl Open Marketplace',     value: 'two' },
-    { title: 'Sneaky Market',   value: 'three' }
+  readonly tabs: SellTab[] = [
+    { title: 'Sell Orders', icon: 'part-recipe', templ: 'orders'},
+    { title: 'Your Listings', icon: 'part-stock', templ: 'templates'},
+    { title: 'Questions', icon: 'part-chat-discussion', templ: 'questions'},
   ];
 
 
+  private selectedTabIdx: number = 0;
 
 
-  clear(): void {
-    this.filters = {
-      search:   '',
-      sort:     'DATE',
-      category: '*',
-      hashItems: ''
-    };
-    if (this.selectedTab === 1) {
-      //this.loadPage(0, true);
+  constructor(
+    private _route: ActivatedRoute
+  ) { }
+
+
+  ngOnInit() {
+    const query = this._route.snapshot.queryParams;
+    const selectedSellTab = query['selectedSellTab'];
+    const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
+    if (newTabIdx > -1) {
+      this.selectedTabIdx = newTabIdx;
     }
   }
 
-  changeTab(index: number): void {
-    this.selectedTab = index;
-    this.clear();
+
+  get selectedTab(): number {
+    return this.selectedTabIdx;
+  }
+
+  get selectedTempl(): string {
+    return this.tabs[this.selectedTabIdx].templ;
+  }
+
+
+  changeTab(idx: number) {
+    if ((idx !== this.selectedTabIdx) && (idx >= 0) && (idx < this.tabs.length)) {
+      this.selectedTabIdx = idx;
+    }
   }
 
 }

@@ -71,7 +71,7 @@ export class SellService {
 
         const queries = [];
 
-        queries.push(['location', 'add', templateID, data.shippingFrom]);
+        queries.push(['location', 'update', templateID, data.shippingFrom]);
 
         (data.shippingTo || []).forEach((dest: string) => {
           queries.push(['shipping', 'add', templateID, dest, 'SHIPS']);

@@ -9382,9 +9382,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-9.tgz:
-  version "0.3.0-9"
-  resolved "./particl-marketplace-0.3.0-9.tgz#55f878fa38839f6a11efc27e7a5e0e7c761e62d3"
+particl-marketplace@./particl-marketplace-0.3.0-10.tgz:
+  version "0.3.0-10"
+  resolved "./particl-marketplace-0.3.0-10.tgz#cc4f8d672821d37b6e785ccdc8bcdacaa47db8e6"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9450,7 +9450,7 @@ particl-marketplace@./particl-marketplace-0.3.0-9.tgz:
     typescript "2.4.2"
     web-request "^1.0.7"
     winston "^2.4.4"
-    zeromq "^5.1.0"
+    zeromq "5"
 
 particl-zmq@^1.0.4:
   version "1.0.4"
@@ -13235,7 +13235,7 @@ yn@^2.0.0:
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
   integrity sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 
-zeromq@^5.1.0:
+zeromq@5, zeromq@^5.1.0:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-5.2.0.tgz#92eed6baeee5167977e51a2e2360b2c29a3b39fd"
   integrity sha512-qsckhCmrg6et6zrAJytC971SSN/4iLxKgkXK1Wqn2Gij5KXMY+TA+3cy/iFwehaWdU5usg5HNOOgaBdjSqtCVw==

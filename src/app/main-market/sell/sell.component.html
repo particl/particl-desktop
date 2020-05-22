@@ -1,192 +1,27 @@
-<!-- Do not remove the below class it is using for test case -->
-<app-header>
-  <div class="tab-bar">
-    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-recipe"></mat-icon>
-          Sell Orders
-          <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span>
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-stock"></mat-icon>
-          Your Listings
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-          Questions
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
+
+<div class="tab-bar">
+  <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+    <mat-tab *ngFor="let tab of tabs">
+      <ng-template mat-tab-label>
+        <mat-icon [fontIcon]="tab.icon"></mat-icon>
+        {{ tab.title }}
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<ng-container [ngSwitch]="selectedTempl">
+
+  <div *ngSwitchCase="'orders'" class="container-block with-tab-bar" >
+    <market-sell-orders></market-sell-orders>
   </div>
-</app-header>
 
+  <div *ngSwitchCase="'templates'" class="container-block with-tab-bar" >
+    <market-sell-templates></market-sell-templates>
+  </div>
 
+  <div *ngSwitchCase="'questions'" class="questions container-block">
+    <market-sell-questions></market-sell-questions>
+  </div>
 
-<!-- =========== ORDERS =========== -->
-
-<!-- Do not remove the below class it is using for test case -->
-<div class="container-block with-tab-bar test-case-container" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-sell-orders-page></app-sell-orders-page>
-</div><!-- "Orders" tab -->
-
-
-
-<!-- =========== LISTINGS =========== -->
-
-<div class="container-block with-tab-bar" *ngIf="tabLabels[selectedTab] == 'listings'">
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
-    <ng-container page-title>Your Listings</ng-container>
-    <ng-container page-content>
-      This is your dashboard for selling your products on the marketplace and manage their listings.<br>
-      Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
-    </ng-container>
-    <ng-container page-help>
-      All listings created here will be publicly available on the Marketplace.
-    </ng-container>
-  </app-page-intro>
-
-  <!-- Listings > Filter -->
-  <div class="filter">
-
-    <div class="buttons">
-      <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
-        <mat-icon fontIcon="part-circle-plus"></mat-icon>
-        Add new Listing
-      </button>
-      <button mat-raised-button color="accent" routerLink="import-listings" class="full-width"><!-- (click)="importListings()" -->
-        <mat-icon fontIcon="part-image-upload"></mat-icon>
-        Import Listings
-      </button>
-    </div><!-- .buttons -->
-
-    <h2 class="section-title">
-      Search &amp; sort
-    </h2>
-
-    <mat-card class="filter-card">
-
-      <mat-form-field class="--plain" appearance="fill">
-        <input matInput type="text" placeholder="Search listings" [(ngModel)]="filters.search"
-                (keyup)="clearAndLoadPage()" (keyup.enter)="clearAndLoadPage()" (keyup.escape)="filters.search = ''; clearAndLoadPage()">
-        <button *ngIf="filters.search" matSuffix mat-button class="small" (click)="filters.search=''; clearAndLoadPage()" matTooltip="Clear" matTooltipPosition="after">
-          <mat-icon fontIcon="part-clear-all"></mat-icon>
-        </button>
-        <mat-icon *ngIf="!filters.search" matSuffix fontIcon="part-search"></mat-icon>
-      </mat-form-field>
-
-      <mat-form-field class="--plain" appearance="fill">
-        <mat-select placeholder="Sort listings" [(ngModel)]="filters.sort" (selectionChange)="clearAndLoadPage()">
-          <mat-option *ngFor="let sorting of listing_sortings" [value]="sorting.value">
-            {{ sorting.title }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-    </mat-card><!-- .filter-card -->
-
-    <h2 class="section-title">
-      Filter
-    </h2>
-
-    <mat-card class="filter-card">
-      <mat-radio-group class="radio-group block-radio" [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()">
-        <mat-radio-button class="filter-option" *ngFor="let status of listing_filtering_status" value="{{ status.value }}" color="accent">
-          {{ status.title }}
-          <!-- <span class="amount">{{ status.amount }}</span>  -->
-        </mat-radio-button>
-      </mat-radio-group>
-      <mat-divider></mat-divider>
-      <!-- TODO: this one is new - if it can't be implemented, we can get rid of it: -->
-      <mat-form-field class="--plain" appearance="fill">
-        <mat-select placeholder="All Markets" [(ngModel)]="filters.sort" (selectionChange)="clearAndLoadPage()">
-          <mat-option *ngFor="let filtering_market of listing_filtering_market" [value]="filtering_market.value">
-            {{ filtering_market.title }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </mat-card><!-- .filter-card -->
-
-    <button mat-button color="basic" class="clear-filters" (click)="clear()">
-      <mat-icon fontIcon="part-clear-all"></mat-icon>
-      Clear all filters
-    </button>
-
-  </div><!-- .filter -->
-
-
-  <!-- Listings > list -->
-  <div class="listings section with-filter">
-    <!-- infiniteScroll
-    [infiniteScrollContainer]="pagination.infinityScrollSelector"
-    [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="50"
-    [fromRoot]="true"
-    (scrolled)="loadNextPage()" -->
-
-    <mat-accordion>
-      <app-listing-list-item></app-listing-list-item>
-      <app-listing-list-item></app-listing-list-item>
-    </mat-accordion>
-
-    <!-- no listings at all -->
-    <!-- [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
-    <div class="no-results">
-      <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
-      <p>
-        You don't have any Listings yet
-      </p>
-      <p class="help-text">
-        Start selling by clicking on either "Add new Listing" or "Import Listings" button
-      </p>
-    </div><!-- .no-results -->
-
-    <!-- no listings matching search -->
-    <div class="no-results" *ngIf="filters.search">
-      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
-      <p>
-        No matching Listings found
-      </p>
-      <p class="help-text">
-        You don't have any Listings matching your search
-      </p>
-    </div><!-- .no-results -->
-
-  </div><!-- .listings-list -->
-
-  <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isPageLoading">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        Hang on, we're loading your listings
-      </p>
-      <p class="help-text">
-        This might take a while
-      </p>
-    </div>
-  </div><!-- .loading-container -->
-
-</div><!-- "Listings" tab -->
-
-
-
-<!-- =========== QUESTIONS =========== -->
-
-<div class="questions container-block" *ngIf="tabLabels[selectedTab] == 'questions'">
-  <app-sell-questions></app-sell-questions>
-</div><!-- "Questions" tab -->
-
-
-
-<div class="loading-bar">
-  <mat-progress-bar mode="indeterminate" color="accent" *ngIf="isLoading"></mat-progress-bar>
-  <!-- FIXME: implement and uncomment:
-  <mat-progress-bar mode="indeterminate" color="accent" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading"></mat-progress-bar-->
-</div><!-- .loading-bar -->
+</ng-container>

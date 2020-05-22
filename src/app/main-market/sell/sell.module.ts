@@ -3,18 +3,24 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketSharedModule } from '../shared/shared.module';
+
+import { SellService } from './sell.service';
+
 import { SellComponent } from './sell.component';
+
+import { SellTemplatesComponent } from './sell-templates/sell-templates.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
-import { SellService } from './sell.service';
 import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
-import { SellOrdersPageComponent } from './sell-orders-page/sell-orders-page.component';
+
+import { SellOrdersComponent } from './sell-orders/sell-orders.component';
 import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
-import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
 import { AcceptBidModalComponent } from './accept-bid-modal/accept-bid-modal.component';
 import { RejectBidModalComponent } from './reject-bid-modal/reject-bid-modal.component';
 import { EscrowPaymentModalComponent } from './escrow-payment-modal/escrow-payment-modal.component';
 import { OrderShippedModalComponent } from './order-shipped-modal/order-shipped-modal.component';
+
+import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
 
 
 const routes: Routes = [
@@ -33,21 +39,20 @@ const routes: Routes = [
   ],
   exports: [
     RouterModule,
-    SellOrdersPageComponent,
-    SellOrderListItemComponent
   ],
   declarations: [
     SellComponent,
+    SellTemplatesComponent,
     NewListingComponent,
     ImportListingsComponent,
     PublishTemplateModalComponent,
-    SellOrdersPageComponent,
+    SellOrdersComponent,
     SellOrderListItemComponent,
-    SellQuestionsComponent,
     AcceptBidModalComponent,
     RejectBidModalComponent,
     EscrowPaymentModalComponent,
-    OrderShippedModalComponent
+    OrderShippedModalComponent,
+    SellQuestionsComponent,
   ],
   entryComponents: [
     PublishTemplateModalComponent,

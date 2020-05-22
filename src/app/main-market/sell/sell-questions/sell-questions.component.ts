@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material';
 import { ListingDetailModalComponent } from './../../shared/listing-detail-modal/listing-detail-modal.component';
 
 @Component({
-  selector: 'app-sell-questions',
+  selector: 'market-sell-questions',
   templateUrl: './sell-questions.component.html',
   styleUrls: ['./sell-questions.component.scss']
 })

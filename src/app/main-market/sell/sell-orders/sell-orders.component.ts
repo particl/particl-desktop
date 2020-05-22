@@ -2,18 +2,18 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 
-export interface Filter {
+interface Filter {
   value: string;
   title: string;
   count: string;
 }
 
 @Component({
-  selector: 'app-sell-orders-page',
-  templateUrl: './sell-orders-page.component.html',
-  styleUrls: ['./sell-orders-page.component.scss']
+  selector: 'market-sell-orders',
+  templateUrl: './sell-orders.component.html',
+  styleUrls: ['./sell-orders.component.scss']
 })
-export class SellOrdersPageComponent implements OnInit {
+export class SellOrdersComponent implements OnInit {
 
   searchQuery: FormControl = new FormControl('');
   filterQuery: FormControl = new FormControl('all');
