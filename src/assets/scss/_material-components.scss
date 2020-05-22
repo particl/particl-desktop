@@ -304,9 +304,10 @@ mat-expansion-panel.mat-expansion-panel {
   font-family: var(--font) !important;
   .mat-step-label {
     min-width: auto;
+    font-size: 15px;
   }
   .mat-step-label-selected {
-    font-weight: 700;
+    font-weight: 500;
   }
   .mat-step-icon {
     .mat-icon {

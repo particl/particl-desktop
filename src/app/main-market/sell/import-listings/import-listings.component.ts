@@ -10,7 +10,6 @@ export class ImportListingsComponent implements OnInit {
 
   firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
-  thirdFormGroup: FormGroup;
 
   import_sources: Array<any> = [
     { title: 'CSV file',    icon: 'part-image-upload',   value: 'csv' },
@@ -25,9 +24,6 @@ export class ImportListingsComponent implements OnInit {
     });
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required]
-    });
-    this.thirdFormGroup = this._formBuilder.group({
-      thirdCtrl: ['', Validators.required]
     });
   }
 

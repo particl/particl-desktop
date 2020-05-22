@@ -17,7 +17,7 @@
 
     <!-- ---------------------------------- 1. SELECT IMPORT ---------------------------------- -->
     
-    <mat-step [completed]="stepper.selectedIndex >= 1" [stepControl]="firstFormGroup">
+    <mat-step [completed]="stepper.selectedIndex >= 0" [stepControl]="firstFormGroup">
       <ng-template matStepLabel>Select Import</ng-template>
       <app-page-intro>
         <ng-container page-title>Select Import</ng-container>
@@ -151,7 +151,7 @@
 
     <!-- ---------------------------------- 2. REVIEW IMPORT DATA ---------------------------------- -->
     
-    <mat-step [completed]="stepper.selectedIndex >= 2">
+    <mat-step [completed]="stepper.selectedIndex >= 1">
       <ng-template matStepLabel>Review Import Data</ng-template>
       <app-page-intro>
         <ng-container page-title>Review Import Data</ng-container>
@@ -186,7 +186,7 @@
                 </div>
                 <div class="publish-toggle" fxFlex>
                   <!-- @TODO: if errors, uncheck & disable Publish checkbox -->
-                  <mat-checkbox disabled>Import</mat-checkbox>
+                  <mat-checkbox disabled (click)="$event.stopPropagation()" color="primary">Import</mat-checkbox>
                 </div>
               </div>
             </mat-expansion-panel-header>
@@ -212,7 +212,7 @@
                   </div>
                 </div>
                 <div class="publish-toggle" fxFlex>
-                  <mat-checkbox checked="checked">Import</mat-checkbox>
+                  <mat-checkbox checked="checked" (click)="$event.stopPropagation()" color="primary">Import</mat-checkbox>
                 </div>
               </div>
             </mat-expansion-panel-header>
@@ -220,7 +220,12 @@
               -- Add new Template component here --
             </div>
           </mat-expansion-panel><!-- .imported-template -->
-        </mat-accordion> 
+        </mat-accordion>
+
+        <p class="alert --boxed --warning">
+          <!-- @FIXME: replace text by meaningful error message ;) -->
+          <span>Ooops, some errors occured &ndash; missing fields or something, please correct them before Saving</span>
+        </p>
 
         <div class="action-buttons" fxLayoutAlign="space-between center">
           <button mat-button matStepperPrevious>
@@ -230,82 +235,11 @@
           <!-- @TODO: enable if at least 1 template is marked for importing -->
           <button mat-raised-button color="primary" matStepperNext>
             <mat-icon fontIcon="part-next-single"></mat-icon>
-            Continue
+            Import &amp; Save
           </button>
         </div>
 
       </form><!-- .review-import-data.stepper-content -->
-    </mat-step>
-
-
-
-    <!-- ---------------------------------- 3. CONFIRM & PUBLISH ---------------------------------- -->
-    
-    <mat-step [completed]="stepper.selectedIndex >= 3">
-      <ng-template matStepLabel>Confirm & Create</ng-template>
-      <app-page-intro>
-        <ng-container page-title>Confirm &amp; Create</ng-container>
-        <ng-container page-content>
-          Here are the data processed from your Import &ndash; fill in the missing fields (if any) and update the rest to your liking<br>
-          When satisfied, continue to Import summary and confirm the creation of your Listing templates
-        </ng-container>
-        <ng-container page-help>
-        </ng-container>
-      </app-page-intro>
-
-      <form class="stepper-content confirm-publish" [formGroup]="thirdFormGroup">
-
-        <table mat-table class="table-full-width"><!-- [dataSource]="filterListingsByPublished" -->
-
-          <!-- Title Column -->
-          <ng-container matColumnDef="title">
-            <th mat-header-cell *matHeaderCellDef>Listing title</th>
-            <td mat-cell *matCellDef="let listing">
-              {{listing.title}}
-              <p class="error" *ngIf="listing.validationError">{{ listing.validationError }}</p>
-            </td>
-          </ng-container>
-
-          <!-- Price Column -->
-          <ng-container matColumnDef="basePrice">
-            <th mat-header-cell *matHeaderCellDef>Price</th>
-            <td mat-cell *matCellDef="let listing"> {{listing.basePrice | partoshiAmount}} </td>
-          </ng-container>
-
-          <!-- Shipping Column -->
-          <ng-container matColumnDef="domesticShippingPrice">
-            <th mat-header-cell *matHeaderCellDef>Domestic Shipping</th>
-            <td mat-cell *matCellDef="let listing"> {{listing.domesticShippingPrice | partoshiAmount}} </td>
-          </ng-container>
-
-          <!-- Intl Shipping Column -->
-          <ng-container matColumnDef="internationalShippingPrice">
-            <th mat-header-cell *matHeaderCellDef>International Shipping</th>
-            <td mat-cell *matCellDef="let listing"> {{listing.internationalShippingPrice | partoshiAmount}} </td>
-          </ng-container>
-
-          <!-- Fee Column -->
-          <ng-container matColumnDef="fee">
-            <th mat-header-cell *matHeaderCellDef>Publishing fee</th>
-            <td mat-cell *matCellDef="let listing"> {{listing.fee | particlAmount}} </td>
-          </ng-container>
-        
-          <tr mat-header-row></tr><!-- *matHeaderRowDef="['title', 'basePrice', 'domesticShippingPrice', 'internationalShippingPrice', 'fee']" -->
-          <tr mat-row ></tr><!-- *matRowDef="let row; columns: ['title', 'basePrice', 'domesticShippingPrice', 'internationalShippingPrice', 'fee'];" -->
-        </table>
-
-        <div class="action-buttons" fxLayoutAlign="space-between center">
-          <button mat-button matStepperPrevious>
-            <mat-icon fontIcon="part-previous-single"></mat-icon>
-            Back
-          </button>
-          <button mat-raised-button color="primary" (click)="publishListing()">
-            <mat-icon fontIcon="part-check"></mat-icon>
-            Publish imported Listings
-          </button>
-        </div>
-
-      </form><!-- .confirm-publish.stepper-content -->
     </mat-step>
 
 
