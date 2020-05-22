@@ -12,6 +12,7 @@
 
 // ------ ALERTS/NOTIFICATIONS ------ //
 
+/*
 .notification {
   background: hsla(var(--color-info-hsl), 0.03);
   box-shadow: 0 2px 20px -16px inset;
@@ -30,5 +31,17 @@
   }
   .button {
     font-size: inherit;
+  }
+}
+*/
+
+.alpha-warning {
+  border-bottom: 1px dashed var(--bg-muted);
+  .mat-button {
+    border-radius: 0;
+    padding: 4px;
+    .mat-icon {
+      font-size: 14px;
+    }
   }
 }
