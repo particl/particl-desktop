@@ -11,6 +11,7 @@ import { SellComponent } from './sell.component';
 import { SellTemplatesComponent } from './sell-templates/sell-templates.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
+import { SellTemplateFormComponent } from './sell-template-form/sell-template-form.component';
 import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';
@@ -43,6 +44,7 @@ const routes: Routes = [
   declarations: [
     SellComponent,
     SellTemplatesComponent,
+    SellTemplateFormComponent,
     NewListingComponent,
     ImportListingsComponent,
     PublishTemplateModalComponent,
