@@ -59,10 +59,18 @@
 }
 
 .latest-activity {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
   .item {
     @extend %tfx;
+    flex: 1 1 25%;
+    margin-right: 30px;
     @include break(l) {
       padding: 24px 30px 30px;
+    }
+    &:last-of-type {
+      margin-right: 0;
     }
     .icon {
       position: relative;

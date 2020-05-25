@@ -724,6 +724,45 @@ p {
   margin-bottom: 25px;
 }
 
+// NEW "colorful" alerts (like messages below, but with more color)
+// markup: p.alert.--boxed.--warning>span
+p.alert {
+  font-weight: 500;
+  margin: 24px 0;
+  display: flex;
+  align-items: stretch;
+  &::before {
+    flex: 0 0 56px;
+    font-family: 'part';
+    text-align: center;
+    color: var(--color-white);
+    font-size: 16px;
+    line-height: 52px;
+  }
+  span {
+    flex: 1 1 100%;
+    padding: 16px 18px;
+  }
+  &.--boxed {
+    background: var(--color-white);
+    box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  &.--warning {
+    &::before {
+      content: '\ea03';
+      background: linear-gradient(to right, var(--color-alert) 0%, var(--color-confirms-33-pct) 100%);
+    }
+  }
+  &.--info {
+    &::before {
+      content: '\ea25';
+      background: linear-gradient(to right, var(--color-tertiary) 0%, var(--color-info) 100%);
+    }
+  }
+}
+
 // NEW warning & info messages
 p.message {
   font-weight: 500;

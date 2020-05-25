@@ -18,8 +18,8 @@
     (onRequestImageRemoval)="actionImageRemovalRequest($event)"
   ></market-sell-template-form>
 
-  <p class="message --warning" *ngIf="errorMessage.length > 0">
-    <strong>Error:</strong> {{ errorMessage }}
+  <p class="alert --boxed --warning" *ngIf="errorMessage.length > 0">
+    <span><strong>Error:</strong> {{ errorMessage }}</span>
   </p>
 
 
