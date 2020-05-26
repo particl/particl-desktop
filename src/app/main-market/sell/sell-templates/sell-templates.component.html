@@ -89,7 +89,7 @@
               <div class="name">{{templ.information.title}}</div>
               <!-- TODO: if published on 1 market, display it's name; if on multiple display "X Markets" (as shown below) -->
               <span class="published-markets">2 Markets<!--{{ listing?.market }}--></span>
-              <span class="category">Some Category<!--{{ listing?.category.name }}--></span>
+              <span class="category">{{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--></span>
             </div>
             <div class="status-wrap" fxFlex="0 0 140px">
               <div class="status {{ templ.status }}">
@@ -202,21 +202,6 @@
     </div><!-- .no-results -->
   </ng-template>
 </div><!-- .listings-list -->
-
-<!-- .loading-container -->
-<div class="loading-container" *ngIf="false">
-  <div class="loading-info">
-    <div class="loading-image">
-      <img src="./assets/particl-logo-symbol.svg">
-    </div>
-    <p class="title">
-      Hang on, we're loading your listings
-    </p>
-    <p class="help-text">
-      This might take a while
-    </p>
-  </div>
-</div><!-- .loading-container -->
 
 
 <div class="loading-bar" *ngIf="isLoadingMore">

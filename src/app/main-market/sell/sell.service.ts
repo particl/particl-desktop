@@ -233,11 +233,24 @@ export class SellService {
   }
 
 
+  cloneTemplate(sourceID: number): Observable<any> {
+    return this._rpc.call('template', ['clone', sourceID]);
+  }
+
+
   createNewCategory(name: string, parentID: number, marketID: number): Observable<number> {
     return this._rpc.call('category', ['add', marketID, name, '', parentID]).pipe(
       map((resp: RespCategoryAdd) => {
         return resp.id;
       })
+    );
+  }
+
+
+  deleteTemplate(templateID: number): Observable<boolean> {
+    return this._rpc.call('template', ['remove', +templateID]).pipe(
+      catchError(() => of(false)),
+      map(resp => typeof resp === 'boolean' ? resp : true)
     );
   }
 

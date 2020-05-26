@@ -1,0 +1,36 @@
+<div mat-dialog-title>Cancel bid</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="dialog-content">
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/reject-cancel-bid.svg" alt="Cancel bid">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Are you sure you want to delete this template?
+      </p>
+      <p class="help-text">
+        This will remove your template and it will no longer be available to publish
+      </p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" (click)="confirmDelete()">
+    <mat-icon fontIcon="part-circle-remove"></mat-icon>
+    Yes, delete this item
+  </button>
+</mat-dialog-actions>

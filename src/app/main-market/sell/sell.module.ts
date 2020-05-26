@@ -13,6 +13,7 @@ import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { SellTemplateFormComponent } from './sell-template-form/sell-template-form.component';
 import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
+import { DeleteTemplateModalComponent } from './modals/delete-template-modal/delete-template-modal.component';
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';
 import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
@@ -48,16 +49,20 @@ const routes: Routes = [
     NewListingComponent,
     ImportListingsComponent,
     PublishTemplateModalComponent,
+    DeleteTemplateModalComponent,
+
     SellOrdersComponent,
     SellOrderListItemComponent,
     AcceptBidModalComponent,
     RejectBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
+
     SellQuestionsComponent,
   ],
   entryComponents: [
     PublishTemplateModalComponent,
+    DeleteTemplateModalComponent,
     AcceptBidModalComponent,
     RejectBidModalComponent,
     EscrowPaymentModalComponent,
