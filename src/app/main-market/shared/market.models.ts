@@ -42,6 +42,7 @@ export interface RespMarketListMarketItem {
 export interface RespListingTemplate {
   id: number;
   hash: string | null;
+  market: number | null;
   generatedAt: number;
   profileId: number;
   parentListingItemTemplateId: number | null;
@@ -52,7 +53,8 @@ export interface RespListingTemplate {
     title: string;
     shortDescription: string;
     longDescription: string;
-    listingItemId: null,
+    itemCategoryId: number | null;
+    listingItemId: number | null,
     listingItemTemplateId: number;
     updatedAt: number;
     createdAt: number;
@@ -65,6 +67,26 @@ export interface RespListingTemplate {
       updatedAt: number;
       createdAt: number;
       LocationMarker: any;
+    };
+    ItemCategory?: {
+      id: number;
+      key: string | null;
+      name: string;
+      market: number | null;
+      description: string;
+      parentItemCategoryId: number | null;
+      updatedAt: number;
+      createdAt: number;
+      ParentItemCategory: {
+        id: number;
+        key: string | null;
+        name: string;
+        market: number | null;
+        description: string;
+        parentItemCategoryId: number | null;
+        updatedAt: number;
+        createdAt: number;
+      }
     };
     ItemImages?: Array<{
       id: number;

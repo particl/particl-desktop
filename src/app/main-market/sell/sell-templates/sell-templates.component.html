@@ -60,7 +60,7 @@
     <!-- <mat-divider></mat-divider> -->
   </mat-card><!-- .filter-card -->
 
-  <button mat-button color="basic" class="clear-filters" (click)="resetControls()">
+  <button mat-button color="basic" class="clear-filters" (click)="resetFilters()">
     <mat-icon fontIcon="part-clear-all"></mat-icon>
     Clear all filters
   </button>
@@ -77,34 +77,130 @@
   [fromRoot]="true"
   (scrolled)="loadNextPage()" -->
 
-  <mat-accordion>
-    <app-listing-list-item></app-listing-list-item>
-    <app-listing-list-item></app-listing-list-item>
-  </mat-accordion>
+  <ng-container *ngIf="savedTemplates.length > 0; else noTemplates">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let templ of savedTemplates; trackBy:trackBySavedTemplates" class="listing list-item no-padding">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper">
+            <div class="photo">
+              <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+            </div>
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="name">{{templ.information.title}}</div>
+              <!-- TODO: if published on 1 market, display it's name; if on multiple display "X Markets" (as shown below) -->
+              <span class="published-markets">2 Markets<!--{{ listing?.market }}--></span>
+              <span class="category">Some Category<!--{{ listing?.category.name }}--></span>
+            </div>
+            <div class="status-wrap" fxFlex="0 0 140px">
+              <div class="status {{ templ.status }}">
+                <span class="dot"></span>
+                <ng-container [ngSwitch]="templ.status">
+                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.UNPUBLISHED">Unpublished</ng-container>
+                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.PENDING">Pending</ng-container>
+                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.PUBLISHED">Published</ng-container>
+                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.EXPIRED">Expired</ng-container>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
 
-  <!-- no listings at all -->
-  <!-- [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
-  <div class="no-results">
-    <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
-    <p>
-      You don't have any Listings yet
-    </p>
-    <p class="help-text">
-      Start selling by clicking on either "Add new Listing" or "Import Listings" button
-    </p>
-  </div><!-- .no-results -->
+        <div class="status-info">
+          <div class="text">
+            <h2 class="item-title">{{templ.information.title}}</h2>
+            <p>{{templ.information.summary}}</p>
+          </div>
+          <p class="item-info">
+            Category: {{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--><br>
+            Created: {{templ.created}}<br>
+            Updated: {{templ.updated}}<br>
+            Expires: 2020-05-11 15:86<!--{{ listing?.expiredAt }}-->
+          </p>
+        </div>
 
-  <!-- no listings matching search -->
-  <div class="no-results" *ngIf="true">
-    <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
-    <p>
-      No matching Listings found
-    </p>
-    <p class="help-text">
-      You don't have any Listings matching your search
-    </p>
-  </div><!-- .no-results -->
+        <div class="detail" fxLayout="row" fxLayoutGap="30px">
+          <div class="description" fxFlex="55%">
+            <h3 class="item-subtitle">Published on</h3>
+            <ul class="listing-info">
+              <li>Particl Open Marketplace</li>
+              <li>Sneaky Market</li>
+            </ul>
+          </div><!-- .description -->
+          <div class="pricing-info" fxFlex="45%">
+            <h3 class="item-subtitle">Pricing</h3>
+            <table class="prices">
+              <tfoot>
+                <th></th>
+                <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+                <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th-->
+              </tfoot>
+              <tbody>
+                <tr>
+                  <th>Price per item</th>
+                  <td class="amount part">{{templ.price.basePrice.particlsString()}}</td>
+                  <!--td class="amount fiat">3.5165</td-->
+                </tr>
+                <tr>
+                  <th>Local shipping ({{templ.location.countryCode || ''}})</th>
+                  <td class="amount part">{{templ.price.shippingLocal.particlsString()}}</td>
+                  <!--td class="amount fiat">0.6518</td-->
+                </tr>
+                <tr>
+                  <th>Worldwide shipping</th>
+                  <td class="amount part">{{templ.price.shippingInternational.particlsString()}}</td>
+                  <!--td class="amount fiat">0.9410</td-->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
 
+        <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+          <div class="left">
+            <button mat-button *ngIf="templ.status === TEMPLATE_STATUS.UNPUBLISHED" color="warn" matTooltip="Delete listing" (click)="deleteTemplate(templ.id)" class="small">
+              <mat-icon fontIcon="part-cross"></mat-icon>
+            </button>
+            <button mat-button matTooltip="Clone listing" (click)="cloneListing(templ.id)" class="small">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button *ngIf="templ.status === TEMPLATE_STATUS.UNPUBLISHED" matTooltip="Edit listing details" routerLink="new-listing" [queryParams]="{templateID: templ.id}" class="small">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+              Edit
+            </button>
+            <button mat-button matTooltip="Open this listing" class="small" (click)="openPreview(templ.id)">
+              <mat-icon fontIcon="part-zoom-in"></mat-icon>
+              Open
+            </button>
+          </div>
+
+        </mat-action-row>
+      </mat-expansion-panel><!-- .listing -->
+    </mat-accordion>
+  </ng-container>
+
+  <ng-template #noTemplates>
+    <!-- no listings at all -->
+    <div class="no-results">
+      <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
+      <p>
+        You don't have any Listings yet
+      </p>
+      <p class="help-text">
+        Start selling by clicking on either "Add new Listing" or "Import Listings" button
+      </p>
+    </div><!-- .no-results -->
+
+    <!-- no listings matching search -->
+    <div class="no-results" *ngIf="true">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
+      <p>
+        No matching Listings found
+      </p>
+      <p class="help-text">
+        You don't have any Listings matching your search
+      </p>
+    </div><!-- .no-results -->
+  </ng-template>
 </div><!-- .listings-list -->
 
 <!-- .loading-container -->
@@ -123,9 +219,6 @@
 </div><!-- .loading-container -->
 
 
-
-<div class="loading-bar">
-  <mat-progress-bar mode="indeterminate" color="accent" *ngIf="true"></mat-progress-bar>
-  <!-- FIXME: implement and uncomment:
-  <mat-progress-bar mode="indeterminate" color="accent" *ngIf="pages[0] && pages[0].listings && pages[0].listings.length === 10 && isLoading"></mat-progress-bar-->
+<div class="loading-bar" *ngIf="isLoadingMore">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div><!-- .loading-bar -->

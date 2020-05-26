@@ -11,6 +11,17 @@ import {
 } from '../shared/market.models';
 
 
+export type TEMPLATE_SORT_FIELD_TYPE = 'item_informations.title' | 'created_at' | 'updated_at';
+
+
+export enum TEMPLATE_STATUS_TYPE {
+  PUBLISHED = 'published',
+  UNPUBLISHED = 'unpublished',
+  PENDING = 'pending',
+  EXPIRED = 'expired'
+}
+
+
 export interface NewTemplateData {
   title: string;
   shortDescription: string;
@@ -117,4 +128,7 @@ export interface ListingTemplate {
   price: TemplatePricing;
   payment: TemplatePaymentInfo;
   hasLinkedListings: boolean;
+  status: TEMPLATE_STATUS_TYPE;
+  created: number;
+  updated: number;
 }

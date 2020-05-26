@@ -7,8 +7,16 @@ import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { NewTemplateData, ListingTemplate, TemplateShippingDestination, TemplateImage, UpdateTemplateData } from './sell.models';
 import { RespListingTemplate, RespCategoryAdd, RespTemplateSize } from '../shared/market.models';
+import {
+  NewTemplateData,
+  ListingTemplate,
+  TemplateShippingDestination,
+  TemplateImage,
+  UpdateTemplateData,
+  TEMPLATE_SORT_FIELD_TYPE,
+  TEMPLATE_STATUS_TYPE
+} from './sell.models';
 
 
 @Injectable()
@@ -30,6 +38,31 @@ export class SellService {
           return;
         }
         return this.buildTemplate(resp, marketPort);
+      })
+    );
+  }
+
+
+  findTemplates(
+    profileID: number,
+    pageNum: number,
+    pageCount: number,
+    orderField: TEMPLATE_SORT_FIELD_TYPE,
+    searchTerm: string = '',
+    isPublished?: boolean
+  ): Observable<ListingTemplate[]> {
+    const searchParams: any[] = ['search', pageNum, pageCount, 'ASC', orderField, profileID, searchTerm ? searchTerm : '*', []];
+    if (typeof isPublished === 'boolean') {
+      searchParams.push(isPublished);
+    }
+    return this._rpc.call('template', searchParams).pipe(
+      map((resp: RespListingTemplate[]) => {
+
+        const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+
+        return resp.map((respItem: RespListingTemplate) => {
+          return this.buildTemplate(respItem, marketPort);
+        });
       })
     );
   }
@@ -176,7 +209,7 @@ export class SellService {
 
   publishTemplate(
     templateID: number, marketID: number, duration: number, categoryID: number = null, estimateOnly: boolean = true
-  ): Observable<any> {
+  ): Observable<any> {  // TODO: create relevant return type and set it correctly here when it is known
 
     let obs = of();
 
@@ -220,10 +253,22 @@ export class SellService {
     const shipLocal = (shippingPrice && +shippingPrice.domestic) || 0;
     const shipIntl = (shippingPrice && +shippingPrice.international) || 0;
 
+    const sourceHasListings = (source.ListingItems || []).length > 0;
+    const sourceHash = source.hash || '';
+
+    let sourceStatus: TEMPLATE_STATUS_TYPE;
+    switch (true) {
+      // TODO zaSmilingIdiot 2020-05-26 -> Add in Expired case here as well
+      //    (requires knowing what the listing item expiry field is, which is not known at the time of this comment)
+      case (sourceHash.length > 0) && sourceHasListings: sourceStatus = TEMPLATE_STATUS_TYPE.PUBLISHED; break;
+      case (sourceHash.length > 0) && !sourceHasListings: sourceStatus = TEMPLATE_STATUS_TYPE.PENDING; break;
+      default: sourceStatus = TEMPLATE_STATUS_TYPE.UNPUBLISHED;
+    }
+
     const templ: ListingTemplate = {
       id: source.id,
       profileId: source.profileId,
-      hash: source.hash,
+      hash: sourceHash,
       information: {
         id: itemInfo.id,
         title: itemInfo.title,
@@ -231,8 +276,8 @@ export class SellService {
         description: itemInfo.longDescription
       },
       location: {
-        id: (itemInfo && itemInfo.ItemLocation && +itemInfo.ItemLocation.id) || null,
-        countryCode: (itemInfo && itemInfo.ItemLocation && itemInfo.ItemLocation.country) || null,
+        id: (itemInfo && itemInfo.ItemLocation && +itemInfo.ItemLocation.id) || 0,
+        countryCode: (itemInfo && itemInfo.ItemLocation && itemInfo.ItemLocation.country) || '',
       },
       shippingDestinations: (itemInfo.ShippingDestinations || []).map(d => {
         const dest: TemplateShippingDestination = {
@@ -258,7 +303,7 @@ export class SellService {
         return img;
       }),
       payment: {
-        id: (paymentInfo && +paymentInfo.id) || null,
+        id: (paymentInfo && +paymentInfo.id) || 0,
         type: (paymentInfo && paymentInfo.type) || null,
         escrow: {
           type: (paymentInfo && paymentInfo.Escrow && paymentInfo.Escrow.type) || null,
@@ -267,13 +312,16 @@ export class SellService {
         }
       },
       price: {
-        id: (itemPrice && +itemPrice.id) || null,
+        id: (itemPrice && +itemPrice.id) || 0,
         currency: (itemPrice && itemPrice.currency) || null,
         basePrice: new PartoshiAmount(basePrice * Math.pow(10, 8)),
         shippingLocal: new PartoshiAmount(shipLocal * Math.pow(10, 8)),
         shippingInternational: new PartoshiAmount(shipIntl * Math.pow(10, 8))
       },
-      hasLinkedListings: (source.ListingItems || []).length > 0
+      hasLinkedListings: sourceHasListings,
+      status: sourceStatus,
+      created: source.createdAt,
+      updated: source.updatedAt
     };
 
     return templ;
