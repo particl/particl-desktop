@@ -1,11 +1,10 @@
 <app-page-intro childPageAlias="Sell Templates">
-  <ng-container page-title>Your Listings</ng-container>
+  <ng-container page-title>Your Products &amp; Listings</ng-container>
   <ng-container page-content>
-    This is your dashboard for selling your products on the marketplace and manage their listings.<br>
-    Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
+    This is your dashboard for selling your Products on the marketplace and manage their Listings.<br>
+    To sell, you will need to create a Product template first, which you can later publish as a Listing to any connected Market.
   </ng-container>
   <ng-container page-help>
-    All listings created here will be publicly available on the Marketplace.
   </ng-container>
 </app-page-intro>
 
@@ -15,11 +14,11 @@
   <div class="buttons">
     <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
       <mat-icon fontIcon="part-circle-plus"></mat-icon>
-      Add new Listing
+      Add new Product
     </button>
     <button mat-raised-button color="accent" routerLink="import-listings" class="full-width">
       <mat-icon fontIcon="part-image-upload"></mat-icon>
-      Import Listings
+      Import Products
     </button>
   </div><!-- .buttons -->
 
@@ -70,6 +69,18 @@
 
 <!-- Listings > list -->
 <div class="listings section with-filter">
+
+  <div class="list-item-actions" fxLayout fxLayoutAlign="space-between center">
+    <button mat-button class="small" matTooltip="Select Products for batch actions">
+      <mat-icon fontIcon="part-select"></mat-icon>
+      Select Products
+    </button>
+    <button mat-button class="small">
+      <mat-icon fontIcon="part-more-horizontal"></mat-icon>
+      Select Action
+    </button>
+  </div><!-- .list-item-actions -->
+
   <!-- infiniteScroll
   [infiniteScrollContainer]="pagination.infinityScrollSelector"
   [infiniteScrollDistance]="2"
