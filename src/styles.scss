@@ -22,6 +22,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       2.5. Radio switchers (sidebar submenu)
       2.6. Instance switcher (wallet selection)
       2.7. App sidebar menu
+      2.8. List items header (batch edits etc.)
     3. UI elements
       3.1. Buttons
       3.2. Addresses
@@ -397,6 +398,42 @@ body {
   }
 }
 
+
+// ------ 2.8. LIST ITEMS HEADER ------ //
+
+.list-items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 32px;
+  .left { // has section title
+    h2.section-title {
+      margin: 0;
+    }
+  }
+  .right { // has action buttons
+    text-align: right;
+    margin-top: -6px;
+    .action-options {
+      @extend %mat-card;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: var(--radius);
+      padding: 0 6px;
+      margin-top: -3px;
+      & > * {
+        margin-right: 6px;
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      .mat-form-field {
+        display: inline-block;
+      }
+    }
+  }
+}
 
 
 /* ------------------------------- *\

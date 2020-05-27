@@ -734,6 +734,11 @@ label {
       }
     }
   }
+  &.--smaller {
+    .mat-form-field-flex {
+      padding: 0 12px;
+    }
+  }
   
   // Boxed, standalone variant (common)
   &.--boxed {
@@ -799,6 +804,13 @@ label {
           position: relative;
           top: 1px;
         }
+      }
+    }
+    &.--smaller {
+      .mat-form-field-infix {
+        padding: calc(0.7 * var(--field-boxed-paddingV)) 0;
+        min-width: 120px;
+        width: auto;
       }
     }
 
