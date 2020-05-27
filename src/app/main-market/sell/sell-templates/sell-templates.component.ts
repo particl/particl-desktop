@@ -34,8 +34,18 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     {title: 'Published', value: '1'},
   ];
 
+  // @FIXME: batch action selection select (hehe)
+  readonly batchSelectCriteria: {title: string; value: string}[] = [
+    {title: 'All', value: ''},
+    {title: 'Unpublished', value: 'unpublished'},
+    {title: 'None', value: '0'},
+  ];
+
   savedTemplates: ListingTemplate[] = [];
   isLoadingMore: boolean = false;
+
+  // @FIXME: showing/hiding batch action checkboxes in product/listing list items
+  batchEditingActive: boolean = false;
 
   searchQuery: FormControl = new FormControl();
   sortOrder: FormControl = new FormControl();
