@@ -59,6 +59,7 @@
       line-height: 1.5;
       @include break(l) {
         font-size: 14.5px;
+        line-height: 1.6;
       }
     }
     .message:empty {

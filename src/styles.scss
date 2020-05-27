@@ -406,6 +406,9 @@ body {
   justify-content: space-between;
   align-items: flex-start;
   height: 32px;
+  @include break(l) {
+    height: 38px;
+  }
   .left { // has section title
     h2.section-title {
       margin: 0;
