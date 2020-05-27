@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { Subject, merge, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, tap, takeUntil, finalize, switchMap, startWith } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { Subject, merge, Observable, iif, defer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, takeUntil, finalize, switchMap, startWith, concatMap, take } from 'rxjs/operators';
 import { SellService } from '../sell.service';
 import { TEMPLATE_SORT_FIELD_TYPE, ListingTemplate, TEMPLATE_STATUS_TYPE } from '../sell.models';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
+import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
 
 
 @Component({
@@ -47,7 +50,9 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   constructor(
     private _sellService: SellService,
-    private _store: Store
+    private _store: Store,
+    private _router: Router,
+    private _dialog: MatDialog,
   ) {}
 
 
@@ -88,7 +93,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     this.doFilterChange.valueChanges.pipe(
       tap(() => {
         this.savedTemplates = [];
-        this.isLoadingMore = true;
       }),
       switchMap(() => {
         return this.fetchTemplates();
@@ -99,9 +103,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         this.savedTemplates = templates;
       }
     );
-
-    // Load initial values
-    this.doFilterChange.setValue(true);
   }
 
 
@@ -123,10 +124,42 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   cloneListing(id: number) {
     // TODO
+    this._sellService.cloneTemplate(id).pipe(
+      tap((resp) => console.log('@@@@ clone resp: ', resp)),
+      // concatMap((resp) => this._router.navigate(['new-listing'], {queryParams:{ templateID: resp.id }}))
+    ).subscribe();
   }
 
   deleteTemplate(id: number) {
-    // TODO
+    const doDelete$ = this._sellService.deleteTemplate(id).pipe(
+      concatMap((ok) =>
+        iif(
+          () => ok,
+          defer(() => this.fetchTemplates().pipe(
+            tap((templates) => {
+              // Deleting an entry anywhere in the current list of templates means the last page reloaded return 1 new item.
+              // So find the new item(s) in the resp, and append to the end of the current list
+              const newItems = [];
+              for (let ii = templates.length - 1; ii >= 0; ii--) {
+                if (this.savedTemplates[this.savedTemplates.length - 1].id === templates[ii].id) {
+                  break;
+                }
+                newItems.push(templates[ii]);
+              }
+              newItems.forEach(templ => this.savedTemplates.push(templ));
+            })
+          ))
+        )
+      )
+    );
+
+    const dialog = this._dialog.open(DeleteTemplateModalComponent);
+    dialog.afterClosed().pipe(take(1)).subscribe(() => subs.unsubscribe());
+
+    const subs = dialog.componentInstance.isConfirmed.pipe(
+      take(1),
+      concatMap(() => doDelete$)
+    ).subscribe();
   }
 
 
@@ -145,6 +178,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   private fetchTemplates(): Observable<ListingTemplate[]> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    this.isLoadingMore = true;
 
     return this._sellService.findTemplates(
       profileId,
