@@ -43,6 +43,14 @@
 
     <mat-divider></mat-divider>
 
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="Filter by Market" [formControl]="filterMarket">
+        <mat-option *ngFor="let market of publishedOnMarketCriteria" [value]="market.value">
+          {{ market.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
     <mat-radio-group class="radio-group block-radio">
       <mat-radio-button class="filter-option" *ngFor="let status of statusFilters" value="{{ status.value }}" color="accent" [ngClass]="{ 'empty': status.count === '0' }">
         {{ status.title }}

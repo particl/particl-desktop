@@ -56,7 +56,14 @@
         {{ status.title }}
       </mat-radio-button>
     </mat-radio-group>
-    <!-- <mat-divider></mat-divider> -->
+    <mat-divider></mat-divider>
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="Filter by Market" [formControl]="filterMarket">
+        <mat-option *ngFor="let market of publishedOnMarketCriteria" [value]="market.value">
+          {{ market.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </mat-card><!-- .filter-card -->
 
   <button mat-button color="basic" class="clear-filters" (click)="resetFilters()">

@@ -36,11 +36,12 @@ export class SellListingsComponent implements OnInit, OnDestroy {
   ];
 
   readonly savedTemplate$: Observable<ListingTemplate[]>;
-  // @FIXME: batch action selection select (hehe)
-  readonly batchSelectCriteria: {title: string; value: string}[] = [
-    {title: 'All', value: ''},
-    {title: 'Unpublished', value: 'unpublished'},
-    {title: 'None', value: '0'},
+
+  // @FIXME: implement filtering based on Markets where the Product is published
+  readonly publishedOnMarketCriteria: {title: string; value: string}[] = [
+    {title: 'All Markets', value: ''},
+    {title: 'Particl Open Marketplace', value: 'open-marketplace'},
+    {title: 'Sneaky Market', value: 'sneaky'},
   ];
 
   isLoadingMore: boolean = false;
@@ -52,6 +53,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
   searchQuery: FormControl = new FormControl();
   sortOrder: FormControl = new FormControl();
   filterStatus: FormControl = new FormControl();
+  filterMarket: FormControl = new FormControl();
 
 
   private destroy$: Subject<void> = new Subject();
