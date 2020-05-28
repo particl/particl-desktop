@@ -9,6 +9,7 @@ import { SellService } from './sell.service';
 import { SellComponent } from './sell.component';
 
 import { SellTemplatesComponent } from './sell-templates/sell-templates.component';
+import { SellListingsComponent } from './sell-listings/sell-listings.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { SellTemplateFormComponent } from './sell-template-form/sell-template-form.component';
@@ -45,6 +46,7 @@ const routes: Routes = [
   declarations: [
     SellComponent,
     SellTemplatesComponent,
+    SellListingsComponent,
     SellTemplateFormComponent,
     NewListingComponent,
     ImportListingsComponent,

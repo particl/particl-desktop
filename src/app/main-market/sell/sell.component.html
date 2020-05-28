@@ -16,6 +16,10 @@
     <market-sell-orders></market-sell-orders>
   </div>
 
+  <div *ngSwitchCase="'listings'" class="container-block with-tab-bar" >
+    <market-sell-listings></market-sell-listings>
+  </div>
+
   <div *ngSwitchCase="'templates'" class="container-block with-tab-bar" >
     <market-sell-templates></market-sell-templates>
   </div>
