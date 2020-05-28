@@ -69,7 +69,7 @@
 
 
 <!-- Listings > list -->
-<div class="listings section with-filter">
+<div class="listings section with-filter" *appVar="(savedTemplate$ | async) as allTemplates">
   <!-- infiniteScroll
   [infiniteScrollContainer]="pagination.infinityScrollSelector"
   [infiniteScrollDistance]="2"
@@ -77,13 +77,13 @@
   [fromRoot]="true"
   (scrolled)="loadNextPage()" -->
 
-  <ng-container *ngIf="savedTemplates.length > 0; else noTemplates">
+  <ng-container *ngIf="allTemplates.length > 0; else noTemplates">
     <mat-accordion>
-      <mat-expansion-panel *ngFor="let templ of savedTemplates; trackBy:trackBySavedTemplates" class="listing list-item no-padding">
+      <mat-expansion-panel *ngFor="let templ of allTemplates; trackBy:trackBySavedTemplates" class="listing list-item no-padding">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper">
             <div class="photo">
-              <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+              <img [src]="templ.images[0]?.thumbnailUrl" default="./assets/images/placeholder_4-3.jpg">
             </div>
             <div class="meta" fxFlex="1 1 100%">
               <div class="name">{{templ.information.title}}</div>
@@ -112,8 +112,8 @@
           </div>
           <p class="item-info">
             Category: {{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--><br>
-            Created: {{templ.created}}<br>
-            Updated: {{templ.updated}}<br>
+            Created: {{templ.created | date:'medium'}}<br>
+            Updated: {{templ.updated | date:'medium'}}<br>
             Expires: 2020-05-11 15:86<!--{{ listing?.expiredAt }}-->
           </p>
         </div>
@@ -180,7 +180,7 @@
 
   <ng-template #noTemplates>
     <!-- no listings at all -->
-    <div class="no-results">
+    <div class="no-results" *ngIf="!doTemplatesExist">
       <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
       <p>
         You don't have any Listings yet
@@ -191,7 +191,7 @@
     </div><!-- .no-results -->
 
     <!-- no listings matching search -->
-    <div class="no-results" *ngIf="true">
+    <div class="no-results" *ngIf="doTemplatesExist">
       <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
       <p>
         No matching Listings found

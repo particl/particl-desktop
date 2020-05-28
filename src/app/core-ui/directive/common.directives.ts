@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, Renderer, HostListener, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Directive, Input, ElementRef, Renderer, HostListener, OnInit, Output, EventEmitter, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
@@ -85,3 +85,36 @@ export class ImagePreloadDirective {
   }
 }
 /* tslint:enable */
+
+
+@Directive({
+    // don't use 'ng' prefix since it's reserved for Angular
+    selector: '[appVar]',
+})
+export class TemplateVariableDirective<T = unknown> {
+    // https://angular.io/guide/structural-directives#typing-the-directives-context
+    static ngTemplateContextGuard<T>(dir: TemplateVariableDirective<T>, ctx: any): ctx is Context<T> {
+        return true;
+    }
+
+    private context?: Context<T>;
+
+    constructor(
+        private vcRef: ViewContainerRef,
+        private templateRef: TemplateRef<Context<T>>
+    ) {}
+
+    @Input()
+    set appVar(value: T) {
+        if (this.context) {
+            this.context.appVar = value;
+        } else {
+            this.context = { appVar: value };
+            this.vcRef.createEmbeddedView(this.templateRef, this.context);
+        }
+    }
+}
+
+interface Context<T> {
+    appVar: T;
+}

@@ -304,6 +304,9 @@ export class SellService {
         const img: TemplateImage = {
           id: +value.id,
           featured: !!value.featured,
+          thumbnailUrl: this.formatImagePath(
+            ((value.ItemImageDatas || []).find(item => item.imageVersion === 'MEDIUM') || {dataId: ''}).dataId || '', marketPort
+          ),
           versions: (value.ItemImageDatas || []).map(iid => {
             return {
               id: iid.id,

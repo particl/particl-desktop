@@ -108,6 +108,7 @@ export interface TemplateShippingDestination {
 export interface TemplateImage {
   id: number;
   featured: boolean;
+  thumbnailUrl: string;
   versions: Array<{
     id: number;
     version: IMAGE_VERSION;

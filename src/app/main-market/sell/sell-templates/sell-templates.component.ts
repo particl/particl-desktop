@@ -2,20 +2,21 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, merge, Observable, iif, defer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, tap, takeUntil, finalize, switchMap, startWith, concatMap, take } from 'rxjs/operators';
+import { Subject, merge, Observable, iif, defer, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, tap, takeUntil, switchMap, startWith, concatMap, take } from 'rxjs/operators';
 import { SellService } from '../sell.service';
 import { TEMPLATE_SORT_FIELD_TYPE, ListingTemplate, TEMPLATE_STATUS_TYPE } from '../sell.models';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
+import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
 
 @Component({
   selector: 'market-sell-templates',
   templateUrl: './sell-templates.component.html',
   styleUrls: ['./sell-templates.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SellTemplatesComponent implements OnInit, OnDestroy {
 
@@ -34,8 +35,9 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     {title: 'Published', value: '1'},
   ];
 
-  savedTemplates: ListingTemplate[] = [];
+  readonly savedTemplate$: Observable<ListingTemplate[]>;
   isLoadingMore: boolean = false;
+  doTemplatesExist: boolean = true;
 
   searchQuery: FormControl = new FormControl();
   sortOrder: FormControl = new FormControl();
@@ -43,6 +45,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
   private destroy$: Subject<void> = new Subject();
+  private templates$: BehaviorSubject<ListingTemplate[]> = new BehaviorSubject([]);
   private doFilterChange: FormControl = new FormControl();
   private readonly PAGE_COUNT: number = 30;
   private currentPage: number = 0;
@@ -53,7 +56,9 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _router: Router,
     private _dialog: MatDialog,
-  ) {}
+  ) {
+    this.savedTemplate$ = this.templates$.asObservable();
+  }
 
 
   ngOnInit() {
@@ -92,7 +97,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
     this.doFilterChange.valueChanges.pipe(
       tap(() => {
-        this.savedTemplates = [];
+        this.templates$.next([]);
       }),
       switchMap(() => {
         return this.fetchTemplates();
@@ -100,13 +105,26 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(
       (templates: ListingTemplate[]) => {
-        this.savedTemplates = templates;
+        if (this.currentPage === 0) {
+          const defaults = this.getControlDefaults();
+          const formFields = Object.keys(defaults);
+          let isDefaultsSet = true;
+          for (const field of formFields) {
+            if (this[field].value !== defaults[field]) {
+              isDefaultsSet = false;
+              break;
+            }
+          }
+          this.doTemplatesExist = !((templates.length === 0) && isDefaultsSet);
+        }
+        this.templates$.next(templates);
       }
     );
   }
 
 
   ngOnDestroy() {
+    this.templates$.complete();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -125,7 +143,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   cloneListing(id: number) {
     // TODO
     this._sellService.cloneTemplate(id).pipe(
-      tap((resp) => console.log('@@@@ clone resp: ', resp)),
+      // tap((resp) => console.log('@@@@ clone resp: ', resp)),
       // concatMap((resp) => this._router.navigate(['new-listing'], {queryParams:{ templateID: resp.id }}))
     ).subscribe();
   }
@@ -140,13 +158,15 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
               // Deleting an entry anywhere in the current list of templates means the last page reloaded return 1 new item.
               // So find the new item(s) in the resp, and append to the end of the current list
               const newItems = [];
+              const templs = this.templates$.value;
               for (let ii = templates.length - 1; ii >= 0; ii--) {
-                if (this.savedTemplates[this.savedTemplates.length - 1].id === templates[ii].id) {
+                if (templs[templs.length - 1].id === templates[ii].id) {
                   break;
                 }
                 newItems.push(templates[ii]);
               }
-              newItems.forEach(templ => this.savedTemplates.push(templ));
+              newItems.forEach(templ => templs.push(templ));
+              this.templates$.next(templs);
             })
           ))
         )
@@ -165,14 +185,29 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   openPreview(id: number) {
     // TODO
-    // const dialog = this._dialog.open(ListingDetailModalComponent);
+    const dialog = this._dialog.open(ListingDetailModalComponent);
   }
 
 
   private setControlDefaults() {
-    this.searchQuery.setValue('');
-    this.sortOrder.setValue('updated_at');
-    this.filterStatus.setValue('');
+    const defaults = this.getControlDefaults();
+    const fieldKeys = Object.keys(defaults);
+
+    for (const field of fieldKeys) {
+      const formField = this[field] as FormControl;
+      if (formField.value !== defaults[field]) {
+        formField.setValue(defaults[field]);
+      }
+    }
+  }
+
+
+  private getControlDefaults(): {[key: string]: string} {
+    return {
+      searchQuery: '',
+      sortOrder: 'updated_at',
+      filterStatus: ''
+    };
   }
 
 
@@ -187,6 +222,9 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       this.sortOrder.value,
       this.searchQuery.value,
       this.filterStatus.value.length > 0 ? (this.filterStatus.value === '1') : null
-    ).pipe(finalize(() => this.isLoadingMore = false));
+    ).pipe(tap(() => {
+      this.isLoadingMore = false;
+      })
+    );
   }
 }
