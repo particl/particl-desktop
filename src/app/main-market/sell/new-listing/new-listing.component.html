@@ -1,7 +1,7 @@
 <div class="container-block">
 
   <app-page-intro>
-    <ng-container page-title>Add new Listing</ng-container>
+    <ng-container page-title>Add new Product</ng-container>
     <ng-container page-content>
       Publish a new Product for sale on Particl Open Marketplace or any other Markets you've joined.
     </ng-container>
@@ -26,8 +26,8 @@
   <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
     <div class="left">
       <button mat-button [routerLink]="['../']" [queryParams]="{selectedSellTab: 'templates'}" color="warn">
-        <mat-icon fontIcon="part-cross"></mat-icon>
-        Back to Listings
+        <mat-icon fontIcon="part-previous-single"></mat-icon>
+        Back to Products &amp; Listings
       </button>
     </div>
     <div class="right" *ngIf="(saveButtonText.length > 0) && (publishButtonText.length > 0)">

@@ -1,11 +1,10 @@
 <app-page-intro childPageAlias="Sell Templates">
-  <ng-container page-title>Your Listings</ng-container>
+  <ng-container page-title>Your Products &amp; Listings</ng-container>
   <ng-container page-content>
-    This is your dashboard for selling your products on the marketplace and manage their listings.<br>
-    Create new listings and manage them here. Use the Orders tab to track and process orders from your customers.
+    This is your dashboard for selling your Products on the marketplace and manage their Listings.<br>
+    To sell, you will need to create a Product template first, which you can later publish as a Listing to any connected Market.
   </ng-container>
   <ng-container page-help>
-    All listings created here will be publicly available on the Marketplace.
   </ng-container>
 </app-page-intro>
 
@@ -15,11 +14,11 @@
   <div class="buttons">
     <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
       <mat-icon fontIcon="part-circle-plus"></mat-icon>
-      Add new Listing
+      Add new Product
     </button>
     <button mat-raised-button color="accent" routerLink="import-listings" class="full-width">
       <mat-icon fontIcon="part-image-upload"></mat-icon>
-      Import Listings
+      Import Products
     </button>
   </div><!-- .buttons -->
 
@@ -70,6 +69,67 @@
 
 <!-- Listings > list -->
 <div class="listings section with-filter" *appVar="(savedTemplate$ | async) as allTemplates">
+
+  <div class="list-items-header">
+    <div class="left">
+      <h2 class="section-title" *ngIf="!batchEditingActive">8 Products in Inventory</h2>
+      <!-- @TODO: implement number of currently selected products (or remove altogether) -->
+      <h2 class="section-title" *ngIf="batchEditingActive">0 Products selected</h2>
+    </div>
+    <div class="right">
+      <button mat-button class="tiny icon-only" (click)="batchEditingActive = !batchEditingActive" *ngIf="!batchEditingActive" matTooltip="Batch editing" matTooltipPosition="before">
+        <mat-icon fontIcon="part-check-2"></mat-icon>
+      </button>
+      <div class="action-options" *ngIf="batchEditingActive">
+        <mat-form-field class="--plain --smaller" appearance="fill">
+          <mat-select placeholder="Select…">
+            <mat-option *ngFor="let select of batchSelectCriteria" [value]="select.value">
+              {{ select.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <button mat-button class="tiny" matTooltip="Select action for all selected Products" matTooltipPosition="above" color="accent">
+          <mat-icon fontIcon="part-more-horizontal"></mat-icon>
+          Batch Action&hellip;
+        </button>
+        <button mat-button class="tiny icon-only" (click)="batchEditingActive = !batchEditingActive" matTooltip="Cancel batch editing" matTooltipPosition="above" color="warn">
+          <mat-icon fontIcon="part-cross"></mat-icon>
+        </button>
+      </div><!-- if batchEditingActive-->
+    </div>
+  </div><!-- .list-item-actions -->
+
+
+  <!-- ================== ONLY FOR DEVELOPMENT OF BATCH ACTIONS >>> ================== -->
+
+  <mat-expansion-panel class="listing list-item no-padding">
+    <mat-expansion-panel-header class="header">
+      <div class="header-wrapper">
+        <div class="photo">
+          <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+        </div>
+        <div class="meta" fxFlex="1 1 100%">
+          <div class="name">Listing title or whatever</div>
+          <!-- TODO: if published on 1 market, display it's name; if on multiple display "X Markets" (as shown below) -->
+          <span class="published-markets">2 Markets<!--{{ listing?.market }}--></span>
+          <span class="category">Category name tralalala</span>
+        </div>
+        <div class="status-wrap" fxFlex="0 0 140px">
+          <div class="status published">
+            <span class="dot"></span>
+            <ng-container>
+              <ng-container>Published</ng-container>
+            </ng-container>
+          </div>
+        </div>
+        <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
+      </div>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <!-- ================== <<< ONLY FOR DEVELOPMENT OF BATCH ACTIONS ================== -->
+
+
   <!-- infiniteScroll
   [infiniteScrollContainer]="pagination.infinityScrollSelector"
   [infiniteScrollDistance]="2"
@@ -102,6 +162,7 @@
                 </ng-container>
               </div>
             </div>
+            <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
           </div>
         </mat-expansion-panel-header>
 
