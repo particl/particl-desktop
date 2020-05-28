@@ -102,7 +102,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
 
 
   private toPartoshiAmount(amount: number): PartoshiAmount {
-    return new PartoshiAmount(amount * Math.pow(10, 8));
+    return new PartoshiAmount(amount);
   }
 
 

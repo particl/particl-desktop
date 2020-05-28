@@ -9,9 +9,9 @@ export class PartoshiAmount {
   private DEC_SEP: string = '.';
   private amount: string = '0';
 
-  constructor(amount: number) {
-    const num = Math.round(amount);
-    this.amount = this.isValid(+num) ? `${num}` : this.amount;
+  constructor(amount: number, isPartoshiValue: boolean = false) {
+    const num = isPartoshiValue ? Math.round(+amount) : Math.round((+amount * Math.pow(10, 8)));
+    this.amount = this.isValid(num) ? `${num}` : this.amount;
   }
 
   public partoshis(): number {

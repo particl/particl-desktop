@@ -59,7 +59,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       map((utxos: WalletUTXOStateModel) => {
         return this.extractUTXOSpendables(utxos);
       }),
-      tap((amount) => this._walletBalance = (new PartoshiAmount(amount * Math.pow(10, 8))).particlsString()),
+      tap((amount) => this._walletBalance = (new PartoshiAmount(amount)).particlsString()),
       takeUntil(this.destroy$)
     );
 
@@ -208,7 +208,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
           spendable = utxo.spendable;
         }
         if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-          tempBal.add(new PartoshiAmount(utxo.amount * Math.pow(10, 8)));
+          tempBal.add(new PartoshiAmount(utxo.amount));
         }
       }
     }

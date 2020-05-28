@@ -94,7 +94,7 @@ export class FilteredTransaction {
     this.txid = json.txid;
     this.category = json.category;
 
-    const partoshiAmount = new PartoshiAmount(Math.abs(+json.amount) * Math.pow(10, 8));
+    const partoshiAmount = new PartoshiAmount(Math.abs(+json.amount));
     this.amount = +json.amount;
 
     this.reward = +json.reward ? +json.reward : 0;
@@ -169,7 +169,8 @@ export class FilteredTransaction {
       this.amount < 0 ?
       '-' :
       (this.transferType === TxTransferType.NONE ? '+' : '')
-     ) + partoshiAmount.particlStringInteger();
+    ) + partoshiAmount.particlStringInteger();
+
     this.amountFraction = partoshiAmount.particlStringFraction(4);
 
 
@@ -185,10 +186,10 @@ export class FilteredTransaction {
         break;
 
       default:
-        const posFee = new PartoshiAmount(Math.abs(this.fee) * Math.pow(10, 8));
+        const posFee = new PartoshiAmount(Math.abs(this.fee));
         const calcNet = this.fee > 0 ?
-          (new PartoshiAmount(Math.abs(this.amount) * Math.pow(10, 8))).subtract(posFee).particls() :
-          (new PartoshiAmount(Math.abs(this.amount) * Math.pow(10, 8))).add(posFee).particls();
+          (new PartoshiAmount(Math.abs(this.amount))).subtract(posFee).particls() :
+          (new PartoshiAmount(Math.abs(this.amount))).add(posFee).particls();
 
         netValue = this.amount > 0 ? calcNet : +`-${calcNet}`;
         break;

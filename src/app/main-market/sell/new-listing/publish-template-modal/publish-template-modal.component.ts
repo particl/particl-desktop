@@ -293,7 +293,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
         spendable = utxo.spendable;
       }
       if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount * Math.pow(10, 8)));
+        tempBal.add(new PartoshiAmount(utxo.amount));
       }
     }
 

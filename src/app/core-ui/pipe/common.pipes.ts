@@ -4,7 +4,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 @Pipe({name: 'partoshiAmount'})
 export class PartoshiAmountPipe implements PipeTransform {
   transform(partoshi: number): string {
-    const partoshiAmount = new PartoshiAmount(partoshi);
+    const partoshiAmount = new PartoshiAmount(partoshi, true);
     return partoshiAmount.particlsString();
   }
 }
@@ -12,7 +12,7 @@ export class PartoshiAmountPipe implements PipeTransform {
 @Pipe({name: 'particlAmount'})
 export class ParticlAmountPipe implements PipeTransform {
   transform(particl: number): string {
-    const partoshiAmount = new PartoshiAmount(particl * Math.pow(10, 8));
+    const partoshiAmount = new PartoshiAmount(particl);
     return partoshiAmount.particlsString();
   }
 }

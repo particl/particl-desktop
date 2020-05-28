@@ -182,7 +182,7 @@ export class ColdstakeService {
           if (utxo.coldstaking_address || !utxo.address) {
             // skip
           } else {
-            amount.add(new PartoshiAmount(+utxo.amount * Math.pow(10, 8)));
+            amount.add(new PartoshiAmount(+utxo.amount));
             utxos.push({
               address: utxo.address,
               amount: +utxo.amount,
@@ -268,7 +268,7 @@ export class ColdstakeService {
         results.forEach(result => {
           if (+result.fee && +result.fee > 0) {
             ++count;
-            fee.add(new PartoshiAmount(+result.fee * Math.pow(10, 8)));
+            fee.add(new PartoshiAmount(+result.fee));
           }
           if (result.error) {
             ++errors;

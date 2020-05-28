@@ -330,9 +330,9 @@ export class SellService {
       price: {
         id: (itemPrice && +itemPrice.id) || 0,
         currency: (itemPrice && itemPrice.currency) || null,
-        basePrice: new PartoshiAmount(basePrice * Math.pow(10, 8)),
-        shippingLocal: new PartoshiAmount(shipLocal * Math.pow(10, 8)),
-        shippingInternational: new PartoshiAmount(shipIntl * Math.pow(10, 8))
+        basePrice: new PartoshiAmount(basePrice),
+        shippingLocal: new PartoshiAmount(shipLocal),
+        shippingInternational: new PartoshiAmount(shipIntl)
       },
       hasLinkedListings: sourceHasListings,
       status: sourceStatus,

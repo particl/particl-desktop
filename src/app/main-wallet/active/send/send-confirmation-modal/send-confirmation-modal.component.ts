@@ -34,7 +34,7 @@ export class SendConfirmationModalComponent {
     private _dialogRef: MatDialogRef<SendConfirmationModalComponent>,
   ) {
     this.txType = this.data.sendTx.source;
-    const requested = new PartoshiAmount(this.data.sendTx.amount * Math.pow(10, 8));
+    const requested = new PartoshiAmount(this.data.sendTx.amount);
     this.requestedWhole = requested.particlStringInteger();
     this.requestedFraction  = requested.particlStringFraction();
     this.txFee = `${data.fee}`;
@@ -42,8 +42,8 @@ export class SendConfirmationModalComponent {
     this.targetAddress = this.data.sendTx.transactionType === 'send' ? this.data.sendTx.targetAddress : '';
     this.isSubtractingFee = this.data.sendTx.deductFeesFromTotal;
     const total = this.isSubtractingFee ?
-        requested.subtract(new PartoshiAmount((data.fee || 0) * Math.pow(10, 8))) :
-        requested.add(new PartoshiAmount((data.fee || 0) * Math.pow(10, 8)));
+        requested.subtract(new PartoshiAmount(data.fee || 0)) :
+        requested.add(new PartoshiAmount(data.fee || 0));
     this.totalAmount = total.particlsString();
   }
 

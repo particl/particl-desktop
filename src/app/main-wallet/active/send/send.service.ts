@@ -94,7 +94,7 @@ export class SendService {
         spendable = utxo.spendable;
       }
       if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        const amount = new PartoshiAmount(utxo.amount * Math.pow(10, 8));
+        const amount = new PartoshiAmount(utxo.amount);
         tempBal.add(amount);
       }
     }
