@@ -17,6 +17,7 @@ export class SellOrdersComponent implements OnInit {
 
   searchQuery: FormControl = new FormControl('');
   filterQuery: FormControl = new FormControl('all');
+  filterMarket: FormControl = new FormControl();
 
   statusFilters: Filter[] = [
     {value: 'all', title: 'All orders', count: '11'},
@@ -28,6 +29,13 @@ export class SellOrdersComponent implements OnInit {
     {value: 'complete', title: 'Completed', count: '3'},
     {value: 'rejected', title: 'Rejected', count: '1'},
     {value: 'cancelled', title: 'Cancelled', count: '3'}
+  ];
+
+  // @FIXME: implement filtering based on Markets where the Product is published
+  readonly publishedOnMarketCriteria: {title: string; value: string}[] = [
+    {title: 'All Markets', value: ''},
+    {title: 'Particl Open Marketplace', value: 'open-marketplace'},
+    {title: 'Sneaky Market', value: 'sneaky'},
   ];
 
   public filters: any = {

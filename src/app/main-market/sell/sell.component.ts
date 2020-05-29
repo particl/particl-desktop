@@ -18,7 +18,8 @@ export class SellComponent implements OnInit {
 
   readonly tabs: SellTab[] = [
     { title: 'Sell Orders', icon: 'part-recipe', templ: 'orders'},
-    { title: 'Products & Listings', icon: 'part-stock', templ: 'templates'},
+    { title: 'Sell Listings', icon: 'part-bag', templ: 'listings'},
+    { title: 'Inventory & Products', icon: 'part-stock', templ: 'templates'},
     { title: 'Questions', icon: 'part-chat-discussion', templ: 'questions'},
   ];
 
