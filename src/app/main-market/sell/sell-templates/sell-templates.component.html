@@ -98,6 +98,97 @@
     </div>
   </div><!-- .list-item-actions -->
 
+
+
+  <mat-expansion-panel class="product list-item no-padding">
+    <mat-expansion-panel-header class="header">
+      <div class="header-wrapper">
+        <div class="photo">
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="meta" fxFlex="1 1 100%">
+          <div class="name">Product title or whatever (2 for 1!)</div>
+          <span class="help-text">Product's Summary goes here; oh how nice!</span>
+        </div>
+        <div class="status-wrap" fxFlex="0 0 140px">
+          <!-- @TODO Allien: unify class names for status dots! -->
+          <div class="status published">
+            <span class="dot"></span>
+            <!-- @TODO: active = published listings/products; total = sum of all listings/products -->
+            <span class="active">1</span><span class="total">/3</span>
+          </div>
+        </div>
+        <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="detail">
+      <div class="row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between flex-start">
+        <div class="product-details" fxFlex="40">
+          <h3 class="item-subtitle">Details</h3>
+          <details>
+            <summary>Show Product description</summary>
+            -- product description goes here --
+          </details>
+        </div><!-- .product-details -->
+        <div class="inventory-stats" fxFlex="20">
+          <h3 class="item-subtitle">Inventory</h3>
+          <table>
+            <!-- @TODO: until we have quantities, keep the infinity symbol -->
+            <tr><th>&infin;</th><td>In stock</td></tr>
+            <tr><th>&infin;</th><td>Published</td></tr>
+            <tr><th>1</th><td>In Orders</td></tr>
+            <tr><th>0</th><td>Sold</td></tr>
+          </table>
+        </div><!-- .inventory-stats -->
+        <div class="pricing" fxFlex="40">
+          <h3 class="item-subtitle">Pricing</h3>
+          <table>
+            <tr>
+              <th>Price</th><td>PA 0<small>.4323</small> <span class="fiat">(&asymp; E€ 51<small>.00</small>)</span></td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>
+                Local in CZ &ndash; PA 0<small>.0142</small> <span class="fiat">(&asymp; E€ 2<small>.50</small>)</span><br>
+                Worldwide &ndash; PA 0<small>.1562</small> <span class="fiat">(&asymp; E€ 5<small>.46</small>)</span>
+              </td>
+            </tr>
+          </table>
+        </div><!-- .pricing -->
+      </div><!-- .row -->
+    </div><!-- .detail -->
+    <mat-action-row class="action-buttons">
+      <div class="left">
+        <button mat-button class="small" matTooltip="Delete Product" color="warn">
+          <mat-icon fontIcon="part-cross"></mat-icon>
+          Delete
+        </button>
+        <!-- @TODO: trigger modal with "edit template" component + append "(Copy)" to product's title input? -->
+        <button mat-button class="small icon-only" matTooltip="Clone Product">
+          <mat-icon fontIcon="part-copy"></mat-icon>
+        </button>
+        <!-- @TODO: trigger modal with "edit template" component -->
+        <button mat-button class="small" matTooltip="Update Product">
+          <mat-icon fontIcon="part-pen-1"></mat-icon>
+          Edit
+        </button>
+        <!-- @TODO: redirect to Listings tab and filter out Listings based on this Product -->
+        <button mat-button class="small" matTooltip="Show current Listings of this Product">
+          <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          Show Listings
+        </button>
+      </div>
+      <div class="right">
+        <button mat-raised-button color="primary">
+          <mat-icon fontIcon="part-rocket"></mat-icon>
+          Publish on Market
+        </button>
+      </div>
+    </mat-action-row>
+  </mat-expansion-panel><!-- .product -->
+
+
+
   <!-- infiniteScroll
   [infiniteScrollContainer]="pagination.infinityScrollSelector"
   [infiniteScrollDistance]="2"

@@ -3,32 +3,35 @@
 
 // ------ LISTING ITEM ------ //
 
-.listing {
+.product {
   .header {
     .meta {
       .name {
-        margin-bottom: 6px;
+        margin-bottom: 2px;
+        @include break(l) {
+          margin-bottom: 3px;
+        }
       }
-      .published-markets {
-        margin-right: 10px;
-        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
-        padding: 1px 6px;
-        border-radius: var(--radius);
-        font-size: 13px;
-      }
-    }
-  }
-  .status-info {
-    .item-info { // ID, order created/updated
-      flex: 0 0 250px;
     }
   }
   .detail {
+    border-top: 1px dashed var(--bg-muted);
+    padding: var(--paddingV) var(--paddingH);
     .item-subtitle {
       margin-top: 0;
     }
-    ul.listing-info {
-      padding-left: 24px;
+    .pricing {
+      th,
+      td {
+        display: block;
+        text-align: left;
+        @include break(l) {
+          display: table-cell;
+        }
+      }
     }
+  }
+  .action-buttons {
+    justify-content: space-between;
   }
 }
