@@ -112,7 +112,7 @@
         </div>
         <div class="status-wrap" fxFlex="0 0 140px">
           <!-- @TODO Allien: unify class names for status dots! -->
-          <div class="status published">
+          <div class="status published --rounded">
             <span class="dot"></span>
             <!-- @TODO: active = published listings/products; total = sum of all listings/products -->
             <span class="active">1</span><span class="total">/3</span>
@@ -170,7 +170,7 @@
           </table>
         </div><!-- .pricing -->
       </div><!-- .row -->
-      <details>
+      <!--details>
         <summary>Show Product description</summary>
         <p class="details">
           -- product description goes here -- Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa eius tempora modi error doloribus enim harum necessitatibus minima.
@@ -183,8 +183,65 @@
           - nesciunt dicta alias minima molestias
           - 100% officia vitae?
         </p>
-      </details>
+      </details-->
     </div><!-- .detail -->
+    <section class="market-templates-list">
+      <table class="market-templates">
+        <tr>
+          <th>Status</th>
+          <th>Published on</th>
+          <th class="category">Category</th>
+          <th class="price">Price</th>
+          <th class="actions">Actions</th>
+        </tr>
+        <tr>
+          <td>
+            <!-- @TODO: status classes: `unpublished | published | expiring | expired` (expiring = expires in <24h) -->
+            <!-- for expiring, show "Expires in XX:XX:XX" in tooltip -->
+            <span class="status published --plain" matTooltip="Live Listing" matTooltipPosition="before">
+              <span class="dot"></span>
+            </span>
+            <span class="template-name">Allien's Chilli Peppers (200 g)</span>
+          </td>
+          <td>Particl Open Marketplace</td>
+          <td class="category">Food & Nutrition</td>
+          <td class="price">12.6851 PART</td>
+          <td class="actions">
+            <button mat-button class="tiny icon-only" matTooltip="Edit">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Clone">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Publish">
+              <mat-icon fontIcon="part-rocket"></mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="status expired --plain" matTooltip="Expired Listing" matTooltipPosition="before">
+              <span class="dot"></span>
+            </span>
+            <span class="template-name">Allien's Sweet Peppers (200 g)</span>
+          </td>
+          <td>Sneaky Market</td>
+          <td class="category">Spicy Stuff</td>
+          <td class="price">11.4510 PART</td>
+          <td class="actions">
+            <button mat-button class="tiny icon-only" matTooltip="Edit">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Clone">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Publish">
+              <mat-icon fontIcon="part-rocket"></mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </section><!-- .market-templates-list -->
     <mat-action-row class="action-buttons">
       <div class="left">
         <button mat-button class="small" matTooltip="Delete Product" color="warn">

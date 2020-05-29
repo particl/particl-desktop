@@ -5,7 +5,7 @@
   LIST ITEM DETAILS
     Contents of list items in Material's Expansion Panels
 
-  - Market Listings & Orders
+  - Market Listings, Products & Orders
   - Overview > Q/A's
   - Exchange history
   - Bots
@@ -180,6 +180,20 @@
       border-color: transparent var(--bg) transparent transparent;
       position: absolute;
     }
+    &.--rounded {
+      border-radius: 999px;
+      padding: 7px 16px;
+      &::before {
+        content: none;
+      }
+    }
+    &.--plain {
+      padding: 0;
+      background: none;
+      &::before {
+        content: none;
+      }
+    }
     .dot { // status indicator
       display: inline-block;
       width: 7px;
@@ -189,7 +203,7 @@
       top: -1px;
       margin-right: 8px;
     }
-    // listings
+    // Products & Listings
     &.unpublished .dot {
       background: var(--bg-muted);
     }
@@ -199,10 +213,13 @@
     &.published .dot {
       background: var(--color-success);
     }
+    &.expiring .dot {
+      background: var(--color-warning);
+    }
     &.expired .dot {
       background: var(--color-alert);
     }
-    // orders
+    // Orders
     &.bidding .dot {
       background: var(--color-warning);
     }
@@ -236,7 +253,8 @@
     &.buy.payment,
     &.sell.escrow,
     &.sell.packaging,
-    &.buy.shipping {
+    &.buy.shipping,
+    &.expired {
       // + in Listing statuses..
       // @TODO we can use blink animation for own expired listing in future.
       // &.expired

@@ -14,6 +14,68 @@
       }
     }
   }
+  // Market Templates list
+  section.market-templates-list {
+    padding: 0 0 8px 0;
+    @include break(xl) {
+      font-size: 15px;
+      padding: 0 0 16px 0;
+    }
+    table.market-templates {
+      width: 100%;
+      border-spacing: 0;
+      tr {
+        & > * {
+          @extend %tfx;
+          border-bottom: 1px solid hsla(var(--bg-muted-hsl), 0.25);
+          padding: 6px 6px;
+          @include break(xl) {
+            padding: 10px 6px;
+          }
+          &:first-child {
+            padding-left: var(--paddingH);
+          }
+          &:last-child {
+            padding-right: var(--paddingH);
+          }
+        }
+        &:last-child {
+          & > * {
+            border: none;
+          }
+        }
+      }
+      th {
+        text-align: left;
+        font-weight: 500;
+        color: var(--text-muted);
+        padding-bottom: 12px !important;
+      }
+      .template-name {
+        display: none;
+        @include break(xl) {
+          display: inline-block;
+          font-weight: 500;
+        }
+      }
+      .category {
+        display: none;
+        color: var(--text-muted);
+        @include break(l) {
+          display: table-cell;
+        }
+      }
+      .price {
+        color: var(--text-muted);
+      }
+      .actions {
+        text-align: right;
+        button {
+          margin: 0;
+        }
+      }
+    }
+  }
   .detail {
     border-top: 1px dashed var(--bg-muted);
     padding: var(--paddingV) var(--paddingH);
