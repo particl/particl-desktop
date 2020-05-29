@@ -15,7 +15,8 @@ import {
   TemplateImage,
   UpdateTemplateData,
   TEMPLATE_SORT_FIELD_TYPE,
-  TEMPLATE_STATUS_TYPE
+  TEMPLATE_STATUS_TYPE,
+  TemplateCategory
 } from './sell.models';
 
 
@@ -269,6 +270,8 @@ export class SellService {
     const sourceHasListings = (source.ListingItems || []).length > 0;
     const sourceHash = source.hash || '';
 
+    const sourceCategory = itemInfo && itemInfo.ItemCategory;
+
     let sourceStatus: TEMPLATE_STATUS_TYPE;
     switch (true) {
       // TODO zaSmilingIdiot 2020-05-26 -> Add in Expired case here as well
@@ -334,6 +337,7 @@ export class SellService {
         shippingLocal: new PartoshiAmount(shipLocal),
         shippingInternational: new PartoshiAmount(shipIntl)
       },
+      category: { id: (sourceCategory ? +sourceCategory.id : 0), name: (sourceCategory ? sourceCategory.name : '') },
       hasLinkedListings: sourceHasListings,
       status: sourceStatus,
       created: source.createdAt,

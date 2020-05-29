@@ -45,8 +45,8 @@ const routes: Routes = [
   ],
   declarations: [
     SellComponent,
+
     SellTemplatesComponent,
-    SellListingsComponent,
     SellTemplateFormComponent,
     NewListingComponent,
     ImportListingsComponent,
@@ -59,6 +59,8 @@ const routes: Routes = [
     RejectBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
+
+    SellListingsComponent,
 
     SellQuestionsComponent,
   ],

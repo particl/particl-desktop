@@ -32,18 +32,14 @@ export interface ListingItem {
     readonly id: number;
     readonly title: string;
   };
-  readonly market: {
-    readonly id: number;
-    readonly name: string;
-  };
   readonly seller: string;
-  timeData: {
-    expires: number;
-    created: number;
+  readonly timeData: {
+    readonly expires: number;
+    readonly created: number;
   };
   readonly escrow: {
-    buyerRatio: number;
-    sellerRatio: number;
+    readonly buyerRatio: number;
+    readonly sellerRatio: number;
   };
   readonly extra: {
     readonly isFlagged: boolean;

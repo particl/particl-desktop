@@ -17,4 +17,9 @@ export class RegionListService {
       (a: Country, b: Country) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0
     );
   }
+
+
+  findCountriesByIsoCodes(codes: string[]): Country[] {
+    return this.getCountryList().filter(c => codes.includes(c.iso));
+  }
 }

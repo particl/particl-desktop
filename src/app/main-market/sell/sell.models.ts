@@ -105,6 +105,12 @@ export interface TemplateShippingDestination {
 }
 
 
+export interface TemplateCategory {
+  id: number;
+  name: string;
+}
+
+
 export interface TemplateImage {
   id: number;
   featured: boolean;
@@ -128,6 +134,7 @@ export interface ListingTemplate {
   images: TemplateImage[];
   price: TemplatePricing;
   payment: TemplatePaymentInfo;
+  category: TemplateCategory;
   hasLinkedListings: boolean;
   status: TEMPLATE_STATUS_TYPE;
   created: number;

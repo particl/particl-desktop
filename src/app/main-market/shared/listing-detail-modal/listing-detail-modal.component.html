@@ -314,32 +314,32 @@
 
   <div class="left" *ngIf="showActions">
 
-    <app-report *ngIf="!data?.listing?.isFlagged && !data?.listing?.isMine" [listing]="data?.listing" [from]="'preview'" (complete)="reportListingFinished()"></app-report>
+    <app-report *ngIf="false"></app-report>
 
-    <div class="reporting" *ngIf="data?.listing?.isFlagged">
+    <div class="reporting" *ngIf="false">
       <!-- Reported, not voted yet by user -->
-      <div *ngIf="!data?.listing?.VoteDetails">
+      <div *ngIf="false">
         <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
-        <button mat-button class="small" color="primary" (click)="voteForListing(data?.listing?.keepItem)" matTooltip="Item is fine and should stay on Market">
+        <button mat-button class="small" color="primary" (click)="null;" matTooltip="Item is fine and should stay on Market">
           <mat-icon fontIcon="part-thumb-up"></mat-icon>
           Keep it
         </button>
-        <button mat-button class="small" color="warn" (click)="voteForListing(data?.listing?.removeItem)" matTooltip="Item is inappropriate/illegal and should be removed from Market">
+        <button mat-button class="small" color="warn" (click)="null;" matTooltip="Item is inappropriate/illegal and should be removed from Market">
           <mat-icon fontIcon="part-thumb-down"></mat-icon>
           Remove it
         </button>
       </div>
       <!-- Reported & voted already -->
-      <div *ngIf="data?.listing?.VoteDetails" class="voted">
-        <p *ngIf="data?.listing?.VoteDetails?.isReported">
-          <button mat-button class="small icon-only" color="primary" (click)="voteForListing(data?.listing?.keepItem)"
+      <div *ngIf="false" class="voted">
+        <p *ngIf="false">
+          <button mat-button class="small icon-only" color="primary" (click)="null;"
             matTooltip="I've changed my mind, the item is fine and should stay on Market">
             <mat-icon fontIcon="part-thumb-up"></mat-icon>
           </button>
           I've changed my mind, the item is fine and should stay on Market
         </p>
-        <p *ngIf="!data?.listing?.VoteDetails?.isReported">
-          <button mat-button class="small icon-only" color="warn" (click)="voteForListing(data?.listing?.removeItem)"
+        <p *ngIf="false">
+          <button mat-button class="small icon-only" color="warn" (click)="null;"
             matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
             <mat-icon fontIcon="part-thumb-down"></mat-icon>
           </button>
@@ -352,8 +352,8 @@
 
   <div class="right" fxLayout fxLayoutAlign="end center">
     <ng-container *ngIf="showActions; else noActions">
-      <app-favorite [listing]="data?.listing" [detail]="true"></app-favorite>
-      <app-add-to-cart [listing]="data?.listing" [detail]="true" (onAdded)="dialogClose()"></app-add-to-cart>
+      <app-favorite></app-favorite>
+      <app-add-to-cart></app-add-to-cart>
 
       <!-- if mine, show message instead of "add to cart" button -->
       <button mat-button disabled *ngIf="details.isOwner">

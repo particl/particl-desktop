@@ -5,11 +5,13 @@ import { MatDialog } from '@angular/material';
 import { Subject, merge, Observable, iif, defer, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, tap, takeUntil, switchMap, startWith, concatMap, take } from 'rxjs/operators';
 import { SellService } from '../sell.service';
-import { TEMPLATE_SORT_FIELD_TYPE, ListingTemplate, TEMPLATE_STATUS_TYPE } from '../sell.models';
+import { RegionListService } from 'app/main-market/services/region-list/region-list.service';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingItem } from 'app/main-market/shared/shared.models';
+import { TEMPLATE_SORT_FIELD_TYPE, ListingTemplate, TEMPLATE_STATUS_TYPE } from '../sell.models';
 
 
 @Component({
@@ -66,6 +68,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _router: Router,
     private _dialog: MatDialog,
+    private _regionService: RegionListService
   ) {
     this.savedTemplate$ = this.templates$.asObservable();
   }
@@ -194,9 +197,71 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
   openPreview(id: number) {
-    // TODO
-    const dialog = this._dialog.open(ListingDetailModalComponent, {
+    const templ = this.templates$.getValue().find(t => t.id === id);
+
+    let featuredIdx = 0;
+    const images = [];
+    for (let ii = 0; ii < templ.images.length; ii++) {
+      const thumb = templ.images[ii].versions.find(v => v.version === 'THUMBNAIL');
+      const img = templ.images[ii].versions.find(v => v.version === 'MEDIUM');
+
+      if (img && img.url && thumb && thumb.url) {
+        images.push({
+          THUMBNAIL: thumb.url,
+          IMAGE: img.url,
+        });
+
+        if (templ.images[ii].featured) {
+          featuredIdx = images.length - 1;
+        }
+      }
+    }
+
+    const countryCodes: string[] = [templ.location.countryCode, ...templ.shippingDestinations.map(dest => dest.countryCode)];
+    const countries = this._regionService.findCountriesByIsoCodes(countryCodes);
+    const sourceCountry = countries.shift();
+
+    const listing: ListingItem = {
+      id: 0,
+      hash: '',
+      title: templ.information.title,
+      summary: templ.information.summary,
+      description: templ.information.description,
+      images: {
+        featured: featuredIdx,
+        images: images,
+      },
+      price: {
+        base: templ.price.basePrice.particls(),
+        shippingDomestic: templ.price.shippingLocal.particls(),
+        shippingIntl: templ.price.shippingInternational.particls()
+      },
+      shippingFrom: { code: sourceCountry ? sourceCountry.iso : '', name: sourceCountry ? sourceCountry.name : '' },
+      shippingTo: countries.map(c => ({code: c.iso, name: c.name})),
+      category: {
+        id: templ.category.id,
+        title: templ.category.name
+      },
+      seller: '',
+      timeData: {
+        expires: 0,
+        created: Date.now(),
+      },
+      escrow: {
+        buyerRatio: templ.payment.escrow.buyerRatio,
+        sellerRatio: templ.payment.escrow.sellerRatio
+      },
+      extra: {
+        isFlagged: false,
+        isOwn: true,
+        vote: {},
+      }
+
+    };
+
+    this._dialog.open(ListingDetailModalComponent, {
       data: {
+        listing: listing,
         canChat: false,
         canComment: false,
       }

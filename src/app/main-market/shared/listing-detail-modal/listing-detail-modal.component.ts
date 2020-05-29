@@ -81,72 +81,21 @@ export class ListingDetailModalComponent implements OnInit {
     hasExpired: boolean;
   };
 
-  /* test only >>> */
-  public data: any = {
-    listing: {
-      title: 'eGift Card - Mastercard ($250) USA',
-      shortDescription: 'Digital Delivery (Replaces Tracking Number)',
-      longDescription: 'I want to get these to people who need them! (Everyone) I paid a lot for these masks and I am only charging enough markup to allow me to make a bigger order next. Ships Priority Mail USPS, If post office closures happen I will switch to any provider still open with Priority shipping. I am unsure if I can get another shipment in but I will try if these sell quickly.\n\nI am actively seeking to provide more supplies like this. If you would like CASE Pricing or high qty please leave contact info in your private bid and I will contact you.\n\nDOMESTIC USA SHIPPING ONLY. I am unsure if you would recieve it in time otherwise.',
-      imageCollection: {
-        featuredImage: {
-          thumbnail: './assets/images/placeholder_4-3.jpg'
-        },
-        images: [
-          './assets/images/placeholder_4-3.jpg',
-          './assets/images/placeholder_1-1.jpg',
-          './assets/images/placeholder_4-3.jpg',
-          './assets/images/placeholder_3-4.jpg',
-          './assets/images/placeholder_1-1.jpg',
-          './assets/images/placeholder_4-3.jpg',
-          './assets/images/placeholder_3-4.jpg'
-        ]
-      },
-      basePrice: 865,
-      inStock: '4–10',
-      isAboutToExpire: true,
-      expireIn: '23 hours 24 minutes',
-      domesticShippingPrice: 20,
-      internationalShippingPrice: 25.6,
-      escrowPriceDomestic: 885,
-      escrowPriceInternational: 1865,
-      totalAmountDomestic: 1770,
-      totalAmountInternaltional: 3730,
-      category: {
-        name: 'Business / Corporate'
-      },
-      country: 'US',
-      buyersCountry: 'CZ',
-      createdAt: '22-04-2020',
-      expiredTime: '24-04-2020',
-      hash: 'sdfjsndf',
-      listing: {
-        seller: 'sdfhbsjhdfb',
-      },
-      isFlagged: false,
-      isMine: true,
-      VoteDetails: {
-        isReported: false,
-      }
-    },
-    buyPage: false,
-  };
-  /* << test only */
-
 
   private readonly SOON_DURATION: number = 1000 * 60 * 60 * 24; // 24 hours
 
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public inputValues: ListingItemDetailInputs,
+    @Inject(MAT_DIALOG_DATA) public data: ListingItemDetailInputs,
     private _store: Store
   ) {
 
-    const isInputValuesObject = ListingDetailModalComponent.isObject(inputValues);
+    const isInputValuesObject = ListingDetailModalComponent.isObject(data);
     const userDestinationCountry = this._store.selectSnapshot(MarketState.settings).userRegion;
 
     const input: ListingItem = isInputValuesObject &&
-        ListingDetailModalComponent.isObject(inputValues.listing) ?
-        JSON.parse(JSON.stringify(inputValues.listing)) : {};
+        ListingDetailModalComponent.isObject(data.listing) ?
+        JSON.parse(JSON.stringify(data.listing)) : {};
 
     const inputCategory = ListingDetailModalComponent.isObject(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
     const inputEscrow = ListingDetailModalComponent.isObject(input.escrow) ? input.escrow : { buyerRatio: 0};
@@ -243,10 +192,10 @@ export class ListingDetailModalComponent implements OnInit {
       isOwner: typeof inputExtras.isOwn === 'boolean' ? inputExtras.isOwn : false
     };
 
-    this.showActions = isInputValuesObject && (typeof inputValues.canAction === 'boolean') && (this.details.id > 0) ?
-        inputValues.canAction : false;
-    this.showComments = isInputValuesObject && (typeof inputValues.canChat === 'boolean') && (this.details.id > 0) ?
-        inputValues.canChat : false;
+    this.showActions = isInputValuesObject && (typeof data.canAction === 'boolean') && (this.details.id > 0) ?
+        data.canAction : false;
+    this.showComments = isInputValuesObject && (typeof data.canChat === 'boolean') && (this.details.id > 0) ?
+        data.canChat : false;
 
 
     const expiryTime = +inputTimeValues.expires || 0;
