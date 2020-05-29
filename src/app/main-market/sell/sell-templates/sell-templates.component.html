@@ -122,17 +122,31 @@
       </div>
     </mat-expansion-panel-header>
     <div class="detail">
-      <div class="row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between flex-start">
-        <div class="product-details" fxFlex="40">
-          <h3 class="item-subtitle">Details</h3>
-          <details>
-            <summary>Show Product description</summary>
-            -- product description goes here --
-          </details>
+      <div class="row" fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-start">
+        <div class="product-details" fxFlex="37">
+          <h3 class="item-subtitle">Gallery</h3>
+          <div class="gallery">
+            <!-- @TODO: list small thumbnails for Product's gallery for quick preview -->
+            <div class="image">
+              <img src="./assets/images/placeholder_3-4.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_4-3.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_1-1.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_3-4.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_4-3.jpg">
+            </div>
+          </div>
         </div><!-- .product-details -->
-        <div class="inventory-stats" fxFlex="20">
+        <div class="inventory-stats" fxFlex="18">
           <h3 class="item-subtitle">Inventory</h3>
-          <table>
+          <table class="inventory">
             <!-- @TODO: until we have quantities, keep the infinity symbol -->
             <tr><th>&infin;</th><td>In stock</td></tr>
             <tr><th>&infin;</th><td>Published</td></tr>
@@ -140,22 +154,36 @@
             <tr><th>0</th><td>Sold</td></tr>
           </table>
         </div><!-- .inventory-stats -->
-        <div class="pricing" fxFlex="40">
+        <div class="pricing" fxFlex="45">
           <h3 class="item-subtitle">Pricing</h3>
-          <table>
+          <table class="prices">
             <tr>
-              <th>Price</th><td>PA 0<small>.4323</small> <span class="fiat">(&asymp; E€ 51<small>.00</small>)</span></td>
+              <th>Product</th><td>0<small>.4323</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
             </tr>
             <tr>
               <th>Shipping</th>
               <td>
-                Local in CZ &ndash; PA 0<small>.0142</small> <span class="fiat">(&asymp; E€ 2<small>.50</small>)</span><br>
-                Worldwide &ndash; PA 0<small>.1562</small> <span class="fiat">(&asymp; E€ 5<small>.46</small>)</span>
+                Local in CZ &ndash; 0<small>.0142</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
+                Worldwide &ndash; 0<small>.1562</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
               </td>
             </tr>
           </table>
         </div><!-- .pricing -->
       </div><!-- .row -->
+      <details>
+        <summary>Show Product description</summary>
+        <p class="details">
+          -- product description goes here -- Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa eius tempora modi error doloribus enim harum necessitatibus minima.
+          
+          Nobis fugiat vel suscipit reiciendis perferendis ut explicabo veniam facilis. Perferendis incidunt saepe, odit repudiandae fugit cupiditate sequi molestiae laborum quos fugiat vitae illo autem quisquam dolorem nostrum voluptatem placeat veritatis dolores nisi accusantium! Placeat dicta libero ab a, voluptatem eum sit nobis odit ea quibusdam neque ipsam, ex suscipit. Quaerat laborum modi illum ducimus quidem voluptatum animi consequuntur maxime odio, sapiente excepturi facere temporibus vero quas quam assumenda id nam nostrum omnis cum repellendus. Molestias ratione excepturi enim, deserunt dolores assumenda optio temporibus ex omnis, quae facilis recusandae.
+          
+          - consequatur pariatur, veniam asperiores, nostrum qui voluptatem
+          - explicabo voluptatum error saepe consectetur
+          - facere
+          - nesciunt dicta alias minima molestias
+          - 100% officia vitae?
+        </p>
+      </details>
     </div><!-- .detail -->
     <mat-action-row class="action-buttons">
       <div class="left">
