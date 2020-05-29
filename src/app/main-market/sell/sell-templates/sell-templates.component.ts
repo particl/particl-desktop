@@ -195,7 +195,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   openPreview(id: number) {
     // TODO
-    const dialog = this._dialog.open(ListingDetailModalComponent);
+    const dialog = this._dialog.open(ListingDetailModalComponent, {
+      data: {
+        canChat: false,
+        canComment: false,
+      }
+    });
   }
 
 
