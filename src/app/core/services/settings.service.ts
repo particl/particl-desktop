@@ -114,6 +114,10 @@ export class SettingsService {
 
 
   private fetchSettings(): any {
-    return JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    try {
+      return JSON.parse(localStorage.getItem('settings') || '{}') || {};
+    } catch (e) {
+      return {};
+    }
   }
 }

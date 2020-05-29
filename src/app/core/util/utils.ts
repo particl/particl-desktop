@@ -40,6 +40,14 @@ export class PartoshiAmount {
     return this;
   }
 
+  public multiply(num: number): PartoshiAmount {
+    const total = Math.round(this.partoshis() * +num);
+    if ( this.isValid(total)) {
+      this.amount = `${total}`;
+    }
+    return this;
+  }
+
   public subtract(other: PartoshiAmount): PartoshiAmount {
     const total = this.partoshis() - other.partoshis();
 
