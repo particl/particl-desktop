@@ -76,8 +76,9 @@
       <h2 class="section-title" *ngIf="batchEditingActive">0 Products selected</h2>
     </div>
     <div class="right">
-      <button mat-button class="tiny icon-only" (click)="batchEditingActive = !batchEditingActive" *ngIf="!batchEditingActive" matTooltip="Batch editing" matTooltipPosition="before">
+      <button mat-button class="tiny" (click)="batchEditingActive = !batchEditingActive" *ngIf="!batchEditingActive" [matMenuTriggerFor]="batchActions">
         <mat-icon fontIcon="part-check-2"></mat-icon>
+        Batch editing
       </button>
       <div class="action-options" *ngIf="batchEditingActive">
         <mat-form-field class="--plain --smaller" appearance="fill">
@@ -91,12 +92,29 @@
           <mat-icon fontIcon="part-more-horizontal"></mat-icon>
           Batch Action&hellip;
         </button>
-        <button mat-button class="tiny icon-only" (click)="batchEditingActive = !batchEditingActive" matTooltip="Cancel batch editing" matTooltipPosition="above" color="warn">
+        <button mat-button class="tiny icon-only" (click)="batchEditingActive = !batchEditingActive" matTooltip="Cancel batch editing" matTooltipPosition="above">
           <mat-icon fontIcon="part-cross"></mat-icon>
         </button>
       </div><!-- if batchEditingActive-->
     </div>
   </div><!-- .list-item-actions -->
+
+  <!-- Menu with options for batch actions -->
+  <!-- @FIXME: doesn't wanna show up for some reason.. -->
+  <mat-menu #batchActions="matMenu">
+    <button mat-menu-item>
+      <mat-icon fontIcon="part-rocket"></mat-icon>
+      <span>Publish selected</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon fontIcon="part-copy"></mat-icon>
+      <span>Clone selected</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon fontIcon="part-circle-remove" color="warn"></mat-icon>
+      <span>Delete selected</span>
+    </button>
+  </mat-menu>
 
 
 
@@ -111,11 +129,14 @@
           <span class="help-text">Product's Summary goes here; oh how nice!</span>
         </div>
         <div class="status-wrap" fxFlex="0 0 140px">
-          <!-- @TODO Allien: unify class names for status dots! -->
-          <div class="status published --rounded">
+          <!-- @TODO status classes:
+            - `published` if all market-templates live
+            - `expiring` if at least one is close to expiry
+            - `expired` if at least one already expired -->
+          <div class="status expired --rounded">
             <span class="dot"></span>
             <!-- @TODO: active = published listings/products; total = sum of all listings/products -->
-            <span class="active">1</span><span class="total">/3</span>
+            <span class="active">1</span><span class="total">/2</span>
           </div>
         </div>
         <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>

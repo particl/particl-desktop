@@ -13,6 +13,13 @@
         }
       }
     }
+    .status {
+      span.total {
+        color: var(--text-muted);
+        font-weight: 400;
+        margin-left: 2px;
+      }
+    }
   }
   // Market Templates list
   section.market-templates-list {
