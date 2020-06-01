@@ -1,5 +1,11 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+import { GalleryModule } from '@ngx-gallery/core';
+import { LightboxModule } from '@ngx-gallery/lightbox';
+import { GallerizeModule } from '@ngx-gallery/gallerize';
+import 'hammerjs';
+
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { QuestionThreadListItemComponent } from './question-thread-list-item/question-thread-list-item.component';
@@ -8,7 +14,10 @@ import { ListingDetailModalComponent } from './listing-detail-modal/listing-deta
 @NgModule({
   imports: [
     CommonModule,
-    CoreUiModule
+    CoreUiModule,
+    GalleryModule,
+    LightboxModule,
+    GallerizeModule,
   ],
   declarations: [
     TreeSelectComponent,
@@ -18,7 +27,10 @@ import { ListingDetailModalComponent } from './listing-detail-modal/listing-deta
   exports: [
     TreeSelectComponent,
     QuestionThreadListItemComponent,
-    ListingDetailModalComponent
+    ListingDetailModalComponent,
+    GalleryModule,
+    LightboxModule,
+    GallerizeModule,
   ],
   entryComponents: [
     ListingDetailModalComponent

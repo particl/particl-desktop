@@ -8,21 +8,25 @@
 
     <div class="product-gallery">
       <div class="gallery-carousel">
-        <img [src]="details.images.images[0].IMAGE">
+        <img *ngIf="details.images.hasNoImages" [src]="details.images.images[0].data.src">
 
-        <!-- TODO: can we push the thumbnails in gallery to right side (instead of below)? -->
-        <!--gallery
+        <gallery
           *ngIf="!details.images.hasNoImages"
           gallerize
           [gestures]="false"
+
           [style.height.px]="380"
           [style.width.px]="450"
-          [thumbWidth]= "80"
-          [thumbHeight]="80"
-          [loadingMode]="'indeterminate'"
-          [thumb]="images.length > 1"
-          [items]="images">
-        </gallery-->
+          [items]="details.images.images"
+
+          slidingDirection="vertical"
+          [counter]="true"
+          counterPosition="bottom"
+          [thumb]="details.images.images.length > 1"
+          thumbPosition="right"
+          [thumbWidth]="80"
+          [thumbHeight]="80">
+        </gallery>
       </div>
     </div><!-- .product-gallery -->
 
@@ -151,13 +155,13 @@
         <p class="lead description">{{ details.summary }}</p>
         <p class="detailed description">{{ details.description }}</p>
       </mat-card>
-      <!-- TODO: only if Listing contains multiple images, show them here. on click, trigger the fullscreen gallery if possible: -->
+
       <ng-container *ngIf="details.images.images.length > 1">
         <h2 class="section-title">Product gallery</h2>
-        <div class="gallery">
+        <div class="gallery" gallerize>
           <ng-container *ngFor="let image of details.images.images">
             <div class="image">
-              <img [src]="image.IMAGE">
+              <img [src]="image.data.thumb" [attr.imageSrc]="image.data.src" >
             </div>
           </ng-container>
         </div>

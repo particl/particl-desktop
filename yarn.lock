@@ -1339,24 +1339,24 @@
     tree-kill "1.2.2"
     webpack-sources "1.4.3"
 
-"@ngx-gallery/core@^4.0.1":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@ngx-gallery/core/-/core-4.0.3.tgz#e09071bcddb3e29b68240712cee199d14a18924c"
-  integrity sha512-nkfr19jf3LVXoJ4MW398gbD5Y50ivsufOdbSd6gWkR1pCOJogqQRhuSk77Lt7xtco11ZwYRr+MEBV0BpT2wUjw==
+"@ngx-gallery/core@^5.0.0-beta.0":
+  version "5.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@ngx-gallery/core/-/core-5.0.0-beta.0.tgz#9f6ddb56a8fee0034ca2dfba4f23ac8e640fa90b"
+  integrity sha512-K6zh7fCHf1cV6Y6TaEHUZ1jcXZz+8s9YG0TzocKTxl5KUqb/dV8DzVy6iatYtrx/zaiU35EQ5R9Ws9ZnwDlaQw==
   dependencies:
     tslib "^1.9.0"
 
-"@ngx-gallery/gallerize@^4.0.1":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@ngx-gallery/gallerize/-/gallerize-4.0.3.tgz#cdd5ec2e211d353463b9b8a748b3b23f0d3fea3d"
-  integrity sha512-o4Madh23qrx6SYnYR7QSUc83CeOLFe27ZAyzehvnG6OXIe7rjXK2mYMGsVF5iHdA+Rm1UHyQO2kfUdLKPrsq1Q==
+"@ngx-gallery/gallerize@^5.0.0-beta.0":
+  version "5.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@ngx-gallery/gallerize/-/gallerize-5.0.0-beta.0.tgz#68f364155d8a69832212ee4aeca99feddb02a50c"
+  integrity sha512-mkCszWquGKI0dzC+YS0VkMXkSF1GjnUihRCR56bupYURSQfdkTqtQaT9PZu/1i2L3QprFv8lazokefUu3xw4tA==
   dependencies:
     tslib "^1.9.0"
 
-"@ngx-gallery/lightbox@^4.0.1":
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/@ngx-gallery/lightbox/-/lightbox-4.0.3.tgz#4dfdd76806ce3f2e8465a765504fe2d4d45d52d8"
-  integrity sha512-KE+XMHt6/xtWBTZxoKjYriPl1T/XzqUwpnpBCec7GHHpvbJHuJMgcz9s5uJOwyRgkMfLI3r451BZ0r0tACIsnQ==
+"@ngx-gallery/lightbox@^5.0.0-beta.0":
+  version "5.0.0-beta.0"
+  resolved "https://registry.yarnpkg.com/@ngx-gallery/lightbox/-/lightbox-5.0.0-beta.0.tgz#18303e25fdb9e4b3d2bacee3861aeb9f799a227d"
+  integrity sha512-KTGOWE3FnQqGNyeZwD+HedSIEWz9DJHLMKjHxpxhnMK4WcPLJaziyWSZGyiPb2q4DAvzoageWm7TbdXnqcboTg==
   dependencies:
     tslib "^1.9.0"
 

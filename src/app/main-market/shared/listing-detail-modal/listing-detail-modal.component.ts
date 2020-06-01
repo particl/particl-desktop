@@ -1,5 +1,6 @@
 import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { GalleryItem, ImageItem } from '@ngx-gallery/core';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { ListingItem } from '../shared.models';
 import { Store } from '@ngxs/store';
@@ -44,7 +45,7 @@ export class ListingDetailModalComponent implements OnInit {
     description: string;
     images: {
       hasNoImages: boolean;
-      images: {THUMBNAIL: string, IMAGE: string}[];
+      images: GalleryItem[];
     };
     price: {
       base: string;
@@ -161,7 +162,7 @@ export class ListingDetailModalComponent implements OnInit {
       description: typeof input.description === 'string' ? input.description : TextContent.UNSET_VALUE,
       images: {
         hasNoImages: hasNoImages,
-        images: inputImages
+        images: inputImages.map(img => new ImageItem({src: img.IMAGE, thumb: img.THUMBNAIL}))
       },
       price: {
         base: shipBasePrice.particlsString(),

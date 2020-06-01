@@ -5,10 +5,6 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
-import { GalleryModule } from '@ngx-gallery/core';
-import { LightboxModule } from '@ngx-gallery/lightbox';
-import { GallerizeModule } from '@ngx-gallery/gallerize';
-import 'hammerjs';
 
 import { DirectiveModule } from './directive/directive.module';
 import { PipeModule } from './pipe/pipe.module';
@@ -30,11 +26,6 @@ import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro
     MaterialModule,
     MatDialogModule, // todo move
     InfiniteScrollModule,
-
-    // also can add a config options
-    GalleryModule, // GalleryModule.forRoot(galleryConfig?),
-    LightboxModule, // GalleryLightbox.forRoot(lightboxConfig?),
-    GallerizeModule,
     DirectiveModule,
     PipeModule
   ],
@@ -43,9 +34,6 @@ import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro
     PaginatorComponent,
     InfiniteScrollModule,
     DirectiveModule,
-    GalleryModule,
-    LightboxModule,
-    GallerizeModule,
     PipeModule,
     HeaderComponent,
     PageIntroComponent

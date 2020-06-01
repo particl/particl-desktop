@@ -174,9 +174,9 @@
   },
   "dependencies": {
     "@jedmao/ini-parser": "^0.2.1",
-    "@ngx-gallery/core": "^4.0.1",
-    "@ngx-gallery/gallerize": "^4.0.1",
-    "@ngx-gallery/lightbox": "^4.0.1",
+    "@ngx-gallery/core": "^5.0.0-beta.0",
+    "@ngx-gallery/gallerize": "^5.0.0-beta.0",
+    "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
     "bluebird": "^3.4.7",
     "buffered-spawn": "^3.3.2",
