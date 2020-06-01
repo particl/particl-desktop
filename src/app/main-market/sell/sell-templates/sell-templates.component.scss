@@ -3,32 +3,170 @@
 
 // ------ LISTING ITEM ------ //
 
-.listing {
+.product {
   .header {
     .meta {
       .name {
-        margin-bottom: 6px;
-      }
-      .published-markets {
-        margin-right: 10px;
-        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
-        padding: 1px 6px;
-        border-radius: var(--radius);
-        font-size: 13px;
+        margin-bottom: 2px;
+        @include break(l) {
+          margin-bottom: 3px;
+        }
       }
     }
   }
-  .status-info {
-    .item-info { // ID, order created/updated
-      flex: 0 0 250px;
+  // Market Templates list
+  section.market-templates-list {
+    padding: 0 0 8px 0;
+    @include break(xl) {
+      font-size: 15px;
+      padding: 0 0 16px 0;
+    }
+    table.market-templates {
+      width: 100%;
+      border-spacing: 0;
+      tr {
+        & > * {
+          @extend %tfx;
+          border-bottom: 1px solid hsla(var(--bg-muted-hsl), 0.25);
+          padding: 6px 6px;
+          @include break(xl) {
+            padding: 10px 6px;
+          }
+          &:first-child {
+            padding-left: var(--paddingH);
+          }
+          &:last-child {
+            padding-right: var(--paddingH);
+          }
+        }
+        &:last-child {
+          & > * {
+            border: none;
+          }
+        }
+      }
+      th {
+        text-align: left;
+        font-weight: 500;
+        color: var(--text-muted);
+        padding-bottom: 12px !important;
+      }
+      .template-name {
+        display: none;
+        @include break(xl) {
+          display: inline-block;
+          font-weight: 500;
+        }
+      }
+      .category {
+        display: none;
+        color: var(--text-muted);
+        @include break(l) {
+          display: table-cell;
+        }
+      }
+      .price {
+        color: var(--text-muted);
+      }
+      .actions {
+        text-align: right;
+        button {
+          margin: 0;
+        }
+      }
     }
   }
   .detail {
+    border-top: 1px dashed var(--bg-muted);
+    padding: var(--paddingV) var(--paddingH);
     .item-subtitle {
       margin-top: 0;
     }
-    ul.listing-info {
-      padding-left: 24px;
+    // Product details
+    .gallery {
+      --images-in-row: 3;
+      --images-spacing: 1.5%;
+      --images-size: calc(100% / var(--images-in-row) - 2 * var(--images-spacing));
+      display: flex;
+      flex-wrap: wrap;
+      margin: calc(-1 * var(--images-spacing));
+      width: calc(100% + 2 * var(--images-spacing));
+      @include break(l) {
+        --images-in-row: 4;
+      }
+      @include break(xl) {
+        --images-in-row: 5;
+      }
+      .image {
+        flex: 0 0 var(--images-size);
+        margin: var(--images-spacing);
+        height: 0; // fix ratio to 1:1
+        padding-top: var(--images-size);
+        overflow: hidden;
+        position: relative;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+      }
     }
+    // Inventory
+    table.inventory {
+      border-spacing: 0;
+      line-height: 1.6;
+      th {
+        color: hsla(var(--text-hsl), 0.85);
+        font-weight: 600;
+        text-align: right;
+        padding-right: 8px;
+      }
+    }
+    // Pricing
+    table.prices {
+      tr {
+        margin-bottom: 6px;
+        display: block;
+        @include break(l) {
+          margin: 0;
+          display: table-row;
+        }
+      }
+      th,
+      td {
+        display: block;
+        text-align: left;
+        @include break(l) {
+          display: table-cell;
+        }
+      }
+      th {
+        color: hsla(var(--text-hsl), 0.85);
+        font-weight: 500;
+      }
+      td {
+        span.fiat {
+          display: none; // hide until needed
+          color: var(--text-muted);
+          margin-left: 8px;
+        }
+      }
+    }
+    // Description
+    details {
+      margin: 18px 0;
+      // @TODO Allien: fix line wrap (like in Listing detail modal)
+      .details {
+        padding: 0 16px 14px;
+      }
+    }
+  }
+  .action-buttons {
+    justify-content: space-between;
   }
 }

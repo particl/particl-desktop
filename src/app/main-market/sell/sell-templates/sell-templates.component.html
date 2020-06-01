@@ -98,6 +98,182 @@
     </div>
   </div><!-- .list-item-actions -->
 
+
+
+  <mat-expansion-panel class="product list-item no-padding">
+    <mat-expansion-panel-header class="header">
+      <div class="header-wrapper">
+        <div class="photo">
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="meta" fxFlex="1 1 100%">
+          <div class="name">Product title or whatever (2 for 1!)</div>
+          <span class="help-text">Product's Summary goes here; oh how nice!</span>
+        </div>
+        <div class="status-wrap" fxFlex="0 0 140px">
+          <!-- @TODO Allien: unify class names for status dots! -->
+          <div class="status published --rounded">
+            <span class="dot"></span>
+            <!-- @TODO: active = published listings/products; total = sum of all listings/products -->
+            <span class="active">1</span><span class="total">/3</span>
+          </div>
+        </div>
+        <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="detail">
+      <div class="row" fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-start">
+        <div class="product-details" fxFlex="37">
+          <h3 class="item-subtitle">Gallery</h3>
+          <div class="gallery">
+            <!-- @TODO: list small thumbnails for Product's gallery for quick preview -->
+            <div class="image">
+              <img src="./assets/images/placeholder_3-4.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_4-3.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_1-1.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_3-4.jpg">
+            </div>
+            <div class="image">
+              <img src="./assets/images/placeholder_4-3.jpg">
+            </div>
+          </div>
+        </div><!-- .product-details -->
+        <div class="inventory-stats" fxFlex="18">
+          <h3 class="item-subtitle">Inventory</h3>
+          <table class="inventory">
+            <!-- @TODO: until we have quantities, keep the infinity symbol -->
+            <tr><th>&infin;</th><td>In stock</td></tr>
+            <tr><th>&infin;</th><td>Published</td></tr>
+            <tr><th>1</th><td>In Orders</td></tr>
+            <tr><th>0</th><td>Sold</td></tr>
+          </table>
+        </div><!-- .inventory-stats -->
+        <div class="pricing" fxFlex="45">
+          <h3 class="item-subtitle">Pricing</h3>
+          <table class="prices">
+            <tr>
+              <th>Product</th><td>0<small>.4323</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
+            </tr>
+            <tr>
+              <th>Shipping</th>
+              <td>
+                Local in CZ &ndash; 0<small>.0142</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
+                Worldwide &ndash; 0<small>.1562</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
+              </td>
+            </tr>
+          </table>
+        </div><!-- .pricing -->
+      </div><!-- .row -->
+      <!--details>
+        <summary>Show Product description</summary>
+        <p class="details">
+          -- product description goes here -- Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa eius tempora modi error doloribus enim harum necessitatibus minima.
+          
+          Nobis fugiat vel suscipit reiciendis perferendis ut explicabo veniam facilis. Perferendis incidunt saepe, odit repudiandae fugit cupiditate sequi molestiae laborum quos fugiat vitae illo autem quisquam dolorem nostrum voluptatem placeat veritatis dolores nisi accusantium! Placeat dicta libero ab a, voluptatem eum sit nobis odit ea quibusdam neque ipsam, ex suscipit. Quaerat laborum modi illum ducimus quidem voluptatum animi consequuntur maxime odio, sapiente excepturi facere temporibus vero quas quam assumenda id nam nostrum omnis cum repellendus. Molestias ratione excepturi enim, deserunt dolores assumenda optio temporibus ex omnis, quae facilis recusandae.
+          
+          - consequatur pariatur, veniam asperiores, nostrum qui voluptatem
+          - explicabo voluptatum error saepe consectetur
+          - facere
+          - nesciunt dicta alias minima molestias
+          - 100% officia vitae?
+        </p>
+      </details-->
+    </div><!-- .detail -->
+    <section class="market-templates-list">
+      <table class="market-templates">
+        <tr>
+          <th>Status</th>
+          <th>Published on</th>
+          <th class="category">Category</th>
+          <th class="price">Price</th>
+          <th class="actions">Actions</th>
+        </tr>
+        <tr>
+          <td>
+            <!-- @TODO: status classes: `unpublished | published | expiring | expired` (expiring = expires in <24h) -->
+            <!-- for expiring, show "Expires in XX:XX:XX" in tooltip -->
+            <span class="status published --plain" matTooltip="Live Listing" matTooltipPosition="before">
+              <span class="dot"></span>
+            </span>
+            <span class="template-name">Allien's Chilli Peppers (200 g)</span>
+          </td>
+          <td>Particl Open Marketplace</td>
+          <td class="category">Food & Nutrition</td>
+          <td class="price">12.6851 PART</td>
+          <td class="actions">
+            <button mat-button class="tiny icon-only" matTooltip="Edit">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Clone">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Publish">
+              <mat-icon fontIcon="part-rocket"></mat-icon>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="status expired --plain" matTooltip="Expired Listing" matTooltipPosition="before">
+              <span class="dot"></span>
+            </span>
+            <span class="template-name">Allien's Sweet Peppers (200 g)</span>
+          </td>
+          <td>Sneaky Market</td>
+          <td class="category">Spicy Stuff</td>
+          <td class="price">11.4510 PART</td>
+          <td class="actions">
+            <button mat-button class="tiny icon-only" matTooltip="Edit">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Clone">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button class="tiny icon-only" matTooltip="Publish">
+              <mat-icon fontIcon="part-rocket"></mat-icon>
+            </button>
+          </td>
+        </tr>
+      </table>
+    </section><!-- .market-templates-list -->
+    <mat-action-row class="action-buttons">
+      <div class="left">
+        <button mat-button class="small" matTooltip="Delete Product" color="warn">
+          <mat-icon fontIcon="part-cross"></mat-icon>
+          Delete
+        </button>
+        <!-- @TODO: trigger modal with "edit template" component + append "(Copy)" to product's title input? -->
+        <button mat-button class="small icon-only" matTooltip="Clone Product">
+          <mat-icon fontIcon="part-copy"></mat-icon>
+        </button>
+        <!-- @TODO: trigger modal with "edit template" component -->
+        <button mat-button class="small" matTooltip="Update Product">
+          <mat-icon fontIcon="part-pen-1"></mat-icon>
+          Edit
+        </button>
+        <!-- @TODO: redirect to Listings tab and filter out Listings based on this Product -->
+        <button mat-button class="small" matTooltip="Show current Listings of this Product">
+          <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          Show Listings
+        </button>
+      </div>
+      <div class="right">
+        <button mat-raised-button color="primary">
+          <mat-icon fontIcon="part-rocket"></mat-icon>
+          Publish on Market
+        </button>
+      </div>
+    </mat-action-row>
+  </mat-expansion-panel><!-- .product -->
+
+
+
   <!-- infiniteScroll
   [infiniteScrollContainer]="pagination.infinityScrollSelector"
   [infiniteScrollDistance]="2"

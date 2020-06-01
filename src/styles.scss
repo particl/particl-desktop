@@ -31,6 +31,8 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.5. Input with icon
       3.6. QR codes
       3.7. Tables
+      3.8. Details/summary expander
+      3.9. Modals
     4. Typography
       4.1. (Sub)titles (h2, h3..)
       4.2. Paragraph styles
@@ -674,6 +676,30 @@ table {
 }
 
 
+// ------ 3.8. DETAILS/SUMMARY EXPANDER ------ //
+
+details { // Sell > Import & Product list item
+  background: var(--bg);
+  border-radius: var(--radius);
+  summary {
+    @extend %tfx;
+    cursor: pointer;
+    outline: none;
+    padding: 8px 16px;
+    &::-webkit-details-marker {
+      color: var(--text-muted);
+    }
+    &:hover,
+    &:focus {
+      color: var(--text);
+    }
+  }
+  .details {
+    padding: 1px 16px 4px;
+  }
+}
+
+
 // ------ 3.9. MODALS ------ //
 
 .modal-content {
@@ -702,8 +728,8 @@ table {
       }
     }
   }
-
 }
+
 
 
 /* ------------------------------- *\

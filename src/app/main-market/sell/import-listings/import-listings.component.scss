@@ -25,25 +25,9 @@
       }
     }
     details {
-      background: var(--bg);
-      border-radius: var(--radius);
       margin-bottom: 16px;
-      summary {
-        @extend %tfx;
-        cursor: pointer;
-        outline: none;
-        padding: 8px 16px;
-        &::-webkit-details-marker {
-          color: var(--text-muted);
-        }
-        &:hover,
-        &:focus {
-          color: var(--text);
-        }
-      }
       .details {
         @extend %enable-select;
-        padding: 1px 16px 4px;
         p {
           margin-top: 0;
           strong {
