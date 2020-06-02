@@ -18,10 +18,10 @@ import { DeleteTemplateModalComponent } from './modals/delete-template-modal/del
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';
 import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
-import { AcceptBidModalComponent } from './accept-bid-modal/accept-bid-modal.component';
-import { RejectBidModalComponent } from './reject-bid-modal/reject-bid-modal.component';
-import { EscrowPaymentModalComponent } from './escrow-payment-modal/escrow-payment-modal.component';
-import { OrderShippedModalComponent } from './order-shipped-modal/order-shipped-modal.component';
+import { AcceptBidModalComponent } from './modals/accept-bid-modal/accept-bid-modal.component';
+import { RejectBidModalComponent } from './modals/reject-bid-modal/reject-bid-modal.component';
+import { EscrowPaymentModalComponent } from './modals/escrow-payment-modal/escrow-payment-modal.component';
+import { OrderShippedModalComponent } from './modals/order-shipped-modal/order-shipped-modal.component';
 
 import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
 
