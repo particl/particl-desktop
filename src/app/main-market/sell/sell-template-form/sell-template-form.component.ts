@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { amountValidator, totalValueValidator } from './sell-template-form.validators';
-import { ListingTemplate } from '../sell.models';
+import { BaseTemplate, MarketTemplate } from '../sell.models';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { ListingTemplate } from '../sell.models';
 })
 export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() listingTemplate: ListingTemplate;
+  @Input() listingTemplate: BaseTemplate | MarketTemplate;
   @Input() regions$: Observable<{id: string, name: string}[]> = of([]);
   @Output() isValid: EventEmitter<boolean> = new EventEmitter();
   @Output() onImageImportError: EventEmitter<void> = new EventEmitter();
@@ -33,15 +33,16 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   private destroy$: Subject<void> = new Subject();
 
   constructor() {
+    // The basic template information present on all templates
     this.templateForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_TITLE)]),
-      shortDescription: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_SHORT_DESCRIPTION)]),
-      longDescription: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_LONG_DESCRIPTION)]),
+      summary: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_SHORT_DESCRIPTION)]),
+      description: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_LONG_DESCRIPTION)]),
       basePrice: new FormControl('', [Validators.required, amountValidator()]),
       priceShipLocal: new FormControl('', [Validators.required, amountValidator()]),
       priceShipIntl: new FormControl('', [Validators.required, amountValidator()]),
-      sourceRegion: new FormControl('', [Validators.required]),
-      targetRegions: new FormControl([]),
+      shippingOrigin: new FormControl('', [Validators.required]),
+      shippingDestinations: new FormControl([]),
       images: new FormControl({value: [], disabled: true})
     },
     [totalValueValidator]);
@@ -54,12 +55,12 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     this.templateForm.statusChanges.pipe(
-      // emitted on every keystroke it seems, which is fits the current requirements, but might have potential issues in the future
+      // NB! emitted on every keystroke it seems, which fits the current requirements, but might have potential issues in the future
       tap(() => this.isValid.emit(this.templateForm.valid)),
       takeUntil(this.destroy$)
     ).subscribe();
 
-    // Initial emission of validity to ensure container receives correct validity initializtion
+    // Initial emission of validity to ensure container receives correct validity initialization
     this.isValid.emit(this.templateForm.valid);
   }
 
@@ -98,12 +99,12 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     return this.templateForm.get('priceShipIntl');
   }
 
-  get sourceRegion(): AbstractControl {
-    return this.templateForm.get('sourceRegion');
+  get shippingOrigin(): AbstractControl {
+    return this.templateForm.get('shippingOrigin');
   }
 
-  get targetRegions(): AbstractControl {
-    return this.templateForm.get('targetRegions');
+  get shippingDestinations(): AbstractControl {
+    return this.templateForm.get('shippingDestinations');
   }
 
   get images(): AbstractControl {
@@ -204,35 +205,33 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
 
-  private setFormValues(template: ListingTemplate): void {
+  private setFormValues(template: BaseTemplate | MarketTemplate): void {
     this.imagesPending.setValue([]);
 
     this.templateForm.controls['title'].setValue(
-      typeof template.information.title === 'string' ? template.information.title : ''
+      typeof template.details.information.title === 'string' ? template.details.information.title : ''
     );
-    this.templateForm.controls['shortDescription'].setValue(
-      typeof template.information.summary === 'string' ? template.information.summary : ''
+    this.templateForm.controls['summary'].setValue(
+      typeof template.details.information.summary === 'string' ? template.details.information.summary : ''
     );
-    this.templateForm.controls['longDescription'].setValue(
-      typeof template.information.description === 'string' ? template.information.description : ''
-    );
-    this.templateForm.controls['basePrice'].setValue(template.price.basePrice.particlsString());
-    this.templateForm.controls['priceShipLocal'].setValue(template.price.shippingLocal.particlsString());
-    this.templateForm.controls['priceShipIntl'].setValue(template.price.shippingInternational.particlsString());
-    this.templateForm.controls['sourceRegion'].setValue(
-      typeof template.location.countryCode === 'string' ? template.location.countryCode : ''
-    );
-    this.templateForm.controls['targetRegions'].setValue(
-      Object.prototype.toString.call(template.shippingDestinations) === '[object Array]' ?
-        template.shippingDestinations.map(dest => dest.countryCode) : []
+    this.templateForm.controls['description'].setValue(
+      typeof template.details.information.description === 'string' ? template.details.information.description : ''
     );
 
-    const savedImages = (template.images || []).map(image => {
-      const imgVer = image.versions.find(version => version.version === 'THUMBNAIL');
-      if (imgVer) {
-        return {id: image.id, url: imgVer.url};
-      }
-    }).filter(img => !!(img && img.id && img.url));
+    this.templateForm.controls['basePrice'].setValue(template.details.price.basePrice.particlsString());
+    this.templateForm.controls['priceShipLocal'].setValue(template.details.price.shippingLocal.particlsString());
+    this.templateForm.controls['priceShipIntl'].setValue(template.details.price.shippingInternational.particlsString());
+
+    this.templateForm.controls['shippingOrigin'].setValue(
+      typeof template.details.shippingOrigin.countryCode === 'string' ? template.details.shippingOrigin.countryCode : ''
+    );
+    this.templateForm.controls['shippingDestinations'].setValue(template.details.shippingDestinations.map(dest => dest.countryCode));
+
+    const savedImages = (template.details.images).map(
+      image => ({id: image.id, url: image.thumbnailUrl})
+    ).filter(
+      img => !!(img && img.id && img.url)
+    );
     this.templateForm.controls['images'].setValue(savedImages);
   }
 }

@@ -17,7 +17,7 @@
         <label>
           <mat-form-field appearance="fill" class="textarea --plain --larger">
             <h3 class="label">Summary</h3>
-            <textarea matInput #summary rows="3" placeholder="Short Product summary" formControlName="shortDescription"></textarea>
+            <textarea matInput #summary rows="3" placeholder="Short Product summary" formControlName="summary"></textarea>
             <mat-hint align="end">{{ summary.value.length }}/{{MAX_SHORT_DESCRIPTION}}</mat-hint>
           </mat-form-field>
         </label>
@@ -25,7 +25,7 @@
         <label>
           <mat-form-field appearance="fill" class="textarea --plain --larger">
             <h3 class="label">Full description</h3>
-            <textarea matInput #description rows="12" placeholder="In-depth description of your Product" formControlName="longDescription"></textarea>
+            <textarea matInput #description rows="12" placeholder="In-depth description of your Product" formControlName="description"></textarea>
             <mat-hint align="end">{{ description.value?.length }}/{{MAX_LONG_DESCRIPTION}}</mat-hint>
           </mat-form-field>
         </label>
@@ -129,12 +129,12 @@
           <tree-select *ngIf="(regions$ | async).length > 0"
             [data$]="regions$"
             [singleSelection]="true"
-            [initialSelection]="[sourceRegion.value]"
+            [initialSelection]="[shippingOrigin.value]"
             placeholderLabel="Shipping from (your country)"
             prefixIcon="part-globe"
             [labelStyles]="['--larger']"
             matTooltip="The region from which the item will be shipped" matTooltipPosition="below"
-            (onClosed)="sourceRegion.setValue($event[0] || '')">
+            (onClosed)="shippingOrigin.setValue($event[0] || '')">
           </tree-select>
         </label>
 
@@ -177,12 +177,12 @@
           <tree-select *ngIf="(regions$ | async).length > 0"
             [data$]="regions$"
             [singleSelection]="false"
-            [initialSelection]="targetRegions.value"
+            [initialSelection]="shippingDestinations.value"
             placeholderLabel="Shipping everywhere"
             prefixIcon="part-airplane"
             [labelStyles]="['--larger']"
             matTooltip="The region(s) to which the item can be shipped" matTooltipPosition="below"
-            (onClosed)="targetRegions.setValue($event)">
+            (onClosed)="shippingDestinations.setValue($event)">
           </tree-select>
         </label>
 

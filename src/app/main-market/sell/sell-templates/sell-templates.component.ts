@@ -11,7 +11,8 @@ import { MarketState } from 'app/main-market/store/market.state';
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { ListingItem } from 'app/main-market/shared/shared.models';
-import { TEMPLATE_SORT_FIELD_TYPE, ListingTemplate, TEMPLATE_STATUS_TYPE } from '../sell.models';
+import { TEMPLATE_SORT_FIELD_TYPE, TEMPLATE_STATUS_TYPE, MarketTemplate, BaseTemplate } from '../sell.models';
+import { templateJitUrl } from '@angular/compiler';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     {title: 'Published', value: '1'},
   ];
 
-  readonly savedTemplate$: Observable<ListingTemplate[]>;
+  readonly savedTemplate$: Observable<(BaseTemplate | MarketTemplate)[]>;
   // @FIXME: batch action selection select (hehe)
   readonly batchSelectCriteria: {title: string; value: string}[] = [
     {title: 'All', value: ''},
@@ -57,7 +58,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
   private destroy$: Subject<void> = new Subject();
-  private templates$: BehaviorSubject<ListingTemplate[]> = new BehaviorSubject([]);
+  private templates$: BehaviorSubject<(BaseTemplate | MarketTemplate)[]> = new BehaviorSubject([]);
   private doFilterChange: FormControl = new FormControl();
   private readonly PAGE_COUNT: number = 30;
   private currentPage: number = 0;
@@ -77,62 +78,62 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setControlDefaults();
 
-    const search$ = this.searchQuery.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    );
+    // const search$ = this.searchQuery.valueChanges.pipe(
+    //   startWith(''),
+    //   debounceTime(400),
+    //   distinctUntilChanged(),
+    //   takeUntil(this.destroy$)
+    // );
 
-    const sort$ = this.sortOrder.valueChanges.pipe(
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    );
+    // const sort$ = this.sortOrder.valueChanges.pipe(
+    //   distinctUntilChanged(),
+    //   takeUntil(this.destroy$)
+    // );
 
-    const filterStatus$ = this.filterStatus.valueChanges.pipe(
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    );
+    // const filterStatus$ = this.filterStatus.valueChanges.pipe(
+    //   distinctUntilChanged(),
+    //   takeUntil(this.destroy$)
+    // );
 
-    const profile$ = this._store.select(MarketState.currentProfile);
+    // const profile$ = this._store.select(MarketState.currentProfile);
 
-    merge(
-      search$,
-      sort$,
-      filterStatus$,
-      profile$
-    ).pipe(
-      tap(() => {
-        this.doFilterChange.setValue(true);
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();
+    // merge(
+    //   search$,
+    //   sort$,
+    //   filterStatus$,
+    //   profile$
+    // ).pipe(
+    //   tap(() => {
+    //     this.doFilterChange.setValue(true);
+    //   }),
+    //   takeUntil(this.destroy$)
+    // ).subscribe();
 
-    this.doFilterChange.valueChanges.pipe(
-      tap(() => {
-        this.templates$.next([]);
-      }),
-      switchMap(() => {
-        return this.fetchTemplates();
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (templates: ListingTemplate[]) => {
-        if (this.currentPage === 0) {
-          const defaults = this.getControlDefaults();
-          const formFields = Object.keys(defaults);
-          let isDefaultsSet = true;
-          for (const field of formFields) {
-            if (this[field].value !== defaults[field]) {
-              isDefaultsSet = false;
-              break;
-            }
-          }
-          this.doTemplatesExist = !((templates.length === 0) && isDefaultsSet);
-        }
-        this.templates$.next(templates);
-      }
-    );
+    // this.doFilterChange.valueChanges.pipe(
+    //   tap(() => {
+    //     this.templates$.next([]);
+    //   }),
+    //   switchMap(() => {
+    //     return this.fetchTemplates();
+    //   }),
+    //   takeUntil(this.destroy$)
+    // ).subscribe(
+    //   (templates: ListingTemplate[]) => {
+    //     if (this.currentPage === 0) {
+    //       const defaults = this.getControlDefaults();
+    //       const formFields = Object.keys(defaults);
+    //       let isDefaultsSet = true;
+    //       for (const field of formFields) {
+    //         if (this[field].value !== defaults[field]) {
+    //           isDefaultsSet = false;
+    //           break;
+    //         }
+    //       }
+    //       this.doTemplatesExist = !((templates.length === 0) && isDefaultsSet);
+    //     }
+    //     this.templates$.next(templates);
+    //   }
+    // );
   }
 
 
@@ -143,104 +144,107 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
-  trackBySavedTemplates(idx: number, item: ListingTemplate) {
+  trackBySavedTemplates(idx: number, item: BaseTemplate | MarketTemplate) {
     return item.id;
   }
 
 
   resetFilters() {
-    this.setControlDefaults();
+    // this.setControlDefaults();
   }
 
 
   cloneListing(id: number) {
-    // TODO
-    this._sellService.cloneTemplate(id).pipe(
-      // tap((resp) => console.log('@@@@ clone resp: ', resp)),
-      // concatMap((resp) => this._router.navigate(['new-listing'], {queryParams:{ templateID: resp.id }}))
-    ).subscribe();
+    // // TODO
+    // this._sellService.cloneTemplate(id).pipe(
+    //   // tap((resp) => console.log('@@@@ clone resp: ', resp)),
+    //   // concatMap((resp) => this._router.navigate(['new-listing'], {queryParams:{ templateID: resp.id }}))
+    // ).subscribe();
   }
 
   deleteTemplate(id: number) {
-    const doDelete$ = this._sellService.deleteTemplate(id).pipe(
-      concatMap((ok) =>
-        iif(
-          () => ok,
-          defer(() => this.fetchTemplates().pipe(
-            tap((templates) => {
-              // Deleting an entry anywhere in the current list of templates means the last page reloaded return 1 new item.
-              // So find the new item(s) in the resp, and append to the end of the current list
-              const newItems = [];
-              const templs = this.templates$.value;
-              for (let ii = templates.length - 1; ii >= 0; ii--) {
-                if (templs[templs.length - 1].id === templates[ii].id) {
-                  break;
-                }
-                newItems.push(templates[ii]);
-              }
-              newItems.forEach(templ => templs.push(templ));
-              this.templates$.next(templs);
-            })
-          ))
-        )
-      )
-    );
+    // const doDelete$ = this._sellService.deleteTemplate(id).pipe(
+    //   concatMap((ok) =>
+    //     iif(
+    //       () => ok,
+    //       defer(() => this.fetchTemplates().pipe(
+    //         tap((templates) => {
+    //           // Deleting an entry anywhere in the current list of templates means the last page reloaded return 1 new item.
+    //           // So find the new item(s) in the resp, and append to the end of the current list
+    //           const newItems = [];
+    //           const templs = this.templates$.value;
+    //           for (let ii = templates.length - 1; ii >= 0; ii--) {
+    //             if (templs[templs.length - 1].id === templates[ii].id) {
+    //               break;
+    //             }
+    //             newItems.push(templates[ii]);
+    //           }
+    //           newItems.forEach(templ => templs.push(templ));
+    //           this.templates$.next(templs);
+    //         })
+    //       ))
+    //     )
+    //   )
+    // );
 
-    const dialog = this._dialog.open(DeleteTemplateModalComponent);
-    dialog.afterClosed().pipe(take(1)).subscribe(() => subs.unsubscribe());
+    // const dialog = this._dialog.open(DeleteTemplateModalComponent);
+    // dialog.afterClosed().pipe(take(1)).subscribe(() => subs.unsubscribe());
 
-    const subs = dialog.componentInstance.isConfirmed.pipe(
-      take(1),
-      concatMap(() => doDelete$)
-    ).subscribe();
+    // const subs = dialog.componentInstance.isConfirmed.pipe(
+    //   take(1),
+    //   concatMap(() => doDelete$)
+    // ).subscribe();
   }
 
 
   openPreview(id: number) {
-    const templ = this.templates$.getValue().find(t => t.id === id);
+    const templ = this.templates$.getValue().find(t => t.id === id) as MarketTemplate;
+
+    if (templ === undefined) {
+      return;
+    }
 
     let featuredIdx = 0;
     const images = [];
-    for (let ii = 0; ii < templ.images.length; ii++) {
-      const thumb = templ.images[ii].versions.find(v => v.version === 'THUMBNAIL');
-      const img = templ.images[ii].versions.find(v => v.version === 'MEDIUM');
+    for (const img of templ.details.images) {
 
-      if (img && img.url && thumb && thumb.url) {
-        images.push({
-          THUMBNAIL: thumb.url,
-          IMAGE: img.url,
-        });
+      images.push({
+        THUMBNAIL: img.thumbnailUrl,
+        IMAGE: img.imageUrl,
+      });
 
-        if (templ.images[ii].featured) {
-          featuredIdx = images.length - 1;
-        }
+      if (img.featured) {
+        featuredIdx = images.length - 1;
       }
     }
 
-    const countryCodes: string[] = [templ.location.countryCode, ...templ.shippingDestinations.map(dest => dest.countryCode)];
+    const countryCodes: string[] = [
+      templ.details.shippingOrigin.countryCode,
+      ...templ.details.shippingDestinations.map(dest => dest.countryCode)
+    ];
     const countries = this._regionService.findCountriesByIsoCodes(countryCodes);
     const sourceCountry = countries.shift();
 
     const listing: ListingItem = {
       id: 0,
       hash: '',
-      title: templ.information.title,
-      summary: templ.information.summary,
-      description: templ.information.description,
+      title: templ.details.information.title,
+      summary: templ.details.information.summary,
+      description: templ.details.information.description,
       images: {
         featured: featuredIdx,
         images: images,
       },
       price: {
-        base: templ.price.basePrice.particls(),
-        shippingDomestic: templ.price.shippingLocal.particls(),
-        shippingIntl: templ.price.shippingInternational.particls()
+        base: templ.details.price.basePrice.particls(),
+        shippingDomestic: templ.details.price.shippingLocal.particls(),
+        shippingIntl: templ.details.price.shippingInternational.particls()
       },
       shippingFrom: { code: sourceCountry ? sourceCountry.iso : '', name: sourceCountry ? sourceCountry.name : '' },
       shippingTo: countries.map(c => ({code: c.iso, name: c.name})),
       category: {
-        id: templ.category.id,
-        title: templ.category.name
+        id: templ.category ? templ.category.id || 0 : 0,
+        title: templ.category ? templ.category.name || '' : ''
       },
       seller: '',
       timeData: {
@@ -248,8 +252,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         created: Date.now(),
       },
       escrow: {
-        buyerRatio: templ.payment.escrow.buyerRatio,
-        sellerRatio: templ.payment.escrow.sellerRatio
+        buyerRatio: templ.details.payment.escrow.buyerRatio,
+        sellerRatio: templ.details.payment.escrow.sellerRatio
       },
       extra: {
         isFlagged: false,
@@ -291,20 +295,20 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
-  private fetchTemplates(): Observable<ListingTemplate[]> {
-    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
-    this.isLoadingMore = true;
+  // private fetchTemplates(): Observable<ListingTemplate[]> {
+  //   const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+  //   this.isLoadingMore = true;
 
-    return this._sellService.findTemplates(
-      profileId,
-      this.currentPage,
-      this.PAGE_COUNT,
-      this.sortOrder.value,
-      this.searchQuery.value,
-      this.filterStatus.value.length > 0 ? (this.filterStatus.value === '1') : null
-    ).pipe(tap(() => {
-      this.isLoadingMore = false;
-      })
-    );
-  }
+  //   return this._sellService.findTemplates(
+  //     profileId,
+  //     this.currentPage,
+  //     this.PAGE_COUNT,
+  //     this.sortOrder.value,
+  //     this.searchQuery.value,
+  //     this.filterStatus.value.length > 0 ? (this.filterStatus.value === '1') : null
+  //   ).pipe(tap(() => {
+  //     this.isLoadingMore = false;
+  //     })
+  //   );
+  // }
 }

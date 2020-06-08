@@ -14,7 +14,7 @@
     [listingTemplate]="savedTemplate"
     [regions$]="regionList$"
     (isValid)="updateFormValidity($event)"
-    (onImageImportError)="actionImageImportError($event)"
+    (onImageImportError)="actionImageAddError($event)"
     (onRequestImageRemoval)="actionImageRemovalRequest($event)"
   ></market-sell-template-form>
 

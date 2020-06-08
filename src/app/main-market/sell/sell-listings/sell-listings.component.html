@@ -75,7 +75,7 @@
 
 
 <!-- Listings > list -->
-<div class="listings section with-filter" *appVar="(savedTemplate$ | async) as allTemplates">
+<div class="listings section with-filter" *appVar="[] as allTemplates">
   <!-- infiniteScroll
   [infiniteScrollContainer]="pagination.infinityScrollSelector"
   [infiniteScrollDistance]="2"
@@ -187,7 +187,7 @@
 
   <ng-template #noTemplates>
     <!-- no listings at all -->
-    <div class="no-results" *ngIf="!doTemplatesExist">
+    <div class="no-results" *ngIf="!false">
       <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
       <p>
         You don't have any Listings yet
@@ -198,7 +198,7 @@
     </div><!-- .no-results -->
 
     <!-- no listings matching search -->
-    <div class="no-results" *ngIf="doTemplatesExist">
+    <div class="no-results" *ngIf="false">
       <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
       <p>
         No matching Listings found
@@ -211,6 +211,6 @@
 </div><!-- .listings-list -->
 
 
-<div class="loading-bar" *ngIf="isLoadingMore">
+<div class="loading-bar" *ngIf="false">
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div><!-- .loading-bar -->

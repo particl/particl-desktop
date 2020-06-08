@@ -4,9 +4,7 @@ import { ValidatorFn, AbstractControl, FormGroup, ValidationErrors } from '@angu
 export function amountValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
     if (
-      (typeof +control.value !== 'number') ||
-      (!+control.value) ||
-      (+control.value < 1e-8) ||
+      !((+control.value > 0) || (+control.value === 0)) ||
       ((`${control.value}`.split('.')[1] || '').length > 8)
     ) {
         return { 'amount': true };

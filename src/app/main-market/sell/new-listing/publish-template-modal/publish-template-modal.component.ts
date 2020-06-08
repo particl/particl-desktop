@@ -203,84 +203,84 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
 
   addNewCategory() {
-    if (this.isAddingCategory || !this.isCategoryCreatable || (this.newCategoryName.length <= 0)) {
-      return;
-    }
-    this.isAddingCategory = true;
+    // if (this.isAddingCategory || !this.isCategoryCreatable || (this.newCategoryName.length <= 0)) {
+    //   return;
+    // }
+    // this.isAddingCategory = true;
 
-    const catRoot = this.useRootCategory || !this.newCategoryRoot.value ? this.marketsRootCategory : this.newCategoryRoot.value;
-    this._sellService.createNewCategory(this.newCategoryName, catRoot, this.selectedMarket.value).pipe(
-      finalize(() => this.isAddingCategory = false)
-    ).subscribe(
-      () => {
-        // force a refresh of the market categories
-        this.newCategoryName = '';
-        this.selectedMarket.setValue(this.selectedMarket.value);
-        this._snackbar.open(TextContent.CATEGORY_ADD_SUCCESS);
-      },
-      () => {
-        this._snackbar.open(TextContent.CATEGORY_ADD_FAILURE, 'err');
-      }
-    );
+    // const catRoot = this.useRootCategory || !this.newCategoryRoot.value ? this.marketsRootCategory : this.newCategoryRoot.value;
+    // this._sellService.createNewCategory(this.newCategoryName, catRoot, this.selectedMarket.value).pipe(
+    //   finalize(() => this.isAddingCategory = false)
+    // ).subscribe(
+    //   () => {
+    //     // force a refresh of the market categories
+    //     this.newCategoryName = '';
+    //     this.selectedMarket.setValue(this.selectedMarket.value);
+    //     this._snackbar.open(TextContent.CATEGORY_ADD_SUCCESS);
+    //   },
+    //   () => {
+    //     this._snackbar.open(TextContent.CATEGORY_ADD_FAILURE, 'err');
+    //   }
+    // );
   }
 
 
   estimateFee() {
-    this.hasEstimateError = false;
-    this.feeEstimate = -1;
+    // this.hasEstimateError = false;
+    // this.feeEstimate = -1;
 
-    const estimate$ = this._unlocker.unlock({timeout: 10}).pipe(
-      concatMap(
-        (unlocked: boolean) => iif(
-          () => unlocked,
-          defer(
-            () => this._sellService.publishTemplate(
-              +this.data.templateID,
-              this.selectedMarket.value,
-              this.selectedDuration.value,
-              this.selectedCategory.value,
-              true
-            ).pipe(
-              tap((value) => {
-                this.feeEstimate = 1.11010101;
-              }) // TODO: set the estimate fee here (no idea what the response looks like)
-            )
-          )
-        )
-      )
-    );
+    // const estimate$ = this._unlocker.unlock({timeout: 10}).pipe(
+    //   concatMap(
+    //     (unlocked: boolean) => iif(
+    //       () => unlocked,
+    //       defer(
+    //         () => this._sellService.publishTemplate(
+    //           +this.data.templateID,
+    //           this.selectedMarket.value,
+    //           this.selectedDuration.value,
+    //           this.selectedCategory.value,
+    //           true
+    //         ).pipe(
+    //           tap((value) => {
+    //             this.feeEstimate = 1.11010101;
+    //           }) // TODO: set the estimate fee here (no idea what the response looks like)
+    //         )
+    //       )
+    //     )
+    //   )
+    // );
 
-    concat(
-      this.saveTemplateData(),
-      estimate$,
-    ).pipe(
-      takeUntil(this.destroy$) // force close any potential leak
-    ).subscribe(
-      null,
-      () => this.hasEstimateError = true
-    );
+    // concat(
+    //   this.saveTemplateData(),
+    //   estimate$,
+    // ).pipe(
+    //   takeUntil(this.destroy$) // force close any potential leak
+    // ).subscribe(
+    //   null,
+    //   () => this.hasEstimateError = true
+    // );
   }
 
 
   doPublish() {
-    if (
-      (+this.selectedMarket.value > 0) &&
-      (+this.selectedCategory.value > 0) &&
-      (+this.selectedDuration.value > 0)
-    ) {
-      this.saveTemplateData().pipe(
-        tap(() => {
-          this.isConfirmed.emit({
-            market: +this.selectedMarket.value,
-            duration: +this.selectedDuration.value
-          });
-          this._dialogRef.close();
-        })
-      ).subscribe(
-        null,
-        () => this._snackbar.open(TextContent.PUBLISH_FAILURE, 'err')
-      );
-    }
+    // if (
+    //   (+this.selectedMarket.value > 0) &&
+    //   (+this.selectedCategory.value > 0) &&
+    //   (+this.selectedDuration.value > 0)
+    // ) {
+    //   this.saveTemplateData().pipe(
+    //     tap(() => {
+    //       this.isConfirmed.emit({
+    //         market: +this.selectedMarket.value,
+    //         duration: +this.selectedDuration.value
+    //       });
+    //       this._dialogRef.close();
+    //     })
+    //   ).subscribe(
+    //     null,
+    //     () => this._snackbar.open(TextContent.PUBLISH_FAILURE, 'err')
+    //   );
+    // }
   }
 
 
@@ -301,7 +301,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
   }
 
 
-  private saveTemplateData(): Observable<void> {
-    return this._sellService.setTemplateCategory(+this.data.templateID, +this.selectedCategory.value);
-  }
+  // private saveTemplateData(): Observable<void> {
+  //   return this._sellService.setTemplateCategory(+this.data.templateID, +this.selectedCategory.value);
+  // }
 }

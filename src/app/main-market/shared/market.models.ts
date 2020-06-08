@@ -39,36 +39,36 @@ export interface RespMarketListMarketItem {
 }
 
 
-export interface RespListingTemplate {
+export interface RespListingTemplateInformation {
   id: number;
-  hash: string | null;
-  market: number | null;
-  generatedAt: number;
-  profileId: number;
-  parentListingItemTemplateId: number | null;
+  title: string;
+  shortDescription: string;
+  longDescription: string;
+  itemCategoryId: number | null;
+  listingItemId: number | null;
+  listingItemTemplateId: number;
   updatedAt: number;
   createdAt: number;
-  ItemInformation?: {
+  ItemLocation?: {
     id: number;
-    title: string;
-    shortDescription: string;
-    longDescription: string;
-    itemCategoryId: number | null;
-    listingItemId: number | null,
-    listingItemTemplateId: number;
+    country: string;
+    address: string | null;
+    description: string | null;
+    itemInformationId: number;
     updatedAt: number;
     createdAt: number;
-    ItemLocation?: {
-      id: number;
-      country: string;
-      address: string | null;
-      description: string | null;
-      itemInformationId: number;
-      updatedAt: number;
-      createdAt: number;
-      LocationMarker: any;
-    };
-    ItemCategory?: {
+    LocationMarker: any;
+  };
+  ItemCategory?: {
+    id: number;
+    key: string | null;
+    name: string;
+    market: number | null;
+    description: string;
+    parentItemCategoryId: number | null;
+    updatedAt: number;
+    createdAt: number;
+    ParentItemCategory: {
       id: number;
       key: string | null;
       name: string;
@@ -77,39 +77,42 @@ export interface RespListingTemplate {
       parentItemCategoryId: number | null;
       updatedAt: number;
       createdAt: number;
-      ParentItemCategory: {
-        id: number;
-        key: string | null;
-        name: string;
-        market: number | null;
-        description: string;
-        parentItemCategoryId: number | null;
-        updatedAt: number;
-        createdAt: number;
-      }
-    };
-    ItemImages?: Array<{
-      id: number;
-      hash: string;
-      itemInformationId: number;
-      featured: 0 | 1;
-      ItemImageDatas: Array<{
-        id: number;
-        protocol: IMAGE_PROTOCOL,
-        encoding: IMAGE_ENCODING,
-        imageVersion: IMAGE_VERSION,
-        imageHash: string;
-        dataId: string;
-        data: string;
-        itemImageId: number,
-        updatedAt: number;
-        createdAt: number;
-        originalMime: string | null;
-        originalName: string | null;
-      }>;
-    }>;
-    ShippingDestinations?: Array<{id: number; country: string; shippingAvailability: SHIPPING_AVAIL_TYPE}>;
+    }
   };
+  ItemImages?: Array<{
+    id: number;
+    hash: string;
+    itemInformationId: number;
+    featured: 0 | 1;
+    ItemImageDatas: Array<{
+      id: number;
+      protocol: IMAGE_PROTOCOL,
+      encoding: IMAGE_ENCODING,
+      imageVersion: IMAGE_VERSION,
+      imageHash: string;
+      dataId: string;
+      data: string;
+      itemImageId: number,
+      updatedAt: number;
+      createdAt: number;
+      originalMime: string | null;
+      originalName: string | null;
+    }>;
+  }>;
+  ShippingDestinations?: Array<{id: number; country: string; shippingAvailability: SHIPPING_AVAIL_TYPE}>;
+}
+
+
+export interface RespListingTemplate {
+  id: number;
+  hash: string | null;
+  market: string | null;
+  generatedAt: number;
+  profileId: number;
+  parentListingItemTemplateId: number | null;
+  updatedAt: number;
+  createdAt: number;
+  ItemInformation: RespListingTemplateInformation;
   PaymentInformation: {
     id: number;
     type: SALES_TYPE;
@@ -155,7 +158,7 @@ export interface RespListingTemplate {
   ListingItemObjects: any[];
   ListingItems: any[];
   Profile: any;
-  ChildListingItemTemplate: any;
+  ChildListingItemTemplate: RespListingTemplate[];
 }
 
 

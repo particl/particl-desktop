@@ -7,11 +7,15 @@ import {
   SHIPPING_AVAIL_TYPE,
   IMAGE_PROTOCOL,
   IMAGE_ENCODING,
-  IMAGE_VERSION
 } from '../shared/market.models';
 
 
 export type TEMPLATE_SORT_FIELD_TYPE = 'item_informations.title' | 'created_at' | 'updated_at';
+
+export enum TEMPLATE_TYPE {
+  BASE,
+  MARKET
+}
 
 
 export enum TEMPLATE_STATUS_TYPE {
@@ -22,10 +26,103 @@ export enum TEMPLATE_STATUS_TYPE {
 }
 
 
-export interface NewTemplateData {
+export namespace TemplateDetails {
+  export interface Information {
+    id: number;
+    title: string;
+    summary: string;
+    description: string;
+  }
+
+
+  export interface Pricing {
+    id: number;
+    currency: CURRENCY_TYPE;
+    basePrice: PartoshiAmount;
+    shippingLocal: PartoshiAmount;
+    shippingInternational: PartoshiAmount;
+  }
+
+
+  export interface PaymentInfo {
+    id: number;
+    type: SALES_TYPE;
+    escrow: {
+      type: ESCROW_TYPE;
+      buyerRatio: number;
+      sellerRatio: number;
+    };
+  }
+
+
+  export interface Location {
+    id: number;
+    countryCode: string;
+  }
+
+
+  export interface ShippingDestination {
+    id: number;
+    countryCode: string;
+    type: SHIPPING_AVAIL_TYPE;
+  }
+
+
+  export interface Category {
+    id: number;
+    name: string;
+  }
+
+
+  export interface Image {
+    id: number;
+    featured: boolean;
+    thumbnailUrl: string;
+    imageUrl: string;
+  }
+}
+
+
+interface Template {
+  id: number;
+  hash: string;   // NB! template cannot be modified if this value exists
+  type: TEMPLATE_TYPE;
+  details: {
+    information: TemplateDetails.Information;
+    shippingOrigin: TemplateDetails.Location;
+    shippingDestinations: TemplateDetails.ShippingDestination[];
+    images: TemplateDetails.Image[];
+    price: TemplateDetails.Pricing;
+    payment: TemplateDetails.PaymentInfo;
+  };
+  created: number;
+  updated: number;
+}
+
+
+export interface BaseTemplate extends Template {
+  type: TEMPLATE_TYPE.BASE;
+  marketTemplates: MarketTemplate[];
+}
+
+
+export interface MarketTemplate extends Template {
+  type: TEMPLATE_TYPE.MARKET;
+  baseTemplateId: number;
+  market: {
+    id: number;
+    key: string;
+    name: string;
+  };
+  category: TemplateDetails.Category;
+  status: TEMPLATE_STATUS_TYPE;
+}
+
+
+export interface ParamsNewTemplateDetails {
   title: string;
-  shortDescription: string;
-  longDescription: string;
+  summary: string;
+  description: string;
   basePrice: number;
   domesticShippingPrice: number;
   foreignShippingPrice: number;
@@ -41,11 +138,11 @@ export interface NewTemplateData {
 }
 
 
-export interface UpdateTemplateData {
+export interface ParamsUpdateTemplateDetails {
   info?: {
     title: string;
-    shortDescription: string;
-    longDescription: string;
+    summary: string;
+    description: string;
     category?: number | null;
   };
   images?: Array<{type: IMAGE_PROTOCOL, encoding: IMAGE_ENCODING, data: string}>;
@@ -61,82 +158,4 @@ export interface UpdateTemplateData {
     add: string[],
     remove: string[];
   };
-}
-
-
-export interface TemplateInformation {
-  id: number;
-  title: string;
-  summary: string;
-  description: string;
-}
-
-
-export interface TemplatePricing {
-  id: number;
-  currency: CURRENCY_TYPE;
-  basePrice: PartoshiAmount;
-  shippingLocal: PartoshiAmount;
-  shippingInternational: PartoshiAmount;
-}
-
-
-export interface TemplatePaymentInfo {
-  id: number;
-  type: SALES_TYPE;
-  escrow: {
-    type: ESCROW_TYPE;
-    buyerRatio: number;
-    sellerRatio: number;
-  };
-}
-
-
-export interface TemplateLocation {
-  id: number;
-  countryCode: string;
-}
-
-
-export interface TemplateShippingDestination {
-  id: number;
-  countryCode: string;
-  type: SHIPPING_AVAIL_TYPE;
-}
-
-
-export interface TemplateCategory {
-  id: number;
-  name: string;
-}
-
-
-export interface TemplateImage {
-  id: number;
-  featured: boolean;
-  thumbnailUrl: string;
-  versions: Array<{
-    id: number;
-    version: IMAGE_VERSION;
-    url: string;
-    data: string;
-  }>;
-}
-
-
-export interface ListingTemplate {
-  id: number;
-  profileId: number;
-  hash: string;   // NB! template cannot be modified if this value exists
-  information: TemplateInformation;
-  location: TemplateLocation;
-  shippingDestinations: TemplateShippingDestination[];
-  images: TemplateImage[];
-  price: TemplatePricing;
-  payment: TemplatePaymentInfo;
-  category: TemplateCategory;
-  hasLinkedListings: boolean;
-  status: TEMPLATE_STATUS_TYPE;
-  created: number;
-  updated: number;
 }
