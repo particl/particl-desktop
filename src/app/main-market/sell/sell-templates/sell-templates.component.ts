@@ -12,7 +12,6 @@ import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/de
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { ListingItem } from 'app/main-market/shared/shared.models';
 import { TEMPLATE_SORT_FIELD_TYPE, TEMPLATE_STATUS_TYPE, MarketTemplate, BaseTemplate } from '../sell.models';
-import { templateJitUrl } from '@angular/compiler';
 
 
 @Component({

@@ -8900,10 +8900,10 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.131:
-  version "0.1.131"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.131.tgz#825046f45a5200c04c54bef9e98c9eb14de21102"
-  integrity sha512-oaeo2PAK2Lhul/CkvRkGfwtilZC5ocV73tpw7N78CHpNJumM24pyp3gtHbsnOy1PRrzjCO0Wc3XKSotm6mD3GA==
+omp-lib@^0.1.135:
+  version "0.1.135"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.135.tgz#581d255f34915d3ad76fc6402079f8d459f041fe"
+  integrity sha512-TCW3/Z/NpIWCEhnTBXDMDU5kQvvXTSvdr9JnIX/bA1GJrGB/1T8XdJtiiHCUMXwwmIJCCRu7iH2imzo/BhackA==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -9320,9 +9320,9 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9382,9 +9382,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-10.tgz:
-  version "0.3.0-10"
-  resolved "./particl-marketplace-0.3.0-10.tgz#cc4f8d672821d37b6e785ccdc8bcdacaa47db8e6"
+particl-marketplace@./particl-marketplace-0.3.0-11.tgz:
+  version "0.3.0-11"
+  resolved "./particl-marketplace-0.3.0-11.tgz#13a6597808d44f59021c16b6d0bfaecbe7f3cf6c"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9424,7 +9424,7 @@ particl-marketplace@./particl-marketplace-0.3.0-10.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.131"
+    omp-lib "^0.1.135"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.4"
     path "^0.12.7"
