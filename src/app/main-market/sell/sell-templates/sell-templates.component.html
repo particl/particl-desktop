@@ -12,13 +12,19 @@
 <div class="filter">
 
   <div class="buttons">
-    <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
-      <mat-icon fontIcon="part-circle-plus"></mat-icon>
-      Add new Product
-    </button>
-    <button mat-raised-button color="accent" routerLink="import-listings" class="full-width">
-      <mat-icon fontIcon="part-image-upload"></mat-icon>
-      Import Products
+    <div class="button-group" fxLayout fxLayoutGap="2px" fxLayoutAlign="space-between flex-start">
+      <button mat-raised-button color="primary" routerLink="new-listing" class="full-width" fxFlex="50">
+        <mat-icon fontIcon="part-circle-plus"></mat-icon>
+        New
+      </button>
+      <button mat-raised-button color="primary" routerLink="import-listings" class="full-width" fxFlex="50">
+        <mat-icon fontIcon="part-image-upload"></mat-icon>
+        Import
+      </button>
+    </div><!-- .row -->
+    <button mat-raised-button color="accent" class="full-width" (click)="openBatchPublishModal()">
+      <mat-icon fontIcon="part-check-2"></mat-icon>
+      Batch (Re)publish&hellip;
     </button>
   </div><!-- .buttons -->
 
@@ -234,7 +240,7 @@
             <button mat-button class="tiny icon-only" matTooltip="Clone">
               <mat-icon fontIcon="part-copy"></mat-icon>
             </button>
-            <button mat-button class="tiny icon-only" matTooltip="Publish">
+            <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishTemplateModal()">
               <mat-icon fontIcon="part-rocket"></mat-icon>
             </button>
           </td>
@@ -256,7 +262,7 @@
             <button mat-button class="tiny icon-only" matTooltip="Clone">
               <mat-icon fontIcon="part-copy"></mat-icon>
             </button>
-            <button mat-button class="tiny icon-only" matTooltip="Publish">
+            <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishTemplateModal()">
               <mat-icon fontIcon="part-rocket"></mat-icon>
             </button>
           </td>
@@ -285,7 +291,8 @@
         </button>
       </div>
       <div class="right">
-        <button mat-raised-button color="primary">
+        <!-- @TODO: remove link to BatchPublishModal (I'm using it here for dev purposes, since the batch actions menu isn't working for me) -->
+        <button mat-raised-button color="primary" (click)="openPublishTemplateModal()">
           <mat-icon fontIcon="part-rocket"></mat-icon>
           Publish on Market
         </button>

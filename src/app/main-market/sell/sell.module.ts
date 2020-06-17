@@ -24,6 +24,7 @@ import { EscrowPaymentModalComponent } from './modals/escrow-payment-modal/escro
 import { OrderShippedModalComponent } from './modals/order-shipped-modal/order-shipped-modal.component';
 
 import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
+import { BatchPublishModalComponent } from './modals/batch-publish-modal/batch-publish-modal.component';
 
 
 const routes: Routes = [
@@ -52,6 +53,7 @@ const routes: Routes = [
     ImportListingsComponent,
     PublishTemplateModalComponent,
     DeleteTemplateModalComponent,
+    BatchPublishModalComponent,
 
     SellOrdersComponent,
     SellOrderListItemComponent,
@@ -70,7 +72,8 @@ const routes: Routes = [
     AcceptBidModalComponent,
     RejectBidModalComponent,
     EscrowPaymentModalComponent,
-    OrderShippedModalComponent
+    OrderShippedModalComponent,
+    BatchPublishModalComponent
   ],
   providers: [
     SellService

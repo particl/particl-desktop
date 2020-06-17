@@ -1,0 +1,91 @@
+<div mat-dialog-title fxLayout fxLayoutAlign="space-between center">
+  Batch Publish Listings
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity which will publish the Listing" matTooltipPosition="before">
+    <!-- @TODO: take first letter from currentIdentity (until we have avatars ready ;) -->
+    <div class="avatar">P</div>
+    <div class="text">
+      <div class="identity-name">{{ currentIdentity }}</div>
+      <div class="available-balance">Public balance: {{ currentBalance }}</div>
+    </div>
+  </div>
+</div><!-- mat-dialog-title -->
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+<mat-dialog-content class="dialog-content">
+
+  <div class="publish-options row" fxLayout fxLayoutAlign="space-between center" fxLayoutGap="25px">
+
+    <section class="select-preset">
+      <h2 class="section-title">Select</h2>
+      <mat-card class="product-presets no-padding">
+        <label>
+          <mat-form-field class="--plain" appearance="fill">
+            <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
+            <mat-select placeholder="Select Products" [formControl]="selectedProducts">
+              <mat-option *ngFor="let preset of productPresets" [value]="preset.value">
+                {{ preset.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+      </mat-card><!-- .product-presets -->
+    </section><!-- .select-preset -->
+
+    <section class="select-market">
+      <h2 class="section-title">Publish to</h2>
+      <mat-card class="publish-to no-padding">
+        <label>
+          <mat-form-field class="--plain" appearance="fill">
+            <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+            <mat-select placeholder="Select Market" [formControl]="selectedMarket">
+              <mat-option *ngFor="let market of availableMarkets" [value]="market.id">
+                {{ market.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+      </mat-card><!-- .publish-to -->
+    </section><!-- .select-market -->
+
+    <section class="duration">
+      <h2 class="section-title">Publish duration</h2>
+      <div class="row" fxLayout fxLayoutAlign="space-between stretch" fxLayoutGap="8px">
+        <mat-card class="publish-duration no-padding">
+          <label>
+            <mat-form-field class="--plain" appearance="fill">
+              <mat-icon matPrefix fontIcon="part-date"></mat-icon>
+              <mat-select placeholder="Select duration" [formControl]="publishDuration">
+                <mat-option *ngFor="let duration of publishDuration" [value]="duration.value">
+                  {{ duration.title }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </label>
+        </mat-card><!-- .publish-to -->
+        <mat-card class="fee-estimation" fxLayoutAlign="center center">
+          <!-- @TODO: initially show button only; when it's clicked, swap it for the fee value (if duration is changed, swap it back for the button) -->
+          <button mat-button>
+            <mat-icon fontIcon="part-stake"></mat-icon>
+            Calc. fee
+          </button>
+        </mat-card>
+      </div><!-- .row -->
+    </section><!-- .duration -->
+    
+  </div><!-- .row -->
+
+  <p class="help-text">
+    Batch Publish will process your Products and publish them to a selected Market. You won’t have an option to customize Listing’s description, pricing etc. If you want to adjust your Listings per chosen Markets, don’t Batch Publish and instead Publish them one by one.
+  </p>
+
+</mat-dialog-content>
+
+
+
+
+
+
+

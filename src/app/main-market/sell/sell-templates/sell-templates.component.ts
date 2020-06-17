@@ -10,6 +10,8 @@ import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { BatchPublishModalComponent } from '../modals/batch-publish-modal/batch-publish-modal.component';
+import { PublishTemplateModalComponent } from '../new-listing/publish-template-modal/publish-template-modal.component';
 import { ListingItem } from 'app/main-market/shared/shared.models';
 import { TEMPLATE_SORT_FIELD_TYPE, TEMPLATE_STATUS_TYPE, MarketTemplate, BaseTemplate } from '../sell.models';
 
@@ -310,4 +312,13 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   //     })
   //   );
   // }
+
+  openBatchPublishModal(): void {
+    const dialog = this._dialog.open(BatchPublishModalComponent);
+  }
+
+  openPublishTemplateModal(): void {
+    const dialog = this._dialog.open(PublishTemplateModalComponent);
+  }
+
 }
