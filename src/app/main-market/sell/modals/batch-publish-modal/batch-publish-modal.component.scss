@@ -37,11 +37,67 @@
 }
 
 .publish-options {
-  margin-bottom: 18px;
-  .fee-estimation {
-    padding: 0 6px;
+  margin: 0 -74px -16px -24px;
+  line-height: 1.1;
+  .duration {
+    .estimate-fee {
+      padding: 0 0 14px;
+    }
+    .estimated-fee {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--text-muted);
+      margin: 0 0 0 12px;
+      .fee {
+        font-weight: 500;
+        color: var(--text);
+      }
+    }
   }
 }
+
+.available-products {
+  margin-top: 30px;
+
+  .product {
+    --photo-size: 70px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    .photo {
+      flex: 0 0 var(--photo-size);
+      height: var(--photo-size);
+      margin-right: 20px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-position: center;
+        object-fit: cover;
+      }
+    }
+    .meta {
+      flex: 1 1 100%;
+      .title {
+        font-size: 15px;
+        font-weight: 500;
+      }
+      .publish-status {
+        color: var(--text-muted);
+        .mat-icon {
+          font-size: 14px;
+          position: relative;
+          top: 2px;
+          margin-right: 2px;
+        }
+      }
+    }
+    .publish-checkbox {
+      margin: 0 24px 0 14px;
+    }
+  }
+
+} // .available-products
 
 
 

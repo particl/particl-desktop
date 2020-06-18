@@ -24,6 +24,13 @@ export class BatchPublishModalComponent implements OnInit {
     { title: '1 week', value: 7 }
   ];
 
+  readonly categories: Array<{title: string; value: string}> = [
+    { title: 'Furniture', value: 'f' },
+    { title: 'Yachts', value: 'y' },
+    { title: 'Bots', value: 'b' },
+    { title: 'Electronics', value: 'e' }
+  ];
+
   constructor() { }
 
   ngOnInit() {
