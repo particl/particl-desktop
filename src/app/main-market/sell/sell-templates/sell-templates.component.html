@@ -75,55 +75,6 @@
 <!-- Listings > list -->
 <div class="listings section with-filter" *appVar="(savedTemplate$ | async) as allTemplates">
 
-  <div class="list-items-header">
-    <div class="left">
-      <h2 class="section-title" *ngIf="!batchEditingActive">8 Products in Inventory</h2>
-      <!-- @TODO: implement number of currently selected products (or remove altogether) -->
-      <h2 class="section-title" *ngIf="batchEditingActive">0 Products selected</h2>
-    </div>
-    <div class="right">
-      <button mat-button class="tiny" (click)="batchEditingActive = !batchEditingActive" *ngIf="!batchEditingActive" [matMenuTriggerFor]="batchActions">
-        <mat-icon fontIcon="part-check-2"></mat-icon>
-        Batch editing
-      </button>
-      <div class="action-options" *ngIf="batchEditingActive">
-        <mat-form-field class="--plain --smaller" appearance="fill">
-          <mat-select placeholder="Select…">
-            <mat-option *ngFor="let select of batchSelectCriteria" [value]="select.value">
-              {{ select.title }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <button mat-button class="tiny" matTooltip="Select action for all selected Products" matTooltipPosition="above" color="accent">
-          <mat-icon fontIcon="part-more-horizontal"></mat-icon>
-          Batch Action&hellip;
-        </button>
-        <button mat-button class="tiny icon-only" (click)="batchEditingActive = !batchEditingActive" matTooltip="Cancel batch editing" matTooltipPosition="above">
-          <mat-icon fontIcon="part-cross"></mat-icon>
-        </button>
-      </div><!-- if batchEditingActive-->
-    </div>
-  </div><!-- .list-item-actions -->
-
-  <!-- Menu with options for batch actions -->
-  <!-- @FIXME: doesn't wanna show up for some reason.. -->
-  <mat-menu #batchActions="matMenu">
-    <button mat-menu-item>
-      <mat-icon fontIcon="part-rocket"></mat-icon>
-      <span>Publish selected</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon fontIcon="part-copy"></mat-icon>
-      <span>Clone selected</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon fontIcon="part-circle-remove" color="warn"></mat-icon>
-      <span>Delete selected</span>
-    </button>
-  </mat-menu>
-
-
-
   <mat-expansion-panel class="product list-item no-padding">
     <mat-expansion-panel-header class="header">
       <div class="header-wrapper">
