@@ -20,7 +20,7 @@
         <mat-form-field class="--plain --larger" appearance="fill">
           <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
           <mat-select placeholder="Select Market" [formControl]="selectedMarket">
-            <mat-option *ngFor="let market of availableMarkets" [value]="market.id">
+            <mat-option *ngFor="let market of availableMarkets" [value]="market.id" class="--larger">
               {{ market.name }}
             </mat-option>
           </mat-select>
@@ -35,7 +35,7 @@
           <mat-form-field class="--plain --larger" appearance="fill">
             <mat-icon matPrefix fontIcon="part-date"></mat-icon>
             <mat-select placeholder="Select duration" [formControl]="publishDuration">
-              <mat-option *ngFor="let duration of publishDuration" [value]="duration.value">
+              <mat-option *ngFor="let duration of publishDuration" [value]="duration.value" class="--larger">
                 {{ duration.title }}
               </mat-option>
             </mat-select>
@@ -43,11 +43,11 @@
         </label>
         <div class="estimate-fee">
           <!-- @TODO: initially show button only; when it's clicked, swap it for the fee value (if duration is changed, swap it back for the button) -->
-          <button mat-button>
+          <button mat-button *ngIf="!feeCalculated" (click)="feeCalculated = !feeCalculated">
             <mat-icon fontIcon="part-stake"></mat-icon>
             Calc. fee
           </button>
-          <div class="estimated-fee"><!-- if button is clicked.. -->
+          <div class="estimated-fee" *ngIf="feeCalculated">
             Publishing fee:<br>
             <span class="fee">2.513541 PART</span>
           </div>
@@ -61,7 +61,7 @@
         <mat-form-field class="--plain --larger" appearance="fill">
           <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
           <mat-select placeholder="Select Products" [formControl]="selectedProducts">
-            <mat-option *ngFor="let preset of productPresets" [value]="preset.value">
+            <mat-option *ngFor="let preset of productPresets" [value]="preset.value" class="--larger">
               {{ preset.title }}
             </mat-option>
           </mat-select>
@@ -79,12 +79,25 @@
 
 <mat-dialog-content class="dialog-content">
 
-  <p class="help-text">
+  <p class="introduction help-text">
     Batch Publish will process your Products and publish them to a selected Market. You won’t have an option to customize Listing’s description, pricing etc.<br>
     If you want to adjust your Listings per chosen Markets, don’t Batch Publish and instead Publish them one by one.
   </p>
 
   <section class="available-products">
+
+    <!-- @TODO: show only before Market is selected -->
+    <div class="no-results --horizontal --smaller">
+      <img class="illustration" src="./assets/app-market/illustrations/batch-publish.svg" alt="Select Market first">
+      <div class="text">
+        <p>
+          Select Market for Publishing
+        </p>
+        <p class="help-text">
+          Please select a Market where you want to Publish your Products first
+        </p>
+      </div>
+    </div><!-- .no-results -->
 
     <mat-card class="product">
       <div class="photo">
@@ -95,6 +108,31 @@
         <div class="publish-status">
           <mat-icon fontIcon="part-check"></mat-icon>
           Ready for publishing
+        </div>
+      </div>
+      <div class="category-select">
+        <mat-form-field class="--plain" appearance="fill">
+          <mat-select placeholder="Select category" [formControl]="categorySelect">
+            <mat-option *ngFor="let category of categories" [value]="category.value">
+              {{ category.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="publish-checkbox">
+        <mat-checkbox>Publish</mat-checkbox>
+      </div>
+    </mat-card>
+
+    <mat-card class="product">
+      <div class="photo">
+        <img src="./assets/images/placeholder_3-4.jpg">
+      </div>
+      <div class="meta">
+        <div class="title">Another product name</div>
+        <div class="publish-status">
+          <mat-icon fontIcon="part-circle-info"></mat-icon>
+          Please select category before publishing
         </div>
       </div>
       <div class="category-select">

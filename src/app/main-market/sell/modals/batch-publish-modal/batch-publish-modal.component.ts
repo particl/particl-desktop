@@ -7,6 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BatchPublishModalComponent implements OnInit {
 
+  // @TODO: only for testing, pls remove and properly implement:
+  feeCalculated: boolean = false;
+
   currentIdentity: string = '';
   currentBalance: string = '';
 
