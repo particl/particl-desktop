@@ -32,6 +32,26 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
 
   private destroy$: Subject<void> = new Subject();
 
+  // @TODO: only for testing, pls remove and properly implement:
+  feeCalculated: boolean = false;
+
+  currentIdentity: string = '';
+  currentBalance: string = '';
+
+  readonly publishDuration: Array<{title: string; value: number}> = [
+    { title: '1 day', value: 1 },
+    { title: '2 days', value: 2 },
+    { title: '4 days', value: 4 },
+    { title: '1 week', value: 7 }
+  ];
+
+  readonly categories: Array<{title: string; value: string}> = [
+    { title: 'Furniture', value: 'f' },
+    { title: 'Yachts', value: 'y' },
+    { title: 'Bots', value: 'b' },
+    { title: 'Electronics', value: 'e' }
+  ];
+
   constructor() {
     // The basic template information present on all templates
     this.templateForm = new FormGroup({

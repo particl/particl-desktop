@@ -122,3 +122,41 @@
   font-size: 16px;
   color: var(--text-muted);
 }
+
+
+// ------ PUBLISH OPTIONS ------ //
+
+.publishing-settings {
+  .header {
+    min-height: 80px;
+    max-height: 80px;
+    .title {
+      margin-left: 12px;
+      h3 {
+        font-weight: 500;
+        margin: 0 0 3px;
+      }
+      .help-text {
+        margin: 0;
+      }
+    }
+  }
+  .publish-options { // expanded content
+    background: hsla(var(--bg-hsl), 0.5);
+    border-top: 1px dashed var(--bg-muted);
+    .estimate-fee {
+      padding: 0 0 16px;
+    }
+    .estimated-fee {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--text-muted);
+      margin: 0 0 0 12px;
+      .fee {
+        font-weight: 500;
+        color: var(--text);
+      }
+    }
+  }
+}
