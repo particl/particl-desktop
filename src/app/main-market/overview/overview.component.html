@@ -1,29 +1,31 @@
 <div class="overview container-block without-tab-bar">
 
-  <!-- FIXME @dev: implement these, pretty please :) -->
   <mat-card class="balances-overview">
 
     <div class="item active-identity">
-      <div class="value">particl-market</div>
+      <div class="value">{{(currentIdentity | async).displayName}}</div>
       <div class="key">Active Market identity</div>
     </div>
 
     <div class="divider --blank"></div>
 
     <div class="item">
-      <div class="value">205<small>.9410</small></div>
-      <div class="key">Total Market balance</div>
+      <div class="value">{{balances.spendablePublic.whole}}<small>{{balances.spendablePublic.sep}}{{balances.spendablePublic.decimal}}</small></div>
+      <div class="key">Fees and Voting (public) balance</div>
+      <div class="key"><small>Pending: {{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}}</small></div>
     </div>
 
     <div class="divider"></div>
 
     <div class="item">
-      <div class="value">190<small>.5173</small></div>
+      <div class="value">{{balances.spendableAnon.whole}}<small>{{balances.spendableAnon.sep}}{{balances.spendableAnon.decimal}}</small></div>
       <div class="key">Spendable Anon balance</div>
+      <div class="key"><small>Pending: {{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}}</small></div>
     </div>
 
     <div class="divider"></div>
-    
+
+    <!-- FIXME @dev: implement this one still, pretty please :) -->
     <div class="item">
       <div class="value">15<small>.5613</small></div>
       <div class="key">Locked in Escrows</div>
@@ -40,8 +42,7 @@
       Particl Marketplace allows anyone to buy and sell directly, privately and peer-to-peer without unnecessary middlemen
     </p>
     <p class="buttons">
-      <!-- @TODO: redirect to Listings page -->
-      <button mat-button color="primary">Explore the Market</button>
+      <button [routerLink]="[listingsUrl]" mat-button color="primary">Explore the Market</button>
       <a mat-button href="https://particl.wiki/learn/market/" target="_blank" color="accent">Learn more</a>
     </p>
   </div><!-- .page-intro -->
@@ -54,58 +55,16 @@
 
   <div class="latest-activity row">
 
-    <!-- @TODO: on click, redirect to respective page and tab -->
-    <!-- @TODO: items with active notifications as `.active` + differentiate Buyer's (.buyer) and Seller's (.seller) -->
-    <mat-card class="active buyer item">
+    <mat-card *ngFor="let actionable of buyerActions;trackBy:trackByActionableIndex" [class.active]="actionable.active" class="buyer item" (click)="navigateTo(actionable)">
       <div class="icon">
-        <div class="badge">5</div>
-        <mat-icon fontIcon="part-recipe"></mat-icon>
+        <div class="badge">{{actionable.count}}</div>
+        <mat-icon [fontIcon]="actionable.icon"></mat-icon>
       </div>
       <div class="title">
-        Active Buy Orders
+        {{actionable.title}}
       </div>
       <p class="help-text">
-        All Buy Orders currently in progress
-      </p>
-    </mat-card><!-- .item -->
-
-    <mat-card class="active buyer item">
-      <div class="icon">
-        <div class="badge">2</div>
-        <mat-icon fontIcon="part-recipe"></mat-icon>
-      </div>
-      <div class="title">
-        <!-- @TODO: got better name that fits 1 line? :) -->
-        Urgent Buy Orders
-      </div>
-      <p class="help-text">
-        Updated Orders that need your attention
-      </p>
-    </mat-card><!-- .item -->
-
-    <mat-card class="buyer item"><!-- not ".active" since it has no unread notifications -->
-      <div class="icon">
-        <div class="badge">0</div>
-        <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-      </div>
-      <div class="title">
-        New replies
-      </div>
-      <p class="help-text">
-        Unread Sellers' replies to your questions
-      </p>
-    </mat-card><!-- .item -->
-
-    <mat-card class="active buyer item">
-      <div class="icon">
-        <div class="badge">4</div>
-        <mat-icon fontIcon="part-shop"></mat-icon>
-      </div>
-      <div class="title">
-        Joined Markets
-      </div>
-      <p class="help-text">
-        Total number of Markets you've joined
+        {{actionable.text}}
       </p>
     </mat-card><!-- .item -->
 
@@ -118,58 +77,16 @@
 
   <div class="latest-activity row">
 
-    <!-- @TODO: on click, redirect to respective page and tab -->
-    <!-- @TODO: items with active notifications as `.active` + differentiate Buyer's (.buyer) and Seller's (.seller) -->
-    <mat-card class="active seller item">
+    <mat-card *ngFor="let actionable of sellerActions;trackBy:trackByActionableIndex" [class.active]="actionable.active" class="seller item" (click)="navigateTo(actionable)">
       <div class="icon">
-        <div class="badge">5</div>
-        <mat-icon fontIcon="part-recipe"></mat-icon>
+        <div class="badge">{{actionable.count}}</div>
+        <mat-icon [fontIcon]="actionable.icon"></mat-icon>
       </div>
       <div class="title">
-        Active Sell Orders
+        {{actionable.title}}
       </div>
       <p class="help-text">
-        All Sell Orders currently in progress
-      </p>
-    </mat-card><!-- .item -->
-
-    <mat-card class="seller item"><!-- not ".active" since it has no unread notifications -->
-      <div class="icon">
-        <div class="badge">0</div>
-        <mat-icon fontIcon="part-recipe"></mat-icon>
-      </div>
-      <div class="title">
-        <!-- @TODO: got better name that fits 1 line? :) -->
-        Urgent Sell Orders
-      </div>
-      <p class="help-text">
-        Updated Orders that need your attention
-      </p>
-    </mat-card><!-- .item -->
-
-    <mat-card class="active seller item">
-      <div class="icon">
-        <div class="badge">1</div>
-        <mat-icon fontIcon="part-chat"></mat-icon>
-      </div>
-      <div class="title">
-        New questions
-      </div>
-      <p class="help-text">
-        Unread Buyers' questions on your Listings
-      </p>
-    </mat-card><!-- .item -->
-
-    <mat-card class="active seller item">
-      <div class="icon">
-        <div class="badge">4</div>
-        <mat-icon fontIcon="part-stock"></mat-icon>
-      </div>
-      <div class="title">
-        Expired Listings
-      </div>
-      <p class="help-text">
-        Listings needing to be re-listed on the Market
+        {{actionable.text}}
       </p>
     </mat-card><!-- .item -->
 
