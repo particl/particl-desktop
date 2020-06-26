@@ -392,8 +392,8 @@ mat-expansion-panel.mat-expansion-panel {
     .dialog-content {
       margin: 0 -24px;
     }
-    [mat-dialog-title] { // dialog title
-      font-family: var(--font);
+    .mat-dialog-title { // dialog title
+      font-family: var(--font) !important;
       font-weight: 500;
       font-size: 20px;
       margin-bottom: 15px;
@@ -401,7 +401,7 @@ mat-expansion-panel.mat-expansion-panel {
       &.text-center {
         padding: 0;
       }
-    }
+      }
 
     mat-dialog-content {
       line-height: 1.5;

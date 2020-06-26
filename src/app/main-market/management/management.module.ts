@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ManagementComponent } from './management.component';
 import { CreateMarketComponent } from './create-market/create-market.component';
+import { EditMarketModalComponent } from './edit-market-modal/edit-market-modal.component';
 
 
 const routes: Routes = [
@@ -23,7 +24,11 @@ const routes: Routes = [
   ],
   declarations: [
     ManagementComponent,
-    CreateMarketComponent
+    CreateMarketComponent,
+    EditMarketModalComponent
+  ],
+  entryComponents: [
+    EditMarketModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

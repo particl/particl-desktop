@@ -132,16 +132,6 @@
     [infiniteScrollThrottle]="50"
     (scrolled)="loadNextPage()" -->
 
-    <div class="no-results"><!--  [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
-      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
-      <p>
-        No Markets found
-      </p>
-      <p class="help-text">
-        If you're looking for a specific Market, ask any its member for the Market ID and join it manually
-      </p>
-    </div>
-
     <mat-accordion>
 
       <!-- Example: Available market (remove *ngIf below when implementing) -->
@@ -219,6 +209,7 @@
               <mat-icon fontIcon="part-cross"></mat-icon>
               Leave
             </button>
+            <!-- @TODO: show only on 3rd party Markets (ie. those which you joined) -->
             <button mat-button color="basic" class="small icon-only"
                     [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
               <mat-icon fontIcon="part-flag"></mat-icon>
@@ -226,6 +217,10 @@
             <button mat-button color="basic" class="small">
               <mat-icon fontIcon="part-copy"></mat-icon>
               Copy Market ID
+            </button>
+            <button mat-button color="basic" class="small" matTooltip="Edit Market details" (click)="openEditMarketModal()">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+              Edit Market
             </button>
             <button mat-button color="basic" class="small icon-only"
                     [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
@@ -307,11 +302,12 @@
               <mat-icon fontIcon="part-cross"></mat-icon>
               Leave
             </button>
+            <!-- @TODO: show only on 3rd party Markets (ie. those which you joined) -->
             <button mat-button color="basic" class="small icon-only"
                     [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
               <mat-icon fontIcon="part-flag"></mat-icon>
             </button>
-            <button mat-button color="basic" class="small">
+            <button mat-button color="basic" class="small" matTooltip="Edit Market details" (click)="openEditMarketModal()">
               <mat-icon fontIcon="part-pen-1"></mat-icon>
               Edit Market
             </button>
@@ -330,6 +326,16 @@
       </mat-expansion-panel><!-- .market -->
 
     </mat-accordion>
+
+    <div class="no-results"><!--  [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
+      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
+      <p>
+        No Markets found
+      </p>
+      <p class="help-text">
+        If you're looking for a specific Market, ask any its member for the Market ID and join it manually
+      </p>
+    </div><!-- .no-results -->
 
   </div><!-- .markets (content) -->
 </div><!-- .container-block -->

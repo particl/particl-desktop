@@ -1,0 +1,94 @@
+<div mat-dialog-title>Edit Market categories</div>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+
+<mat-dialog-content class="dialog-content">
+  
+  <h2 class="section-title">Add new root category</h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" placeholder="Name of new root category">
+    <button matSuffix mat-button class="small" matTooltip="Add category" matTooltipPosition="after">
+      <mat-icon fontIcon="part-circle-plus"></mat-icon>
+    </button>
+  </mat-form-field>
+
+  <h2 class="section-title">Manage existing categories</h2>
+
+  <!-- only for coding purposes, so it's not bloated that much.. can be removed once implemented ofc -->
+  <ng-template #item>
+    <div class="category">
+      <div class="name">
+        (Sub)category name
+      </div>
+      <button mat-button class="add-new tiny" matTooltip="Add sub-category here" (click)="$event.stopPropagation()">
+        <mat-icon fontIcon="part-small-plus"></mat-icon>
+        Add
+      </button>
+      <button mat-button class="remove tiny" color="warn" matTooltip="Remove category" (click)="$event.stopPropagation()">
+        <mat-icon fontIcon="part-circle-remove"></mat-icon>
+        Remove
+      </button>
+    </div>
+  </ng-template>
+
+  <ul class="root categories">
+    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+    <li>
+      <ng-container *ngTemplateOutlet="item"></ng-container>
+      <ul>
+        <li>
+          <ng-container *ngTemplateOutlet="item"></ng-container>
+          <ul>
+            <!-- @TODO: when "add new subcategory" button is clicked, show the following form field: -->
+            <li>
+              <mat-form-field class="add-new-form --plain" appearance="fill">
+                <mat-icon matPrefix fontIcon="part-filter"></mat-icon>
+                <input matInput type="text" placeholder="Name of new sub-category">
+                <button matSuffix mat-button class="tiny icon-only" color="primary" matTooltip="Create sub-category" matTooltipPosition="after">
+                  <mat-icon fontIcon="part-check"></mat-icon>
+                </button>
+                <button matSuffix mat-button class="tiny icon-only" matTooltip="Cancel" matTooltipPosition="after">
+                  <mat-icon fontIcon="part-cross"></mat-icon>
+                </button>
+              </mat-form-field>
+            </li>
+            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+          </ul>
+        </li>
+        <li>
+          <ng-container *ngTemplateOutlet="item"></ng-container>
+          <ul>
+            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+          </ul>
+        </li>
+        <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+        <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+      </ul>
+    </li>
+    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
+  </ul>
+
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close (click)="dialogClose()">
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel &amp; Close
+  </button>
+  <!-- @TODO: implement saving -->
+  <button mat-raised-button color="primary" mat-dialog-close>
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Save categories
+  </button>
+</mat-dialog-actions>

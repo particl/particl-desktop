@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 
+import { EditMarketModalComponent } from './edit-market-modal/edit-market-modal.component';
 
 @Component({
   templateUrl: './management.component.html',
@@ -29,10 +31,17 @@ export class ManagementComponent {
     { title: 'Storefronts',       value: 'storefronts' }
   ];
 
+  constructor(
+    private _dialog: MatDialog
+  ) {}
 
   changeTab(index: number): void {
     //this.clear();
     this.selectedTab = index;
+  }
+
+  openEditMarketModal(): void {
+    const dialog = this._dialog.open(EditMarketModalComponent);
   }
 
 }

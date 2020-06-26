@@ -1,0 +1,58 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.dialog-content {
+  background: var(--bg);
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px solid var(--bg-muted);
+  padding: 24px;
+  width: 35rem;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  &.root { // 1st level
+    font-weight: 500;
+  }
+  ul { // subcategories
+    font-weight: 400;
+    margin-left: 32px;
+  }
+  .category { // item
+    background: var(--color-white);
+    margin: 0 0 var(--card-spacing);
+    box-shadow: 0 1px 4px var(--bg-muted);
+    border-radius: var(--radius);
+    padding: 0 24px;
+    height: 42px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .name {
+      flex: 0 1 100%;
+    }
+    .mat-button {
+      display: none;
+      .add-new {
+        flex: 0 1 5%;
+        margin-right: 8px;
+      }
+      .remove {
+        flex: 0 1 5%;
+      }
+    }
+    &:hover {
+      .mat-button {
+        display: block;
+      }
+    }
+  }
+  .add-new-form {
+    background: var(--color-white);
+    margin-bottom: var(--card-spacing);
+    box-shadow: 0 1px 4px var(--bg-muted);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+}
