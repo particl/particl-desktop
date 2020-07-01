@@ -8,6 +8,7 @@ export type SHIPPING_AVAIL_TYPE = 'SHIPS' | 'DOES_NOT_SHIP' | 'ASK' | 'UNKNOWN';
 export type IMAGE_PROTOCOL = 'HTTPS' | 'LOCAL' | 'IPFS';
 export type IMAGE_ENCODING = 'BASE64';
 export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'LARGE';
+type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
 export interface RespCategoryList {
@@ -189,4 +190,155 @@ export interface RespTemplateSize {
   fits: boolean;
   messageData: number;
   spaceLeft: number;
+}
+
+
+interface RespListingItemCategory {
+  id: number;
+  key: string;
+  name: string;
+  market: string;
+  description: string;
+  parentItemCategoryId: number | null;
+  updatedAt: number;
+  createdAt: number;
+  ParentItemCategory: RespListingItemCategory | null;
+}
+
+
+export interface RespListingItem {
+  id: number;
+  msgid: string;
+  hash: string;
+  seller: string;
+  market: string;
+  listingItemTemplateId: number;
+  removed: 0 | 1;
+  expiryTime: number;
+  generatedAt: number;
+  receivedAt: number;
+  postedAt: number;
+  expiredAt: number;
+  updatedAt: number;
+  createdAt: number;
+  ItemInformation: {
+    id: number;
+    title: string;
+    shortDescription: string;
+    longDescription: string;
+    itemCategoryId: number;
+    listingItemId: number;
+    listingItemTemplateId: number | null;
+    updatedAt: number;
+    createdAt: number;
+    ItemCategory: RespListingItemCategory;
+    ItemLocation: {
+      id: number;
+      country: string;
+      address: string | null;
+      description: string | null;
+      itemInformationId: number;
+      updatedAt: number;
+      createdAt: number;
+      LocationMarker: any;
+    };
+    ItemImages: Array<{
+      id: number;
+      hash: string;
+      itemInformationId: number;
+      featured: 0 | 1;
+      ItemImageDatas: Array<{
+        id: number;
+        protocol: IMAGE_PROTOCOL,
+        encoding: IMAGE_ENCODING,
+        imageVersion: IMAGE_VERSION,
+        imageHash: string;
+        dataId: string;
+        data: string;
+        itemImageId: number,
+        updatedAt: number;
+        createdAt: number;
+        originalMime: string | null;
+        originalName: string | null;
+      }>;
+    }>;  // @TODO: Confirm this is the case
+    ShippingDestinations: {
+      id: number;
+      country: string;
+      shippingAvailability: SHIPPING_AVAIL_TYPE;
+      itemInformationId: number;
+      updatedAt: number;
+      createdAt: number;
+    } [];
+  };
+  PaymentInformation: {
+    id: number;
+    type: SALES_TYPE;
+    listingItemId: number;
+    listingItemTemplateId: number | null;
+    updatedAt: number;
+    createdAt: number;
+    Escrow: {
+      id: number;
+      type: ESCROW_TYPE;
+      secondsToLock: number | null;
+      releaseType: ESCROW_RELEASE_TYPE;
+      paymentInformationId: number;
+      updatedAt: number;
+      createdAt: number;
+      Ratio: {
+        id: number;
+        buyer: number;
+        seller: number;
+        escrowId: number;
+        updatedAt: number;
+        createdAt: number;
+      }
+    },
+    ItemPrice: {
+      id: number;
+      currency: CURRENCY_TYPE;
+      basePrice: number;
+      paymentInformationId: number;
+      cryptocurrencyAddressId: number;
+      updatedAt: number;
+      createdAt: number;
+      ShippingPrice: {
+        id: number;
+        domestic: number;
+        international: number;
+        itemPriceId: number;
+        updatedAt: number;
+        createdAt: number;
+      };
+      CryptocurrencyAddress: {
+        id: number;
+        type: CRYPTO_ADDRESS_TYPE;
+        address: string;
+        profileId: number | null;
+        updatedAt: number;
+        createdAt: number;
+      };
+    };
+  };
+  MessagingInformation: any[];  // @TODO: ???
+  ListingItemObjects: any[];  // @TODO: ???
+  ListingItemTemplate: null | {
+    id: number;
+    hash: string;
+    market: string;
+    generatedAt: number;
+    profileId: number;
+    parentListingItemTemplateId: number;
+    updatedAt: number;
+    createdAt: number;
+    Profile: {
+      id: number;
+      name: string;
+      updatedAt: number;
+      createdAt: number;
+    };
+  };
+  Bids: any[];  // @TODO: ???
+  FlaggedItem: any; // @TODO: ???
 }

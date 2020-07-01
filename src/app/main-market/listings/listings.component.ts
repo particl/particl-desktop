@@ -1,31 +1,41 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, Subject, iif, merge, of } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { Observable, Subject, iif, merge, of, defer, combineLatest } from 'rxjs';
+import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError } from 'rxjs/operators';
 import { xor } from 'lodash';
-import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { MatDialog } from '@angular/material';
 
 import { DataService } from '../services/data/data.service';
+import { RegionListService } from '../services/region-list/region-list.service';
+import { ListingsService } from './listings.service';
 
 import { Market, CategoryItem, Country } from '../services/data/data.models';
-import { RegionListService } from '../services/region-list/region-list.service';
-
 import { ListingDetailModalComponent } from './../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingOverviewItem } from './listings.models';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+
+
+enum TextContent {
+  FAILED_LOAD_LISTINGS = 'Failed to load listings. Please try again'
+}
+
 
 @Component({
   templateUrl: './listings.component.html',
-  styleUrls: ['./listings.component.scss']
+  styleUrls: ['./listings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListingsComponent implements OnInit, OnDestroy {
 
   // for easy rendering only
   marketsList: Market[] = [];
   activeMarket: Market;
-  hasNewListings: boolean = false;    // TODO: Make this do something useful...
-  isSearching: boolean = false;       // TODO: Make this do something useful...
-  isLoadingListings: boolean = false; // TODO: Make this do something useful...
+  hasNewListings: boolean = false;          // TODO: Make this do something useful...
+  atEndOfListings: boolean = false;
+  isSearching: boolean = false;
+  isLoadingListings: boolean = true;
 
 
   // filter/search control mechanisms
@@ -34,29 +44,36 @@ export class ListingsComponent implements OnInit, OnDestroy {
   filterSourceRegion: FormControl = new FormControl([]);
   filterTargetRegion: FormControl = new FormControl([]);
   filterFlagged: FormControl = new FormControl(false);
+  filterSeller: FormControl = new FormControl('');
+  // refresh action
   actionRefresh: FormControl = new FormControl();
+  // scroll action
+  actionScroll: FormControl = new FormControl();
 
   // list items for filter selections
   categoriesList$: Observable<CategoryItem[]>;
   countryList$: Observable<Country[]>;
 
-  listings: any[] = [];       // TODO: Make this do something useful...
+  listings: ListingOverviewItem[] = [];
 
 
   private destroy$: Subject<void> = new Subject();
   private market$: Subject<Market> = new Subject();
   private categorySource$: Subject<CategoryItem[]> = new Subject();
 
-  private pageCount: number = 0;
-
-
   private availableMarkets: Market[] = [];
 
+  private PAGE_COUNT: number = 40;
+
+
   constructor(
+    private _cdr: ChangeDetectorRef,
     private _store: Store,
-    private _listService: DataService,
+    private _listingService: ListingsService,
+    private _sharedService: DataService,
     private _regionService: RegionListService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _snackbar: SnackbarService
   ) {
     this.categoriesList$ = this.categorySource$.asObservable().pipe(takeUntil(this.destroy$));
     this.countryList$ = of(this._regionService.getCountryList()).pipe(
@@ -69,9 +86,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+
+    // If the identity changes, fetch the selected identitys' markets.
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
       concatMap((iden) => iif(() => iden && iden.id > 0,
-        this._listService.loadMarkets(0, iden.id).pipe(
+        this._sharedService.loadMarkets(0, iden.id).pipe(
           tap((markets: Market[]) => {
             this.availableMarkets = markets;
             this.market$.next(null);
@@ -81,6 +100,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    // When the market form field changes (user selected a new market/identity changed/whatever), ensure we have a valid market
+    //  and then load the categories for that market,
+    //  and then reset filters ( causing a new listings lookup to be generated :) )
     const marketChange$ = this.market$.pipe(
       map((market: Market) => {
         let selectedMarket: Market = market || this.activeMarket;
@@ -100,13 +122,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
         return selectedMarket;
       }),
       concatMap((market: Market) => iif(() => !!market,
-        this._listService.loadCategories(+market.id).pipe(
+        // load the categories for the selected market
+        this._sharedService.loadCategories(+market.id).pipe(
           tap((categories) => {
             this.categorySource$.next(categories.categories);
           })
         )
       )),
-      // !!!!!  TODO: RESET FILTERS HERE  !!!
+      tap(() => {
+        this.resetFilters();
+      }),
       takeUntil(this.destroy$)
     );
 
@@ -130,12 +155,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const targetRegion$ = this.filterTargetRegion.valueChanges.pipe(
+    const destRegion$ = this.filterTargetRegion.valueChanges.pipe(
       distinctUntilChanged((prev: string[], curr: string[]) => prev[0] === curr[0]),
       takeUntil(this.destroy$)
     );
 
-    const flagged$ = this.filterFlagged.valueChanges.pipe(
+    const seller$ = this.filterSeller.valueChanges.pipe(
+      distinctUntilChanged((prev: string, curr: string) => prev === curr),
       takeUntil(this.destroy$)
     );
 
@@ -143,19 +169,88 @@ export class ListingsComponent implements OnInit, OnDestroy {
       search$,
       category$,
       sourceRegion$,
-      targetRegion$,
-      flagged$
+      destRegion$,
+      seller$
     ];
 
-    merge(
-      ...criteria$,
-      this.actionRefresh.valueChanges.pipe(takeUntil(this.destroy$))
-    ).pipe(
-      switchMap(() => this.fetchMarketListings()),
+    const filters$ = combineLatest(...criteria$).pipe(
+      takeUntil(this.destroy$));
+
+    const refresh$ = this.actionRefresh.valueChanges.pipe(
+      tap(() => {
+        this.listings = [];
+      }),
       takeUntil(this.destroy$)
+    );
+
+    const flagged$ = this.filterFlagged.valueChanges.pipe(
+      tap(() => {
+        this.listings = [];
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    const scrolled$ = this.actionScroll.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    );
+
+    // observable subscriptions and handling...
+    // ...this one for loading listings
+    merge(
+      refresh$,
+      flagged$,
+      filters$,
+      scrolled$
+    ).pipe(
+
+      tap(() => {
+        this.isLoadingListings = true;
+
+        // check for whether we're filtering/seaching
+        let isSearching = false;
+        const defaults = this.getDefaultFilterValues();
+        const fields = Object.keys(defaults);
+
+        for (const field of fields) {
+          try {
+            const defaultValue = defaults[field];
+            if (['number', 'string'].includes(typeof defaultValue)) {
+              isSearching = (this[field] as FormControl).value !== defaultValue;
+            } else {
+              isSearching = JSON.stringify((this[field] as FormControl).value) !== JSON.stringify(defaultValue);
+            }
+          } catch (err) {
+            // oops
+          }
+          if (isSearching) {
+            break;
+          }
+        }
+
+        this.isSearching = isSearching;
+
+        // force view update here
+        this._cdr.detectChanges();
+      }),
+
+      switchMap(() => this.fetchMarketListings(this.PAGE_COUNT).pipe(
+
+        catchError(() => {
+          this._snackbar.open(TextContent.FAILED_LOAD_LISTINGS, 'err');
+          return of(false);
+        }),
+
+        tap(() => {
+          this.isLoadingListings = false;
+          this._cdr.detectChanges();  // force view update again here
+        }),
+      )),
+
+      takeUntil(this.destroy$)
+
     ).subscribe();
 
-
+    // ...this one for watching the "global" changes
     merge(
       marketChange$,
       identityChange$
@@ -182,13 +277,80 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  private fetchMarketListings(): Observable<[]> {
-    // TODO: IMPLEMENT THIS (currently just a placeholder for the real lookup of listings)
-    return of([]);
+  openListingDetailModal(): void {
+    // TODO: IMPLEMENT THIS
+    const dialog = this._dialog.open(ListingDetailModalComponent);
   }
 
-  openListingDetailModal(): void {
-    const dialog = this._dialog.open(ListingDetailModalComponent);
+
+  private fetchMarketListings(numItems: number): Observable<boolean> {
+    const itemCount = this.listings.length;
+    return this._listingService.searchListingItems(
+      (this.activeMarket && this.activeMarket.receiveAddress) || '',
+      Math.floor(itemCount / numItems),
+      numItems,
+      this.searchQuery.value,
+      this.filterCategory.value,
+      this.filterSeller.value,
+      this.filterSourceRegion.value[0],
+      this.filterTargetRegion.value[0],
+      this.filterFlagged.value
+    ).pipe(
+      map(items => {
+        this.atEndOfListings = (items.length > 0) && (items.length < numItems);
+        // Remove duplicated listings: this may happen if earlier listings expired
+        //   - in which case the MP search queries may ignore them from the resultset returned, thus causing some overlap
+        //   - we only really need to check one PAGE_COUNT of the previous existing listing items
+        const found = [];
+        for (let ii = 0; ii < items.length; ii++) {
+          const item = items[ii];
+
+          for (let jj = 0; jj < Math.min(this.PAGE_COUNT, itemCount); jj++) {
+            const existing = this.listings[this.listings.length - 1 - jj];
+            if (existing.id === item.id) {
+              found.push(item.id);
+            }
+          }
+        }
+
+        if (found.length > 0) {
+          items = items.filter(item => !found.includes(item.id));
+        }
+
+        this.listings.push(...items);
+        return found.length;
+      }),
+
+      concatMap(loadMore => iif(
+        () => (loadMore > 0) && (numItems > 5) && (loadMore > (numItems / 5)),
+        defer(() => this.fetchMarketListings(loadMore)),
+        defer(() => of(true))
+      ))
+    );
+  }
+
+
+  private resetFilters(): void {
+    const defaults = this.getDefaultFilterValues();
+    const fields = Object.keys(defaults);
+    for (const field of fields) {
+      try {
+        (this[field] as FormControl).setValue(defaults[field]);
+      } catch (err) {
+        // oops
+      }
+    }
+  }
+
+
+  private getDefaultFilterValues(): {[key: string]: any} {
+    return {
+      searchQuery: '',
+      filterCategory: [],
+      filterSourceRegion: [],
+      filterTargetRegion: [],
+      filterSeller: ''
+    };
   }
 
 }

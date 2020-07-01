@@ -1397,6 +1397,11 @@
     consola "^2.3.0"
     node-fetch "^2.3.0"
 
+"@scarf/scarf@0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@scarf/scarf/-/scarf-0.1.5.tgz#fc4cc88294eca336eed9a91549180346de5e6946"
+  integrity sha512-Fx6atDc7JM1r0WkPCDhNetVZNp+DO21q/HGlomAKBG+k8vb1B8fg8Yige4oCf1P9OWTZWm5tM5i3jlXhrSbNOg==
+
 "@schematics/angular@8.3.26":
   version "8.3.26"
   resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-8.3.26.tgz#adda1552de14126e4d0993b648b4ea6258a581ce"
@@ -8480,11 +8485,12 @@ ngx-clipboard@^12.3.0:
     ngx-window-token "^2.0.0"
     tslib "^1.9.0"
 
-ngx-infinite-scroll@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-7.1.0.tgz#87dd5e0c596cd4795d2a487f7e30a0eabbb5e442"
-  integrity sha512-uytsKxUgGcPQjYMcf7FObcducQHkEsilPHZGJ3AMhOM4mtxP+YramnXXdyp2thEcuMgfNr9fBJjYnP0YcJciEQ==
+ngx-infinite-scroll@^8.0.0:
+  version "8.0.2"
+  resolved "https://registry.yarnpkg.com/ngx-infinite-scroll/-/ngx-infinite-scroll-8.0.2.tgz#ab527962f179b00f7b57c37cc0c8aba1bf88b131"
+  integrity sha512-+r748h8CAs0AZQXQw4eIE0bBH2xF+kBcqhJ/q3VG4f6p0qH+4XyhUlPkm3UGMke2Xe00V+RuWbolqmP7DoOGdw==
   dependencies:
+    "@scarf/scarf" "0.1.5"
     opencollective-postinstall "^2.0.2"
 
 ngx-material-file-input@^2.0.0:
@@ -9382,9 +9388,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-12.tgz:
-  version "0.3.0-12"
-  resolved "./particl-marketplace-0.3.0-12.tgz#88690d63e285235700a9ba28bf28aef97cda81d8"
+particl-marketplace@./particl-marketplace-0.3.0-16.tgz:
+  version "0.3.0-16"
+  resolved "./particl-marketplace-0.3.0-16.tgz#8138230027f87c9596159dc21ba02707788dee13"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"

@@ -1,7 +1,5 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// TODO: move to material
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -25,14 +23,12 @@ import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro
     CommonModule,
     MaterialModule,
     MatDialogModule, // todo move
-    InfiniteScrollModule,
     DirectiveModule,
     PipeModule
   ],
   exports: [
     MaterialModule,
     PaginatorComponent,
-    InfiniteScrollModule,
     DirectiveModule,
     PipeModule,
     HeaderComponent,

@@ -71,6 +71,10 @@
         <mat-icon fontIcon="part-flag"></mat-icon>
       </mat-button-toggle>
 
+      <button mat-button *ngIf="filterSeller.value.length > 0" class="refresh filter-button small" (click)="filterSeller.setValue('')" matTooltip="Clear seller filter">
+        <mat-icon fontIcon="part-search"></mat-icon>
+      </button>
+
     </div><!-- .filter-buttons -->
 
   </div><!-- .control-bar -->
@@ -90,90 +94,62 @@
   </app-page-intro>
 
 
-  <div class="content grid-container"><!-- infiniteScroll
-       [infiniteScrollContainer]="pagination.infinityScrollSelector"
-       [fromRoot]="true"
-       (scrolled)="loadNextPage()" -->
+  <div class="content grid-container" infiniteScroll
+       [scrollWindow]="true"
+       [infiniteScrollDisabled]="(listings.length === 0) || atEndOfListings || isLoadingListings"
+       (scrolled)="actionScroll.setValue()">
 
-    <!-- <div class="loading-container" *ngIf="isLoadingBig">
-      <div class="loading-info">
-        <div class="loading-image">
-          <img src="./assets/particl-logo-symbol.svg">
-        </div>
-        <h4 class="title">
-          Hang on, we're loading the listings
-        </h4>
-        <p class="help-text">
-          This might take a while
-        </p>
+    <mat-card class="listing" *ngFor="let listing of listings; trackBy:trackByListingFn">
+      <div mat-card-image (click)="openListingDetailModal(listing.id)">
+        <img class="img" [src]="listing.image" [alt]="listing.title">
       </div>
-    </div>-->  <!--.loading-container -->
+      <mat-card-header (click)="openListingDetailModal(listing.id)">
+        <mat-card-title>
+          {{ listing.title }}
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ listing.summary }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions fxLayoutAlign="space-between center">
+        <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="listing.extras.canAddToCart">
+          <mat-icon fontIcon="part-cart"></mat-icon>
+          <mat-icon fontIcon="part-cart-plus"></mat-icon>
+          {{ listing.price.whole }}{{ listing.price.sep }}<small>{{ listing.price.decimal }}</small>
+          <mat-icon fontIcon="part-cryptocurrency-particl"></mat-icon>
+        </button>
+        <button mat-button class="more-options tiny icon-only" [matMenuTriggerFor]="menu" aria-label="Secondary Listing actions">
+          <mat-icon fontIcon="part-more-horizontal"></mat-icon>
+        </button>
+      </mat-card-actions>
+      <mat-menu #menu="matMenu" class="--smaller">
+        <button mat-menu-item>
+          <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
+          <span>Report as inapropriate</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+          <span>Questions &amp; Answers ({{ listing.extras.commentCount }})</span>
+        </button>
+        <button mat-menu-item>
+          <ng-container *ngIf="!listing.extras.isFavourited">
+            <mat-icon fontIcon="part-heart-outline"></mat-icon>
+            <span>Add to Favorites</span>
+          </ng-container>
+          <ng-container *ngIf="listing.extras.isFavourited">
+            <mat-icon fontIcon="part-heart"></mat-icon>
+            <span>Remove from Favorites</span>
+          </ng-container>
+        </button>
+        <button mat-menu-item>
+          <mat-icon fontIcon="part-search"></mat-icon>
+          <span>Filter By Seller</span>
+        </button>
+      </mat-menu>
+    </mat-card>
 
-    <!--ng-container *ngFor="let page of pages;let pageIdx = index;">
-      <ng-container *ngFor="let item of page.listings"-->
 
-        <ng-template #listingItem><!-- template here just for layout testing -->
-        <mat-card class="listing">
-          <div mat-card-image (click)="openListingDetailModal()">
-            <img class="img" src="./assets/images/placeholder_4-3.jpg" alt="TODO: listing name here">
-          </div>
-          <mat-card-header (click)="openListingDetailModal()">
-            <mat-card-title>
-              A bit longer Listing name in here, should cut off after 2 lines, just for the fun of it
-            </mat-card-title>
-            <mat-card-subtitle>
-              And let's show a couple lines from Listing's Summary here - nobody needs to know the Category, right?
-            </mat-card-subtitle>
-          </mat-card-header>
-          <mat-card-actions fxLayoutAlign="space-between center">
-            <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart">
-              <mat-icon fontIcon="part-cart"></mat-icon>
-              <mat-icon fontIcon="part-cart-plus"></mat-icon>
-              652.<small>8431</small>
-              <mat-icon fontIcon="part-cryptocurrency-particl"></mat-icon>
-            </button>
-            <button mat-button class="more-options tiny icon-only" [matMenuTriggerFor]="menu" aria-label="Secondary Listing actions">
-              <mat-icon fontIcon="part-more-horizontal"></mat-icon>
-            </button>
-          </mat-card-actions>
-          <mat-menu #menu="matMenu" class="--smaller">
-            <button mat-menu-item>
-              <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
-              <span>Report as inapropriate</span>
-            </button>
-            <button mat-menu-item>
-              <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-              <span>Questions &amp; Answers (8)</span>
-            </button>
-            <button mat-menu-item>
-              <mat-icon fontIcon="part-heart-outline"></mat-icon>
-              <span>Add to Favorites</span>
-            </button>
-            <!-- ..vs.. -->
-            <!--button mat-menu-item>
-              <mat-icon fontIcon="part-heart"></mat-icon>
-              <span>Remove from Favorites</span>
-            </button-->
-          </mat-menu>
-        </mat-card>
-        </ng-template>
-
-        <!-- just for layout testing.. -->
-        <!-- <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container>
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container> -->
-        <ng-container *ngTemplateOutlet="listingItem"></ng-container> 
-
-      <!--/ng-container>
-    </ng-container-->
-
-    <div class="no-results" *ngIf="listings.length === 0">
+    <div class="no-results" *ngIf="!isLoadingListings && (listings.length === 0)">
 
       <ng-container *ngIf="!isSearching; else searchingBanner">
         <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="Market is syncing">
@@ -184,7 +160,7 @@
           If you launched the Marketplace recently, Listings might not load yet.<br>
           Please wait a few minutes and then:
         </p>
-        <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()">
+        <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)">
           <mat-icon fontIcon="part-refresh"></mat-icon>
           Refresh Listings
         </button>
@@ -202,12 +178,12 @@
 
     </div><!-- .no-results -->
 
-    <div class="no-results --smaller" *ngIf="reachedListingsEnd">
+    <div class="no-results --smaller" *ngIf="atEndOfListings">
       <p>
         This is the end
       </p>
       <p class="help-text">
-        You've reached the end of the Marketplace supply
+        You've reached the end of the current Marketplace supply
       </p>
     </div><!-- .no-results -->
   </div><!-- .content -->

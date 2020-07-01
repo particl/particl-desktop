@@ -14,21 +14,4 @@
     font-weight: 600;
     display: inline-block;
   }
-  /* TODO @allien: no longer needed?
-  .right {
-    text-align: right;
-    .spendable-balance { // available blind balance for spending on Market
-      display: inline-block;
-      border-right: 1px solid var(--bg-muted);
-      margin-right: 24px;
-      padding: 15px 24px 15px 0;
-      .mat-icon {
-        margin-right: 8px;
-        position: relative;
-        top: 2px;
-        color: var(--text-muted);
-      }
-    }
-  }
-  */
 }
