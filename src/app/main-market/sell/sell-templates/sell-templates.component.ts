@@ -12,7 +12,7 @@ import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/de
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { BatchPublishModalComponent } from '../modals/batch-publish-modal/batch-publish-modal.component';
 import { PublishTemplateModalComponent } from '../new-listing/publish-template-modal/publish-template-modal.component';
-import { ListingItem } from 'app/main-market/shared/shared.models';
+import { ListingItemDetail } from 'app/main-market/shared/shared.models';
 import { TEMPLATE_SORT_FIELD_TYPE, TEMPLATE_STATUS_TYPE, MarketTemplate, BaseTemplate } from '../sell.models';
 
 
@@ -217,7 +217,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     const countries = this._regionService.findCountriesByIsoCodes(countryCodes);
     const sourceCountry = countries.shift();
 
-    const listing: ListingItem = {
+    const listing: ListingItemDetail = {
       id: 0,
       hash: '',
       title: templ.details.information.title,

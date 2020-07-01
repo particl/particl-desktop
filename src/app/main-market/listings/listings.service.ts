@@ -3,6 +3,7 @@ import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { RegionListService } from '../services/region-list/region-list.service';
 
 import { MarketState } from '../store/market.state';
 
@@ -10,6 +11,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { RespListingItem } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
 import { MarketSettings } from '../store/market.models';
+import { ListingItemDetail } from '../shared/shared.models';
 
 
 @Injectable()
@@ -17,6 +19,7 @@ export class ListingsService {
 
   constructor(
     private _rpc: MarketRpcService,
+    private _regionService: RegionListService,
     private _store: Store
   ) {}
 
@@ -57,6 +60,13 @@ export class ListingsService {
   }
 
 
+  getListingDetails(id: number): Observable<ListingItemDetail> {
+    return this._rpc.call('item', ['get', id, true]).pipe(
+      map((resp: RespListingItem) => this.createListingItemDetail(resp))
+    );
+  }
+
+
   private createOverviewItem(from: RespListingItem, marketSettings: MarketSettings): ListingOverviewItem {
     let listingId = 0,
         title = '',
@@ -70,7 +80,7 @@ export class ListingsService {
 
     const fromDetails = from.ItemInformation;
 
-    if ((typeof fromDetails === 'object') && !!fromDetails) {
+    if (this.isBasicObjectType(fromDetails)) {
 
       // Set item information values
       title = this.getValueOrDefault(fromDetails.title, 'string', title);
@@ -79,7 +89,7 @@ export class ListingsService {
       listingId = this.getValueOrDefault(from.id, 'number', 0);
       listingSeller = this.getValueOrDefault(from.seller, 'string', '');
 
-      if ((typeof fromDetails.ItemLocation === 'object') && !!fromDetails.ItemLocation) {
+      if (this.isBasicObjectType(fromDetails.ItemLocation)) {
         isLocalShipping = marketSettings.userRegion === this.getValueOrDefault(fromDetails.ItemLocation.country, 'string', '');
       }
 
@@ -104,8 +114,8 @@ export class ListingsService {
     // Calculate price value to be displayed
     const priceInfo = from.PaymentInformation;
 
-    if ((typeof priceInfo === 'object') && !!priceInfo) {
-      if ((typeof priceInfo.ItemPrice === 'object') && !!priceInfo.ItemPrice) {
+    if (this.isBasicObjectType(priceInfo)) {
+      if (this.isBasicObjectType(priceInfo.ItemPrice)) {
         price.add(new PartoshiAmount(priceInfo.ItemPrice.basePrice, true));
 
         if (marketSettings.userRegion.length > 0) {
@@ -119,7 +129,7 @@ export class ListingsService {
     }
 
     // Process extra info
-    isOwnListing = (typeof from.ListingItemTemplate === 'object') && (+from.ListingItemTemplate.id > 0);
+    isOwnListing = this.isBasicObjectType(from.ListingItemTemplate) && (+from.ListingItemTemplate.id > 0);
     commentCount = Object.prototype.toString.call(from.MessagingInformation) === '[object Array]' ?
         from.MessagingInformation.length : 0;
 
@@ -140,7 +150,7 @@ export class ListingsService {
       extras: {
         commentCount: commentCount,
         isFavourited: false,
-        isFlagged: typeof from.FlaggedItem === 'object' && !!from.FlaggedItem,
+        isFlagged: this.isBasicObjectType(from.FlaggedItem),
         usersVote: false,
         isOwn: isOwnListing,
         canAddToCart: !isOwnListing
@@ -151,8 +161,157 @@ export class ListingsService {
   }
 
 
+  private createListingItemDetail(from: RespListingItem): ListingItemDetail {
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+
+    let title = '',
+        summary = '',
+        description = '',
+        basePrice = 0,
+        shipLocal = 0,
+        shipIntl = 0,
+        escrowSeller = 100,
+        escrowBuyer = 100,
+        shippingDestinations = [] as {code: string, name: string}[];
+
+    const shippingLocation = { code: '', name: ''};
+    const category = { id: 0, title: '' };
+    const images = { featured: 0, images: [] as {THUMBNAIL: string, IMAGE: string}[] };
+
+    const fromDetails = from.ItemInformation;
+
+    if (this.isBasicObjectType(fromDetails)) {
+      // basic info
+      title = this.getValueOrDefault(fromDetails.title, 'string', title);
+      summary = this.getValueOrDefault(fromDetails.shortDescription, 'string', summary);
+      description = this.getValueOrDefault(fromDetails.longDescription, 'string', description);
+
+      // shipping source and destinations
+      const codes = [];
+
+      if (this.isBasicObjectType(fromDetails.ItemLocation)) {
+        shippingLocation.code = this.getValueOrDefault(fromDetails.ItemLocation.country, 'string', shippingLocation.code);
+        codes.push(shippingLocation.code);
+      }
+
+      if (Object.prototype.toString.call(fromDetails.ShippingDestinations) === '[object Array]') {
+        fromDetails.ShippingDestinations.forEach((shipping) => {
+          if ((this.getValueOrDefault(shipping.country, 'string', '') !== '') && (shipping.shippingAvailability === 'SHIPS')) {
+            codes.push(shipping.country);
+          }
+        });
+      }
+
+      const locations = this._regionService.findCountriesByIsoCodes(codes);
+
+      if (locations.length && (locations[0].iso === shippingLocation.code)) {
+        let source = locations[0];
+        if (codes.filter(c => c === shippingLocation.code).length === 1) {
+          source = locations.shift();
+        }
+        shippingLocation.name = source.name;
+      }
+
+      shippingDestinations = locations.map(l => ({code: l.iso, name: l.name}));
+
+      // category
+      if (this.isBasicObjectType(fromDetails.ItemCategory)) {
+        category.id = this.getValueOrDefault(fromDetails.ItemCategory.id, 'number', category.id);
+        category.title = this.getValueOrDefault(fromDetails.ItemCategory.name, 'string', category.title);
+      }
+
+      // images
+      if (Object.prototype.toString.call(fromDetails.ItemImages) === '[object Array]') {
+        fromDetails.ItemImages.forEach(img => {
+          if (img.featured) {
+            images.featured = images.images.length;
+          }
+          let thumbUrl = '';
+          let imgUrl = '';
+
+          if (Object.prototype.toString.call(img.ItemImageDatas) === '[object Array]') {
+            img.ItemImageDatas.forEach(d => {
+              if (d.imageVersion) {
+                if (d.imageVersion === 'MEDIUM' && this.getValueOrDefault(d.dataId, 'string', imgUrl)) { imgUrl = d.dataId; }
+                if (d.imageVersion === 'THUMBNAIL' && this.getValueOrDefault(d.dataId, 'string', thumbUrl)) { thumbUrl = d.dataId; }
+              }
+            });
+          }
+
+          if (thumbUrl && imgUrl) {
+            images.images.push({
+              IMAGE: this.formatImagePath(imgUrl, marketSettings.port),
+              THUMBNAIL: this.formatImagePath(thumbUrl, marketSettings.port)
+            });
+          }
+        });
+      }
+    }
+
+    const priceInfo = from.PaymentInformation;
+
+    if (this.isBasicObjectType(priceInfo)) {
+      if (this.isBasicObjectType(priceInfo.ItemPrice)) {
+        basePrice = this.getValueOrDefault(priceInfo.ItemPrice.basePrice, 'number', 0);
+
+        if (this.isBasicObjectType(priceInfo.ItemPrice.ShippingPrice)) {
+          shipLocal = this.getValueOrDefault(priceInfo.ItemPrice.ShippingPrice.domestic, 'number', shipLocal);
+          shipIntl = this.getValueOrDefault(priceInfo.ItemPrice.ShippingPrice.international, 'number', shipIntl);
+        }
+      }
+
+      if (this.isBasicObjectType(priceInfo.Escrow)) {
+        if (this.isBasicObjectType(priceInfo.Escrow.Ratio)) {
+          escrowBuyer = this.getValueOrDefault(priceInfo.Escrow.Ratio.buyer, 'number', escrowBuyer);
+          escrowSeller = this.getValueOrDefault(priceInfo.Escrow.Ratio.seller, 'number', escrowSeller);
+        }
+      }
+    }
+
+
+    const itemDetail: ListingItemDetail = {
+      id: this.getValueOrDefault(from.id, 'number', 0),
+      hash: this.getValueOrDefault(from.hash, 'string', ''),
+      title: title,
+      summary: summary,
+      description: description,
+      seller: this.getValueOrDefault(from.seller, 'string', ''),
+      price: {
+        base: basePrice,
+        shippingDomestic: shipLocal,
+        shippingIntl: shipIntl
+      },
+      escrow: {
+        buyerRatio: escrowBuyer,
+        sellerRatio: escrowSeller
+      },
+      shippingFrom: shippingLocation,
+      shippingTo: shippingDestinations,
+      category: category,
+      images: images,
+      timeData: {
+        created: this.getValueOrDefault(from.postedAt, 'number', 0),
+        expires: this.getValueOrDefault(from.expiredAt, 'number', 0)
+      },
+      extra: {
+        isFlagged: this.isBasicObjectType(from.FlaggedItem),
+        isOwn: this.isBasicObjectType(from.ListingItemTemplate) && (+from.ListingItemTemplate.id > 0),
+        vote: {}   // TODO: implement details when known
+      }
+
+    };
+
+    return itemDetail;
+  }
+
+
   private getValueOrDefault<T>(value: T, type: 'string' | 'number' | 'boolean', defaultValue: T): T {
     return typeof value === type ? value : defaultValue;
+  }
+
+
+  private isBasicObjectType(value: any): boolean {
+    return (typeof value === 'object') && !!value;
   }
 
 

@@ -18,7 +18,8 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
 
 enum TextContent {
-  FAILED_LOAD_LISTINGS = 'Failed to load listings. Please try again'
+  FAILED_LOAD_LISTINGS = 'Failed to load listings. Please try again',
+  FAILED_LOAD_DETAILS = 'Could not load listing details. Please try again shortly'
 }
 
 
@@ -174,6 +175,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     ];
 
     const filters$ = combineLatest(...criteria$).pipe(
+      tap(() => this.listings = []),
       takeUntil(this.destroy$));
 
     const refresh$ = this.actionRefresh.valueChanges.pipe(
@@ -277,9 +279,23 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  openListingDetailModal(): void {
+  openListingDetailModal(id: number): void {
     // TODO: IMPLEMENT THIS
-    const dialog = this._dialog.open(ListingDetailModalComponent);
+    this._listingService.getListingDetails(id).subscribe(
+      (listing) => {
+        if (+listing.id > 0) {
+          const dialog = this._dialog.open(
+            ListingDetailModalComponent,
+            {data: {listing, canChat: true, canAction: true}}
+          );
+        } else {
+          this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn');
+        }
+      },
+
+      (err) => this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn')
+    );
+
   }
 
 

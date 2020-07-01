@@ -72,7 +72,7 @@
       </mat-button-toggle>
 
       <button mat-button *ngIf="filterSeller.value.length > 0" class="refresh filter-button small" (click)="filterSeller.setValue('')" matTooltip="Clear seller filter">
-        <mat-icon fontIcon="part-search"></mat-icon>
+        <mat-icon fontIcon="part-cross"></mat-icon>
       </button>
 
     </div><!-- .filter-buttons -->
@@ -141,7 +141,7 @@
             <span>Remove from Favorites</span>
           </ng-container>
         </button>
-        <button mat-menu-item>
+        <button mat-menu-item *ngIf="filterSeller.value === ''" (click)="filterSeller.setValue(listing.seller)">
           <mat-icon fontIcon="part-search"></mat-icon>
           <span>Filter By Seller</span>
         </button>

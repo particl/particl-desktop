@@ -2,13 +2,13 @@ import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/cor
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { GalleryItem, ImageItem } from '@ngx-gallery/core';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { ListingItem } from '../shared.models';
+import { ListingItemDetail } from '../shared.models';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 
 
 interface ListingItemDetailInputs {
-  listing: ListingItem;
+  listing: ListingItemDetail;
   canChat: boolean;
   canAction: boolean;
 }
@@ -94,9 +94,11 @@ export class ListingDetailModalComponent implements OnInit {
     const isInputValuesObject = ListingDetailModalComponent.isObject(data);
     const userDestinationCountry = this._store.selectSnapshot(MarketState.settings).userRegion;
 
-    const input: ListingItem = isInputValuesObject &&
+    const input: ListingItemDetail = isInputValuesObject &&
         ListingDetailModalComponent.isObject(data.listing) ?
         JSON.parse(JSON.stringify(data.listing)) : {};
+
+        console.log('@@@@ details input item: ', input);
 
     const inputCategory = ListingDetailModalComponent.isObject(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
     const inputEscrow = ListingDetailModalComponent.isObject(input.escrow) ? input.escrow : { buyerRatio: 0};
@@ -145,9 +147,9 @@ export class ListingDetailModalComponent implements OnInit {
 
     // Validate and extract initial pricing info
     const inputPrice = ListingDetailModalComponent.isObject(input.price) ? input.price : { base: 0, shippingDomestic: 0, shippingIntl: 0};
-    const shipBasePrice = new PartoshiAmount(+inputPrice.base);
-    const shipLocalPrice = new PartoshiAmount(+inputPrice.shippingDomestic);
-    const shipIntlPrice = new PartoshiAmount(+inputPrice.shippingIntl);
+    const shipBasePrice = new PartoshiAmount(+inputPrice.base, true);
+    const shipLocalPrice = new PartoshiAmount(+inputPrice.shippingDomestic, true);
+    const shipIntlPrice = new PartoshiAmount(+inputPrice.shippingIntl, true);
     const shipActualPrice = isLocalShipping ? shipLocalPrice : shipIntlPrice;
 
     // NB! The price values calculated below use a bit of JS object referential trickery to avoid creating new objects for price type.

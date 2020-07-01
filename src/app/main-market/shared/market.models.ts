@@ -262,14 +262,14 @@ export interface RespListingItem {
         originalName: string | null;
       }>;
     }>;  // @TODO: Confirm this is the case
-    ShippingDestinations: {
+    ShippingDestinations: Array<{
       id: number;
       country: string;
       shippingAvailability: SHIPPING_AVAIL_TYPE;
       itemInformationId: number;
       updatedAt: number;
       createdAt: number;
-    } [];
+    }>;
   };
   PaymentInformation: {
     id: number;

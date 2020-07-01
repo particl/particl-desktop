@@ -11,7 +11,7 @@ interface ListingRegion {
 }
 
 
-export interface ListingItem {
+export interface ListingItemDetail {
   readonly id: number;
   readonly hash: string;
   readonly title: string;
@@ -42,9 +42,9 @@ export interface ListingItem {
     readonly sellerRatio: number;
   };
   readonly extra: {
-    readonly isFlagged: boolean;
+    isFlagged: boolean;
     readonly isOwn: boolean;
-    readonly vote: {
+    vote: {
       // TODO: details to be added when known
     };
   };
