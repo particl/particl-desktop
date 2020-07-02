@@ -26,55 +26,7 @@ This repository is the user interface that works in combination with our [`parti
 
 ## Development
 
-### Boostrapping for development:
-
-* Download + Install [Node.js®](https://nodejs.org/) 6.4—7.10
-* Download + Install [git](https://git-scm.com/)
-
-```bash
-git clone https://github.com/particl/particl-desktop
-cd particl-desktop
-yarn install
-```
-
-### Development with Electron
-
-1. run `ng serve` to start the dev server and keep it running
-2. and then start it: `yarn run start:electron:dev`
-   * note: this command will auto-refresh the client on each saved change
-   * `-testnet` – for running on testnet (omit for running the client on mainnet)
-   * `-opendevtools` – automatically opens Developer Tools on client launch
-   * `-skipmarket` – skip launching internal market process
-
-#### Interact with particl-core daemon
-
-You can directly interact with the daemon ran by the Electron version.
-
-```
-./particl-cli -testnet getblockchaininfo
-```
-
-## Running
-
-### Start Electron
-
-* `yarn run start:electron:fast` – disables debug messages for faster startup (keep in mind using `:fast` disables auto-reload of app on code change)
-
-### Package Electron
-
-Building for Windows requires:
-* WINE
-* the 32-bit libraries to be available.
-
-```bash
-sudo apt-get install gcc-multilib
-sudo apt-get install g++-multilib
-```
-
-
-* `yarn run package:win` – Windows
-* `yarn run package:mac` – OSX
-* `yarn run package:linux` – Linux
+Development currently takes place in a private repo. Please contact us (using the details below) in order to find out how to contribute towards development.
 
 ## Contributors
 
