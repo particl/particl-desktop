@@ -10,7 +10,7 @@ export interface ListingOverviewItem {
   seller: string;
   extras: {
     isOwn: boolean;
-    isFavourited: boolean;
+    favouriteId: number | null;
     canAddToCart: boolean;
     isFlagged: boolean;
     usersVote: null | boolean;

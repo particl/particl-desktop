@@ -99,7 +99,7 @@
        [infiniteScrollDisabled]="(listings.length === 0) || atEndOfListings || isLoadingListings"
        (scrolled)="actionScroll.setValue()">
 
-    <mat-card class="listing" *ngFor="let listing of listings; trackBy:trackByListingFn">
+    <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
       <div mat-card-image (click)="openListingDetailModal(listing.id)">
         <img class="img" [src]="listing.image" [alt]="listing.title">
       </div>
@@ -131,12 +131,12 @@
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
           <span>Questions &amp; Answers ({{ listing.extras.commentCount }})</span>
         </button>
-        <button mat-menu-item>
-          <ng-container *ngIf="!listing.extras.isFavourited">
+        <button mat-menu-item (click)="updateFav(listingIdx, listing.extras.favouriteId === null ? 'ADD' : 'REMOVE')">
+          <ng-container *ngIf="listing.extras.favouriteId === null">
             <mat-icon fontIcon="part-heart-outline"></mat-icon>
             <span>Add to Favorites</span>
           </ng-container>
-          <ng-container *ngIf="listing.extras.isFavourited">
+          <ng-container *ngIf="listing.extras.favouriteId !== null">
             <mat-icon fontIcon="part-heart"></mat-icon>
             <span>Remove from Favorites</span>
           </ng-container>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, mapTo, catchError } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 
@@ -54,7 +54,8 @@ export class ListingsService {
     return this._rpc.call('item', ['search', ...params]).pipe(
       map((resp: RespListingItem[]) => {
         const marketSettings = this._store.selectSnapshot(MarketState.settings);
-        return resp.map((item) => this.createOverviewItem(item, marketSettings));
+        const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+        return resp.map((item) => this.createOverviewItem(item, profileId, marketSettings));
       })
     );
   }
@@ -67,7 +68,23 @@ export class ListingsService {
   }
 
 
-  private createOverviewItem(from: RespListingItem, marketSettings: MarketSettings): ListingOverviewItem {
+  addFavourite(profileId: number, listingId: number): Observable<number | null> {
+    return this._rpc.call('favorite', ['add', profileId, listingId]).pipe(
+      map(item => item.id),
+      catchError(() => of(null)),
+    );
+  }
+
+
+  removeFavourite(favouriteId: number): Observable<boolean> {
+    return this._rpc.call('favorite', ['remove', favouriteId]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
+    );
+  }
+
+
+  private createOverviewItem(from: RespListingItem, profileId: number, marketSettings: MarketSettings): ListingOverviewItem {
     let listingId = 0,
         title = '',
         summary = '',
@@ -75,6 +92,7 @@ export class ListingsService {
         imageSelected = './assets/images/placeholder_4-3.jpg',
         isLocalShipping = false,
         isOwnListing = false,
+        favId = null,
         commentCount = 0;
     const price = new PartoshiAmount(0);
 
@@ -128,6 +146,15 @@ export class ListingsService {
       }
     }
 
+    // Favourite?
+    if (Object.prototype.toString.call(from.FavoriteItems) === '[object Array]') {
+
+      for (let ii = 0; ii < from.FavoriteItems.length; ii++) {
+        favId = from.FavoriteItems[ii].profileId === profileId ? from.FavoriteItems[ii].id : favId;
+        if (favId) { break; }
+      }
+    }
+
     // Process extra info
     isOwnListing = this.isBasicObjectType(from.ListingItemTemplate) && (+from.ListingItemTemplate.id > 0);
     commentCount = Object.prototype.toString.call(from.MessagingInformation) === '[object Array]' ?
@@ -149,7 +176,7 @@ export class ListingsService {
       },
       extras: {
         commentCount: commentCount,
-        isFavourited: false,
+        favouriteId: favId,
         isFlagged: this.isBasicObjectType(from.FlaggedItem),
         usersVote: false,
         isOwn: isOwnListing,

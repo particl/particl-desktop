@@ -19,7 +19,8 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
 enum TextContent {
   FAILED_LOAD_LISTINGS = 'Failed to load listings. Please try again',
-  FAILED_LOAD_DETAILS = 'Could not load listing details. Please try again shortly'
+  FAILED_LOAD_DETAILS = 'Could not load listing details. Please try again shortly',
+  FAILED_FAV_SET = 'The was an error while updating the item. Please try again shortly'
 }
 
 
@@ -37,7 +38,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
   isLoadingListings: boolean = true;
-
 
   // filter/search control mechanisms
   searchQuery: FormControl = new FormControl('');
@@ -63,8 +63,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private categorySource$: Subject<CategoryItem[]> = new Subject();
 
   private availableMarkets: Market[] = [];
-
-  private PAGE_COUNT: number = 40;
+  private PAGE_COUNT: number = 60;
 
 
   constructor(
@@ -88,7 +87,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // If the identity changes, fetch the selected identitys' markets.
+    // If the identity changes, fetch the selected identity's markets.
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
       concatMap((iden) => iif(() => iden && iden.id > 0,
         this._sharedService.loadMarkets(0, iden.id).pipe(
@@ -166,7 +165,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const criteria$ = [
+    const filterActions = [
       search$,
       category$,
       sourceRegion$,
@@ -174,18 +173,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
       seller$
     ];
 
-    const filters$ = combineLatest(...criteria$).pipe(
-      tap(() => this.listings = []),
-      takeUntil(this.destroy$));
+    const filters$ = combineLatest(...filterActions).pipe(takeUntil(this.destroy$));
+    const refresh$ = this.actionRefresh.valueChanges.pipe(takeUntil(this.destroy$));
+    const flagged$ = this.filterFlagged.valueChanges.pipe(takeUntil(this.destroy$));
 
-    const refresh$ = this.actionRefresh.valueChanges.pipe(
-      tap(() => {
-        this.listings = [];
-      }),
-      takeUntil(this.destroy$)
-    );
-
-    const flagged$ = this.filterFlagged.valueChanges.pipe(
+    const reset$ = merge(filters$, refresh$, flagged$).pipe(
       tap(() => {
         this.listings = [];
       }),
@@ -199,9 +191,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     // observable subscriptions and handling...
     // ...this one for loading listings
     merge(
-      refresh$,
-      flagged$,
-      filters$,
+      reset$,
       scrolled$
     ).pipe(
 
@@ -279,8 +269,53 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
+  updateFav(listingIdx: number, action: 'ADD' | 'REMOVE') {
+    const listing: ListingOverviewItem = this.listings[listingIdx];
+    if (
+      this.isLoadingListings ||
+      !listing ||
+      ((action === 'ADD') && listing.extras.favouriteId) ||
+      ((action === 'REMOVE') && !listing.extras.favouriteId)
+    ) {
+      return;
+    }
+
+    let obs$: Observable<boolean | number | null>;
+    if (action === 'ADD') {
+      obs$ = this._listingService.addFavourite(this._store.selectSnapshot(MarketState.currentProfile).id, listing.id);
+    } else if (action === 'REMOVE') {
+      obs$ = this._listingService.removeFavourite(listing.extras.favouriteId);
+    }
+
+    if (obs$) {
+      obs$.subscribe(
+        (resp) => {
+          let success = false;
+          if (action === 'ADD') {
+            if (typeof resp === 'number' && resp) {
+              listing.extras.favouriteId = resp as number;
+              success = true;
+            }
+          } else if (action === 'REMOVE') {
+            if (typeof resp === 'boolean' && resp) {
+              listing.extras.favouriteId = null;
+              success = true;
+            }
+          }
+
+          if (success) {
+            this._cdr.detectChanges();  // force refresh here
+          } else {
+            this._snackbar.open(TextContent.FAILED_FAV_SET, 'warn');
+          }
+        }
+      );
+
+    }
+  }
+
+
   openListingDetailModal(id: number): void {
-    // TODO: IMPLEMENT THIS
     this._listingService.getListingDetails(id).subscribe(
       (listing) => {
         if (+listing.id > 0) {
@@ -288,6 +323,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
             ListingDetailModalComponent,
             {data: {listing, canChat: true, canAction: true}}
           );
+          // TODO: Link dialog actions back to applicable actions here
         } else {
           this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn');
         }

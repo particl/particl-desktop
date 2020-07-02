@@ -11,6 +11,13 @@ export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'L
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
+interface RespGeneralProfile {
+  id: number;
+  name: string;
+  updatedAt: number;
+  createdAt: number;
+}
+
 export interface RespCategoryList {
   id: number;
   key: string;
@@ -323,6 +330,14 @@ export interface RespListingItem {
   };
   MessagingInformation: any[];  // @TODO: ???
   ListingItemObjects: any[];  // @TODO: ???
+  FavoriteItems: Array<{
+    id: number;
+    listingItemId: number;
+    profileId: number;
+    updatedAt: number;
+    createdAt: number;
+    Profile: RespGeneralProfile;
+  }>;
   ListingItemTemplate: null | {
     id: number;
     hash: string;
@@ -332,12 +347,7 @@ export interface RespListingItem {
     parentListingItemTemplateId: number;
     updatedAt: number;
     createdAt: number;
-    Profile: {
-      id: number;
-      name: string;
-      updatedAt: number;
-      createdAt: number;
-    };
+    Profile: RespGeneralProfile;
   };
   Bids: any[];  // @TODO: ???
   FlaggedItem: any; // @TODO: ???
