@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 
-import { ListingDetailModalComponent } from './../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
 @Component({
-  selector: 'app-buy-questions',
-  templateUrl: './buy-questions.component.html',
-  styleUrls: ['./buy-questions.component.scss']
+  selector: 'market-buy-comments',
+  templateUrl: './buy-comments.component.html',
+  styleUrls: ['./buy-comments.component.scss']
 })
-export class BuyQuestionsComponent implements OnInit {
+export class BuyCommentsComponent implements OnInit {
 
   searchQuery: FormControl = new FormControl('');
 

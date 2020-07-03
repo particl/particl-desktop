@@ -1,95 +1,32 @@
-<app-header>
-  <div class="tab-bar">
-    <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-cart-2"></mat-icon>
-          Your cart
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-recipe"></mat-icon>
-          Buy Orders
-          <!-- FIXME @dev:
-          <span class="tag" *ngIf="orderCount > 0">{{ orderCount }}</span-->
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-          Answers
-        </ng-template>
-      </mat-tab>
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-heart-outline"></mat-icon>
-          Favourites
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
-</app-header>
+
+<div class="tab-bar">
+  <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+    <mat-tab *ngFor="let tab of tabs">
+      <ng-template mat-tab-label>
+        <mat-icon [fontIcon]="tab.icon"></mat-icon>
+        {{ tab.title }}
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
 
 
+<ng-container [ngSwitch]="selectedTempl">
 
-<!-- =========== CART =========== -->
-
-<div class="your-cart" *ngIf="tabLabels[selectedTab] == 'cart'">
-  <app-checkout-process (onOrderPlaced)="changeTab($event)"></app-checkout-process>
-</div><!-- "Your cart" tab -->
-
-
-
-<!-- =========== ORDERS =========== -->
-
-<div class="orders container-block" *ngIf="tabLabels[selectedTab] == 'orders'">
-  <app-buy-orders-page></app-buy-orders-page>
-</div><!-- "Orders" tab -->
-
-
-
-<!-- =========== QUESTIONS =========== -->
-
-<div class="questions container-block" *ngIf="tabLabels[selectedTab] == 'questions'">
-  <app-buy-questions></app-buy-questions>
-</div><!-- "Questions" tab -->
-
-
-
-<!-- =========== FAVORITES =========== -->
-
-<div class="favorites container-block"
-     *ngIf="tabLabels[selectedTab] == 'favourites'">
-
-  <app-page-intro [childPageAlias]="tabLabels[selectedTab]">
-    <ng-container page-title>Your Favourites</ng-container>
-    <ng-container page-content>
-      Save your favourite Listings to easily access them later on.
-    </ng-container>
-    <ng-container page-help>
-      Note that marketplace Listings have a limited lifetime (they expire after some time), so make sure to check back here often as they might not be available on the marketplace anymore.
-    </ng-container>
-  </app-page-intro>
-
-  <div class="no-results" *ngIf="favorites === undefined || favorites?.length == 0">
-    <img class="illustration" src="./assets/app-market/illustrations/no-favorites.svg" alt="No favorites yet">
-    <p>
-      You don't have any favourites yet
-    </p>
-    <p class="help-text">
-      To add an item to favourites, click on the <mat-icon fontIcon="part-heart-outline-add"></mat-icon> icon
-    </p>
-  </div><!-- .no-results -->
-
-  <div *ngIf="favorites !== undefined && favorites.length != 0" class="grid-container">
-    <ng-container *ngFor="let favorite of favorites">
-
-      <mat-card class="listing">
-        <app-listing-item [listing]="favorite"></app-listing-item>
-      </mat-card>
-
-    </ng-container>
+  <div *ngSwitchCase="'cart'" class="your-cart" >
+    <market-buy-checkout></market-buy-checkout>
   </div>
 
-</div><!-- "Favorites" tab -->
+  <div *ngSwitchCase="'orders'" class="orders container-block" >
+    <market-buy-orders></market-buy-orders>
+  </div>
+
+  <div *ngSwitchCase="'comments'" class="questions container-block" >
+    <market-buy-comments></market-buy-comments>
+  </div>
+
+  <div *ngSwitchCase="'favourites'" class="favorites container-block">
+    <market-buy-favourites></market-buy-favourites>
+  </div>
+
+</ng-container>

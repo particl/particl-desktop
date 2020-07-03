@@ -2,16 +2,22 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { BuyComponent } from './buy.component';
-import { CheckoutProcessComponent } from './checkout-process/checkout-process.component';
 import { MarketSharedModule } from '../shared/shared.module';
-import { BuyOrdersPageComponent } from './buy-orders-page/buy-orders-page.component';
-import { BuyOrderListItemComponent } from './buy-order-list-item/buy-order-list-item.component';
-import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
-import { BuyQuestionsComponent } from './buy-questions/buy-questions.component';
-import { CancelBidModalComponent } from './cancel-bid-modal/cancel-bid-modal.component';
-import { PayOrderModalComponent } from './pay-order-modal/pay-order-modal.component';
-import { ConfirmOrderDeliveredModalComponent } from './confirm-order-delivered-modal/confirm-order-delivered-modal.component';
+import { BuyComponent } from './buy.component';
+
+import { BuyCheckoutComponent } from './buy-checkout/buy-checkout.component';
+import { PlaceBidModalComponent } from './buy-checkout/place-bid-modal/place-bid-modal.component';
+
+import { BuyCommentsComponent } from './buy-comments/buy-comments.component';
+
+import { BuyFavouritesComponent } from './buy-favourites/buy-favourites.component';
+
+import { BuyOrdersComponent } from './buy-orders/buy-orders.component';
+import { BuyOrderListItemComponent } from './buy-orders/buy-order-list-item/buy-order-list-item.component';
+import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bid-modal.component';
+import { ConfirmOrderDeliveredModalComponent } from './buy-orders/confirm-order-delivered-modal/confirm-order-delivered-modal.component';
+import { PayOrderModalComponent } from './buy-orders/pay-order-modal/pay-order-modal.component';
+
 
 const routes: Routes = [
   { path: '', component: BuyComponent, data: { title: 'Purchases'} }
@@ -26,23 +32,27 @@ const routes: Routes = [
     MarketSharedModule
   ],
   exports: [
-    RouterModule,
-    BuyOrdersPageComponent,
-    BuyOrderListItemComponent
+    RouterModule
   ],
   declarations: [
     BuyComponent,
-    CheckoutProcessComponent,
+
+    BuyCheckoutComponent,
     PlaceBidModalComponent,
-    BuyOrdersPageComponent,
+
+    BuyCommentsComponent,
+
+    BuyFavouritesComponent,
+
+    BuyOrdersComponent,
     BuyOrderListItemComponent,
-    BuyQuestionsComponent,
     CancelBidModalComponent,
+    ConfirmOrderDeliveredModalComponent,
     PayOrderModalComponent,
-    ConfirmOrderDeliveredModalComponent
   ],
   entryComponents: [
     PlaceBidModalComponent,
+
     CancelBidModalComponent,
     PayOrderModalComponent,
     ConfirmOrderDeliveredModalComponent

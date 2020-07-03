@@ -9,11 +9,11 @@ export interface Filter {
 }
 
 @Component({
-  selector: 'app-buy-orders-page',
-  templateUrl: './buy-orders-page.component.html',
-  styleUrls: ['./buy-orders-page.component.scss']
+  selector: 'market-buy-orders',
+  templateUrl: './buy-orders.component.html',
+  styleUrls: ['./buy-orders.component.scss']
 })
-export class BuyOrdersPageComponent implements OnInit {
+export class BuyOrdersComponent implements OnInit {
 
   searchQuery: FormControl = new FormControl('');
   filterQuery: FormControl = new FormControl('all');

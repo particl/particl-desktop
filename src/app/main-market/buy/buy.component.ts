@@ -1,51 +1,60 @@
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-// ----- ↓↓↓ ORDERS component ↓↓↓ ----- //
-export interface Filter {
-  value: string;
+
+interface BuyTab {
+  icon: string;
   title: string;
-  count: string;
+  templ: string;
 }
-// ----- ↑↑↑ ORDERS component ↑↑↑ ----- //
+
 
 @Component({
   templateUrl: './buy.component.html',
-  styleUrls: ['./buy.component.scss']
+  styleUrls: ['./buy.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BuyComponent {
+export class BuyComponent implements OnInit {
 
-  public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['cart', 'orders', 'questions', 'favourites'];
-
-  // ----- ↓↓↓ ORDERS component ↓↓↓ ----- //
-  searchQuery: FormControl = new FormControl('');
-  filterQuery: FormControl = new FormControl('all');
-
-  statusFilters: Filter[] = [
-    {value: 'all', title: 'All orders', count: '11'},
-    {value: 'bids', title: 'Bidding', count: '1'},
-    {value: 'awaiting', title: 'Awaiting payment', count: '2'},
-    {value: 'escrow', title: 'Escrow pending', count: '0'},
-    {value: 'packaging', title: 'Packaging', count: '1'},
-    {value: 'shipping', title: 'Shipping', count: '0'},
-    {value: 'complete', title: 'Completed', count: '3'},
-    {value: 'rejected', title: 'Rejected', count: '1'},
-    {value: 'cancelled', title: 'Cancelled', count: '3'}
+  readonly tabs: BuyTab[] = [
+    { title: 'Your cart', icon: 'part-cart-2', templ: 'cart'},
+    { title: 'Buy Orders', icon: 'part-recipe', templ: 'orders'},
+    { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments'},
+    { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites'},
   ];
-  // ----- ↑↑↑ ORDERS component ↑↑↑ ----- //
-
-  public filters: any = {
-    search: undefined,
-    sort:   undefined,
-    status: undefined
-  };
 
 
+  private selectedTabIdx: number = 0;
 
 
-  changeTab(index: number): void {
-    this.selectedTab = index;
+  constructor(
+    private _route: ActivatedRoute
+  ) { }
+
+
+  ngOnInit() {
+    const query = this._route.snapshot.queryParams;
+    const selectedSellTab = query['selectedBuyTab'];
+    const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
+    if (newTabIdx > -1) {
+      this.selectedTabIdx = newTabIdx;
+    }
+  }
+
+
+  get selectedTab(): number {
+    return this.selectedTabIdx;
+  }
+
+  get selectedTempl(): string {
+    return this.tabs[this.selectedTabIdx].templ;
+  }
+
+
+  changeTab(idx: number) {
+    if ((idx !== this.selectedTabIdx) && (idx >= 0) && (idx < this.tabs.length)) {
+      this.selectedTabIdx = idx;
+    }
   }
 
 }

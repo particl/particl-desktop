@@ -125,7 +125,7 @@
       <mat-menu #menu="matMenu" class="--smaller">
         <button mat-menu-item>
           <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
-          <span>Report as inapropriate</span>
+          <span>Report as inappropriate</span>
         </button>
         <button mat-menu-item>
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
@@ -134,16 +134,16 @@
         <button mat-menu-item (click)="updateFav(listingIdx, listing.extras.favouriteId === null ? 'ADD' : 'REMOVE')">
           <ng-container *ngIf="listing.extras.favouriteId === null">
             <mat-icon fontIcon="part-heart-outline"></mat-icon>
-            <span>Add to Favorites</span>
+            <span>Add to Favourites</span>
           </ng-container>
           <ng-container *ngIf="listing.extras.favouriteId !== null">
             <mat-icon fontIcon="part-heart"></mat-icon>
-            <span>Remove from Favorites</span>
+            <span>Remove from Favourites</span>
           </ng-container>
         </button>
         <button mat-menu-item *ngIf="filterSeller.value === ''" (click)="filterSeller.setValue(listing.seller)">
           <mat-icon fontIcon="part-search"></mat-icon>
-          <span>Filter By Seller</span>
+          <span>Other Items from Seller</span>
         </button>
       </mat-menu>
     </mat-card>

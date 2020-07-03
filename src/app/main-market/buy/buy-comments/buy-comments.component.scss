@@ -1,5 +1,5 @@
 @import './src/assets/_config'; // import shared colors etc.
-@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+@import '../../shared/list-item-details'; // shared styling for list items
 
 .question-item {
   // header / toggle
