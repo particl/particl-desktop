@@ -36,7 +36,7 @@ export class ManagementComponent {
   ) {}
 
   changeTab(index: number): void {
-    //this.clear();
+    // this.clear();
     this.selectedTab = index;
   }
 

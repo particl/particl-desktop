@@ -8,6 +8,6 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 export class CreateMarketComponent {
 
   // Create Market > Promote
-  public promoDuration = 'none';
+  public promoDuration: string = 'none';
 
 }

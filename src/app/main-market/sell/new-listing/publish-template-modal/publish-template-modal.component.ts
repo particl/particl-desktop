@@ -91,7 +91,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
           const currentProfile = this._store.selectSnapshot(MarketState.currentProfile);
           if (currentProfile && currentProfile.id) {
-            return this._dataService.loadMarkets(currentProfile.id, identity.id).pipe(
+            return this._dataService.loadMarkets(identity.id).pipe(
               catchError(() => of([])),
               tap((markets: Market[]) => {
                 this.availableMarkets = (markets || []).filter(m => m.type === 'MARKETPLACE' || m.type === 'STOREFRONT_ADMIN');

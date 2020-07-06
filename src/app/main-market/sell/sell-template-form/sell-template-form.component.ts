@@ -27,11 +27,6 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   readonly MAX_SHORT_DESCRIPTION: number = 200;
   readonly MAX_LONG_DESCRIPTION: number = 8000;
 
-  @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
-  @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
-
-  private destroy$: Subject<void> = new Subject();
-
   // @TODO: only for testing, pls remove and properly implement:
   feeCalculated: boolean = false;
 
@@ -51,6 +46,10 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     { title: 'Bots', value: 'b' },
     { title: 'Electronics', value: 'e' }
   ];
+
+  private destroy$: Subject<void> = new Subject();
+  @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
+  @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
 
   constructor() {
     // The basic template information present on all templates

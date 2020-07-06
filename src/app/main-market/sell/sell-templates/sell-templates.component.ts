@@ -265,6 +265,16 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
+  openBatchPublishModal(): void {
+    const dialog = this._dialog.open(BatchPublishModalComponent);
+  }
+
+
+  openPublishTemplateModal(): void {
+    const dialog = this._dialog.open(PublishTemplateModalComponent);
+  }
+
+
   private setControlDefaults() {
     const defaults = this.getControlDefaults();
     const fieldKeys = Object.keys(defaults);
@@ -303,13 +313,5 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   //     })
   //   );
   // }
-
-  openBatchPublishModal(): void {
-    const dialog = this._dialog.open(BatchPublishModalComponent);
-  }
-
-  openPublishTemplateModal(): void {
-    const dialog = this._dialog.open(PublishTemplateModalComponent);
-  }
 
 }

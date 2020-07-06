@@ -14,7 +14,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 @Injectable()
 export class FavouritesService {
 
-  private readonly EXPIRY_DELAY: number = 1000 * 60;
+  private readonly EXPIRY_DELAY: number = 1000 * 30;
 
   constructor(
     private _rpc: MarketRpcService,
@@ -121,7 +121,7 @@ export class FavouritesService {
         decimal: price.particlStringFraction()
       },
       isOwn: isOwn,
-      canAddToCart: true // !(isOwn || (expiry < (Date.now() + this.EXPIRY_DELAY)))
+      canAddToCart: !(isOwn || (expiry < (Date.now() + this.EXPIRY_DELAY)))
     };
 
     return newItem;
