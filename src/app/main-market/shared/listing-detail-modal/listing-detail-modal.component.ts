@@ -34,6 +34,8 @@ export class ListingDetailModalComponent implements OnInit {
     return Object.prototype.toString.call(obj) === '[object Array]';
   }
 
+  expiryTimer: string = '';   // TODO: implement this
+
   readonly showActions: boolean;
   readonly showComments: boolean;
 
@@ -97,8 +99,6 @@ export class ListingDetailModalComponent implements OnInit {
     const input: ListingItemDetail = isInputValuesObject &&
         ListingDetailModalComponent.isObject(data.listing) ?
         JSON.parse(JSON.stringify(data.listing)) : {};
-
-        console.log('@@@@ details input item: ', input);
 
     const inputCategory = ListingDetailModalComponent.isObject(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
     const inputEscrow = ListingDetailModalComponent.isObject(input.escrow) ? input.escrow : { buyerRatio: 0};
@@ -207,7 +207,7 @@ export class ListingDetailModalComponent implements OnInit {
     this.itemExpiry = {
       timestamp: expiryTime,
       hasExpired: (expiryTime > 0) && (now >= expiryTime),
-      isSoon: (now < expiryTime) && (expiryTime > (now + this.SOON_DURATION)),
+      isSoon: (now < expiryTime) && (now > (expiryTime - this.SOON_DURATION)),
     };
   }
 

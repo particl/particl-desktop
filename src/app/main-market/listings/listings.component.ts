@@ -12,7 +12,7 @@ import { RegionListService } from '../services/region-list/region-list.service';
 import { ListingsService } from './listings.service';
 
 import { Market, CategoryItem, Country } from '../services/data/data.models';
-import { ListingDetailModalComponent } from './../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
 import { ListingOverviewItem } from './listings.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
@@ -90,7 +90,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     // If the identity changes, fetch the selected identity's markets.
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
       concatMap((iden) => iif(() => iden && iden.id > 0,
-        this._sharedService.loadMarkets(0, iden.id).pipe(
+        this._sharedService.loadMarkets(iden.id).pipe(
           tap((markets: Market[]) => {
             this.availableMarkets = markets;
             this.market$.next(null);
@@ -316,7 +316,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   openListingDetailModal(id: number): void {
-    this._listingService.getListingDetails(id).subscribe(
+    this._sharedService.getListingDetails(id).subscribe(
       (listing) => {
         if (+listing.id > 0) {
           const dialog = this._dialog.open(

@@ -352,3 +352,14 @@ export interface RespListingItem {
   Bids: any[];  // @TODO: ???
   FlaggedItem: any; // @TODO: ???
 }
+
+
+export interface RespFavoriteItem {
+  id: number;
+  listingItemId: number;
+  profileId: number;
+  updatedAt: number;
+  createdAt: number;
+  ListingItem: RespListingItem;
+  Profile: RespGeneralProfile;
+}

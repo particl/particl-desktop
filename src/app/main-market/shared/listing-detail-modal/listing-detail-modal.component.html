@@ -38,7 +38,7 @@
       <p class="expires-soon" *ngIf="itemExpiry.isSoon">
         <span matTooltip="Last chance to buy this Listing before it becomes unavailable" matTooltipPosition="after">
           <mat-icon fontIcon="part-circle-info"></mat-icon>
-          Expires in {{ itemExpiry.isSoon }}
+          Expires in {{ expiryTimer }}
         </span>
       </p>
       <p class="expires-soon" *ngIf="itemExpiry.hasExpired">
@@ -363,6 +363,11 @@
       <button mat-button disabled *ngIf="details.isOwner">
         <mat-icon fontIcon="part-circle-info"></mat-icon>
         This is your own listing
+      </button>
+
+      <button mat-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired">
+        <mat-icon fontIcon="part-cart"></mat-icon>
+        Add to Cart
       </button>
     </ng-container>
 

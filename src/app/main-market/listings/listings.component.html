@@ -112,7 +112,7 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions fxLayoutAlign="space-between center">
-        <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="listing.extras.canAddToCart">
+        <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!listing.extras.canAddToCart">
           <mat-icon fontIcon="part-cart"></mat-icon>
           <mat-icon fontIcon="part-cart-plus"></mat-icon>
           {{ listing.price.whole }}{{ listing.price.sep }}<small>{{ listing.price.decimal }}</small>
