@@ -29,6 +29,12 @@ export interface Identity {
 }
 
 
+export interface CartDetail {
+  id: number;
+  name: string;
+}
+
+
 export interface MarketSettings {
   port: number;
   defaultProfileID: number;
@@ -55,5 +61,6 @@ export interface MarketStateModel {
   profile: Profile;
   identities: Identity[];
   identity: Identity;
+  availableCarts: CartDetail[];
   settings: MarketSettings;
 }

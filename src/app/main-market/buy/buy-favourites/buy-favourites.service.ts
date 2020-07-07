@@ -6,7 +6,7 @@ import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 
 import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
-import { RespFavoriteItem } from '../../shared/market.models';
+import { RespFavoriteItem, RespCartItemAdd } from '../../shared/market.models';
 import { FavouritedListing } from './buy-favourites.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 
@@ -37,6 +37,11 @@ export class FavouritesService {
       mapTo(true),
       catchError(() => of(false))
     );
+  }
+
+
+  addItemToCart(listingId: number, cartId: number): Observable<RespCartItemAdd> {
+    return this._rpc.call('cartitem', ['add', cartId, listingId]);
   }
 
 

@@ -97,7 +97,9 @@
   <div class="content grid-container" infiniteScroll
        [scrollWindow]="true"
        [infiniteScrollDisabled]="(listings.length === 0) || atEndOfListings || isLoadingListings"
-       (scrolled)="actionScroll.setValue()">
+       (scrolled)="actionScroll.setValue()"
+       *appVar="(availableCarts | async)[0] as selectedCart"
+  >
 
     <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
       <div mat-card-image (click)="openListingDetailModal(listing.id)">
@@ -112,7 +114,7 @@
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions fxLayoutAlign="space-between center">
-        <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!listing.extras.canAddToCart">
+        <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!listing.extras.canAddToCart" (click)="addItemToCart(listingIdx, selectedCart && selectedCart.id)">
           <mat-icon fontIcon="part-cart"></mat-icon>
           <mat-icon fontIcon="part-cart-plus"></mat-icon>
           {{ listing.price.whole }}{{ listing.price.sep }}<small>{{ listing.price.decimal }}</small>

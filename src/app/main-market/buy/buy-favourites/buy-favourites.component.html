@@ -9,7 +9,7 @@
   </ng-container>
 </app-page-intro>
 
-<div class="content grid-container">
+<div class="content grid-container" *appVar="(availableCarts | async)[0] as selectedCart">
 
   <div class="no-results" *ngIf="!isLoadingItems && (favouriteList.length === 0)">
     <img class="illustration" src="./assets/app-market/illustrations/no-favorites.svg" alt="No favorites yet">
@@ -35,7 +35,7 @@
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-actions fxLayoutAlign="space-between center">
-          <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!favorite.canAddToCart">
+          <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!favorite.canAddToCart" (click)="addItemToCart(favIdx, selectedCart.id)">
             <mat-icon fontIcon="part-cart"></mat-icon>
             <mat-icon fontIcon="part-cart-plus"></mat-icon>
             {{ favorite.price.whole }}{{ favorite.price.sep }}<small>{{ favorite.price.decimal }}</small>

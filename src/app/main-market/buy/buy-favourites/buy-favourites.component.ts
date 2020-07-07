@@ -1,7 +1,9 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Subject, timer } from 'rxjs';
+import { Observable, Subject, timer } from 'rxjs';
 import { finalize, takeUntil } from 'rxjs/operators';
+import { Select } from '@ngxs/store';
+import { MarketState } from '../../store/market.state';
 
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
@@ -9,12 +11,17 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { FavouritesService } from './buy-favourites.service';
 import { DataService } from '../../services/data/data.service';
 import { FavouritedListing } from './buy-favourites.models';
+import { CartDetail } from '../../store/market.models';
 
 
 enum TextContent {
   FAILED_LOAD = 'There seems to be a problem fetching favourited items',
   FAILED_REMOVE = 'An error occurred trying to remove the favourite item',
   FAILED_LOAD_DETAILS = 'Could not load listing details. Please try again shortly',
+  CART_ADD_INVALID = 'The selected item cannot be added to the cart',
+  CART_ADD_FAILED = 'Something went wrong adding the item to the cart',
+  CART_ADD_DUPLICATE = 'That item is already in the cart',
+  CART_ADD_SUCCESS = 'Successfully added to cart'
 }
 
 
@@ -26,6 +33,8 @@ enum TextContent {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BuyFavouritesComponent implements OnInit, OnDestroy {
+
+  @Select(MarketState.availableCarts) availableCarts: Observable<CartDetail[]>;
 
   favouriteList: FavouritedListing[] = [];
   isLoadingItems: boolean = true;
@@ -109,6 +118,33 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
       },
 
       (err) => this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn')
+    );
+  }
+
+
+  addItemToCart(favIndex: number, cartId: number) {
+    if (!cartId || !(+favIndex >= 0) || !(+favIndex < this.favouriteList.length) ) {
+      return;
+    }
+
+    const fav = this.favouriteList[favIndex];
+
+    if (!fav || !fav.listingId || !fav.canAddToCart) {
+      this._snackbar.open(TextContent.CART_ADD_INVALID, 'err');
+      return;
+    }
+
+    this._favService.addItemToCart(fav.listingId, cartId).subscribe(
+      () => {
+        this._snackbar.open(TextContent.CART_ADD_SUCCESS);
+      },
+      (err) => {
+        let msg = TextContent.CART_ADD_FAILED;
+        if (err === 'ListingItem already added to ShoppingCart') {
+          msg = TextContent.CART_ADD_DUPLICATE;
+        }
+        this._snackbar.open(msg, 'warn');
+      }
     );
   }
 

@@ -8,7 +8,7 @@ import { MarketState } from '../store/market.state';
 import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../shared/utils';
 
 import { PartoshiAmount } from 'app/core/util/utils';
-import { RespListingItem } from '../shared/market.models';
+import { RespListingItem, RespCartItemAdd } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
 import { MarketSettings } from '../store/market.models';
 
@@ -59,7 +59,8 @@ export class ListingsService {
   }
 
 
-  addFavourite(profileId: number, listingId: number): Observable<number | null> {
+  addFavourite(listingId: number): Observable<number | null> {
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     return this._rpc.call('favorite', ['add', profileId, listingId]).pipe(
       map(item => item.id),
       catchError(() => of(null)),
@@ -72,6 +73,11 @@ export class ListingsService {
       mapTo(true),
       catchError(() => of(false))
     );
+  }
+
+
+  addItemToCart(listingId: number, cartId: number): Observable<RespCartItemAdd> {
+    return this._rpc.call('cartitem', ['add', cartId, listingId]);
   }
 
 

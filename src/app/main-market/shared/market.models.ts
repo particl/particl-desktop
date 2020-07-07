@@ -363,3 +363,55 @@ export interface RespFavoriteItem {
   ListingItem: RespListingItem;
   Profile: RespGeneralProfile;
 }
+
+
+export interface RespCartListItem {
+  id: number;
+  name: string;
+  profileId: number;
+  updatedAt: number;
+  createdAt: number;
+}
+
+
+export interface RespCartGetItem {
+  id: number;
+  name: string;
+  profileId: number;
+  updatedAt: number;
+  createdAt: number;
+  Profile: RespGeneralProfile;
+  ShoppingCartItems: Array<{
+    id: number;
+    shoppingCartId: number;
+    listingItemId: number;
+    updatedAt: number;
+    createdAt: number;
+    ListingItem: {
+      id: number;
+      msgid: string;
+      hash: string;
+      seller: string;
+      market: string;
+      listingItemTemplateId: number | null;
+      removed: 0 | 1,
+      expiryTime: number;
+      generatedAt: number;
+      receivedAt: number;
+      postedAt: number;
+      expiredAt: number;
+      updatedAt: number;
+      createdAt: number;
+    };
+  }>;
+}
+
+export interface RespCartItemAdd {
+  id: number;
+  shoppingCartId: number;
+  listingItemId: number;
+  updatedAt: number;
+  createdAt: number;
+  ShoppingCart: RespCartListItem;
+  ListingItem: RespListingItem;
+}

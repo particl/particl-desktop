@@ -4,23 +4,29 @@ import { MatDialog } from '@angular/material';
 import { Observable, Subject, iif, merge, of, defer, combineLatest, timer } from 'rxjs';
 import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError } from 'rxjs/operators';
 import { xor } from 'lodash';
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { ListingsService } from './listings.service';
 
-import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
+
+import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { ListingOverviewItem } from './listings.models';
-import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { CartDetail } from '../store/market.models';
 
 
 enum TextContent {
   FAILED_LOAD_LISTINGS = 'Failed to load listings. Please try again',
   FAILED_LOAD_DETAILS = 'Could not load listing details. Please try again shortly',
-  FAILED_FAV_SET = 'The was an error while updating the item. Please try again shortly'
+  FAILED_FAV_SET = 'The was an error while updating the item. Please try again shortly',
+  CART_ADD_INVALID = 'The selected item cannot be added to the cart',
+  CART_ADD_FAILED = 'Something went wrong adding the item to the cart',
+  CART_ADD_DUPLICATE = 'That item is already in the cart',
+  CART_ADD_SUCCESS = 'Successfully added to cart'
 }
 
 
@@ -30,6 +36,8 @@ enum TextContent {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListingsComponent implements OnInit, OnDestroy {
+
+  @Select(MarketState.availableCarts) availableCarts: Observable<CartDetail[]>;
 
   // for easy rendering only
   marketsList: Market[] = [];
@@ -190,9 +198,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    // observable subscriptions and handling...
-    // ...this one for loading listings
-    merge(
+    // actually do the loading of listings when necessary
+    const loadListings$ = merge(
       reset$,
       scrolled$
     ).pipe(
@@ -242,10 +249,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
       takeUntil(this.destroy$)
 
-    ).subscribe();
+    );
 
-    // ...this one for watching the "global" changes
     merge(
+      loadListings$,
       marketChange$,
       identityChange$
     ).subscribe();
@@ -287,7 +294,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     let obs$: Observable<boolean | number | null>;
     if (action === 'ADD') {
-      obs$ = this._listingService.addFavourite(this._store.selectSnapshot(MarketState.currentProfile).id, listing.id);
+      obs$ = this._listingService.addFavourite(listing.id);
     } else if (action === 'REMOVE') {
       obs$ = this._listingService.removeFavourite(listing.extras.favouriteId);
     }
@@ -337,6 +344,32 @@ export class ListingsComponent implements OnInit, OnDestroy {
       (err) => this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn')
     );
 
+  }
+
+
+  addItemToCart(listingIndex: number, cartId: number) {
+    if (!cartId || !(+listingIndex >= 0) || !(+listingIndex < this.listings.length) ) {
+      return;
+    }
+
+    const listing = this.listings[listingIndex];
+    if (!listing || !listing.id || !listing.extras.canAddToCart) {
+      this._snackbar.open(TextContent.CART_ADD_INVALID, 'err');
+      return;
+    }
+
+    this._listingService.addItemToCart(listing.id, cartId).subscribe(
+      () => {
+        this._snackbar.open(TextContent.CART_ADD_SUCCESS);
+      },
+      (err) => {
+        let msg = TextContent.CART_ADD_FAILED;
+        if (err === 'ListingItem already added to ShoppingCart') {
+          msg = TextContent.CART_ADD_DUPLICATE;
+        }
+        this._snackbar.open(msg, 'warn');
+      }
+    );
   }
 
 

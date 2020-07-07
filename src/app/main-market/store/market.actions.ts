@@ -30,4 +30,10 @@ export namespace MarketActions {
     static readonly type: string = '[Market] Save Market Setting';
     constructor(public key: string, public value: string | boolean | number) {}
   }
+
+
+  export class ResetActiveShoppingCarts {
+    static readonly type: string = '[Market] Reset Active Shopping Carts';
+    constructor() {}
+  }
 }

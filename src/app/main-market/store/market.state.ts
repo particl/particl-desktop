@@ -4,9 +4,10 @@ import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operator
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
-import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings, Profile } from './market.models';
+import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings, Profile, CartDetail } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
+import { RespCartListItem } from '../shared/market.models';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -17,6 +18,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   profile: null,
   identities: [],
   identity: null,
+  availableCarts: [],
   settings: {
     port: 3000,
     defaultIdentityID: 0,
@@ -78,6 +80,12 @@ export class MarketState {
   @Selector()
   static settings(state: MarketStateModel): MarketSettings {
     return state.settings;
+  }
+
+
+  @Selector()
+  static availableCarts(state: MarketStateModel): CartDetail[] {
+    return state.availableCarts;
   }
 
 
@@ -144,7 +152,7 @@ export class MarketState {
           this.loadSettings(ctx, ctx.getState().profile.id);
 
           ctx.patchState({started: StartedStatus.STARTED});
-          ctx.dispatch(new MarketActions.LoadIdentities());
+          ctx.dispatch([new MarketActions.LoadIdentities(), new MarketActions.ResetActiveShoppingCarts()]);
         }
       })
     );
@@ -262,7 +270,7 @@ export class MarketState {
     let profileID: number;
 
     if (key.startsWith('profile.')) {
-      // Save settings with for the current Profile
+      // Save settings for the current Profile
       key = key.replace('profile.', '');
       if (currentState.profile !== null) {
         profileID = currentState.profile.id;
@@ -275,6 +283,20 @@ export class MarketState {
         ctx.patchState({settings: currentSettings});
       }
     }
+  }
+
+
+  @Action(MarketActions.ResetActiveShoppingCarts)
+  changeActiveCart(ctx: StateContext<MarketStateModel>) {
+    return this._marketService.call('cart', ['list', ctx.getState().profile.id]).pipe(
+      catchError(() => of([])),
+      tap((cartList: RespCartListItem[]) => {
+        const carts = cartList.map(
+          cart => ({id: cart.id, name: cart.name === 'DEFAULT' ? '' : cart.name})
+        ).sort((a, b) => a.id - b.id);
+        ctx.patchState({availableCarts: carts});
+      })
+    );
   }
 
 
