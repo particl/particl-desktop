@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, iif, merge, of, defer, combineLatest } from 'rxjs';
+import { Observable, Subject, iif, merge, of, defer, combineLatest, timer } from 'rxjs';
 import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError } from 'rxjs/operators';
 import { xor } from 'lodash';
 import { Store } from '@ngxs/store';
@@ -59,11 +59,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   private destroy$: Subject<void> = new Subject();
+  private timerExpire$: Subject<void> = new Subject();
   private market$: Subject<Market> = new Subject();
   private categorySource$: Subject<CategoryItem[]> = new Subject();
 
   private availableMarkets: Market[] = [];
   private PAGE_COUNT: number = 60;
+  private expiryValue: number = 0;
 
 
   constructor(
@@ -252,8 +254,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
+    this.listings = [];
     this.market$.complete();
     this.categorySource$.complete();
+    this.timerExpire$.next();
+    this.timerExpire$.complete();
     this.destroy$.next();
     this.destroy$.complete();
   }
@@ -350,6 +355,11 @@ export class ListingsComponent implements OnInit, OnDestroy {
     ).pipe(
       map(items => {
         this.atEndOfListings = (items.length > 0) && (items.length < numItems);
+        // stop the expiration checking timer: safety measure
+        //  (it is stopped properly later, but just to prevent any unnecessary side effects of delayed processing,
+        //  we force any running timer to stop here as well).
+        this.timerExpire$.next();
+
         // Remove duplicated listings: this may happen if earlier listings expired
         //   - in which case the MP search queries may ignore them from the resultset returned, thus causing some overlap
         //   - we only really need to check one PAGE_COUNT of the previous existing listing items
@@ -370,6 +380,21 @@ export class ListingsComponent implements OnInit, OnDestroy {
         }
 
         this.listings.push(...items);
+
+        // Update the expiration timer checking value if necessary
+        const leastTime = items.filter(
+          i => i.extras.canAddToCart && (i.expiry > 0)
+        ).sort(
+          (a, b) => a.expiry - b.expiry
+        )[0];
+
+        if (leastTime && ((leastTime.expiry < this.expiryValue) || (this.expiryValue === 0))) {
+          this.expiryValue = leastTime.expiry;
+        }
+
+        // (re)start the expiration checking timer
+        this.startExpirationTimer();
+
         return found.length;
       }),
 
@@ -403,6 +428,44 @@ export class ListingsComponent implements OnInit, OnDestroy {
       filterTargetRegion: [],
       filterSeller: ''
     };
+  }
+
+
+  private startExpirationTimer(): void {
+    // ensure that existing timers are stopped
+    this.timerExpire$.next();
+
+    if (this.expiryValue === 0) {
+      return;
+    }
+    const countdown = this.expiryValue - Date.now();
+
+    timer(countdown > 0 ? countdown : 100).pipe(
+      tap(() => {
+        let newTime = Number.MAX_SAFE_INTEGER;
+        let shouldUpdate = false;
+        const now = Date.now();
+
+        this.listings.forEach(item => {
+          if (item.extras.canAddToCart && item.expiry <= (now + 5000)) {
+            item.extras.canAddToCart = false;
+            shouldUpdate = true;
+          }
+          if (item.extras.canAddToCart && (item.expiry < newTime)) {
+            newTime = item.expiry;
+          }
+        });
+
+        this.expiryValue = newTime === Number.MAX_SAFE_INTEGER ? 0 : newTime;
+
+        if (shouldUpdate) {
+          this._cdr.detectChanges();
+        }
+      }),
+      takeUntil(this.timerExpire$)
+    ).subscribe(
+      () => this.startExpirationTimer()
+    );
   }
 
 }

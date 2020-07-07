@@ -151,6 +151,8 @@ export class ListingsService {
     commentCount = Object.prototype.toString.call(from.MessagingInformation) === '[object Array]' ?
         from.MessagingInformation.length : 0;
 
+    const expirationTime = getValueOrDefault(from.expiredAt, 'number', 0);
+
 
     const newItem: ListingOverviewItem = {
       id: listingId,
@@ -158,7 +160,7 @@ export class ListingsService {
       summary: summary,
       hash: getValueOrDefault(from.hash, 'string', ''),
       seller: listingSeller,
-      expiry: getValueOrDefault(from.expiryTime, 'number', 0),
+      expiry: expirationTime,
       image: imageSelected,
       price: {
         whole: price.particlStringInteger(),
@@ -171,7 +173,7 @@ export class ListingsService {
         isFlagged: isBasicObjectType(from.FlaggedItem),
         usersVote: false,  // TODO: implement details when known
         isOwn: isOwnListing,
-        canAddToCart: !isOwnListing
+        canAddToCart: !isOwnListing && (expirationTime > Date.now())
       }
     };
 
