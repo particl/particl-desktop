@@ -20,6 +20,7 @@ interface SocketDataObject {
 
 type SocketMessageHandlersType = { [P in keyof SupportedMessageTypes]: Subject<SupportedMessageTypes[P]>};
 type SocketMessageListeners = { [P in keyof SupportedMessageTypes]: Observable<SupportedMessageTypes[P]>};
+
 interface SocketMessageHandlers extends SocketMessageHandlersType {
   // simplistic attempt at indicating that the type has some form of iterator
   dontUseThis?: string;
@@ -103,8 +104,8 @@ export class MarketRpcService {
   }
 
 
-  subscribeToSocketEvents<K extends keyof SocketMessageListeners>(msgType: K) {
-    return this.MESSAGE_HANDLERS[msgType].asObservable();
+  getSocketMessageListener<K extends keyof SocketMessageListeners>(msgType: K): SocketMessageListeners[K] {
+    return this.MESSAGE_HANDLERS[msgType].asObservable() as SocketMessageListeners[K];
   }
 
 
