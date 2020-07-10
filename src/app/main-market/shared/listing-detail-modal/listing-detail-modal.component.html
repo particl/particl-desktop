@@ -357,7 +357,6 @@
   <div class="right" fxLayout fxLayoutAlign="end center">
     <ng-container *ngIf="showActions; else noActions">
       <app-favorite></app-favorite>
-      <app-add-to-cart></app-add-to-cart>
 
       <!-- if mine, show message instead of "add to cart" button -->
       <button mat-button disabled *ngIf="details.isOwner">

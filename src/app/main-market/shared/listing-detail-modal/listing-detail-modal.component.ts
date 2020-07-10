@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GalleryItem, ImageItem } from '@ngx-gallery/core';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { ListingItemDetail } from '../shared.models';

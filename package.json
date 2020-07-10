@@ -195,7 +195,6 @@
     "particl-zmq": "^1.0.4",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
-    "socket.io-client": "^2.2.0",
     "tslib": "1.9.3",
     "zone.js": "~0.9.1"
   },
@@ -218,7 +217,6 @@
     "@angular/router": "^8.2.14",
     "@types/jasmine": "2.8.9",
     "@types/node": "^9.4.6",
-    "@types/socket.io-client": "^1.4.32",
     "angularx-qrcode": "^1.0.1",
     "checksum": "^0.1.1",
     "codelyzer": "^5.0.1",

@@ -42,9 +42,9 @@ export interface ListingItemDetail {
     readonly sellerRatio: number;
   };
   readonly extra: {
-    isFlagged: boolean;
+    readonly isFlagged: boolean;
     readonly isOwn: boolean;
-    vote: {
+    readonly vote: {
       // TODO: details to be added when known
     };
   };
