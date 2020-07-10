@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
 import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
-import { Observable, throwError as observableThrowError, Subject } from 'rxjs';
+import { Observable, throwError as observableThrowError, Subject, empty } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { IpcService } from 'app/core/services/ipc.service';
@@ -105,7 +105,9 @@ export class MarketRpcService {
 
 
   getSocketMessageListener<K extends keyof SocketMessageListeners>(msgType: K): SocketMessageListeners[K] {
-    return this.MESSAGE_HANDLERS[msgType].asObservable() as SocketMessageListeners[K];
+    return (this.MESSAGE_HANDLERS[msgType] === null || this.MESSAGE_HANDLERS[msgType].isStopped) ?
+      empty() :
+      this.MESSAGE_HANDLERS[msgType].asObservable() as SocketMessageListeners[K];
   }
 
 

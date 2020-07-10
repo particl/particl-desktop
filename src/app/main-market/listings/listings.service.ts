@@ -22,6 +22,11 @@ export class ListingsService {
   ) {}
 
 
+  getListenerNewListings() {
+    return this._rpc.getSocketMessageListener('MPA_LISTING_ADD_03');
+  }
+
+
   searchListingItems(
     market: string,
     page: number,

@@ -97,6 +97,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+
+    const newMessages$ = this._listingService.getListenerNewListings().pipe(
+      tap((resp) => {
+        if (resp && (resp.market === this.activeMarket.receiveAddress)) {
+          this.hasNewListings = true;
+          this._cdr.detectChanges();
+        }
+      }),
+      catchError(() => of()),
+      takeUntil(this.destroy$)
+    );
+
     // If the identity changes, fetch the selected identity's markets.
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
       concatMap((iden) => iif(() => iden && iden.id > 0,
@@ -230,6 +242,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         this.isSearching = isSearching;
 
+        if (!this.isSearching && (this.listings.length === 0) && !this.filterFlagged.value) {
+          this.hasNewListings = false;
+        }
+
         // force view update here
         this._cdr.detectChanges();
       }),
@@ -254,7 +270,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     merge(
       loadListings$,
       marketChange$,
-      identityChange$
+      identityChange$,
+      newMessages$
     ).subscribe();
 
   }
