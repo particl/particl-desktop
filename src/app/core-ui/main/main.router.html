@@ -191,11 +191,10 @@
                 matTooltipPosition="above"><strong>Wallet unlocked</strong> for {{ time }}</span>
             </mat-list-item>
 
-            <mat-list-item class="info sidebar-item" *ngIf="showUnlockWalletWarning">
-              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-lock"></mat-icon>
-              <span class="text"
-                matTooltip="Unlock the wallet to check for new bid related messages"
-                matTooltipPosition="above">Checking for bid messages paused</span>
+            <!-- @TODO: on click, show the unlock wallet modal -->
+            <mat-list-item class="info sidebar-item" *ngIf="showUnlockWalletWarning" matTooltip="Wallet isn't decrypting Order updates while locked">
+              <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
+              <span class="text">Unlock wallet<br>for Order updates</span>
             </mat-list-item>
 
           </mat-list>
