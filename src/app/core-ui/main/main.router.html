@@ -191,8 +191,7 @@
                 matTooltipPosition="above"><strong>Wallet unlocked</strong> for {{ time }}</span>
             </mat-list-item>
 
-            <!-- @TODO: on click, show the unlock wallet modal -->
-            <mat-list-item class="info sidebar-item" *ngIf="showUnlockWalletWarning" matTooltip="Wallet isn't decrypting Order updates while locked">
+            <mat-list-item class="info sidebar-item" *ngIf="showUnlockWalletWarning" matTooltip="Wallet isn't decrypting Order updates while locked" (click)="unlockWalletAction()">
               <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-info"></mat-icon>
               <span class="text">Unlock wallet<br>for Order updates</span>
             </mat-list-item>
