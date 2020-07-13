@@ -264,6 +264,12 @@ export class MainRouterComponent implements OnInit, OnDestroy {
     }
   }
 
+  unlockWalletAction() {
+    if (this.showUnlockWalletWarning) {
+      this._modalsService.unlock({showStakeOnly: false, showEditableTimeout: true});
+    }
+  }
+
   private clearTimer() {
     if (this.unSubscribeTimer !== null) {
       try {
