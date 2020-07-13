@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
-import { timer } from 'rxjs';
-import { filter, map, flatMap, distinctUntilChanged, takeWhile, take } from 'rxjs/operators';
+import { timer, Subject } from 'rxjs';
+import { filter, map, flatMap, distinctUntilChanged, takeWhile, take, takeUntil, tap } from 'rxjs/operators';
 
 import { RpcStateService } from 'app/core/rpc/rpc-state/rpc-state.service';
 import { RpcService } from 'app/core/rpc/rpc.service';
@@ -44,6 +44,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   log: any = Log.create('main.router id: ' + Math.floor((Math.random() * 1000) + 1));
   private destroyed: boolean = false;
+  private destroy$: Subject<void> = new Subject();
+  showUnlockWalletWarning: boolean = false;
 
   /* UI States */
 
@@ -178,6 +180,13 @@ export class MainRouterComponent implements OnInit, OnDestroy {
         }
       });
 
+    this._rpcState.observe('getwalletinfo', 'encryptionstatus').pipe(
+      tap((value: string) => {
+        this.showUnlockWalletWarning = this._market.isMarketStarted && !['Unlocked', 'Unencrypted'].includes(value);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+
     /* versions */
     // Obtains the current daemon version
     this._rpcState.observe('getnetworkinfo', 'subversion')
@@ -210,6 +219,8 @@ export class MainRouterComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.destroyed = true;
+    this.destroy$.next();
+    this.destroy$.complete();
     this.clearTimer();
     this._txNotify.stop();
     this._rpcState.stop();
