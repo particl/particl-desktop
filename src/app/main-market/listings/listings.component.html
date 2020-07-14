@@ -125,10 +125,17 @@
         </button>
       </mat-card-actions>
       <mat-menu #menu="matMenu" class="--smaller">
+        <!-- @TODO: if nobody voted yet, show only this "Report" button: -->
         <button mat-menu-item>
           <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
           <span>Report as inappropriate</span>
         </button>
+        <!-- @TODO: if someone already marked as inappropriate, show the other button as well: -->
+        <button mat-menu-item>
+          <mat-icon fontIcon="part-thumb-up" color="primary"></mat-icon>
+          <span>Report as appropriate</span>
+        </button>
+        <!-- @TODO: if user already voted, replace "Report" with "Voted" in the voted option ^ (ie. "Voted as appropriate") -->
         <button mat-menu-item>
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
           <span>Questions &amp; Answers ({{ listing.extras.commentCount }})</span>
