@@ -752,6 +752,9 @@ p {
   &.lead {
     font-size: 15px;
   }
+  &.text-muted {
+    color: var(--text-muted);
+  }
 }
 
 
