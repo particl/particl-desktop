@@ -752,6 +752,9 @@ p {
   &.lead {
     font-size: 15px;
   }
+  &.text-muted {
+    color: var(--text-muted);
+  }
 }
 
 
@@ -764,7 +767,8 @@ p {
 
 // NEW "colorful" alerts (like messages below, but with more color)
 // markup: p.alert.--boxed.--warning>span
-p.alert {
+p.alert,
+div.alert {
   font-weight: 500;
   margin: 24px 0;
   display: flex;
@@ -779,7 +783,10 @@ p.alert {
   }
   span {
     flex: 1 1 100%;
-    padding: 16px 18px;
+    padding: 0 18px;
+  }
+  .action-button {
+    padding-right: 8px;
   }
   &.--boxed {
     background: var(--color-white);

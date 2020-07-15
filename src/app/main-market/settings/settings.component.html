@@ -10,22 +10,28 @@
   </app-page-intro>
 
 
-  <div *ngIf="startedStatus !== STARTEDSTATUS.STARTED" class="notification" fxLayout fxLayoutAlign="space-between center">
-    <div class="text">
-      <ng-template [ngIf]="startedStatus === STARTEDSTATUS.PENDING">
-        <mat-icon fontIcon="part-circle-info"></mat-icon>
-        The Particl Marketplace is starting up
-      </ng-template>
-      <ng-template [ngIf]="startedStatus !== STARTEDSTATUS.PENDING">
-        <mat-icon fontIcon="part-alert"></mat-icon>
-        The Particl Marketplace failed to start correctly! Perhaps a setting needs to be adjusted?
-      </ng-template>
+  <ng-container *ngIf="startedStatus !== STARTEDSTATUS.STARTED">
+    <!-- Market is starting -->
+    <div class="alert --boxed --info" *ngIf="startedStatus === STARTEDSTATUS.PENDING" fxLayout fxLayoutAlign="space-between center">
+      <span>
+        The Particl Marketplace is starting up&hellip;
+      </span>
     </div>
-    <button *ngIf="startedStatus !== STARTEDSTATUS.PENDING" class="button" mat-button color="warn" (click)="restartMarketplace()">
-      <mat-icon fontIcon="part-alert"></mat-icon>
-      Restart The Particl Marketplace
-    </button>
-  </div>
+    <!-- Market failed to start -->
+    <div class="alert --boxed --warning" *ngIf="startedStatus !== STARTEDSTATUS.PENDING" fxLayout fxLayoutAlign="space-between center">
+      <span>
+        The Particl Marketplace failed to start correctly!<br>
+        If you changed some settings recently, try reverting them back.
+      </span>
+      <div class="action-button">
+        <button class="button" mat-button color="warn" (click)="restartMarketplace()">
+          <mat-icon fontIcon="part-alert"></mat-icon>
+          Restart The Marketplace
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  
 
   <ng-container *ngTemplateOutlet="content"></ng-container>
 </div>
