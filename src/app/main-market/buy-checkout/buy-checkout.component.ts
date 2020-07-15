@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
 import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
 
 @Component({

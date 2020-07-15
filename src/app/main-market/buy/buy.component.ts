@@ -17,7 +17,6 @@ interface BuyTab {
 export class BuyComponent implements OnInit {
 
   readonly tabs: BuyTab[] = [
-    { title: 'Your cart', icon: 'part-cart-2', templ: 'cart'},
     { title: 'Buy Orders', icon: 'part-recipe', templ: 'orders'},
     { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments'},
     { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites'},

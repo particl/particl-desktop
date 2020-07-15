@@ -13,10 +13,6 @@
 
 <ng-container [ngSwitch]="selectedTempl">
 
-  <div *ngSwitchCase="'cart'" class="your-cart" >
-    <market-buy-checkout></market-buy-checkout>
-  </div>
-
   <div *ngSwitchCase="'orders'" class="orders container-block" >
     <market-buy-orders></market-buy-orders>
   </div>

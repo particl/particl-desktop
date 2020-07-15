@@ -4,14 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketSharedModule } from '../shared/shared.module';
 import { BuyComponent } from './buy.component';
-
-import { BuyCheckoutComponent } from './buy-checkout/buy-checkout.component';
-import { PlaceBidModalComponent } from './buy-checkout/place-bid-modal/place-bid-modal.component';
-
 import { BuyCommentsComponent } from './buy-comments/buy-comments.component';
-
 import { BuyFavouritesComponent } from './buy-favourites/buy-favourites.component';
-
 import { BuyOrdersComponent } from './buy-orders/buy-orders.component';
 import { BuyOrderListItemComponent } from './buy-orders/buy-order-list-item/buy-order-list-item.component';
 import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bid-modal.component';
@@ -36,14 +30,8 @@ const routes: Routes = [
   ],
   declarations: [
     BuyComponent,
-
-    BuyCheckoutComponent,
-    PlaceBidModalComponent,
-
     BuyCommentsComponent,
-
     BuyFavouritesComponent,
-
     BuyOrdersComponent,
     BuyOrderListItemComponent,
     CancelBidModalComponent,
@@ -51,8 +39,6 @@ const routes: Routes = [
     PayOrderModalComponent,
   ],
   entryComponents: [
-    PlaceBidModalComponent,
-
     CancelBidModalComponent,
     PayOrderModalComponent,
     ConfirmOrderDeliveredModalComponent
