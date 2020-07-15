@@ -42,7 +42,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // for easy rendering only
   marketsList: Market[] = [];
   activeMarket: Market;
-  hasNewListings: boolean = false;          // TODO: Make this do something useful...
+  hasNewListings: boolean = false;
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
   isLoadingListings: boolean = true;
@@ -54,12 +54,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
   filterTargetRegion: FormControl = new FormControl([]);
   filterFlagged: FormControl = new FormControl(false);
   filterSeller: FormControl = new FormControl('');
-  // refresh action
+  // actionable mechanisms
   actionRefresh: FormControl = new FormControl();
-  // scroll action
   actionScroll: FormControl = new FormControl();
-
-  // list items for filter selections
+  // details for filter lists
   categoriesList$: Observable<CategoryItem[]>;
   countryList$: Observable<Country[]>;
 
@@ -412,7 +410,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
         // Remove duplicated listings: this may happen if earlier listings expired
         //   - in which case the MP search queries may ignore them from the resultset returned, thus causing some overlap
-        //   - we only really need to check one PAGE_COUNT of the previous existing listing items
         const found = [];
         for (let ii = 0; ii < items.length; ii++) {
           const item = items[ii];

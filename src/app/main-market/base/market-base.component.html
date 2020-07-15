@@ -49,23 +49,6 @@
 
   <main-topbar></main-topbar>
 
-  <!-- Alpha mainnet warning -->
-  <!--div class="notification" fxLayout fxLayoutAlign="space-between center" >
-    <div class="text">
-      <mat-icon fontIcon="part-circle-info"></mat-icon>
-      The Particl Marketplace is still in development - use it at your own risk!
-    </div>
-    <div class="buttons">
-      <button class="button" mat-button color="warn" (click)="openWarningMessage()">
-        <mat-icon fontIcon="part-alert"></mat-icon>
-        Click here to read all the details first!
-      </button>
-      <button class="button tiny icon-only" mat-button matTooltip="Dismiss for this session" (click)="isWarningVisible=false;">
-        <mat-icon fontIcon="part-cross"></mat-icon>
-      </button>
-    </div>
-  </div><!-- .notification -->
-
   <div class="alpha-warning" fxLayoutAlign="stretch stretch" *ngIf="isWarningVisible">
     <button class="button tiny" mat-button color="warn" (click)="openWarningMessage()" fxFlex="1 1 100%">
       <mat-icon fontIcon="part-alert"></mat-icon>

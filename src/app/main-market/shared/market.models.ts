@@ -329,7 +329,7 @@ export interface RespListingItem {
     };
   };
   MessagingInformation: any[];  // @TODO: ???
-  ListingItemObjects: any[];  // @TODO: ???
+  ListingItemObjects: any[];
   FavoriteItems: Array<{
     id: number;
     listingItemId: number;
@@ -349,7 +349,7 @@ export interface RespListingItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   };
-  Bids: any[];  // @TODO: ???
+  Bids: any[];
   FlaggedItem: any; // @TODO: ???
 }
 

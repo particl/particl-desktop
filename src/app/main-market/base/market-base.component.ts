@@ -70,6 +70,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    const initUrl = this._router.url;
     this._router.navigate(['/main/market/loading']);
 
     this._store.select(MarketState.startedStatus).pipe(
@@ -87,7 +88,11 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
           const lastPath = currentPathParts[currentPathParts.length - 1];
           const didNavigate = this.menu.findIndex(m => m.alwaysEnabled && m.path === lastPath);
           if (didNavigate === -1) {
-            this._router.navigate(['/main/market/overview']);
+            if (initUrl.startsWith('/main/market/')) {
+              this._router.navigate([initUrl]);
+            } else {
+              this._router.navigate(['/main/market/overview']);
+            }
           }
         } else if (status !== StartedStatus.PENDING) {
           this._router.navigate(['/main/market/settings']);
@@ -98,8 +103,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
 
     this.currentBalance = concat(
-      this._store.select(WalletUTXOState),
-      this._store.select(MarketState.currentIdentity)
+      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
+      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$))
     ).pipe(
       map(() => {
         const utxos: WalletUTXOStateModel = this._store.selectSnapshot(WalletUTXOState);
