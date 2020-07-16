@@ -1,0 +1,96 @@
+<app-page-intro [childPageAlias]="'shipping-profiles'">
+  <ng-container page-title>Shipping profiles</ng-container>
+  <ng-container page-content>
+    Add, manage and remove your saved Shipping profiles &ndash; your saved physical addresses, which you can use when buying Products on the Marketplace
+  </ng-container>
+  <ng-container page-help>
+    Simply save your home and/or office addresses for example and next time you're shopping, just select your saved Profile (don't worry, profiles are saved only on your device)
+  </ng-container>
+</app-page-intro>
+
+
+<!-- Profiles > Filter -->
+<div class="filter">
+
+  <div class="buttons">
+    <button mat-raised-button color="primary" class="full-width">
+      <mat-icon fontIcon="part-circle-plus"></mat-icon>
+      Add new Shipping Profile
+    </button>
+  </div><!-- .buttons -->
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="searchQuery"
+          placeholder="Search Orders" (keyup.escape)="searchQuery.setValue('')">
+    <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+<!-- Orders > list -->
+<div class="shipping-profiles section with-filter">
+
+  <!-- just for dev purposes -->
+  <ng-template #shippingProfile>
+    <mat-card class="item">
+      <button mat-button class="edit-profile tiny icon-only" matTooltip="Edit/remove" color="accent">
+        <mat-icon fontIcon="part-pen-1"></mat-icon>
+      </button>
+      <span class="profile-name">Home profile</span>
+      <span class="name">First Last name</span>
+      <span class="address-line">Address line 1 is very, insanely long and hopefully not needed!</span>
+      <!-- @TODO: show only if supplied: -->
+      <span class="address-line">Address line 2</span>
+      <span class="zip">ZIP38</span>
+      <span class="city">Cryptocity</span>
+      <!-- @TODO: show only if supplied: -->
+      <span class="state">The Great State</span>
+      <span class="country">Country Republic</span>
+    </mat-card>
+  </ng-template>
+
+  <div class="profiles-grid">
+    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
+    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
+    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
+    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
+    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
+  </div>
+
+
+  <!-- @TODO: no profiles saved yet -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-shipping-profiles.svg" alt="No Profiles found">
+    <p>
+      You don't have any shipping profiles yet
+    </p>
+    <p class="help-text">
+      Go ahead and create your first Shipping profile right away!
+    </p>
+  </div>
+
+  <!-- when searching/filtering: -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-shipping-profiles.svg" alt="No Profiles found">
+    <p>
+      No matching Profiles found
+    </p>
+    <p class="help-text">
+      You don't have any Shipping profiles matching your search
+    </p>
+  </div>
+
+</div><!-- .shipping-profiles -->

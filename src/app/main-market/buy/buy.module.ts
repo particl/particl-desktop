@@ -11,6 +11,7 @@ import { BuyOrderListItemComponent } from './buy-orders/buy-order-list-item/buy-
 import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bid-modal.component';
 import { ConfirmOrderDeliveredModalComponent } from './buy-orders/confirm-order-delivered-modal/confirm-order-delivered-modal.component';
 import { PayOrderModalComponent } from './buy-orders/pay-order-modal/pay-order-modal.component';
+import { BuyShippingProfilesComponent } from './buy-shipping-profiles/buy-shipping-profiles.component';
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
     CancelBidModalComponent,
     ConfirmOrderDeliveredModalComponent,
     PayOrderModalComponent,
+    BuyShippingProfilesComponent,
   ],
   entryComponents: [
     CancelBidModalComponent,
