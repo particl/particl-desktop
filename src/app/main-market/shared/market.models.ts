@@ -213,6 +213,43 @@ interface RespListingItemCategory {
 }
 
 
+interface RespListingItemFlagged {
+  id: number;
+  reason: string;
+  listingItemId: number;
+  proposalId: number;
+  marketId: null;
+  updatedAt: number;
+  createdAt: number;
+  Proposal: {
+    id: number;
+    msgid: string;
+    market: string;
+    submitter: string;
+    hash: string;
+    target: string;
+    category: 'ITEM_VOTE',
+    title: string;
+    description: string;
+    timeStart: number;
+    postedAt: number;
+    receivedAt: number;
+    expiredAt: number;
+    updatedAt: number;
+    createdAt: number;
+    ProposalOptions: Array<{
+      id: number;
+      proposalId: number;
+      optionId: number;
+      description: 'KEEP' | 'REMOVE',
+      hash: string;
+      updatedAt: number;
+      createdAt: number;
+    }>;
+  };
+}
+
+
 export interface RespListingItem {
   id: number;
   msgid: string;
@@ -329,7 +366,7 @@ export interface RespListingItem {
     };
   };
   MessagingInformation: any[];  // @TODO: ???
-  ListingItemObjects: any[];  // @TODO: ???
+  ListingItemObjects: any[];
   FavoriteItems: Array<{
     id: number;
     listingItemId: number;
@@ -349,8 +386,8 @@ export interface RespListingItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   };
-  Bids: any[];  // @TODO: ???
-  FlaggedItem: any; // @TODO: ???
+  Bids: any[];
+  FlaggedItem?: RespListingItemFlagged;
 }
 
 
@@ -406,6 +443,7 @@ export interface RespCartGetItem {
   }>;
 }
 
+
 export interface RespCartItemAdd {
   id: number;
   shoppingCartId: number;
@@ -414,4 +452,20 @@ export interface RespCartItemAdd {
   createdAt: number;
   ShoppingCart: RespCartListItem;
   ListingItem: RespListingItem;
+}
+
+
+export interface RespItemFlag {
+  result: string;
+  msgid: string;
+  txid: string;
+  fee: number;
+  tx_bytes: number;
+  msgids: string[];
+}
+
+
+export interface RespItemVote {
+  result: string;
+  msgids: string[];
 }
