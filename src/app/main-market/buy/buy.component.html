@@ -1,4 +1,3 @@
-
 <div class="tab-bar">
   <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
     <mat-tab *ngFor="let tab of tabs">
@@ -19,10 +18,6 @@
 
   <div *ngSwitchCase="'comments'" class="questions container-block" >
     <market-buy-comments></market-buy-comments>
-  </div>
-
-  <div *ngSwitchCase="'favourites'" class="favorites container-block">
-    <market-buy-favourites></market-buy-favourites>
   </div>
 
   <div *ngSwitchCase="'shipping-profiles'" class="shipping-profiles container-block">

@@ -1,259 +1,281 @@
-<div class="container-block">
+<div class="tab-bar">
+  <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+    <mat-tab *ngFor="let tab of tabs">
+      <ng-template mat-tab-label>
+        <mat-icon [fontIcon]="tab.icon"></mat-icon>
+        {{ tab.title }}
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
 
-  <!-- =========== YOUR CART =========== -->
+
+<ng-container [ngSwitch]="selectedTempl">
   
-  <form>
+  <div *ngSwitchCase="'cart'" class="your-cart container-block">
 
-    <app-page-intro>
-      <ng-container page-title>Your Cart</ng-container>
-      <ng-container page-content>
-        Manage items in your Cart and submit your Order(s) when you're satisfied
-      </ng-container>
-    </app-page-intro>
-
-    <!-- TODO: hide .cart-header when Cart is empty -->
-    <section class="cart">
-
-      <div class="cart-header --cart-layout">
-        <div class="photo">Preview</div>
-        <div class="title">Title</div>
-        <div class="price">Price</div>
-        <div class="qty">Qty</div>
-        <!-- TODO: hide all `.shipping` divs if address for delivery is not selected + update country code when delivery country is selected -->
-        <div class="shipping">Shipping to SA</div>
-        <div class="total">Subtotal</div>
-        <div class="remove"></div>
-      </div>
-
-      <mat-card class="cart-item --cart-layout">
-        <div class="photo" (click)="openListingDetailModal()">
-          <div class="overlay">
-            <mat-icon fontIcon="part-zoom-in"></mat-icon>
-          </div>
-          <img src="./assets/images/placeholder_4-3.jpg">
-        </div>
-        <div class="title">
-          <h3 class="name">Listing name goes here</h3>
-          <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
-          <!--div class="meta">
-            <span class="market">Particl Open Marketplace</span>
-            <span class="category">Furniture Things</span>
-          </div-->
-          <div class="info">
-            <span class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
-              <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
-              Expires soon &ndash; buy fast!
-            </span>
-            <!-- TODO: generic errors (and "already expired") -->
-            <span class="message --error" matTooltip="Expired Listing: This item will be automatically removed from your Cart when creating Order" matTooltipPosition="after">
-              <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
-              Sorry, this Listing already expired
-            </span>
-          </div>
-        </div>
-        <div class="price">
-          <span class="amount part">P 5<small>.3513</small></span>
-          <span class="amount fiat">$ 1<small>.6413</small></span>
-        </div>
-        <!-- Quantity: keep showing "1×" until we implement qty management -->
-        <div class="qty">1 &times;</div>
-        <div class="shipping">
-          <!-- TODO: update shipping prices dynamically based on shipping address country -->
-          <span class="amount part">P 0<small>.3513</small></span>
-          <span class="amount fiat">$ 0<small>.1413</small></span>
-        </div>
-        <div class="total">
-          <span class="amount part">P 7<small>.3513</small></span>
-          <span class="amount fiat">$ 2<small>.6413</small></span>
-        </div>
-        <div class="remove">
-          <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
-            <mat-icon fontIcon="part-circle-remove"></mat-icon>
-          </button>
-        </div>
-      </mat-card><!-- .cart-item -->
-
-      <!-- Another one, just for testing (it's the same, can be removed) -->
-      <mat-card class="cart-item --cart-layout">
-        <div class="photo" (click)="openListingDetailModal()">
-          <div class="overlay">
-            <mat-icon fontIcon="part-zoom-in"></mat-icon>
-          </div>
-          <img src="./assets/images/placeholder_4-3.jpg">
-        </div>
-        <div class="title">
-          <h3 class="name">This one is a bit more longer than the other one, so let's crop it</h3>
-          <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
-          <div class="meta">
-            <span class="market">Sneaky Longer Market Which Fits Well</span>
-            <span class="category">This category name is longer than expected</span>
-          </div>
-          <!--div class="info">
-            <span class="expires-soon">Expires soon!</span>
-            <span class="expired">Sorry, this Listing already expired</span>
-          </div-->
-        </div>
-        <div class="price">
-          <span class="amount part">P 55841<small>.3513</small></span>
-          <span class="amount fiat">$ 1151<small>.6413</small></span>
-        </div>
-        <div class="qty">1 &times;</div>
-        <div class="shipping">
-          <span class="amount part">P 6510<small>.3513</small></span>
-          <span class="amount fiat">$ 2510<small>.1413</small></span>
-        </div>
-        <div class="total">
-          <span class="amount part">P 8237<small>.3513</small></span>
-          <span class="amount fiat">$ 3512<small>.6413</small></span>
-        </div>
-        <div class="remove">
-          <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
-            <mat-icon fontIcon="part-circle-remove"></mat-icon>
-          </button>
-        </div>
-      </mat-card><!-- .cart-item -->
-
-      <div class="action-buttons" [hidden]="cart?.countOfItems === 0">
-        <button mat-button (click)="clearCart()">
-          <mat-icon fontIcon="part-clear-all"></mat-icon>
-          Empty Cart
-        </button>
-      </div><!-- .action-buttons -->
-
-    </section><!-- .cart -->
-
-    <div class="no-results --smaller --horizontal">
-      <img class="illustration" src="./assets/app-market/illustrations/empty-cart.svg" alt="Your Cart is empty">
-      <div class="text">
-        <p>
-          Your Cart is empty
-        </p>
-        <p class="help-text">
-          Why don't you head over to Listings page and populate your Cart with some Products?
-        </p>
-      </div>
-    </div><!-- .no-results -->
-
-
-
-    <!-- =========== SHIPPING & PRICING =========== -->
+    <!-- =========== YOUR CART =========== -->
     
-    <div class="shipping-pricing" fxLayout="row">
-      
-      <section class="shipping">
+    <form>
 
-        <div class="section-header">
-          <h2>Shipping details</h2>
-          <p class="help-text">
-            Choose an address where your Order should be delivered.<br>
-            You can save your frequently used addresses to your private Shipping profiles.
+      <app-page-intro>
+        <ng-container page-title>Your Cart</ng-container>
+        <ng-container page-content>
+          Manage items in your Cart and submit your Order(s) when you're satisfied
+        </ng-container>
+      </app-page-intro>
+
+      <!-- TODO: hide .cart-header when Cart is empty -->
+      <section class="cart">
+
+        <div class="cart-header --cart-layout">
+          <div class="photo">Preview</div>
+          <div class="title">Title</div>
+          <div class="price">Price</div>
+          <div class="qty">Qty</div>
+          <!-- TODO: hide all `.shipping` divs if address for delivery is not selected + update country code when delivery country is selected -->
+          <div class="shipping">Shipping to SA</div>
+          <div class="total">Subtotal</div>
+          <div class="remove"></div>
+        </div>
+
+        <mat-card class="cart-item --cart-layout">
+          <div class="photo" (click)="openListingDetailModal()">
+            <div class="overlay">
+              <mat-icon fontIcon="part-zoom-in"></mat-icon>
+            </div>
+            <img src="./assets/images/placeholder_4-3.jpg">
+          </div>
+          <div class="title">
+            <h3 class="name">Listing name goes here</h3>
+            <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
+            <!--div class="meta">
+              <span class="market">Particl Open Marketplace</span>
+              <span class="category">Furniture Things</span>
+            </div-->
+            <div class="info">
+              <span class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
+                <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
+                Expires soon &ndash; buy fast!
+              </span>
+              <!-- TODO: generic errors (and "already expired") -->
+              <span class="message --error" matTooltip="Expired Listing: This item will be automatically removed from your Cart when creating Order" matTooltipPosition="after">
+                <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
+                Sorry, this Listing already expired
+              </span>
+            </div>
+          </div>
+          <div class="price">
+            <span class="amount part">P 5<small>.3513</small></span>
+            <span class="amount fiat">$ 1<small>.6413</small></span>
+          </div>
+          <!-- Quantity: keep showing "1×" until we implement qty management -->
+          <div class="qty">1 &times;</div>
+          <div class="shipping">
+            <!-- TODO: update shipping prices dynamically based on shipping address country -->
+            <span class="amount part">P 0<small>.3513</small></span>
+            <span class="amount fiat">$ 0<small>.1413</small></span>
+          </div>
+          <div class="total">
+            <span class="amount part">P 7<small>.3513</small></span>
+            <span class="amount fiat">$ 2<small>.6413</small></span>
+          </div>
+          <div class="remove">
+            <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
+              <mat-icon fontIcon="part-circle-remove"></mat-icon>
+            </button>
+          </div>
+        </mat-card><!-- .cart-item -->
+
+        <!-- Another one, just for testing (it's the same, can be removed) -->
+        <mat-card class="cart-item --cart-layout">
+          <div class="photo" (click)="openListingDetailModal()">
+            <div class="overlay">
+              <mat-icon fontIcon="part-zoom-in"></mat-icon>
+            </div>
+            <img src="./assets/images/placeholder_4-3.jpg">
+          </div>
+          <div class="title">
+            <h3 class="name">This one is a bit more longer than the other one, so let's crop it</h3>
+            <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
+            <div class="meta">
+              <span class="market">Sneaky Longer Market Which Fits Well</span>
+              <span class="category">This category name is longer than expected</span>
+            </div>
+            <!--div class="info">
+              <span class="expires-soon">Expires soon!</span>
+              <span class="expired">Sorry, this Listing already expired</span>
+            </div-->
+          </div>
+          <div class="price">
+            <span class="amount part">P 55841<small>.3513</small></span>
+            <span class="amount fiat">$ 1151<small>.6413</small></span>
+          </div>
+          <div class="qty">1 &times;</div>
+          <div class="shipping">
+            <span class="amount part">P 6510<small>.3513</small></span>
+            <span class="amount fiat">$ 2510<small>.1413</small></span>
+          </div>
+          <div class="total">
+            <span class="amount part">P 8237<small>.3513</small></span>
+            <span class="amount fiat">$ 3512<small>.6413</small></span>
+          </div>
+          <div class="remove">
+            <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart">
+              <mat-icon fontIcon="part-circle-remove"></mat-icon>
+            </button>
+          </div>
+        </mat-card><!-- .cart-item -->
+
+        <div class="action-buttons" [hidden]="cart?.countOfItems === 0">
+          <button mat-button (click)="clearCart()">
+            <mat-icon fontIcon="part-clear-all"></mat-icon>
+            Empty Cart
+          </button>
+        </div><!-- .action-buttons -->
+
+      </section><!-- .cart -->
+
+      <div class="no-results --smaller --horizontal">
+        <img class="illustration" src="./assets/app-market/illustrations/empty-cart.svg" alt="Your Cart is empty">
+        <div class="text">
+          <p>
+            Your Cart is empty
           </p>
-        </div><!-- .section-header -->
+          <p class="help-text">
+            Why don't you head over to Listings page and populate your Cart with some Products?
+          </p>
+        </div>
+      </div><!-- .no-results -->
 
-        <mat-card class="shipping-profile no-padding">
-          <label class="--larger">
-            <h3 class="label">Load Shipping profile</h3>
-            <mat-form-field appearance="fill" class="--plain --larger">
-              <mat-select matNativeControl
-                placeholder="Select saved shipping address profile">
-                <!-- TODO: add a new option (e.g. "(none)"), which would deselect previously selected profile (so that user can go back to manually filling out the address) -->
-                <mat-option class="--larger" value="manual">(none)</mat-option>
-                <mat-option class="--larger" value="address">Home</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </label>
-        </mat-card>
 
-        <mat-card class="shipping-details no-padding">
-          <app-shipping-profile-address></app-shipping-profile-address>
-          <div class="save-profile">
-            <mat-checkbox name="save-shipping-profile" [(ngModel)]="saveShippingProfile">
-              {{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
-            </mat-checkbox>
-            <label>
-              <mat-form-field appearance="fill" class="--plain --larger" color="accent">
-                <input matInput type="text" placeholder="Shipping profile name" [disabled]="!saveShippingProfile" />
+
+      <!-- =========== SHIPPING & PRICING =========== -->
+      
+      <div class="shipping-pricing" fxLayout="row">
+        
+        <section class="shipping">
+
+          <div class="section-header">
+            <h2>Shipping details</h2>
+            <p class="help-text">
+              Choose an address where your Order should be delivered.<br>
+              You can save your frequently used addresses to your private Shipping profiles.
+            </p>
+          </div><!-- .section-header -->
+
+          <mat-card class="shipping-profile no-padding">
+            <label class="--larger">
+              <h3 class="label">Load Shipping profile</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <mat-select matNativeControl
+                  placeholder="Select saved shipping address profile">
+                  <!-- TODO: add a new option (e.g. "(none)"), which would deselect previously selected profile (so that user can go back to manually filling out the address) -->
+                  <mat-option class="--larger" value="manual">(none)</mat-option>
+                  <mat-option class="--larger" value="address">Home</mat-option>
+                </mat-select>
               </mat-form-field>
             </label>
-          </div><!-- .save-profile -->
+          </mat-card>
 
-        </mat-card>
-      </section><!-- .shipping -->
+          <mat-card class="shipping-details no-padding">
+            <app-shipping-profile-address></app-shipping-profile-address>
+            <div class="save-profile">
+              <mat-checkbox name="save-shipping-profile" [(ngModel)]="saveShippingProfile">
+                {{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
+              </mat-checkbox>
+              <label>
+                <mat-form-field appearance="fill" class="--plain --larger" color="accent">
+                  <input matInput type="text" placeholder="Shipping profile name" [disabled]="!saveShippingProfile" />
+                </mat-form-field>
+              </label>
+            </div><!-- .save-profile -->
 
-      <section class="pricing">
+          </mat-card>
+        </section><!-- .shipping -->
 
-        <div class="section-header">
-          <h2>Pricing overview</h2>
-          <p class="help-text">
-            Review pricing of your Order, before you submit it.<br>
-            Prices update dynamically, based on destination shipping country.
-          </p>
-        </div><!-- .section-header -->
+        <section class="pricing">
 
-        <mat-card>
-          <table class="prices">
-            <tfoot>
-              <tr>
-                <th></th>
-                <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
-                <!-- fiat `th` can be commented out; I was just preparing grounds :) | TODO: replace with user selected fiat countervalue currency (when implemented) -->
-                <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th>
-              </tr>
-            </tfoot>
-            <tbody>
-              <!-- TODO: fiat `td`s can be commented out; I was just preparing grounds :) -->
-              <tr class="items">
-                <th>Items' price</th>
-                <td class="amount part">55845<small>.8026</small></td>
-                <td class="amount fiat">1153<small>.2151</small></td>
-              </tr>
-              <tr class="shipping">
-                <th>Shipping to SA</th>
-                <td class="amount part">6510<small>.8026</small></td>
-                <td class="amount fiat">2510<small>.4926</small></td>
-              </tr>
-              <tr class="subtotal">
-                <th>Total price</th>
-                <td class="amount part">125613<small>.1684</small></td>
-                <td class="amount fiat">3663<small>.7077</small></td>
-              </tr>
-              <tr class="escrow">
-                <th>Escrow</th>
-                <td class="amount part">125613<small>.1684</small></td>
-                <td class="amount fiat">3663<small>.7077</small></td>
-              </tr>
-              <tr class="total">
-                <th>Total for Order</th>
-                <td class="amount part">251026<small>.3368</small></td>
-                <td class="amount fiat">7327<small>.4154</small></td>
-              </tr>
-            </tbody>
-          </table>
-          <mat-divider></mat-divider>
-          <p class="help-text">
-            Note: Escrow payment will be automatically returned after successfull delivery of the Order.
-          </p>
-        </mat-card>
-
-        <section class="submit-order">
           <div class="section-header">
-            <h2>Submit your Order</h2>
+            <h2>Pricing overview</h2>
             <p class="help-text">
-              Got everything in your Cart, shipping details filled out and agree with the pricing? Submit your Order below.
+              Review pricing of your Order, before you submit it.<br>
+              Prices update dynamically, based on destination shipping country.
             </p>
           </div><!-- .section-header -->
 
           <mat-card>
-            <button mat-raised-button class="full-width" color="primary" (click)="openPlaceBidModal()"><!-- [disabled]="!shippingFormGroup.valid" -->
-              <mat-icon fontIcon="part-next-single"></mat-icon>
-              Review &amp; Submit this Order&hellip;
-            </button>
+            <table class="prices">
+              <tfoot>
+                <tr>
+                  <th></th>
+                  <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+                  <!-- fiat `th` can be commented out; I was just preparing grounds :) | TODO: replace with user selected fiat countervalue currency (when implemented) -->
+                  <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th>
+                </tr>
+              </tfoot>
+              <tbody>
+                <!-- TODO: fiat `td`s can be commented out; I was just preparing grounds :) -->
+                <tr class="items">
+                  <th>Items' price</th>
+                  <td class="amount part">55845<small>.8026</small></td>
+                  <td class="amount fiat">1153<small>.2151</small></td>
+                </tr>
+                <tr class="shipping">
+                  <th>Shipping to SA</th>
+                  <td class="amount part">6510<small>.8026</small></td>
+                  <td class="amount fiat">2510<small>.4926</small></td>
+                </tr>
+                <tr class="subtotal">
+                  <th>Total price</th>
+                  <td class="amount part">125613<small>.1684</small></td>
+                  <td class="amount fiat">3663<small>.7077</small></td>
+                </tr>
+                <tr class="escrow">
+                  <th>Escrow</th>
+                  <td class="amount part">125613<small>.1684</small></td>
+                  <td class="amount fiat">3663<small>.7077</small></td>
+                </tr>
+                <tr class="total">
+                  <th>Total for Order</th>
+                  <td class="amount part">251026<small>.3368</small></td>
+                  <td class="amount fiat">7327<small>.4154</small></td>
+                </tr>
+              </tbody>
+            </table>
+            <mat-divider></mat-divider>
+            <p class="help-text">
+              Note: Escrow payment will be automatically returned after successfull delivery of the Order.
+            </p>
           </mat-card>
-        </section><!-- .submit-order -->
 
-      </section><!-- .pricing -->
+          <section class="submit-order">
+            <div class="section-header">
+              <h2>Submit your Order</h2>
+              <p class="help-text">
+                Got everything in your Cart, shipping details filled out and agree with the pricing? Submit your Order below.
+              </p>
+            </div><!-- .section-header -->
 
-    </div><!-- .shipping-pricing -->
+            <mat-card>
+              <button mat-raised-button class="full-width" color="primary" (click)="openPlaceBidModal()"><!-- [disabled]="!shippingFormGroup.valid" -->
+                <mat-icon fontIcon="part-next-single"></mat-icon>
+                Review &amp; Submit this Order&hellip;
+              </button>
+            </mat-card>
+          </section><!-- .submit-order -->
 
-  </form>
-</div><!-- container-block -->
+        </section><!-- .pricing -->
+
+      </div><!-- .shipping-pricing -->
+
+    </form>
+  </div><!-- container-block -->
+
+
+  <div *ngSwitchCase="'favourites'" class="favorites container-block">
+    <market-buy-favourites></market-buy-favourites>
+  </div>
+
+
+</ng-container>

@@ -19,7 +19,6 @@ export class BuyComponent implements OnInit {
   readonly tabs: BuyTab[] = [
     { title: 'Buy Orders', icon: 'part-recipe', templ: 'orders'},
     { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments'},
-    { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites'},
     { title: 'Shipping profiles', icon: 'part-truck', templ: 'shipping-profiles'},
   ];
 

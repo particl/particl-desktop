@@ -5,6 +5,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketSharedModule } from '../shared/shared.module';
 
 import { BuyCheckoutComponent } from './buy-checkout.component';
+import { BuyFavouritesComponent } from './buy-favourites/buy-favourites.component';
 import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
 
 
@@ -25,6 +26,7 @@ const routes: Routes = [
   ],
   declarations: [
     BuyCheckoutComponent,
+    BuyFavouritesComponent,
     PlaceBidModalComponent,
   ],
   entryComponents: [
