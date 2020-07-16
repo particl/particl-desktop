@@ -11,6 +11,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { QuestionThreadListItemComponent } from './question-thread-list-item/question-thread-list-item.component';
 import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
+import { ShippingProfileAddressComponent } from './shipping-profile-address/shipping-profile-address.component';
 
 @NgModule({
   imports: [
@@ -24,12 +25,14 @@ import { ListingDetailModalComponent } from './listing-detail-modal/listing-deta
   declarations: [
     TreeSelectComponent,
     QuestionThreadListItemComponent,
-    ListingDetailModalComponent
+    ListingDetailModalComponent,
+    ShippingProfileAddressComponent
   ],
   exports: [
     TreeSelectComponent,
     QuestionThreadListItemComponent,
     ListingDetailModalComponent,
+    ShippingProfileAddressComponent,
     GalleryModule,
     LightboxModule,
     GallerizeModule,

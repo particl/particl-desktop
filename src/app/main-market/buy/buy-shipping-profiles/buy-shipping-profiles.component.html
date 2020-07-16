@@ -13,7 +13,7 @@
 <div class="filter">
 
   <div class="buttons">
-    <button mat-raised-button color="primary" class="full-width">
+    <button mat-raised-button color="primary" class="full-width" (click)="openEditShippingProfileModal()">
       <mat-icon fontIcon="part-circle-plus"></mat-icon>
       Add new Shipping Profile
     </button>
@@ -46,7 +46,7 @@
   <!-- just for dev purposes -->
   <ng-template #shippingProfile>
     <mat-card class="item">
-      <button mat-button class="edit-profile tiny icon-only" matTooltip="Edit/remove" color="accent">
+      <button mat-button class="edit-profile tiny icon-only" (click)="openEditShippingProfileModal()" matTooltip="Edit/remove" color="accent">
         <mat-icon fontIcon="part-pen-1"></mat-icon>
       </button>
       <span class="profile-name">Home profile</span>

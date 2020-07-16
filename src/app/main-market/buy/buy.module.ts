@@ -12,6 +12,7 @@ import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bi
 import { ConfirmOrderDeliveredModalComponent } from './buy-orders/confirm-order-delivered-modal/confirm-order-delivered-modal.component';
 import { PayOrderModalComponent } from './buy-orders/pay-order-modal/pay-order-modal.component';
 import { BuyShippingProfilesComponent } from './buy-shipping-profiles/buy-shipping-profiles.component';
+import { EditShippingProfileModalComponent } from './buy-shipping-profiles/edit-shipping-profile-modal/edit-shipping-profile-modal.component';
 
 
 const routes: Routes = [
@@ -39,11 +40,13 @@ const routes: Routes = [
     ConfirmOrderDeliveredModalComponent,
     PayOrderModalComponent,
     BuyShippingProfilesComponent,
+    EditShippingProfileModalComponent,
   ],
   entryComponents: [
     CancelBidModalComponent,
     PayOrderModalComponent,
-    ConfirmOrderDeliveredModalComponent
+    ConfirmOrderDeliveredModalComponent,
+    EditShippingProfileModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

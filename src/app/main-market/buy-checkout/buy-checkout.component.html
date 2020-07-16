@@ -163,75 +163,9 @@
             </mat-form-field>
           </label>
         </mat-card>
-      
-        <mat-card class="shipping-details no-padding">
-          <div class="row" fxLayout>
-            <label class="--larger" fxFlex="40">
-              <h3 class="label">First name</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="Your first name"/>
-              </mat-form-field>
-            </label>
-            <label class="--larger" fxFlex="60">
-              <h3 class="label">Last name</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="Your last name(s)"/>
-              </mat-form-field>
-            </label>
-          </div>
-          <div class="row" fxLayout>
-            <label class="--larger" fxFlex="40">
-              <h3 class="label">Address</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="Address line 1"/>
-              </mat-form-field>
-            </label>
-            <label class="--larger" fxFlex="60">
-              <h3 class="label">&nbsp;</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="Address line 2 (if applicable)"/>
-              </mat-form-field>
-            </label>
-          </div>
-          <div class="row" fxLayout>
-            <label class="--larger" fxFlex="40">
-              <h3 class="label">Postal code</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="ZIP code"/>
-              </mat-form-field>
-            </label>
-            <label class="--larger" fxFlex="60">
-              <h3 class="label">City</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="City"/>
-              </mat-form-field>
-            </label>
-          </div>
-          <div class="row" fxLayout fxLayoutAlign="stretch flex-end">
-            <label class="--larger" fxFlex="40">
-              <h3 class="label">State</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text"
-                placeholder="State (if applicable)"/>
-              </mat-form-field>
-            </label>
-            <label class="--larger" fxFlex="60">
-              <h3 class="label">Country</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <mat-select placeholder="Select your country">
-                  <mat-option value="a">Cryptoland</mat-option>
-                  <mat-option value="b">Bitcoinville</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </label>
-          </div>
 
+        <mat-card class="shipping-details no-padding">
+          <app-shipping-profile-address></app-shipping-profile-address>
           <div class="save-profile">
             <mat-checkbox name="save-shipping-profile" [(ngModel)]="saveShippingProfile">
               {{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile
