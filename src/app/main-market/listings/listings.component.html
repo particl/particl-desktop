@@ -102,10 +102,10 @@
   >
 
     <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
-      <div mat-card-image (click)="openListingDetailModal(listing.id)">
+      <div mat-card-image (click)="openListingDetailModal(listing.id, false)">
         <img class="img" [src]="listing.image" [alt]="listing.title">
       </div>
-      <mat-card-header (click)="openListingDetailModal(listing.id)">
+      <mat-card-header (click)="openListingDetailModal(listing.id, false)">
         <mat-card-title>
           {{ listing.title }}
         </mat-card-title>
@@ -139,7 +139,7 @@
             <span>Mark item is appropriate</span>
           </button>
         </ng-container>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="openListingDetailModal(listing.id, true)">
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
           <span>Questions &amp; Answers ({{ listing.extras.commentCount }})</span>
         </button>

@@ -12,7 +12,7 @@ import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/de
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { BatchPublishModalComponent } from '../modals/batch-publish-modal/batch-publish-modal.component';
 import { PublishTemplateModalComponent } from '../new-listing/publish-template-modal/publish-template-modal.component';
-import { ListingItemDetail } from 'app/main-market/shared/shared.models';
+import { ListingItemDetail } from 'app/main-market/shared/listing-detail-modal/listing-detail.models';
 import { TEMPLATE_SORT_FIELD_TYPE, TEMPLATE_STATUS_TYPE, MarketTemplate, BaseTemplate } from '../sell.models';
 
 

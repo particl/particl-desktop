@@ -1,21 +1,27 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GalleryItem, ImageItem } from '@ngx-gallery/core';
-import { PartoshiAmount } from 'app/core/util/utils';
-import { ListingItemDetail } from '../shared.models';
+import { Subject, timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
+import { PartoshiAmount } from 'app/core/util/utils';
+import { ListingItemDetail } from './listing-detail.models';
 
+
+type InitialTabSelectionType = 'default' | 'chat';
 
 interface ListingItemDetailInputs {
   listing: ListingItemDetail;
   canChat: boolean;
   canAction: boolean;
+  initTab?: InitialTabSelectionType;
 }
 
 
 enum TextContent {
-  UNSET_VALUE = '<unknown>'
+  UNSET_VALUE = '<unknown>',
+  TIMER_SECONDS_REMAINING = 'Less than a minute'
 }
 
 @Component({
@@ -23,7 +29,7 @@ enum TextContent {
   styleUrls: ['./listing-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListingDetailModalComponent implements OnInit {
+export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
 
   private static isObject(obj: any): boolean {
@@ -34,7 +40,8 @@ export class ListingDetailModalComponent implements OnInit {
     return Object.prototype.toString.call(obj) === '[object Array]';
   }
 
-  expiryTimer: string = '';   // TODO: implement this
+  expiryTimer: string = '';
+  initialTab: InitialTabSelectionType = 'default';
 
   readonly showActions: boolean;
   readonly showComments: boolean;
@@ -86,11 +93,13 @@ export class ListingDetailModalComponent implements OnInit {
 
 
   private readonly SOON_DURATION: number = 1000 * 60 * 60 * 24; // 24 hours
+  private destroy$: Subject<void> = new Subject();
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ListingItemDetailInputs,
-    private _store: Store
+    private _store: Store,
+    private _cdr: ChangeDetectorRef
   ) {
 
     const isInputValuesObject = ListingDetailModalComponent.isObject(data);
@@ -207,10 +216,62 @@ export class ListingDetailModalComponent implements OnInit {
     this.itemExpiry = {
       timestamp: expiryTime,
       hasExpired: (expiryTime > 0) && (now >= expiryTime),
-      isSoon: (now < expiryTime) && (now > (expiryTime - this.SOON_DURATION)),
+      isSoon: this.isExpiringSoon(now, expiryTime),
     };
+
+    if (isInputValuesObject && typeof data.initTab === 'string') {
+      this.initialTab = data.initTab === 'chat' && this.showComments ? 'chat' : this.initialTab;
+    }
   }
 
   ngOnInit() {
+
+    if ((this.itemExpiry.timestamp > 0) && (!this.itemExpiry.hasExpired)) {
+      timer(Date.now() % 1000, 1000).pipe(
+        takeUntil(this.destroy$)
+      ).subscribe(
+        (count) => {
+          const now = Date.now();
+          if (now > this.itemExpiry.timestamp) {
+            this.itemExpiry.hasExpired = true;
+            this.itemExpiry.isSoon = false;
+            this.destroy$.next();
+          } else if (!this.itemExpiry.isSoon && this.isExpiringSoon(now, this.itemExpiry.timestamp)) {
+            this.itemExpiry.isSoon = true;
+          }
+
+          if (this.itemExpiry.isSoon) {
+            this.expiryTimer = this.formatSeconds( (this.itemExpiry.timestamp - now) / 1000);
+          }
+          if (this.itemExpiry.isSoon || this.itemExpiry.hasExpired) {
+            this._cdr.detectChanges();
+          }
+        }
+      );
+    }
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
+  private isExpiringSoon(current: number, future: number): boolean {
+    return (current < future) && (current > (future - this.SOON_DURATION));
+  }
+
+
+  private formatSeconds(sec: number): string {
+    // @TODO: zaSmilingIdiot 2020-07-16 -> Improve this type of crappy string building for translations
+    const seconds = Math.floor(sec % 60),
+          minutes = Math.floor((sec / 60) % 60),
+          hours = Math.floor((sec / 3600) % 3600);
+
+    if ((hours === 0) && (minutes === 0) ) {
+      return TextContent.TIMER_SECONDS_REMAINING;
+    }
+    return `${hours.toString().padStart(2, '0')} h ${minutes.toString().padStart(2, '0')} min ${seconds.toString().padStart(2, '0')} sec`;
   }
 }

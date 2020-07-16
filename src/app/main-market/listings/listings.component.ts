@@ -440,13 +440,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  openListingDetailModal(id: number): void {
+  openListingDetailModal(id: number, startAtComments: boolean = false): void {
     this._sharedService.getListingDetails(id).subscribe(
       (listing) => {
         if (+listing.id > 0) {
           const dialog = this._dialog.open(
             ListingDetailModalComponent,
-            {data: {listing, canChat: true, canAction: true}}
+            {data: {listing, canChat: true, canAction: true, initTab: startAtComments ? 'chat' : 'default'}}
           );
           // TODO: Link dialog actions back to applicable actions here
         } else {

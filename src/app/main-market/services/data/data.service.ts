@@ -9,7 +9,7 @@ import { RegionListService } from '../region-list/region-list.service';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { RespCategoryList, RespMarketListMarketItem, RespListingItem } from '../../shared/market.models';
-import { ListingItemDetail } from '../../shared/shared.models';
+import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
 import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
 import { CategoryItem, Market } from './data.models';
 
