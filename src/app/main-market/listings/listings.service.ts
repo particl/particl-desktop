@@ -8,7 +8,7 @@ import { MarketState } from '../store/market.state';
 import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../shared/utils';
 
 import { PartoshiAmount } from 'app/core/util/utils';
-import { RespListingItem, RespCartItemAdd } from '../shared/market.models';
+import { RespListingItem, RespCartItemAdd, RespItemFlag, RespItemVote } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
 import { MarketSettings } from '../store/market.models';
 
@@ -81,6 +81,25 @@ export class ListingsService {
   }
 
 
+  reportItem(listingId: number): Observable<boolean> {
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return this._rpc.call('item', ['flag', listingId, identityId]).pipe(
+      map((resp: RespItemFlag) => {
+        return resp && resp.result && String(resp.result).toLowerCase() === 'sent.';
+      })
+    );
+  }
+
+
+  voteOnItem(marketId: number, proposalHash: string, voteOptionId: number): Observable<boolean> {
+    return this._rpc.call('vote', ['post', marketId, proposalHash, voteOptionId]).pipe(
+      map((resp: RespItemVote) => {
+        return resp && resp.result && String(resp.result).toLowerCase() === 'sent.';
+      })
+    );
+  }
+
+
   addItemToCart(listingId: number, cartId: number): Observable<RespCartItemAdd> {
     return this._rpc.call('cartitem', ['add', cartId, listingId]);
   }
@@ -95,7 +114,10 @@ export class ListingsService {
         isLocalShipping = false,
         isOwnListing = false,
         favId = null,
-        commentCount = 0;
+        commentCount = 0,
+        flagHash = '',
+        flaggedVoteKeepId = 0,
+        flaggedVoteRemoveId = 0;
     const price = new PartoshiAmount(0);
 
     const fromDetails = from.ItemInformation;
@@ -163,6 +185,21 @@ export class ListingsService {
         from.MessagingInformation.length : 0;
 
     const expirationTime = getValueOrDefault(from.expiredAt, 'number', 0);
+    const itemIsFlagged = isBasicObjectType(from.FlaggedItem) && +from.FlaggedItem.id > 0;
+
+    if (itemIsFlagged && isBasicObjectType(from.FlaggedItem.Proposal)) {
+       flagHash = getValueOrDefault(from.FlaggedItem.Proposal.hash, 'string', flagHash);
+
+       from.FlaggedItem.Proposal.ProposalOptions.forEach((option) => {
+         if (option && +option.optionId) {
+           if (option.description === 'KEEP') {
+            flaggedVoteKeepId = option.optionId;
+           } else if (option.description === 'REMOVE') {
+            flaggedVoteRemoveId = option.optionId;
+           }
+         }
+       });
+    }
 
 
     const newItem: ListingOverviewItem = {
@@ -181,8 +218,13 @@ export class ListingsService {
       extras: {
         commentCount: commentCount,
         favouriteId: favId,
-        isFlagged: isBasicObjectType(from.FlaggedItem),
-        usersVote: false,  // TODO: implement details when known
+        isFlagged: itemIsFlagged,
+        usersVote: {
+          voteId: 0,  // TODO: um, sort this out
+          hash: flagHash,
+          keepId: flaggedVoteKeepId,
+          removeId: flaggedVoteRemoveId
+        },
         isOwn: isOwnListing,
         canAddToCart: !isOwnListing && (expirationTime > Date.now())
       }
