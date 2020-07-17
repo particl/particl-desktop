@@ -72,7 +72,6 @@
 }
 
 
-
 /* -------------- LISTING ITEM -------------- */
 
 mat-card.listing {
@@ -80,7 +79,7 @@ mat-card.listing {
   // container width / no. of columns - (grid gutter + card's side padding):
   flex: 0 0 calc((100% / var(--grid-columns) - var(--grid-gutter)) - 2 * var(--card-padding));
   padding: var(--card-padding);
-  margin: 0 var(--grid-gutter) 32px 0;
+  margin: 0 var(--grid-gutter) var(--grid-gutter) 0;
   border-radius: 0;
   .mat-card-image {
     height: 0;
