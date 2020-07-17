@@ -13,12 +13,6 @@ export interface ListingOverviewItem {
     favouriteId: number | null;
     canAddToCart: boolean;
     isFlagged: boolean;
-    usersVote: {
-      voteId: number;
-      hash: string;
-      keepId: number;
-      removeId: number;
-    },
     commentCount: number;
   };
 }

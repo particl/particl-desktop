@@ -125,20 +125,10 @@
         </button>
       </mat-card-actions>
       <mat-menu #menu="matMenu" class="--smaller">
-        <button mat-menu-item [disabled]="listing.extras.isFlagged" *ngIf="!(listing.extras.isFlagged && (listing.extras.usersVote.voteId === 0))" (click)="reportListing(listingIdx)">
+        <button mat-menu-item [disabled]="listing.extras.isFlagged" (click)="reportListing(listingIdx)">
           <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
-          <span>{{ !listing.extras.isFlagged ? 'Report as inappropriate' : (listing.extras.usersVote.voteId === listing.extras.usersVote.keepId ? 'Voted as appropriate' : 'Voted to remove') }}</span>
+          <span>{{ listing.extras.isFlagged ? 'Flagged as inappropriate' : 'Report as inappropriate' }}</span>
         </button>
-        <ng-container *ngIf="listing.extras.isFlagged">
-          <button mat-menu-item *ngIf="(listing.extras.usersVote.voteId === listing.extras.usersVote.removeId) || (listing.extras.usersVote.voteId === 0)" (click)="voteOnFlaggedListing(listingIdx)">
-            <mat-icon fontIcon="part-thumb-down" color="warn"></mat-icon>
-            <span>Remove this item</span>
-          </button>
-          <button mat-menu-item *ngIf="(listing.extras.usersVote.voteId === listing.extras.usersVote.keepId) || (listing.extras.usersVote.voteId === 0)" (click)="voteOnFlaggedListing(listingIdx)">
-            <mat-icon fontIcon="part-thumb-up" color="primary"></mat-icon>
-            <span>Mark item is appropriate</span>
-          </button>
-        </ng-container>
         <button mat-menu-item (click)="openListingDetailModal(listing.id, true)">
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
           <span>Questions &amp; Answers ({{ listing.extras.commentCount }})</span>

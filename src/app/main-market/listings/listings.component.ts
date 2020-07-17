@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRe
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, iif, merge, of, defer, combineLatest, timer } from 'rxjs';
-import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError } from 'rxjs/operators';
+import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError, filter } from 'rxjs/operators';
 import { xor } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -30,9 +30,6 @@ enum TextContent {
   CART_ADD_SUCCESS = 'Successfully added to cart',
   ITEM_FLAG_SUCCESS = 'Successfully flagged the listing',
   ITEM_FLAG_FAILED = 'An error occurred while flagging the listing',
-  ITEM_VOTE_KEEP_SUCCESS = 'Successfully vote to keep the listing',
-  ITEM_VOTE_REMOVE_SUCCESS = 'Successfully vote to remove the listing',
-  ITEM_VOTE_FAILED = 'Could not cast your vote now',
 }
 
 
@@ -102,12 +99,45 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    // Websocket message update handlers
 
-    const newMessages$ = this._listingService.getListenerNewListings().pipe(
+    const newMessageListings$ = this._listingService.getListenerNewListings().pipe(
       tap((resp) => {
         if (resp && (resp.market === this.activeMarket.receiveAddress)) {
           this.hasNewListings = true;
           this._cdr.detectChanges();
+        }
+      }),
+      catchError(() => of()),
+      takeUntil(this.destroy$)
+    );
+
+
+    const newMessageFlagged$ = this._listingService.getListenerFlaggedItems().pipe(
+      filter(() => this.listings.length > 0),
+      tap((resp) => {
+        if (resp.market && (resp.market === this.activeMarket.receiveAddress) && (typeof resp.target === 'string')) {
+          const listingsFound = this.listings.filter(l => l.hash === resp.target);
+          if (listingsFound.length) {
+            listingsFound.forEach(lf => lf.extras.isFlagged = true);
+            this._cdr.detectChanges();
+          }
+        }
+      }),
+      catchError(() => of()),
+      takeUntil(this.destroy$)
+    );
+
+
+    const newMessageComment$ = this._listingService.getListenerComments().pipe(
+      filter(() => this.listings.length > 0),
+      tap((resp) => {
+        if (resp.target && (resp.receiver === this.activeMarket.receiveAddress) && (typeof resp.target === 'string')) {
+          const listing = this.listings.find(l => l.hash === resp.target);
+          if (listing) {
+            listing.extras.commentCount++;
+            this._cdr.detectChanges();
+          }
         }
       }),
       catchError(() => of()),
@@ -276,7 +306,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
       loadListings$,
       marketChange$,
       identityChange$,
-      newMessages$
+      newMessageListings$,
+      newMessageFlagged$,
+      newMessageComment$
     ).subscribe();
 
   }
@@ -365,7 +397,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
               if (newListingRef && newListingRef.id === listing.id) {
                 this.listings.splice(listingIdx, 1);
 
-                if (this.needsupdatedListingsAfterRemovals()) {
+                const modCount = this.listings.length % this.PAGE_COUNT;
+                if (!this.atEndOfListings && (modCount > 0) && (modCount < (this.PAGE_COUNT / 2))) {
                   this.actionScroll.setValue(null);
                   // no need to update display here since the refreshing of the scrolled listings should take care of that
                 } else {
@@ -379,63 +412,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
     ).subscribe(
       () => this._snackbar.open(TextContent.ITEM_FLAG_SUCCESS),
       () => this._snackbar.open(TextContent.ITEM_FLAG_FAILED, 'warn')
-    );
-  }
-
-
-  voteOnFlaggedListing(listingIdx: number): void {
-    const listing = this.listings[listingIdx];
-
-    if (!listing || !listing.extras.isFlagged) {
-
-      return;
-    }
-
-    // default (if not vote is cast, or otherwise something is broken, is to vote to remove the item)
-    const newVoteOptionId = listing.extras.usersVote.voteId === listing.extras.usersVote.removeId ?
-    listing.extras.usersVote.keepId : listing.extras.usersVote.removeId;
-
-    this._unlocker.unlock({timeout: 10}).pipe(
-      concatMap((unlocked: boolean) => iif(
-        () => unlocked,
-        defer(() => this._listingService.voteOnItem(this.activeMarket.id, listing.extras.usersVote.hash, newVoteOptionId).pipe(
-            tap((success) => {
-              const newListingRef = this.listings[listingIdx];
-
-              if (success) {
-
-                if (newListingRef && newListingRef.id === listing.id) {
-                  newListingRef.extras.usersVote.voteId = newVoteOptionId;
-
-                  if (
-                    (!this.filterFlagged.value && (newListingRef.extras.usersVote.voteId === newListingRef.extras.usersVote.removeId)) ||
-                    (this.filterFlagged.value && (newListingRef.extras.usersVote.voteId === newListingRef.extras.usersVote.keepId))
-                  ) {
-                    this.listings.splice(listingIdx, 1);
-                  }
-
-                  if (this.needsupdatedListingsAfterRemovals()) {
-                    this.actionScroll.setValue(null);
-                    // no need to update display here since the refreshing of the scrolled listings should take care of that
-                  } else {
-                    this._cdr.detectChanges();
-                  }
-                }
-
-                this._snackbar.open(newVoteOptionId === listing.extras.usersVote.removeId ?
-                  TextContent.ITEM_VOTE_REMOVE_SUCCESS :
-                  TextContent.ITEM_VOTE_KEEP_SUCCESS
-                );
-              } else {
-                this._snackbar.open(TextContent.ITEM_VOTE_FAILED, 'warn');
-              }
-            })
-          )
-        )
-      ))
-    ).subscribe(
-      null,
-      () => this._snackbar.open(TextContent.ITEM_VOTE_FAILED, 'warn')
     );
   }
 
@@ -612,11 +588,4 @@ export class ListingsComponent implements OnInit, OnDestroy {
       () => this.startExpirationTimer()
     );
   }
-
-
-  private needsupdatedListingsAfterRemovals(): boolean {
-    const modCount = this.listings.length % this.PAGE_COUNT;
-    return !this.atEndOfListings && (modCount > 0) && (modCount < (this.PAGE_COUNT / 2));
-  }
-
 }

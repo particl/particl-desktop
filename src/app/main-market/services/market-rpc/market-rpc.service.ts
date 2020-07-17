@@ -36,7 +36,9 @@ export class MarketRpcService {
   private marketSocket: WebSocketSubject<SocketDataObject | number> = null;
 
   private MESSAGE_HANDLERS: SocketMessageHandlers = {
-    MPA_LISTING_ADD_03: null
+    MPA_LISTING_ADD_03: null,
+    MPA_COMMENT_ADD: null,
+    MPA_PROPOSAL_ADD: null
   };
 
 
@@ -105,7 +107,7 @@ export class MarketRpcService {
 
 
   getSocketMessageListener<K extends keyof SocketMessageListeners>(msgType: K): SocketMessageListeners[K] {
-    return (this.MESSAGE_HANDLERS[msgType] === null || this.MESSAGE_HANDLERS[msgType].isStopped) ?
+    return (this.MESSAGE_HANDLERS[msgType] === null) ?
       empty() :
       this.MESSAGE_HANDLERS[msgType].asObservable() as SocketMessageListeners[K];
   }
@@ -231,7 +233,9 @@ export class MarketRpcService {
     this.stopMessageListeners();
 
     this.MESSAGE_HANDLERS = {
-      MPA_LISTING_ADD_03: new Subject<SocketMessages_v03.AddListing>()
+      MPA_LISTING_ADD_03: new Subject<SocketMessages_v03.AddListing>(),
+      MPA_COMMENT_ADD: new Subject<SocketMessages_v03.CommentAdded>(),
+      MPA_PROPOSAL_ADD: new Subject<SocketMessages_v03.ProposalAdded>()
     };
   }
 

@@ -7846,10 +7846,15 @@ lodash@=4.17.11:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.0, lodash@~4.17.11, lodash@~4.17.12:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.0, lodash@~4.17.11, lodash@~4.17.12:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+
+lodash@^4.17.11:
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 log-driver@^1.2.7:
   version "1.2.7"
@@ -8901,10 +8906,10 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.135:
-  version "0.1.135"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.135.tgz#581d255f34915d3ad76fc6402079f8d459f041fe"
-  integrity sha512-TCW3/Z/NpIWCEhnTBXDMDU5kQvvXTSvdr9JnIX/bA1GJrGB/1T8XdJtiiHCUMXwwmIJCCRu7iH2imzo/BhackA==
+omp-lib@^0.1.138:
+  version "0.1.138"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.138.tgz#ecd4bdde41370fe2f208bf04766e6b0b26f5bab4"
+  integrity sha512-4aBBH8m/lBTXFi3msRaGkVJAt+waWSY0Vhg8ly4I55zrrSzf5iMr7fXzPnzCNNSR8MRQRB6tX8zPYOFUEaFOcA==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -9321,9 +9326,9 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9383,9 +9388,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-17.tgz:
-  version "0.3.0-17"
-  resolved "./particl-marketplace-0.3.0-17.tgz#1efb286e1c2e6c35a4e6a74b77386b3fb7666f86"
+particl-marketplace@./particl-marketplace-0.3.0-18.tgz:
+  version "0.3.0-18"
+  resolved "./particl-marketplace-0.3.0-18.tgz#65176250b3ac75df18a7c2919b04754ba3163ee2"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9425,7 +9430,7 @@ particl-marketplace@./particl-marketplace-0.3.0-17.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.135"
+    omp-lib "^0.1.138"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.4"
     path "^0.12.7"

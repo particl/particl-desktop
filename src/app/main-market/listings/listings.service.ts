@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
-import { map, mapTo, catchError } from 'rxjs/operators';
+import { map, mapTo, catchError, filter } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 
 import { MarketState } from '../store/market.state';
@@ -11,6 +11,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { RespListingItem, RespCartItemAdd, RespItemFlag, RespItemVote } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
 import { MarketSettings } from '../store/market.models';
+import { SocketMessages_v03 } from '../shared/market-socket.models';
 
 
 @Injectable()
@@ -22,9 +23,23 @@ export class ListingsService {
   ) {}
 
 
-  getListenerNewListings() {
+  getListenerNewListings(): Observable<SocketMessages_v03.AddListing> {
     return this._rpc.getSocketMessageListener('MPA_LISTING_ADD_03');
   }
+
+
+  getListenerFlaggedItems(): Observable<SocketMessages_v03.ProposalAdded> {
+    return this._rpc.getSocketMessageListener('MPA_PROPOSAL_ADD').pipe(
+      filter((msg) => msg && (msg.category === 'ITEM_VOTE'))
+    );
+  }
+
+  getListenerComments(): Observable<SocketMessages_v03.CommentAdded> {
+    return this._rpc.getSocketMessageListener('MPA_COMMENT_ADD').pipe(
+      filter((msg) => msg && (typeof msg.commentType === 'string') && (msg.commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS'))
+    );
+  }
+
 
 
   searchListingItems(
@@ -91,15 +106,6 @@ export class ListingsService {
   }
 
 
-  voteOnItem(marketId: number, proposalHash: string, voteOptionId: number): Observable<boolean> {
-    return this._rpc.call('vote', ['post', marketId, proposalHash, voteOptionId]).pipe(
-      map((resp: RespItemVote) => {
-        return resp && resp.result && String(resp.result).toLowerCase() === 'sent.';
-      })
-    );
-  }
-
-
   addItemToCart(listingId: number, cartId: number): Observable<RespCartItemAdd> {
     return this._rpc.call('cartitem', ['add', cartId, listingId]);
   }
@@ -114,10 +120,7 @@ export class ListingsService {
         isLocalShipping = false,
         isOwnListing = false,
         favId = null,
-        commentCount = 0,
-        flagHash = '',
-        flaggedVoteKeepId = 0,
-        flaggedVoteRemoveId = 0;
+        commentCount = 0;
     const price = new PartoshiAmount(0);
 
     const fromDetails = from.ItemInformation;
@@ -187,20 +190,6 @@ export class ListingsService {
     const expirationTime = getValueOrDefault(from.expiredAt, 'number', 0);
     const itemIsFlagged = isBasicObjectType(from.FlaggedItem) && +from.FlaggedItem.id > 0;
 
-    if (itemIsFlagged && isBasicObjectType(from.FlaggedItem.Proposal)) {
-       flagHash = getValueOrDefault(from.FlaggedItem.Proposal.hash, 'string', flagHash);
-
-       from.FlaggedItem.Proposal.ProposalOptions.forEach((option) => {
-         if (option && +option.optionId) {
-           if (option.description === 'KEEP') {
-            flaggedVoteKeepId = option.optionId;
-           } else if (option.description === 'REMOVE') {
-            flaggedVoteRemoveId = option.optionId;
-           }
-         }
-       });
-    }
-
 
     const newItem: ListingOverviewItem = {
       id: listingId,
@@ -219,12 +208,6 @@ export class ListingsService {
         commentCount: commentCount,
         favouriteId: favId,
         isFlagged: itemIsFlagged,
-        usersVote: {
-          voteId: 0,  // TODO: um, sort this out
-          hash: flagHash,
-          keepId: flaggedVoteKeepId,
-          removeId: flaggedVoteRemoveId
-        },
         isOwn: isOwnListing,
         canAddToCart: !isOwnListing && (expirationTime > Date.now())
       }
