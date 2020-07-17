@@ -1,26 +1,28 @@
-<app-page-intro [childPageAlias]="'favourites'">
-  <ng-container page-title>Your Favourites</ng-container>
-  <ng-container page-content>
-    Save your favourite Listings to easily access them later on.
-  </ng-container>
-  <ng-container page-help>
-    Note that marketplace Listings have a limited lifetime (they expire after some time), so make sure to check back here often as they might not be available on the marketplace anymore.
-  </ng-container>
-</app-page-intro>
+<div class="container-block">
 
-<div class="content grid-container" *appVar="(availableCarts | async)[0] as selectedCart">
+  <app-page-intro [childPageAlias]="'favourites'">
+    <ng-container page-title>Your Favourites</ng-container>
+    <ng-container page-content>
+      Save your favourite Listings to easily access them later on.
+    </ng-container>
+    <ng-container page-help>
+      Note that marketplace Listings have a limited lifetime (they expire after some time), so make sure to check back here often as they might not be available on the marketplace anymore.
+    </ng-container>
+  </app-page-intro>
 
-  <div class="no-results" *ngIf="!isLoadingItems && (favouriteList.length === 0)">
-    <img class="illustration" src="./assets/app-market/illustrations/no-favorites.svg" alt="No favorites yet">
-    <p>
-      You don't have any favourites yet
-    </p>
-    <p class="help-text">
-      To add an item to favourites, click on a listings's <mat-icon fontIcon="part-heart-outline-add"></mat-icon> icon
-    </p>
-  </div><!-- .no-results -->
+  <div class="content" *appVar="(availableCarts | async)[0] as selectedCart">
 
-  <div *ngIf="favouriteList.length > 0" class="grid-container">
+    <div class="no-results" *ngIf="!isLoadingItems && (favouriteList.length === 0)">
+      <img class="illustration" src="./assets/app-market/illustrations/no-favorites.svg" alt="No favorites yet">
+      <p>
+        You don't have any favourites yet
+      </p>
+      <p class="help-text">
+        To add an item to favourites, click on a listings's <mat-icon fontIcon="part-heart-outline-add"></mat-icon> icon
+      </p>
+    </div><!-- .no-results -->
+
+    <div *ngIf="favouriteList.length > 0" class="grid-container">
       <mat-card class="listing" *ngFor="let favorite of favouriteList; index as favIdx; trackBy:trackByFavFn">
         <div mat-card-image (click)="openListingDetailModal(favorite.listingId)">
           <img class="img" [src]="favorite.image" [alt]="favorite.title">
@@ -51,10 +53,12 @@
           </button>
         </mat-menu>
       </mat-card>
+    </div>
+
   </div>
 
-</div>
+  <div class="loading-bar">
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoadingItems" color="accent"></mat-progress-bar>
+  </div><!-- .loading-bar -->
 
-<div class="loading-bar">
-  <mat-progress-bar mode="indeterminate" *ngIf="isLoadingItems" color="accent"></mat-progress-bar>
-</div><!-- .loading-bar -->
+</div><!-- .container-block -->
