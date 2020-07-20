@@ -65,6 +65,7 @@
 
       <button mat-button class="refresh filter-button small" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
         <mat-icon fontIcon="part-refresh"></mat-icon>
+        <div class="dot"></div>
       </button>
 
       <mat-button-toggle class="flagged filter-button small" type="checkbox" value="reported-only" [matTooltip]="filterFlagged.value ? 'Show all Listings' : 'Show reported Listings only'" (change)="filterFlagged.setValue(!filterFlagged.value)">
