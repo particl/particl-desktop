@@ -219,6 +219,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
     const listing: ListingItemDetail = {
       id: 0,
+      marketId: 0,
       hash: '',
       title: templ.details.information.title,
       summary: templ.details.information.summary,
@@ -248,9 +249,9 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         sellerRatio: templ.details.payment.escrow.sellerRatio
       },
       extra: {
-        isFlagged: false,
         isOwn: true,
-        vote: {},
+        favouriteId: 0,
+        flaggedProposal: ''
       }
 
     };
@@ -259,7 +260,11 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       data: {
         listing: listing,
         canChat: false,
-        canComment: false,
+        displayActions: {
+          cart: false,
+          governance: false,
+          fav: false
+        }
       }
     });
   }

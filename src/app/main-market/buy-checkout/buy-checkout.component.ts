@@ -35,7 +35,7 @@ export class BuyCheckoutComponent implements OnInit {
 
   ngOnInit() {
     const query = this._route.snapshot.queryParams;
-    const selectedSellTab = query['selectedBuyTab'];
+    const selectedSellTab = query['selectedTab'];
     const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
     if (newTabIdx > -1) {
       this.selectedTabIdx = newTabIdx;

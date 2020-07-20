@@ -213,6 +213,34 @@ interface RespListingItemCategory {
 }
 
 
+interface Proposal {
+  id: number;
+  msgid: string;
+  market: string;
+  submitter: string;
+  hash: string;
+  target: string;
+  category: 'ITEM_VOTE' | 'PUBLIC_VOTE' | 'MARKET_VOTE';
+  title: string;
+  description: string;
+  timeStart: number;
+  postedAt: number;
+  receivedAt: number;
+  expiredAt: number;
+  updatedAt: number;
+  createdAt: number;
+  ProposalOptions: Array<{
+    id: number;
+    proposalId: number;
+    optionId: number;
+    description: 'KEEP' | 'REMOVE',
+    hash: string;
+    updatedAt: number;
+    createdAt: number;
+  }>;
+}
+
+
 interface RespListingItemFlagged {
   id: number;
   reason: string;
@@ -221,32 +249,7 @@ interface RespListingItemFlagged {
   marketId: null;
   updatedAt: number;
   createdAt: number;
-  Proposal: {
-    id: number;
-    msgid: string;
-    market: string;
-    submitter: string;
-    hash: string;
-    target: string;
-    category: 'ITEM_VOTE',
-    title: string;
-    description: string;
-    timeStart: number;
-    postedAt: number;
-    receivedAt: number;
-    expiredAt: number;
-    updatedAt: number;
-    createdAt: number;
-    ProposalOptions: Array<{
-      id: number;
-      proposalId: number;
-      optionId: number;
-      description: 'KEEP' | 'REMOVE',
-      hash: string;
-      updatedAt: number;
-      createdAt: number;
-    }>;
-  };
+  Proposal: Proposal;
 }
 
 
@@ -465,7 +468,43 @@ export interface RespItemFlag {
 }
 
 
-export interface RespItemVote {
+export interface RespVotePost {
   result: string;
   msgids: string[];
 }
+
+
+export interface RespVoteGet {
+  id: number;
+  voter: string;
+  weight: number;
+  postedAt: number;
+  receivedAt: number;
+  expiredAt: number;
+  createdAt: number;
+  updatedAt: number;
+  ProposalOptions: {
+    id: number;
+    proposalId: number;
+    optionId: number;
+    description: string;
+    hash: string;
+    Proposal: Proposal;
+    Votes: any[];
+    createdAt: number;
+    updatedAt: number;
+  }[];
+  ProposalOption: {
+    id: number;
+    proposalId: number;
+    optionId: number;
+    description: string;
+    hash: string;
+    Proposal: Proposal;
+    Votes: any[];
+
+    createdAt: number;
+    updatedAt: number;
+  };
+}
+

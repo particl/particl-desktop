@@ -1,36 +1,54 @@
-import { Component, OnInit, OnDestroy, Inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ChangeDetectionStrategy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GalleryItem, ImageItem } from '@ngx-gallery/core';
-import { Subject, timer } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer, iif, defer, of } from 'rxjs';
+import { takeUntil, tap, take, concatMap, map, finalize, concatAll } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
+import { ListingDetailService } from './listing-detail.service';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { ListingItemDetail } from './listing-detail.models';
 
 
 type InitialTabSelectionType = 'default' | 'chat';
 
-interface ListingItemDetailInputs {
-  listing: ListingItemDetail;
-  canChat: boolean;
-  canAction: boolean;
-  initTab?: InitialTabSelectionType;
-}
-
 
 enum TextContent {
   UNSET_VALUE = '<unknown>',
-  TIMER_SECONDS_REMAINING = 'Less than a minute'
+  TIMER_SECONDS_REMAINING = 'Less than a minute',
+  FAV_SET_FAILED = 'Setting as favourite failed, please try again shortly',
+  FLAG_SET_FAILED = 'Flagging this item failed, please try again shortly',
+  VOTE_SET_FAILED = 'Voting failed, please try again shortly',
+  CART_ADD_FAILED = 'Something went wrong adding the item to the cart',
+  CART_ADD_DUPLICATE = 'This item is already in the cart',
+  CART_ADD_SUCCESS = 'Successfully added to cart',
 }
+
+
+interface Actionables {
+  cart: boolean;
+  governance: boolean;
+  fav: boolean;
+}
+
+
+export interface ListingItemDetailInputs {
+  listing: ListingItemDetail;
+  canChat: boolean;
+  initTab?: InitialTabSelectionType;
+  displayActions: Actionables;
+}
+
 
 @Component({
   templateUrl: './listing-detail-modal.component.html',
   styleUrls: ['./listing-detail-modal.component.scss'],
+  providers: [ListingDetailService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListingDetailModalComponent implements OnInit, OnDestroy {
-
 
   private static isObject(obj: any): boolean {
     return Object.prototype.toString.call(obj) === '[object Object]';
@@ -40,10 +58,18 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     return Object.prototype.toString.call(obj) === '[object Array]';
   }
 
+  @Output() eventFavouritedItem: EventEmitter<number> = new EventEmitter();
+  @Output() eventFlaggedItem: EventEmitter<string> = new EventEmitter();
+
+
   expiryTimer: string = '';
   initialTab: InitialTabSelectionType = 'default';
 
-  readonly showActions: boolean;
+  readonly displayActions: Actionables = {
+    cart: false,
+    governance: false,
+    fav: false
+  };
   readonly showComments: boolean;
 
   readonly details: {
@@ -83,6 +109,13 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     };
     created: number;
     isOwner: boolean;
+    favouriteId: number;
+    governance: {
+      proposalHash: string;
+      voteCast: number;
+      voteOptionKeep: number;
+      voteOptionRemove: number;
+    }
   };
 
   readonly itemExpiry: {
@@ -94,25 +127,36 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
   private readonly SOON_DURATION: number = 1000 * 60 * 60 * 24; // 24 hours
   private destroy$: Subject<void> = new Subject();
+  private selectedMarketId: number = 0;
+  private isActioning: boolean = false;
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ListingItemDetailInputs,
     private _store: Store,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _detailsService: ListingDetailService,
+    private _snackbar: SnackbarService,
+    private _unlocker: WalletEncryptionService
   ) {
 
     const isInputValuesObject = ListingDetailModalComponent.isObject(data);
+
     const userDestinationCountry = this._store.selectSnapshot(MarketState.settings).userRegion;
 
     const input: ListingItemDetail = isInputValuesObject &&
         ListingDetailModalComponent.isObject(data.listing) ?
         JSON.parse(JSON.stringify(data.listing)) : {};
 
+    if (typeof input.marketId === 'number' && input.marketId > 0) {
+      this.selectedMarketId = input.marketId;
+    }
+
     const inputCategory = ListingDetailModalComponent.isObject(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
     const inputEscrow = ListingDetailModalComponent.isObject(input.escrow) ? input.escrow : { buyerRatio: 0};
     const inputTimeValues = ListingDetailModalComponent.isObject(input.timeData) ? input.timeData : { created: 0, expires: 0};
-    const inputExtras = ListingDetailModalComponent.isObject(input.extra) ? input.extra : { isOwn: false };
+    const inputExtras = ListingDetailModalComponent.isObject(input.extra) ?
+        input.extra : { isOwn: false, favouriteId: 0, flaggedProposal: '' };
 
     // Validate and extract images
     const isImagesObject = ListingDetailModalComponent.isObject(input.images);
@@ -201,11 +245,17 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         canShip: canShip,
       },
       created: +inputTimeValues.created || 0,
-      isOwner: typeof inputExtras.isOwn === 'boolean' ? inputExtras.isOwn : false
+      isOwner: typeof inputExtras.isOwn === 'boolean' ? inputExtras.isOwn : false,
+      favouriteId:  typeof inputExtras.favouriteId === 'number' ? inputExtras.favouriteId : 0,
+      governance: {
+        proposalHash: typeof inputExtras.flaggedProposal === 'string' && inputExtras.flaggedProposal.length > 0 ?
+            inputExtras.flaggedProposal : '',
+        voteCast: 0,
+        voteOptionKeep: 0,
+        voteOptionRemove: 0
+      }
     };
 
-    this.showActions = isInputValuesObject && (typeof data.canAction === 'boolean') && (this.details.id > 0) ?
-        data.canAction : false;
     this.showComments = isInputValuesObject && (typeof data.canChat === 'boolean') && (this.details.id > 0) ?
         data.canChat : false;
 
@@ -226,28 +276,112 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    if ((this.itemExpiry.timestamp > 0) && (!this.itemExpiry.hasExpired)) {
-      timer(Date.now() % 1000, 1000).pipe(
-        takeUntil(this.destroy$)
-      ).subscribe(
-        (count) => {
-          const now = Date.now();
-          if (now > this.itemExpiry.timestamp) {
-            this.itemExpiry.hasExpired = true;
-            this.itemExpiry.isSoon = false;
-            this.destroy$.next();
-          } else if (!this.itemExpiry.isSoon && this.isExpiringSoon(now, this.itemExpiry.timestamp)) {
-            this.itemExpiry.isSoon = true;
+    const voteDetail$ = defer(() =>
+      this._detailsService.fetchVotingAction(this.selectedMarketId, this.details.governance.proposalHash).pipe(
+        tap((resp) => {
+          if (
+            ListingDetailModalComponent.isObject(resp) &&
+            ListingDetailModalComponent.isObject(resp.ProposalOption)
+          ) {
+
+            if (ListingDetailModalComponent.isArray(resp.ProposalOptions)) {
+              resp.ProposalOption.Proposal.ProposalOptions.forEach(po => {
+                if (po && po.description === 'KEEP') {
+                  this.details.governance.voteOptionKeep = +po.optionId;
+                }
+                if (po && po.description === 'REMOVE') {
+                  this.details.governance.voteOptionRemove = +po.optionId;
+                }
+              });
+
+              if ((typeof resp.ProposalOption.Proposal.hash === 'string') && (this.details.governance.proposalHash.length === 0)) {
+                this.details.governance.proposalHash = resp.ProposalOption.Proposal.hash;
+              }
+            }
+
+            if (typeof resp.ProposalOption.optionId === 'number') {
+              this.details.governance.voteCast = resp.ProposalOption.optionId;
+            }
           }
 
-          if (this.itemExpiry.isSoon) {
-            this.expiryTimer = this.formatSeconds( (this.itemExpiry.timestamp - now) / 1000);
-          }
-          if (this.itemExpiry.isSoon || this.itemExpiry.hasExpired) {
-            this._cdr.detectChanges();
-          }
+          this.displayActions.governance = true;
+        }),
+        tap(() => this._cdr.detectChanges())
+      )
+    );
+
+
+    let query$ = [];
+
+    if (ListingDetailModalComponent.isObject(this.data) &&
+          ListingDetailModalComponent.isObject(this.data.displayActions) &&
+          (this.details.id > 0) &&
+          !this.itemExpiry.hasExpired
+    ) {
+      this.displayActions.cart = typeof this.data.displayActions.cart === 'boolean' ?
+          this.data.displayActions.cart : this.displayActions.cart;
+
+      this.displayActions.fav = (typeof this.data.displayActions.fav === 'boolean') ?
+          this.data.displayActions.fav : this.displayActions.fav;
+
+      if ((this.selectedMarketId > 0) &&
+          (typeof this.data.displayActions.governance === 'boolean') &&
+          this.data.displayActions.governance
+      ) {
+        if (this.details.governance.proposalHash.length > 0) {
+          // fetch the selected vote first
+          query$.push(voteDetail$);
+
+        } else {
+
+          this.displayActions.governance = true;
+          // set up listener for flagged messages, so we know how the user voted
+          this._detailsService.getListenerFlaggedItem(this.details.hash).pipe(
+            map((resp) => {
+              if (this.details.governance.proposalHash.length === 0) {
+                this.details.governance.proposalHash = resp.hash;
+                this._cdr.detectChanges();
+              }
+              return (this.details.governance.voteOptionKeep ===  0) || (this.details.governance.voteOptionRemove ===  0);
+            }),
+            concatMap((getVoteOptions) => iif(() => getVoteOptions, voteDetail$)),
+            take(1),
+            takeUntil(this.destroy$)
+          ).subscribe();
+
         }
+      }
+    }
+
+    if ((this.itemExpiry.timestamp > 0) && (!this.itemExpiry.hasExpired)) {
+      query$.push(
+        timer(Date.now() % 1000, 1000).pipe(
+          tap((count) => {
+            const now = Date.now();
+            if (now > this.itemExpiry.timestamp) {
+              this.itemExpiry.hasExpired = true;
+              this.itemExpiry.isSoon = false;
+              this.displayActions.governance = false;
+              this.displayActions.fav = false;
+              this.destroy$.next();
+            } else if (!this.itemExpiry.isSoon && this.isExpiringSoon(now, this.itemExpiry.timestamp)) {
+              this.itemExpiry.isSoon = true;
+            }
+
+            if (this.itemExpiry.isSoon) {
+              this.expiryTimer = this.formatSeconds( (this.itemExpiry.timestamp - now) / 1000);
+            }
+            if (this.itemExpiry.isSoon || this.itemExpiry.hasExpired) {
+              this._cdr.detectChanges();
+            }
+          }),
+          takeUntil(this.destroy$)
+        )
       );
+    }
+
+    if (query$.length > 0) {
+      of(...query$).pipe(concatAll()).subscribe();
     }
   }
 
@@ -255,6 +389,141 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  actionFlagItem() {
+    if (!this.displayActions.governance || (this.details.governance.proposalHash.length > 0) || this.isActioning) {
+      return;
+    }
+    this.isActioning = true;
+
+    this._unlocker.unlock({timeout: 10}).pipe(
+      concatMap((unlocked: boolean) => iif(
+        () => unlocked,
+        defer(() => this._detailsService.reportItem(this.details.id).pipe(
+          tap((proposalHash) => {
+            if (proposalHash.length > 0) {
+              this.details.governance.proposalHash = proposalHash;
+              this._cdr.detectChanges();
+            } else {
+              this._snackbar.open(TextContent.FLAG_SET_FAILED, 'warn');
+            }
+          })
+        ))
+      )),
+      finalize(() => this.isActioning = false)
+    ).subscribe(
+      null,
+      () => {
+        this._snackbar.open(TextContent.FLAG_SET_FAILED, 'warn');
+      },
+      () => {
+        if (this.details.governance.proposalHash.length > 0) {
+          this.eventFlaggedItem.emit(this.details.governance.proposalHash);
+        }
+      }
+    );
+  }
+
+
+  actionVoteItem(option: 'KEEP' | 'REMOVE') {
+
+    if (this.isActioning ||
+        !this.displayActions.governance ||
+        (this.details.governance.proposalHash.length === 0) ||
+        (this.details.governance.voteOptionKeep === 0) ||
+        (this.details.governance.voteOptionRemove === 0)
+    ) {
+      return;
+    }
+    this.isActioning = true;
+
+    const selectedVote = option === 'KEEP' ? this.details.governance.voteOptionKeep : this.details.governance.voteOptionRemove;
+
+    this._unlocker.unlock({timeout: 10}).pipe(
+      concatMap((unlocked: boolean) => iif(
+        () => unlocked,
+        defer(() => this._detailsService.voteOnItemProposal(this.selectedMarketId, this.details.governance.proposalHash, selectedVote).pipe(
+          tap((success) => {
+            if (success) {
+              this.details.governance.voteCast = selectedVote;
+              this._cdr.detectChanges();
+            } else {
+              this._snackbar.open(TextContent.VOTE_SET_FAILED, 'warn');
+            }
+          })
+        ))
+      )),
+      finalize(() => this.isActioning = false)
+    ).subscribe(
+      null,
+      () => {
+        this._snackbar.open(TextContent.VOTE_SET_FAILED, 'warn');
+      }
+    );
+  }
+
+
+  actionToggleFavItem() {
+    if (!this.displayActions.fav || this.isActioning) {
+      return;
+    }
+    this.isActioning = true;
+
+    let query$: Observable<any>;
+
+    if (this.details.favouriteId > 0) {
+      query$ = this._detailsService.removeFavourite(this.details.favouriteId).pipe(
+        tap((resp) => {
+          if (resp) {
+            this.details.favouriteId = 0;
+          }
+        })
+      );
+    } else {
+      query$ = this._detailsService.addFavourite(this.details.id).pipe(
+        tap((favId) => {
+          this.details.favouriteId = favId;
+        })
+      );
+    }
+
+    query$.pipe(
+      tap(() => {
+        this._cdr.detectChanges();
+        this.eventFavouritedItem.emit(this.details.favouriteId);
+      }),
+      finalize(() => this.isActioning = false)
+    ).subscribe(
+      null,
+      (err) => {
+        this._snackbar.open(TextContent.FAV_SET_FAILED, 'warn');
+      }
+    );
+  }
+
+
+  actionAddItemToCart() {
+    if (!this.displayActions.cart || this.isActioning) {
+      return;
+    }
+    const currentCartId = this._store.selectSnapshot(MarketState.availableCarts)[0].id;
+
+    this._detailsService.addItemToCart(this.details.id, currentCartId).pipe(
+      finalize(() => this.isActioning = false)
+    ).subscribe(
+      () => {
+        this._snackbar.open(TextContent.CART_ADD_SUCCESS);
+      },
+      (err) => {
+        let msg = TextContent.CART_ADD_FAILED;
+        if (err === 'ListingItem already added to ShoppingCart') {
+          msg = TextContent.CART_ADD_DUPLICATE;
+        }
+        this._snackbar.open(msg, 'warn');
+      }
+    );
   }
 
 

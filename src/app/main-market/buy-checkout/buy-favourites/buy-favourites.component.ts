@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, timer } from 'rxjs';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil, take } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 
@@ -104,17 +104,52 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
 
 
   openListingDetailModal(id: number): void {
-    this._sharedService.getListingDetails(id).subscribe(
+    this._sharedService.getListingDetailsForMarket(id, 0).subscribe(
       (listing) => {
-        if (+listing.id > 0) {
-          const dialog = this._dialog.open(
-            ListingDetailModalComponent,
-            {data: {listing, canChat: true, canAction: true}}
-          );
-          // TODO: Link dialog actions back to applicable actions here
-        } else {
+        if (+listing.id <= 0) {
           this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn');
+          return;
         }
+
+        const dialogRef = this._dialog.open(
+          ListingDetailModalComponent,
+          {
+            data: {
+              listing,
+              canChat: true,
+              initTab: 'default',
+              displayActions: {
+                cart: true,
+                governance: false,
+                fav: true
+              }
+            }
+          }
+        );
+
+
+        let favId = listing.extra.favouriteId;
+
+        dialogRef.componentInstance.eventFavouritedItem.subscribe(
+          (newFavId) => favId = newFavId
+        );
+
+        dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
+          if (favId !== listing.extra.favouriteId) {
+
+            // favourite Id of this listing changed
+            const foundListingIdx = this.favouriteList.findIndex(f => f.listingId === listing.id);
+
+            if ((foundListingIdx > -1) && (this.favouriteList[foundListingIdx].listingId === id)) {
+              if (favId === 0) {
+                this.favouriteList.splice(foundListingIdx, 1);
+              } else {
+                this.favouriteList[foundListingIdx].favouriteId = favId;
+              }
+              this._cdr.detectChanges();
+            }
+          }
+        });
       },
 
       (err) => this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn')

@@ -364,7 +364,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
             }
           } else if (action === 'REMOVE') {
             if (typeof resp === 'boolean' && resp) {
-              listing.extras.favouriteId = null;
+              listing.extras.favouriteId = 0;
               success = true;
             }
           }
@@ -417,14 +417,49 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   openListingDetailModal(id: number, startAtComments: boolean = false): void {
-    this._sharedService.getListingDetails(id).subscribe(
+    this._sharedService.getListingDetailsForMarket(id, this.activeMarket.id).subscribe(
       (listing) => {
         if (+listing.id > 0) {
-          const dialog = this._dialog.open(
+          const dialogRef = this._dialog.open(
             ListingDetailModalComponent,
-            {data: {listing, canChat: true, canAction: true, initTab: startAtComments ? 'chat' : 'default'}}
+            {
+              data: {
+                listing,
+                canChat: true,
+                initTab: startAtComments ? 'chat' : 'default',
+                displayActions: {
+                  cart: true,
+                  governance: true,
+                  fav: true
+                }
+              }
+            }
           );
-          // TODO: Link dialog actions back to applicable actions here
+
+          let favId = listing.extra.favouriteId,
+              proposalHash = listing.extra.flaggedProposal;
+
+          dialogRef.componentInstance.eventFavouritedItem.subscribe(
+            (newFavId) => favId = newFavId
+          );
+
+          dialogRef.componentInstance.eventFlaggedItem.subscribe(
+            (flaggedHash) => proposalHash = flaggedHash
+          );
+
+          dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
+            if ((favId !== listing.extra.favouriteId) || (proposalHash !== listing.extra.flaggedProposal)) {
+              // favourite Id of this listing changed
+              const foundListing = this.listings.find(l => l.id === listing.id);
+              if (foundListing) {
+                foundListing.extras.favouriteId = favId;
+                foundListing.extras.isFlagged = proposalHash.length > 0;
+
+                this._cdr.detectChanges();
+              }
+            }
+          });
+
         } else {
           this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn');
         }

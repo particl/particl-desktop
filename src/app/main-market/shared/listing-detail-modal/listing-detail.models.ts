@@ -13,6 +13,7 @@ interface ListingRegion {
 
 export interface ListingItemDetail {
   readonly id: number;
+  readonly marketId: number;
   readonly hash: string;
   readonly title: string;
   readonly summary: string;
@@ -42,10 +43,8 @@ export interface ListingItemDetail {
     readonly sellerRatio: number;
   };
   readonly extra: {
-    readonly isFlagged: boolean;
+    readonly flaggedProposal: string;
     readonly isOwn: boolean;
-    readonly vote: {
-      // TODO: details to be added when known
-    };
+    readonly favouriteId: number;
   };
 }

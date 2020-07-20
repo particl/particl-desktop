@@ -320,67 +320,75 @@
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
 
-  <div class="left" *ngIf="showActions">
+  <div class="left">
 
-    <app-report *ngIf="false"></app-report>
+    <ng-container *ngIf="displayActions.governance && !itemExpiry.hasExpired">
 
-    <div class="reporting" *ngIf="false">
-      <!-- Reported, not voted yet by user -->
-      <div *ngIf="false">
-        <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
-        <button mat-button class="small" color="primary" (click)="null;" matTooltip="Item is fine and should stay on Market">
-          <mat-icon fontIcon="part-thumb-up"></mat-icon>
-          Keep it
-        </button>
-        <button mat-button class="small" color="warn" (click)="null;" matTooltip="Item is inappropriate/illegal and should be removed from Market">
-          <mat-icon fontIcon="part-thumb-down"></mat-icon>
-          Remove it
-        </button>
-      </div>
-      <!-- Reported & voted already -->
-      <div *ngIf="false" class="voted">
-        <p *ngIf="false">
-          <button mat-button class="small icon-only" color="primary" (click)="null;"
-            matTooltip="I've changed my mind, the item is fine and should stay on Market">
+      <button mat-button class="small"
+              [color]="details.governance.proposalHash.length > 0 ? 'warn' : 'basic'" appDebounceClick (debounceClick)="actionFlagItem()"
+              [matTooltip]="details.governance.proposalHash.length > 0 ? 'Item has been reported' : 'Report'"
+              matTooltipPosition="above">
+        <mat-icon fontSet="partIcon" fontIcon="part-flag" [class.active]="details.governance.proposalHash.length > 0"></mat-icon>
+      </button>
+
+      <div class="reporting" *ngIf="details.governance.proposalHash.length > 0">
+        <!-- Reported, not voted yet by user -->
+        <div *ngIf="details.governance.voteCast === 0">
+          <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
+          <button mat-button class="small" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')" matTooltip="Item is fine and should stay on Market">
             <mat-icon fontIcon="part-thumb-up"></mat-icon>
+            Keep it
           </button>
-          I've changed my mind, the item is fine and should stay on Market
-        </p>
-        <p *ngIf="false">
-          <button mat-button class="small icon-only" color="warn" (click)="null;"
-            matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
+          <button mat-button class="small" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')" matTooltip="Item is inappropriate/illegal and should be removed from Market">
             <mat-icon fontIcon="part-thumb-down"></mat-icon>
+            Remove it
           </button>
-          I've changed my mind, the item is inappropriate/illegal and should be removed from Market
-        </p>
-      </div>
-    </div><!-- .reporting -->
+        </div>
+        <!-- Reported & voted already -->
+        <div *ngIf="details.governance.voteCast > 0" class="voted">
+          <p *ngIf="details.governance.voteCast === details.governance.voteOptionRemove">
+            <button mat-button class="small icon-only" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')"
+              matTooltip="I've changed my mind, the item is fine and should stay on Market">
+              <mat-icon fontIcon="part-thumb-up"></mat-icon>
+            </button>
+            I've changed my mind, the item is fine and should stay on Market
+          </p>
+          <p *ngIf="details.governance.voteCast === details.governance.voteOptionKeep">
+            <button mat-button class="small icon-only" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')"
+              matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
+              <mat-icon fontIcon="part-thumb-down"></mat-icon>
+            </button>
+            I've changed my mind, the item is inappropriate/illegal and should be removed from Market
+          </p>
+        </div>
+      </div><!-- .reporting -->
+
+    </ng-container>
 
   </div>
 
   <div class="right" fxLayout fxLayoutAlign="end center">
-    <ng-container *ngIf="showActions; else noActions">
-      <app-favorite></app-favorite>
+    <button *ngIf="displayActions.fav" class="favorite" mat-button
+          [color]="details.favouriteId > 0 ? 'warn' : 'basic'" appDebounceClick (debounceClick)="actionToggleFavItem()"
+          [matTooltip]="details.favouriteId > 0 ? 'Remove from Favorites' : 'Add to Favorites'" matTooltipPosition="above">
+      <mat-icon class="fav icon" fontSet="partIcon"
+            [fontIcon]="details.favouriteId > 0 ? 'part-heart' : 'part-heart-outline'"
+            [ngClass.active]="details.favouriteId > 0"></mat-icon>
+      {{ details.favouriteId > 0 ? 'Saved' : 'Save' }}
+    </button>
 
+    <ng-container *ngIf="displayActions.cart">
       <!-- if mine, show message instead of "add to cart" button -->
       <button mat-button disabled *ngIf="details.isOwner">
         <mat-icon fontIcon="part-circle-info"></mat-icon>
         This is your own listing
       </button>
 
-      <button mat-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired">
+      <button mat-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired" appDebounceClick (debounceClick)="actionAddItemToCart()">
         <mat-icon fontIcon="part-cart"></mat-icon>
         Add to Cart
       </button>
     </ng-container>
-
-    <ng-template #noActions>
-      <button mat-button disabled>
-        <mat-icon fontIcon="part-circle-info"></mat-icon>
-        No actions available
-      </button>
-    </ng-template>
-
   </div>
 
 </mat-dialog-actions>

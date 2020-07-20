@@ -8,7 +8,7 @@ import { MarketState } from '../store/market.state';
 import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../shared/utils';
 
 import { PartoshiAmount } from 'app/core/util/utils';
-import { RespListingItem, RespCartItemAdd, RespItemFlag, RespItemVote } from '../shared/market.models';
+import { RespListingItem, RespCartItemAdd, RespItemFlag } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
 import { MarketSettings } from '../store/market.models';
 import { SocketMessages_v03 } from '../shared/market-socket.models';
@@ -119,7 +119,7 @@ export class ListingsService {
         imageSelected = './assets/images/placeholder_4-3.jpg',
         isLocalShipping = false,
         isOwnListing = false,
-        favId = null,
+        favId = 0,
         commentCount = 0;
     const price = new PartoshiAmount(0);
 
@@ -177,15 +177,18 @@ export class ListingsService {
     if (Object.prototype.toString.call(from.FavoriteItems) === '[object Array]') {
 
       for (let ii = 0; ii < from.FavoriteItems.length; ii++) {
-        favId = from.FavoriteItems[ii].profileId === profileId ? from.FavoriteItems[ii].id : favId;
-        if (favId) { break; }
+        if (from.FavoriteItems[ii].profileId === profileId) {
+          favId = from.FavoriteItems[ii].id;
+          break;
+        }
       }
     }
 
     // Process extra info
     isOwnListing = isBasicObjectType(from.ListingItemTemplate) && (+from.ListingItemTemplate.id > 0);
-    commentCount = Object.prototype.toString.call(from.MessagingInformation) === '[object Array]' ?
-        from.MessagingInformation.length : 0;
+    // commentCount = Object.prototype.toString.call(from.MessagingInformation) === '[object Array]' ?
+    //     from.MessagingInformation.length : 0;
+    commentCount = 0;
 
     const expirationTime = getValueOrDefault(from.expiredAt, 'number', 0);
     const itemIsFlagged = isBasicObjectType(from.FlaggedItem) && +from.FlaggedItem.id > 0;

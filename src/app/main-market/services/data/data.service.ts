@@ -52,9 +52,9 @@ export class DataService {
   }
 
 
-  getListingDetails(id: number): Observable<ListingItemDetail> {
+  getListingDetailsForMarket(id: number, marketId: number): Observable<ListingItemDetail> {
     return this._rpc.call('item', ['get', id, true]).pipe(
-      map((resp: RespListingItem) => this.createListingItemDetail(resp))
+      map((resp: RespListingItem) => this.createListingItemDetail(resp, marketId))
     );
   }
 
@@ -79,8 +79,9 @@ export class DataService {
   }
 
 
-  private createListingItemDetail(from: RespListingItem): ListingItemDetail {
+  private createListingItemDetail(from: RespListingItem, marketId: number): ListingItemDetail {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
 
     let title = '',
         summary = '',
@@ -90,6 +91,8 @@ export class DataService {
         shipIntl = 0,
         escrowSeller = 100,
         escrowBuyer = 100,
+        flaggedHash = '',
+        favouriteId = 0,
         shippingDestinations = [] as {code: string, name: string}[];
 
     const shippingLocation = { code: '', name: ''};
@@ -186,9 +189,24 @@ export class DataService {
       }
     }
 
+    if (isBasicObjectType(from.FlaggedItem) && isBasicObjectType(from.FlaggedItem.Proposal)) {
+      flaggedHash = getValueOrDefault(from.FlaggedItem.Proposal.hash, 'string', flaggedHash);
+    }
+
+    if (Object.prototype.toString.call(from.FavoriteItems) === '[object Array]') {
+
+      for (let ii = 0; ii < from.FavoriteItems.length; ii++) {
+        if (from.FavoriteItems[ii].profileId === profileId) {
+          favouriteId = from.FavoriteItems[ii].id;
+          break;
+        }
+      }
+    }
+
 
     const itemDetail: ListingItemDetail = {
       id: getValueOrDefault(from.id, 'number', 0),
+      marketId: marketId,
       hash: getValueOrDefault(from.hash, 'string', ''),
       title: title,
       summary: summary,
@@ -212,9 +230,9 @@ export class DataService {
         expires: getValueOrDefault(from.expiredAt, 'number', 0)
       },
       extra: {
-        isFlagged: isBasicObjectType(from.FlaggedItem),
+        flaggedProposal: flaggedHash,
+        favouriteId: favouriteId,
         isOwn: isBasicObjectType(from.ListingItemTemplate) && (+from.ListingItemTemplate.id > 0),
-        vote: {}   // TODO: implement details when known
       }
 
     };
