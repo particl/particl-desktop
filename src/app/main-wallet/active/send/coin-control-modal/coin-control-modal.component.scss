@@ -1,0 +1,77 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.selection-overview {
+  display: flex;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 12px 0 0;
+  .item {
+    flex: 20%;
+    &.type,
+    &.selected {
+      flex: 10%;
+    }
+    &.fee {
+      flex: 15%;
+    }
+    .value {
+      color: var(--text);
+      font-weight: 500;
+      font-size: 15px;
+      margin-top: 3px;
+    }
+  }
+}
+
+
+.dialog-content {
+  width: 60rem;
+  padding: 5px 0;
+  background: var(--bg);
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px solid var(--bg-muted);
+}
+
+.utxo-table {
+  .utxo {
+    @extend %tfx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: hsla(var(--text-hsl), 0.7);
+    & > * { // set same height for all items on line
+      @extend %tfx;
+      line-height: 2.5;
+    }
+    .mat-checkbox {
+      flex: 3%;
+      padding: 0 0 0 24px;
+      &.mat-checkbox-checked,
+      &.mat-checkbox-checked ~ div {
+        background: hsla(var(--color-info-hsl), 0.125);
+        color: var(--text);
+        font-weight: 500;
+      }
+    }
+    .amount {
+      flex: 15%;
+    }
+    .utxo-label {
+      flex: 30%;
+    }
+    .address {
+      flex: 45%;
+    }
+    .date {
+      flex: 12%;
+      text-align: right;
+      padding: 0 24px 0 0;
+    }
+  }
+}
+
+.mat-dialog-actions {
+  margin: 0 -12px -24px;
+}

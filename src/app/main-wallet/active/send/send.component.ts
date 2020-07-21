@@ -12,6 +12,7 @@ import { AddressLookupModalComponent } from './addresss-lookup-modal/address-loo
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
+import { CoinControlModalComponent } from './coin-control-modal/coin-control-modal.component';
 import { CoreErrorModel } from 'app/core/core.models';
 import {
   TabType,
@@ -261,6 +262,10 @@ export class SendComponent implements OnInit, OnDestroy {
       }
     );
     dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.addressSelected.unsubscribe());
+  }
+
+  openCoinControlModal(): void {
+    const dialog = this._dialog.open(CoinControlModalComponent);
   }
 
 

@@ -1,0 +1,102 @@
+<div mat-dialog-title>
+  Coin selection
+
+  <div class="selection-overview">
+    <div class="item type">
+      <div class="key">UTXO type</div>
+      <div class="value">Blind</div>
+    </div>
+    <div class="item selected">
+      <div class="key">Selected</div>
+      <div class="value">2 UTXOs</div>
+    </div>
+    <div class="item amount">
+      <div class="key">Selected Amount</div>
+      <div class="value">1534.51351151 PART</div>
+    </div>
+    <div class="item fee">
+      <div class="key">TX Fee</div>
+      <div class="value">&asymp; 0.00015861 PART</div>
+    </div>
+    <div class="item after-fee">
+      <div class="key">Amount after Fee</div>
+      <div class="value">1533.5131438 PART</div>
+    </div>
+  </div><!-- .selection-overview -->
+
+</div><!-- mat-dialog-title -->
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="dialog-content">
+
+  <div class="utxo-table">
+    <div class="utxo">
+      <mat-checkbox></mat-checkbox>
+      <div class="amount">0.0000100</div>
+      <div class="utxo-label">Staking rewards</div>
+      <div class="address">
+        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pbZwtzJTnYgaXgLHyyyq3ZZzFNhThDhAkQ</a>
+      </div>
+      <div class="date">10.05.20 22:46</div>
+    </div><!-- .utxo -->
+    <div class="utxo">
+      <mat-checkbox></mat-checkbox>
+      <div class="amount">4562.0450100</div>
+      <div class="utxo-label">Bittrex</div>
+      <div class="address">
+        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pbZwt3ZZzFNhThDhAkQzJTnYgaXgLHyyyq</a>
+      </div>
+      <div class="date">09.05.20 12:23</div>
+    </div><!-- .utxo -->
+    <div class="utxo">
+      <mat-checkbox></mat-checkbox>
+      <div class="amount">0.0000001</div>
+      <div class="utxo-label">Profits from my humble shop</div>
+      <div class="address">
+        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pHyyyq3ZZzFNhThDhAkQbZwtzJTnYgaXgL</a>
+      </div>
+      <div class="date">01.05.20 05:32</div>
+    </div><!-- .utxo -->
+    <div class="utxo">
+      <mat-checkbox></mat-checkbox>
+      <div class="amount">0.0000100</div>
+      <div class="utxo-label">Staking rewards</div>
+      <div class="address">
+        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pbZwtzJTnYgaXgLHyyyq3ZZzFNhThDhAkQ</a>
+      </div>
+      <div class="date">28.04.20 08:51</div>
+    </div><!-- .utxo -->
+    <div class="utxo">
+      <mat-checkbox></mat-checkbox>
+      <div class="amount">513.0000000</div>
+      <div class="utxo-label">Profits from my humble shop</div>
+      <div class="address">
+        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">ps1qqpwx3jklsc84z70wl6a5fz5lrp9kx3lkrlqj5xp0kkydc3sdpmpj8qpqvgtkggc3aqh0g9stcyqf8y4du6lpca689lmslkus6netx6mcjarvqqqq50yyt</a>
+      </div>
+      <div class="date">25.05.20 13:07</div>
+    </div><!-- .utxo -->
+  </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions fxLayoutAlign="space-between center">
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <div class="right">
+    <button mat-button class="small">
+      <mat-icon fontIcon="part-select"></mat-icon>
+      (De)select all
+    </button>
+    <button mat-raised-button color="primary" mat-dialog-close>
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Spend selected coins
+    </button>
+  </div>
+</mat-dialog-actions>

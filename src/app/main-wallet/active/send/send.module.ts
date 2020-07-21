@@ -7,6 +7,7 @@ import { WalletSharedModule } from '../../shared/wallet-shared.module';
 import { SendComponent } from './send.component';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
+import { CoinControlModalComponent } from './coin-control-modal/coin-control-modal.component';
 
 
 const routes: Routes = [
@@ -27,11 +28,13 @@ const routes: Routes = [
   declarations: [
     SendComponent,
     SendConfirmationModalComponent,
-    AddressLookupModalComponent
+    AddressLookupModalComponent,
+    CoinControlModalComponent
   ],
   entryComponents: [
     SendConfirmationModalComponent,
-    AddressLookupModalComponent
+    AddressLookupModalComponent,
+    CoinControlModalComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -45,11 +45,15 @@
             <ng-container *ngIf="sourceType.value === 'anon'">
               Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
               addresses are hidden from public.
-              <button mat-button (click)="showAdvanced = !showAdvanced" class="small advanced-options">
-                <mat-icon fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
-                Advanced options
-              </button>
             </ng-container>
+            <button mat-button (click)="showAdvanced = !showAdvanced" *ngIf="sourceType.value === 'anon'" class="small advanced-options">
+              <mat-icon fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
+              Advanced options
+            </button>
+            <button mat-button (click)="openCoinControlModal()" class="small coin-control">
+              <mat-icon fontIcon="part-stake"></mat-icon>
+              Coin control
+            </button>
           </p>
 
           <div *ngIf="sourceType.value === 'anon' && showAdvanced" class="advanced">
