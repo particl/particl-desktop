@@ -2,5 +2,12 @@
 
 .dialog-content {
   width: 34rem;
-  padding: 0 0 8px;
+  padding: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px solid var(--bg-muted);
+}
+
+.mat-dialog-actions {
+  margin: 0 -12px -24px;
 }
