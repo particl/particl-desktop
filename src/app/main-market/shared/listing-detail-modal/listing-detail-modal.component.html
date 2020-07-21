@@ -333,7 +333,7 @@
 
       <div class="reporting" *ngIf="details.governance.proposalHash.length > 0">
         <!-- Reported, not voted yet by user -->
-        <div *ngIf="details.governance.voteCast === 0">
+        <div *ngIf="details.governance.voteCast < 0">
           <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
           <button mat-button class="small" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')" matTooltip="Item is fine and should stay on Market">
             <mat-icon fontIcon="part-thumb-up"></mat-icon>
@@ -345,7 +345,7 @@
           </button>
         </div>
         <!-- Reported & voted already -->
-        <div *ngIf="details.governance.voteCast > 0" class="voted">
+        <div *ngIf="details.governance.voteCast >= 0" class="voted">
           <p *ngIf="details.governance.voteCast === details.governance.voteOptionRemove">
             <button mat-button class="small icon-only" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')"
               matTooltip="I've changed my mind, the item is fine and should stay on Market">

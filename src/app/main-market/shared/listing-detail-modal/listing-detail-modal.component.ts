@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject, ChangeDetectionStrategy, ChangeDe
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GalleryItem, ImageItem } from '@ngx-gallery/core';
 import { Observable, Subject, timer, iif, defer, of } from 'rxjs';
-import { takeUntil, tap, take, concatMap, map, finalize, concatAll } from 'rxjs/operators';
+import { takeUntil, tap, take, concatMap, map, finalize, concatAll, catchError } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 import { ListingDetailService } from './listing-detail.service';
@@ -250,9 +250,9 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       governance: {
         proposalHash: typeof inputExtras.flaggedProposal === 'string' && inputExtras.flaggedProposal.length > 0 ?
             inputExtras.flaggedProposal : '',
-        voteCast: 0,
-        voteOptionKeep: 0,
-        voteOptionRemove: 0
+        voteCast: -1,
+        voteOptionKeep: -1,
+        voteOptionRemove: -1
       }
     };
 
@@ -285,12 +285,12 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
           ) {
 
             if (ListingDetailModalComponent.isArray(resp.ProposalOptions)) {
-              resp.ProposalOption.Proposal.ProposalOptions.forEach(po => {
+              resp.ProposalOptions.forEach(po => {
                 if (po && po.description === 'KEEP') {
-                  this.details.governance.voteOptionKeep = +po.optionId;
+                  this.details.governance.voteOptionKeep = +po.optionId >= 0 ? +po.optionId : -1;
                 }
                 if (po && po.description === 'REMOVE') {
-                  this.details.governance.voteOptionRemove = +po.optionId;
+                  this.details.governance.voteOptionRemove = +po.optionId >= 0 ? +po.optionId : -1;
                 }
               });
 
@@ -311,7 +311,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     );
 
 
-    let query$ = [];
+    const query$ = [];
 
     if (ListingDetailModalComponent.isObject(this.data) &&
           ListingDetailModalComponent.isObject(this.data.displayActions) &&
@@ -330,7 +330,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       ) {
         if (this.details.governance.proposalHash.length > 0) {
           // fetch the selected vote first
-          query$.push(voteDetail$);
+          query$.push(voteDetail$.pipe(catchError(() => of())));
 
         } else {
 
@@ -342,7 +342,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
                 this.details.governance.proposalHash = resp.hash;
                 this._cdr.detectChanges();
               }
-              return (this.details.governance.voteOptionKeep ===  0) || (this.details.governance.voteOptionRemove ===  0);
+              return (this.details.governance.voteOptionKeep < 0) || (this.details.governance.voteOptionRemove < 0);
             }),
             concatMap((getVoteOptions) => iif(() => getVoteOptions, voteDetail$)),
             take(1),
@@ -428,12 +428,11 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
 
   actionVoteItem(option: 'KEEP' | 'REMOVE') {
-
     if (this.isActioning ||
         !this.displayActions.governance ||
         (this.details.governance.proposalHash.length === 0) ||
-        (this.details.governance.voteOptionKeep === 0) ||
-        (this.details.governance.voteOptionRemove === 0)
+        (this.details.governance.voteOptionKeep < 0) ||
+        (this.details.governance.voteOptionRemove < 0)
     ) {
       return;
     }
