@@ -28,6 +28,7 @@
                             fxLayout="column" fxLayoutGap="10px">
             <mat-radio-button class="balance" *ngFor="let option of selectorOptions" [value]="option.value" color="primary" fxFlex >
               <div class="name">{{ option.name }}</div>
+              <!-- @TODO: in case of manual Coin control, swap "Available balance" with "Selected balance" -->
               <div class="desc">Available balance:<span class="amount">{{ option.displayedBalance }}</span>
                 <mat-icon *ngIf="option.help.length > 0" fontIcon="part-circle-question" class="help-icon"
                           [matTooltip]="option.help"></mat-icon>
@@ -46,15 +47,17 @@
               Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
               addresses are hidden from public.
             </ng-container>
+          </p>
+          <div class="buttons">
             <button mat-button (click)="showAdvanced = !showAdvanced" *ngIf="sourceType.value === 'anon'" class="small advanced-options">
               <mat-icon fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
               Advanced options
             </button>
-            <button mat-button (click)="openCoinControlModal()" class="small coin-control">
+            <button mat-button (click)="openCoinControlModal()" class="small coin-control" matTooltip="Select TX inputs manually" matTooltipPosition="below">
               <mat-icon fontIcon="part-stake"></mat-icon>
               Coin control
             </button>
-          </p>
+          </div>
 
           <div *ngIf="sourceType.value === 'anon' && showAdvanced" class="advanced">
             <div class="subtitle">Privacy level <small>(no. of ring sigs)</small></div>
