@@ -11,7 +11,7 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { QuestionThreadListItemComponent } from './question-thread-list-item/question-thread-list-item.component';
 import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
-import { ShippingProfileAddressComponent } from './shipping-profile-address/shipping-profile-address.component';
+import { ShippingProfileAddressFormComponent } from './shipping-profile-address-form/shipping-profile-address-form.component';
 
 @NgModule({
   imports: [
@@ -26,13 +26,13 @@ import { ShippingProfileAddressComponent } from './shipping-profile-address/ship
     TreeSelectComponent,
     QuestionThreadListItemComponent,
     ListingDetailModalComponent,
-    ShippingProfileAddressComponent
+    ShippingProfileAddressFormComponent
   ],
   exports: [
     TreeSelectComponent,
     QuestionThreadListItemComponent,
     ListingDetailModalComponent,
-    ShippingProfileAddressComponent,
+    ShippingProfileAddressFormComponent,
     GalleryModule,
     LightboxModule,
     GallerizeModule,

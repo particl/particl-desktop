@@ -1,33 +1,39 @@
-<div mat-dialog-title>Edit Shipping profile</div>
+<ng-container *appVar="(isActionable | async) as canAction">
+  <div mat-dialog-title>Edit Shipping profile</div>
 
-<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
-  <mat-icon fontIcon="part-cross"></mat-icon>
-</button>
-
-
-<mat-dialog-content class="dialog-content">
-
-  <label class="--larger">
-    <h3 class="label">Shipping profile name</h3>
-    <mat-form-field appearance="fill" class="--plain --larger">
-      <input matInput type="text"
-      placeholder="Label this Shipping profile (visible only to you)"/>
-    </mat-form-field>
-  </label>
-
-  <app-shipping-profile-address></app-shipping-profile-address>
-
-</mat-dialog-content>
-
-
-<mat-dialog-actions fxLayoutAlign="space-between center">
-  <button mat-button mat-dialog-close color="warn">
-    <mat-icon fontIcon="part-circle-remove"></mat-icon>
-    Delete Profile
+  <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+    <mat-icon fontIcon="part-cross"></mat-icon>
   </button>
-  <!-- @TODO: implement saving -->
-  <button mat-raised-button color="primary" mat-dialog-close>
-    <mat-icon fontIcon="part-check"></mat-icon>
-    Save Profile
-  </button>
-</mat-dialog-actions>
+
+
+  <mat-dialog-content class="dialog-content">
+
+    <label class="--larger">
+      <h3 class="label">Shipping profile name</h3>
+      <mat-form-field appearance="fill" class="--plain --larger">
+        <input matInput type="text" [formControl]="titleField"
+        placeholder="Label this Shipping profile (visible only to you)"/>
+      </mat-form-field>
+    </label>
+
+    <market-shipping-address-form
+        [srcAddress]="address"
+        [isEditable]="true"
+        (isValid)="setFormValid($event)">
+    </market-shipping-address-form>
+
+  </mat-dialog-content>
+
+
+  <mat-dialog-actions fxLayoutAlign="space-between center">
+    <button mat-button color="warn" *ngIf="!isNew" [disabled]="!canAction" (click)="deleteAddress()">
+      <mat-icon fontIcon="part-circle-remove"></mat-icon>
+      Delete Profile
+    </button>
+
+    <button mat-raised-button color="primary" [disabled]="!canAction" (click)="setAddress()">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      {{ isNew ? 'Save Profile' : 'Update Profile' }}
+    </button>
+  </mat-dialog-actions>
+</ng-container>

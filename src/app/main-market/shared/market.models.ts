@@ -8,6 +8,7 @@ export type SHIPPING_AVAIL_TYPE = 'SHIPS' | 'DOES_NOT_SHIP' | 'ASK' | 'UNKNOWN';
 export type IMAGE_PROTOCOL = 'HTTPS' | 'LOCAL' | 'IPFS';
 export type IMAGE_ENCODING = 'BASE64';
 export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'LARGE';
+export enum ADDRESS_TYPES { SHIPPING_OWN = 'SHIPPING_OWN', SHIPPING_BID = 'SHIPPING_BID' }
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
@@ -494,7 +495,7 @@ export interface RespVoteGet {
     createdAt: number;
     updatedAt: number;
   }[];
-  ProposalOption: {
+  votedProposalOption: {
     id: number;
     proposalId: number;
     optionId: number;
@@ -508,3 +509,39 @@ export interface RespVoteGet {
   };
 }
 
+
+export interface RespAddressAdd {
+  id: number;
+  firstName: string;
+  lastName: string;
+  title: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+  type: ADDRESS_TYPES;
+  profileId: number;
+  updatedAt: number;
+  createdAt: number;
+  Profile: RespGeneralProfile;
+}
+
+
+export interface RespAddressListItem {
+  id: number;
+  firstName: string;
+  lastName: string;
+  title: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  country: string;
+  zipCode: string;
+  type: ADDRESS_TYPES;
+  profileId: number;
+  updatedAt: number;
+  createdAt: number;
+}

@@ -11,11 +11,11 @@
 
 
 <ng-container [ngSwitch]="selectedTempl">
-  
+
   <div *ngSwitchCase="'cart'" class="your-cart container-block">
 
     <!-- =========== YOUR CART =========== -->
-    
+
     <form>
 
       <app-page-intro>
@@ -151,9 +151,9 @@
 
 
       <!-- =========== SHIPPING & PRICING =========== -->
-      
+
       <div class="shipping-pricing" fxLayout="row">
-        
+
         <section class="shipping">
 
           <div class="section-header">
@@ -179,7 +179,7 @@
           </mat-card>
 
           <mat-card class="shipping-details no-padding">
-            <app-shipping-profile-address></app-shipping-profile-address>
+            <market-shipping-address-form></market-shipping-address-form>
             <div class="save-profile">
               <mat-checkbox name="save-shipping-profile" [(ngModel)]="saveShippingProfile">
                 {{ selectedAddress?.id ? 'Update' : 'Save' }} shipping profile

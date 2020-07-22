@@ -13,7 +13,7 @@
 <div class="filter">
 
   <div class="buttons">
-    <button mat-raised-button color="primary" class="full-width" (click)="openEditShippingProfileModal()">
+    <button mat-raised-button color="primary" class="full-width" (click)="openEditShippingProfileModal(-1)">
       <mat-icon fontIcon="part-circle-plus"></mat-icon>
       Add new Shipping Profile
     </button>
@@ -23,7 +23,7 @@
     Search
   </h2>
 
-  <mat-form-field class="--boxed" appearance="fill">
+  <mat-form-field [disabled]="isLoading" class="--boxed" appearance="fill">
     <input matInput type="text" [formControl]="searchQuery"
           placeholder="Search Orders" (keyup.escape)="searchQuery.setValue('')">
     <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
@@ -32,65 +32,53 @@
     <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
   </mat-form-field>
 
-  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
-    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
-    Clear all filters
-  </button>
-
 </div><!-- .filter -->
 
 
 <!-- Orders > list -->
 <div class="shipping-profiles section with-filter">
 
-  <!-- just for dev purposes -->
-  <ng-template #shippingProfile>
-    <mat-card class="item">
-      <button mat-button class="edit-profile tiny icon-only" (click)="openEditShippingProfileModal()" matTooltip="Edit/remove" color="accent">
+  <div class="profiles-grid">
+
+    <mat-card class="item" *ngFor="let address of displayedAddressList; index as addressIdx; trackBy:trackByAddressFn">
+      <button mat-button class="edit-profile tiny icon-only" (click)="openEditShippingProfileModal(addressIdx)" matTooltip="Edit/remove" color="accent">
         <mat-icon fontIcon="part-pen-1"></mat-icon>
       </button>
-      <span class="profile-name">Home profile</span>
-      <span class="name">First Last name</span>
-      <span class="address-line">Address line 1 is very, insanely long and hopefully not needed!</span>
-      <!-- @TODO: show only if supplied: -->
-      <span class="address-line">Address line 2</span>
-      <span class="zip">ZIP38</span>
-      <span class="city">Cryptocity</span>
-      <!-- @TODO: show only if supplied: -->
-      <span class="state">The Great State</span>
-      <span class="country">Country Republic</span>
+      <span class="profile-name">{{ address.title }}</span>
+      <span class="name">{{ address.firstName }} {{ address.lastName }}</span>
+      <span class="address-line">{{ address.addressLine1 }}</span>
+      <span class="address-line" *ngIf="address.addressLine2.length > 0">{{ address.addressLine2 }}</span>
+      <span class="zip">{{ address.zipCode }}</span>
+      <span class="city">{{ address.city }}</span>
+      <span class="state" *ngIf="address.state.length > 0">{{ address.state }}</span>
+      <span class="country">{{ address.country }}</span>
     </mat-card>
-  </ng-template>
 
-  <div class="profiles-grid">
-    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
-    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
-    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
-    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
-    <ng-container *ngTemplateOutlet="shippingProfile"></ng-container>
   </div>
 
+  <div class="no-results" *ngIf="!isLoading && displayedAddressList.length === 0">
+    <img class="illustration" src="./assets/app-market/illustrations/no-shipping-profiles.svg" alt="No Shipping Profiles found">
+    <ng-container *ngIf="searchQuery.value === ''; else noSearchResults">
+      <p>
+        You don't have any shipping profiles yet
+      </p>
+      <p class="help-text">
+        Go ahead and create your first Shipping profile right away!
+      </p>
+    </ng-container>
 
-  <!-- @TODO: no profiles saved yet -->
-  <div class="no-results">
-    <img class="illustration" src="./assets/app-market/illustrations/no-shipping-profiles.svg" alt="No Profiles found">
-    <p>
-      You don't have any shipping profiles yet
-    </p>
-    <p class="help-text">
-      Go ahead and create your first Shipping profile right away!
-    </p>
-  </div>
-
-  <!-- when searching/filtering: -->
-  <div class="no-results">
-    <img class="illustration" src="./assets/app-market/illustrations/no-shipping-profiles.svg" alt="No Profiles found">
-    <p>
-      No matching Profiles found
-    </p>
-    <p class="help-text">
-      You don't have any Shipping profiles matching your search
-    </p>
+    <ng-template #noSearchResults>
+      <p>
+        No matching Profiles found
+      </p>
+      <p class="help-text">
+        You don't have any Shipping profiles matching your search
+      </p>
+    </ng-template>
   </div>
 
 </div><!-- .shipping-profiles -->
+
+<div class="loading-bar">
+  <mat-progress-bar mode="indeterminate" *ngIf="isLoading" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

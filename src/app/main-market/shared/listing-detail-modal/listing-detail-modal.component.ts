@@ -281,7 +281,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         tap((resp) => {
           if (
             ListingDetailModalComponent.isObject(resp) &&
-            ListingDetailModalComponent.isObject(resp.ProposalOption)
+            ListingDetailModalComponent.isObject(resp.votedProposalOption)
           ) {
 
             if (ListingDetailModalComponent.isArray(resp.ProposalOptions)) {
@@ -294,13 +294,13 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
                 }
               });
 
-              if ((typeof resp.ProposalOption.Proposal.hash === 'string') && (this.details.governance.proposalHash.length === 0)) {
-                this.details.governance.proposalHash = resp.ProposalOption.Proposal.hash;
+              if ((typeof resp.votedProposalOption.Proposal.hash === 'string') && (this.details.governance.proposalHash.length === 0)) {
+                this.details.governance.proposalHash = resp.votedProposalOption.Proposal.hash;
               }
             }
 
-            if (typeof resp.ProposalOption.optionId === 'number') {
-              this.details.governance.voteCast = resp.ProposalOption.optionId;
+            if (typeof resp.votedProposalOption.optionId === 'number') {
+              this.details.governance.voteCast = resp.votedProposalOption.optionId;
             }
           }
 
