@@ -33,53 +33,23 @@
 
 <mat-dialog-content class="dialog-content">
 
-  <div class="utxo-table">
-    <div class="utxo">
-      <mat-checkbox></mat-checkbox>
-      <div class="amount">0.0000100</div>
-      <div class="utxo-label">Staking rewards</div>
-      <div class="address">
-        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pbZwtzJTnYgaXgLHyyyq3ZZzFNhThDhAkQ</a>
-      </div>
-      <div class="date">10.05.20 22:46</div>
-    </div><!-- .utxo -->
-    <div class="utxo">
-      <mat-checkbox></mat-checkbox>
-      <div class="amount">4562.0450100</div>
-      <div class="utxo-label">Bittrex</div>
-      <div class="address">
-        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pbZwt3ZZzFNhThDhAkQzJTnYgaXgLHyyyq</a>
-      </div>
-      <div class="date">09.05.20 12:23</div>
-    </div><!-- .utxo -->
-    <div class="utxo">
-      <mat-checkbox></mat-checkbox>
-      <div class="amount">0.0000001</div>
-      <div class="utxo-label">Profits from my humble shop</div>
-      <div class="address">
-        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pHyyyq3ZZzFNhThDhAkQbZwtzJTnYgaXgL</a>
-      </div>
-      <div class="date">01.05.20 05:32</div>
-    </div><!-- .utxo -->
-    <div class="utxo">
-      <mat-checkbox></mat-checkbox>
-      <div class="amount">0.0000100</div>
-      <div class="utxo-label">Staking rewards</div>
-      <div class="address">
-        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">pbZwtzJTnYgaXgLHyyyq3ZZzFNhThDhAkQ</a>
-      </div>
-      <div class="date">28.04.20 08:51</div>
-    </div><!-- .utxo -->
-    <div class="utxo">
-      <mat-checkbox></mat-checkbox>
-      <div class="amount">513.0000000</div>
-      <div class="utxo-label">Profits from my humble shop</div>
-      <div class="address">
-        <a href="https://explorer.particl.io/address/xxxx" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">ps1qqpwx3jklsc84z70wl6a5fz5lrp9kx3lkrlqj5xp0kkydc3sdpmpj8qpqvgtkggc3aqh0g9stcyqf8y4du6lpca689lmslkus6netx6mcjarvqqqq50yyt</a>
-      </div>
-      <div class="date">25.05.20 13:07</div>
-    </div><!-- .utxo -->
-  </div>
+  <table class="available-utxos" matSort (matSortChange)="sortData($event)" cellspacing="0">
+    <tr>
+      <th class="checkbox"></th>
+      <th mat-sort-header="amount" class="amount">Amount</th>
+      <th mat-sort-header="label" class="label">Label</th>
+      <th mat-sort-header="address" class="address">Address</th>
+      <th mat-sort-header="date" class="date">Date</th>
+    </tr>
+  
+    <tr *ngFor="let utxo of sortedData">
+      <td class="checkbox"><mat-checkbox></mat-checkbox></td>
+      <td class="amount">{{utxo.amount}}</td>
+      <td class="label">{{utxo.label}}</td>
+      <td class="address"><a href="https://explorer.particl.io/address/{{utxo.address}}" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a></td>
+      <td class="date">{{utxo.date}}</td>
+    </tr>
+  </table>
 
 </mat-dialog-content>
 
