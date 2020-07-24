@@ -28,16 +28,26 @@
       font-size: 20px;
       font-weight: 500;
       margin-bottom: 2px;
-      @include break(l) {
-      }
       small {
         font-size: 15px;
         font-weight: 400;
         color: var(--text-muted);
       }
+      .mat-progress-spinner { // pending funds indicator
+        display: inline-block;
+        position: relative;
+        top: 1px;
+        margin-right: 4px;
+      }
     }
     .key {
       color: var(--text-muted);
+      .mat-icon {
+        font-size: 12px;
+        margin-right: 2px;
+        position: relative;
+        top: 1px;
+      }
     }
   }
 }

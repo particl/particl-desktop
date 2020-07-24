@@ -10,17 +10,29 @@
     <div class="divider --blank"></div>
 
     <div class="item">
-      <div class="value">{{balances.spendablePublic.whole}}<small>{{balances.spendablePublic.sep}}{{balances.spendablePublic.decimal}}</small></div>
-      <div class="key">Fees and Voting (public) balance</div>
-      <div class="key"><small>Pending: {{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}}</small></div>
+      <div class="value">
+        <!-- @TODO: show only when pending TX exists -->
+        <mat-spinner class="tiny" matTooltip="+{{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}} pending" matTooltipPosition="before" color="primary"></mat-spinner>
+        {{balances.spendablePublic.whole}}<small>{{balances.spendablePublic.sep}}{{balances.spendablePublic.decimal}}</small>
+      </div>
+      <div class="key">
+        <mat-icon fontIcon="part-public" matTooltip="Public balance" matTooltipPosition="before"></mat-icon>
+        Fees and Voting balance
+      </div>
     </div>
 
     <div class="divider"></div>
 
     <div class="item">
-      <div class="value">{{balances.spendableAnon.whole}}<small>{{balances.spendableAnon.sep}}{{balances.spendableAnon.decimal}}</small></div>
-      <div class="key">Spendable Anon balance</div>
-      <div class="key"><small>Pending: {{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}}</small></div>
+      <div class="value">
+        <!-- @TODO: show only when pending TX exists -->
+        <mat-spinner class="tiny" matTooltip="+{{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}} pending" matTooltipPosition="before" color="accent"></mat-spinner>
+        {{balances.spendableAnon.whole}}<small>{{balances.spendableAnon.sep}}{{balances.spendableAnon.decimal}}</small>
+      </div>
+      <div class="key">
+        <mat-icon fontIcon="part-anon" matTooltip="Anon balance" matTooltipPosition="before"></mat-icon>
+        Spendable balance
+      </div>
     </div>
 
     <div class="divider"></div>
