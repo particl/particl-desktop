@@ -60,23 +60,30 @@
           </div>
         </div>
         <div class="item shipping">
+          <!-- Shipping destination not selected -->
           <ng-container *ngIf="details.shipping.selectedDestination.length === 0; else shippingDestSet">
             <div class="title">Shipping</div>
             <div class="value">
-              <span class="big">{{ details.price.shipping.local }} - {{ details.price.shipping.intl }}</span>
+              <span class="big">{{ details.price.shipping.local }}&ndash;{{ details.price.shipping.intl }}</span>
               <span class="currency">PART</span>
             </div>
           </ng-container>
 
+          <!-- Shipping destination known -->
           <ng-template #shippingDestSet>
             <div class="title">Shipping to {{ details.shipping.selectedDestination }}</div>
             <div class="value">
-              <span class="big">{{ details.shipping.canShip ? details.price.shipping.actual : 'N/A' }}</span>
-              <span class="currency" *ngIf="details.shipping.canShip">PART</span>
-              <span *ngIf="!details.shipping.canShip" matTooltip="Seller does not ship to this destination" matTooltipPosition="after">
-                &nbsp;
-                <mat-icon fontIcon="part-circle-info"></mat-icon>
-              </span>
+              <!-- can be shipped -->
+              <ng-container *ngIf="details.shipping.canShip">
+                <span class="big">{{ details.price.shipping.actual }}</span>
+                <span class="currency">PART</span>
+              </ng-container>
+              <!-- shipping to destination not available -->
+              <ng-container *ngIf="!details.shipping.canShip">
+                <span class="not-available" matTooltip="Seller does not ship to this destination">
+                  Not available
+                </span>
+              </ng-container>
             </div>
           </ng-template>
 
@@ -324,7 +331,7 @@
 
     <ng-container *ngIf="displayActions.governance && !itemExpiry.hasExpired">
 
-      <button mat-button class="small"
+      <button mat-button class="small icon-only"
               [color]="details.governance.proposalHash.length > 0 ? 'warn' : 'basic'" appDebounceClick (debounceClick)="actionFlagItem()"
               [matTooltip]="details.governance.proposalHash.length > 0 ? 'Item has been reported' : 'Report'"
               matTooltipPosition="above">
@@ -384,6 +391,7 @@
         This is your own listing
       </button>
 
+      <!-- @TODO: can we disable the button and switch label to "Added to Cart" after it has been added to cart? -->
       <button mat-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired" appDebounceClick (debounceClick)="actionAddItemToCart()">
         <mat-icon fontIcon="part-cart"></mat-icon>
         Add to Cart

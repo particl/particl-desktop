@@ -162,6 +162,11 @@ button.modal-close {
           font-weight: 400;
           margin-left: 5px;
         }
+        .not-available { // product shipping N/A to selected destination
+          @extend .big;
+          font-style: italic;
+          color: var(--color-alert);
+        }
       }
       &.price {
         .title,
