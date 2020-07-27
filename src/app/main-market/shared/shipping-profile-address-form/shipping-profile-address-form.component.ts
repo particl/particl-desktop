@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable, Subject, of } from 'rxjs';
 import { tap, takeUntil } from 'rxjs/operators';
@@ -19,6 +19,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
   @Input() srcAddress: ShippingAddress = null;
   @Input() isEditable: boolean = true;
   @Output() isValid: EventEmitter<boolean> = new EventEmitter();
+  @Output() regionChange: EventEmitter<string> = new EventEmitter();
 
   addressForm: FormGroup;
 
@@ -29,7 +30,8 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _regionService: RegionListService
+    private _regionService: RegionListService,
+    private _cdr: ChangeDetectorRef
   ) {
 
     const regions = this._regionService.getCountryList().map(c => ({id: c.iso, name: c.name}));
@@ -50,25 +52,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    const shippingAddress = {
-      firstName: '',
-      lastName: '',
-      addressLine1: '',
-      addressLine2: '',
-      city: '',
-      countryCode: '',
-      state: '',
-      zipCode: ''
-    };
-
-    if (isBasicObjectType(this.srcAddress)) {
-      const srcKeys = Object.keys(shippingAddress);
-      for (const key of srcKeys) {
-        if ((key in this.srcAddress) && (typeof shippingAddress[key] === typeof this.srcAddress[key])) {
-          this.addressForm.get(key).setValue(this.srcAddress[key]);
-        }
-      }
-    }
+    this.setAddressFormDetails(this.srcAddress);
 
     if (!this.isEditable) {
       this.addressForm.disable();
@@ -80,6 +64,11 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
         this.isValid.emit(this.addressForm.valid);
 
       }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+
+    this.addressForm.get('countryCode').valueChanges.pipe(
+      tap(value => this.regionChange.emit(value)),
       takeUntil(this.destroy$)
     ).subscribe();
 
@@ -105,6 +94,42 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
       }
     });
     return values;
+  }
+
+
+  resetAddressForm(address: ShippingAddress) {
+    this.setAddressFormDetails(address);
+    this._cdr.detectChanges();
+    // emit validity on changing of the form
+    this.isValid.emit(this.addressForm.valid);
+  }
+
+
+  private setAddressFormDetails(address: ShippingAddress) {
+    const shippingAddress = {
+      firstName: '',
+      lastName: '',
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      countryCode: '',
+      state: '',
+      zipCode: ''
+    };
+
+    const srcKeys = Object.keys(shippingAddress);
+
+    for (const key of srcKeys) {
+      this.addressForm.get(key).setValue(shippingAddress[key]);
+    }
+
+    if (isBasicObjectType(address)) {
+      for (const key of srcKeys) {
+        if ((key in address) && (typeof shippingAddress[key] === typeof address[key])) {
+          this.addressForm.get(key).setValue(address[key]);
+        }
+      }
+    }
   }
 
 }

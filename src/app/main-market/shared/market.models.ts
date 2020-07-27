@@ -210,7 +210,7 @@ interface RespListingItemCategory {
   parentItemCategoryId: number | null;
   updatedAt: number;
   createdAt: number;
-  ParentItemCategory: RespListingItemCategory | null;
+  ParentItemCategory?: RespListingItemCategory | null;
 }
 
 
@@ -379,7 +379,7 @@ export interface RespListingItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   }>;
-  ListingItemTemplate: null | {
+  ListingItemTemplate?: null | {
     id: number;
     hash: string;
     market: string;
@@ -544,4 +544,15 @@ export interface RespAddressListItem {
   profileId: number;
   updatedAt: number;
   createdAt: number;
+}
+
+
+export interface RespCartItemListItem {
+  id: number;
+  shoppingCartId: number;
+  listingItemId: number;
+  updatedAt: number;
+  createdAt: number;
+  ShoppingCart: RespCartListItem;
+  ListingItem: RespListingItem;
 }

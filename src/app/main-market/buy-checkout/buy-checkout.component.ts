@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
-
-import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
-import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
 
 
 interface BuyCheckoutTab {
@@ -26,10 +22,7 @@ export class BuyCheckoutComponent implements OnInit {
 
   private selectedTabIdx: number = 0;
 
-  saveShippingProfile: boolean = false;
-
   constructor(
-    private _dialog: MatDialog,
     private _route: ActivatedRoute
   ) { }
 
@@ -55,14 +48,6 @@ export class BuyCheckoutComponent implements OnInit {
     if ((idx !== this.selectedTabIdx) && (idx >= 0) && (idx < this.tabs.length)) {
       this.selectedTabIdx = idx;
     }
-  }
-
-  openListingDetailModal(): void {
-    const dialog = this._dialog.open(ListingDetailModalComponent);
-  }
-
-  openPlaceBidModal(): void {
-    const dialog = this._dialog.open(PlaceBidModalComponent);
   }
 
 }

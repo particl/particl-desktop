@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA , } from '@angular/material/dialog';
@@ -39,7 +39,7 @@ export interface EditedActionResponse {
   providers: [BuyShippingProfilesService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditShippingProfileModalComponent implements OnInit {
+export class EditShippingProfileModalComponent {
 
 
   readonly address: ShippingAddress = {
@@ -96,11 +96,6 @@ export class EditShippingProfileModalComponent implements OnInit {
     ).pipe(
       map(([actionable, valid]: [boolean, boolean]) => actionable ? valid : actionable)
     );
-  }
-
-
-  ngOnInit() {
-
   }
 
 

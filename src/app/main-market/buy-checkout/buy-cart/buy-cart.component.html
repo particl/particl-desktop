@@ -1,0 +1,235 @@
+<div class="container-block">
+  <form>
+
+    <app-page-intro>
+      <ng-container page-title>Your Cart</ng-container>
+      <ng-container page-content>
+        Manage items in your Cart and submit your Order(s) when you're satisfied
+      </ng-container>
+    </app-page-intro>
+
+    <section class="cart" *ngIf="cartItems.length > 0">
+
+      <div class="cart-header --cart-layout">
+        <div class="photo">Preview</div>
+        <div class="title">Title</div>
+        <div class="price">Price</div>
+        <div class="qty">Qty</div>
+        <div class="shipping">Shipping</div>
+        <div class="total">Subtotal</div>
+        <div class="remove"></div>
+      </div>
+
+      <mat-card *ngFor="let cartItem of cartItems; trackBy: trackByCartItemIdx" class="cart-item --cart-layout">
+        <div class="photo" (click)="openListingDetailModal(cartItem.listingId)">
+          <div class="overlay">
+            <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          </div>
+          <img [src]="cartItem.image">
+        </div>
+        <div class="title">
+          <h3 class="name">{{ cartItem.title }}</h3>
+          <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
+          <div class="meta">
+            <span class="market">{{ cartItem.marketName }}</span>
+            <span class="category">{{ cartItem.category }}</span>
+          </div>
+          <div class="info">
+            <span *ngIf="cartItem.errors.expiring" class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
+              <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
+              Expires soon &ndash; buy fast!
+            </span>
+            <span *ngIf="cartItem.errors.expired" class="message --error" matTooltip="Expired Listing: This item will be automatically removed from your Cart when creating Order" matTooltipPosition="after">
+              <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
+              Sorry, this Listing already expired
+            </span>
+            <span *ngIf="cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')" class="message --error" matTooltip="This item does not ship to your selected destination" matTooltipPosition="after">
+              <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
+              This item does not ship to the selected destination
+            </span>
+          </div>
+        </div>
+        <div class="price">
+          <span class="amount part">P {{cartItem.displayedPrices.item.whole}}<small>{{cartItem.displayedPrices.item.sep}}{{cartItem.displayedPrices.item.fraction}}</small></span>
+          <!-- <span class="amount fiat">$ 1<small>.6413</small></span> -->
+        </div>
+        <!-- Quantity: keep showing "1×" until we implement qty management -->
+        <div class="qty">1 &times;</div>
+        <div class="shipping">
+          <span *ngIf="cartItem.displayedPrices.shipping.whole !== ''; else noPrice" class="amount part">P {{cartItem.displayedPrices.shipping.whole}}<small>{{cartItem.displayedPrices.shipping.sep}}{{cartItem.displayedPrices.shipping.fraction}}</small></span>
+          <!-- <span class="amount fiat">$ 0<small>.1413</small></span> -->
+        </div>
+        <div class="total">
+          <span *ngIf="cartItem.displayedPrices.subtotal.whole !== ''; else noPrice" class="amount part">P {{cartItem.displayedPrices.subtotal.whole}}<small>{{cartItem.displayedPrices.subtotal.sep}}{{cartItem.displayedPrices.subtotal.fraction}}</small></span>
+          <!-- <span class="amount fiat">$ 2<small>.6413</small></span> -->
+        </div>
+        <div class="remove">
+          <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart" (click)="removeCartItem(cartItem.id)">
+            <mat-icon fontIcon="part-circle-remove"></mat-icon>
+          </button>
+        </div>
+
+      </mat-card><!-- .cart-item -->
+
+      <div class="action-buttons">
+        <button mat-button (click)="clearCart()">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+          Empty Cart
+        </button>
+      </div><!-- .action-buttons -->
+
+    </section><!-- .cart -->
+
+    <div class="no-results --smaller --horizontal" *ngIf="cartItems.length === 0">
+      <img class="illustration" src="./assets/app-market/illustrations/empty-cart.svg" alt="Your Cart is empty">
+      <div class="text">
+        <p>
+          Your Cart is empty
+        </p>
+        <p class="help-text">
+          Why don't you head over to Listings page and populate your Cart with some Products?
+        </p>
+      </div>
+    </div><!-- .no-results -->
+
+
+
+    <!-- =========== SHIPPING & PRICING =========== -->
+
+    <div class="shipping-pricing" fxLayout="row">
+
+      <section class="shipping">
+
+        <div class="section-header">
+          <h2>Shipping details</h2>
+          <p class="help-text">
+            Choose an address where your Order should be delivered.<br>
+            You can save your frequently used addresses to your private Shipping profiles.
+          </p>
+        </div><!-- .section-header -->
+
+        <mat-card class="shipping-profile no-padding">
+          <label class="--larger">
+            <h3 class="label">Load Shipping profile</h3>
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <mat-select matNativeControl [formControl]="selectedAddress"
+                placeholder="Select saved shipping address profile">
+
+                <mat-option class="--larger" value="0">(none)</mat-option>
+                <mat-option class="--larger" *ngFor="let address of addresses; trackBy: trackByAddressIdx" [value]="address.id">{{ address.title }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </label>
+        </mat-card>
+
+        <mat-card class="shipping-details no-padding">
+          <market-shipping-address-form
+            [isEditable]="true"
+            (isValid)="isAddressValid.setValue($event)"
+            (regionChange)="updateLocationValue($event)">
+          </market-shipping-address-form>
+          <div class="save-profile">
+            <mat-checkbox name="save-shipping-profile" [formControl]="modifyShippingProfile">
+              {{ +selectedAddress.value > 0 ? 'Update' : 'Save' }} shipping profile
+            </mat-checkbox>
+            <label>
+              <mat-form-field appearance="fill" class="--plain --larger" color="accent">
+                <input matInput type="text" placeholder="Shipping profile name" [disabled]="!modifyShippingProfile.value" [formControl]="addressTitleField"/>
+              </mat-form-field>
+            </label>
+          </div><!-- .save-profile -->
+
+        </mat-card>
+      </section><!-- .shipping -->
+
+      <section class="pricing">
+
+        <div class="section-header">
+          <h2>Pricing overview</h2>
+          <p class="help-text">
+            Review pricing of your Order, before you submit it.<br>
+            Prices update dynamically, based on destination shipping country.
+          </p>
+        </div><!-- .section-header -->
+
+        <mat-card>
+          <table class="prices">
+            <tfoot>
+              <tr>
+                <th></th>
+                <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+                <!-- TODO: replace with user selected fiat countervalue currency (when implemented) -->
+                <!-- <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th> -->
+              </tr>
+            </tfoot>
+            <tbody>
+              <tr class="items">
+                <th>Items' price</th>
+                <td class="amount part">{{ pricingSummary.items.whole}}<small>{{ pricingSummary.items.sep}}{{ pricingSummary.items.fraction}}</small></td>
+                <!-- <td class="amount fiat">1153<small>.2151</small></td> -->
+              </tr>
+              <tr class="shipping">
+                <th>Shipping</th>
+                <td class="amount part">
+                  <ng-container *ngIf="pricingSummary.shipping.whole !== ''; else noPrice">{{ pricingSummary.shipping.whole}}<small>{{ pricingSummary.shipping.sep}}{{ pricingSummary.shipping.fraction}}</small></ng-container>
+                </td>
+                <!-- <td class="amount fiat">2510<small>.4926</small></td> -->
+              </tr>
+              <tr class="subtotal">
+                <th>Total price</th>
+                <td class="amount part">
+                  <ng-container *ngIf="pricingSummary.subtotal.whole !== ''; else noPrice">{{ pricingSummary.subtotal.whole}}<small>{{ pricingSummary.subtotal.sep}}{{ pricingSummary.subtotal.fraction}}</small></ng-container>
+                </td>
+                <!-- <td class="amount fiat">3663<small>.7077</small></td> -->
+              </tr>
+              <tr class="escrow">
+                <th>Escrow</th>
+                <td class="amount part">
+                  <ng-container *ngIf="pricingSummary.escrow.whole !== ''; else noPrice">{{ pricingSummary.escrow.whole}}<small>{{ pricingSummary.escrow.sep}}{{ pricingSummary.escrow.fraction}}</small></ng-container>
+                </td>
+                <!-- <td class="amount fiat">3663<small>.7077</small></td> -->
+              </tr>
+              <tr class="total">
+                <th>Total for Order</th>
+                <td class="amount part">
+                  <ng-container *ngIf="pricingSummary.orderTotal.whole !== ''; else noPrice">{{ pricingSummary.orderTotal.whole}}<small>{{ pricingSummary.orderTotal.sep}}{{ pricingSummary.orderTotal.fraction}}</small></ng-container>
+                </td>
+                <!-- <td class="amount fiat">7327<small>.4154</small></td> -->
+              </tr>
+            </tbody>
+          </table>
+          <mat-divider></mat-divider>
+          <p class="help-text">
+            Note: Escrow payment will be automatically returned after successfull delivery of the Order.
+          </p>
+        </mat-card>
+
+        <section class="submit-order">
+          <div class="section-header">
+            <h2>Submit your Order</h2>
+            <p class="help-text">
+              Got everything in your Cart, shipping details filled out and agree with the pricing? Submit your Order below.
+            </p>
+          </div><!-- .section-header -->
+
+          <mat-card>
+            <button mat-raised-button class="full-width" color="primary" (click)="openPlaceBidModal()" [disabled]="!canCheckoutForm.value">
+              <mat-icon fontIcon="part-next-single"></mat-icon>
+              Review &amp; Submit this Order&hellip;
+            </button>
+          </mat-card>
+        </section><!-- .submit-order -->
+
+      </section><!-- .pricing -->
+
+    </div><!-- .shipping-pricing -->
+
+  </form>
+</div><!-- container-block -->
+
+
+<ng-template #noPrice>
+  <span matTooltip="A shipping location needs to be selected" matTooltipPosition="above">
+    <mat-icon fontIcon="part-circle-question"></mat-icon>
+  </span>
+</ng-template>
