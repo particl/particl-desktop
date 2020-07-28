@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { OverlayConfig, OverlayRef, Overlay } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
@@ -6,8 +6,8 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener, MatTree } from '@angular/material/tree';
 import { matSelectAnimations } from '@angular/material/select';
-import { Observable, Subject, Subscription, merge } from 'rxjs';
-import { takeUntil, take, mapTo, debounceTime, distinctUntilChanged, startWith, tap, skip } from 'rxjs/operators';
+import { Observable, Subject, Subscription, merge, fromEvent } from 'rxjs';
+import { takeUntil, take, mapTo, debounceTime, distinctUntilChanged, startWith, tap, filter } from 'rxjs/operators';
 
 import { InputItem, ItemNode, ItemFlatNode } from './tree-select.models';
 
@@ -48,6 +48,8 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private close$: Subscription;
+  private checklistSelectionEvent$: Observable<boolean>;
+  private backdropClickedEvent$: Observable<any>;
 
 
   @ViewChild(CdkPortal, {static: true}) private portal: CdkPortal;
@@ -56,7 +58,8 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   private overlayElement: OverlayRef;
 
   constructor(
-    private _overlay: Overlay
+    private _overlay: Overlay,
+    private _cdr: ChangeDetectorRef
   ) {
     const treeFlattener: MatTreeFlattener<ItemNode, ItemFlatNode> = new MatTreeFlattener(
       this.transformer, this.getLevel, this.isExpandable, this.getChildren
@@ -72,68 +75,106 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
 
     let defaultItemsSelected: Array<number | string> = JSON.parse(JSON.stringify(this.initialSelection));
 
+    const positionStrategy = this._overlay.position()
+    .flexibleConnectedTo(this.itemListLabel)
+    .withPush(false)
+    .withPositions([{
+      originX: 'start',
+      originY: 'bottom',
+      overlayX: 'start',
+      overlayY: 'top'
+    }, {
+      originX: 'start',
+      originY: 'top',
+      overlayX: 'start',
+      overlayY: 'bottom'
+    }]);
+
+    const overlayConfig = new OverlayConfig({
+      positionStrategy: positionStrategy,
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-transparent-backdrop'
+    });
+
+    this.overlayElement = this._overlay.create(overlayConfig);
+
+    this.backdropClickedEvent$ = this.overlayElement.backdropClick().pipe(takeUntil(this.destroy$));
+    this.checklistSelectionEvent$ = this.checklistSelection.changed.pipe(mapTo(true), takeUntil(this.destroy$));
+
+    const listeners$ = [];
     if (this.data$ !== undefined) {
-      this.data$.pipe(
-        takeUntil(this.destroy$)
-      ).subscribe(data => {
-        this.checklistSelection.selected.forEach(s => defaultItemsSelected.push(s.id));
-        this.checklistSelection.clear();
-        this.dataSource.data = this.buildNodeTree(data, 0);
+      listeners$.push(
+          this.data$.pipe(
+            tap((data) => {
+              this.checklistSelection.selected.forEach(s => defaultItemsSelected.push(s.id));
+              this.dataSource.data = this.buildNodeTree(data, 0);
 
-        if (defaultItemsSelected.length > 0) {
-          if (this.singleSelection && (defaultItemsSelected.length !== 1)) {
-            // ensure only a single item is set if singleSelection is enabled
-            defaultItemsSelected = [defaultItemsSelected[0]];
-          }
-          this.treeControl.dataNodes.filter(
-            flatNode => defaultItemsSelected.includes(flatNode.id)
-          ).forEach(node => {
-            if (!this.checklistSelection.isSelected(node)) {
-              node.expandable ? this.itemSelectionToggle(node) : this.leafItemSelectionToggle(node);
-            }
-          });
+              this.resetSelection(defaultItemsSelected);
 
-          defaultItemsSelected = [];
-        }
-        // setting of the correct labels, etc
-        this.cleanupPanel(false);
-      });
+              defaultItemsSelected = [];
+            }),
+            takeUntil(this.destroy$)
+          )
+      );
     }
-    this.userSearchInput.valueChanges.pipe(
-      startWith(''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      skip(1),
-      tap((searchStr: string) => {
-        const lcaseInput = searchStr.toLowerCase();
-        const levels = {};
 
-        if (!searchStr.length) {
-          // no need to check for visibility: everything becomes visible
-          this.treeControl.dataNodes.forEach(flatNode => flatNode.isVisible = true);
-        } else {
-
-          for (let ii = this.treeControl.dataNodes.length - 1; ii >= 0; ii--) {
-            const flatNode = this.treeControl.dataNodes[ii];
-            const isMatching = flatNode.item.toLowerCase().includes(lcaseInput);
-
-            flatNode.isVisible = !flatNode.expandable
-                ? isMatching    // child(leaf) node
-                : (isMatching && this.isParentNodesSelectable) || !!levels[`${flatNode.level + 1}`]; // parent node
-
-            levels[`${flatNode.level}`] = levels[`${flatNode.level}`] || flatNode.isVisible;
-            if (flatNode.expandable) {
-              levels[`${flatNode.level + 1}`] = false;
+    listeners$.push(
+        // Shitty way of intercepting the blur event, specifically done this way to prevent issues with navigation in a multiselect element
+        //   (ie: by trapping the tab key 'keydown' event)
+        // works, so meh, but will cause issues with "international" keyboards or different keybindings!!
+        fromEvent(this.itemListLabel.nativeElement, 'keydown').pipe(
+          filter((event: any) => event.keyCode === 9),
+          tap(() => {
+            if (this.overlayElement && this.overlayElement.hasAttached()) {
+              this.cleanupPanel(false);
             }
-          }
-        }
-        if (this.overlayElement.hasAttached()) {
-          // do another check to ensure that the overlay is visible bfore trying to re-render nodes
-          this.matTreeNode.renderNodeChanges(this.treeControl.dataNodes);
-        }
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();
+          }),
+          takeUntil(this.destroy$)
+        )
+    );
+
+    listeners$.push(
+        this.userSearchInput.valueChanges.pipe(
+          startWith(this.userSearchInput.value),
+          debounceTime(400),
+          distinctUntilChanged(),
+          tap((searchStr: string) => {
+            const lcaseInput = searchStr.toLowerCase();
+            const levels = {};
+
+            const dataNodes = this.treeControl.dataNodes || [];
+
+            if (!searchStr.length) {
+              // no need to check for visibility: everything becomes visible
+              dataNodes.forEach(flatNode => flatNode.isVisible = true);
+            } else {
+
+              for (let ii = dataNodes.length - 1; ii >= 0; ii--) {
+                const flatNode = dataNodes[ii];
+                const isMatching = flatNode.item.toLowerCase().includes(lcaseInput);
+
+                flatNode.isVisible = !flatNode.expandable
+                    ? isMatching    // child(leaf) node
+                    : (isMatching && this.isParentNodesSelectable) || !!levels[`${flatNode.level + 1}`]; // parent node
+
+                levels[`${flatNode.level}`] = levels[`${flatNode.level}`] || flatNode.isVisible;
+                if (flatNode.expandable) {
+                  levels[`${flatNode.level + 1}`] = false;
+                }
+              }
+            }
+
+            if (this.overlayElement && this.overlayElement.hasAttached()) {
+              // do another check to ensure that the overlay is visible bfore trying to re-render nodes
+              this.matTreeNode.renderNodeChanges(dataNodes);
+              this._cdr.detectChanges();
+            }
+          }),
+          takeUntil(this.destroy$)
+        )
+    );
+
+    merge(...listeners$).subscribe();
   }
 
 
@@ -146,33 +187,38 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   }
 
 
+  resetSelection(newSelectedIds: Array<number|string> | number): void {
+    const newIds: Array<number|string> = [];
+    if ((typeof newSelectedIds === 'number') || typeof newSelectedIds === 'string') {
+      newIds.push(newSelectedIds);
+    } else if (Object.prototype.toString.call(newSelectedIds) === '[object Array]') {
+      if (this.singleSelection) {
+        newIds.push((newSelectedIds as Array<number|string>)[0]);
+      } else {
+        newIds.push(...(newSelectedIds as Array<number|string>));
+      }
+    }
+
+    this.checklistSelection.clear();
+
+    if (newIds.length > 0) {
+      this.treeControl.dataNodes.filter(
+        flatNode => newIds.includes(flatNode.id)
+      ).forEach(node => {
+        if (!this.checklistSelection.isSelected(node)) {
+          node.expandable ? this.itemSelectionToggle(node) : this.leafItemSelectionToggle(node);
+        }
+      });
+    }
+
+    // setting of the correct labels, etc
+    this.cleanupPanel(false);
+  }
+
+
   showPanel() {
     if (this.treeControl.dataNodes.length === 0) {
       return;
-    }
-    if (this.overlayElement === undefined) {
-      const positionStrategy = this._overlay.position()
-      .flexibleConnectedTo(this.itemListLabel)
-      .withPush(false)
-      .withPositions([{
-        originX: 'start',
-        originY: 'bottom',
-        overlayX: 'start',
-        overlayY: 'top'
-      }, {
-        originX: 'start',
-        originY: 'top',
-        overlayX: 'start',
-        overlayY: 'bottom'
-      }]);
-
-      const overlayConfig = new OverlayConfig({
-        positionStrategy: positionStrategy,
-        hasBackdrop: true,
-        backdropClass: 'cdk-overlay-transparent-backdrop'
-      });
-
-      this.overlayElement = this._overlay.create(overlayConfig);
     }
 
     if (this.overlayElement.hasAttached()) {
@@ -185,11 +231,11 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
     let closeEvent: Observable<boolean>;
     if (this.singleSelection) {
       closeEvent = merge(
-        this.checklistSelection.changed.pipe(mapTo(true), take(1), takeUntil(this.destroy$)),
-        this.overlayElement.backdropClick().pipe(mapTo(false), take(1), takeUntil(this.destroy$))
-      );
+            this.checklistSelectionEvent$.pipe(mapTo(true)),
+            this.backdropClickedEvent$.pipe(mapTo(false)),
+          );
     } else {
-      closeEvent = this.overlayElement.backdropClick().pipe(mapTo(true));
+      closeEvent = this.backdropClickedEvent$.pipe(mapTo(true));
     }
 
     this.close$ = closeEvent.pipe(

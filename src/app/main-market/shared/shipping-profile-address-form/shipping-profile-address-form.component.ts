@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable, Subject, of } from 'rxjs';
 import { tap, takeUntil } from 'rxjs/operators';
 import { ShippingAddress } from './shipping-profile-address.models';
 import { isBasicObjectType } from '../utils';
 import { RegionListService } from 'app/main-market/services/region-list/region-list.service';
+import { TreeSelectComponent } from '../tree-select/tree-select.component';
 
 
 @Component({
@@ -27,6 +28,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
   readonly MAX_FIELD_LENGTH: number = 100;
 
   private destroy$: Subject<void> = new Subject();
+  @ViewChild(TreeSelectComponent, {static: false}) private countrySelector: TreeSelectComponent;
 
 
   constructor(
@@ -99,6 +101,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
 
   resetAddressForm(address: ShippingAddress) {
     this.setAddressFormDetails(address);
+    this.countrySelector.resetSelection(this.addressForm.get('countryCode').value);
     this._cdr.detectChanges();
     // emit validity on changing of the form
     this.isValid.emit(this.addressForm.valid);

@@ -31,7 +31,7 @@
           <h3 class="name">{{ cartItem.title }}</h3>
           <ng-container *ngIf="cartItem.errors.expired || cartItem.errors.expiring || (cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')); else noCartItemErrors">
             <div class="info">
-              <span *ngIf="cartItem.errors.expiring" class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
+              <span *ngIf="cartItem.errors.expiring" class="message --info" matTooltip="This Listing will expire at {{cartItem.expiryTime | date: 'yyyy-MM-dd HH:mm:ss'}}" matTooltipPosition="after">
                 <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
                 Expires soon &ndash; buy fast!
               </span>
