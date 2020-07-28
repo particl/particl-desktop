@@ -1,9 +1,20 @@
 @import './src/assets/_config'; // import shared colors etc.
 
 .dialog-content {
-  min-width: 550px;
+  width: 450px;
+  background: var(--bg);
+  padding: 24px;
+  margin-bottom: -24px !important; // offset missing mat-dialog-actions
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px solid var(--bg-muted);
+  @include break(l) {
+    width: 500px;
+  }
+  @include break(xl) {
+    width: 550px;
+  }
   p.lead {
-    margin-top: 0;
+    margin: 0;
   }
 }
 
@@ -33,17 +44,19 @@
 }
 
 section {
-  margin-top: 40px;
+  margin-top: 32px;
 }
 
 .shipping {
   .shipping-address {
-    background: hsla(var(--bg-hsl), 1);
-    padding: 10px 16px 7px;
-    border-radius: var(--radius);
+    color: var(--text-muted);
     p {
       margin: 0 0 3px;
       line-height: 1.35;
     }
   }
+}
+
+.no-results { // in this case used instead of "mat-action-buttons
+  margin-top: 30px;
 }

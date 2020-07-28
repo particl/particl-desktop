@@ -1,47 +1,47 @@
-<div mat-dialog-title>Submit Order</div>
-<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+<div mat-dialog-title>Review &amp; Submit Order</div>
+<button mat-button color="warn" class="modal-close" mat-dialog-close>
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
 <mat-dialog-content class="dialog-content">
   <p class="lead">
-    Please review and submit your following Order:
+    Please review and submit your following Order
   </p>
 
 
-  <section>
-
+  <section class="cart-items">
     <h2 class="section-title">
       You're buying
     </h2>
+    <mat-card>
 
-    <div class="item">
-      <div class="photo">
-        <img src="./assets/images/placeholder_4-3.jpg">
+      <div class="item">
+        <div class="photo">
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="title">
+          Listing name goes here
+        </div>
       </div>
-      <div class="title">
-        Listing name goes here
+  
+      <div class="item">
+        <div class="photo">
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="title">
+          This one is a bit more longer than the other, so let's crop it
+        </div>
       </div>
-    </div>
 
-    <div class="item">
-      <div class="photo">
-        <img src="./assets/images/placeholder_4-3.jpg">
-      </div>
-      <div class="title">
-        This one is a bit more longer than the other, so let's crop it
-      </div>
-    </div>
+    </mat-card>
+  </section><!-- .cart-items -->
 
-  </section>
-
-  <section fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between start">
-
-    <div class="shipping" fxFlex="35%">
-      <h2 class="section-title">
-        Shipping details
-      </h2>
+  <section class="shipping">
+    <h2 class="section-title">
+      Shipping details
+    </h2>
+    <mat-card>
       <div class="shipping-address">
         <p>Martin Allien</p>
         <p>Super long Crypto Lane Street name like this 23/53c</p>
@@ -49,12 +49,14 @@
         <p>ZIPcode&emsp;State</p>
         <p>Cryptoland</p>
       </div>
-    </div>
+    </mat-card>
+  </section>
 
-    <div class="pricing" fxFlex="65%">
-      <h2 class="section-title">
-        Order price
-      </h2>
+  <section class="pricing-info">
+    <h2 class="section-title">
+      Order price
+    </h2>
+    <mat-card>
       <table class="prices">
         <tfoot>
           <tr>
@@ -82,7 +84,7 @@
             <td class="amount fiat">3663<small>.7077</small></td>
           </tr>
           <tr class="escrow">
-            <th>Escrow</th>
+            <th>Refundable Escrow</th>
             <td class="amount part">125613<small>.1684</small></td>
             <td class="amount fiat">3663<small>.7077</small></td>
           </tr>
@@ -93,22 +95,27 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </mat-card>
+  </section><!-- .pricing-info -->
 
-  </section>
 
-
+  <!-- Note: mat-action-buttons removed and all this moved to the bottom, so users have to scroll and check everything before submitting -->
+  <div class="no-results --smaller --no-bg">
+    <img class="illustration" src="./assets/app-market/illustrations/place-bid.svg" alt="Confirm your Order">
+    <p>
+      Looks good?
+    </p>
+    <p class="help-text">
+      After confirming this Order, it will be sent to Seller(s) &ndash; they will accept or reject your bids. Only if they accept, you will pay for this Order.
+    </p>
+    <p>
+      <button mat-raised-button color="primary" mat-dialog-close>
+        <mat-icon fontIcon="part-check"></mat-icon>
+        Confirm Order &amp; Submit
+      </button>
+    </p>
+  </div><!-- .no-results -->
 
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
-  <button mat-button mat-dialog-close (click)="dialogClose()">
-    <mat-icon fontIcon="part-cross"></mat-icon>
-    Cancel
-  </button>
-  <button mat-raised-button color="primary" mat-dialog-close>
-    <mat-icon fontIcon="part-check"></mat-icon>
-    Confirm Order &amp; Submit
-  </button>
-</mat-dialog-actions>

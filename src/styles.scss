@@ -562,6 +562,10 @@ body {
       }
     }
   }
+  &.--no-bg {
+    background: transparent;
+    border: none;
+  }
 }
 
 
