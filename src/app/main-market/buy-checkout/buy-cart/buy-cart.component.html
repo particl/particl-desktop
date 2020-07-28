@@ -29,25 +29,28 @@
         </div>
         <div class="title">
           <h3 class="name">{{ cartItem.title }}</h3>
-          <!-- TODO: display `.meta` if no errors/warning are present. if they are, hide `.meta` and show `.info` below -->
-          <div class="meta">
-            <span class="market">{{ cartItem.marketName }}</span>
-            <span class="category">{{ cartItem.category }}</span>
-          </div>
-          <div class="info">
-            <span *ngIf="cartItem.errors.expiring" class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
-              <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
-              Expires soon &ndash; buy fast!
-            </span>
-            <span *ngIf="cartItem.errors.expired" class="message --error" matTooltip="Expired Listing: This item will be automatically removed from your Cart when creating Order" matTooltipPosition="after">
-              <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
-              Sorry, this Listing already expired
-            </span>
-            <span *ngIf="cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')" class="message --error" matTooltip="This item does not ship to your selected destination" matTooltipPosition="after">
-              <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
-              This item does not ship to the selected destination
-            </span>
-          </div>
+          <ng-container *ngIf="cartItem.errors.expired || cartItem.errors.expiring || (cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')); else noCartItemErrors">
+            <div class="info">
+              <span *ngIf="cartItem.errors.expiring" class="message --info" matTooltip="This Listing will expire in XX:XX:XX" matTooltipPosition="after">
+                <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
+                Expires soon &ndash; buy fast!
+              </span>
+              <span *ngIf="cartItem.errors.expired" class="message --error" matTooltip="Expired Listing: This item will be automatically removed from your Cart when creating Order" matTooltipPosition="after">
+                <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
+                Sorry, this Listing already expired
+              </span>
+              <span *ngIf="cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')" class="message --error" matTooltip="This item does not ship to your selected destination" matTooltipPosition="after">
+                <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
+                This item does not ship to the selected destination
+              </span>
+            </div>
+          </ng-container>
+          <ng-template #noCartItemErrors>
+            <div class="meta">
+              <span class="market">{{ cartItem.marketName }}</span>
+              <span class="category">{{ cartItem.category }}</span>
+            </div>
+          </ng-template>
         </div>
         <div class="price">
           <span class="amount part">P {{cartItem.displayedPrices.item.whole}}<small>{{cartItem.displayedPrices.item.sep}}{{cartItem.displayedPrices.item.fraction}}</small></span>
@@ -134,7 +137,7 @@
             </mat-checkbox>
             <label>
               <mat-form-field appearance="fill" class="--plain --larger" color="accent">
-                <input matInput type="text" placeholder="Shipping profile name" [disabled]="!modifyShippingProfile.value" [formControl]="addressTitleField"/>
+                <input matInput type="text" placeholder="Shipping profile name" [formControl]="addressTitleField"/>
               </mat-form-field>
             </label>
           </div><!-- .save-profile -->

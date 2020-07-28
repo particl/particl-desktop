@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
-import { Subject, of, forkJoin, merge, Observable, combineLatest } from 'rxjs';
-import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatAll } from 'rxjs/operators';
+import { Subject, of, forkJoin, merge, Observable, combineLatest, iif, defer, timer } from 'rxjs';
+import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatAll, concatMap } from 'rxjs/operators';
+import { Select } from '@ngxs/store';
+import { MarketState } from 'app/main-market/store/market.state';
 
 import { BuyCartService } from './buy-cart.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -12,6 +14,7 @@ import { CartItem } from './buy-cart.models';
 import { ShippingAddress } from 'app/main-market/shared/shipping-profile-address-form/shipping-profile-address.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { ShippingProfileAddressFormComponent } from 'app/main-market/shared/shipping-profile-address-form/shipping-profile-address-form.component';
+import { Identity } from '../../store/market.models';
 
 
 enum TextContent {
@@ -57,6 +60,8 @@ interface PricingTotals {
 })
 export class BuyCartComponent implements OnInit, OnDestroy {
 
+  @Select(MarketState.currentIdentity) identity$: Observable<Identity>;
+
   // list of things to display
   cartItems: DisplayedCartItem[] = [];
   addresses: ShippingAddress[] = [];
@@ -71,7 +76,9 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   // other address controls
   selectedAddress: FormControl = new FormControl('0');
   modifyShippingProfile: FormControl = new FormControl(false);
-  addressTitleField: FormControl = new FormControl('', [Validators.required, Validators.minLength(1), Validators.maxLength(100)]);
+  addressTitleField: FormControl = new FormControl(
+    {value: '', disabled: true}, [Validators.required, Validators.minLength(1), Validators.maxLength(100)]
+  );
 
   // for validity
   isAddressValid: FormControl = new FormControl(false);  // public so as to set this value
@@ -84,6 +91,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   private cartModified: FormControl = new FormControl();
   private hasCartErrors: FormControl  = new FormControl(true);
   private isProcessing: boolean = false;  // internal (not necessarily visible) check to limit concurrent MP activity
+  private loadData$: Observable<any>;
 
   @ViewChild(ShippingProfileAddressFormComponent, {static: false}) private addressForm: ShippingProfileAddressFormComponent;
 
@@ -92,67 +100,57 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
     private _cdr: ChangeDetectorRef
-  ) { }
+  ) {
+
+     // <-- LOAD CART ITEMS AND ADDRESSES INTO PAGE -->
+
+     const addressLoad$ = this._cartService.fetchSavedAddresses();
+
+     const cartLoad$ = this._cartService.fetchCartItems().pipe(
+       map((cartItems: CartItem[]) => {
+         return cartItems.map(ci => {
+           const dci: DisplayedCartItem = {
+             ...ci,
+             displayedPrices: {
+               item: {
+                 whole: ci.price.base.particlStringInteger(),
+                 sep: ci.price.base.particlStringSep(),
+                 fraction: ci.price.base.particlStringFraction()
+               },
+               shipping: { whole: '', sep: '', fraction: ''},
+               subtotal: { whole: '', sep: '', fraction: ''}
+             },
+             errors: {
+               expired: false,
+               expiring: false,
+               shipping: false
+             }
+           };
+           return dci;
+         });
+       })
+     );
+
+     this.loadData$ = forkJoin({
+       addresses: addressLoad$,
+       cartItems: cartLoad$
+     }).pipe(
+       catchError(() => {
+         this._snackbar.open(TextContent.LOADING_ERROR, 'warn');
+         return of({cartItems: [], addresses: []});
+       }),
+       tap(results => {
+         this.cartItems = results.cartItems;
+         this.addresses = results.addresses;
+         this.updateCartExpiryTimer();
+         this.updateCartItemPricing();
+         this.cartModified.setValue(true);
+       })
+     );
+  }
 
 
   ngOnInit() {
-
-    // <-- LOAD CART ITEMS AND ADDRESSES INTO PAGE -->
-    let loadingError = false;
-
-    const addressLoad$ = this._cartService.fetchSavedAddresses().pipe(
-      startWith([]),
-      catchError(() => {
-        loadingError = true;
-        return of([] as ShippingAddress[]);
-      })
-    );
-
-    const cartLoad$ = this._cartService.fetchCartItems().pipe(
-      map((cartItems: CartItem[]) => {
-        return cartItems.map(ci => {
-          const dci: DisplayedCartItem = {
-            ...ci,
-            displayedPrices: {
-              item: {
-                whole: ci.price.base.particlStringInteger(),
-                sep: ci.price.base.particlStringSep(),
-                fraction: ci.price.base.particlStringFraction()
-              },
-              shipping: { whole: '', sep: '', fraction: ''},
-              subtotal: { whole: '', sep: '', fraction: ''}
-            },
-            errors: {
-              expired: false,
-              expiring: false,
-              shipping: false
-            }
-          };
-          return dci;
-        });
-      }),
-      catchError(() => {
-        loadingError = true;
-        return of([]);
-      })
-    );
-
-    const init$ = forkJoin({
-      addresses: addressLoad$,
-      cartItems: cartLoad$
-    }).pipe(
-      tap(results => {
-        this.cartItems = results.cartItems;
-        this.addresses = results.addresses;
-
-        if (loadingError) {
-          this._snackbar.open(TextContent.LOADING_ERROR, 'warn');
-        } else {
-          this.updateCartItemPricing();
-        }
-      })
-    );
-
 
     // <-- HELPER FOR DETECTING SHIPPING COUNTRY CHANGES -->
 
@@ -160,6 +158,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       tap((countryCode: string) => {
         this.updateCartItemPricing();
+        this.cartModified.setValue(true);
       }),
       takeUntil(this.destroy$)
     );
@@ -189,9 +188,22 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     // <-- PROCESS CHECKOUT VALIDITY -->
 
     const addressValidity$: Observable<boolean> = combineLatest(
-      this.isAddressValid.valueChanges.pipe(distinctUntilChanged()),
-      this.modifyShippingProfile.valueChanges.pipe(startWith(this.modifyShippingProfile.value)),
-      this.addressTitleField.valueChanges.pipe(startWith(this.addressTitleField.value), map(() => this.addressTitleField.valid))
+      this.isAddressValid.valueChanges.pipe(
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      ),
+      this.modifyShippingProfile.valueChanges.pipe(
+        startWith(this.modifyShippingProfile.value),
+        tap((chcked: boolean) => {
+          if (chcked) { this.addressTitleField.enable(); } else { this.addressTitleField.disable(); }
+        }),
+        takeUntil(this.destroy$)
+      ),
+      this.addressTitleField.valueChanges.pipe(
+        startWith(this.addressTitleField.value),
+        map(() => this.addressTitleField.valid),
+        takeUntil(this.destroy$)
+      )
     ).pipe(
       map(([formValid, shouldSaveForm, titleValid]: [boolean, boolean, boolean]) => formValid && (shouldSaveForm ? titleValid : true)),
       takeUntil(this.destroy$)
@@ -210,19 +222,28 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-
-
     merge(
       cartUpdated$,
       locationUpdate$,
       addressChanger$,
       checkoutChecker$,
-      init$,
+      this.identity$.pipe(
+        tap(() => {
+          this.cartItems = [];
+          this.updateCartExpiryTimer();
+          this.updateCartItemPricing();
+          this.cartModified.setValue(true);
+        }),
+        concatMap((identity) => iif(() => identity.id > 0, defer(() => this.loadData$))),
+        takeUntil(this.destroy$)
+      )
     ).subscribe();
   }
 
 
   ngOnDestroy() {
+    this.cartItems = [];
+    this.addresses = [];
     this.timerDestroy$.next();
     this.timerDestroy$.complete();
     this.destroy$.next();
@@ -274,7 +295,10 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     if (!this.canCheckoutForm.value) {
       return;
     }
-    this._dialog.open(PlaceBidModalComponent);
+    const dialog = this._dialog.open(PlaceBidModalComponent);
+    // dialog.afterClosed().pipe(
+    //   concatMap(() => this.loadData$)
+    // ).subscribe();
   }
 
 
@@ -289,13 +313,14 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     }
     this.isProcessing = true;
 
-    this._cartService.removeCartItem(itemId).pipe(
-    ).subscribe(
+    this._cartService.removeCartItem(itemId).subscribe(
       (success) => {
         if (success) {
           const itemIdx = this.cartItems.findIndex(ci => ci.id === itemId);
           if (itemIdx > -1) {
             this.cartItems.splice(itemIdx, 1);
+            this.updateCartExpiryTimer();
+            this.updateCartItemPricing();
             this.cartModified.setValue(true);
           }
         } else {
@@ -338,9 +363,48 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         }
 
         this.isProcessing = false;
+        this.updateCartExpiryTimer();
+        this.updateCartItemPricing();
         this.cartModified.setValue(true);
       })
     ).subscribe();
+  }
+
+
+  private updateCartExpiryTimer(): void {
+    this.timerDestroy$.next();
+
+    if (this.cartItems.length === 0) {
+      return;
+    }
+
+    const now = Date.now() + 1000;
+    const expiresSoonTime = 1000 * 60 * 60 * 24;
+
+    let timerTo: number = Number.MAX_SAFE_INTEGER;
+
+    for (const cartItem of this.cartItems) {
+      cartItem.errors.expired = cartItem.expiryTime <= now;
+      cartItem.errors.expiring = (cartItem.expiryTime > now) && (now >= (cartItem.expiryTime - expiresSoonTime));
+
+      const checkTime = (cartItem.expiryTime - expiresSoonTime) > now ?
+        (cartItem.expiryTime - expiresSoonTime) :
+        (cartItem.expiryTime > now ? cartItem.expiryTime : Number.MAX_SAFE_INTEGER);
+
+      timerTo = Math.min(timerTo, checkTime);
+    }
+
+    if ((timerTo < Number.MAX_SAFE_INTEGER) && (timerTo > Date.now())) {
+      timer(timerTo - Date.now()).pipe(
+        takeUntil(this.timerDestroy$)
+      ).subscribe(
+        // subscription shouldn't fire if the takeUntil completion is triggered, preventing a recursive call leak
+        () => {
+          this.updateCartExpiryTimer();
+          this._cdr.detectChanges();
+        }
+      );
+    }
   }
 
 
@@ -419,8 +483,6 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       this.pricingSummary.escrow = { whole: '', sep: '', fraction: ''};
       this.pricingSummary.orderTotal = { whole: '', sep: '', fraction: ''};
     }
-
-    this.cartModified.setValue(true);
   }
 
 }
