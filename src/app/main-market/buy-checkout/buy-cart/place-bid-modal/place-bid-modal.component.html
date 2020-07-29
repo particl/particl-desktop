@@ -16,21 +16,12 @@
     </h2>
     <mat-card>
 
-      <div class="item">
+      <div class="item" *ngFor="let item of this.summary.items">
         <div class="photo">
-          <img src="./assets/images/placeholder_4-3.jpg">
+          <img [src]="item.itemImg">
         </div>
         <div class="title">
-          Listing name goes here
-        </div>
-      </div>
-  
-      <div class="item">
-        <div class="photo">
-          <img src="./assets/images/placeholder_4-3.jpg">
-        </div>
-        <div class="title">
-          This one is a bit more longer than the other, so let's crop it
+          {{ item.itemName }}
         </div>
       </div>
 
@@ -43,11 +34,8 @@
     </h2>
     <mat-card>
       <div class="shipping-address">
-        <p>Martin Allien</p>
-        <p>Super long Crypto Lane Street name like this 23/53c</p>
-        <p>Stakingville</p>
-        <p>ZIPcode&emsp;State</p>
-        <p>Cryptoland</p>
+        <p>{{ summary.shippingDetails.name }}</p>
+        <p *ngFor="let addressLine of summary.shippingDetails.address">{{ addressLine }}</p>
       </div>
     </mat-card>
   </section>
@@ -63,35 +51,34 @@
             <th></th>
             <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
             <!-- fiat `th` can be commented out; I was just preparing grounds :) | TODO: replace with user selected fiat countervalue currency (when implemented) -->
-            <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th>
+            <!-- <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th> -->
           </tr>
         </tfoot>
         <tbody>
-          <!-- TODO: fiat `td`s can be commented out; I was just preparing grounds :) -->
           <tr class="items">
             <th>Items' price</th>
-            <td class="amount part">55845<small>.8026</small></td>
-            <td class="amount fiat">1153<small>.2151</small></td>
+            <td class="amount part">{{ summary.pricingSummary.items.whole }}<small>{{ summary.pricingSummary.items.sep }}{{ summary.pricingSummary.items.fraction }}</small></td>
+            <!-- <td class="amount fiat">1153<small>.2151</small></td> -->
           </tr>
           <tr class="shipping">
-            <th>Shipping to SA</th>
-            <td class="amount part">6510<small>.8026</small></td>
-            <td class="amount fiat">2510<small>.4926</small></td>
+            <th>Shipping to: {{summary.shippingDetails.destinationCountryCode}}</th>
+            <td class="amount part">{{ summary.pricingSummary.shipping.whole }}<small>{{ summary.pricingSummary.shipping.sep }}{{ summary.pricingSummary.shipping.fraction }}</small></td>
+            <!-- <td class="amount fiat">2510<small>.4926</small></td> -->
           </tr>
           <tr class="subtotal">
             <th>Total price</th>
-            <td class="amount part">125613<small>.1684</small></td>
-            <td class="amount fiat">3663<small>.7077</small></td>
+            <td class="amount part">{{ summary.pricingSummary.subtotal.whole }}<small>{{ summary.pricingSummary.subtotal.sep }}{{ summary.pricingSummary.subtotal.fraction }}</small></td>
+            <!-- <td class="amount fiat">3663<small>.7077</small></td> -->
           </tr>
           <tr class="escrow">
             <th>Refundable Escrow</th>
-            <td class="amount part">125613<small>.1684</small></td>
-            <td class="amount fiat">3663<small>.7077</small></td>
+            <td class="amount part">{{ summary.pricingSummary.escrow.whole }}<small>{{ summary.pricingSummary.escrow.sep }}{{ summary.pricingSummary.escrow.fraction }}</small></td>
+            <!-- <td class="amount fiat">3663<small>.7077</small></td> -->
           </tr>
           <tr class="total">
             <th>Total for Order</th>
-            <td class="amount part">251026<small>.3368</small></td>
-            <td class="amount fiat">7327<small>.4154</small></td>
+            <td class="amount part">{{ summary.pricingSummary.orderTotal.whole }}<small>{{ summary.pricingSummary.orderTotal.sep }}{{ summary.pricingSummary.orderTotal.fraction }}</small></td>
+            <!-- <td class="amount fiat">7327<small>.4154</small></td> -->
           </tr>
         </tbody>
       </table>
@@ -109,10 +96,19 @@
       After confirming this Order, it will be sent to Seller(s) &ndash; they will accept or reject your bids. Only if they accept, you will pay for this Order.
     </p>
     <p>
-      <button mat-raised-button color="primary" mat-dialog-close>
+      <button mat-raised-button color="primary" [disabled]="errors.invalidData || errors.insufficientFunds" (click)="confirmCheckout()">
         <mat-icon fontIcon="part-check"></mat-icon>
         Confirm Order &amp; Submit
       </button>
+    </p>
+    <p *ngIf="errors.invalidData">
+      Inexplicably, there appears to be some data missing
+    </p>
+    <p *ngIf="errors.insufficientFunds">
+      There appears to be insufficient funds to complete this order
+    </p>
+    <p *ngIf="errors.insufficientUtxos">
+      While there is sufficient balance to continue, its likely that one or more items will not be able to be bought.
     </p>
   </div><!-- .no-results -->
 

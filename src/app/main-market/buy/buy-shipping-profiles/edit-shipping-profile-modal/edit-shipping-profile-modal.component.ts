@@ -1,7 +1,7 @@
 import { Component, Inject, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import { MAT_DIALOG_DATA , } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, combineLatest, of } from 'rxjs';
 import { map, tap, mapTo, catchError, startWith } from 'rxjs/operators';
 
@@ -67,7 +67,7 @@ export class EditShippingProfileModalComponent {
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: ShippingAddress,
-    public _dialogRef: MatDialogRef<EditShippingProfileModalComponent>,
+    private _dialogRef: MatDialogRef<EditShippingProfileModalComponent>,
     private _addressService: BuyShippingProfilesService,
     private _snackbar: SnackbarService
   ) {

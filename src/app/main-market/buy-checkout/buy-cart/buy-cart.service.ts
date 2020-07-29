@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, iif, defer } from 'rxjs';
-import { map, catchError, concatMap, mapTo } from 'rxjs/operators';
+import { Observable, of, iif, defer, concat, throwError } from 'rxjs';
+import { map, catchError, concatMap, mapTo, tap, ignoreElements } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
@@ -9,10 +9,16 @@ import { DataService } from '../../services/data/data.service';
 
 import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { RespMarketListMarketItem, RespCartItemListItem, RespAddressListItem, ADDRESS_TYPES } from '../../shared/market.models';
+import { RespMarketListMarketItem, RespCartItemListItem, RespAddressListItem, ADDRESS_TYPES, RespAddressAdd } from '../../shared/market.models';
 import { ShippingAddress } from '../../shared/shipping-profile-address-form/shipping-profile-address.models';
 import { CartItem } from './buy-cart.models';
 import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
+
+
+interface CartItemBidDetails {
+  cartItemId: number;
+  listingItemId: number;
+}
 
 
 @Injectable()
@@ -37,11 +43,11 @@ export class BuyCartService {
 
 
   fetchCartItems(): Observable<CartItem[]> {
-    const cartId = this._store.selectSnapshot(MarketState.availableCarts)[0].id;
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    const cart = this._store.selectSnapshot(MarketState.availableCarts)[0];
 
-    if (!(+cartId > 0)) {
-      return of([]);
+    if (!(cart && (+cart.id > 0))) {
+      return throwError('InvalidCart');
     }
 
     const markets$ = this._rpc.call('market', ['list', profileId]).pipe(
@@ -51,7 +57,7 @@ export class BuyCartService {
       catchError(() => of([]))
     );
 
-    return this._rpc.call('cartitem', ['list', cartId]).pipe(
+    return this._rpc.call('cartitem', ['list', +cart.id]).pipe(
       concatMap((cartItems: RespCartItemListItem[]) => iif(
         () => cartItems.length > 0,
 
@@ -111,6 +117,126 @@ export class BuyCartService {
     return this._rpc.call('cartitem', ['remove', cartItemId]).pipe(
       mapTo(true),
       catchError(() => of(false))
+    );
+  }
+
+
+  saveAddressFields(
+    title: string,
+    firstName: string,
+    lastName: string,
+    addressLine1: string,
+    addressLine2: string,
+    city: string,
+    state: string,
+    countryCode: string,
+    zipCode: string,
+    addressId: number | null = null
+  ): Observable<ShippingAddress> {
+      let obs$: Observable<RespAddressAdd>;
+
+      if (!(+addressId > 0)) {
+        const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+        obs$ = this._rpc.call('address', ['add',
+          profileId,
+          title,
+          firstName,
+          lastName,
+          addressLine1,
+          addressLine2,
+          city,
+          state,
+          countryCode,
+          zipCode
+        ]);
+      } else {
+        obs$ = this._rpc.call('address', ['update',
+          addressId,
+          title,
+          firstName,
+          lastName,
+          addressLine1,
+          addressLine2,
+          city,
+          state,
+          countryCode,
+          zipCode
+        ]);
+      }
+
+      return obs$.pipe(
+        catchError(() => of(null)),
+        map(addr => this.buildShippingAddress(addr))
+      );
+  }
+
+
+  /**
+   * Places bids on items in the current shopping cart
+   *
+   * @param addressDetails details of the address to ship the items to. Note that values such as the id are ignored.
+   *
+   * @returns boolean indicating whether the shopping cart has been successfully cleared of all items successfully bid on (true)
+   *  or the cart may not reflect the correct state of bids (eg: bid placed but an error prevented the cart from being cleared of that item)
+   *
+   * Note that an error may be thrown if a bid send message errors
+   */
+  checkoutCart(addressDetails: ShippingAddress): Observable<boolean> {
+    const cartId = this._store.selectSnapshot(MarketState.availableCarts)[0].id;
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+
+    if (!((+cartId > 0) && (+identityId > 0))) {
+      return of(true);
+    }
+
+    let itemRemovalSuccessful = true;
+
+    // get list of items in the cart
+    return this._rpc.call('cartitem', ['list', cartId]).pipe(
+      map((cartItems: RespCartItemListItem[]) => cartItems.map(ci => {
+        const mappedValue: CartItemBidDetails = {cartItemId: +ci.id, listingItemId: +ci.listingItemId};
+        return mappedValue;
+      })),
+      catchError(() => of([] as CartItemBidDetails[])),
+      map(items => {
+        // map cart items to 'bid send' observables
+        return items.map(ci =>
+          this._rpc.call(
+            'bid',
+            ['send', ci.listingItemId, identityId, false,
+              'shippingAddress.firstName',
+              addressDetails.firstName,
+              'shippingAddress.lastName',
+              addressDetails.lastName,
+              'shippingAddress.addressLine1',
+              addressDetails.addressLine1,
+              'shippingAddress.addressLine2',
+              addressDetails.addressLine2,
+              'shippingAddress.city',
+              addressDetails.city,
+              'shippingAddress.state',
+              addressDetails.state,
+              'shippingAddress.zipCode',
+              addressDetails.zipCode,
+              'shippingAddress.country',
+              addressDetails.countryCode
+            ]
+          ).pipe(
+            concatMap(() => this.removeCartItem(ci.cartItemId).pipe(
+              catchError(() => of(false)),
+              tap(removeSuccess => itemRemovalSuccessful = itemRemovalSuccessful && removeSuccess)
+            )),
+            ignoreElements()
+          )
+        );
+      }),
+
+      concatMap((bidObservables) => iif(
+        () => bidObservables.length > 0,
+        // run the bid send observables one at a time
+        concat(...bidObservables).pipe(mapTo(itemRemovalSuccessful)),
+        of(true)
+      ))
     );
   }
 

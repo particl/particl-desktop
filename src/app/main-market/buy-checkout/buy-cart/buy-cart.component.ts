@@ -2,25 +2,30 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRe
 import { MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { Subject, of, forkJoin, merge, Observable, combineLatest, iif, defer, timer } from 'rxjs';
-import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatAll, concatMap } from 'rxjs/operators';
+import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatAll, concatMap, mapTo } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
-import { MarketState } from 'app/main-market/store/market.state';
+import { MarketState } from '../../store/market.state';
 
 import { BuyCartService } from './buy-cart.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
-import { PlaceBidModalComponent } from './place-bid-modal/place-bid-modal.component';
+import { PlaceBidModalComponent, BidModalData } from './place-bid-modal/place-bid-modal.component';
+import { ShippingProfileAddressFormComponent } from '../../shared/shipping-profile-address-form/shipping-profile-address-form.component';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { CartItem } from './buy-cart.models';
-import { ShippingAddress } from 'app/main-market/shared/shipping-profile-address-form/shipping-profile-address.models';
-import { PartoshiAmount } from 'app/core/util/utils';
-import { ShippingProfileAddressFormComponent } from 'app/main-market/shared/shipping-profile-address-form/shipping-profile-address-form.component';
+import { ShippingAddress } from '../../shared/shipping-profile-address-form/shipping-profile-address.models';
 import { Identity } from '../../store/market.models';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 enum TextContent {
   LOADING_ERROR = 'Could not obtain all data for this page',
   CART_ITEM_REMOVE_ERROR = 'An error occurred while trying to remove that item',
-  CART_CLEAR_ERROR = 'Could not remove 1 or more items from the cart'
+  CART_CLEAR_ERROR = 'Could not remove 1 or more items from the cart',
+  PROCESSING_CHECKOUT = 'Placing bids on your items',
+  BID_SEND_ERROR = 'Error: Not all of your bids were able to be placed!',
+  BID_CONSISTENCY_ERROR = 'Something went wrong during bidding. Please verify orders placed vs cart items',
 }
 
 interface PriceItem {
@@ -83,11 +88,11 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   // for validity
   isAddressValid: FormControl = new FormControl(false);  // public so as to set this value
   canCheckoutForm: FormControl = new FormControl(false); // public so as to read this value
+  selectedLocation: FormControl = new FormControl('');
 
 
   private destroy$: Subject<void> = new Subject();
   private timerDestroy$: Subject<void> = new Subject();
-  private selectedLocation: FormControl = new FormControl('');
   private cartModified: FormControl = new FormControl();
   private hasCartErrors: FormControl  = new FormControl(true);
   private isProcessing: boolean = false;  // internal (not necessarily visible) check to limit concurrent MP activity
@@ -99,6 +104,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     private _cartService: BuyCartService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
+    private _unlocker: WalletEncryptionService,
     private _cdr: ChangeDetectorRef
   ) {
 
@@ -292,13 +298,134 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   }
 
   openPlaceBidModal(): void {
-    if (!this.canCheckoutForm.value) {
+    if (!this.canCheckoutForm.value || this.isProcessing) {
       return;
     }
-    const dialog = this._dialog.open(PlaceBidModalComponent);
-    // dialog.afterClosed().pipe(
-    //   concatMap(() => this.loadData$)
-    // ).subscribe();
+
+    this.isProcessing = true;
+
+    const addressFields = this.addressForm.getFormValues();
+
+    const checkout$ = defer(() => {
+
+      let address$ = of(false);
+
+      if (this.modifyShippingProfile.value) {
+        // save or update the address
+        address$ = this._cartService.saveAddressFields(
+          this.addressTitleField.value,
+          addressFields.firstName || '',
+          addressFields.lastName || '',
+          addressFields.addressLine1 || '',
+          addressFields.addressLine2 || '',
+          addressFields.city || '',
+          addressFields.state || '',
+          addressFields.countryCode || '',
+          addressFields.zipCode || '',
+          +this.selectedAddress.value
+        ).pipe(
+          tap((updatedAddr) => {
+            if (updatedAddr.id > 0) {
+              const foundAddrIdx = this.addresses.findIndex(a => a.id === updatedAddr.id);
+              if (foundAddrIdx === -1) {
+                // was a new address
+                this.addresses.push(updatedAddr);
+                this.selectedAddress.setValue(updatedAddr.id);
+              } else {
+                // was an existing address that was updated
+                this.addresses[foundAddrIdx] = updatedAddr;
+                this.selectedAddress.setValue(updatedAddr.id);
+              }
+            }
+          }),
+          mapTo(true)
+        );
+      }
+
+      const completion$ = defer(() => {
+        this._dialog.closeAll();
+        this.modifyShippingProfile.setValue(false);
+        return this.loadData$;
+      });
+
+      const bid$ = defer(() => {
+        this._dialog.open(ProcessingModalComponent, {
+          disableClose: true,
+          data: { message: TextContent.PROCESSING_CHECKOUT }
+        });
+
+        const shipAddress: ShippingAddress = {
+          id: null,
+          title: null,
+          firstName: addressFields.firstName || '',
+          lastName: addressFields.lastName || '',
+          addressLine1: addressFields.addressLine1 || '',
+          addressLine2: addressFields.addressLine2 || '',
+          city: addressFields.city || '',
+          state: addressFields.state || '',
+          country: null,
+          countryCode: addressFields.countryCode || '',
+          zipCode: addressFields.zipCode || '',
+        };
+
+        return this._cartService.checkoutCart(shipAddress).pipe(
+          tap((resp) => {
+            // console.log('@@@@ got response from bid sending!!!! -> ', resp);
+            if (!resp) {
+              this._snackbar.open(TextContent.BID_CONSISTENCY_ERROR, 'err');
+            }
+          }),
+          catchError(() => {
+            this._snackbar.open(TextContent.BID_SEND_ERROR, 'err');
+            return of(false);
+          }),
+          concatMap(() => completion$)
+        );
+      });
+
+      // Calculate possible sufficient time for wallet unlock for checkout
+      const requiredSecs = 15 * this.cartItems.length;
+      const actualSecs = Math.max(30, requiredSecs) + 5;
+
+      return address$.pipe(
+        concatMap((refresh) => this._unlocker.unlock({timeout: actualSecs}).pipe(
+          concatMap((unlocked) => iif(() => unlocked, bid$, iif(() => refresh, completion$)))
+        ))
+      );
+
+    });
+
+    const bidModalData: BidModalData = {
+      items: this.cartItems.map(ci => ({itemName: ci.title, itemImg: ci.image})),
+      pricingSummary: {
+        items: this.pricingSummary.items,
+        shipping: this.pricingSummary.shipping,
+        subtotal: this.pricingSummary.escrow,
+        escrow: this.pricingSummary.escrow,
+        orderTotal: this.pricingSummary.orderTotal
+      },
+      shippingDetails: {
+        name: `${addressFields.firstName || ''} ${addressFields.lastName || ''}`,
+        address: [
+          addressFields.addressLine1 || '',
+          addressFields.addressLine2 || '',
+          addressFields.city || '',
+          addressFields.state || '',
+          addressFields.zipCode || '',
+        ].filter(line => line.length > 0),
+        destinationCountryCode: addressFields.countryCode
+      }
+    };
+
+    this._dialog.open(
+      PlaceBidModalComponent,
+      {data: bidModalData}
+    ).afterClosed().pipe(
+      concatMap((doCheckout: boolean | null | undefined) => iif(() => !!doCheckout, checkout$)),
+      finalize(() => this.isProcessing = false)
+    ).subscribe(
+      // resp => console.log('@@@@@@ modal confirmation subscription: ->', resp)
+    );
   }
 
 
@@ -313,7 +440,9 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     }
     this.isProcessing = true;
 
-    this._cartService.removeCartItem(itemId).subscribe(
+    this._cartService.removeCartItem(itemId).pipe(
+      finalize(() => this.isProcessing = false)
+    ).subscribe(
       (success) => {
         if (success) {
           const itemIdx = this.cartItems.findIndex(ci => ci.id === itemId);
