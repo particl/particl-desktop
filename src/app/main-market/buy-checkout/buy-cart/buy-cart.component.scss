@@ -196,6 +196,18 @@
   }
 } // << .cart-item
 
+// placeholder "(?) N/A" when shipping country is not selected
+.no-price {
+  color: var(--text-muted);
+  .mat-icon {
+    font-size: 13px;
+    position: relative;
+    top: 2px;
+    margin-right: 1px;
+    color: hsla(var(--text-muted-hsl), 0.6);
+  }
+}
+
 .shipping-pricing {
   margin-top: var(--paddingV);
 }

@@ -31,7 +31,8 @@
           <h3 class="name">{{ cartItem.title }}</h3>
           <ng-container *ngIf="cartItem.errors.expired || cartItem.errors.expiring || (cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')); else noCartItemErrors">
             <div class="info">
-              <span *ngIf="cartItem.errors.expiring" class="message --info" matTooltip="This Listing will expire at {{cartItem.expiryTime | date: 'yyyy-MM-dd HH:mm:ss'}}" matTooltipPosition="after">
+              <!-- show only if expiring AND seller ships to destination -->
+              <span *ngIf="cartItem.errors.expiring && !(cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== ''))" class="message --info" matTooltip="Expires at {{cartItem.expiryTime | date: 'yyyy-MM-dd HH:mm:ss'}}" matTooltipPosition="after">
                 <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
                 Expires soon &ndash; buy fast!
               </span>
@@ -41,7 +42,8 @@
               </span>
               <span *ngIf="cartItem.errors.shipping && (cartItem.displayedPrices.shipping.whole !== '')" class="message --error" matTooltip="This item does not ship to your selected destination" matTooltipPosition="after">
                 <mat-icon fontIcon="part-alert" color="warn"></mat-icon>
-                This item does not ship to the selected destination
+                <!-- @TODO: pls replace "XY" with currently selected country code -->
+                Seller does not ship to XY
               </span>
             </div>
           </ng-container>
@@ -147,6 +149,7 @@
 
       <section class="pricing">
 
+        <!-- @TODO: hide when destination country isn't selected -->
         <div class="section-header">
           <h2>Pricing overview</h2>
           <p class="help-text">
@@ -155,6 +158,7 @@
           </p>
         </div><!-- .section-header -->
 
+        <!-- @TODO: hide when destination country isn't selected -->
         <mat-card>
           <table class="prices">
             <tfoot>
@@ -207,6 +211,7 @@
           </p>
         </mat-card>
 
+        <!-- @TODO: hide when destination country isn't selected -->
         <section class="submit-order">
           <div class="section-header">
             <h2>Submit your Order</h2>
@@ -231,8 +236,10 @@
 </div><!-- container-block -->
 
 
+<!-- template for showing placeholder "(?) N/A" when shipping country is not selected -->
 <ng-template #noPrice>
-  <span matTooltip="A shipping location needs to be selected" matTooltipPosition="above">
+  <span class="no-price" matTooltip="Select destination country&#13;to calculate exact prices" matTooltipPosition="before" matTooltipClass="multi-line">
     <mat-icon fontIcon="part-circle-question"></mat-icon>
+    N/A
   </span>
 </ng-template>
