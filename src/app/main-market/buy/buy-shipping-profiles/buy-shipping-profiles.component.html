@@ -25,7 +25,7 @@
 
   <mat-form-field [disabled]="isLoading" class="--boxed" appearance="fill">
     <input matInput type="text" [formControl]="searchQuery"
-          placeholder="Search Orders" (keyup.escape)="searchQuery.setValue('')">
+          placeholder="Search Shipping Profiles" (keyup.escape)="searchQuery.setValue('')">
     <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
       <mat-icon fontIcon="part-clear-all"></mat-icon>
     </button>

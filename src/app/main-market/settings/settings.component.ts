@@ -20,6 +20,7 @@ import {
   SettingGroup,
   Setting
 } from 'app/main-extra/global-settings/settings.types';
+import { environment } from 'environments/environment';
 
 
 enum TextContent {
@@ -56,6 +57,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     help: 'For configuration of global app settings, click the settings icon in bottom right corner'
   } as PageInfo;
 
+  readonly mpVersion: string;
+
 
   private destroy$: Subject<void> = new Subject();
   private _currentGroupIdx: number = 0;
@@ -67,7 +70,9 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     private _snackbar: SnackbarService,
     private _regionService: RegionListService,
     private _dialog: MatDialog,
-  ) { }
+  ) {
+    this.mpVersion = environment.marketVersion;
+  }
 
 
   ngOnInit() {
