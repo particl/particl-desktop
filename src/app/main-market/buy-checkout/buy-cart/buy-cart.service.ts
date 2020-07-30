@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, iif, defer, concat, throwError } from 'rxjs';
-import { map, catchError, concatMap, mapTo, tap, ignoreElements } from 'rxjs/operators';
+import { map, catchError, concatMap, mapTo, reduce } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
@@ -189,8 +189,6 @@ export class BuyCartService {
       return of(true);
     }
 
-    let itemRemovalSuccessful = true;
-
     // get list of items in the cart
     return this._rpc.call('cartitem', ['list', cartId]).pipe(
       map((cartItems: RespCartItemListItem[]) => cartItems.map(ci => {
@@ -224,17 +222,16 @@ export class BuyCartService {
           ).pipe(
             concatMap(() => this.removeCartItem(ci.cartItemId).pipe(
               catchError(() => of(false)),
-              tap(removeSuccess => itemRemovalSuccessful = itemRemovalSuccessful && removeSuccess)
-            )),
-            ignoreElements()
+            ))
           )
         );
       }),
 
       concatMap((bidObservables) => iif(
         () => bidObservables.length > 0,
-        // run the bid send observables one at a time
-        concat(...bidObservables).pipe(mapTo(itemRemovalSuccessful)),
+        // run the bid send observables one at a time, accumulating results for eventually sending when the bids are all done,
+        //    ie: 1 response value instead of multiple from each inner bid
+        concat(...bidObservables).pipe(reduce((acc, newVal) => acc && newVal, true)),
         of(true)
       ))
     );

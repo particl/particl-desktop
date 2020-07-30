@@ -26,6 +26,7 @@ enum TextContent {
   PROCESSING_CHECKOUT = 'Placing bids on your items',
   BID_SEND_ERROR = 'Error: Not all of your bids were able to be placed!',
   BID_CONSISTENCY_ERROR = 'Something went wrong during bidding. Please verify orders placed vs cart items',
+  BID_SUCCESSFUL = 'Successfully bid on items!'
 }
 
 interface PriceItem {
@@ -301,8 +302,9 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     if (!this.canCheckoutForm.value || this.isProcessing) {
       return;
     }
-
     this.isProcessing = true;
+
+    let isCartStateGood = true;
 
     const addressFields = this.addressForm.getFormValues();
 
@@ -345,6 +347,9 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       const completion$ = defer(() => {
         this._dialog.closeAll();
         this.modifyShippingProfile.setValue(false);
+        if (!isCartStateGood) {
+          this._snackbar.open(TextContent.BID_CONSISTENCY_ERROR, 'err');
+        }
         return this.loadData$;
       });
 
@@ -370,9 +375,8 @@ export class BuyCartComponent implements OnInit, OnDestroy {
 
         return this._cartService.checkoutCart(shipAddress).pipe(
           tap((resp) => {
-            // console.log('@@@@ got response from bid sending!!!! -> ', resp);
-            if (!resp) {
-              this._snackbar.open(TextContent.BID_CONSISTENCY_ERROR, 'err');
+            if (typeof resp === 'boolean') {
+              isCartStateGood = isCartStateGood && resp;
             }
           }),
           catchError(() => {
@@ -424,7 +428,20 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       concatMap((doCheckout: boolean | null | undefined) => iif(() => !!doCheckout, checkout$)),
       finalize(() => this.isProcessing = false)
     ).subscribe(
-      // resp => console.log('@@@@@@ modal confirmation subscription: ->', resp)
+      resp => {
+        try {
+          if (
+            resp &&
+            Object.prototype.toString.call(resp.cartItems) === '[object Array]' &&
+            (resp.cartItems.length  === 0) &&
+            isCartStateGood
+          ) {
+            this._snackbar.open(TextContent.BID_SUCCESSFUL);
+          }
+        } catch (e) {
+          // eh?? what happened? -> resp changed.
+        }
+      }
     );
   }
 
