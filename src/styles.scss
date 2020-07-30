@@ -612,7 +612,7 @@ table {
       th,
       td {
         vertical-align: top;
-        padding: 1px 0 0;
+        padding: 4px 0 1px;
         line-height: 1.5;
         border-bottom: 1px solid transparent;
       }
@@ -644,7 +644,7 @@ table {
     tfoot {
       th {
         text-align: right;
-        padding: 0;
+        padding: 4px 0 0;
         font-weight: 500;
       }
     }
@@ -787,7 +787,15 @@ div.alert {
   }
   span {
     flex: 1 1 100%;
-    padding: 0 18px;
+    padding: 16px 18px;
+    align-self: center;
+  }
+  small { // help descriptions for alerts (e.g. for solutions to fixing the problem)
+    display: block;
+    margin-top: 4px;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.85em;
   }
   .action-button {
     padding-right: 8px;
