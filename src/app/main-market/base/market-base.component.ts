@@ -15,6 +15,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { StartedStatus, Identity } from '../store/market.models';
 import { WalletInfoStateModel, WalletUTXOStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { environment } from 'environments/environment';
 
 
 enum TextContent {
@@ -46,6 +47,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   isWarningVisible: boolean = true;
 
+  readonly mpVersion: string;
+
   readonly menu: IMenuItem[] = [
     {text: 'Overview', path: 'overview', icon: 'part-overview', alwaysEnabled: false},
     {text: 'Listings', path: 'listings', icon: 'part-shop', alwaysEnabled: false},
@@ -67,7 +70,9 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog
-  ) { }
+  ) {
+    this.mpVersion = environment.marketVersion || '';
+  }
 
 
   ngOnInit() {

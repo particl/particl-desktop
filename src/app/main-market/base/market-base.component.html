@@ -44,7 +44,17 @@
         </ng-template>
       </ng-container>
     </div>
+  </ng-container>
 
+  <ng-container ngProjectAs="sidebar">
+    <mat-content class="client-version">
+      <div class="daemon item">
+        Market
+        <span class="version">
+          {{ mpVersion }}
+        </span>
+      </div>
+    </mat-content>
   </ng-container>
 
   <main-topbar></main-topbar>
