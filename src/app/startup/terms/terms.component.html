@@ -4,18 +4,19 @@
 
   <div class="sidebar">
     <div class="logo">
-      <img src="./assets/particl-logo{{ (testnet | async) ? '-testnet' : ''}}.svg" alt="Particl">
+      <img src="./assets/particl-logo.svg" alt="Particl">
     </div>
 
     <mat-divider></mat-divider>
 
-    <div class="progress">
-      <div class="step last active">
-        <div class="number">1</div>
-        <div class="desc">Terms &amp; Conditions</div>
-      </div>
-    </div>
+    <section class="terms-sidebar-info">
+      <h2>Terms &amp; Conditions</h2>
+      <p>
+        In order to use Particl Desktop and Particl Open Marketplace, please accept the following Terms &amp; Conditions
+      </p>
+    </section>
   </div>
+
 
   <div class="content">
     <mat-toolbar class="header-main">
@@ -23,13 +24,6 @@
     </mat-toolbar><!-- .header-main -->
 
     <div class="container-block">
-      <app-page-intro>
-        <ng-container page-title>Terms &amp; Conditions</ng-container>
-        <ng-container page-content>
-          In order to use Particl Desktop and Particl Open Marketplace, please accept the following Terms &amp; Conditions
-        </ng-container>
-      </app-page-intro>
-
       <div class="terms-text" [innerHTML]="text"></div>
     </div>
 
@@ -44,13 +38,13 @@
         <mat-checkbox name="accept" [(ngModel)]="isAccepted" class="confirmation-checkbox">
           <strong>I have read and accept</strong> these Terms &amp; Conditions
         </mat-checkbox>
-        <button mat-raised-button color="primary" [disabled]="!isAccepted" (click)="acceptTerms()">
+        <button mat-raised-button color="accent" [disabled]="!isAccepted" (click)="acceptTerms()">
           <mat-icon fontIcon="part-check"></mat-icon>
           Continue
         </button>
       </div>
-    </div>
-  <!-- .content -->
+    </div><!-- .content -->
+
+
   </div>
-</div>
-<!-- .terms -->
+</div><!-- .terms -->

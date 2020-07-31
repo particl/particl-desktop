@@ -38,6 +38,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
     5. Plug-ins
       5.1. Charts
     6. Misc.
+      6.1. T&C text
 
 */
 
@@ -987,3 +988,21 @@ kbd {
 /* ------------------------------- *\
     6. MISC
 \* ------------------------------- */
+
+// ------ 6.1. T&C text ------ //
+
+.terms-text {
+  text-align: justify;
+  color: var(--text-muted);
+  h2, b, strong {
+    color: var(--text);
+    font-weight: 500;
+    margin-top: 0;
+  }
+  h3 {
+    margin-top: 42px;
+  }
+  p {
+    line-height: 1.6;
+  }
+}
