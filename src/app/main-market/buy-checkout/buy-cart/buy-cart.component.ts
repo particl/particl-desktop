@@ -97,7 +97,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   private cartModified: FormControl = new FormControl();
   private hasCartErrors: FormControl  = new FormControl(true);
   private isProcessing: boolean = false;  // internal (not necessarily visible) check to limit concurrent MP activity
-  private loadData$: Observable<any>;
+  private loadData$: Observable<{addresses: ShippingAddress[], cartItems: DisplayedCartItem[]}>;
 
   @ViewChild(ShippingProfileAddressFormComponent, {static: false}) private addressForm: ShippingProfileAddressFormComponent;
 
@@ -483,35 +483,21 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     }
     this.isProcessing = true;
 
-    const removals: Observable<boolean>[] = [];
-    const failures: number[] = [];
+    this._cartService.removeAllCurrentCartItems().pipe(
+      concatMap((success) => iif(
+        () => success,
 
-    for (const item of this.cartItems) {
-      const itemObs = this._cartService.removeCartItem(item.id).pipe(
-        tap((success) => {
-          if (!success) {
-            failures.push(item.id);
-          }
-        })
-      );
-      removals.push( itemObs );
-    }
-
-    of(...removals).pipe(
-      concatAll(),
-      finalize(() => {
-
-        if (failures.length > 0) {
-          this.cartItems = this.cartItems.filter(ci => failures.includes(ci.id));
-          this._snackbar.open(TextContent.CART_CLEAR_ERROR, 'warn');
-        } else {
+        defer(() => {
           this.cartItems = [];
-        }
+          this.updateCartExpiryTimer();
+          this.updateCartItemPricing();
+          this.cartModified.setValue(true);
+        }),
 
+        defer(() => this.loadData$)
+      )),
+      finalize(() => {
         this.isProcessing = false;
-        this.updateCartExpiryTimer();
-        this.updateCartItemPricing();
-        this.cartModified.setValue(true);
       })
     ).subscribe();
   }

@@ -6,7 +6,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener, MatTree } from '@angular/material/tree';
 import { matSelectAnimations } from '@angular/material/select';
-import { Observable, Subject, Subscription, merge, fromEvent } from 'rxjs';
+import { Observable, Subject, Subscription, merge, fromEvent, of } from 'rxjs';
 import { takeUntil, take, mapTo, debounceTime, distinctUntilChanged, startWith, tap, filter } from 'rxjs/operators';
 
 import { InputItem, ItemNode, ItemFlatNode } from './tree-select.models';
@@ -28,7 +28,7 @@ enum TextContent {
 })
 export class TreeSelectComponent implements OnInit, OnDestroy {
 
-  @Input() data$: Observable<InputItem[]>;
+  @Input() data$: Observable<InputItem[]> = of([]);
   @Input() singleSelection: boolean = false;
   @Input() isParentNodesSelectable: boolean = true;
   @Input() placeholderLabel: string = '';

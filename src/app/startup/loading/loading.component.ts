@@ -47,8 +47,9 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   private getNextRoute() {
     const termsVersion = JSON.parse(localStorage.getItem('terms'));
-    if (!termsVersion || (termsVersion && termsVersion.createdAt !== termsObj.createdAt
-      && termsVersion.text !== termsObj.text)) {
+    if (!termsVersion ||
+        ((termsVersion.createdAt !== termsObj.createdAt) || (termsVersion.text !== termsObj.text))
+    ) {
       this.goToTerms();
       return;
     }

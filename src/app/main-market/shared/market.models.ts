@@ -19,6 +19,29 @@ interface RespGeneralProfile {
   createdAt: number;
 }
 
+// tslint:disable:no-empty-interface
+export interface RespProfileListItem extends RespGeneralProfile {}
+// tslint:enable:no-empty-interface
+
+
+export interface RespIdentityListItem {
+  id: number;
+  profileId: number;
+  type: 'MARKET' | 'PROFILE';
+  wallet: string;  // eg: 'profiles/DEFAULT/particl-market'
+  address: string;
+  hdseedid: string;
+  path: string; // eg: m/4444446'/0'
+  mnemonic: string | null;
+  passphrase: string | null;
+  updatedAt: number;
+  createdAt: number;
+  Profile: RespGeneralProfile;
+  ShoppingCarts: RespCartListItem[];
+  Markets: RespMarketListMarketItem[];
+}
+
+
 export interface RespCategoryList {
   id: number;
   key: string;

@@ -16,7 +16,6 @@ export namespace MarketActions {
     static readonly type: string = '[Market] Restart Market Service';
   }
 
-
   export class LoadIdentities {
     static readonly type: string = '[Market] Load Identities';
   }
@@ -31,9 +30,4 @@ export namespace MarketActions {
     constructor(public key: string, public value: string | boolean | number) {}
   }
 
-
-  export class ResetActiveShoppingCarts {
-    static readonly type: string = '[Market] Reset Active Shopping Carts';
-    constructor() {}
-  }
 }

@@ -94,6 +94,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       }),
       take(1)
     );
+    this.categorySource$.next([]);
   }
 
 
@@ -146,14 +147,21 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
     // If the identity changes, fetch the selected identity's markets.
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
-      concatMap((iden) => iif(() => iden && iden.id > 0,
+      concatMap((iden) => iif(
+        () => iden && iden.id > 0,
+
         this._sharedService.loadMarkets(iden.id).pipe(
           tap((markets: Market[]) => {
             this.availableMarkets = markets;
             this.market$.next(null);
           })
-        ))
-      ),
+        ),
+
+        defer(() => {
+          this.availableMarkets = [];
+          this.market$.next(null);
+        })
+      )),
       takeUntil(this.destroy$)
     );
 
@@ -178,13 +186,22 @@ export class ListingsComponent implements OnInit, OnDestroy {
         }
         return selectedMarket;
       }),
-      concatMap((market: Market) => iif(() => !!market,
+      concatMap((market: Market) => iif(
+        () => !!market,
         // load the categories for the selected market
-        this._sharedService.loadCategories(+market.id).pipe(
+        defer(() => this._sharedService.loadCategories(+market.id).pipe(
           tap((categories) => {
             this.categorySource$.next(categories.categories);
+          }),
+          catchError(() => {
+            this.categorySource$.next([]);
+            return of(null);
           })
-        )
+        )),
+        // invalid market loaded so set categories list to empty
+        defer(() => {
+          this.categorySource$.next([]);
+        })
       )),
       tap(() => {
         this.resetFilters();

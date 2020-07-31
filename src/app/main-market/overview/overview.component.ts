@@ -28,9 +28,9 @@ interface ActionableItem {
 
 interface Balances {
   spendableAnon: {whole: string, sep: string, decimal: string};
-  pendingAnon: {whole: string, sep: string, decimal: string};
+  pendingAnon: {whole: string, sep: string, decimal: string, value: number};
   spendablePublic: {whole: string, sep: string, decimal: string};
-  pendingPublic: {whole: string, sep: string, decimal: string};
+  pendingPublic: {whole: string, sep: string, decimal: string, value: number};
 }
 
 
@@ -49,9 +49,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   readonly balances: Balances = {
     spendableAnon: {whole: '0', sep: '', decimal: ''},
-    pendingAnon: {whole: '0', sep: '', decimal: ''},
+    pendingAnon: {whole: '0', sep: '', decimal: '', value: 0},
     spendablePublic: {whole: '0', sep: '', decimal: ''},
-    pendingPublic: {whole: '0', sep: '', decimal: ''},
+    pendingPublic: {whole: '0', sep: '', decimal: '', value: 0},
   };
 
 
@@ -130,12 +130,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const spendable$ = this._store.select(WalletUTXOState).pipe(
       tap((utxos: WalletUTXOStateModel) => {
-        const anonSpendable = this.extractUTXOSpendable(utxos.anon);
+        let anonSpendable: PartoshiAmount;
+        let publicSpendable: PartoshiAmount;
+
+        if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
+          anonSpendable = this.extractUTXOSpendable(utxos.anon);
+          publicSpendable = this.extractUTXOSpendable(utxos.public);
+        } else {
+          anonSpendable = new PartoshiAmount(0);
+          publicSpendable = new PartoshiAmount(0);
+        }
         this.balances.spendableAnon.whole = anonSpendable.particlStringInteger();
         this.balances.spendableAnon.sep = anonSpendable.particlStringSep();
         this.balances.spendableAnon.decimal = anonSpendable.particlStringFraction();
 
-        const publicSpendable = this.extractUTXOSpendable(utxos.public);
         this.balances.spendablePublic.whole = publicSpendable.particlStringInteger();
         this.balances.spendablePublic.sep = publicSpendable.particlStringSep();
         this.balances.spendablePublic.decimal = publicSpendable.particlStringFraction();
@@ -146,16 +154,22 @@ export class OverviewComponent implements OnInit, OnDestroy {
     const pending$ = this._store.select(WalletInfoState).pipe(
       tap((info: WalletInfoStateModel) => {
         const pendingAnon = new PartoshiAmount(0);
-        pendingAnon.add( new PartoshiAmount(+info.unconfirmed_anon) ).add( new PartoshiAmount(+info.immature_anon_balance) );
+        const pendingPublic = new PartoshiAmount(0);
+
+        if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
+          pendingAnon.add( new PartoshiAmount(+info.unconfirmed_anon) ).add( new PartoshiAmount(+info.immature_anon_balance) );
+          pendingPublic.add( new PartoshiAmount(+info.unconfirmed_balance) ).add( new PartoshiAmount(+info.immature_balance) );
+        }
+
         this.balances.pendingAnon.whole = pendingAnon.particlStringInteger();
         this.balances.pendingAnon.sep = pendingAnon.particlStringSep();
         this.balances.pendingAnon.decimal = pendingAnon.particlStringFraction();
+        this.balances.pendingAnon.value = pendingAnon.particls();
 
-        const pendingPublic = new PartoshiAmount(0);
-        pendingPublic.add( new PartoshiAmount(+info.unconfirmed_balance) ).add( new PartoshiAmount(+info.immature_balance) );
         this.balances.pendingPublic.whole = pendingPublic.particlStringInteger();
         this.balances.pendingPublic.sep = pendingPublic.particlStringSep();
         this.balances.pendingPublic.decimal = pendingPublic.particlStringFraction();
+        this.balances.pendingPublic.value = pendingPublic.particls();
       }),
       takeUntil(this.destroy$)
     );

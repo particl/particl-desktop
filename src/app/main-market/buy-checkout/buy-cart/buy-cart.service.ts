@@ -121,6 +121,19 @@ export class BuyCartService {
   }
 
 
+  removeAllCurrentCartItems(): Observable<boolean> {
+    const cart = this._store.selectSnapshot(MarketState.availableCarts)[0];
+
+    if (!cart || !(+cart.id > 0)) {
+      return of(false);
+    }
+    return this._rpc.call('cart', ['clear', cart.id]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
+    );
+  }
+
+
   saveAddressFields(
     title: string,
     firstName: string,

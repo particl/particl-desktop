@@ -8906,10 +8906,10 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.138:
-  version "0.1.138"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.138.tgz#ecd4bdde41370fe2f208bf04766e6b0b26f5bab4"
-  integrity sha512-4aBBH8m/lBTXFi3msRaGkVJAt+waWSY0Vhg8ly4I55zrrSzf5iMr7fXzPnzCNNSR8MRQRB6tX8zPYOFUEaFOcA==
+omp-lib@^0.1.139:
+  version "0.1.139"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.139.tgz#6d8bea0f9647362f82dc6e3e7367caa77b7c1a29"
+  integrity sha512-qRbUsZVIzqUgKsauj+Dzdb9FYz9CQv9PNLMQbkvVcRWeeGr2RZCptKxB0YrUZv4Z3M6hsJoEYdog4kOQ1kOzog==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -9388,9 +9388,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-18.tgz:
-  version "0.3.0-18"
-  resolved "./particl-marketplace-0.3.0-18.tgz#65176250b3ac75df18a7c2919b04754ba3163ee2"
+particl-marketplace@./particl-marketplace-0.3.0-19.tgz:
+  version "0.3.0-19"
+  resolved "./particl-marketplace-0.3.0-19.tgz#6c52d8942943dc244affc0c3dcc9ee82ebb4d112"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9430,7 +9430,7 @@ particl-marketplace@./particl-marketplace-0.3.0-18.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.138"
+    omp-lib "^0.1.139"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.4"
     path "^0.12.7"

@@ -4,10 +4,10 @@ import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operator
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
-import { MarketStateModel, StartedStatus, ProfileResp, Identity, IdentityResp, MarketSettings, Profile, CartDetail } from './market.models';
+import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
-import { RespCartListItem } from '../shared/market.models';
+import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -18,7 +18,6 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   profile: null,
   identities: [],
   identity: null,
-  availableCarts: [],
   settings: {
     port: 3000,
     defaultIdentityID: 0,
@@ -26,6 +25,9 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     userRegion: ''
   }
 };
+
+
+const NULL_IDENTITY: Identity = { id: 0, name: '-', displayName: '-', icon: '', path: '', carts: [] };
 
 
 @State<MarketStateModel>({
@@ -58,8 +60,7 @@ export class MarketState {
 
   @Selector()
   static currentIdentity(state: MarketStateModel): Identity {
-    const nullIdentity: Identity = { id: 0, name: '-', displayName: '-', icon: '', path: '' };
-    return state.identity !== null ? state.identity : nullIdentity;
+    return state.identity !== null ? state.identity : JSON.parse(JSON.stringify(NULL_IDENTITY));
   }
 
 
@@ -85,7 +86,7 @@ export class MarketState {
 
   @Selector()
   static availableCarts(state: MarketStateModel): CartDetail[] {
-    return state.availableCarts;
+    return state.identity === null ? [] : state.identity.carts;
   }
 
 
@@ -119,7 +120,7 @@ export class MarketState {
       return this._marketService.call('profile', ['list']).pipe(
         retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 5})),
         catchError(() => of([])),
-        concatMap((profileList: ProfileResp[]) => {
+        concatMap((profileList: RespProfileListItem[]) => {
           if (savedProfileId > 0) {
             const found = profileList.find(profileItem => profileItem.id === savedProfileId);
             if (found !== undefined) {
@@ -139,22 +140,31 @@ export class MarketState {
           return failed$.pipe(mapTo(false));
         })
       );
-    });
+    }).pipe(
+      tap((isSuccess) => {
+        if (isSuccess) {
+          this.loadSettings(ctx, ctx.getState().profile.id);
+        }
+      }),
+      concatMap((isSuccess) => iif(
+          () => isSuccess,
+
+          defer(() => {
+            return ctx.dispatch(new MarketActions.LoadIdentities()).pipe(tap(() => ctx.patchState({started: StartedStatus.STARTED})));
+          })
+      ))
+    );
 
     return this._marketService.startMarketService(ctx.getState().settings.port).pipe(
       catchError((err) => {
         ctx.patchState({started: StartedStatus.FAILED});
         return of(false);
       }),
-      concatMap((isStarted: boolean) => iif(() => isStarted, profile$, failed$)),
-      tap((isSuccess) => {
-        if (isSuccess) {
-          this.loadSettings(ctx, ctx.getState().profile.id);
-
-          ctx.patchState({started: StartedStatus.STARTED});
-          ctx.dispatch([new MarketActions.LoadIdentities(), new MarketActions.ResetActiveShoppingCarts()]);
-        }
-      })
+      concatMap((isStarted: boolean) => iif(
+        () => !isStarted,
+        failed$,
+        profile$
+      ))
     );
   }
 
@@ -177,23 +187,32 @@ export class MarketState {
   @Action(MarketActions.LoadIdentities)
   loadMarketIdentities(ctx: StateContext<MarketStateModel>) {
     const state = ctx.getState();
-    if (state.started === StartedStatus.STARTED) {
+    if ((state.started === StartedStatus.STARTED) || (state.started === StartedStatus.PENDING)) {
       const profileId = state.profile.id;
 
       return this._marketService.call('identity', ['list', profileId]).pipe(
         retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
         catchError(() => of([])),
-        map((identityList: IdentityResp[]) => {
+        map((identityList: RespIdentityListItem[]) => {
           const ids: Identity[] = [];
-          identityList.forEach((idItem: IdentityResp) => {
+          identityList.forEach((idItem: RespIdentityListItem) => {
             if (idItem.type === 'MARKET') {
               const idName = String(idItem.wallet.split(`${state.profile.name}/`)[1]);
+              const availableCarts: CartDetail[] = [];
+              if (idItem.ShoppingCarts && idItem.ShoppingCarts.length) {
+                idItem.ShoppingCarts.forEach(cart => {
+                  if (cart && (+cart.id > 0)) {
+                    availableCarts.push({id: +cart.id, name: typeof cart.name === 'string' ? cart.name : ''});
+                  }
+                });
+              }
               ids.push({
                 name: idItem.wallet,
                 displayName: idName,
                 icon: idName[0],
                 path: idItem.path,
-                id: idItem.id
+                id: idItem.id,
+                carts: availableCarts
               });
             }
           });
@@ -203,15 +222,17 @@ export class MarketState {
 
         tap(identities => {
           ctx.patchState({identities});
+        }),
 
+        concatMap((identities) => {
           if (identities.length > 0) {
             const selectedIdentity = ctx.getState().identity;
 
             if (selectedIdentity !== null) {
               const found = identities.find(id => id.id === selectedIdentity.id);
               if (found !== undefined) {
-                // current selected identity is in the list so nothing to do.
-                return;
+                // current selected identity is in the list so nothing to do: its already selected
+                return of(null);
               }
             }
 
@@ -221,8 +242,9 @@ export class MarketState {
             if (savedID) {
               const saved = identities.find(id => id.id === savedID);
               if (saved !== undefined) {
-                ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
-                return;
+                return ctx.dispatch(new MainActions.ChangeWallet(saved.name)).pipe(
+                  concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(saved)))
+                );
               }
             }
 
@@ -234,16 +256,19 @@ export class MarketState {
               const savedName = globalSettings.activatedWallet;
               const saved = identities.find(id => id.name === savedName);
               if (saved) {
-                ctx.dispatch(new MarketActions.SetCurrentIdentity(saved));
-                return;
+                return ctx.dispatch(new MainActions.ChangeWallet(saved.name)).pipe(
+                  concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(saved)))
+                );
               }
             }
 
             // No valid current identity and no saved identity... get first identity from list
             const selected = identities.sort((a, b) => a.id - b.id)[0];
-            ctx.dispatch(new MarketActions.SetCurrentIdentity(selected));
+            return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
+              concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(selected)))
+            );
           } else {
-            ctx.dispatch(new MarketActions.SetCurrentIdentity(null));
+            return ctx.dispatch(new MarketActions.SetCurrentIdentity(NULL_IDENTITY));
           }
         })
       );
@@ -253,11 +278,16 @@ export class MarketState {
 
   @Action(MarketActions.SetCurrentIdentity)
   setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketActions.SetCurrentIdentity) {
-    if (identity === null || (Number.isInteger(+identity.id) && (+identity.id > 0))) {
-      return ctx.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
-        tap(() => ctx.patchState({identity})),
-        concatMap(() => ctx.dispatch(new MainActions.ChangeSmsgWallet(identity.name)))
-      );
+
+    if (identity && (Number.isInteger(+identity.id))) {
+      const globalSettings = this._settingsService.fetchGlobalSettings();
+      // TODO: not a great way to do this... but we need to verify that the application state wallet is the current wallet
+      //  before setting the active identity to that wallet. Look into a better way of doing this...
+      if (globalSettings['activatedWallet'] === identity.name) {
+        ctx.patchState({identity});
+      }
+    } else {
+      ctx.patchState({identity: NULL_IDENTITY});
     }
   }
 
@@ -283,20 +313,6 @@ export class MarketState {
         ctx.patchState({settings: currentSettings});
       }
     }
-  }
-
-
-  @Action(MarketActions.ResetActiveShoppingCarts)
-  changeActiveCart(ctx: StateContext<MarketStateModel>) {
-    return this._marketService.call('cart', ['list', ctx.getState().profile.id]).pipe(
-      catchError(() => of([])),
-      tap((cartList: RespCartListItem[]) => {
-        const carts = cartList.map(
-          cart => ({id: cart.id, name: cart.name === 'DEFAULT' ? '' : cart.name})
-        ).sort((a, b) => a.id - b.id);
-        ctx.patchState({availableCarts: carts});
-      })
-    );
   }
 
 

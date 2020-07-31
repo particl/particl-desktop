@@ -11,8 +11,7 @@
 
     <div class="item">
       <div class="value">
-        <!-- @TODO: show only when pending TX exists -->
-        <mat-spinner class="tiny" matTooltip="+{{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}} pending" matTooltipPosition="before" color="primary"></mat-spinner>
+        <mat-spinner *ngIf="balances.pendingPublic.value > 0" class="tiny" matTooltip="+{{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}} pending" matTooltipPosition="before" color="primary"></mat-spinner>
         {{balances.spendablePublic.whole}}<small>{{balances.spendablePublic.sep}}{{balances.spendablePublic.decimal}}</small>
       </div>
       <div class="key">
@@ -25,8 +24,7 @@
 
     <div class="item">
       <div class="value">
-        <!-- @TODO: show only when pending TX exists -->
-        <mat-spinner class="tiny" matTooltip="+{{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}} pending" matTooltipPosition="before" color="accent"></mat-spinner>
+        <mat-spinner *ngIf="balances.pendingAnon.value > 0" class="tiny" matTooltip="+{{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}} pending" matTooltipPosition="before" color="accent"></mat-spinner>
         {{balances.spendableAnon.whole}}<small>{{balances.spendableAnon.sep}}{{balances.spendableAnon.decimal}}</small>
       </div>
       <div class="key">

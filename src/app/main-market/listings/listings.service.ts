@@ -163,7 +163,7 @@ export class ListingsService {
       if (isBasicObjectType(priceInfo.ItemPrice)) {
         price.add(new PartoshiAmount(priceInfo.ItemPrice.basePrice, true));
 
-        if (marketSettings.userRegion.length > 0) {
+        if ((marketSettings.userRegion.length > 0) && isBasicObjectType(priceInfo.ItemPrice.ShippingPrice)) {
           if (isLocalShipping) {
             price.add( new PartoshiAmount(priceInfo.ItemPrice.ShippingPrice.domestic, true) );
           } else {

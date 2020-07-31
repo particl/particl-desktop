@@ -5,8 +5,9 @@ import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
 import { MarketActions } from '../store/market.actions';
+import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, concat } from 'rxjs';
-import { takeUntil, tap,  map, startWith, finalize } from 'rxjs/operators';
+import { takeUntil, tap,  map, startWith, finalize, concatMap } from 'rxjs/operators';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
@@ -108,8 +109,11 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$))
     ).pipe(
       map(() => {
-        const utxos: WalletUTXOStateModel = this._store.selectSnapshot(WalletUTXOState);
-        return this.extractSpendableBalance(utxos);
+        if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
+          const utxos: WalletUTXOStateModel = this._store.selectSnapshot(WalletUTXOState);
+          return this.extractSpendableBalance(utxos);
+        }
+        return '0';
       }),
       startWith('0')
     );
@@ -145,15 +149,17 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   identitySelected(identity: Identity) {
 
+    this.identitySelector.close();
+
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.MARKET_LOADING}});
-    this._store.dispatch(new MarketActions.SetCurrentIdentity(identity)).pipe(
-      finalize(() => this._dialog.closeAll())
+    this._store.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
+      concatMap(() => this._store.dispatch(new MarketActions.SetCurrentIdentity(identity))),
+      finalize(() => {
+        this._dialog.closeAll();
+      })
     ).subscribe(
       () => {
         const walletData: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
-        if (this.identitySelector && this.identitySelector.opened) {
-          this.identitySelector.close();
-        }
 
         if (walletData.walletname === identity.name) {
           this._snackbar.open(TextContent.MARKET_ACTIVATE_SUCCESS, 'success');
