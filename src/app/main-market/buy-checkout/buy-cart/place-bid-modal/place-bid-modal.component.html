@@ -16,14 +16,17 @@
     </h2>
     <mat-card>
 
-      <div class="item" *ngFor="let item of this.summary.items">
-        <div class="photo">
-          <img [src]="item.itemImg">
+      <ng-container *ngFor="let item of this.summary.items">
+        <div class="item">
+          <div class="photo">
+            <img [src]="item.itemImg">
+          </div>
+          <div class="title">
+            {{ item.itemName }}
+          </div>
         </div>
-        <div class="title">
-          {{ item.itemName }}
-        </div>
-      </div>
+        <mat-divider></mat-divider>
+      </ng-container>
 
     </mat-card>
   </section><!-- .cart-items -->
@@ -34,7 +37,7 @@
     </h2>
     <mat-card>
       <div class="shipping-address">
-        <p>{{ summary.shippingDetails.name }}</p>
+        <p class="name">{{ summary.shippingDetails.name }}</p>
         <p *ngFor="let addressLine of summary.shippingDetails.address">{{ addressLine }}</p>
       </div>
     </mat-card>
