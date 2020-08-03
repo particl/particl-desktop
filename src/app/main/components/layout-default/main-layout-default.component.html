@@ -19,7 +19,10 @@
 
       <footer class="footer">
         <block-sync-bar></block-sync-bar>
-        <main-version></main-version>
+        <div class="versions">
+          <ng-content select="app-version"></ng-content>
+          <main-version></main-version>
+        </div>
       </footer><!-- .pin-to-bottom -->
 
     </div><!-- .sidebar-menu -->

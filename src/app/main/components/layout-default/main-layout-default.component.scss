@@ -47,6 +47,10 @@
   .footer {
     @extend %menu-divider;
     flex: 1 1 10px;
+    .versions {
+      margin: 0 0 14px;
+      padding: 14px 24px 0;
+    }
   }
 
 }
