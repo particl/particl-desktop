@@ -8,8 +8,12 @@
 // Inherit Global settings' styles (no need to duplicate them)
 @import '../../main-extra/global-settings/global-settings.component.scss';
 
+.alert {
+  margin: 0 0 42px;
+}
 
 // ------ ALERTS/NOTIFICATIONS ------ //
+/* @TODO Allien: redundant? probably old alert regarding MP not starting correctly?
 
 .notification {
   background: hsla(var(--color-info-hsl), 0.03);
@@ -31,7 +35,8 @@
     font-size: inherit;
   }
 }
+*/
 
-.buttons {
+.buttons { // "Market console" button
   margin-top: 24px;
 }

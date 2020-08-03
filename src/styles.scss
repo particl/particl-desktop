@@ -799,7 +799,8 @@ div.alert {
     font-size: 0.85em;
   }
   .action-button {
-    padding-right: 8px;
+    padding-right: 16px;
+    align-self: center;
   }
   &.--boxed {
     background: var(--color-white);
