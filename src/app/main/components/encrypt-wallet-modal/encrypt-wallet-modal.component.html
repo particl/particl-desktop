@@ -12,13 +12,24 @@
 <ng-template #newpass>
   <mat-dialog-content class="modal-content">
 
-    <p class="lead">
-      Please choose a password to encrypt your wallet
-    </p>
-    <p class="help-text">
-      Wallet encryption protects you from unauthorized access to your coins (e.g. if someone steals your computer).
-      It affects only this Particl wallet on your current device.
-    </p>
+    <div class="row">
+
+      <div class="image">
+        <img class="illustration" src="./assets/app-wallet/illustrations/encrypt-wallet.svg" alt="Encrypt wallet">
+      </div>
+
+      <div class="text">
+        <p class="lead">
+          Please choose a password to encrypt your wallet
+        </p>
+        <p class="help-text">
+          Wallet encryption protects you from unauthorized access to your coins (e.g. if someone steals your computer).
+          It affects only this Particl wallet on your current device.
+        </p>
+      </div>
+
+    </div><!-- .row -->
+
 
     <div class="modal-highlight">
       <p class="message --warning">
@@ -59,9 +70,23 @@
 <ng-template #confirm>
   <mat-dialog-content class="modal-content">
 
-    <p class="lead">
-      Please enter your chosen password again to confirm it
-    </p>
+    <div class="row">
+
+      <div class="image">
+        <img class="illustration" src="./assets/app-wallet/illustrations/confirm-encryption.svg" alt="Confirm your password">
+      </div>
+
+      <div class="text">
+        <p class="lead">
+          Please enter your chosen password again
+        </p>
+        <p class="help-text">
+          Once confirmed, you will need this password every time for spending from this wallet. In case you would forgot this password, you will need to restore this wallet again with your Recovery Phrase.
+        </p>
+      </div>
+
+    </div><!-- .row -->
+
 
     <div class="modal-highlight">
       <p class="message --warning">
