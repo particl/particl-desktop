@@ -12,20 +12,20 @@
 
   <ng-container *ngIf="startedStatus !== STARTEDSTATUS.STARTED">
     <!-- Market is starting -->
-    <div class="alert --boxed --info" *ngIf="startedStatus === STARTEDSTATUS.PENDING" fxLayout fxLayoutAlign="space-between center">
+    <div class="alert --boxed --info" *ngIf="startedStatus === STARTEDSTATUS.PENDING">
       <span>
         The Particl Marketplace is starting up&hellip;
       </span>
     </div>
     <!-- Market failed to start -->
-    <div class="alert --boxed --warning" *ngIf="startedStatus !== STARTEDSTATUS.PENDING" fxLayout fxLayoutAlign="space-between center">
+    <div class="alert --boxed --warning" *ngIf="startedStatus !== STARTEDSTATUS.PENDING">
       <span>
         The Particl Marketplace failed to start correctly!<br>
         If you changed some settings recently, try reverting them back.
       </span>
       <div class="action-button">
         <button class="button" mat-button color="warn" (click)="restartMarketplace()">
-          <mat-icon fontIcon="part-alert"></mat-icon>
+          <mat-icon fontIcon="part-refresh"></mat-icon>
           Restart The Marketplace
         </button>
       </div>

@@ -37,8 +37,10 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       4.2. Paragraph styles
     5. Plug-ins
       5.1. Charts
-    6. Misc.
+    6. Specific
       6.1. T&C text
+      6.2. Versions (Client, Core, Apps)
+    7. Misc.
 
 */
 
@@ -799,7 +801,8 @@ div.alert {
     font-size: 0.85em;
   }
   .action-button {
-    padding-right: 8px;
+    padding-right: 16px;
+    align-self: center;
   }
   &.--boxed {
     background: var(--color-white);
@@ -986,7 +989,7 @@ kbd {
 
 
 /* ------------------------------- *\
-    6. MISC
+    6. SPECIFIC
 \* ------------------------------- */
 
 // ------ 6.1. T&C text ------ //
@@ -1006,3 +1009,89 @@ kbd {
     line-height: 1.6;
   }
 }
+
+
+// ------ 6.2. Versions (Client, Core, Apps) ------ //
+
+// Version info in Sidebar's footer (needs to be shared across multiple components/apps)
+.client-version {
+  @extend %enable-select;
+  display: block;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  .version {
+    @extend %tfx;
+    color: hsla(var(--color-white-hsl), 0.5);
+    margin-left: 2px;
+    &:hover {
+      color: var(--color-white);
+    }
+
+    .selectable {
+      @extend %enable-select;
+    }
+
+    // version check indicator
+    .dot {
+      @extend %tfx;
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      position: relative;
+      top: -1px;
+      margin: 0 5px 0 2px;
+      background: hsla(var(--text-muted-hsl), 0.8);
+    }
+    &.current {
+      &:hover {
+        .dot {
+          background: var(--color-primary);
+        }
+      }
+    }
+    &.outdated {
+      font-weight: 700;
+      color: var(--color-white);
+      .dot {
+        background: var(--color-warning);
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid var(--color-warning);
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
+      }
+    }
+    &.unknown {
+      color: var(--color-white);
+      .dot {
+        background: var(--color-alert);
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid var(--color-alert);
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
+      }
+    }
+  }
+}
+
+/* ------------------------------- *\
+    7. MISC
+\* ------------------------------- */
+

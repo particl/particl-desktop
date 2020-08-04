@@ -46,13 +46,12 @@
     </div>
   </ng-container>
 
-  <ng-container ngProjectAs="sidebar">
+  <ng-container ngProjectAs="app-version">
     <mat-content class="client-version">
-      <div class="daemon item">
+      <div class="app item">
+        <!-- App name -->
         Market
-        <span class="version">
-          {{ mpVersion }}
-        </span>
+        <span class="version">{{ mpVersion }}</span>
       </div>
     </mat-content>
   </ng-container>

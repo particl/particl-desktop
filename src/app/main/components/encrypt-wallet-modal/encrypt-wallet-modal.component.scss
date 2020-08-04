@@ -4,5 +4,18 @@
 // ------ LAYOUT ------ //
 
 .modal-content {
-  width: 32rem;
+  width: 37rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image {
+  margin-right: 30px;
+  img {
+    width: 12rem;
+  }
 }
