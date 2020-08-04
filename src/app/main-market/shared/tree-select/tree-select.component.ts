@@ -187,7 +187,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
   }
 
 
-  resetSelection(newSelectedIds: Array<number|string> | number): void {
+  resetSelection(newSelectedIds: Array<number|string> | number | string): void {
     const newIds: Array<number|string> = [];
     if ((typeof newSelectedIds === 'number') || typeof newSelectedIds === 'string') {
       newIds.push(newSelectedIds);

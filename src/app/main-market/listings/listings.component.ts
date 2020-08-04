@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, iif, merge, of, defer, combineLatest, timer } from 'rxjs';
@@ -14,6 +14,7 @@ import { ListingsService } from './listings.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
+import { TreeSelectComponent } from '../shared/shared.module';
 
 import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { ListingOverviewItem } from './listings.models';
@@ -75,6 +76,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private availableMarkets: Market[] = [];
   private PAGE_COUNT: number = 60;
   private expiryValue: number = 0;
+  private forceReload$: FormControl = new FormControl();
+  @ViewChild('categorySelection', {static: false}) private componentCategory: TreeSelectComponent;
+  @ViewChild('countrySourceSelection', {static: false}) private componentCountrySource: TreeSelectComponent;
+  @ViewChild('countryDestinationSelection', {static: false}) private componentCountryDestination: TreeSelectComponent;
 
 
   constructor(
@@ -205,6 +210,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
       )),
       tap(() => {
         this.resetFilters();
+        // necessary, for in case the filters are not reset (thus not causing a reload of listings for the selected market)
+        this.forceReload$.setValue(null);
       }),
       takeUntil(this.destroy$)
     );
@@ -265,7 +272,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
     // actually do the loading of listings when necessary
     const loadListings$ = merge(
       reset$,
-      scrolled$
+      scrolled$,
+      this.forceReload$.valueChanges.pipe(takeUntil(this.destroy$))
     ).pipe(
 
       tap(() => {
@@ -582,6 +590,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   private resetFilters(): void {
     const defaults = this.getDefaultFilterValues();
+
+    // reset the actual data components
+    this.componentCategory.resetSelection(defaults.filterCategory);
+    this.componentCountryDestination.resetSelection(defaults.filterTargetRegion);
+    this.componentCountrySource.resetSelection(defaults.filterSourceRegion);
+
+    // set the fields correctly
     const fields = Object.keys(defaults);
     for (const field of fields) {
       try {

@@ -29,6 +29,7 @@
 
     <div class="filter-by category" fxFlex="1 1 20%">
       <tree-select
+        #categorySelection
         [data$]="categoriesList$"
         [singleSelection]="false"
         [isParentNodesSelectable]="true"
@@ -41,6 +42,7 @@
 
     <div class="filter-by seller-country" fxFlex="1 1 20%">
       <tree-select
+        #countrySourceSelection
         [data$]="countryList$"
         [singleSelection]="true"
         placeholderLabel="Origin Country"
@@ -52,6 +54,7 @@
 
     <div class="filter-by buyer-country" fxFlex="1 1 20%">
       <tree-select
+        #countryDestinationSelection
         [data$]="countryList$"
         [singleSelection]="true"
         placeholderLabel="Destination Country"
