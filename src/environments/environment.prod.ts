@@ -9,6 +9,7 @@ export const environment = {
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
   envName: 'prod',
   marketVersion: MP.version,
+  walletVersion: app.appVersions.wallet,
   particlHost: 'localhost',
   particlPort: 51735,
   marketHost: 'localhost',

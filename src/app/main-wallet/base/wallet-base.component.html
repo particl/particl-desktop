@@ -38,5 +38,15 @@
 
   </ng-container>
 
+  <ng-container ngProjectAs="app-version">
+    <mat-content class="client-version">
+      <div class="app item">
+        <!-- App name -->
+        Wallet
+        <span class="version">{{ walletVersion }}</span>
+      </div>
+    </mat-content>
+  </ng-container>
+
   <router-outlet></router-outlet>
 </main-layout-default>

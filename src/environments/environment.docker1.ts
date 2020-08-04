@@ -6,6 +6,7 @@ export const environment = {
   name: app.name,
   version: app.version,
   preRelease: app.preRelease,
+  walletVersion: app.appVersions.wallet,
   envName: 'docker1',
   particlHost: 'localhost',
   particlPort: 52935,

@@ -13,6 +13,7 @@ import { MainActions } from 'app/main/store/main.actions';
 import { IWallet } from './wallet-base.models';
 import { WalletUTXOStateModel, WalletInfoStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { environment } from 'environments/environment';
 
 
 enum TextContent {
@@ -32,6 +33,8 @@ enum TextContent {
 export class WalletBaseComponent implements OnInit, OnDestroy {
 
   otherWallets: IWallet[] = [];
+
+  readonly walletVersion: string = environment.walletVersion || '';
 
 
   private destroy$: Subject<void> = new Subject();

@@ -8,11 +8,11 @@ import { Subject, merge, defer, iif } from 'rxjs';
 import { takeUntil, tap, startWith, concatMap, take, finalize } from 'rxjs/operators';
 import { SendService } from './send.service';
 import { targetTypeValidator, amountRangeValidator, ValidAddressValidator, publicAddressUsageValidator } from './send.validators';
-import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 import { CoinControlModalComponent } from './coin-control-modal/coin-control-modal.component';
+import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
 import { CoreErrorModel } from 'app/core/core.models';
 import {
   TabType,
