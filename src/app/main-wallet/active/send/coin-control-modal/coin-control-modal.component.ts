@@ -1,54 +1,141 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Sort } from '@angular/material/sort';
+import { MatDialogRef } from '@angular/material';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
+
+import { Store, Select } from '@ngxs/store';
+import { WalletUTXOState } from 'app/main/store/main.state';
+import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+
+import { PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
+
+
+enum TextContent {
+  UNKNOWN = '<unknown>',
+  UTXO_TYPE_PUBLIC = 'Public',
+  UTXO_TYPE_BLIND = 'Blind',
+  UTXO_TYPE_ANON = 'Anon',
+}
+
 
 // @FIXME: source https://v8.material.angular.io/components/sort/overview
-export interface UTXO {
+interface UTXOListItem {
+  txid: string;
+  vout: number;
   amount: number;
   label: string;
   address: string;
-  date: string;
 }
+
+type UTXOType = 'public' | 'blind' | 'anon';
+
+
+const compare = (a: number | string, b: number | string, isAsc: boolean) => {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+};
+
+
+export interface CoinControlModalData {
+  txType: UTXOType;
+  selected: {address: string, txid: string, vout: number}[];
+}
+
 
 @Component({
   selector: 'app-coin-control-modal',
   templateUrl: './coin-control-modal.component.html',
   styleUrls: ['./coin-control-modal.component.scss']
 })
-export class CoinControlModalComponent implements OnInit {
+export class CoinControlModalComponent implements OnInit, OnDestroy {
 
-  availableUTXOs: UTXO[] = [
-    {
-      amount: 0.0001,
-      label: 'Staking rewards',
-      address: 'pbZwtzJTnYgaXgLHyyyq3ZZzFNhThDhAkQ',
-      date: '10.05.20 22:46'},
-    {
-      amount: 4562.0450100,
-      label: 'Bittrex',
-      address: 'pbZwt3ZZzFNhThDhAkQzJTnYgaXgLHyyyq',
-      date: '09.05.20 12:47'},
-    {
-      amount: 12.94511500,
-      label: 'Profits from my humble Shop',
-      address: 'ps1qqpwx3jklsc84z70wl6a5fz5lrp9kx3lkrlqj5xp0kkydc3sdpmpj8qpqvgtkggc3aqh0g9stcyqf8y4du6lpca689lmslkus6netx6mcjarvqqqq50yyt',
-      date: '01.05.20 05:32'},
-    {
-      amount: 0.0000100,
-      label: 'Staking rewards',
-      address: 'pHyyyq3ZZzFNhThDhAkQbZwtzJTnYgaXgL',
-      date: '07.05.20 05:30'},
-    {
-      amount: 88999888.88889999,
-      label: 'Profits from my humble Shop',
-      address: 'ps1qqpwx3jklsc84z70wl6a5fz5lrp9kx3lkrlqj5xp0kkydc3sdpmpj8qpqvgtkggc3aqh0g9stcyqf8y4du6lpca689lmslkus6netx6mcjarvqqqq50yyt',
-      date: '10.05.20 22:46'},
-  ];
+  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
 
-  sortedData: UTXO[];
+  availableUTXOs: UTXOListItem[] = [];
+  sortedData: UTXOListItem[] = [];
+  readonly labelUtxoType: string;
 
-  constructor() {
-    this.sortedData = this.availableUTXOs.slice();
+
+  private destroy$: Subject<void> = new Subject();
+  private utxoType: UTXOType = 'public';
+
+
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: CoinControlModalData,
+    private _dialogRef: MatDialogRef<CoinControlModalComponent>,
+    private _store: Store
+  ) {
+    if (data && (typeof data.txType === 'string')) {
+      if ((['public', 'blind', 'anon'] as UTXOType[]).includes(data.txType)) {
+        this.utxoType = data.txType;
+      }
+    }
+
+    switch (this.utxoType) {
+      case 'anon':
+        this.labelUtxoType = TextContent.UTXO_TYPE_ANON;
+        break;
+      case 'blind':
+        this.labelUtxoType = TextContent.UTXO_TYPE_BLIND;
+        break;
+      case 'public':
+        this.labelUtxoType = TextContent.UTXO_TYPE_PUBLIC;
+        break;
+      default:
+        this.labelUtxoType = TextContent.UNKNOWN;
+    }
   }
+
+
+  ngOnInit() {
+    this._store.select(WalletUTXOState.getValue(this.utxoType)).pipe(
+      tap((utxos) => {
+        const newUtxos = utxos.map((utxo: PublicUTXO | BlindUTXO | AnonUTXO) => {
+          const utxoListItem: UTXOListItem = {
+            address: '',
+            amount: 0,
+            label: '',
+            txid: '',
+            vout: -1
+          };
+
+          if (typeof utxo === 'object' && (![null, undefined].includes(utxo))) {
+            if (+utxo.amount > 0) {
+              utxoListItem.amount = utxo.amount;
+            }
+            if (typeof utxo.address === 'string') {
+              utxoListItem.address = utxo.address;
+            }
+            if (typeof utxo.label === 'string') {
+              utxoListItem.label = utxo.label;
+            }
+            if (typeof utxo.txid === 'string') {
+              utxoListItem.txid = utxo.txid;
+            }
+            if (+utxo.vout >= 0) {
+              utxoListItem.vout = +utxo.vout;
+            }
+          }
+
+          return utxoListItem;
+        });
+
+        this.availableUTXOs = newUtxos.filter(newUtxo => newUtxo.address.length > 0 && newUtxo.vout > -1);
+
+        // TODO: remove this call (its only here temporarily)
+        this.sortedData = this.availableUTXOs;
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
 
   sortData(sort: Sort) {
     const data = this.availableUTXOs.slice();
@@ -63,17 +150,9 @@ export class CoinControlModalComponent implements OnInit {
         case 'amount': return compare(a.amount, b.amount, isAsc);
         case 'label': return compare(a.label, b.label, isAsc);
         case 'address': return compare(a.address, b.address, isAsc);
-        case 'date': return compare(a.date, b.date, isAsc);
         default: return 0;
       }
     });
   }
 
-  ngOnInit() {
-  }
-
-}
-
-function compare(a: number | string, b: number | string, isAsc: boolean) {
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

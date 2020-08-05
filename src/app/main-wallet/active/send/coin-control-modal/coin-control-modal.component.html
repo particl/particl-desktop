@@ -4,7 +4,7 @@
   <div class="selection-overview">
     <div class="item type">
       <div class="key">UTXO type</div>
-      <div class="value">Blind</div>
+      <div class="value">{{ labelUtxoType }}</div>
     </div>
     <div class="item selected">
       <div class="key">Selected</div>
@@ -13,14 +13,6 @@
     <div class="item amount">
       <div class="key">Selected Amount</div>
       <div class="value">1534.51351151 PART</div>
-    </div>
-    <div class="item fee">
-      <div class="key">TX Fee</div>
-      <div class="value">&asymp; 0.00015861 PART</div>
-    </div>
-    <div class="item after-fee">
-      <div class="key">For spending (after Fee)</div>
-      <div class="value">1533.5131438 PART</div>
     </div>
   </div><!-- .selection-overview -->
 
@@ -39,15 +31,13 @@
       <th mat-sort-header="amount" class="amount">Amount</th>
       <th mat-sort-header="label" class="label">Label</th>
       <th mat-sort-header="address" class="address">Address</th>
-      <th mat-sort-header="date" class="date">Date</th>
     </tr>
-  
+
     <tr *ngFor="let utxo of sortedData">
       <td class="checkbox"><mat-checkbox></mat-checkbox></td>
       <td class="amount">{{utxo.amount}}</td>
       <td class="label">{{utxo.label}}</td>
-      <td class="address"><a href="https://explorer.particl.io/address/{{utxo.address}}" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a></td>
-      <td class="date">{{utxo.date}}</td>
+      <td class="address"><a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{utxo?.address || ''}}" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a></td>
     </tr>
   </table>
 
