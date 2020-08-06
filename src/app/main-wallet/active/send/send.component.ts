@@ -61,14 +61,16 @@ export class SendComponent implements OnInit, OnDestroy {
   ];
 
   readonly selectorOptions: TxTypeOption[] = [
-    { name: 'Public', balance: 0, displayedBalance: '0', value: 'part', help: '', description: 'Used for publishing of Listings and governance voting (on Listings and Proposals)' },
-    { name: 'Blind', balance: 0, displayedBalance: '0', value: 'blind', help: '', description: 'Offers medium privacy, hides transaction amounts' },
-    { name: 'Anon', balance: 0, displayedBalance: '0', value: 'anon', help: '', description: 'Used for spending on the Open Marketplace – offers highest privacy' }
+    { name: 'Public', balance: 0, coinInputs: [], displayedBalance: '0', value: 'part', help: '', description: 'Used for publishing of Listings and governance voting (on Listings and Proposals)' },
+    { name: 'Blind', balance: 0, coinInputs: [], displayedBalance: '0', value: 'blind', help: '', description: 'Offers medium privacy, hides transaction amounts' },
+    { name: 'Anon', balance: 0, coinInputs: [], displayedBalance: '0', value: 'anon', help: '', description: 'Used for spending on the Open Marketplace – offers highest privacy' }
   ];
 
   private destroy$: Subject<void> = new Subject();
   private log: any = Log.create('send.component');
   private isProcessing: boolean = true;
+  private altBalanceTrigger: FormControl = new FormControl(0);
+  private addressCheckTrigger: FormControl = new FormControl();
 
 
   constructor(
@@ -119,21 +121,29 @@ export class SendComponent implements OnInit, OnDestroy {
     // Event handling:
 
     const amount$ = defer(() => {
-      const bal = this.selectedSourceSelector().balance;
+      const selector = this.selectedSourceSelector();
+      const dispBal = selector.displayedBalance;
+
+      const bal = (new PartoshiAmount(+dispBal)).particls();
+
       if (this.sendingAll.value) {
         this.amount.setValue(bal);
       }
+
       this.amount.setValidators(amountRangeValidator(bal));
       this.amount.updateValueAndValidity();
     });
 
     const sourceType$ = this.sourceType.valueChanges.pipe(
       tap((newValue) => {
+        this.selectorOptions.forEach(s => s.coinInputs = []);
+
         if (newValue === this.targetType.value) {
           this.targetType.setValue(this.selectorOptions.find(opt => opt.value !== newValue).value);
         }
         this.targetType.setValidators(targetTypeValidator(this.currentTabType, this.sourceType.value));
         this.targetType.updateValueAndValidity();
+        this.addressCheckTrigger.setValue(null);
       }),
       takeUntil(this.destroy$)
     );
@@ -142,7 +152,7 @@ export class SendComponent implements OnInit, OnDestroy {
       tap((result) => {
         this.selectorOptions.forEach(o => {
           o.balance = typeof result[o.value] === 'number' ? result[o.value] : o.balance;
-          o.displayedBalance = (new PartoshiAmount(o.balance)).particlsString();
+
           if (o.value === 'blind') {
             if ((o.balance > 0) && (o.balance < 0.0001)) {
               o.help = TextContent.LOW_BALANCE_HELP;
@@ -156,31 +166,48 @@ export class SendComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    // force recalculation of amounts
+    const altBalance$ = this.altBalanceTrigger.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    );
+
     const amountValid$ = merge(
       sourceType$,
+      altBalance$,
       balances$
     ).pipe(
+      tap(() => {
+        // set the displayed balance for each option
+        this.selectorOptions.forEach(o => {
+          const balance = new PartoshiAmount(0);
+          if (o.coinInputs.length > 0) {
+            for (const input of o.coinInputs) {
+              balance.add(new PartoshiAmount(input.amount));
+            }
+          } else {
+            balance.add(new PartoshiAmount(o.balance));
+          }
+          o.displayedBalance = balance.particlsString();
+        });
+      }),
       concatMap(() => amount$),
       takeUntil(this.destroy$)
     );
 
-    const address$ = defer(() => {
-      this.address.setValidators(publicAddressUsageValidator(this.currentTabType, this.sourceType.value));
-      this.address.updateValueAndValidity();
-    });
-
     const switcher$ = this.selectedTab.valueChanges.pipe(
       tap(() => {
         this.currentTabType === 'send' ? this.address.enable() : this.address.disable();
+        this.addressCheckTrigger.setValue(null);
       }),
       takeUntil(this.destroy$)
     );
 
-    const addressValid$ = merge(
-      sourceType$,
-      switcher$
-    ).pipe(
-      concatMap(() => address$),
+
+    const addressValidtor$ = this.addressCheckTrigger.valueChanges.pipe(
+      tap(() => {
+        this.address.setValidators(publicAddressUsageValidator(this.currentTabType, this.sourceType.value));
+        this.address.updateValueAndValidity();
+      }),
       takeUntil(this.destroy$)
     );
 
@@ -198,7 +225,8 @@ export class SendComponent implements OnInit, OnDestroy {
 
     merge(
       amountValid$,
-      addressValid$,
+      switcher$,
+      addressValidtor$,
       sendingAll$
     ).subscribe();
 
@@ -265,13 +293,38 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   openCoinControlModal(): void {
+    const initSelection = this.sourceType.value;
+
     const dialogData: CoinControlModalData = {
-      selected: [],
+      selected: (this.selectedSourceSelector().coinInputs || []).map(utxo => ({txid: utxo.tx, vout: utxo.n})),
       txType: this.sourceType.value === 'part' ? 'public' : this.sourceType.value
     };
-    const dialog = this._dialog.open(CoinControlModalComponent, {
+
+    this._dialog.open(CoinControlModalComponent, {
       data: dialogData
-    });
+    }).afterClosed().pipe(
+      take(1),
+      tap((utxos) => {
+        if (Object.prototype.toString.call(utxos) === '[object Array]') {
+
+          const utxosSelected: {tx: string, n: number, amount: number}[] = [];
+
+          utxos.forEach((u: any) => {
+            if (u && Object.prototype.toString.call(u) === '[object Object]') {
+              if ((typeof u.txid === 'string') && (typeof u.vout === 'number') && (typeof u.amount === 'number')) {
+                utxosSelected.push({tx: u.txid, n: u.vout, amount: u.amount});
+              }
+            }
+          });
+
+          const selector = this.selectorOptions.find(s => s.value === initSelection);
+          if (selector) {
+            selector.coinInputs = utxosSelected;
+          }
+          this.altBalanceTrigger.setValue(null);
+        }
+      }),
+    ).subscribe();
   }
 
 
@@ -287,6 +340,8 @@ export class SendComponent implements OnInit, OnDestroy {
     }
     this.isProcessing = true;
 
+    const selector = this.selectedSourceSelector();
+
     const trans = new SendTransaction();
     trans.transactionType = this.currentTabType;
     trans.source = this.sourceType.value;
@@ -297,6 +352,15 @@ export class SendComponent implements OnInit, OnDestroy {
     trans.ringSize = this.ringSize.value;
     trans.deductFeesFromTotal = this.sendingAll.value;
     trans.addressLabel = trans.transactionType === 'send' ? this.addressLabel.value : '';
+
+    if (selector && (selector.coinInputs.length > 0)) {
+
+      trans.coinControl.inputs = selector.coinInputs.map(u => ({tx: u.tx, n: u.n}));
+
+      if (trans.deductFeesFromTotal && (selector.coinInputs.map(u => u.amount).reduce((acc, val) => acc + val, 0) < selector.balance) ) {
+        trans.deductFeesFromTotal = false;
+      }
+    }
 
     this._unlocker.unlock({timeout: 10}).pipe(
       finalize(() => this.isProcessing = false),
@@ -322,6 +386,7 @@ export class SendComponent implements OnInit, OnDestroy {
               TextContent.TRANSFER_SUCCESS.replace('${amount}', displayAmount);
 
             // reset relevant input fields
+            selector.coinInputs = [];
             this.amount.reset('');
             this.address.reset('');
             this.addressLabel.reset('');

@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Sort } from '@angular/material/sort';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatCheckboxChange } from '@angular/material';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { WalletUTXOState } from 'app/main/store/main.state';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 import { PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 enum TextContent {
@@ -20,8 +21,8 @@ enum TextContent {
 }
 
 
-// @FIXME: source https://v8.material.angular.io/components/sort/overview
 interface UTXOListItem {
+  selected: boolean;
   txid: string;
   vout: number;
   amount: number;
@@ -32,6 +33,12 @@ interface UTXOListItem {
 type UTXOType = 'public' | 'blind' | 'anon';
 
 
+interface UTXOSelectedItem {
+  txid: string;
+  vout: number;
+}
+
+
 const compare = (a: number | string, b: number | string, isAsc: boolean) => {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 };
@@ -39,7 +46,7 @@ const compare = (a: number | string, b: number | string, isAsc: boolean) => {
 
 export interface CoinControlModalData {
   txType: UTXOType;
-  selected: {address: string, txid: string, vout: number}[];
+  selected: UTXOSelectedItem[];
 }
 
 
@@ -53,12 +60,18 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
   @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
 
   availableUTXOs: UTXOListItem[] = [];
-  sortedData: UTXOListItem[] = [];
+  selectedCount: number = 0;
+  selectedTotal: string = '0';
   readonly labelUtxoType: string;
 
 
   private destroy$: Subject<void> = new Subject();
   private utxoType: UTXOType = 'public';
+  private initialSelection: UTXOSelectedItem[] = [];
+  private sortParams: {active: string, direction: '' | 'asc' | 'desc'} = {
+    active: '',
+    direction: ''
+  };
 
 
   constructor(
@@ -85,6 +98,19 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
       default:
         this.labelUtxoType = TextContent.UNKNOWN;
     }
+
+    if (data && (Object.prototype.toString.call(data.selected) === '[object Array]')) {
+      data.selected.forEach(initItem => {
+        if (initItem && (Object.prototype.toString.call(initItem) === '[object Object]')) {
+          if ((typeof initItem.txid === 'string') && (typeof initItem.vout === 'number')) {
+            this.initialSelection.push({
+              vout: initItem.vout,
+              txid: initItem.txid
+            });
+          }
+        }
+      });
+    }
   }
 
 
@@ -93,6 +119,7 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
       tap((utxos) => {
         const newUtxos = utxos.map((utxo: PublicUTXO | BlindUTXO | AnonUTXO) => {
           const utxoListItem: UTXOListItem = {
+            selected: false,
             address: '',
             amount: 0,
             label: '',
@@ -121,10 +148,29 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
           return utxoListItem;
         });
 
-        this.availableUTXOs = newUtxos.filter(newUtxo => newUtxo.address.length > 0 && newUtxo.vout > -1);
+        if (this.availableUTXOs.length > 0) {
+          this.availableUTXOs.filter(u => u.selected).forEach(u => {
+            this.initialSelection.push({
+              txid: u.txid,
+              vout: u.vout
+            });
+          });
+        }
 
-        // TODO: remove this call (its only here temporarily)
-        this.sortedData = this.availableUTXOs;
+        if (this.initialSelection.length > 0) {
+          this.initialSelection.forEach(init => {
+            const found = newUtxos.find(utxo => (init.txid === utxo.txid) && (init.vout === utxo.vout));
+            if (found) {
+              found.selected = true;
+            }
+          });
+
+          this.initialSelection = [];
+        }
+
+        this.availableUTXOs = newUtxos.filter(newUtxo => newUtxo.address.length > 0 && newUtxo.vout > -1);
+        this.sortData(this.sortParams);
+        this.updateTotals();
       }),
       takeUntil(this.destroy$)
     ).subscribe();
@@ -138,13 +184,17 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
 
 
   sortData(sort: Sort) {
-    const data = this.availableUTXOs.slice();
+    if (typeof sort.active === 'string') {
+      this.sortParams.active = sort.active;
+    }
+    if (typeof sort.direction === 'string') {
+      this.sortParams.direction = sort.direction;
+    }
     if (!sort.active || sort.direction === '') {
-      this.sortedData = data;
       return;
     }
 
-    this.sortedData = data.sort((a, b) => {
+    this.availableUTXOs.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
         case 'amount': return compare(a.amount, b.amount, isAsc);
@@ -153,6 +203,47 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
         default: return 0;
       }
     });
+  }
+
+
+  toggleUtxo(idx: number, checkedEvent: MatCheckboxChange): void {
+    if (checkedEvent && (idx < this.availableUTXOs.length) && (idx >= 0)) {
+      this.availableUTXOs[idx].selected = !!checkedEvent.checked;
+      this.updateTotals();
+    }
+  }
+
+
+  actionDeselectAll() {
+    this.availableUTXOs.forEach(u => u.selected = false);
+    this.updateTotals();
+  }
+
+
+  actionMakeSelection(): void {
+    const selection = this.availableUTXOs.filter(u => u.selected).map(u => {
+      const selected: UTXOSelectedItem & { amount: number} = {
+        txid: u.txid,
+        vout: u.vout,
+        amount: u.amount
+      };
+      return selected;
+    });
+
+    this._dialogRef.close(selection);
+  }
+
+
+  private updateTotals(): void {
+    const selectedItems = this.availableUTXOs.filter(u => u.selected);
+    const totalAmount = new PartoshiAmount(0);
+
+    selectedItems.forEach(item => {
+      totalAmount.add(new PartoshiAmount(+item.amount));
+    });
+
+    this.selectedCount = selectedItems.length;
+    this.selectedTotal = totalAmount.particlsString();
   }
 
 }

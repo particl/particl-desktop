@@ -20,6 +20,7 @@ export interface TxTypeOption {
   name: string;
   balance: number;
   displayedBalance: string;
+  coinInputs: {tx: string, n: number, amount: number}[];
   value: TxType;
   help: string;
   description: string;
@@ -40,6 +41,16 @@ export interface SendTypeToEstimateResponse {
   outputs_fee: any;
 }
 
+export interface SendTypeToCoinControl {
+  changeaddress?: string;
+  inputs?: {tx: string, n: number}[];
+  replaceable?: boolean;
+  conf_target?: number;
+  estimate_mode?: 'UNSET' | 'ECONOMICAL' | 'CONSERVATIVE';
+  avoid_reuse?: boolean;
+  feeRate?: number | string;
+}
+
 
 export class SendTransaction {
   transactionType: TabType = 'send';
@@ -51,11 +62,21 @@ export class SendTransaction {
   narration: string = '';
   ringSize: number = 8;
   deductFeesFromTotal: boolean = false;
+  coinControl: SendTypeToCoinControl = {};
+
 
   constructor() {}
 
   getSendTypeParams(estimate: boolean = true): [
-    TxType, TxType, Array<{address: string, amount: number, subfee: boolean, narr: string}>, string, string, number, number, boolean
+    TxType,
+    TxType,
+    Array<{address: string, amount: number, subfee: boolean, narr: string}>,
+    string,
+    string,
+    number,
+    number,
+    boolean,
+    SendTypeToCoinControl
   ] {
 
     let ringSize = this.ringSize;
@@ -76,7 +97,8 @@ export class SendTransaction {
       null,
       ringSize,
       MAX_RING_SIZE,
-      estimate
+      estimate,
+      this.coinControl
     ];
   }
 
