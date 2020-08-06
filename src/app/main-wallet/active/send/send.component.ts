@@ -11,7 +11,7 @@ import { targetTypeValidator, amountRangeValidator, ValidAddressValidator, publi
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
-import { CoinControlModalComponent } from './coin-control-modal/coin-control-modal.component';
+import { CoinControlModalComponent, CoinControlModalData } from './coin-control-modal/coin-control-modal.component';
 import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
 import { CoreErrorModel } from 'app/core/core.models';
 import {
@@ -265,7 +265,13 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
   openCoinControlModal(): void {
-    const dialog = this._dialog.open(CoinControlModalComponent);
+    const dialogData: CoinControlModalData = {
+      selected: [],
+      txType: this.sourceType.value === 'part' ? 'public' : this.sourceType.value
+    };
+    const dialog = this._dialog.open(CoinControlModalComponent, {
+      data: dialogData
+    });
   }
 
 

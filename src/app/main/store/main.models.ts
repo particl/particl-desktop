@@ -52,6 +52,7 @@ export interface BlindUTXO {
   txid: string;
   vout: number;
   address: string;
+  label?: string;
   coldstaking_address?: string;
   scriptPubKey: string;
   amount: number;
