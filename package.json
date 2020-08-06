@@ -132,9 +132,15 @@
       "runAfterFinish": true
     },
     "linux": {
-      "maintainer": "particl contributors <hello@particl.io>",
+      "maintainer": "Particl Contributors <hello@particl.io>",
       "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
       "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
         {
           "target": "deb",
           "arch": [
