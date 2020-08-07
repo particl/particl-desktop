@@ -215,7 +215,12 @@ export class SendComponent implements OnInit, OnDestroy {
       tap((newValue: boolean) => {
         if (newValue) {
           this.amount.disable();
-          this.amount.setValue(this.selectedSourceSelector().balance);
+          const selector = this.selectedSourceSelector();
+          const dispBal = selector.displayedBalance;
+
+          const bal = (new PartoshiAmount(+dispBal)).particls();
+
+          this.amount.setValue(bal);
         } else if (this.amount.disabled) {
           this.amount.enable();
         }
