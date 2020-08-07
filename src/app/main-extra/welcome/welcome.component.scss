@@ -1,0 +1,94 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+body {
+  margin: 0 !important;
+}
+
+.welcome-container {
+  @extend %tfx;
+  background: url('../../../assets/splash-bg.jpg') no-repeat var(--bg-black);
+  background-position: calc(-1 * var(--multiwallet-width)) 100%;
+  background-size: 500px;
+  color: var(--bg);
+  text-align: center;
+  font-family: var(--font);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  @include break(l) {
+    background-size: 600px;
+  }
+  @include break(xl) {
+    background-size: 700px;
+  }
+  .content {
+    margin: auto;
+    // fade-in animation (from 0 opacity)
+    animation: fade-in 0.6s 1;
+    animation-delay: 0.4s;
+    animation-fill-mode: forwards; // stay on the last "frame"
+    opacity: 0;
+  }
+}
+
+.header-text {
+  margin-bottom: 76px;
+  h1 {
+    margin: 0 0 12px;
+  }
+  p {
+    margin: 0;
+    color: hsla(var(--color-white-hsl), 0.6);
+    font-size: 15px;
+  }
+}
+
+.app-grid {
+  display: flex;
+  .app {
+    @extend %tfx;
+    flex: 20%;
+    max-width: 200px;
+    margin: 0 24px;
+    padding: 26px;
+    text-align: left;
+    color: var(--text);
+    text-decoration: none;
+    border-radius: var(--radius);
+    background: var(--color-white);
+    &:hover,
+    &:focus {
+      //transform: scale(1.01);
+      box-shadow: 0 0 0 8px hsla(var(--color-white-hsl), 0.1);
+    }
+    .mat-icon {
+      font-size: 22px;
+      &.part-stake {
+        color: var(--color-primary);
+      }
+      &.part-bag {
+        color: var(--color-secondary);
+      }
+      &.part-swap {
+        color: var(--color-tertiary);
+      }
+    }
+    .name {
+      margin: 14px 0 8px;
+    }
+    .desc {
+      margin: 0;
+      color: var(--text-muted);
+    }
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
