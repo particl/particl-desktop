@@ -2,13 +2,13 @@
 export type MarketType = 'MARKETPLACE' | 'STOREFRONT' | 'STOREFRONT_ADMIN';
 export type SALES_TYPE = 'SALE';
 export type ESCROW_TYPE = 'MAD_CT';
-export type ESCROW_RELEASE_TYPE = 'ANON' | 'BLIND';
 export type CURRENCY_TYPE = 'PART';
 export type SHIPPING_AVAIL_TYPE = 'SHIPS' | 'DOES_NOT_SHIP' | 'ASK' | 'UNKNOWN';
 export type IMAGE_PROTOCOL = 'HTTPS' | 'LOCAL' | 'IPFS';
 export type IMAGE_ENCODING = 'BASE64';
 export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'LARGE';
 export enum ADDRESS_TYPES { SHIPPING_OWN = 'SHIPPING_OWN', SHIPPING_BID = 'SHIPPING_BID' }
+export enum ESCROW_RELEASE_TYPE { ANON = 'anon', BLIND = 'blind' }
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
@@ -18,6 +18,14 @@ interface RespGeneralProfile {
   updatedAt: number;
   createdAt: number;
 }
+
+
+export interface PriceItem {
+  whole: string;
+  sep: string;
+  fraction: string;
+}
+
 
 // tslint:disable:no-empty-interface
 export interface RespProfileListItem extends RespGeneralProfile {}
@@ -71,6 +79,31 @@ export interface RespMarketListMarketItem {
 }
 
 
+interface TemplateItemCategory {
+  id: number;
+  key: string | null;
+  name: string;
+  market: number | null;
+  description: string;
+  parentItemCategoryId: number | null;
+  updatedAt: number;
+  createdAt: number;
+  ParentItemCategory?: TemplateItemCategory;
+}
+
+
+export interface BasicLinkedTemplate {
+  id: number;
+  hash: string | null;
+  market: string | null;
+  generatedAt: number;
+  profileId: number;
+  parentListingItemTemplateId: number | null;
+  updatedAt: number;
+  createdAt: number;
+}
+
+
 export interface RespListingTemplateInformation {
   id: number;
   title: string;
@@ -91,26 +124,7 @@ export interface RespListingTemplateInformation {
     createdAt: number;
     LocationMarker: any;
   };
-  ItemCategory?: {
-    id: number;
-    key: string | null;
-    name: string;
-    market: number | null;
-    description: string;
-    parentItemCategoryId: number | null;
-    updatedAt: number;
-    createdAt: number;
-    ParentItemCategory: {
-      id: number;
-      key: string | null;
-      name: string;
-      market: number | null;
-      description: string;
-      parentItemCategoryId: number | null;
-      updatedAt: number;
-      createdAt: number;
-    }
-  };
+  ItemCategory?: TemplateItemCategory;
   ItemImages?: Array<{
     id: number;
     hash: string;
@@ -131,7 +145,11 @@ export interface RespListingTemplateInformation {
       originalName: string | null;
     }>;
   }>;
-  ShippingDestinations?: Array<{id: number; country: string; shippingAvailability: SHIPPING_AVAIL_TYPE}>;
+  ShippingDestinations?: {
+    id: number;
+    country: string;
+    shippingAvailability: SHIPPING_AVAIL_TYPE
+  }[];
 }
 
 
@@ -155,7 +173,7 @@ export interface RespListingTemplate {
     Escrow?: {
       id: number;
       type: ESCROW_TYPE;
-      secondsToLock: number;
+      secondsToLock: number | null;
       paymentInformationId: number;
       updatedAt: number;
       createdAt: number;
@@ -188,9 +206,10 @@ export interface RespListingTemplate {
   };
   MessagingInformation: any[];
   ListingItemObjects: any[];
-  ListingItems: any[];
-  Profile: any;
-  ChildListingItemTemplate: RespListingTemplate[];
+  ListingItems: RespListingItem[];
+  Profile: RespGeneralProfile;
+  ParentListingItemTemplate?: BasicLinkedTemplate;
+  ChildListingItemTemplate: BasicLinkedTemplate[];
 }
 
 

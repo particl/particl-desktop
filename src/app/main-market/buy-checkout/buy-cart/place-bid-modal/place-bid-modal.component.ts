@@ -7,15 +7,9 @@ import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
 
 import { AnonUTXO } from 'app/main/store/main.models';
+import { PriceItem } from '../../../shared/market.models';
 import { isBasicObjectType, getValueOrDefault } from '../../../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
-
-
-interface PriceItem {
-  whole: string;
-  sep: string;
-  fraction: string;
-}
 
 
 interface ErrorTypes {

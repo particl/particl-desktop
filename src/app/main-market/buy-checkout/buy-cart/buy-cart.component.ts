@@ -16,6 +16,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { CartItem } from './buy-cart.models';
 import { ShippingAddress } from '../../shared/shipping-profile-address-form/shipping-profile-address.models';
 import { Identity } from '../../store/market.models';
+import { PriceItem } from '../../shared/market.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 
 
@@ -29,11 +30,6 @@ enum TextContent {
   BID_SUCCESSFUL = 'Successfully bid on items!'
 }
 
-interface PriceItem {
-  whole: string;
-  sep: string;
-  fraction: string;
-}
 
 interface DisplayedCartItem extends CartItem {
   displayedPrices: {

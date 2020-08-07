@@ -1,18 +1,18 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, BehaviorSubject, of, defer, iif, throwError } from 'rxjs';
-import { take, map, concatMap, tap, finalize, mapTo, catchError, last } from 'rxjs/operators';
+import { BehaviorSubject, defer } from 'rxjs';
+import { take, map, } from 'rxjs/operators';
 import { RegionListService } from '../../services/region-list/region-list.service';
 import { SellService } from '../sell.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
-import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+// import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { SellTemplateFormComponent } from '../sell-template-form/sell-template-form.component';
 import { Country } from '../../services/data/data.models';
-import { BaseTemplate, MarketTemplate } from '../sell.models';
-import { PublishTemplateModalComponent } from './publish-template-modal/publish-template-modal.component';
-import { RespTemplateSize } from 'app/main-market/shared/market.models';
+// import { BaseTemplate, MarketTemplate } from '../sell.models';
+// import { PublishTemplateModalComponent } from './publish-template-modal/publish-template-modal.component';
+// import { RespTemplateSize } from 'app/main-market/shared/market.models';
 
 
 enum TextContent {
@@ -50,7 +50,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
   private hasLoaded: boolean = false;
   private isValid: boolean = false;
   private isTemplateEditable: boolean = false;
-  private savedTempl: BaseTemplate | MarketTemplate = null;
+  // private savedTempl: BaseTemplate | MarketTemplate = null;
 
 
   constructor(
@@ -74,17 +74,17 @@ export class NewListingComponent implements OnInit, OnDestroy {
     this._route.queryParams.pipe(
       take(1),
       map(params => +params['templateID']),
-      concatMap((id: number) => {
-        return this.loadTemplate(id).pipe(
-          tap(() => this.hasLoaded = true),
-          tap((templ) => {
-            this.savedTempl = templ;
-            this.isTemplateEditable = templ.hash.length > 0;
-            this.errorMessage = TextContent.ERROR_UNEDITABLE;
-          }),
-          concatMap(() => iif(() => this.regionList$.value.length === 0, regions$)),
-        );
-      }),
+      // concatMap((id: number) => {
+      //   return this.loadTemplate(id).pipe(
+      //     tap(() => this.hasLoaded = true),
+      //     tap((templ) => {
+      //       this.savedTempl = templ;
+      //       this.isTemplateEditable = templ.hash.length > 0;
+      //       this.errorMessage = TextContent.ERROR_UNEDITABLE;
+      //     }),
+      //     concatMap(() => iif(() => this.regionList$.value.length === 0, regions$)),
+      //   );
+      // }),
     ).subscribe(
       null,
       (err) => this.errorMessage = TextContent.ERROR_EXISTING_TEMPLATE_FETCH
@@ -105,9 +105,9 @@ export class NewListingComponent implements OnInit, OnDestroy {
     return this.isValid;
   }
 
-  get savedTemplate(): BaseTemplate | MarketTemplate | null {
-    return this.savedTempl;
-  }
+  // get savedTemplate(): BaseTemplate | MarketTemplate | null {
+  //   return this.savedTempl;
+  // }
 
 
   updateFormValidity(valid: boolean): void {
@@ -333,20 +333,20 @@ export class NewListingComponent implements OnInit, OnDestroy {
   // }
 
 
-  private loadTemplate(id: number): Observable<BaseTemplate | MarketTemplate | null> {
-    if (id > 0) {
-      return this._sellService.fetchTemplate(id).pipe(
-        tap(() => {
-          this.saveButtonText = TextContent.BUTTON_LABEL_UPDATE;
-          this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_EXISTING;
-        })
-      );
-    }
-    return of(null).pipe(
-      tap(() => {
-        this.saveButtonText = TextContent.BUTTON_LABEL_SAVE;
-        this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_NEW;
-      })
-    );
-  }
+  // private loadTemplate(id: number): Observable<BaseTemplate | MarketTemplate | null> {
+  //   if (id > 0) {
+  //     return this._sellService.fetchTemplate(id).pipe(
+  //       tap(() => {
+  //         this.saveButtonText = TextContent.BUTTON_LABEL_UPDATE;
+  //         this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_EXISTING;
+  //       })
+  //     );
+  //   }
+  //   return of(null).pipe(
+  //     tap(() => {
+  //       this.saveButtonText = TextContent.BUTTON_LABEL_SAVE;
+  //       this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_NEW;
+  //     })
+  //   );
+  // }
 }

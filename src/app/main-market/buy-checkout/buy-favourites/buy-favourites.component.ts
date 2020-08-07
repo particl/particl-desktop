@@ -34,7 +34,7 @@ enum TextContent {
 })
 export class BuyFavouritesComponent implements OnInit, OnDestroy {
 
-  @Select(MarketState.availableCarts) availableCarts: Observable<CartDetail[]>;
+  @Select(MarketState.availableCarts) availableCarts$: Observable<CartDetail[]>;
 
   favouriteList: FavouritedListing[] = [];
   isLoadingItems: boolean = true;

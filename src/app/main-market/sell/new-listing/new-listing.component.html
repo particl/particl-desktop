@@ -10,13 +10,13 @@
     </ng-container>
   </app-page-intro>
 
-  <market-sell-template-form *ngIf="isFormReady"
+  <!-- <market-sell-template-form *ngIf="isFormReady"
     [listingTemplate]="savedTemplate"
     [regions$]="regionList$"
     (isValid)="updateFormValidity($event)"
     (onImageImportError)="actionImageAddError($event)"
     (onRequestImageRemoval)="actionImageRemovalRequest($event)"
-  ></market-sell-template-form>
+  ></market-sell-template-form> -->
 
   <p class="alert --boxed --warning" *ngIf="errorMessage.length > 0">
     <span><strong>Error:</strong> {{ errorMessage }}</span>
