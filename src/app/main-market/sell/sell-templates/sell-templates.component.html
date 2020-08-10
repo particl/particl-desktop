@@ -52,319 +52,151 @@
 
   </mat-card><!-- .filter-card -->
 
-  <h2 class="section-title">
+  <!-- <h2 class="section-title">
     Filter
-  </h2>
+  </h2> -->
 
-  <mat-card class="filter-card">
+  <!-- <mat-card class="filter-card">
     <mat-radio-group class="radio-group block-radio" [formControl]="filterStatus">
       <mat-radio-button class="filter-option" *ngFor="let status of filterStatusCriteria" [value]="status.value" color="accent">
         {{ status.title }}
       </mat-radio-button>
     </mat-radio-group>
-  </mat-card><!-- .filter-card -->
-
-  <button mat-button color="basic" class="clear-filters" (click)="resetFilters()">
-    <mat-icon fontIcon="part-clear-all"></mat-icon>
-    Clear all filters
-  </button>
+  </mat-card> -->
 
 </div><!-- .filter -->
 
 
 <!-- Listings > list -->
-<div class="listings section with-filter" *appVar="(savedTemplate$ | async) as allTemplates">
+<div class="listings section with-filter">
 
-  <mat-expansion-panel class="product list-item no-padding">
-    <mat-expansion-panel-header class="header">
-      <div class="header-wrapper">
-        <div class="photo">
-          <img src="./assets/images/placeholder_4-3.jpg">
-        </div>
-        <div class="meta" fxFlex="1 1 100%">
-          <div class="name">Product title or whatever (2 for 1!)</div>
-          <span class="help-text">Product's Summary goes here; oh how nice!</span>
-        </div>
-        <div class="status-wrap" fxFlex="0 0 140px">
-          <!-- @TODO status classes:
-            - `published` if all market-templates live
-            - `expiring` if at least one is close to expiry
-            - `expired` if at least one already expired -->
-          <div class="status expired --rounded">
-            <span class="dot"></span>
-            <!-- @TODO: active = published listings/products; total = sum of all listings/products -->
-            <span class="active">1</span><span class="total">/2</span>
-          </div>
-        </div>
-        <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
-      </div>
-    </mat-expansion-panel-header>
-    <div class="detail">
-      <div class="row" fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-start">
-        <div class="product-details" fxFlex="37">
-          <h3 class="item-subtitle">Gallery</h3>
-          <div class="gallery">
-            <!-- @TODO: list small thumbnails for Product's gallery for quick preview -->
-            <div class="image">
-              <img src="./assets/images/placeholder_3-4.jpg">
-            </div>
-            <div class="image">
-              <img src="./assets/images/placeholder_4-3.jpg">
-            </div>
-            <div class="image">
-              <img src="./assets/images/placeholder_1-1.jpg">
-            </div>
-            <div class="image">
-              <img src="./assets/images/placeholder_3-4.jpg">
-            </div>
-            <div class="image">
-              <img src="./assets/images/placeholder_4-3.jpg">
-            </div>
-          </div>
-        </div><!-- .product-details -->
-        <div class="inventory-stats" fxFlex="18">
-          <h3 class="item-subtitle">Inventory</h3>
-          <table class="inventory">
-            <!-- @TODO: until we have quantities, keep the infinity symbol -->
-            <tr><th>&infin;</th><td>In stock</td></tr>
-            <tr><th>&infin;</th><td>Published</td></tr>
-            <tr><th>1</th><td>In Orders</td></tr>
-            <tr><th>0</th><td>Sold</td></tr>
-          </table>
-        </div><!-- .inventory-stats -->
-        <div class="pricing" fxFlex="45">
-          <h3 class="item-subtitle">Pricing</h3>
-          <table class="prices">
-            <tr>
-              <th>Product</th><td>0<small>.4323</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
-            </tr>
-            <tr>
-              <th>Shipping</th>
-              <td>
-                Local in CZ &ndash; 0<small>.0142</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
-                Worldwide &ndash; 0<small>.1562</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
-              </td>
-            </tr>
-          </table>
-        </div><!-- .pricing -->
-      </div><!-- .row -->
-      <!--details>
-        <summary>Show Product description</summary>
-        <p class="details">
-          -- product description goes here -- Lorem ipsum dolor sit, amet consectetur adipisicing elit. Culpa eius tempora modi error doloribus enim harum necessitatibus minima.
-          
-          Nobis fugiat vel suscipit reiciendis perferendis ut explicabo veniam facilis. Perferendis incidunt saepe, odit repudiandae fugit cupiditate sequi molestiae laborum quos fugiat vitae illo autem quisquam dolorem nostrum voluptatem placeat veritatis dolores nisi accusantium! Placeat dicta libero ab a, voluptatem eum sit nobis odit ea quibusdam neque ipsam, ex suscipit. Quaerat laborum modi illum ducimus quidem voluptatum animi consequuntur maxime odio, sapiente excepturi facere temporibus vero quas quam assumenda id nam nostrum omnis cum repellendus. Molestias ratione excepturi enim, deserunt dolores assumenda optio temporibus ex omnis, quae facilis recusandae.
-          
-          - consequatur pariatur, veniam asperiores, nostrum qui voluptatem
-          - explicabo voluptatum error saepe consectetur
-          - facere
-          - nesciunt dicta alias minima molestias
-          - 100% officia vitae?
-        </p>
-      </details-->
-    </div><!-- .detail -->
-    <section class="market-templates-list">
-      <table class="market-templates">
-        <tr>
-          <th>Status</th>
-          <th>Published on</th>
-          <th class="category">Category</th>
-          <th class="price">Price</th>
-          <th class="actions">Actions</th>
-        </tr>
-        <tr>
-          <td>
-            <!-- @TODO: status classes: `unpublished | published | expiring | expired` (expiring = expires in <24h) -->
-            <!-- for expiring, show "Expires in XX:XX:XX" in tooltip -->
-            <span class="status published --plain" matTooltip="Live Listing" matTooltipPosition="before">
-              <span class="dot"></span>
-            </span>
-            <span class="template-name">Allien's Chilli Peppers (200 g)</span>
-          </td>
-          <td>Particl Open Marketplace</td>
-          <td class="category">Food & Nutrition</td>
-          <td class="price">12.6851 PART</td>
-          <td class="actions">
-            <button mat-button class="tiny icon-only" matTooltip="Edit">
-              <mat-icon fontIcon="part-pen-1"></mat-icon>
-            </button>
-            <button mat-button class="tiny icon-only" matTooltip="Clone">
-              <mat-icon fontIcon="part-copy"></mat-icon>
-            </button>
-            <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishTemplateModal()">
-              <mat-icon fontIcon="part-rocket"></mat-icon>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <span class="status expired --plain" matTooltip="Expired Listing" matTooltipPosition="before">
-              <span class="dot"></span>
-            </span>
-            <span class="template-name">Allien's Sweet Peppers (200 g)</span>
-          </td>
-          <td>Sneaky Market</td>
-          <td class="category">Spicy Stuff</td>
-          <td class="price">11.4510 PART</td>
-          <td class="actions">
-            <button mat-button class="tiny icon-only" matTooltip="Edit">
-              <mat-icon fontIcon="part-pen-1"></mat-icon>
-            </button>
-            <button mat-button class="tiny icon-only" matTooltip="Clone">
-              <mat-icon fontIcon="part-copy"></mat-icon>
-            </button>
-            <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishTemplateModal()">
-              <mat-icon fontIcon="part-rocket"></mat-icon>
-            </button>
-          </td>
-        </tr>
-      </table>
-    </section><!-- .market-templates-list -->
-    <mat-action-row class="action-buttons">
-      <div class="left">
-        <button mat-button class="small" matTooltip="Delete Product" color="warn">
-          <mat-icon fontIcon="part-cross"></mat-icon>
-          Delete
-        </button>
-        <!-- @TODO: trigger modal with "edit template" component + append "(Copy)" to product's title input? -->
-        <button mat-button class="small icon-only" matTooltip="Clone Product">
-          <mat-icon fontIcon="part-copy"></mat-icon>
-        </button>
-        <!-- @TODO: trigger modal with "edit template" component -->
-        <button mat-button class="small" matTooltip="Update Product">
-          <mat-icon fontIcon="part-pen-1"></mat-icon>
-          Edit
-        </button>
-        <!-- @TODO: redirect to Listings tab and filter out Listings based on this Product -->
-        <button mat-button class="small" matTooltip="Show current Listings of this Product">
-          <mat-icon fontIcon="part-zoom-in"></mat-icon>
-          Show Listings
-        </button>
-      </div>
-      <div class="right">
-        <!-- @TODO: remove link to BatchPublishModal (I'm using it here for dev purposes, since the batch actions menu isn't working for me) -->
-        <button mat-raised-button color="primary" (click)="openPublishTemplateModal()">
-          <mat-icon fontIcon="part-rocket"></mat-icon>
-          Publish on Market
-        </button>
-      </div>
-    </mat-action-row>
-  </mat-expansion-panel><!-- .product -->
-
-
-
-  <!-- infiniteScroll
-  [infiniteScrollContainer]="pagination.infinityScrollSelector"
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="50"
-  [fromRoot]="true"
-  (scrolled)="loadNextPage()" -->
-
-  <ng-container *ngIf="allTemplates.length > 0; else noTemplates">
-    <mat-accordion>
-      <mat-expansion-panel *ngFor="let templ of allTemplates; trackBy:trackBySavedTemplates" class="listing list-item no-padding">
+  <ng-container *ngIf="displayedTemplateIdxs.length > 0; else noTemplates">
+    <ng-container *ngFor="let templIdx of displayedTemplateIdxs">
+      <mat-expansion-panel class="product list-item no-padding" *appVar="allTemplates[templIdx] as templ">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper">
             <div class="photo">
-              <img [src]="templ.images[0]?.thumbnailUrl" default="./assets/images/placeholder_4-3.jpg">
+              <img [src]="templ.images[0]">
             </div>
             <div class="meta" fxFlex="1 1 100%">
-              <div class="name">{{templ.information.title}}</div>
-              <!-- TODO: if published on 1 market, display it's name; if on multiple display "X Markets" (as shown below) -->
-              <span class="published-markets">2 Markets<!--{{ listing?.market }}--></span>
-              <span class="category">{{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--></span>
+              <div class="name">{{ templ.title }}</div>
+              <span class="help-text">{{ templ.summary }}</span>
             </div>
             <div class="status-wrap" fxFlex="0 0 140px">
-              <div class="status {{ templ.status }}">
+              <div class="status --rounded">
                 <span class="dot"></span>
-                <ng-container [ngSwitch]="templ.status">
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.UNPUBLISHED">Unpublished</ng-container>
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.PENDING">Pending</ng-container>
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.PUBLISHED">Published</ng-container>
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.EXPIRED">Expired</ng-container>
-                </ng-container>
+                <span class="active">{{ templ.marketTemplates.countActiveMarkets }}</span><span class="total">/{{ templ.marketTemplates.templates.length }}</span>
               </div>
             </div>
             <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
           </div>
         </mat-expansion-panel-header>
-
-        <div class="status-info">
-          <div class="text">
-            <h2 class="item-title">{{templ.information.title}}</h2>
-            <p>{{templ.information.summary}}</p>
-          </div>
-          <p class="item-info">
-            Category: {{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--><br>
-            Created: {{templ.created | date:'medium'}}<br>
-            Updated: {{templ.updated | date:'medium'}}<br>
-            Expires: 2020-05-11 15:86<!--{{ listing?.expiredAt }}-->
-          </p>
-        </div>
-
-        <div class="detail" fxLayout="row" fxLayoutGap="30px">
-          <div class="description" fxFlex="55%">
-            <h3 class="item-subtitle">Published on</h3>
-            <ul class="listing-info">
-              <li>Particl Open Marketplace</li>
-              <li>Sneaky Market</li>
-            </ul>
-          </div><!-- .description -->
-          <div class="pricing-info" fxFlex="45%">
-            <h3 class="item-subtitle">Pricing</h3>
-            <table class="prices">
-              <tfoot>
-                <th></th>
-                <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
-                <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th-->
-              </tfoot>
-              <tbody>
+        <div class="detail">
+          <div class="row" fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-start">
+            <div class="product-details" fxFlex="37">
+              <h3 class="item-subtitle">Gallery</h3>
+              <div class="gallery">
+                <div class="image" *ngFor="let img of templ.images">
+                  <img [src]="img">
+                </div>
+              </div>
+            </div><!-- .product-details -->
+            <div class="inventory-stats" fxFlex="18">
+              <h3 class="item-subtitle">Inventory</h3>
+              <table class="inventory">
+                <!-- @TODO: until we have quantities, keep the infinity symbol -->
+                <tr><th>&infin;</th><td>In stock</td></tr>
+                <tr><th>{{ templ.marketTemplates.countAllListings }}</th><td>Published</td></tr>
+                <!-- <tr><th>{{ templ.marketTemplates.countOrdersActive }}</th><td>In Orders</td></tr> -->
+                <!-- <tr><th>{{ templ.marketTemplates.countOrdersComplete }}</th><td>Sold</td></tr> -->
+              </table>
+            </div><!-- .inventory-stats -->
+            <div class="pricing" fxFlex="45">
+              <h3 class="item-subtitle">Pricing</h3>
+              <table class="prices">
                 <tr>
-                  <th>Price per item</th>
-                  <td class="amount part">{{templ.price.basePrice.particlsString()}}</td>
-                  <!--td class="amount fiat">3.5165</td-->
+                  <th>Product</th><td>{{templ.basePrice.whole}}<small>{{ templ.basePrice.sep }}{{ templ.basePrice.fraction }}</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
                 </tr>
                 <tr>
-                  <th>Local shipping ({{templ.location.countryCode || ''}})</th>
-                  <td class="amount part">{{templ.price.shippingLocal.particlsString()}}</td>
-                  <!--td class="amount fiat">0.6518</td-->
+                  <th>Shipping</th>
+                  <td>
+                    Local ({{templ.sourceLocation}}) &ndash; {{ templ.shippingPriceLocal.whole }}<small>{{ templ.shippingPriceLocal.sep }}{{ templ.shippingPriceLocal.fraction }}</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
+                    Worldwide &ndash; {{ templ.shippingPriceIntl.whole }}<small>{{ templ.shippingPriceIntl.sep }}{{ templ.shippingPriceIntl.fraction }}</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
+                  </td>
                 </tr>
-                <tr>
-                  <th>Worldwide shipping</th>
-                  <td class="amount part">{{templ.price.shippingInternational.particlsString()}}</td>
-                  <!--td class="amount fiat">0.9410</td-->
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+              </table>
+            </div><!-- .pricing -->
+          </div><!-- .row -->
+        </div><!-- .detail -->
+        <section class="market-templates-list" *ngIf="templ.marketTemplates.templates.length > 0">
+          <table class="market-templates">
+            <tr>
+              <th>Status</th>
+              <th>Published on</th>
+              <th class="category">Category</th>
+              <th class="price">Price</th>
+              <th class="actions">Actions</th>
+            </tr>
+            <tr *ngFor="let marketTempl of templ.marketTemplates.templates">
+              <td>
+                <span *ngIf="marketTempl.status !== null" class="status {{ marketTempl.status }} --plain" matTooltip="listing status: {{marketTempl.status}}" matTooltipPosition="before">
+                  <span class="dot"></span>
+                </span>
+                <span class="template-name">{{ marketTempl.title }}</span>
+              </td>
+              <td>{{ marketTempl.marketKey }}</td>
+              <td class="category">{{ marketTempl.category }}</td>
+              <td class="price">{{ marketTempl.basePrice }} PART</td>
+              <td class="actions">
+                <button *ngIf="marketTempl.actions.edit" mat-button class="tiny icon-only" matTooltip="Edit">
+                  <mat-icon fontIcon="part-pen-1"></mat-icon>
+                </button>
+                <button *ngIf="marketTempl.actions.clone" mat-button class="tiny icon-only" matTooltip="Clone">
+                  <mat-icon fontIcon="part-copy"></mat-icon>
+                </button>
+                <button *ngIf="marketTempl.actions.publish" mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishTemplateModal()">
+                  <mat-icon fontIcon="part-rocket"></mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+        </section><!-- .market-templates-list -->
+        <mat-action-row class="action-buttons">
           <div class="left">
-            <button mat-button *ngIf="templ.status === TEMPLATE_STATUS.UNPUBLISHED" color="warn" matTooltip="Delete listing" (click)="deleteTemplate(templ.id)" class="small">
+            <button *ngIf="templ.actions.delete" mat-button class="small" matTooltip="Delete Product" color="warn">
               <mat-icon fontIcon="part-cross"></mat-icon>
+              Delete
             </button>
-            <button mat-button matTooltip="Clone listing" (click)="cloneListing(templ.id)" class="small">
+            <!-- @TODO: trigger modal with "edit template" component + append "(Copy)" to product's title input? -->
+            <button *ngIf="templ.actions.clone" mat-button class="small icon-only" matTooltip="Clone Product">
               <mat-icon fontIcon="part-copy"></mat-icon>
             </button>
-            <button mat-button *ngIf="templ.status === TEMPLATE_STATUS.UNPUBLISHED" matTooltip="Edit listing details" routerLink="new-listing" [queryParams]="{templateID: templ.id}" class="small">
+            <!-- @TODO: trigger modal with "edit template" component -->
+            <button *ngIf="templ.actions.edit" mat-button class="small" matTooltip="Update Product">
               <mat-icon fontIcon="part-pen-1"></mat-icon>
               Edit
             </button>
-            <button mat-button matTooltip="Open this listing" class="small" (click)="openPreview(templ.id)">
+            <!-- @TODO: redirect to Listings tab and filter out Listings based on this Product -->
+            <button *ngIf="templ.marketTemplates.countAllListings > 0" mat-button class="small" matTooltip="Show current Listings of this Product">
               <mat-icon fontIcon="part-zoom-in"></mat-icon>
-              Open
+              Show Listings
             </button>
           </div>
-
+          <div class="right">
+            <!-- @TODO: remove link to BatchPublishModal (I'm using it here for dev purposes, since the batch actions menu isn't working for me) -->
+            <button *ngIf="templ.actions.publish" mat-raised-button color="primary" (click)="openPublishTemplateModal()">
+              <mat-icon fontIcon="part-rocket"></mat-icon>
+              Publish on Market
+            </button>
+          </div>
         </mat-action-row>
-      </mat-expansion-panel><!-- .listing -->
-    </mat-accordion>
+      </mat-expansion-panel><!-- .product -->
+    </ng-container>
   </ng-container>
 
   <ng-template #noTemplates>
     <!-- no listings at all -->
-    <div class="no-results" *ngIf="!doTemplatesExist">
+    <div class="no-results" *ngIf="allTemplates.length === 0">
       <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Products">
       <p>
         You don't have any Products yet
@@ -375,7 +207,7 @@
     </div><!-- .no-results -->
 
     <!-- no listings matching search -->
-    <div class="no-results" *ngIf="doTemplatesExist">
+    <div class="no-results" *ngIf="allTemplates.length > 0">
       <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Products found">
       <p>
         No matching Products found
@@ -388,6 +220,6 @@
 </div><!-- .listings-list -->
 
 
-<div class="loading-bar" *ngIf="isLoadingMore">
+<div class="loading-bar" *ngIf="isLoading">
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div><!-- .loading-bar -->

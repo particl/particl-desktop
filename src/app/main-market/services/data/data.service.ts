@@ -34,7 +34,7 @@ export class DataService {
   }
 
 
-  loadMarkets(identityId: number): Observable<Market[]> {
+  loadMarkets(identityId?: number): Observable<Market[]> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
 
     return this._rpc.call('market', ['list', profileId]).pipe(

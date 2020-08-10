@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { amountValidator, totalValueValidator } from './sell-template-form.validators';
-import { BaseTemplate, MarketTemplate } from '../sell.models';
+// import { BaseTemplate, MarketTemplate } from '../sell.models';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { BaseTemplate, MarketTemplate } from '../sell.models';
 })
 export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() listingTemplate: BaseTemplate | MarketTemplate;
+  @Input() listingTemplate: any;
   @Input() regions$: Observable<{id: string, name: string}[]> = of([]);
   @Output() isValid: EventEmitter<boolean> = new EventEmitter();
   @Output() onImageImportError: EventEmitter<void> = new EventEmitter();
@@ -224,7 +224,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
 
-  private setFormValues(template: BaseTemplate | MarketTemplate): void {
+  private setFormValues(template: any): void {
     this.imagesPending.setValue([]);
 
     this.templateForm.controls['title'].setValue(

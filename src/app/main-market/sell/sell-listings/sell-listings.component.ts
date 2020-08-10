@@ -1,15 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material';
-import { Subject, merge, Observable, iif, defer, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, tap, takeUntil, switchMap, startWith, concatMap, take } from 'rxjs/operators';
-import { SellService } from '../sell.service';
-import { TEMPLATE_SORT_FIELD_TYPE, TEMPLATE_STATUS_TYPE , BaseTemplate, MarketTemplate} from '../sell.models';
-import { Store } from '@ngxs/store';
-import { MarketState } from 'app/main-market/store/market.state';
-import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
 
 @Component({
@@ -142,7 +133,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  trackBySavedTemplates(idx: number, item: BaseTemplate | MarketTemplate) {
+  trackBySavedTemplates(idx: number, item: any) {
     return item.id;
   }
 

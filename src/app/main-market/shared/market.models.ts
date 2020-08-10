@@ -209,7 +209,7 @@ export interface RespListingTemplate {
   ListingItems: RespListingItem[];
   Profile: RespGeneralProfile;
   ParentListingItemTemplate?: BasicLinkedTemplate;
-  ChildListingItemTemplate: BasicLinkedTemplate[];
+  ChildListingItemTemplates: BasicLinkedTemplate[];
 }
 
 
