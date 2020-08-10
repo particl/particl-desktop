@@ -54,7 +54,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this._router.navigate(['/main/extra/help']);
+    this._router.navigate(['/main/extra/welcome']);
   }
 
   private goToTerms() {

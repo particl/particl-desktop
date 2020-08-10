@@ -1,1 +1,20 @@
 @import './src/assets/_config'; // import shared colors etc.
+
+.sidebar {
+  background-color: var(--bg-black);
+
+  // App bar
+  multiwallet-sidebar {
+    animation: slide-in 0.6s 1; // make it slide-in on launch
+  }
+
+}
+
+@keyframes slide-in {
+  0% {
+    transform: translateX(calc(-1 * var(--multiwallet-width)));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

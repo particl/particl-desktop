@@ -58,7 +58,7 @@ body {
     font-family: var(--font-mono);
     span {
       display: inline-block;
-      margin: 0 1px;
+      margin: 0 8px;
       animation: pulse 0.6s alternate infinite ease-in-out;
       transform-origin: bottom;
       &:nth-child(2n+1) {
@@ -89,7 +89,7 @@ body {
 
 @keyframes pulse {
   to {
-    transform: scale(0.65);
     color: var(--color-tertiary);
+    font-size: 24px;
   }
 }
