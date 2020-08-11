@@ -24,18 +24,6 @@
         text-decoration: none;
       }
     }
-    details {
-      margin-bottom: 16px;
-      .details {
-        @extend %enable-select;
-        p {
-          margin-top: 0;
-          strong {
-            font-weight: 500;
-          }
-        }
-      }
-    }
   }
   label {
     display: block;
