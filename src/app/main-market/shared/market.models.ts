@@ -101,6 +101,7 @@ export interface BasicLinkedTemplate {
   parentListingItemTemplateId: number | null;
   updatedAt: number;
   createdAt: number;
+  ChildListingItemTemplates?: BasicLinkedTemplate[];  // Only on a "market" template
 }
 
 

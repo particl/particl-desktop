@@ -59,12 +59,17 @@
     <mat-divider></mat-divider>
     <mat-form-field class="--plain" appearance="fill">
       <mat-select placeholder="Filter by Market" [formControl]="filterMarket">
-        <mat-option *ngFor="let market of publishedOnMarketCriteria" [value]="market.value">
-          {{ market.title }}
+        <mat-option *ngFor="let market of publishedOnMarketCriteria" [value]="market.key">
+          {{ market.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
   </mat-card><!-- .filter-card -->
+
+  <h2 class="section-title" *ngIf="+filterBaseTemplateId.value > 0">
+    <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
+    Showing Limited Templates
+  </h2>
 
   <button mat-button color="basic" class="clear-filters" (click)="resetFilters()">
     <mat-icon fontIcon="part-clear-all"></mat-icon>
@@ -75,119 +80,107 @@
 
 
 <!-- Listings > list -->
-<div class="listings section with-filter" *appVar="[] as allTemplates">
-  <!-- infiniteScroll
-  [infiniteScrollContainer]="pagination.infinityScrollSelector"
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="50"
-  [fromRoot]="true"
-  (scrolled)="loadNextPage()" -->
+<div class="listings section with-filter">
 
-  <ng-container *ngIf="allTemplates.length > 0; else noTemplates">
-    <mat-accordion>
-      <mat-expansion-panel *ngFor="let templ of allTemplates; trackBy:trackBySavedTemplates" class="listing list-item no-padding">
-        <mat-expansion-panel-header class="header">
-          <div class="header-wrapper">
-            <div class="photo">
-              <img [src]="templ.images[0]?.thumbnailUrl" default="./assets/images/placeholder_4-3.jpg">
-            </div>
-            <div class="meta" fxFlex="1 1 100%">
-              <div class="name">{{templ.information.title}}</div>
-              <!-- TODO: if published on 1 market, display it's name; if on multiple display "X Markets" (as shown below) -->
-              <span class="published-markets">2 Markets<!--{{ listing?.market }}--></span>
-              <span class="category">{{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--></span>
-            </div>
-            <div class="status-wrap" fxFlex="0 0 140px">
-              <div class="status {{ templ.status }}">
-                <span class="dot"></span>
-                <ng-container [ngSwitch]="templ.status">
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.UNPUBLISHED">Unpublished</ng-container>
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.PENDING">Pending</ng-container>
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.PUBLISHED">Published</ng-container>
-                  <ng-container *ngSwitchCase="TEMPLATE_STATUS.EXPIRED">Expired</ng-container>
-                </ng-container>
+  <ng-container *ngIf="displayedListingIdxs.length > 0; else noListings">
+    <ng-container *ngFor="let listingIdx of displayedListingIdxs">
+      <mat-accordion>
+        <mat-expansion-panel class="listing list-item no-padding" *appVar="allListings[listingIdx] as listing">
+          <mat-expansion-panel-header class="header">
+            <div class="header-wrapper">
+              <div class="photo">
+                <img [src]="listing.image">
+              </div>
+              <div class="meta" fxFlex="1 1 100%">
+                <div class="name">{{ listing.title }}</div>
+                <span class="published-markets">{{ marketList[listing.marketKey] || '' }}</span>
+                <span class="category">{{ listing.categoryName }}</span>
+              </div>
+              <div class="status-wrap" fxFlex="0 0 140px">
+                <div class="status {{ listing.status === 'ACTIVE' ? 'pubished' : 'expired' }}">
+                  <span class="dot"></span>
+                  <ng-container [ngSwitch]="listing.status">
+                    <ng-container *ngSwitchCase="'ACTIVE'">Published</ng-container>
+                    <ng-container *ngSwitchCase="'EXPIRED'">Expired</ng-container>
+                  </ng-container>
+                </div>
               </div>
             </div>
-            <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
-          </div>
-        </mat-expansion-panel-header>
+          </mat-expansion-panel-header>
 
-        <div class="status-info">
-          <div class="text">
-            <h2 class="item-title">{{templ.information.title}}</h2>
-            <p>{{templ.information.summary}}</p>
-          </div>
-          <p class="item-info">
-            Category: {{ templ.status !== TEMPLATE_STATUS.UNPUBLISHED ? 'Some category' : ''}}<!--{{ listing?.category.name }}--><br>
-            Created: {{templ.created | date:'medium'}}<br>
-            Updated: {{templ.updated | date:'medium'}}<br>
-            Expires: 2020-05-11 15:86<!--{{ listing?.expiredAt }}-->
-          </p>
-        </div>
-
-        <div class="detail" fxLayout="row" fxLayoutGap="30px">
-          <div class="description" fxFlex="55%">
-            <h3 class="item-subtitle">Published on</h3>
-            <ul class="listing-info">
-              <li>Particl Open Marketplace</li>
-              <li>Sneaky Market</li>
-            </ul>
-          </div><!-- .description -->
-          <div class="pricing-info" fxFlex="45%">
-            <h3 class="item-subtitle">Pricing</h3>
-            <table class="prices">
-              <tfoot>
-                <th></th>
-                <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
-                <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th-->
-              </tfoot>
-              <tbody>
-                <tr>
-                  <th>Price per item</th>
-                  <td class="amount part">{{templ.price.basePrice.particlsString()}}</td>
-                  <!--td class="amount fiat">3.5165</td-->
-                </tr>
-                <tr>
-                  <th>Local shipping ({{templ.location.countryCode || ''}})</th>
-                  <td class="amount part">{{templ.price.shippingLocal.particlsString()}}</td>
-                  <!--td class="amount fiat">0.6518</td-->
-                </tr>
-                <tr>
-                  <th>Worldwide shipping</th>
-                  <td class="amount part">{{templ.price.shippingInternational.particlsString()}}</td>
-                  <!--td class="amount fiat">0.9410</td-->
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
-          <div class="left">
-            <button mat-button *ngIf="templ.status === TEMPLATE_STATUS.UNPUBLISHED" color="warn" matTooltip="Delete listing" (click)="deleteTemplate(templ.id)" class="small">
-              <mat-icon fontIcon="part-cross"></mat-icon>
-            </button>
-            <button mat-button matTooltip="Clone listing" (click)="cloneListing(templ.id)" class="small">
-              <mat-icon fontIcon="part-copy"></mat-icon>
-            </button>
-            <button mat-button *ngIf="templ.status === TEMPLATE_STATUS.UNPUBLISHED" matTooltip="Edit listing details" routerLink="new-listing" [queryParams]="{templateID: templ.id}" class="small">
-              <mat-icon fontIcon="part-pen-1"></mat-icon>
-              Edit
-            </button>
-            <button mat-button matTooltip="Open this listing" class="small" (click)="openPreview(templ.id)">
-              <mat-icon fontIcon="part-zoom-in"></mat-icon>
-              Open
-            </button>
+          <div class="status-info">
+            <div class="text">
+              <h2 class="item-title">{{ listing.title}}</h2>
+              <p>{{ listing.summary }}</p>
+            </div>
+            <p class="item-info">
+              Created: {{listing.created | date:'medium'}}<br>
+              Updated: {{listing.updated | date:'medium'}}<br>
+              Expires: {{listing.expires | date:'medium'}}
+            </p>
           </div>
 
-        </mat-action-row>
-      </mat-expansion-panel><!-- .listing -->
-    </mat-accordion>
+          <div class="detail" fxLayout="row" fxLayoutGap="30px">
+            <div class="description" fxFlex="55%">
+              <h3 class="item-subtitle">Published on</h3>
+              <ul class="listing-info">
+                <li>{{ marketList[listing.marketKey] || '' }}</li>
+              </ul>
+            </div><!-- .description -->
+            <div class="pricing-info" fxFlex="45%">
+              <h3 class="item-subtitle">Pricing</h3>
+              <table class="prices">
+                <tfoot>
+                  <th></th>
+                  <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+                  <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th-->
+                </tfoot>
+                <tbody>
+                  <tr>
+                    <th>Price per item</th>
+                    <td class="amount part">{{ listing.priceBase }}</td>
+                    <!--td class="amount fiat">3.5165</td-->
+                  </tr>
+                  <tr>
+                    <th>Local shipping ({{ listing.shippingSource || '' }})</th>
+                    <td class="amount part">{{ listing.priceShippingLocal }}</td>
+                    <!--td class="amount fiat">0.6518</td-->
+                  </tr>
+                  <tr>
+                    <th>Worldwide shipping</th>
+                    <td class="amount part">{{ listing.priceShippingIntl }}</td>
+                    <!--td class="amount fiat">0.9410</td-->
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+            <div class="left">
+              <button mat-button matTooltip="Open Product listing details" (click)="navigateToTemplate(listing.idBaseTemplate, listing.marketKey)" class="small">
+                <mat-icon fontIcon="part-copy"></mat-icon>
+                Open Product Details
+              </button>
+              <button mat-button matTooltip="Edit product template" routerLink="new-listing" [queryParams]="{templateID: listing.idMarketTemplate}" class="small">
+                <mat-icon fontIcon="part-pen-1"></mat-icon>
+                Edit Product Template
+              </button>
+              <button mat-button matTooltip="Open this listing" class="small" (click)="openPreview(listing.listingId)">
+                <mat-icon fontIcon="part-zoom-in"></mat-icon>
+                Open Listing Details
+              </button>
+            </div>
+
+          </mat-action-row>
+        </mat-expansion-panel><!-- .listing -->
+      </mat-accordion>
+    </ng-container>
   </ng-container>
 
-  <ng-template #noTemplates>
+  <ng-template #noListings>
     <!-- no listings at all -->
-    <div class="no-results" *ngIf="!false">
+    <div class="no-results" *ngIf="allListings.length === 0">
       <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Listings">
       <p>
         You don't have any Listings yet
@@ -198,8 +191,8 @@
     </div><!-- .no-results -->
 
     <!-- no listings matching search -->
-    <div class="no-results" *ngIf="false">
-      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings found">
+    <div class="no-results" *ngIf="(allListings.length > 0) && (displayedListingIdxs.length === 0)">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Listings match the search criteria">
       <p>
         No matching Listings found
       </p>
@@ -211,6 +204,6 @@
 </div><!-- .listings-list -->
 
 
-<div class="loading-bar" *ngIf="false">
+<div class="loading-bar" *ngIf="isLoading">
   <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
 </div><!-- .loading-bar -->

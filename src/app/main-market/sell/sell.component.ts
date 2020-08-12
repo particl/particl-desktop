@@ -1,5 +1,7 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
+import { map, tap, takeUntil } from 'rxjs/operators';
 
 
 interface SellTab {
@@ -14,7 +16,7 @@ interface SellTab {
   styleUrls: ['./sell.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SellComponent implements OnInit {
+export class SellComponent implements OnInit, OnDestroy {
 
   readonly tabs: SellTab[] = [
     { title: 'Sell Orders', icon: 'part-recipe', templ: 'orders'},
@@ -25,20 +27,35 @@ export class SellComponent implements OnInit {
 
 
   private selectedTabIdx: number = 0;
+  private destroy$: Subject<void> = new Subject();
 
 
   constructor(
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _cdr: ChangeDetectorRef
   ) { }
 
 
   ngOnInit() {
-    const query = this._route.snapshot.queryParams;
-    const selectedSellTab = query['selectedSellTab'];
-    const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
-    if (newTabIdx > -1) {
-      this.selectedTabIdx = newTabIdx;
-    }
+    this._route.queryParams.pipe(
+      map(params => params['selectedSellTab']),
+      tap((selectedSellTab: string | undefined) => {
+        if (selectedSellTab) {
+          const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
+          if (newTabIdx > -1) {
+            this.selectedTabIdx = newTabIdx;
+          }
+          this._cdr.detectChanges();
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
