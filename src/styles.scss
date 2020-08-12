@@ -32,6 +32,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       3.7. Tables
       3.8. Details/summary expander
       3.9. Modals
+      3.10. Detail/summary toggle
     4. Typography
       4.1. (Sub)titles (h2, h3..)
       4.2. Paragraph styles
@@ -710,6 +711,22 @@ details { // Sell > Import & Product list item
 }
 
 
+// ------ 3.10. DETAIL/SUMMARY TOGGLE ------ //
+
+// Usage: details > summary + .details
+details {
+  @extend %help-text;
+  margin-bottom: 16px;
+  .details {
+    p {
+      margin-top: 0;
+      strong {
+        font-weight: 500;
+      }
+    }
+  }
+}
+
 
 /* ------------------------------- *\
     4. TYPOGRAPHY
@@ -750,6 +767,17 @@ h1 {
   }
 }
 
+// Alternative to .box-titles ^
+.item-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 28px 0 14px;
+  color: var(--text);
+  @include break(l) {
+    font-size: 18px;
+    margin-top: 36px;
+  }
+}
 
 // ------ 4.2. PARAGRAPH STYLES ------ //
 
