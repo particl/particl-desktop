@@ -13,6 +13,7 @@ export interface Market {
   name: string;
   type: MarketType;
   receiveAddress: string;
+  identityId: number;
 }
 
 

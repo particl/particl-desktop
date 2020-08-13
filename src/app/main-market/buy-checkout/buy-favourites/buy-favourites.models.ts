@@ -2,6 +2,7 @@
 export interface FavouritedListing {
   favouriteId: number;
   listingId: number;
+  marketKey: string;
   title: string;
   summary: string;
   hash: string;

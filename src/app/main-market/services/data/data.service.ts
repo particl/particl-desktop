@@ -43,7 +43,12 @@ export class DataService {
         const filteredMarkets: Market[] = [];
         for (const market of marketsReq) {
           if ( !identityId || (market.identityId === identityId) ) {
-            filteredMarkets.push({id: market.id, name: market.name, type: market.type, receiveAddress: market.receiveAddress});
+            filteredMarkets.push({
+              id: +market.id,
+              name: market.name,
+              type: market.type,
+              receiveAddress: market.receiveAddress,
+              identityId: +market.identityId});
           }
         }
         return filteredMarkets;

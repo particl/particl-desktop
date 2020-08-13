@@ -105,6 +105,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    let isInitialLoad = true;
+
     // Websocket message update handlers
 
     const newMessageListings$ = this._listingService.getListenerNewListings().pipe(
@@ -211,7 +213,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
       tap(() => {
         this.resetFilters();
         // necessary, for in case the filters are not reset (thus not causing a reload of listings for the selected market)
-        this.forceReload$.setValue(null);
+        //  but also only if not on the first, inital load, since the filter reset above will cause the load action and this just
+        //  duplicates the load action.
+        if (isInitialLoad) {
+          isInitialLoad = false;
+        } else {
+          this.forceReload$.setValue(null);
+        }
       }),
       takeUntil(this.destroy$)
     );
@@ -273,7 +281,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const loadListings$ = merge(
       reset$,
       scrolled$,
-      this.forceReload$.valueChanges.pipe(takeUntil(this.destroy$))
+      this.forceReload$.valueChanges.pipe(tap(() => this.listings = []), takeUntil(this.destroy$))
     ).pipe(
 
       tap(() => {

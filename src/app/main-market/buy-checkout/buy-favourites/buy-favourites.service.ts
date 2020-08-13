@@ -54,7 +54,8 @@ export class FavouritesService {
         hash = '',
         image = './assets/images/placeholder_4-3.jpg',
         expiry = 0,
-        isOwn = false;
+        isOwn = false,
+        marketKey = '';
 
     const price = new PartoshiAmount(0);
 
@@ -73,6 +74,8 @@ export class FavouritesService {
           hash = getValueOrDefault(fromListing.hash, 'string', hash);
           expiry = getValueOrDefault(fromListing.expiredAt, 'number', expiry);
           isOwn = +fromListing.listingItemTemplateId > 0;
+
+          marketKey = getValueOrDefault(fromListing.market, 'string', marketKey);
 
           if (isBasicObjectType(fromListing.ItemInformation.ItemLocation)) {
             isLocalShipping = userRegion === getValueOrDefault(fromListing.ItemInformation.ItemLocation.country, 'string', '');
@@ -115,6 +118,7 @@ export class FavouritesService {
     const newItem: FavouritedListing = {
       favouriteId: favId,
       listingId: listingId,
+      marketKey: marketKey,
       title: title,
       summary: summary,
       hash: hash,

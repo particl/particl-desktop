@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, timer } from 'rxjs';
-import { finalize, takeUntil, take } from 'rxjs/operators';
+import { Observable, Subject, timer, of, merge } from 'rxjs';
+import { finalize, takeUntil, take, tap, concatMap, switchMap, catchError } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 
@@ -11,7 +12,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { FavouritesService } from './buy-favourites.service';
 import { DataService } from '../../services/data/data.service';
 import { FavouritedListing } from './buy-favourites.models';
-import { CartDetail } from '../../store/market.models';
+import { CartDetail, Identity } from '../../store/market.models';
 
 
 enum TextContent {
@@ -35,13 +36,18 @@ enum TextContent {
 export class BuyFavouritesComponent implements OnInit, OnDestroy {
 
   @Select(MarketState.availableCarts) availableCarts$: Observable<CartDetail[]>;
+  @Select (MarketState.currentIdentity) identity$: Observable<Identity>;
 
+  favDisplayIdxs: number[] = [];
   favouriteList: FavouritedListing[] = [];
   isLoadingItems: boolean = true;
 
   private destroy$: Subject<void> = new Subject();
   private readonly EXPIRY_COUNT: number = 5;
   private expiryDates: number[] = [];
+  private marketsIdentityMap: Map<string, number> = new Map();
+  private updateDisplayControl: FormControl = new FormControl();
+  private identityId: number = 0;
 
 
   constructor(
@@ -54,19 +60,55 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._favService.fetchFavourites().pipe(
-      finalize(() => {
-        this.isLoadingItems = false;
-        this._cdr.detectChanges();
-      })
-    ).subscribe(
-      (items) => {
+
+    const fav$ = this._favService.fetchFavourites().pipe(
+      tap((items) => {
         this.favouriteList = items;
         this.updateExpiryList();
         this.startExpirationTimer();
-      },
-      (_) => this._snackbar.open(TextContent.FAILED_LOAD)
+      })
     );
+
+    const init$ = this._sharedService.loadMarkets().pipe(
+      tap((marketsList) => {
+        marketsList.forEach(market => {
+          if (+market.identityId > 0) {
+            this.marketsIdentityMap.set(market.receiveAddress, market.identityId);
+          }
+        });
+      }),
+      concatMap(() => fav$),
+      catchError(() => {
+        this._snackbar.open(TextContent.FAILED_LOAD);
+        return of(null);
+      }),
+      finalize(() => {
+        this.isLoadingItems = false;
+        this.updateDisplayControl.setValue(null);
+      })
+    );
+
+    const display$ = this.updateDisplayControl.valueChanges.pipe(
+      switchMap(() => this.setVisibleItems()),
+      tap(() => {
+        this._cdr.detectChanges();
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    const idChange$ = this.identity$.pipe(
+      tap((identity) => {
+        this.identityId = +identity.id;
+        this.updateDisplayControl.setValue(null);
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    merge(
+      init$,
+      idChange$,
+      display$
+    ).subscribe();
   }
 
 
@@ -97,7 +139,7 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
         }
 
         this.favouriteList.splice(idx, 1);
-        this._cdr.detectChanges();
+        this.updateDisplayControl.setValue(null);
       }
     );
   }
@@ -251,5 +293,27 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
       this._cdr.detectChanges();
     }
 
+  }
+
+
+  private setVisibleItems(): Observable<number[]> {
+    const favsList: number[] = [];
+    const markets: string[] = [];
+
+    this.marketsIdentityMap.forEach((id, mKey) => {
+      if (id === this.identityId) {
+        markets.push(mKey);
+      }
+    });
+
+    if (markets.length > 0) {
+      this.favouriteList.forEach((fav, idx) => {
+        if (markets.includes(fav.marketKey)) {
+          favsList.push(idx);
+        }
+      });
+    }
+
+    return of(favsList);
   }
 }
