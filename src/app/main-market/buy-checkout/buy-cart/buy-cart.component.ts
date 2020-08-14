@@ -428,7 +428,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         try {
           if (
             resp &&
-            Object.prototype.toString.call(resp.cartItems) === '[object Array]' &&
+            Array.isArray(resp.cartItems) &&
             (resp.cartItems.length  === 0) &&
             isCartStateGood
           ) {

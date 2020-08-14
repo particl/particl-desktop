@@ -99,7 +99,7 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
         this.labelUtxoType = TextContent.UNKNOWN;
     }
 
-    if (data && (Object.prototype.toString.call(data.selected) === '[object Array]')) {
+    if (data && (Array.isArray(data.selected))) {
       data.selected.forEach(initItem => {
         if (initItem && (Object.prototype.toString.call(initItem) === '[object Object]')) {
           if ((typeof initItem.txid === 'string') && (typeof initItem.vout === 'number')) {

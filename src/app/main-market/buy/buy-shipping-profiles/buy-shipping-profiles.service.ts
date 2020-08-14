@@ -25,7 +25,7 @@ export class BuyShippingProfilesService {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     return this._rpc.call('address', ['list', profileId, ADDRESS_TYPES.SHIPPING_OWN ]).pipe(
       map((addresses: RespAddressListItem[]) => {
-        if (Object.prototype.toString.call(addresses) !== '[object Array]') {
+        if (!Array.isArray(addresses)) {
           return [];
         }
 

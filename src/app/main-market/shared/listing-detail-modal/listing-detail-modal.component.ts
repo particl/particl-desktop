@@ -55,7 +55,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
   }
 
   private static isArray(obj: any): boolean {
-    return Object.prototype.toString.call(obj) === '[object Array]';
+    return Array.isArray(obj);
   }
 
   @Output() eventFavouritedItem: EventEmitter<number> = new EventEmitter();

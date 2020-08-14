@@ -48,7 +48,7 @@ export class WalletBackupModalComponent {
     };
     this._ipc.runCommand('open-system-dialog', null, options).toPromise().then(
       (path) => {
-        const newPath = Object.prototype.toString.call(path) === '[object Array]' && (typeof path[0] === 'string') ? path[0] : undefined;
+        const newPath = Array.isArray(path) && (typeof path[0] === 'string') ? path[0] : undefined;
         if (newPath) {
           this._filePath = newPath;
         }

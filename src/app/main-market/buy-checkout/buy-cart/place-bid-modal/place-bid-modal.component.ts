@@ -77,7 +77,7 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
 
     // extraction of input data
     if (isBasicObjectType(this.data)) {
-      if (Object.prototype.toString.call(this.data.items) === '[object Array]') {
+      if (Array.isArray(this.data.items)) {
         this.data.items.forEach(item => {
           if (
             item &&
@@ -94,7 +94,7 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
         this.summary.shippingDetails.destinationCountryCode = getValueOrDefault(
           this.data.shippingDetails.destinationCountryCode, 'string', this.summary.shippingDetails.destinationCountryCode
         );
-        if (Object.prototype.toString.call(this.data.shippingDetails.address) === '[object Array]') {
+        if (Array.isArray(this.data.shippingDetails.address)) {
           this.data.shippingDetails.address.forEach(addrLine => {
             if (typeof addrLine === 'string') {
               this.summary.shippingDetails.address.push(addrLine);

@@ -310,7 +310,7 @@ export class SendComponent implements OnInit, OnDestroy {
     }).afterClosed().pipe(
       take(1),
       tap((utxos) => {
-        if (Object.prototype.toString.call(utxos) === '[object Array]') {
+        if (Array.isArray(utxos)) {
 
           const utxosSelected: {tx: string, n: number, amount: number}[] = [];
 

@@ -139,14 +139,14 @@ export class ListingsService {
       }
 
       // Image selection and processing
-      if (Object.prototype.toString.call(fromDetails.ItemImages) === '[object Array]') {
+      if (Array.isArray(fromDetails.ItemImages)) {
         if (fromDetails.ItemImages.length) {
           let featured = fromDetails.ItemImages.find(img => img.featured);
           if (featured === undefined) {
             featured = fromDetails.ItemImages[0];
           }
 
-          const imgDatas = Object.prototype.toString.call(featured.ItemImageDatas) === '[object Array]' ? featured.ItemImageDatas : [];
+          const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
           const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
           if (selected) {
             imageSelected = formatImagePath(
@@ -174,7 +174,7 @@ export class ListingsService {
     }
 
     // Favourite?
-    if (Object.prototype.toString.call(from.FavoriteItems) === '[object Array]') {
+    if (Array.isArray(from.FavoriteItems)) {
 
       for (let ii = 0; ii < from.FavoriteItems.length; ii++) {
         if (from.FavoriteItems[ii].profileId === profileId) {
@@ -186,8 +186,7 @@ export class ListingsService {
 
     // Process extra info
     isOwnListing = isBasicObjectType(from.ListingItemTemplate) && (+from.ListingItemTemplate.id > 0);
-    // commentCount = Object.prototype.toString.call(from.MessagingInformation) === '[object Array]' ?
-    //     from.MessagingInformation.length : 0;
+    // commentCount = Array.isArray(from.MessagingInformation) ? from.MessagingInformation.length : 0;
     commentCount = 0;
 
     const expirationTime = getValueOrDefault(from.expiredAt, 'number', 0);

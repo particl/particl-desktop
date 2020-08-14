@@ -82,7 +82,7 @@ export class BuyCartService {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     return this._rpc.call('address', ['list', profileId, ADDRESS_TYPES.SHIPPING_OWN ]).pipe(
       map((addresses: RespAddressListItem[]) => {
-        if (Object.prototype.toString.call(addresses) !== '[object Array]') {
+        if (!Array.isArray(addresses)) {
           return [];
         }
 
@@ -287,7 +287,7 @@ export class BuyCartService {
       newCartItem.title = getValueOrDefault(from.ListingItem.ItemInformation.title, 'string', newCartItem.title);
       newCartItem.expiryTime = getValueOrDefault(from.ListingItem.expiredAt, 'number', newCartItem.expiryTime);
 
-      if (Object.prototype.toString.call(from.ListingItem.ItemInformation.ShippingDestinations) === '[object Array]') {
+      if (Array.isArray(from.ListingItem.ItemInformation.ShippingDestinations)) {
         from.ListingItem.ItemInformation.ShippingDestinations.forEach((shipping) => {
           if ((getValueOrDefault(shipping.country, 'string', '') !== '') && (shipping.shippingAvailability === 'SHIPS')) {
             newCartItem.shippingLocations.push(shipping.country);
@@ -296,7 +296,7 @@ export class BuyCartService {
       }
 
       if (
-        (Object.prototype.toString.call(from.ListingItem.ItemInformation.ItemImages) === '[object Array]') &&
+        (Array.isArray(from.ListingItem.ItemInformation.ItemImages)) &&
         (from.ListingItem.ItemInformation.ItemImages.length)
       ) {
         let featured = from.ListingItem.ItemInformation.ItemImages.find(img => img.featured);
@@ -304,7 +304,7 @@ export class BuyCartService {
           featured = from.ListingItem.ItemInformation.ItemImages[0];
         }
 
-        const imgDatas = Object.prototype.toString.call(featured.ItemImageDatas) === '[object Array]' ? featured.ItemImageDatas : [];
+        const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
         const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
         if (selected) {
           newCartItem.image = formatImagePath(getValueOrDefault(selected.dataId, 'string', ''), marketPort) || newCartItem.image;

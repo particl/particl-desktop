@@ -32,7 +32,7 @@ export class SellTemplatesService {
 
 
   private isArray(obj: any): boolean {
-    return Object.prototype.toString.call(obj) === '[object Array]';
+    return Array.isArray(obj);
   }
 
 

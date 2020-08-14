@@ -187,7 +187,7 @@ export class MarketRpcService {
     if (this.isConnected && (this.marketSocket.closed || needsCreation)) {
       this.marketSocket.subscribe(
         (msg: SocketDataObject) => {
-          if (Object.prototype.toString.call(msg.data) === '[object Array]' && (typeof msg.data[0] === 'string')) {
+          if (Array.isArray(msg.data) && (typeof msg.data[0] === 'string')) {
             const msgKey = msg.data[0];
             if (msgKey === 'serverping') {
               // keepalive: respond to the server's ping

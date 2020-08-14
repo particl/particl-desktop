@@ -191,7 +191,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
     const newIds: Array<number|string> = [];
     if ((typeof newSelectedIds === 'number') || typeof newSelectedIds === 'string') {
       newIds.push(newSelectedIds);
-    } else if (Object.prototype.toString.call(newSelectedIds) === '[object Array]') {
+    } else if (Array.isArray(newSelectedIds)) {
       if (this.singleSelection) {
         newIds.push((newSelectedIds as Array<number|string>)[0]);
       } else {
@@ -329,7 +329,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
       node.item = item.name;
       const children = item.children;
 
-      if ((Object.prototype.toString.call(children) === '[object Array]') && (children.length > 0)) {
+      if (Array.isArray(children) && (children.length > 0)) {
         node.children = this.buildNodeTree(children, level + 1);
       }
 

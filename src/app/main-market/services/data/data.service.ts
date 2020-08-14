@@ -71,7 +71,7 @@ export class DataService {
       children: []
     };
 
-    if (Object.prototype.toString.call(category.ChildItemCategories) === '[object Array]') {
+    if (Array.isArray(category.ChildItemCategories)) {
       item.children = category.ChildItemCategories.reduce<CategoryItem[]>((acc: CategoryItem[], childItem: RespCategoryList) => {
         if (!marketKey || (childItem.market === marketKey)) {
           return acc.concat(this.parseCategories(childItem));
@@ -120,7 +120,7 @@ export class DataService {
         codes.push(shippingLocation.code);
       }
 
-      if (Object.prototype.toString.call(fromDetails.ShippingDestinations) === '[object Array]') {
+      if (Array.isArray(fromDetails.ShippingDestinations)) {
         fromDetails.ShippingDestinations.forEach((shipping) => {
           if ((getValueOrDefault(shipping.country, 'string', '') !== '') && (shipping.shippingAvailability === 'SHIPS')) {
             codes.push(shipping.country);
@@ -147,7 +147,7 @@ export class DataService {
       }
 
       // images
-      if (Object.prototype.toString.call(fromDetails.ItemImages) === '[object Array]') {
+      if (Array.isArray(fromDetails.ItemImages)) {
         fromDetails.ItemImages.forEach(img => {
           if (img.featured) {
             images.featured = images.images.length;
@@ -155,7 +155,7 @@ export class DataService {
           let thumbUrl = '';
           let imgUrl = '';
 
-          if (Object.prototype.toString.call(img.ItemImageDatas) === '[object Array]') {
+          if (Array.isArray(img.ItemImageDatas)) {
             img.ItemImageDatas.forEach(d => {
               if (d.imageVersion) {
                 if (d.imageVersion === 'MEDIUM' && getValueOrDefault(d.dataId, 'string', imgUrl)) { imgUrl = d.dataId; }
@@ -198,7 +198,7 @@ export class DataService {
       flaggedHash = getValueOrDefault(from.FlaggedItem.Proposal.hash, 'string', flaggedHash);
     }
 
-    if (Object.prototype.toString.call(from.FavoriteItems) === '[object Array]') {
+    if (Array.isArray(from.FavoriteItems)) {
 
       for (let ii = 0; ii < from.FavoriteItems.length; ii++) {
         if (from.FavoriteItems[ii].profileId === profileId) {

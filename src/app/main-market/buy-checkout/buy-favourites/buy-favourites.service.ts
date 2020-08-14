@@ -82,14 +82,14 @@ export class FavouritesService {
           }
 
 
-          if (Object.prototype.toString.call(fromListing.ItemInformation.ItemImages) === '[object Array]') {
+          if (Array.isArray(fromListing.ItemInformation.ItemImages)) {
             if (fromListing.ItemInformation.ItemImages.length) {
               let featured = fromListing.ItemInformation.ItemImages.find(img => img.featured);
               if (featured === undefined) {
                 featured = fromListing.ItemInformation.ItemImages[0];
               }
 
-              const imgDatas = Object.prototype.toString.call(featured.ItemImageDatas) === '[object Array]' ? featured.ItemImageDatas : [];
+              const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
               const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
               if (selected) {
                 image = formatImagePath(getValueOrDefault(selected.dataId, 'string', ''), marketPort) || image;
