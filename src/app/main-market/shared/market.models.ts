@@ -9,6 +9,9 @@ export type IMAGE_ENCODING = 'BASE64';
 export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'LARGE';
 export enum ADDRESS_TYPES { SHIPPING_OWN = 'SHIPPING_OWN', SHIPPING_BID = 'SHIPPING_BID' }
 export enum ESCROW_RELEASE_TYPE { ANON = 'anon', BLIND = 'blind' }
+export enum COMMENT_TYPES {
+  LISTINGITEM_QUESTION_AND_ANSWERS = 'LISTINGITEM_QUESTION_AND_ANSWERS'
+}
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
@@ -598,4 +601,31 @@ export interface RespCartItemListItem {
   createdAt: number;
   ShoppingCart: RespCartListItem;
   ListingItem: RespListingItem;
+}
+
+
+export interface RespCommentListItem {
+  id: number;
+  msgid: string;
+  parentCommentId: null | string;
+  hash: string;
+  sender: string;
+  receiver: string;
+  type: COMMENT_TYPES;
+  target: string;
+  message: string;
+  generatedAt: number;
+  postedAt: number;
+  expiredAt: number;
+  receivedAt: number;
+  updatedAt: number;
+  createdAt: number;
+  ParentComment?: null | RespCommentListItem;
+  ChildComments?: RespCommentListItem[];
+}
+
+
+export interface RespCommentPost {
+  result: string;
+  msgid: string;
 }
