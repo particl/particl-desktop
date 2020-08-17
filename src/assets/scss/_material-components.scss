@@ -1042,17 +1042,16 @@ mat-option.mat-option {
       &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
         background: transparent;
         border: 0;
-        color: var(--text-muted);
         .mat-button-toggle-label-content {
           line-height: 36px;
         }
         &:hover,
         &:focus {
           background: hsla(var(--text-hsl), .04);
-          color: var(--text);
         }
         &.mat-button-toggle-checked {
-          color: var(--text);
+          background: hsla(var(--color-info-hsl), 0.1);
+          color: var(--color-info);
         }
       }
     }

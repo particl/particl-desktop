@@ -1,93 +1,6 @@
-<app-header>
-  <div class="control-bar" fxLayout="row" fxLayoutAlign="space-between stretch">
-
-    <!-- TODO @Allien: fix the market switcher? -->
-    <div class="search-listings --plain" fxFlex="1 1 10%">
-      <button mat-button *ngIf="marketsList.length === 0">
-        {{ activeMarket ? activeMarket.name : '' }}
-      </button>
-      <button mat-button *ngIf="marketsList.length > 0" [matMenuTriggerFor]="markets">
-        <mat-icon fontIcon="part-hamburger"></mat-icon>
-        {{ activeMarket ? activeMarket.name : '' }}
-      </button>
-    </div>
-
-    <mat-menu #markets="matMenu" class="smaller with-images">
-      <button mat-menu-item *ngFor="let market of marketsList" (click)="changeMarket(market)">
-        <img class="image" width="25" height="25" src="/assets/images/placeholder_1-1.jpg">
-        {{ market.name }}
-      </button>
-    </mat-menu>
-
-    <!-- Search-->
-    <mat-form-field appearance="fill" class="search-listings --plain" fxFlex="1 1 20%">
-      <mat-icon matPrefix fontIcon="part-search"></mat-icon>
-      <input matInput type="text" [formControl]="searchQuery" placeholder="Search Listings…">
-    </mat-form-field>
-
-    <!-- Filtering -->
-
-    <div class="filter-by category" fxFlex="1 1 20%">
-      <tree-select
-        #categorySelection
-        [data$]="categoriesList$"
-        [singleSelection]="false"
-        [isParentNodesSelectable]="true"
-        placeholderLabel="Filter by Category"
-        prefixIcon="part-filter"
-        matTooltip="Filter by categories" matTooltipPosition="below"
-        (onClosed)="filterCategory.setValue($event)">
-      </tree-select>
-    </div>
-
-    <div class="filter-by seller-country" fxFlex="1 1 20%">
-      <tree-select
-        #countrySourceSelection
-        [data$]="countryList$"
-        [singleSelection]="true"
-        placeholderLabel="Origin Country"
-        prefixIcon="part-globe"
-        matTooltip="Filter by Seller's country" matTooltipPosition="below"
-        (onClosed)="filterSourceRegion.setValue($event)">
-      </tree-select>
-    </div>
-
-    <div class="filter-by buyer-country" fxFlex="1 1 20%">
-      <tree-select
-        #countryDestinationSelection
-        [data$]="countryList$"
-        [singleSelection]="true"
-        placeholderLabel="Destination Country"
-        prefixIcon="part-truck"
-        matTooltip="Select your country to calculate exact shipping & Escrow prices" matTooltipPosition="below"
-        (onClosed)="filterTargetRegion.setValue($event)">
-      </tree-select>
-    </div>
-
-    <div class="filter-buttons">
-
-      <button mat-button class="refresh filter-button small" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
-        <mat-icon fontIcon="part-refresh"></mat-icon>
-        <div class="dot"></div>
-      </button>
-
-      <mat-button-toggle class="flagged filter-button small" type="checkbox" value="reported-only" [matTooltip]="filterFlagged.value ? 'Show all Listings' : 'Show reported Listings only'" (change)="filterFlagged.setValue(!filterFlagged.value)">
-        <mat-icon fontIcon="part-flag"></mat-icon>
-      </mat-button-toggle>
-
-      <button mat-button *ngIf="filterSeller.value.length > 0" class="refresh filter-button small" (click)="filterSeller.setValue('')" matTooltip="Clear seller filter">
-        <mat-icon fontIcon="part-cross"></mat-icon>
-      </button>
-
-    </div><!-- .filter-buttons -->
-
-  </div><!-- .control-bar -->
-</app-header>
-
-
 <div class="container-block with-control-bar">
   <app-page-intro>
-    <ng-container page-title>Particl Open Marketplace</ng-container>
+    <ng-container page-title>{{ activeMarket ? activeMarket.name : '' }}</ng-container>
     <ng-container page-content>
       Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
       Keep in mind, that you can buy Listings here only with your private Anon balance.
@@ -98,101 +11,234 @@
   </app-page-intro>
 
 
-  <div class="content grid-container" infiniteScroll
-       [scrollWindow]="true"
-       [infiniteScrollDisabled]="(listings.length === 0) || atEndOfListings || isLoadingListings"
-       (scrolled)="actionScroll.setValue(null)"
-       *appVar="(availableCarts | async)[0] as selectedCart"
-  >
+  <div class="row">
 
-    <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
-      <div mat-card-image (click)="openListingDetailModal(listing.id, false)">
-        <img class="img" [src]="listing.image" [alt]="listing.title">
+    <div class="filter">  
+
+      <!-- search unified with those from Address Book and Sell > Listings -->
+      <mat-form-field class="--boxed" appearance="fill">
+        <input matInput type="text" class="header-input" placeholder="Search Listings…" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
+        <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+        </button>
+        <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+      </mat-form-field>
+      
+
+      <!-- Market switcher -->
+      <div class="market-switcher">
+        <button mat-button *ngIf="marketsList.length === 0" matTooltip="Active Market: {{ activeMarket ? activeMarket.name : '' }} &#13; Click to change Market" matTooltipPosition="after" matTooltipClass="multi-line" class="small icon-only">
+          <mat-icon fontIcon="part-shop"></mat-icon>
+          <!--{{ activeMarket ? activeMarket.name : '' }}-->
+        </button>
+        <button mat-button *ngIf="marketsList.length > 0" [matMenuTriggerFor]="markets" matTooltip="Active Market: {{ activeMarket ? activeMarket.name : '' }} &#13; Click to change Market" matTooltipPosition="after" matTooltipClass="multi-line" class="small icon-only">
+          <mat-icon fontIcon="part-shop"></mat-icon>
+          <!--{{ activeMarket ? activeMarket.name : '' }}-->
+        </button>
       </div>
-      <mat-card-header (click)="openListingDetailModal(listing.id, false)">
-        <mat-card-title>
-          {{ listing.title }}
-        </mat-card-title>
-        <mat-card-subtitle>
-          {{ listing.summary }}
-        </mat-card-subtitle>
-      </mat-card-header>
-      <mat-card-actions fxLayoutAlign="space-between center">
-        <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!listing.extras.canAddToCart" (click)="addItemToCart(listingIdx, selectedCart && selectedCart.id)">
-          <mat-icon fontIcon="part-cart"></mat-icon>
-          <mat-icon fontIcon="part-cart-plus"></mat-icon>
-          {{ listing.price.whole }}{{ listing.price.sep }}<small>{{ listing.price.decimal }}</small>
-          <mat-icon fontIcon="part-cryptocurrency-particl"></mat-icon>
-        </button>
-        <button mat-button class="more-options tiny icon-only" [matMenuTriggerFor]="menu" aria-label="Secondary Listing actions">
-          <mat-icon fontIcon="part-more-horizontal"></mat-icon>
-        </button>
-      </mat-card-actions>
-      <mat-menu #menu="matMenu" class="--smaller">
-        <button mat-menu-item [disabled]="listing.extras.isFlagged" (click)="reportListing(listingIdx)">
-          <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
-          <span>{{ listing.extras.isFlagged ? 'Flagged as inappropriate' : 'Report as inappropriate' }}</span>
-        </button>
-        <button mat-menu-item (click)="openListingDetailModal(listing.id, true)">
-          <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-          <span>Questions &amp; Answers</span>
-        </button>
-        <button mat-menu-item (click)="updateFav(listingIdx, listing.extras.favouriteId === 0 ? 'ADD' : 'REMOVE')">
-          <ng-container *ngIf="listing.extras.favouriteId === 0">
-            <mat-icon fontIcon="part-heart-outline"></mat-icon>
-            <span>Add to Favourites</span>
-          </ng-container>
-          <ng-container *ngIf="listing.extras.favouriteId > 0">
-            <mat-icon fontIcon="part-heart"></mat-icon>
-            <span>Remove from Favourites</span>
-          </ng-container>
-        </button>
-        <button mat-menu-item *ngIf="filterSeller.value === ''" (click)="filterSeller.setValue(listing.seller)">
-          <mat-icon fontIcon="part-search"></mat-icon>
-          <span>Other Items from Seller</span>
+
+      <mat-menu #markets="matMenu" class="smaller with-images">
+        <button mat-menu-item *ngFor="let market of marketsList" (click)="changeMarket(market)">
+          <img class="image" width="25" height="25" src="/assets/images/placeholder_1-1.jpg">
+          {{ market.name }}
         </button>
       </mat-menu>
-    </mat-card>
+  
 
 
-    <div class="no-results" *ngIf="!isLoadingListings && (listings.length === 0)">
+      <h2 class="section-title">
+        Filter
+      </h2>
 
-      <ng-container *ngIf="!isSearching; else searchingBanner">
-        <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="Market is syncing">
-        <p>
-          No Listings on the Marketplace
-        </p>
-        <p class="help-text">
-          If you launched the Marketplace recently, Listings might not load yet.<br>
-          Please wait a few minutes and then:
-        </p>
-        <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)">
-          <mat-icon fontIcon="part-refresh"></mat-icon>
-          Refresh Listings
+      <mat-card class="filter-card">
+
+        <tree-select
+          #categorySelection
+          [data$]="categoriesList$"
+          [singleSelection]="false"
+          [isParentNodesSelectable]="true"
+          placeholderLabel="Filter by Category"
+          prefixIcon="part-filter"
+          (onClosed)="filterCategory.setValue($event)">
+        </tree-select>
+
+        <!-- Clear Seller filter -->
+        <button mat-button *ngIf="filterSeller.value.length > 0" class="small clear-seller-filter" (click)="filterSeller.setValue('')" color="warn">
+          <mat-icon fontIcon="part-cross"></mat-icon>
+          Clear filtering by Seller
         </button>
-      </ng-container>
 
-      <ng-template #searchingBanner>
-        <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
+      </mat-card>
+
+
+      <h2 class="section-title">
+        Shipping
+      </h2>
+
+      <mat-card class="filter-card">
+        <tree-select
+          #countrySourceSelection
+          [data$]="countryList$"
+          [singleSelection]="true"
+          placeholderLabel="Origin Country"
+          prefixIcon="part-globe"
+          matTooltip="Filter by Seller's country" matTooltipPosition="after"
+          (onClosed)="filterSourceRegion.setValue($event)">
+        </tree-select>
+        <!-- @TODO: Destination coutry should default to value set in Market Settings -->
+        <tree-select
+          #countryDestinationSelection
+          [data$]="countryList$"
+          [singleSelection]="true"
+          placeholderLabel="Destination Country"
+          prefixIcon="part-truck"
+          matTooltip="Select your country to calculate&#13;exact shipping & Escrow prices" matTooltipPosition="after" matTooltipClass="multi-line"
+          (onClosed)="filterTargetRegion.setValue($event)">
+        </tree-select>
+      </mat-card>
+
+      <div class="filter-buttons">
+        <div class="left">
+          <!-- Clear filters -->
+          <!-- @TODO: this button should also clear Seller filter (if some is selected) -->
+          <button mat-button color="basic" class="small icon-only filter-button clear-filters" (click)="clear()" matTooltip="Clear all filters">
+            <mat-icon fontIcon="part-clear-all"></mat-icon>
+          </button>
+          <!-- Flagged only -->
+          <mat-button-toggle class="small icon-only filter-button flagged" type="checkbox" value="reported-only" [matTooltip]="filterFlagged.value ? 'Show all Listings' : 'Show reported Listings only'" (change)="filterFlagged.setValue(!filterFlagged.value)">
+            <mat-icon fontIcon="part-flag"></mat-icon>
+          </mat-button-toggle>        
+        </div>
+        
+        <div class="right">
+          <!-- Refresh Listings -->
+          <button mat-button class="small filter-button refresh" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
+            <mat-icon fontIcon="part-refresh"></mat-icon>
+            Refresh
+            <div class="dot"></div>
+          </button>
+        </div>
+
+      </div><!-- .filter-buttons -->
+  
+      <!--mat-card class="filter-card">
+        <mat-form-field class="--plain" appearance="fill" *ngIf="tabLabels[selectedTab] == 'available'">
+          <mat-select placeholder="Show joined & available">
+            <mat-option *ngFor="let status of markets_status" [value]="status.value">
+              {{ status.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-radio-group class="radio-group block-radio">
+          <mat-radio-button class="filter-option" *ngFor="let type of markets_filtering" value="{{ type.value }}" color="primary">
+            {{ type.title }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-card-->
+  
+      
+  
+    </div><!-- .filter (sidebar) -->
+
+
+
+    <div class="content grid-container" infiniteScroll
+        [scrollWindow]="true"
+        [infiniteScrollDisabled]="(listings.length === 0) || atEndOfListings || isLoadingListings"
+        (scrolled)="actionScroll.setValue(null)"
+        *appVar="(availableCarts | async)[0] as selectedCart"
+    >
+
+      <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
+        <div mat-card-image (click)="openListingDetailModal(listing.id, false)">
+          <img class="img" [src]="listing.image" [alt]="listing.title">
+        </div>
+        <mat-card-header (click)="openListingDetailModal(listing.id, false)">
+          <mat-card-title>
+            {{ listing.title }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ listing.summary }}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-actions fxLayoutAlign="space-between center">
+          <button mat-button class="add-to-cart small" color="primary" matTooltip="Add to Cart" [disabled]="!listing.extras.canAddToCart" (click)="addItemToCart(listingIdx, selectedCart && selectedCart.id)">
+            <mat-icon fontIcon="part-cart"></mat-icon>
+            <mat-icon fontIcon="part-cart-plus"></mat-icon>
+            {{ listing.price.whole }}{{ listing.price.sep }}<small>{{ listing.price.decimal }}</small>
+            <mat-icon fontIcon="part-cryptocurrency-particl"></mat-icon>
+          </button>
+          <button mat-button class="more-options tiny icon-only" [matMenuTriggerFor]="menu" aria-label="Secondary Listing actions">
+            <mat-icon fontIcon="part-more-horizontal"></mat-icon>
+          </button>
+        </mat-card-actions>
+        <mat-menu #menu="matMenu" class="--smaller">
+          <button mat-menu-item [disabled]="listing.extras.isFlagged" (click)="reportListing(listingIdx)">
+            <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
+            <span>{{ listing.extras.isFlagged ? 'Flagged as inappropriate' : 'Report as inappropriate' }}</span>
+          </button>
+          <button mat-menu-item (click)="openListingDetailModal(listing.id, true)">
+            <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+            <span>Questions &amp; Answers</span>
+          </button>
+          <button mat-menu-item (click)="updateFav(listingIdx, listing.extras.favouriteId === 0 ? 'ADD' : 'REMOVE')">
+            <ng-container *ngIf="listing.extras.favouriteId === 0">
+              <mat-icon fontIcon="part-heart-outline"></mat-icon>
+              <span>Add to Favourites</span>
+            </ng-container>
+            <ng-container *ngIf="listing.extras.favouriteId > 0">
+              <mat-icon fontIcon="part-heart"></mat-icon>
+              <span>Remove from Favourites</span>
+            </ng-container>
+          </button>
+          <button mat-menu-item *ngIf="filterSeller.value === ''" (click)="filterSeller.setValue(listing.seller)">
+            <mat-icon fontIcon="part-search"></mat-icon>
+            <span>Other Items from Seller</span>
+          </button>
+        </mat-menu>
+      </mat-card>
+
+
+      <div class="no-results" *ngIf="!isLoadingListings && (listings.length === 0)">
+
+        <ng-container *ngIf="!isSearching; else searchingBanner">
+          <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="Market is syncing">
+          <p>
+            No Listings on the Marketplace
+          </p>
+          <p class="help-text">
+            If you launched the Marketplace recently, Listings might not load yet.<br>
+            Please wait a few minutes and then:
+          </p>
+          <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)">
+            <mat-icon fontIcon="part-refresh"></mat-icon>
+            Refresh Listings
+          </button>
+        </ng-container>
+
+        <ng-template #searchingBanner>
+          <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
+          <p>
+            Sorry, no matching Listings found
+          </p>
+          <p class="help-text">
+            Try a different, less specific search
+          </p>
+        </ng-template>
+
+      </div><!-- .no-results -->
+
+      <div class="no-results --smaller" *ngIf="atEndOfListings">
         <p>
-          Sorry, no matching Listings found
+          This is the end
         </p>
         <p class="help-text">
-          Try a different, less specific search
+          You've reached the end of the current Marketplace supply
         </p>
-      </ng-template>
+      </div><!-- .no-results -->
+    </div><!-- .content -->
 
-    </div><!-- .no-results -->
-
-    <div class="no-results --smaller" *ngIf="atEndOfListings">
-      <p>
-        This is the end
-      </p>
-      <p class="help-text">
-        You've reached the end of the current Marketplace supply
-      </p>
-    </div><!-- .no-results -->
-  </div><!-- .content -->
+  </div><!-- .row -->
 
 
 </div><!-- .container-block -->

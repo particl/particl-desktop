@@ -1,67 +1,60 @@
 @import './src/assets/_config'; // import shared colors etc.
 
+/* -------------- FILTER SIDEBAR -------------- */
 
-/* -------------- CONTROL BAR -------------- */
-
-.control-bar {
-  padding: 0 calc(var(--paddingH) - 16px); // offset inputs' side padding
-
-  /*
-  // Search
-  .search-listings {
-    //margin-bottom: -2px; // offset default border-bottom
-  }
-  */
-
-  // Filter buttons
-  .filter-buttons {
-    flex: 0 1 150px;
-    display: flex;
-    padding-left: 8px;
-    border-left: 1px solid var(--bg-muted);
-    justify-content: flex-end;
-    align-items: center;
-    .filter-button {
-      line-height: 36px;
-      .mat-icon {
-        margin: 0;
-      }
-      &.refresh {
-        position: relative;
-        &.new-listings-available { // when new ones are available
-          .dot { // notification dot
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--color-primary);
-            position: absolute;
-            bottom: 10px;
-            right: 23px;
-            &::before {
-              content: "";
-              display: block;
+.row {
+  display: flex;
+  .filter {
+    top: calc(var(--header-main-height) + var(--paddingV) + 1px);
+    align-self: flex-start; // needed for position:sticky
+    height: auto;
+    margin-right: 35px;
+    .clear-seller-filter {
+      padding: 6px 12px;
+      width: 100%;
+    }
+    // Filter buttons at the bottom
+    .filter-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .filter-button {
+        line-height: 36px;
+        &.refresh {
+          position: relative;
+          &.new-listings-available { // when new ones are available
+            .dot { // notification dot
               width: 6px;
               height: 6px;
-              border: 2px solid hsla(var(--color-primary-hsl), 0.4);
               border-radius: 50%;
-              position: relative;
-              top: -2px;
-              left: -2px;
-              animation: dot-pulse infinite 1.2s;
+              background: var(--color-primary);
+              position: absolute;
+              bottom: 10px;
+              right: 23px;
+              &::before {
+                content: "";
+                display: block;
+                width: 6px;
+                height: 6px;
+                border: 2px solid hsla(var(--color-primary-hsl), 0.4);
+                border-radius: 50%;
+                position: relative;
+                top: -2px;
+                left: -2px;
+                animation: dot-pulse infinite 1.2s;
+              }
             }
           }
         }
-      }
-      &.flagged {
-        &.mat-button-toggle-checked {
-          background: hsla(var(--color-info-hsl), 0.1);
-          color: var(--color-info);
+        &.flagged {
+          .mat-icon {
+            margin: 0;
+          }
         }
       }
     }
   }
-
-} // << .control-bar
+}
 
 @keyframes dot-pulse {
   0% {
@@ -76,24 +69,25 @@
   }
 }
 
+
 /* -------------- CONTENT AREA / LAYOUT -------------- */
 
 .container-block {
-  --grid-columns: 4;
-  --grid-gutter: 2%;
+  --grid-columns: 3;
+  --grid-gutter: 3%;
   @include break(l) {
-    --grid-columns: 5;
+    --grid-columns: 4;
   }
   @include break-from(1700px) {
-    --grid-columns: 6;
+    --grid-columns: 5;
     --grid-gutter: 1.75%;
   }
   @include break-from(2000px) {
-    --grid-columns: 7;
+    --grid-columns: 6;
   }
   @include break-from(2300px) {
-    --grid-columns: 8;
-    --grid-gutter: 1.5%;
+    --grid-columns: 7;
+    --grid-gutter: 2%;
   }
 }
 
