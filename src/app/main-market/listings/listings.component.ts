@@ -53,6 +53,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // filter/search control mechanisms
   searchQuery: FormControl = new FormControl('');
+  selectedMarket: FormControl = new FormControl('open-marketplace');
   filterCategory: FormControl = new FormControl([]);
   filterSourceRegion: FormControl = new FormControl([]);
   filterTargetRegion: FormControl = new FormControl([]);

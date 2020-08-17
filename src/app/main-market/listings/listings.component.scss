@@ -56,6 +56,18 @@
   }
 }
 
+.mat-option {
+  img.image { // photos in Market switcher
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
+  }
+}
+
 @keyframes dot-pulse {
   0% {
     transform: scale(0.8);
