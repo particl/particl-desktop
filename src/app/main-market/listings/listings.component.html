@@ -13,7 +13,7 @@
 
   <div class="row">
 
-    <div class="filter">  
+    <div class="filter">
 
       <!-- search unified with those from Address Book and Sell > Listings -->
       <mat-form-field class="--boxed" appearance="fill">
@@ -22,7 +22,7 @@
           <mat-icon fontIcon="part-clear-all"></mat-icon>
         </button>
         <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
-      </mat-form-field>  
+      </mat-form-field>
 
 
       <h2 class="section-title">
@@ -32,35 +32,13 @@
       <mat-card class="filter-card">
 
         <mat-form-field class="--plain" appearance="fill" matTooltip="Switch Markets" matTooltipPosition="after">
-          <mat-select placeholder="Switch active Market" [formControl]="selectedMarket">
-            <mat-option *ngIf="marketsList.length === 0" value="open-marketplace">
-              <img class="image" width="25" height="25" src="/assets/app-market/open-marketplace-logo.svg">
-              Open Marketplace
-            </mat-option>
-            <mat-option *ngFor="let market of marketsList" [value]="market.value" (click)="changeMarket(market)">
+          <mat-select placeholder="Switch active Market" [value]="activeMarket?.id" (selectionChange)="changeMarket($event.value)">
+            <mat-option *ngFor="let market of marketsList" [value]="market.id">
               <img class="image" width="25" height="25" src="/assets/images/placeholder_1-1.jpg">
-              {{ market.title }}
+              {{ market.name }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-
-        <!-- OLD Market switcher -->
-        <!--div class="market-switcher">
-          <button mat-button *ngIf="marketsList.length === 0" matTooltip="Active Market: {{ activeMarket ? activeMarket.name : '' }} &#13; Click to change Market" matTooltipPosition="after" matTooltipClass="multi-line" class="small icon-only">
-            <mat-icon fontIcon="part-shop"></mat-icon>
-            {{ activeMarket ? activeMarket.name : '' }}
-          </button>
-          <button mat-button *ngIf="marketsList.length > 0" [matMenuTriggerFor]="markets" matTooltip="Active Market: {{ activeMarket ? activeMarket.name : '' }} &#13; Click to change Market" matTooltipPosition="after" matTooltipClass="multi-line" class="small icon-only">
-            <mat-icon fontIcon="part-shop"></mat-icon>
-            {{ activeMarket ? activeMarket.name : '' }}
-          </button>
-        </div>
-        <mat-menu #markets="matMenu" class="smaller with-images">
-          <button mat-menu-item *ngFor="let market of marketsList" (click)="changeMarket(market)">
-            <img class="image" width="25" height="25" src="/assets/images/placeholder_1-1.jpg">
-            {{ market.name }}
-          </button>
-        </mat-menu-->
 
         <tree-select
           #categorySelection
@@ -95,7 +73,6 @@
           matTooltip="Filter by Seller's country" matTooltipPosition="after"
           (onClosed)="filterSourceRegion.setValue($event)">
         </tree-select>
-        <!-- @TODO: Destination coutry should default to value set in Market Settings -->
         <tree-select
           #countryDestinationSelection
           [data$]="countryList$"
@@ -110,17 +87,15 @@
       <div class="filter-buttons">
         <div class="left">
           <!-- Clear filters -->
-          <!-- @TODO: this button should also clear Seller filter (if some is selected) -->
-          <!-- @FIXME: it's probably because the button doesn't do anything actually :D -->
-          <button mat-button color="basic" class="small icon-only filter-button clear-filters" (click)="clear()" matTooltip="Clear all filters">
+          <button mat-button color="basic" class="small icon-only filter-button clear-filters" (click)="clearSearchFilters()" matTooltip="Clear all filters">
             <mat-icon fontIcon="part-clear-all"></mat-icon>
           </button>
           <!-- Flagged only -->
           <mat-button-toggle class="small icon-only filter-button flagged" type="checkbox" value="reported-only" [matTooltip]="filterFlagged.value ? 'Show all Listings' : 'Show reported Listings only'" (change)="filterFlagged.setValue(!filterFlagged.value)">
             <mat-icon fontIcon="part-flag"></mat-icon>
-          </mat-button-toggle>        
+          </mat-button-toggle>
         </div>
-        
+
         <div class="right">
           <!-- Refresh Listings -->
           <button mat-button class="small filter-button refresh" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue()" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
@@ -131,7 +106,7 @@
         </div>
 
       </div><!-- .filter-buttons -->
-  
+
       <!--mat-card class="filter-card">
         <mat-form-field class="--plain" appearance="fill" *ngIf="tabLabels[selectedTab] == 'available'">
           <mat-select placeholder="Show joined & available">
@@ -146,9 +121,9 @@
           </mat-radio-button>
         </mat-radio-group>
       </mat-card-->
-  
-      
-  
+
+
+
     </div><!-- .filter (sidebar) -->
 
 

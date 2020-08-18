@@ -53,7 +53,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   // filter/search control mechanisms
   searchQuery: FormControl = new FormControl('');
-  selectedMarket: FormControl = new FormControl('open-marketplace');
   filterCategory: FormControl = new FormControl([]);
   filterSourceRegion: FormControl = new FormControl([]);
   filterTargetRegion: FormControl = new FormControl([]);
@@ -190,7 +189,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         const updatedID = (selectedMarket && selectedMarket.id) || 0;
         if (updatedID) {
           this.activeMarket = selectedMarket;
-          this.marketsList = this.availableMarkets.filter(m => m.id !== this.activeMarket.id);
+          this.marketsList = this.availableMarkets;
         }
         return selectedMarket;
       }),
@@ -364,8 +363,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  changeMarket(market: Market): void {
-    this.market$.next(market);
+  changeMarket(marketId: number): void {
+    const market = this.marketsList.find(m => m.id === marketId);
+    if (market) {
+      this.market$.next(market);
+    }
+  }
+
+
+  clearSearchFilters(): void {
+    this.resetFilters();
   }
 
 
@@ -478,7 +485,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
           );
 
           dialogRef.componentInstance.eventFlaggedItem.subscribe(
-            (flaggedHash) => proposalHash = flaggedHash
+            (flaggedHash: string | null) => proposalHash = flaggedHash
           );
 
           dialogRef.afterClosed().pipe(take(1)).subscribe(() => {

@@ -7,21 +7,34 @@ import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../market-rpc/market-rpc.service';
 import { RegionListService } from '../region-list/region-list.service';
 
+import * as marketConfig from '../../../../../modules/market/config.js';
+
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
+import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
 import { RespCategoryList, RespMarketListMarketItem, RespListingItem } from '../../shared/market.models';
 import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
-import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
 import { CategoryItem, Market } from './data.models';
+
+
+enum TextContent {
+  OPEN_MARKET_NAME = 'Open Marketplace'
+}
 
 
 @Injectable()
 export class DataService {
 
+  private marketAddresses: string[];
+
   constructor(
     private _rpc: MarketRpcService,
     private _store: Store,
     private _regionService: RegionListService,
-  ) {}
+  ) {
+    if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
+      this.marketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
+    }
+  }
 
 
   loadCategories(marketId?: number): Observable<{categories: CategoryItem[]; rootId: number}> {
@@ -45,7 +58,7 @@ export class DataService {
           if ( !identityId || (market.identityId === identityId) ) {
             filteredMarkets.push({
               id: +market.id,
-              name: market.name,
+              name: this.marketAddresses.includes(market.receiveAddress) ? TextContent.OPEN_MARKET_NAME : market.name,
               type: market.type,
               receiveAddress: market.receiveAddress,
               identityId: +market.identityId});
