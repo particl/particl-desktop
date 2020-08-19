@@ -126,7 +126,9 @@
         <label class="--larger">
           <h3 class="label">Shipping from</h3>
           <p class="label-desc">From which country will you be shipping your product</p>
-          <tree-select *ngIf="(regions$ | async).length > 0"
+          <tree-select
+            #shippingOriginSelector
+            *ngIf="(regions$ | async).length > 0"
             [data$]="regions$"
             [singleSelection]="true"
             [initialSelection]="[shippingOrigin.value]"
@@ -174,7 +176,9 @@
         <label class="--larger">
           <h3 class="label">Shipping destinations (optional)</h3>
           <p class="label-desc">Choose available countries for shipping (leave empty for all)</p>
-          <tree-select *ngIf="(regions$ | async).length > 0"
+          <tree-select
+            #shippingDestinationSelector
+            *ngIf="(regions$ | async).length > 0"
             [data$]="regions$"
             [singleSelection]="false"
             [initialSelection]="shippingDestinations.value"
@@ -234,56 +238,33 @@
           <h3 class="label">Publish to</h3>
           <mat-form-field class="--plain --larger" appearance="fill">
             <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
-            <mat-select placeholder="Select Market">
-              <mat-option *ngFor="let market of availableMarkets" [value]="market.id" class="--larger">
+            <mat-select placeholder="Select Market" formControlName="selectedMarket">
+              <mat-option [value]="0" class="--larger"></mat-option>
+              <mat-option *ngFor="let market of (markets$ | async)" [value]="market.id" class="--larger">
                 {{ market.name }}
               </mat-option>
             </mat-select>
           </mat-form-field>
         </label>
       </section><!-- .select-market -->
-  
-      <section class="duration" fxFlex="54">
-        <div class="duration-row" fxLayout fxLayoutAlign="flex-start flex-end">
-          <label class="--larger">
-            <h3 class="label">Publish duration</h3>
-            <mat-form-field class="--plain --larger" appearance="fill">
-              <mat-icon matPrefix fontIcon="part-date"></mat-icon>
-              <mat-select placeholder="Select duration">
-                <mat-option *ngFor="let duration of publishDuration" [value]="duration.value" class="--larger">
-                  {{ duration.title }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </label>
-          <div class="estimate-fee">
-            <!-- @TODO: initially show button only; when it's clicked, swap it for the fee value (if duration is changed, swap it back for the button) -->
-            <button mat-button *ngIf="!feeCalculated" (click)="feeCalculated = !feeCalculated">
-              <mat-icon fontIcon="part-stake"></mat-icon>
-              Calc. fee
-            </button>
-            <div class="estimated-fee" *ngIf="feeCalculated">
-              Publishing fee:<br>
-              <span class="fee">2.513541 PART</span>
-            </div>
-          </div><!-- .estimate-fee -->
-        </div><!-- .row -->
-      </section><!-- .duration -->
-  
+
       <section class="select-preset" fxFlex="27">
-        <label class="--larger">
+        <label class="--larger" *ngIf="(categories$ | async).length > 0">
           <h3 class="label">Product category</h3>
-          <mat-form-field class="--plain --larger" appearance="fill">
-            <mat-icon matPrefix fontIcon="part-filter"></mat-icon>
-            <mat-select placeholder="Select Category">
-              <mat-option *ngFor="let category of categories" [value]="category.value" class="--larger">
-                {{ category.title }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <tree-select
+            #categorySelector
+            [data$]="categories$"
+            [singleSelection]="true"
+            [initialSelection]="selectedCategory.value"
+            [isParentNodesSelectable]="false"
+            placeholderLabel="Select a category"
+            prefixIcon="part-filter"
+            [labelStyles]="['--larger']"
+            (onClosed)="selectedCategory.setValue($event[0] || '')">
+          </tree-select>
         </label>
       </section><!-- .select-preset -->
-      
+
     </div><!-- .publish-options -->
   </mat-expansion-panel>
 

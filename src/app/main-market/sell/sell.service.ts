@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { } from 'rxjs';
-import {  } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import {  } from '../shared/market.models';
+import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
+import { RespListingTemplate } from '../shared/market.models';
+import { Template, TemplateSavedDetails } from './sell.models';
 
 
 @Injectable()
@@ -19,19 +21,202 @@ export class SellService {
   ) {}
 
 
-  // fetchTemplate(templateId: number): Observable<BaseTemplate | MarketTemplate>  {
-  //   const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+  fetchTemplateForProduct(productId: number): Observable<Template> {
+    return this.fetchProductTemplate(productId).pipe(
+      concatMap((resp) => this.buildTemplateForProduct(resp))
+    );
+  }
 
-  //   return this._rpc.call('template', ['get', templateId]).pipe(
-  //     map((resp: RespListingTemplate) => {
-  //       if (Object.keys(resp.ItemInformation).length <= 0) {
-  //         throwError('Invalid template');
-  //         return;
-  //       }
-  //       return this.buildTemplate(resp, marketPort);
-  //     })
-  //   );
-  // }
+
+  private fetchProductTemplate(productId: number): Observable<RespListingTemplate> {
+    return this._rpc.call('template', ['get', productId]);
+  }
+
+
+  private async buildTemplateForProduct(src: RespListingTemplate): Promise<Template> {
+    const newTempl: Template = {
+      id: 0,
+      type: 'BASE',
+      savedDetails: this.getDefaultTemplateSaveDetails(),
+      baseTemplate: {
+        id: 0,
+        marketHashes: []
+      }
+    };
+
+
+    if (!isBasicObjectType(src)) {
+      return newTempl;
+    }
+
+    const isBaseTemplate =  (src.parentListingItemTemplateId === null);
+
+    if (isBaseTemplate) {
+      // Process base template
+
+      newTempl.type = 'BASE';
+      newTempl.id = +src.id > 0 ? src.id : newTempl.id;
+      newTempl.baseTemplate.id = newTempl.id;
+
+      if (Array.isArray(src.ChildListingItemTemplates)) {
+        // extract the markets for which the base template has already been used
+        src.ChildListingItemTemplates.forEach(child => {
+          if (isBasicObjectType(child) && (typeof child.market === 'string')) {
+            newTempl.baseTemplate.marketHashes.push(child.market);
+          }
+        });
+      }
+
+      newTempl.savedDetails = this.extractTemplateSavedDetails(src);
+      return newTempl;
+    }
+
+    // Process market template
+
+    newTempl.type = 'MARKET';
+
+    let parentSrcTempl: RespListingTemplate;
+    let latestSrcMarketTempl: RespListingTemplate = src;
+
+    let baseSrcTempl = await this.fetchProductTemplate(src.parentListingItemTemplateId).toPromise();
+
+    if (+baseSrcTempl.parentListingItemTemplateId > 0) {
+      // need to go 1 level up for the base template
+      parentSrcTempl = baseSrcTempl;
+      baseSrcTempl = await this.fetchProductTemplate(+baseSrcTempl.parentListingItemTemplateId).toPromise();
+    } else {
+      parentSrcTempl = src;
+    }
+
+    // ensure we've got the latest version of this market template
+    if (Array.isArray(parentSrcTempl.ChildListingItemTemplates)) {
+      // NB! sorting here is based on child id values: it is assumed (correct at implementation time) that
+      //    a new child market template can only be created if no editable market template exists, thus child market temapltes
+      //    with a higher id value must have been created later (MP seems to based on this lookup variation as well)
+      const latestChild = parentSrcTempl.ChildListingItemTemplates.filter(basicChild =>
+        (+basicChild.id > 0)
+      ).sort((a, b) => b.id - a.id)[0];
+
+      if (latestChild) {
+        if (latestChild.id !== src.id) {
+          latestSrcMarketTempl = await this.fetchProductTemplate(+latestChild.id).toPromise();
+        }
+      }
+    }
+
+    newTempl.id = +latestSrcMarketTempl.id > 0 ? +latestSrcMarketTempl.id : newTempl.id;
+
+    newTempl.baseTemplate.id = +baseSrcTempl.id > 0 ? +baseSrcTempl.id : newTempl.baseTemplate.id;
+
+    if (Array.isArray(baseSrcTempl.ChildListingItemTemplates)) {
+      // extract the markets for which the base template has already been used
+      baseSrcTempl.ChildListingItemTemplates.forEach(child => {
+        if (isBasicObjectType(child) && (typeof child.market === 'string')) {
+          newTempl.baseTemplate.marketHashes.push(child.market);
+        }
+      });
+    }
+
+    newTempl.savedDetails = this.extractTemplateSavedDetails(latestSrcMarketTempl);
+
+    let categoryId = 0,
+        categoryName = '';
+
+    if (isBasicObjectType(latestSrcMarketTempl.ItemInformation) && isBasicObjectType(latestSrcMarketTempl.ItemInformation.ItemCategory)) {
+      categoryId = getValueOrDefault(latestSrcMarketTempl.ItemInformation.ItemCategory.id, 'number', categoryId);
+      categoryName = getValueOrDefault(latestSrcMarketTempl.ItemInformation.ItemCategory.name, 'string', categoryName);
+    }
+
+    newTempl.marketDetails = {
+      hash: getValueOrDefault(latestSrcMarketTempl.hash, 'string', ''),
+      marketKey: getValueOrDefault(latestSrcMarketTempl.market, 'string', ''),
+      category: {
+        id: categoryId,
+        name: categoryName
+      }
+    };
+
+    return newTempl;
+  }
+
+
+  private extractTemplateSavedDetails(src: RespListingTemplate): TemplateSavedDetails {
+
+    const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+    const saveDetails = this.getDefaultTemplateSaveDetails();
+
+    if (!isBasicObjectType(src)) {
+      return saveDetails;
+    }
+
+    if (isBasicObjectType(src.ItemInformation)) {
+      saveDetails.title = getValueOrDefault(src.ItemInformation.title, 'string', saveDetails.title);
+      saveDetails.summary = getValueOrDefault(src.ItemInformation.shortDescription, 'string', saveDetails.summary);
+      saveDetails.description = getValueOrDefault(src.ItemInformation.longDescription, 'string', saveDetails.description);
+
+      if (isBasicObjectType(src.ItemInformation.ItemLocation)) {
+        saveDetails.shippingOrigin = getValueOrDefault(src.ItemInformation.ItemLocation.country, 'string', saveDetails.shippingOrigin);
+      }
+
+      if (Array.isArray(src.ItemInformation.ShippingDestinations)) {
+        saveDetails.shippingDestinations = src.ItemInformation.ShippingDestinations.filter(dest =>
+          isBasicObjectType(dest) && dest.shippingAvailability === 'SHIPS' && (typeof dest.country === 'string')
+        ).map(dest => dest.country);
+      }
+
+      if (Array.isArray(src.ItemInformation.ItemImages)) {
+        src.ItemInformation.ItemImages.forEach(img => {
+          if (isBasicObjectType(img) && Array.isArray(img.ItemImageDatas)) {
+            const foundImgData = img.ItemImageDatas.find(imgData =>
+              isBasicObjectType(imgData) && (imgData.imageVersion === 'ORIGINAL') && getValueOrDefault(imgData.dataId, 'string', '')
+            );
+
+            if (foundImgData) {
+              const imgPath = formatImagePath(foundImgData.dataId, marketPort);
+              saveDetails.images.push({id: +img.id, url: imgPath});
+            }
+          }
+        });
+      }
+    }
+
+    if (isBasicObjectType(src.PaymentInformation)) {
+      if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+        saveDetails.escrowBuyer = +src.PaymentInformation.Escrow.Ratio.buyer > 0 ?
+            +src.PaymentInformation.Escrow.Ratio.buyer : saveDetails.escrowBuyer;
+
+        saveDetails.escrowSeller = +src.PaymentInformation.Escrow.Ratio.seller > 0 ?
+        +src.PaymentInformation.Escrow.Ratio.seller : saveDetails.escrowSeller;
+      }
+
+      if (isBasicObjectType(src.PaymentInformation.ItemPrice)) {
+        saveDetails.priceBase = new PartoshiAmount(+src.PaymentInformation.ItemPrice.basePrice, true);
+
+        if (isBasicObjectType(src.PaymentInformation.ItemPrice.ShippingPrice)) {
+          saveDetails.priceShippingLocal = new PartoshiAmount(+src.PaymentInformation.ItemPrice.ShippingPrice.domestic, true);
+          saveDetails.priceShippingIntl = new PartoshiAmount(+src.PaymentInformation.ItemPrice.ShippingPrice.international, true);
+        }
+      }
+    }
+
+    return saveDetails;
+  }
+
+  private getDefaultTemplateSaveDetails(): TemplateSavedDetails {
+    return {
+      title: '',
+      summary: '',
+      description: '',
+      shippingOrigin: '',
+      shippingDestinations: [],
+      priceBase: new PartoshiAmount(0),
+      priceShippingLocal: new PartoshiAmount(0),
+      priceShippingIntl: new PartoshiAmount(0),
+      images: [],
+      escrowBuyer: 100,
+      escrowSeller: 100,
+    };
+  }
 
 
   // findTemplates(
@@ -116,23 +301,6 @@ export class SellService {
   //     last(),  // wait for all of the requests to complete before emitting
   //   );
 
-  // }
-
-
-  // setTemplateCategory(templateID: number, categoryID: number): Observable<void> {
-  //   return this.fetchTemplate(templateID).pipe(
-  //       concatMap((templ: ListingTemplate) => {
-  //         const info: UpdateTemplateData = {
-  //           info: {
-  //             title: templ.information.title,
-  //             shortDescription: templ.information.summary,
-  //             longDescription: templ.information.description,
-  //             category: categoryID
-  //           }
-  //         };
-  //         return this.updateExistingTemplate(templateID, info);
-  //       })
-  //     );
   // }
 
 
@@ -243,201 +411,6 @@ export class SellService {
   //     catchError(() => of(false)),
   //     map(resp => typeof resp === 'boolean' ? resp : true)
   //   );
-  // }
-
-
-  // private buildTemplate(source: RespListingTemplate, marketPort: number): BaseTemplate | MarketTemplate {
-  //   const childTemplates = this.getItemOfType(source.ChildListingItemTemplate, 'Array', []);
-  //   const sourceMarket = this.getItemOfType(source.market, 'String', '');
-
-  //   let sourceTemplate = source;
-  //   const isMarketTemplate = sourceMarket.length > 0;
-
-  //   if (isMarketTemplate) {
-  //     // Dealing with a Market Template, so we need to ensure we find the correct latest "version" of it
-  //     try {
-  //       sourceTemplate = childTemplates.sort((a, b) => +b.createdAt - +a.createdAt)[0];
-  //     } catch (e) {
-  //       // nothing to do, right now... maybe log this out in the future?
-  //     }
-  //   }
-
-
-  //   const itemInfo = this.getItemOfType(sourceTemplate.ItemInformation, 'Object', {} as RespListingTemplateInformation);
-  //   const sourceHash = this.getItemOfType(sourceTemplate.hash, 'String', '');
-
-  //   // Extract source payment details
-  //   const paymentInfo = sourceTemplate.PaymentInformation ? sourceTemplate.PaymentInformation : null;
-
-  //   const itemPrice = paymentInfo && paymentInfo.ItemPrice ? paymentInfo.ItemPrice : null;
-  //   const shippingPrice = itemPrice && itemPrice.ShippingPrice ? itemPrice.ShippingPrice : null;
-  //   const basePrice = (itemPrice && +itemPrice.basePrice) || 0;
-  //   const shipLocal = (shippingPrice && +shippingPrice.domestic) || 0;
-  //   const shipIntl = (shippingPrice && +shippingPrice.international) || 0;
-
-  //   // Extract sourceTemplate shipping location
-  //   const sourceShipLocationId = itemInfo && itemInfo.ItemLocation && +itemInfo.ItemLocation.id ? +itemInfo.ItemLocation.id : 0;
-
-  //   // Create the basic template details
-  //   const templDetails = {
-  //     information: {
-  //       id: this.getItemOfType(itemInfo.id, 'Number', 0),
-  //       title: this.getItemOfType(itemInfo.title, 'String', ''),
-  //       summary: this.getItemOfType(itemInfo.shortDescription, 'String', ''),
-  //       description: this.getItemOfType(itemInfo.longDescription, 'String', ''),
-  //     },
-
-  //     shippingOrigin: {
-  //       id: sourceShipLocationId > 0 ? sourceShipLocationId : 0,
-  //       countryCode: sourceShipLocationId > 0 ? this.getItemOfType(itemInfo.ItemLocation.country, 'String', '') : '',
-  //     },
-
-  //     shippingDestinations: this.getItemOfType(itemInfo.ShippingDestinations, 'Array', []).map(d => {
-  //       const dest: TemplateDetails.ShippingDestination = {
-  //         id: +d.id,
-  //         type: d.shippingAvailability,
-  //         countryCode: d.country
-  //       };
-  //       return dest;
-  //     }).filter(
-  //       d => (+d.id > 0) && (typeof d.countryCode === 'string') && (d.type === 'SHIPS')
-  //     ),
-
-  //     images: this.getItemOfType(itemInfo.ItemImages, 'Array', []).map(value => {
-  //       let thumbnailUrl: string;
-  //       let imageUrl: string;
-  //       const imgDatas = this.getItemOfType(value.ItemImageDatas, 'Array', []);
-  //       for (const imgData of imgDatas) {
-  //         if (imgData.imageVersion === 'THUMBNAIL') {
-  //           thumbnailUrl = this.formatImagePath(
-  //             this.getItemOfType(imgData.dataId, 'String', ''),
-  //             marketPort
-  //           );
-  //         } else if (imgData.imageVersion === 'MEDIUM') {
-  //           imageUrl = this.formatImagePath(
-  //             this.getItemOfType(imgData.dataId, 'String', ''),
-  //             marketPort
-  //           );
-  //         }
-  //       }
-
-  //       const img: TemplateDetails.Image = {
-  //         id: +value.id || 0,
-  //         featured: !!value.featured,
-  //         thumbnailUrl: thumbnailUrl || '',
-  //         imageUrl: imageUrl || '',
-  //       };
-  //       return img;
-  //     }),
-
-  //     price: {
-  //       id: (itemPrice && +itemPrice.id) || 0,
-  //       currency: this.getItemOfType(itemPrice && itemPrice.currency, 'String', 'PART') as CURRENCY_TYPE,
-  //       basePrice: new PartoshiAmount(basePrice),
-  //       shippingLocal: new PartoshiAmount(shipLocal),
-  //       shippingInternational: new PartoshiAmount(shipIntl)
-  //     },
-
-  //     payment: {
-  //       id: (paymentInfo && +paymentInfo.id) || 0,
-  //  type: this.getItemOfType( (paymentInfo && paymentInfo.Escrow && paymentInfo.Escrow.type) || null, 'String', 'SALE') as SALES_TYPE,
-  //       escrow: {
-  //         type: this.getItemOfType( (paymentInfo && paymentInfo.Escrow && paymentInfo.Escrow.type) || null, 'String', 'MAD_CT'),
-  //         buyerRatio: this.getItemOfType(
-  //           (paymentInfo && paymentInfo.Escrow && paymentInfo.Escrow.Ratio && paymentInfo.Escrow.Ratio.buyer) || null,
-  //           'Number',
-  //           100
-  //         ),
-  //         sellerRatio: this.getItemOfType(
-  //           (paymentInfo && paymentInfo.Escrow && paymentInfo.Escrow.Ratio && paymentInfo.Escrow.Ratio.seller) || null,
-  //           'Number',
-  //           100
-  //         )
-  //       }
-  //     },
-  //   };
-
-  //   // Process each type of template
-
-  //   if (!isMarketTemplate) {
-  //     // Base Template
-
-  //     const linkedMarketTemplates: MarketTemplate[] = childTemplates.filter(
-  //       child => child && child.market && (this.getItemOfType(child.market, 'String', '') !== '')
-  //     ).map(
-  //       child => this.buildTemplate(child, marketPort) as MarketTemplate
-  //     );
-
-  //     const baseTemplate: BaseTemplate = {
-  //       id: +sourceTemplate.id > 0 ? +sourceTemplate.id : 0,
-  //       hash: sourceHash,
-  //       type: TEMPLATE_TYPE.BASE,
-  //       marketTemplates: linkedMarketTemplates,
-  //       details: templDetails,
-  //       created: +sourceTemplate.createdAt > 0 ? +sourceTemplate.createdAt : 0,
-  //       updated: +sourceTemplate.updatedAt > 0 ? +sourceTemplate.updatedAt : 0,
-  //     };
-  //     return baseTemplate;
-  //   }
-
-  //   // Market Template
-
-  //   const sourceHasListings = this.getItemOfType(sourceTemplate.ListingItems, 'Array', []).length > 0;
-
-  //   // Extract template status type information
-  //   let sourceStatus: TEMPLATE_STATUS_TYPE;
-  //   switch (true) {
-  //     // TODO zaSmilingIdiot 2020-05-26 -> Add in Expired case here as well
-  //     //    (requires knowing what the listing item expiry field is, which is not known at the time of this comment)
-  //     case (sourceHash.length > 0) && sourceHasListings: sourceStatus = TEMPLATE_STATUS_TYPE.PUBLISHED; break;
-  //     case (sourceHash.length > 0) && !sourceHasListings: sourceStatus = TEMPLATE_STATUS_TYPE.PENDING; break;
-  //     default: sourceStatus = TEMPLATE_STATUS_TYPE.UNPUBLISHED;
-  //   }
-
-  //   // @TODO: Implement market templates correctly
-  //   const marketTemplate: MarketTemplate = {
-  //     id: +sourceTemplate.id > 0 ? +sourceTemplate.id : 0,
-  //     hash: sourceHash,
-  //     type: TEMPLATE_TYPE.MARKET,
-  //     details: templDetails,
-  //     created: +source.createdAt > 0 ? +source.createdAt : 0,
-  //     updated: +sourceTemplate.updatedAt > 0 ? +sourceTemplate.updatedAt : 0,
-  //     market: {
-  //       id: 0,
-  //       key: sourceMarket,
-  //       name: ''
-  //     },
-  //     category: {
-  //       id: 0,
-  //       name: ''
-  //     },
-  //     baseTemplateId: +sourceTemplate.parentListingItemTemplateId,
-  //     status: sourceStatus
-  //   };
-
-  //   return marketTemplate;
-
-  // }
-
-
-  // private formatImagePath(path: string, port: number): string {
-  //   const pathparts = path.split(':');
-
-  //   if (pathparts.length !== 3) {
-  //     return path;
-  //   }
-
-  //   let final = pathparts[2];
-  //   const remainder = pathparts[2].split('/');
-  //   if ((typeof +remainder[0] === 'number') && +remainder[0]) {
-  //     final = remainder.slice(1).join('/');
-  //   }
-  //   return `${[pathparts[0], pathparts[1], String(port)].join(':')}/${final}`;
-  // }
-
-
-  // private getItemOfType<T>(value: T, type: 'Number' | 'Object' | 'Array' | 'String', defaultValue: T): T {
-  //   return Object.prototype.toString.call(value) === `[object ${type}]` ? value : defaultValue;
   // }
 
 }

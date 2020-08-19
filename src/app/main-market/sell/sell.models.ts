@@ -1,4 +1,53 @@
-// import { PartoshiAmount } from 'app/core/util/utils';
+import { PartoshiAmount } from 'app/core/util/utils';
+
+
+export interface TemplateFormDetails {
+  title: string;
+  summary: string;
+  description: string;
+  priceBase: string;
+  priceShipLocal: string;
+  priceShipIntl: string;
+  shippingOrigin: string;
+  shippingDestinations: string[];
+  savedImages: { id: number; url: string; }[];
+  market: { selectedMarketId: number; canEdit: boolean; };
+  category: { selectedMarketCategoryId: number; canEdit: boolean; };
+}
+
+
+export interface TemplateSavedDetails {
+  title: string;
+  summary: string;
+  description: string;
+  priceBase: PartoshiAmount;
+  priceShippingLocal: PartoshiAmount;
+  priceShippingIntl: PartoshiAmount;
+  shippingOrigin: string;
+  shippingDestinations: string[];
+  images: {id: number; url: string}[];
+  escrowSeller: number;
+  escrowBuyer: number;
+}
+
+
+export interface Template {
+  id: number;
+  type: 'MARKET' | 'BASE';
+  savedDetails: TemplateSavedDetails;
+  baseTemplate: {
+    id: number;
+    marketHashes: string[];
+  };
+  marketDetails?: {
+    hash: string;
+    marketKey: string;
+    category: {
+      id: number;
+      name: string;
+    }
+  };
+}
 
 // import {
 //   CURRENCY_TYPE,
@@ -9,115 +58,6 @@
 //   IMAGE_PROTOCOL,
 //   IMAGE_ENCODING,
 // } from '../shared/market.models';
-
-
-// export type TEMPLATE_SORT_FIELD_TYPE = 'title' | 'created_at' | 'updated_at';
-
-// export enum TEMPLATE_TYPE {
-//   BASE,
-//   MARKET
-// }
-
-
-// export enum TEMPLATE_STATUS_TYPE {
-//   PUBLISHED = 'published',
-//   UNPUBLISHED = 'unpublished',
-//   PENDING = 'pending',
-//   EXPIRED = 'expired'
-// }
-
-
-// export namespace TemplateDetails {
-//   export interface Information {
-//     id: number;
-//     title: string;
-//     summary: string;
-//     description: string;
-//   }
-
-
-//   export interface Pricing {
-//     id: number;
-//     currency: CURRENCY_TYPE;
-//     basePrice: PartoshiAmount;
-//     shippingLocal: PartoshiAmount;
-//     shippingInternational: PartoshiAmount;
-//   }
-
-
-//   export interface PaymentInfo {
-//     id: number;
-//     type: SALES_TYPE;
-//     escrow: {
-//       type: ESCROW_TYPE;
-//       buyerRatio: number;
-//       sellerRatio: number;
-//     };
-//   }
-
-
-//   export interface Location {
-//     id: number;
-//     countryCode: string;
-//   }
-
-
-//   export interface ShippingDestination {
-//     id: number;
-//     countryCode: string;
-//     type: SHIPPING_AVAIL_TYPE;
-//   }
-
-
-//   export interface Category {
-//     id: number;
-//     name: string;
-//   }
-
-
-//   export interface Image {
-//     id: number;
-//     featured: boolean;
-//     thumbnailUrl: string;
-//     imageUrl: string;
-//   }
-// }
-
-
-// interface Template {
-//   id: number;
-//   hash: string;   // NB! template cannot be modified if this value exists
-//   type: TEMPLATE_TYPE;
-//   details: {
-//     information: TemplateDetails.Information;
-//     shippingOrigin: TemplateDetails.Location;
-//     shippingDestinations: TemplateDetails.ShippingDestination[];
-//     images: TemplateDetails.Image[];
-//     price: TemplateDetails.Pricing;
-//     payment: TemplateDetails.PaymentInfo;
-//   };
-//   created: number;
-//   updated: number;
-// }
-
-
-// export interface BaseTemplate extends Template {
-//   type: TEMPLATE_TYPE.BASE;
-//   marketTemplates: MarketTemplate[];
-// }
-
-
-// export interface MarketTemplate extends Template {
-//   type: TEMPLATE_TYPE.MARKET;
-//   baseTemplateId: number;
-//   market: {
-//     id: number;
-//     key: string;
-//     name: string;
-//   };
-//   category: TemplateDetails.Category;
-//   status: TEMPLATE_STATUS_TYPE;
-// }
 
 
 // export interface ParamsNewTemplateDetails {

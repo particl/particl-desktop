@@ -1,9 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Observable, Subject, of } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject, of, merge } from 'rxjs';
+import { takeUntil, tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
+
 import { amountValidator, totalValueValidator } from './sell-template-form.validators';
-// import { BaseTemplate, MarketTemplate } from '../sell.models';
+import { TreeSelectComponent } from '../../shared/shared.module';
+import { TemplateFormDetails } from '../sell.models';
 
 
 @Component({
@@ -13,9 +15,12 @@ import { amountValidator, totalValueValidator } from './sell-template-form.valid
 })
 export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Input() listingTemplate: any;
+  @Input() listingTemplate: TemplateFormDetails;
   @Input() regions$: Observable<{id: string, name: string}[]> = of([]);
+  @Input() markets$: Observable<{id: number, name: string}[]> = of([]);
+  @Input() categories$: Observable<{id: number, name: string}[]> = of([]);
   @Output() isValid: EventEmitter<boolean> = new EventEmitter();
+  @Output() onChangeMarketId: EventEmitter<number> = new EventEmitter();
   @Output() onImageImportError: EventEmitter<void> = new EventEmitter();
   @Output() onRequestImageRemoval: EventEmitter<number> = new EventEmitter();
 
@@ -27,29 +32,16 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   readonly MAX_SHORT_DESCRIPTION: number = 200;
   readonly MAX_LONG_DESCRIPTION: number = 8000;
 
-  // @TODO: only for testing, pls remove and properly implement:
-  feeCalculated: boolean = false;
-
-  currentIdentity: string = '';
-  currentBalance: string = '';
-
-  readonly publishDuration: Array<{title: string; value: number}> = [
-    { title: '1 day', value: 1 },
-    { title: '2 days', value: 2 },
-    { title: '4 days', value: 4 },
-    { title: '1 week', value: 7 }
-  ];
-
-  readonly categories: Array<{title: string; value: string}> = [
-    { title: 'Furniture', value: 'f' },
-    { title: 'Yachts', value: 'y' },
-    { title: 'Bots', value: 'b' },
-    { title: 'Electronics', value: 'e' }
-  ];
-
   private destroy$: Subject<void> = new Subject();
+  private defaultCategoryId: number = 0;
+  private categoryUpdateAction: FormControl = new FormControl(0);
+
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
   @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
+  @ViewChild('shippingDestinationSelector', {static: false}) private selectorShipDestinations: TreeSelectComponent;
+  @ViewChild('shippingOriginSelector', {static: false}) private selectorShipOrigin: TreeSelectComponent;
+  @ViewChild('categorySelector', {static: false}) private selectorCategory: TreeSelectComponent;
+
 
   constructor() {
     // The basic template information present on all templates
@@ -62,7 +54,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       priceShipIntl: new FormControl('', [Validators.required, amountValidator()]),
       shippingOrigin: new FormControl('', [Validators.required]),
       shippingDestinations: new FormControl([]),
-      images: new FormControl({value: [], disabled: true})
+      images: new FormControl({value: [], disabled: true}),
+      selectedMarket: new FormControl(0),
+      selectedCategory: new FormControl(0)
     },
     [totalValueValidator]);
   }
@@ -73,10 +67,64 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       this.setFormValues(this.listingTemplate);
     }
 
-    this.templateForm.statusChanges.pipe(
-      // NB! emitted on every keystroke it seems, which fits the current requirements, but might have potential issues in the future
+
+    const formChange$ = this.templateForm.statusChanges.pipe(
+      // NB! emitted on every keystroke, which fits the current requirements, but might have potential issues in the future
       tap(() => this.isValid.emit(this.templateForm.valid)),
       takeUntil(this.destroy$)
+    );
+
+    const marketChange$ = this.markets$.pipe(
+      tap(markets => {
+        const currentMarketId = +this.selectedMarket.value;
+        if ((currentMarketId > 0) && markets.findIndex(m => m.id === currentMarketId) === -1) {
+          this.selectedMarket.setValue(0);
+          this.categoryUpdateAction.setValue(0);
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    const categoryChange$ = this.categories$.pipe(
+      tap(categories => {
+        let selectedCatId = this.selectedCategory.value;
+        if (!(+selectedCatId > 0)) {
+          selectedCatId = this.defaultCategoryId;
+        }
+
+        this.categoryUpdateAction.setValue(selectedCatId);
+
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    const categorySelection$ = this.categoryUpdateAction.valueChanges.pipe(
+      // The debounceTime here is necessary to give the tree-select some time to load before attempting to reset the actual value.
+      //  This is a bullshit way to do this and ends up in a potential race condition... fortunately mitigated somewhat by
+      //  having the category tree-select component only display when there are category items. This definitely has its own issues though..
+      //  but can be fixed later when there is less time contraints.
+      debounceTime(250),
+      tap((catId) => {
+        this.selectedCategory.setValue(catId);
+        if (this.selectorCategory) {
+          this.selectorCategory.resetSelection(catId);
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    const userSelectedMarket$ = this.selectedMarket.valueChanges.pipe(
+      distinctUntilChanged(),
+      tap((marketId) => this.onChangeMarketId.emit(marketId)),
+      takeUntil(this.destroy$)
+    );
+
+    merge(
+      formChange$,
+      marketChange$,
+      categoryChange$,
+      categorySelection$,
+      userSelectedMarket$
     ).subscribe();
 
     // Initial emission of validity to ensure container receives correct validity initialization
@@ -130,6 +178,14 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     return this.templateForm.get('images');
   }
 
+  get selectedCategory(): AbstractControl {
+    return this.templateForm.get('selectedCategory');
+  }
+
+  get selectedMarket(): AbstractControl {
+    return this.templateForm.get('selectedMarket');
+  }
+
 
   addImage() {
     this.fileInputSelector.nativeElement.click();
@@ -166,6 +222,11 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     });
     values['pendingImages'] = this.imagesPending;
     return values;
+  }
+
+
+  resetFormDetails(templ: TemplateFormDetails): void {
+    this.setFormValues(templ);
   }
 
 
@@ -224,33 +285,42 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   }
 
 
-  private setFormValues(template: any): void {
+  private setFormValues(templ: TemplateFormDetails): void {
     this.imagesPending.setValue([]);
 
-    this.templateForm.controls['title'].setValue(
-      typeof template.details.information.title === 'string' ? template.details.information.title : ''
-    );
-    this.templateForm.controls['summary'].setValue(
-      typeof template.details.information.summary === 'string' ? template.details.information.summary : ''
-    );
-    this.templateForm.controls['description'].setValue(
-      typeof template.details.information.description === 'string' ? template.details.information.description : ''
-    );
+    this.templateForm.controls['title'].setValue(templ.title);
+    this.templateForm.controls['summary'].setValue(templ.summary);
+    this.templateForm.controls['description'].setValue(templ.description);
 
-    this.templateForm.controls['basePrice'].setValue(template.details.price.basePrice.particlsString());
-    this.templateForm.controls['priceShipLocal'].setValue(template.details.price.shippingLocal.particlsString());
-    this.templateForm.controls['priceShipIntl'].setValue(template.details.price.shippingInternational.particlsString());
+    this.templateForm.controls['basePrice'].setValue(templ.priceBase);
+    this.templateForm.controls['priceShipLocal'].setValue(templ.priceShipLocal);
+    this.templateForm.controls['priceShipIntl'].setValue(templ.priceShipIntl);
 
-    this.templateForm.controls['shippingOrigin'].setValue(
-      typeof template.details.shippingOrigin.countryCode === 'string' ? template.details.shippingOrigin.countryCode : ''
-    );
-    this.templateForm.controls['shippingDestinations'].setValue(template.details.shippingDestinations.map(dest => dest.countryCode));
+    this.templateForm.controls['shippingOrigin'].setValue(templ.shippingOrigin);
+    this.templateForm.controls['shippingDestinations'].setValue(templ.shippingDestinations);
+    this.selectorShipOrigin.resetSelection(templ.shippingOrigin);
+    this.selectorShipDestinations.resetSelection(templ.shippingDestinations);
 
-    const savedImages = (template.details.images).map(
-      image => ({id: image.id, url: image.thumbnailUrl})
-    ).filter(
-      img => !!(img && img.id && img.url)
-    );
-    this.templateForm.controls['images'].setValue(savedImages);
+    if (templ.category.selectedMarketCategoryId) {
+      // set the temp category variable... when the market is updated, we then set this accordingly.
+      //  Reasoning: the market dictates what categories are available. Thus, when setting the selected market below,
+      //  the category list should invariably change.
+      //  If it doesn't -> well, then setting the selected category is pretty pointless
+      //  Else if the category list changes, then check if this temp category value is set and use it to set the selected category if it is
+      // Yes, this is fucked up... but that describes this whole template functionality anyway.
+      this.defaultCategoryId = templ.category.selectedMarketCategoryId;
+    }
+    if (!templ.category.canEdit) {
+      this.templateForm.controls['selectedCategory'].disable();
+    }
+
+    if (templ.market.selectedMarketId && (templ.market.selectedMarketId !== this.templateForm.controls['selectedMarket'].value)) {
+      this.templateForm.controls['selectedMarket'].setValue(templ.market.selectedMarketId);
+    }
+    if (!templ.market.canEdit) {
+      this.templateForm.controls['selectedMarket'].disable();
+    }
+
+    this.templateForm.controls['images'].setValue(templ.savedImages);
   }
 }

@@ -1,22 +1,25 @@
 <div class="container-block">
 
   <app-page-intro>
-    <ng-container page-title>Add new Product</ng-container>
+    <ng-container page-title>{{ isNewTemplate ? 'Add new Product' : 'Edit your Product' }}</ng-container>
     <ng-container page-content>
-      Create and add a new Product to your Inventory &ndash; save it for publishing later or publish it right away to a selected Market
+      Create/modify a product &ndash; save it for publishing later or publish it right away to a selected Market
     </ng-container>
     <ng-container page-help>
       To join or create new Markets, go to "Manage Markets" page
     </ng-container>
   </app-page-intro>
 
-  <!-- <market-sell-template-form *ngIf="isFormReady"
-    [listingTemplate]="savedTemplate"
-    [regions$]="regionList$"
+  <market-sell-template-form
+    [listingTemplate]="null"
+    [regions$]="regions$"
+    [markets$]="markets$"
+    [categories$]="categories$"
     (isValid)="updateFormValidity($event)"
+    (onChangeMarketId)="actionCategoryChangeForNewMarket($event)"
     (onImageImportError)="actionImageAddError($event)"
     (onRequestImageRemoval)="actionImageRemovalRequest($event)"
-  ></market-sell-template-form> -->
+  ></market-sell-template-form>
 
   <p class="alert --boxed --warning" *ngIf="errorMessage.length > 0">
     <span><strong>Error:</strong> {{ errorMessage }}</span>
@@ -27,7 +30,7 @@
     <div class="left">
       <button mat-button [routerLink]="['../']" [queryParams]="{selectedSellTab: 'templates'}" color="warn">
         <mat-icon fontIcon="part-previous-single"></mat-icon>
-        Back to Products &amp; Listings
+        To Products &amp; Listings
       </button>
     </div>
     <div class="right" *ngIf="(saveButtonText.length > 0) && (publishButtonText.length > 0)">

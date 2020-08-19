@@ -207,8 +207,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         }
       );
 
-      console.log('@@@@@ templates: ', this.allTemplates);
-
       return of(indexes);
     });
   }

@@ -1,12 +1,8 @@
-<app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+<app-page-intro childPageAlias="Sell Comments">
   <ng-container page-title>Buyers' Questions</ng-container>
   <ng-container page-content>
     This is where unread Buyers' questions on your Listings are collected.<br>
     You can reply to your Buyers right from here to manage all the questions with ease.
-  </ng-container>
-  <ng-container page-info *ngIf="hasEncryptedWallet">
-    <!-- @TODO: this should stay here, as comments are SMSG as well, right? -->
-    As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!
   </ng-container>
   <ng-container page-help>
     You can always open the Listings directly (clicking on their photo) and manage questions from there, if you prefer.

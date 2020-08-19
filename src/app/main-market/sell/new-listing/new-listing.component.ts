@@ -1,18 +1,21 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, defer } from 'rxjs';
-import { take, map, } from 'rxjs/operators';
-import { RegionListService } from '../../services/region-list/region-list.service';
-import { SellService } from '../sell.service';
+import { ActivatedRoute } from '@angular/router';
+import { Observable, of, Subject, BehaviorSubject, concat } from 'rxjs';
+import { map, catchError, takeUntil, tap, concatMap, } from 'rxjs/operators';
+
+import { Store } from '@ngxs/store';
+import { MarketState } from '../../store/market.state';
+
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
-// import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { SellService } from '../sell.service';
+import { RegionListService } from '../../services/region-list/region-list.service';
+import { DataService } from '../../services/data/data.service';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { SellTemplateFormComponent } from '../sell-template-form/sell-template-form.component';
-import { Country } from '../../services/data/data.models';
-// import { BaseTemplate, MarketTemplate } from '../sell.models';
-// import { PublishTemplateModalComponent } from './publish-template-modal/publish-template-modal.component';
-// import { RespTemplateSize } from 'app/main-market/shared/market.models';
+import { Template, TemplateFormDetails } from '../sell.models';
+import { Market, CategoryItem } from 'app/main-market/services/data/data.models';
 
 
 enum TextContent {
@@ -20,16 +23,16 @@ enum TextContent {
   BUTTON_LABEL_UPDATE = 'Update',
   BUTTON_LABEL_PUBLISH_NEW = 'Save and Publish',
   BUTTON_LABEL_PUBLISH_EXISTING = 'Update and Publish',
-  ERROR_UNEDITABLE = 'template cannot be edited',
+  // ERROR_UNEDITABLE = 'template cannot be edited',
   ERROR_EXISTING_TEMPLATE_FETCH = 'Could not find the saved template, please try again',
-  ERROR_MAX_SIZE = 'maximum listing size exceeded - try to reduce image or text sizes',
-  ERROR_FAILED_SAVE = 'Could not save the changes to the template',
-  ERROR_IMAGE_REMOVAL = 'Could not remove the selected image',
-  IMAGE_SELECTION_FAILED = 'One or more images selected were not valid',
-  PROCESSING_TEMPLATE_SAVE = 'Saving the current changes',
-  PROCESSING_TEMPLATE_PUBLISH = 'Publishing the template to the selected market',
-  PUBLISH_FAILED = 'Failed to publish the template',
-  PUBLISH_SUCCESS = 'Successfully created a listing!'
+  // ERROR_MAX_SIZE = 'maximum listing size exceeded - try to reduce image or text sizes',
+  // ERROR_FAILED_SAVE = 'Could not save the changes to the template',
+  // ERROR_IMAGE_REMOVAL = 'Could not remove the selected image',
+  ERROR_IMAGE_ADD = 'One or more images selected were not valid',
+  // PROCESSING_TEMPLATE_SAVE = 'Saving the current changes',
+  // PROCESSING_TEMPLATE_PUBLISH = 'Publishing the template to the selected market',
+  // PUBLISH_FAILED = 'Failed to publish the template',
+  // PUBLISH_SUCCESS = 'Successfully created a listing!'
 }
 
 
@@ -39,117 +42,171 @@ enum TextContent {
 })
 export class NewListingComponent implements OnInit, OnDestroy {
 
+  isNewTemplate: boolean = true;
   errorMessage: string = '';
   saveButtonText: string = '';
   publishButtonText: string = '';
+  canActionForm: boolean = false;
 
-  readonly regionList$: BehaviorSubject<Country[]> = new BehaviorSubject([]);
+  readonly regions$: Observable<{id: string, name: string}[]>;
+  readonly markets$: Observable<{id: number, name: string}[]>;
+  readonly categories$: Observable<{id: number, name: string}[]>;
+
+  // private hasLoaded: boolean = false;
+  // private isValid: boolean = false;
 
   @ViewChild(SellTemplateFormComponent, {static: false}) private templateForm: SellTemplateFormComponent;
 
-  private hasLoaded: boolean = false;
-  private isValid: boolean = false;
-  private isTemplateEditable: boolean = false;
-  // private savedTempl: BaseTemplate | MarketTemplate = null;
+  private destroy$: Subject<void> = new Subject();
+  private categoryList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
+  private marketsList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
+  private savedTempl: Template = null;
+  private profileMarkets: Market[] = [];
 
 
   constructor(
     private _route: ActivatedRoute,
-    private _router: Router,
+    private _store: Store,
     private _regionService: RegionListService,
-    private _sellService: SellService,
+    private _sharedService: DataService,
     private _snackbar: SnackbarService,
-    private _dialog: MatDialog,
-    private _unlocker: WalletEncryptionService,
-  ) { }
+    private _sellService: SellService
+  ) {
+    const regionsMap = this._regionService.getCountryList().map(c => ({id: c.iso, name: c.name}));
+    this.regions$ = of(regionsMap);
+
+    this.categories$ = this.categoryList$.asObservable();
+    this.markets$ = this.marketsList$.asObservable();
+  }
 
 
   ngOnInit() {
 
-    const regions$ = defer(() => {
-      const regions = this._regionService.getCountryList().map(c => ({id: c.iso, name: c.name}));
-      this.regionList$.next(regions);
-    });
-
-    this._route.queryParams.pipe(
-      take(1),
-      map(params => +params['templateID']),
-      // concatMap((id: number) => {
-      //   return this.loadTemplate(id).pipe(
-      //     tap(() => this.hasLoaded = true),
-      //     tap((templ) => {
-      //       this.savedTempl = templ;
-      //       this.isTemplateEditable = templ.hash.length > 0;
-      //       this.errorMessage = TextContent.ERROR_UNEDITABLE;
-      //     }),
-      //     concatMap(() => iif(() => this.regionList$.value.length === 0, regions$)),
-      //   );
-      // }),
-    ).subscribe(
-      null,
-      (err) => this.errorMessage = TextContent.ERROR_EXISTING_TEMPLATE_FETCH
+    // Load all markets for the current profile
+    const marketLoader$ = this._sharedService.loadMarkets().pipe(
+      catchError(() => of([] as Market[])),
+      tap((markets) => {
+        this.profileMarkets = markets;
+      })
     );
+
+    // Load and process any requested template
+    const reqTemplateId = +this._route.snapshot.queryParamMap.get('templateID');
+    const templLoader$ = this.fetchTemplateDetails(reqTemplateId).pipe(
+      catchError(() => {
+        this.errorMessage = TextContent.ERROR_EXISTING_TEMPLATE_FETCH;
+        return of(null as Template);
+      }),
+      tap(templ => this.resetTemplateDetails(templ))
+    );
+
+    // Ensure that the markets are loaded first, since the template processing requires the market list
+    const init$ = marketLoader$.pipe(
+      concatMap(() => templLoader$)
+    );
+
+    // Watch the identity - if it changes, load up the new markets associated with that identity and filter out existing market templates
+    const identityMarkets$ = this._store.select(MarketState.currentIdentity).pipe(
+      tap((currentId) => {
+        let availableMarkets = this.profileMarkets.filter(m => m.identityId === currentId.id);
+        if (this.savedTempl) {
+          if (this.savedTempl.type === 'BASE') {
+            availableMarkets = availableMarkets.filter(m =>
+              !this.savedTempl.baseTemplate.marketHashes.includes(m.receiveAddress)
+            );
+          } else if (this.savedTempl.type === 'MARKET') {
+            availableMarkets = availableMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
+          }
+        }
+
+        this.marketsList$.next(
+          availableMarkets.map(m => ({id: m.id, name: m.name}))
+        );
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    concat(
+      init$,            // this completes (it has to do so)
+      identityMarkets$, // this starts after the previous completes, but doesn't complete until component is destroyed
+    ).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe();
+
   }
 
 
   ngOnDestroy() {
-    this.regionList$.complete();
+    this.marketsList$.complete();
+    this.categoryList$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
-  get isFormReady(): boolean {
-    return this.hasLoaded;
-  }
-
-  get canActionForm(): boolean {
-    return this.isValid;
-  }
-
-  // get savedTemplate(): BaseTemplate | MarketTemplate | null {
-  //   return this.savedTempl;
-  // }
-
-
-  updateFormValidity(valid: boolean): void {
-    this.isValid = valid;
+  actionCategoryChangeForNewMarket(marketId: number): void {
+    if (marketId > 0) {
+      this.setCategoriesForMarket(marketId).subscribe();
+    } else {
+      this.categoryList$.next([]);
+    }
   }
 
 
   actionImageAddError(): void {
-    this._snackbar.open(TextContent.IMAGE_SELECTION_FAILED, 'err');
+    this._snackbar.open(TextContent.ERROR_IMAGE_ADD, 'err');
   }
 
 
-  actionImageRemovalRequest(imageId: number): void {
-    if (!this.isTemplateEditable) {
-      return;
-    }
-    // this._sellService.removeTemplateImage(+imageId).pipe(
-    //   tap(() => {
-    //     if (this.errorMessage === TextContent.ERROR_MAX_SIZE) {
-    //       this.errorMessage = '';
-    //     }
-    //   })
-    // ).subscribe(
-    //   null,
-    //   () => this._snackbar.open(TextContent.ERROR_IMAGE_REMOVAL)
-    // );
+  updateFormValidity(isValid: boolean): void {
+    this.canActionForm = isValid;
   }
 
 
-  saveTemplate() {
-    if (!this.canActionForm) {
-      return;
-    }
-
-    // this.doTemplateSave().subscribe();
+  actionImageRemovalRequest(imageId: number) {
   }
 
 
-  publishTemplate() {
-    if (!this.canActionForm) {
-      return;
-    }
+  saveTemplate(): void {
+
+  }
+
+
+  publishTemplate(): void {
+
+  }
+
+
+  // actionImageRemovalRequest(imageId: number): void {
+  //   if (!this.isTemplateEditable) {
+  //     return;
+  //   }
+  //   // this._sellService.removeTemplateImage(+imageId).pipe(
+  //   //   tap(() => {
+  //   //     if (this.errorMessage === TextContent.ERROR_MAX_SIZE) {
+  //   //       this.errorMessage = '';
+  //   //     }
+  //   //   })
+  //   // ).subscribe(
+  //   //   null,
+  //   //   () => this._snackbar.open(TextContent.ERROR_IMAGE_REMOVAL)
+  //   // );
+  // }
+
+
+  // saveTemplate() {
+  //   if (!this.canActionForm) {
+  //     return;
+  //   }
+
+  //   // this.doTemplateSave().subscribe();
+  // }
+
+
+  // publishTemplate() {
+  //   if (!this.canActionForm) {
+  //     return;
+  //   }
 
     // this.doTemplateSave().pipe(
     //   last()
@@ -189,7 +246,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
     //     dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
     //   }
     // );
-  }
+  // }
 
 
   // private doTemplateSave(): Observable<BaseTemplate | MarketTemplate> {
@@ -333,20 +390,78 @@ export class NewListingComponent implements OnInit, OnDestroy {
   // }
 
 
-  // private loadTemplate(id: number): Observable<BaseTemplate | MarketTemplate | null> {
-  //   if (id > 0) {
-  //     return this._sellService.fetchTemplate(id).pipe(
-  //       tap(() => {
-  //         this.saveButtonText = TextContent.BUTTON_LABEL_UPDATE;
-  //         this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_EXISTING;
-  //       })
-  //     );
-  //   }
-  //   return of(null).pipe(
-  //     tap(() => {
-  //       this.saveButtonText = TextContent.BUTTON_LABEL_SAVE;
-  //       this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_NEW;
-  //     })
-  //   );
-  // }
+  private fetchTemplateDetails(id: number): Observable<Template | null> {
+    let obs$: Observable<Template> = of(null);
+    if (id > 0) {
+      obs$ = this._sellService.fetchTemplateForProduct(id);
+    }
+    return obs$;
+  }
+
+
+  private resetTemplateDetails(templ: Template) {
+    this.savedTempl = templ;
+
+    const formDetails: TemplateFormDetails = {
+      title: '',
+      summary: '',
+      description: '',
+      priceBase: '',
+      priceShipLocal: '',
+      priceShipIntl: '',
+      savedImages: [],
+      shippingOrigin: '',
+      shippingDestinations: [],
+      category: {
+        selectedMarketCategoryId: 0,
+        canEdit: true,
+      },
+      market: {
+        selectedMarketId: 0,
+        canEdit: true
+      }
+    };
+
+    if (templ) {
+      this.isNewTemplate = false;
+      this.saveButtonText = TextContent.BUTTON_LABEL_UPDATE;
+      this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_EXISTING;
+
+      formDetails.title = templ.savedDetails.title;
+      formDetails.summary = templ.savedDetails.summary;
+      formDetails.description = templ.savedDetails.description;
+      formDetails.priceBase = templ.savedDetails.priceBase.particlsString();
+      formDetails.priceShipLocal = templ.savedDetails.priceShippingLocal.particlsString();
+      formDetails.priceShipIntl = templ.savedDetails.priceShippingIntl.particlsString();
+      formDetails.savedImages = templ.savedDetails.images;
+      formDetails.shippingOrigin = templ.savedDetails.shippingOrigin;
+      formDetails.shippingDestinations = templ.savedDetails.shippingDestinations;
+
+      if (templ.marketDetails) {
+        formDetails.category.selectedMarketCategoryId = templ.marketDetails.category.id;
+
+        const foundMarket = this.profileMarkets.find(m => m.receiveAddress === templ.marketDetails.marketKey);
+        formDetails.market.canEdit = !(templ.marketDetails.marketKey.length > 0);
+        if (foundMarket) {
+          formDetails.market.selectedMarketId = foundMarket.id;
+        }
+      }
+
+    } else {
+      this.isNewTemplate = true;
+      this.saveButtonText = TextContent.BUTTON_LABEL_SAVE;
+      this.publishButtonText = TextContent.BUTTON_LABEL_PUBLISH_NEW;
+    }
+
+    this.templateForm.resetFormDetails(formDetails);
+  }
+
+
+  private setCategoriesForMarket(marketId: number): Observable<CategoryItem[]> {
+    return this._sharedService.loadCategories(marketId).pipe(
+      map(categories => Array.isArray(categories.categories) ? categories.categories : []),
+      catchError(() => of([])),
+      tap(categories => this.categoryList$.next(categories)),
+    );
+  }
 }
