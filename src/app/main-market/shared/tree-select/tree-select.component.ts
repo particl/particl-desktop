@@ -293,7 +293,9 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
       return;
     }
     this.checklistSelection.toggle(node);
-    this.checkAllParentsSelection(node);
+    if (!this.singleSelection) {
+      this.checkAllParentsSelection(node);
+    }
   }
 
 
