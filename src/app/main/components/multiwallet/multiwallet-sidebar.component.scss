@@ -48,6 +48,7 @@
     flex: 0 1 1px;
     padding: 10px;
     .mat-button {
+      @extend %tfx;
       width: 34px;
       min-width: 0;
       margin: 3px 0;
@@ -57,6 +58,10 @@
       opacity: 0.25;
       &:hover,
       &:focus {
+        opacity: 0.7;
+        color: var(--color-white);
+      }
+      &.active {
         opacity: 1;
         color: var(--color-white);
       }

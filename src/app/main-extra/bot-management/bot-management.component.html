@@ -1,0 +1,129 @@
+<div class="container-block with-tab-bar">
+  <app-page-intro childPageAlias="Bot Management">
+    <ng-container page-title>Bot Management</ng-container>
+    <ng-container page-content>
+      Particl Bots extend functionality of Particl Desktop &ndash; manage Bots here to enable Swapping coins and much more
+    </ng-container>
+    <ng-container page-help>
+      Before enabling any Bot, take time to check it's author &ndash; not all bots here are officially approved; some bots might have 3rd party/unknown developers
+    </ng-container>
+  </app-page-intro>
+
+  <div class="filter">
+
+    <h2 class="section-title">
+      Search
+    </h2>
+
+    <mat-card class="filter-card">
+
+      <mat-form-field class="--plain" appearance="fill">
+        <input matInput type="text" placeholder="Search Bots">
+        <button *ngIf="filters.search" matSuffix mat-button class="small" (click)="filters.search=''; clearAndLoadPage()" matTooltip="Clear" matTooltipPosition="after">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+        </button>
+        <mat-icon *ngIf="!filters.search" matSuffix fontIcon="part-search"></mat-icon>
+      </mat-form-field>
+
+    </mat-card><!-- .filter-card -->
+
+    <h2 class="section-title">
+      Filter
+    </h2>
+
+    <mat-card class="filter-card">
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select placeholder="Bot type">
+          <mat-option value="all">All types</mat-option>
+          <mat-option class="coin-filter-option" *ngFor="let type of supported_types" [value]="type.value">
+            {{ type.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-radio-group class="radio-group block-radio">
+        <mat-radio-button class="filter-option" *ngFor="let status of bots_status" value="{{ status.value }}" color="accent">
+          {{ status.title }}
+          <span class="amount">{{ status.amount }}</span>
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card><!-- .filter-card -->
+
+    <div class="filter-buttons">
+      <div class="left">
+        <button mat-button class="clear-filters small" matTooltip="Clear all filters" matTooltipPosition="below">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+          Clear
+        </button>
+      </div>
+      <div class="right">
+        <button mat-button class="refresh-bots small" matTooltip="Refresh Bot list" matTooltipPosition="below">
+          <mat-icon fontIcon="part-refresh"></mat-icon>
+          Refresh
+        </button>
+      </div>
+    </div>
+
+  </div><!-- .filter -->
+
+  <div class="content with-filter">
+    <div class="bot-grid">
+
+      <mat-card class="bot" *ngFor="let bot of bots">
+
+        <div mat-card-image (click)="openbotDetailModal(bot.id, false)">
+          <img class="img" [src]="bot.image" [alt]="bot.title">
+        </div>
+
+        <mat-card-header (click)="openbotDetailModal(bot.id, false)">
+          <mat-card-title>
+            {{ bot.title }}
+          </mat-card-title>
+          <mat-card-subtitle>
+            {{ bot.summary }}
+          </mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-actions>
+          <button mat-button *ngIf="!bot.active" class="activate small" color="accent">
+            <mat-icon fontIcon="part-small-plus"></mat-icon>
+            Activate
+          </button>
+          <button mat-button *ngIf="bot.active" class="deactivate small" color="warn">
+            <mat-icon fontIcon="part-small-minus"></mat-icon>
+            Deactivate
+          </button>
+        </mat-card-actions>
+
+      </mat-card><!-- .bot -->
+
+    </div><!-- .bot-grid -->
+
+
+    <div class="loading-container" *ngIf="isLoadingBig">
+      <div class="loading-info">
+        <div class="loading-image">
+          <img src="./assets/particl-logo-symbol.svg">
+        </div>
+        <p class="title">
+          Hang on, we're loading the bots
+        </p>
+        <p class="widget-help">
+          This might take a while
+        </p>
+      </div>
+    </div><!-- .loading-container -->
+
+    <div class="no-results">
+      <img class="illustration" src="./assets/app-exchange/illustrations/no-bots.svg" alt="No Bots found">
+      <p>
+        No matching Bots found
+      </p>
+      <p class="help-text">
+        Sorry, we don't have any bot like that &ndash; try a different search
+      </p>
+    </div><!-- .no-results -->
+
+  </div><!-- .bot-list -->
+
+</div><!-- .container-block -->
+

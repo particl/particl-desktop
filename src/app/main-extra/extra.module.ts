@@ -7,6 +7,7 @@ import { ExtraRoutingModule } from './extra-routing.module';
 import { HelpComponent } from 'app/main-extra/help/help.component';
 import { GlobalSettingsComponent } from 'app/main-extra/global-settings/global-settings.component';
 import { WelcomeComponent } from 'app/main-extra/welcome/welcome.component';
+import { BotManagementComponent } from './bot-management/bot-management.component';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { WelcomeComponent } from 'app/main-extra/welcome/welcome.component';
     HelpComponent,
     GlobalSettingsComponent,
     ExtraBaseComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    BotManagementComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
