@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { Observable, of, concat, throwError, from } from 'rxjs';
+import { concatMap, mapTo, catchError, last } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { DataService } from '../services/data/data.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
 import { RespListingTemplate } from '../shared/market.models';
-import { Template, TemplateSavedDetails } from './sell.models';
+import { Template, TemplateSavedDetails, CreateTemplateRequest } from './sell.models';
 
 
 @Injectable()
@@ -17,7 +18,8 @@ export class SellService {
 
   constructor(
     private _rpc: MarketRpcService,
-    private _store: Store
+    private _store: Store,
+    private _sharedService: DataService
   ) {}
 
 
@@ -28,8 +30,135 @@ export class SellService {
   }
 
 
+  removeTemplateImage(imageID: number): Observable<boolean> {
+    return this._rpc.call('template', ['image', 'remove', imageID]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
+    );
+  }
+
+
+  cloneTemplateAsBase(templateId: number): Observable<RespListingTemplate> {
+    return this.cloneTemplate(templateId);
+  }
+
+
+  cloneTemplateForMarket(templateId: number, marketId: number): Observable<RespListingTemplate> {
+    return this.cloneTemplate(templateId, marketId);
+  }
+
+
+  createNewTemplate(data: CreateTemplateRequest): Observable<Template> {
+    /**
+     *
+     * - save the current as a base template (because it is a new template)
+     * - if a market id has been set then:
+     *     = clone the saved template (the newly created one) as a market template
+     *     = set the category id appropriately on the new market template
+     * - build up a Template object from whichever template was last saved
+     *   (either the market template or the base one if no market template was created)
+     */
+
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    const addParams = [
+      'add',
+      profileId,
+      data.title,
+      data.summary,
+      data.description,
+      null,  // category id is not provided here yet (not set here yet)
+      data.salesType,
+      data.currency,
+      data.priceBase,
+      data.priceShippingLocal,
+      data.priceShippingIntl,
+      data.escrowType,
+      data.escrowBuyerRatio,
+      data.escrowSellerRatio,
+      data.escrowReleaseType
+    ];
+
+    return this._rpc.call('template', addParams).pipe(
+      concatMap(resp => {
+        const templateID = resp.id;
+
+        const queries = [];
+        queries.push(
+          this._rpc.call('template', ['location', 'update', templateID, data.shippingFrom]).pipe(catchError(() => of(null)))
+        );
+
+        (data.shippingTo || []).forEach((dest: string) => {
+          queries.push(
+            this._rpc.call('template', ['shipping', 'add', templateID, dest, 'SHIPS']).pipe(catchError(() => of(null)))
+          );
+        });
+
+        (data.images || []).forEach(image => {
+          const imageParts = image.data.split(',');
+          const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
+          queries.push(
+            this._rpc.call('template', ['image', 'add', templateID, '', image.type, image.encoding, imgData]).pipe(
+              catchError(() => of(null))
+            )
+          );
+        });
+
+        let templateRetrieval$: Observable<RespListingTemplate> = this._rpc.call('template', ['get', templateID]);
+
+        if (+data.marketId > 0) {
+          // create a market template clone for this base template
+          templateRetrieval$ =
+            this._rpc.call('template', ['clone', resp.id, +data.marketId]).pipe(
+              concatMap((newMarketTempl: RespListingTemplate) => {
+
+                if (isBasicObjectType(newMarketTempl) && (+newMarketTempl.id > 0)) {
+                  return concat(
+
+                    // set the category now (since the market is now set)
+                    this._rpc.call(
+                      'information',
+                      ['update', +newMarketTempl.id, data.title, data.summary, data.description, +data.categoryId]
+                    ).pipe(
+                      catchError(() => of(null))
+                    ),
+
+                    // finally, return the latest template details
+                    this._rpc.call('template', ['get', +newMarketTempl.id])
+                  );
+                }
+
+                return throwError('invalid market template created!');
+              })
+          );
+        }
+
+        queries.push(
+          templateRetrieval$.pipe(
+            concatMap((respTemplate: RespListingTemplate) => this.buildTemplateForProduct(respTemplate))
+          )
+        );
+
+        return from(queries).pipe(
+          concatMap((query: Observable<any>) => query)
+        );
+      }),
+      last()
+    );
+
+  }
+
+
   private fetchProductTemplate(productId: number): Observable<RespListingTemplate> {
     return this._rpc.call('template', ['get', productId]);
+  }
+
+
+  private cloneTemplate(templateId: number, marketId?: number): Observable<RespListingTemplate> {
+    const params = ['clone', templateId];
+    if (+marketId > 0) {
+      params.push(marketId);
+    }
+    return this._rpc.call('template', params);
   }
 
 
@@ -94,7 +223,7 @@ export class SellService {
       //    a new child market template can only be created if no editable market template exists, thus child market temapltes
       //    with a higher id value must have been created later (MP seems to based on this lookup variation as well)
       const latestChild = parentSrcTempl.ChildListingItemTemplates.filter(basicChild =>
-        (+basicChild.id > 0)
+        isBasicObjectType(basicChild) && (+basicChild.id > 0)
       ).sort((a, b) => b.id - a.id)[0];
 
       if (latestChild) {
@@ -102,6 +231,27 @@ export class SellService {
           latestSrcMarketTempl = await this.fetchProductTemplate(+latestChild.id).toPromise();
         }
       }
+    }
+
+    if (isBasicObjectType(latestSrcMarketTempl) &&
+        (getValueOrDefault(latestSrcMarketTempl.hash, 'string', '').length > 0) &&
+        (+latestSrcMarketTempl.id > 0)
+    ) {
+      const markets = await this._sharedService.loadMarkets().toPromise();
+      if (!Array.isArray(markets) || (markets.length === 0)) {
+        throw Error('Failed fetching markets');
+      }
+      const marketAddress = getValueOrDefault(src.market, 'string', '');
+      const foundMarket = markets.find(m => m.receiveAddress === marketAddress);
+
+      if (!foundMarket) {
+        throw Error('Failed fetching markets');
+      }
+      latestSrcMarketTempl = await this.cloneTemplateForMarket(+latestSrcMarketTempl.id, foundMarket.id).toPromise();
+    }
+
+    if (!isBasicObjectType(latestSrcMarketTempl)) {
+      return newTempl;
     }
 
     newTempl.id = +latestSrcMarketTempl.id > 0 ? +latestSrcMarketTempl.id : newTempl.id;
@@ -128,7 +278,6 @@ export class SellService {
     }
 
     newTempl.marketDetails = {
-      hash: getValueOrDefault(latestSrcMarketTempl.hash, 'string', ''),
       marketKey: getValueOrDefault(latestSrcMarketTempl.market, 'string', ''),
       category: {
         id: categoryId,
@@ -219,88 +368,8 @@ export class SellService {
   }
 
 
-  // findTemplates(
-  //   profileID: number,
-  //   pageNum: number,
-  //   pageCount: number,
-  //   orderField: TEMPLATE_SORT_FIELD_TYPE,
-  //   searchTerm: string = '',
-  //   isPublished?: boolean
-  // ): Observable<(BaseTemplate | MarketTemplate)[]> {
-  //   const searchParams: any[] = ['search', pageNum, pageCount, 'ASC', orderField, profileID, searchTerm ? searchTerm : '*', []];
-  //   if (typeof isPublished === 'boolean') {
-  //     searchParams.push(isPublished);
-  //   }
-  //   return this._rpc.call('template', searchParams).pipe(
-  //     map((resp: RespListingTemplate[]) => {
-
-  //       const marketPort = this._store.selectSnapshot(MarketState.settings).port;
-
-  //       return resp.map((respItem: RespListingTemplate) => {
-  //         return this.buildTemplate(respItem, marketPort);
-  //       });
-  //     })
-  //   );
-  // }
-
-
-  // removeTemplateImage(imageID: number): Observable<void> {
-  //   return this._rpc.call('template', ['image', 'remove', imageID]);
-  // }
-
-
   // getTemplateSize(templateId: number): Observable<RespTemplateSize> {
   //   return this._rpc.call('template', ['size', templateId]);
-  // }
-
-
-  // createNewTemplate(data: NewTemplateData): Observable<number> {
-  //   const profile = this._store.selectSnapshot(MarketState.currentProfile).id;
-  //   const addParams = [
-  //     'add',
-  //     profile,
-  //     data.title,
-  //     data.shortDescription,
-  //     data.longDescription,
-  //     null,  // category id is not provided here yet (not set here yet)
-  //     data.salesType,
-  //     data.currency,
-  //     data.basePrice,
-  //     data.domesticShippingPrice,
-  //     data.foreignShippingPrice,
-  //     data.escrowType,
-  //     data.escrowBuyerRatio,
-  //     data.escrowSellerRatio,
-  //     data.escrowReleaseType
-  //   ];
-
-  //   return this._rpc.call('template', addParams).pipe(
-  //     concatMap((resp: RespListingTemplate) => {
-  //       const templateID = resp.id;
-
-  //       const queries = [];
-
-  //       queries.push(['location', 'update', templateID, data.shippingFrom]);
-
-  //       (data.shippingTo || []).forEach((dest: string) => {
-  //         queries.push(['shipping', 'add', templateID, dest, 'SHIPS']);
-  //       });
-
-  //       (data.images || []).forEach(image => {
-  //         const imageParts = image.data.split(',');
-  //         const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
-  //         queries.push(['image', 'add', templateID, '', image.type, image.encoding, imgData]);
-  //       });
-
-  //       return from(queries).pipe(
-  //         concatMap(params => {
-  //           return this._rpc.call('template', params).pipe(catchError(() => of(null)), mapTo(templateID));
-  //         })
-  //       );
-  //     }),
-  //     last(),  // wait for all of the requests to complete before emitting
-  //   );
-
   // }
 
 

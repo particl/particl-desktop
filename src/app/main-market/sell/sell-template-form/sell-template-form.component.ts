@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Observable, Subject, of, merge } from 'rxjs';
 import { takeUntil, tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
-import { amountValidator, totalValueValidator } from './sell-template-form.validators';
+import { amountValidator, totalValueValidator, categorySelectedValidator } from './sell-template-form.validators';
 import { TreeSelectComponent } from '../../shared/shared.module';
 import { TemplateFormDetails } from '../sell.models';
 
@@ -57,8 +57,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       images: new FormControl({value: [], disabled: true}),
       selectedMarket: new FormControl(0),
       selectedCategory: new FormControl(0)
-    },
-    [totalValueValidator]);
+      },
+      [totalValueValidator, categorySelectedValidator]
+    );
   }
 
 
@@ -220,7 +221,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
         values[control] = values[control].trim();
       }
     });
-    values['pendingImages'] = this.imagesPending;
+    values['pendingImages'] = this.imagesPending.value;
     return values;
   }
 

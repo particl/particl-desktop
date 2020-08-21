@@ -16,12 +16,12 @@
     [markets$]="markets$"
     [categories$]="categories$"
     (isValid)="updateFormValidity($event)"
-    (onChangeMarketId)="actionCategoryChangeForNewMarket($event)"
+    (onChangeMarketId)="actionMarketSelectionChanged($event)"
     (onImageImportError)="actionImageAddError($event)"
     (onRequestImageRemoval)="actionImageRemovalRequest($event)"
   ></market-sell-template-form>
 
-  <p class="alert --boxed --warning" *ngIf="errorMessage.length > 0">
+  <p class="alert --boxed --warning" *ngIf="errorMessage.value.length > 0">
     <span><strong>Error:</strong> {{ errorMessage }}</span>
   </p>
 
@@ -34,12 +34,12 @@
       </button>
     </div>
     <div class="right" *ngIf="(saveButtonText.length > 0) && (publishButtonText.length > 0)">
-      <button [disabled]="!canActionForm" mat-button matTooltip="Save template changes" appDebounceClick (debounceClick)="saveTemplate()">
+      <button [disabled]="!isTemplateSavable" mat-button matTooltip="Save template changes" appDebounceClick (debounceClick)="saveTemplate()">
         <mat-icon fontIcon="part-date"></mat-icon>
         {{ saveButtonText }}
       </button>
 
-      <button [disabled]="!canActionForm" mat-raised-button color="primary" appDebounceClick (debounceClick)="publishTemplate()">
+      <button [disabled]="!isTemplatePublishable" mat-raised-button color="primary" appDebounceClick (debounceClick)="publishTemplate()">
         <mat-icon fontIcon="part-check"></mat-icon>
         {{ publishButtonText }}
       </button>

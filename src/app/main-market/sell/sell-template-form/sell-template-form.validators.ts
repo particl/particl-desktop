@@ -19,3 +19,8 @@ export const totalValueValidator: ValidatorFn = (group: FormGroup): ValidationEr
 
   return total <= 1e-06 ? { 'totalValue': true } : null;
 };
+
+
+export const categorySelectedValidator: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
+  return +group.get('selectedMarket').value > 0 ? (+group.get('selectedCategory').value > 0 ? null : {selectedCategory: true}) : null;
+};

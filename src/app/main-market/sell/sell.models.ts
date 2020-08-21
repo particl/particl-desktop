@@ -1,4 +1,12 @@
 import { PartoshiAmount } from 'app/core/util/utils';
+import {
+  CURRENCY_TYPE,
+  ESCROW_TYPE,
+  ESCROW_RELEASE_TYPE,
+  SALES_TYPE,
+  IMAGE_PROTOCOL,
+  IMAGE_ENCODING,
+} from '../shared/market.models';
 
 
 export interface TemplateFormDetails {
@@ -40,7 +48,6 @@ export interface Template {
     marketHashes: string[];
   };
   marketDetails?: {
-    hash: string;
     marketKey: string;
     category: {
       id: number;
@@ -49,54 +56,53 @@ export interface Template {
   };
 }
 
-// import {
-//   CURRENCY_TYPE,
-//   ESCROW_TYPE,
-//   ESCROW_RELEASE_TYPE,
-//   SALES_TYPE,
-//   SHIPPING_AVAIL_TYPE,
-//   IMAGE_PROTOCOL,
-//   IMAGE_ENCODING,
-// } from '../shared/market.models';
+
+export interface TemplateRequestImageItem {
+  type: IMAGE_PROTOCOL;
+  encoding: IMAGE_ENCODING;
+  data: string;
+}
 
 
-// export interface ParamsNewTemplateDetails {
-//   title: string;
-//   summary: string;
-//   description: string;
-//   basePrice: number;
-//   domesticShippingPrice: number;
-//   foreignShippingPrice: number;
-//   images: Array<{type: IMAGE_PROTOCOL, encoding: IMAGE_ENCODING, data: string}>;
-//   shippingFrom: string;
-//   shippingTo: string[];
-//   salesType: SALES_TYPE;
-//   currency: CURRENCY_TYPE;
-//   escrowType: ESCROW_TYPE;
-//   escrowBuyerRatio: 100;
-//   escrowSellerRatio: 100;
-//   escrowReleaseType: ESCROW_RELEASE_TYPE;
-// }
+export interface CreateTemplateRequest {
+  title: string;
+  summary: string;
+  description: string;
+  priceBase: number;
+  priceShippingLocal: number;
+  priceShippingIntl: number;
+  images: TemplateRequestImageItem[];
+  shippingFrom: string;
+  shippingTo: string[];
+  salesType: SALES_TYPE;
+  currency: CURRENCY_TYPE;
+  escrowType: ESCROW_TYPE;
+  escrowBuyerRatio: number;
+  escrowSellerRatio: number;
+  escrowReleaseType: ESCROW_RELEASE_TYPE;
+  marketId: number | null;
+  categoryId: number | null;
+}
 
 
-// export interface ParamsUpdateTemplateDetails {
-//   info?: {
-//     title: string;
-//     summary: string;
-//     description: string;
-//     category?: number | null;
-//   };
-//   images?: Array<{type: IMAGE_PROTOCOL, encoding: IMAGE_ENCODING, data: string}>;
-//   payment?: {
-//     salesType: SALES_TYPE;
-//     currency: CURRENCY_TYPE;
-//     basePrice: number;
-//     domesticShippingPrice: number;
-//     foreignShippingPrice: number;
-//   };
-//   shippingFrom?: string;
-//   shippingTo?: {
-//     add: string[],
-//     remove: string[];
-//   };
-// }
+export interface UpdateTemplateRequest {
+  info?: {
+    title: string;
+    summary: string;
+    description: string;
+    category?: number | null;
+  };
+  images?: TemplateRequestImageItem[];
+  payment?: {
+    salesType: SALES_TYPE;
+    currency: CURRENCY_TYPE;
+    basePrice: number;
+    domesticShippingPrice: number;
+    foreignShippingPrice: number;
+  };
+  shippingFrom?: string;
+  shippingTo?: {
+    add: string[],
+    remove: string[];
+  };
+}
