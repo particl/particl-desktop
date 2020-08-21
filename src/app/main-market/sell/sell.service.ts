@@ -107,8 +107,7 @@ export class SellService {
 
         if (+data.marketId > 0) {
           // create a market template clone for this base template
-          templateRetrieval$ =
-            this._rpc.call('template', ['clone', resp.id, +data.marketId]).pipe(
+          templateRetrieval$ = this.cloneTemplate(resp.id, +data.marketId).pipe(
               concatMap((newMarketTempl: RespListingTemplate) => {
 
                 if (isBasicObjectType(newMarketTempl) && (+newMarketTempl.id > 0)) {

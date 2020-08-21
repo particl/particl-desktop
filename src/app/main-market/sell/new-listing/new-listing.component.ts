@@ -56,8 +56,6 @@ export class NewListingComponent implements OnInit, OnDestroy {
   readonly markets$: Observable<{id: number, name: string}[]>;
   readonly categories$: Observable<{id: number, name: string}[]>;
 
-  // private hasLoaded: boolean = false;
-  // private isValid: boolean = false;
 
   @ViewChild(SellTemplateFormComponent, {static: false}) private templateForm: SellTemplateFormComponent;
 
@@ -136,7 +134,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
 
     const processingForm$ = this.processingChangesControl.valueChanges.pipe(
-      // auditTime(1000),    // ensure that the processing modal is displayed for at least 1 second
+
       tap((isProcessing) => {
         if (!!isProcessing) {
           this._dialog.open(ProcessingModalComponent, {
