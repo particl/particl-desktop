@@ -86,6 +86,10 @@ export interface CreateTemplateRequest {
 
 
 export interface UpdateTemplateRequest {
+  cloneToMarket?: {
+    marketId: number;
+    categoryId: number;
+  };
   info?: {
     title: string;
     summary: string;

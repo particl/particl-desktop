@@ -17,7 +17,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { SellTemplateFormComponent } from '../sell-template-form/sell-template-form.component';
 import { getValueOrDefault } from 'app/main-market/shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { Template, TemplateFormDetails, CreateTemplateRequest, TemplateRequestImageItem } from '../sell.models';
+import { Template, TemplateFormDetails, CreateTemplateRequest, TemplateRequestImageItem, UpdateTemplateRequest } from '../sell.models';
 import { Market, CategoryItem } from 'app/main-market/services/data/data.models';
 import { ESCROW_RELEASE_TYPE } from 'app/main-market/shared/market.models';
 
@@ -296,147 +296,6 @@ export class NewListingComponent implements OnInit, OnDestroy {
   // }
 
 
-  // private doTemplateSave(): Observable<BaseTemplate | MarketTemplate> {
-  //   const dialog = this._dialog.open(ProcessingModalComponent, {
-  //     disableClose: true,
-  //     data: { message: TextContent.PROCESSING_TEMPLATE_SAVE }
-  //   });
-
-  //   let update$: Observable<number>;
-
-  //   const formValues = this.templateForm.getFormValues();
-
-  //   const parsedValues = {
-  //     title: typeof formValues['title'] === 'string' ? formValues['title'] : '',
-  //     summary: typeof formValues['summary'] === 'string' ? formValues['summary'] : '',
-  //     description: typeof formValues['description'] === 'string' ? formValues['description'] : '',
-  //     basePrice: (typeof formValues['basePrice'] === 'string') && (+formValues['basePrice'] >= 0) ?
-  //         formValues['basePrice'] : '0',
-  //     domesticShippingPrice: (typeof formValues['priceShipLocal'] === 'string') && (+formValues['priceShipLocal'] >= 0) ?
-  //         formValues['priceShipLocal'] : '0',
-  //     foreignShippingPrice: (typeof formValues['priceShipIntl'] === 'string') && (+formValues['priceShipIntl'] >= 0) ?
-  //         formValues['priceShipIntl'] : '0',
-  //     images: Object.prototype.toString.call(formValues['pendingImages']) === '[object Array]' ?
-  //         formValues['pendingImages'].map((image: string) => ({type: 'LOCAL', encoding: 'BASE64', data: image})) : [],
-  //     shippingFrom: typeof formValues['sourceRegion'] === 'string' ? formValues['sourceRegion'] : '',
-  //     shippingTo: Object.prototype.toString.call(formValues['targetRegions']) === '[object Array]' ?
-  //         (formValues['targetRegions'] as string[]) : [],
-  //   };
-
-  //   if (this.savedTempl === null) {
-  //     // perform save
-  //     const newTemplateData: NewTemplateData = {
-  //       title: parsedValues.title,
-  //       shortDescription: parsedValues.shortDescription,
-  //       longDescription: parsedValues.longDescription,
-  //       basePrice: +parsedValues.basePrice,
-  //       domesticShippingPrice: +parsedValues.domesticShippingPrice,
-  //       foreignShippingPrice: +parsedValues.foreignShippingPrice,
-  //       images: parsedValues.images,
-  //       shippingFrom: parsedValues.shippingFrom,
-  //       shippingTo: parsedValues.shippingTo,
-  //       escrowType: 'MAD_CT',
-  //       escrowReleaseType: 'ANON',
-  //       escrowBuyerRatio: 100,
-  //       escrowSellerRatio: 100,
-  //       salesType: 'SALE',
-  //       currency: 'PART',
-  //     };
-
-  //     update$ = this._sellService.createNewTemplate(newTemplateData);
-
-  //   } else {
-  //     // perform update operations
-  //     const updateData: UpdateTemplateData = {};
-  //     updateData.images = parsedValues.images;
-
-  //     if (
-  //       (parsedValues.title !== this.savedTempl.information.title) ||
-  //       (parsedValues.shortDescription !== this.savedTempl.information.summary) ||
-  //       (parsedValues.longDescription !== this.savedTempl.information.description)
-  //     ) {
-  //       updateData.info = {
-  //         title: parsedValues.title,
-  //         shortDescription: parsedValues.shortDescription,
-  //         longDescription: parsedValues.longDescription
-  //       };
-  //     }
-
-  //     if (
-  //       (parsedValues.basePrice !== this.savedTempl.price.basePrice.particlsString()) ||
-  //       (parsedValues.domesticShippingPrice !== this.savedTempl.price.shippingLocal.particlsString()) ||
-  //       (parsedValues.foreignShippingPrice !== this.savedTempl.price.shippingInternational.particlsString())
-  //     ) {
-  //       updateData.payment = {
-  //         basePrice: +parsedValues.basePrice,
-  //         domesticShippingPrice: +parsedValues.domesticShippingPrice,
-  //         foreignShippingPrice: +parsedValues.foreignShippingPrice,
-  //         currency: 'PART',
-  //         salesType: 'SALE'
-  //       };
-  //     }
-
-  //     if (parsedValues.shippingFrom !== this.savedTempl.location.countryCode) {
-  //       updateData.shippingFrom = parsedValues.shippingFrom;
-  //     }
-
-  //     updateData.shippingTo = {
-  //       add: [],
-  //       remove: []
-  //     };
-
-  //     const existingDestinationCodes = (this.savedTempl.shippingDestinations || []).filter(dest => {
-  //       return dest.type === 'SHIPS';
-  //     }).map(dest => dest.countryCode);
-
-  //     existingDestinationCodes.forEach(dest => {
-  //       if (!parsedValues.shippingTo.includes(dest)) {
-  //         updateData.shippingTo.remove.push(dest);
-  //       }
-  //     });
-
-  //     parsedValues.shippingTo.forEach((dest: string) => {
-  //       if (!existingDestinationCodes.includes(dest)) {
-  //         updateData.shippingTo.add.push(dest);
-  //       }
-  //     });
-
-  //     update$ = this._sellService.updateExistingTemplate(this.savedTempl.id, updateData).pipe(mapTo(this.savedTempl.id));
-  //   }
-
-  //   return update$.pipe(
-  //     concatMap((id: number) => iif(
-  //       () => +id > 0,
-  //       defer(() => {
-  //         // @TODO: zaSmilingIdiot 2020-05-25 -> stupid way to force the update. Do change detection, etc in the capture Form component
-  //         this.hasLoaded = false;
-  //         return this.loadTemplate(id).pipe(
-  //             finalize(() => this.hasLoaded = true),
-  //             concatMap((template: ListingTemplate) => {
-  //               return this._sellService.getTemplateSize(template.id).pipe(
-  //                 catchError(() => of(null)),
-  //                 tap((resp: RespTemplateSize | null) => {
-  //                   if ((resp === null) || !resp.fits) {
-  //                     this.errorMessage = TextContent.ERROR_MAX_SIZE;
-  //                   }
-  //                 }),
-  //                 mapTo(template)
-  //               );
-  //             })
-  //           );
-  //         }
-  //       )
-  //     )),
-  //     finalize(() => this._dialog.getDialogById(dialog.id).close()),
-  //     catchError(() => {
-  //       this._snackbar.open(TextContent.ERROR_FAILED_SAVE);
-  //       return throwError('save error');
-  //     }),
-  //   );
-
-  // }
-
-
   private doTemplateSave(): Observable<boolean> {
     this.processingChangesControl.setValue(true);
 
@@ -466,10 +325,11 @@ export class NewListingComponent implements OnInit, OnDestroy {
     };
 
     let updateObs$: Observable<Template>;
+    let responseObs$: Observable<boolean>;
 
 
     if ((this.savedTempl === null) || (this.savedTempl.id <= 0)) {
-      // creation of new template
+      // Creation of new template
       const newTemplateData: CreateTemplateRequest = {
         title: parsedValues.title,
         summary: parsedValues.summary,
@@ -493,28 +353,100 @@ export class NewListingComponent implements OnInit, OnDestroy {
       updateObs$ = this._sellService.createNewTemplate(newTemplateData);
 
     } else {
-      // update existing template (can be either base or market template)...
-      /**
-       * NB!
-       * If base template
-       *  - if market id is now set
-       *    = update base template
-       *    = clone base as a market template
-       *  - else
-       *    = just update base template
-       * Else if market template
-       *  - just update market template
-       */
+
+      // Update existing template (beware base templates that need to be cloned to a market template)
+
+      const updateTemplateData: UpdateTemplateRequest = {};
+
+      if (
+        (parsedValues.title !== this.savedTempl.savedDetails.title) ||
+        (parsedValues.summary !== this.savedTempl.savedDetails.summary) ||
+        (parsedValues.description !== this.savedTempl.savedDetails.description)
+      ) {
+        updateTemplateData.info = {
+          title: parsedValues.title,
+          summary: parsedValues.summary,
+          description: parsedValues.description
+        };
+
+        if (this.savedTempl.marketDetails && this.savedTempl.marketDetails.category.id) {
+          updateTemplateData.info.category = this.savedTempl.marketDetails.category.id;
+        }
+      }
+
+      if (parsedValues.images.length) {
+        updateTemplateData.images = parsedValues.images;
+      }
+
+      if (
+        (parsedValues.basePrice !== this.savedTempl.savedDetails.priceBase.particlsString()) ||
+        (parsedValues.domesticShippingPrice !== this.savedTempl.savedDetails.priceShippingLocal.particlsString()) ||
+        (parsedValues.foreignShippingPrice !== this.savedTempl.savedDetails.priceShippingIntl.particlsString())
+      ) {
+        updateTemplateData.payment = {
+          basePrice: (new PartoshiAmount(+parsedValues.basePrice)).partoshis(),
+          domesticShippingPrice: (new PartoshiAmount(+parsedValues.domesticShippingPrice)).partoshis(),
+          foreignShippingPrice: (new PartoshiAmount(+parsedValues.foreignShippingPrice)).partoshis(),
+          currency: 'PART',
+          salesType: 'SALE'
+        };
+      }
+
+      if (parsedValues.shippingFrom !== this.savedTempl.savedDetails.shippingOrigin) {
+        updateTemplateData.shippingFrom = parsedValues.shippingFrom;
+      }
+
+      const destRemovals: string[] = [];
+      const destAdditions: string[] = [];
+
+      const existingDestinationCodes = (this.savedTempl.savedDetails.shippingDestinations || []);
+
+      existingDestinationCodes.forEach((dest: string) => {
+        if (!parsedValues.shippingTo.includes(dest)) {
+          destRemovals.push(dest);
+        }
+      });
+
+      parsedValues.shippingTo.forEach((dest: string) => {
+        if (!existingDestinationCodes.includes(dest)) {
+          destAdditions.push(dest);
+        }
+      });
+
+      if (destRemovals.length || destAdditions.length) {
+        updateTemplateData.shippingTo = {
+          add: destAdditions,
+          remove: destRemovals
+        };
+      }
+
+      if ((this.savedTempl.type === 'BASE') && (parsedValues.selectedMarketId > 0)) {
+        updateTemplateData.cloneToMarket = {
+          marketId: parsedValues.selectedMarketId,
+          categoryId: parsedValues.selectedCategoryId
+        };
+      }
+
+      if (Object.keys(updateTemplateData).length > 0) {
+        updateObs$ = this._sellService.updateExistingTemplate(this.savedTempl.id, updateTemplateData);
+      } else {
+        responseObs$ = of(true);
+      }
     }
 
-    if (updateObs$ === undefined) {
-      return of(false);
+    if (updateObs$ !== undefined) {
+      responseObs$ = updateObs$.pipe(
+        tap((updatedTemp) => this.resetTemplateDetails(updatedTemp)),
+        mapTo(true),
+        catchError(() => of(false))
+      );
     }
 
-    return updateObs$.pipe(
-      tap((updatedTemp) => this.resetTemplateDetails(updatedTemp)),
-      mapTo(true),
-      catchError(() => of(false)),
+    if (responseObs$ === undefined) {
+      responseObs$ = of(false);
+    }
+
+    return responseObs$.pipe(
       tap(() => this.processingChangesControl.setValue(false))
     );
   }

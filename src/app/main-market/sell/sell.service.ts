@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, concat, throwError, from } from 'rxjs';
-import { concatMap, mapTo, catchError, last } from 'rxjs/operators';
+import { concatMap, mapTo, catchError, last, concatAll } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -10,7 +10,7 @@ import { DataService } from '../services/data/data.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
 import { RespListingTemplate } from '../shared/market.models';
-import { Template, TemplateSavedDetails, CreateTemplateRequest } from './sell.models';
+import { Template, TemplateSavedDetails, CreateTemplateRequest, UpdateTemplateRequest } from './sell.models';
 
 
 @Injectable()
@@ -147,6 +147,115 @@ export class SellService {
   }
 
 
+  updateExistingTemplate(templateId: number, details: UpdateTemplateRequest): Observable<Template> {
+    /**
+     *
+     * Update existing template
+     *
+     * NB!
+     * If base template
+     *  - if market id is now set
+     *    = update base template
+     *    = clone base as a market template
+     *  - else
+     *    = just update base template
+     * Else if market template
+     *  - just update market template
+     */
+
+    const updates$: Observable<any>[] = [];
+
+    if (isBasicObjectType(details.info)) {
+      const rpc$ = this._rpc.call('template', [
+        'information',
+        'update',
+        templateId,
+        details.info.title || '',
+        details.info.summary || '',
+        details.info.description || '',
+        +details.info.category || null
+      ]);
+      updates$.push(rpc$);
+    }
+    if (isBasicObjectType(details.payment)) {
+      const args = [
+        'payment',
+        'update',
+        templateId,
+        details.payment.salesType,
+        details.payment.currency,
+        details.payment.basePrice,
+        details.payment.domesticShippingPrice,
+        details.payment.foreignShippingPrice
+      ];
+      updates$.push(this._rpc.call('template', args));
+    }
+    if (typeof details.shippingFrom === 'string') {
+      updates$.push(this._rpc.call('template', ['location', 'update', templateId, details.shippingFrom]));
+    }
+    if (isBasicObjectType(details.shippingTo)) {
+      if (details.shippingTo.add) {
+        details.shippingTo.add.forEach(dest =>
+          updates$.push(this._rpc.call('template', ['shipping', 'add', templateId, dest, 'SHIPS']))
+        );
+      }
+      if (details.shippingTo.remove) {
+        details.shippingTo.remove.forEach(dest =>
+          updates$.push(this._rpc.call('template', ['shipping', 'remove', templateId, dest]))
+        );
+      }
+    }
+    if (Array.isArray(details.images)) {
+      details.images.forEach(image => {
+        const imageParts = image.data.split(',');
+        const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
+        updates$.push(this._rpc.call('template', ['image', 'add', templateId, '', image.type, image.encoding, imgData]));
+      });
+    }
+
+    if (isBasicObjectType(details.cloneToMarket)) {
+      const cloneTempl$ = this.cloneTemplate(templateId, details.cloneToMarket.marketId).pipe(
+        concatMap((clonedTemplResp) => {
+
+          if (isBasicObjectType(clonedTemplResp) && (+clonedTemplResp.id > 0)) {
+
+            if (+details.cloneToMarket.categoryId > 0) {
+              return this._rpc.call('template', [
+                'information',
+                'update',
+                +clonedTemplResp.id,
+                details.info.title || '',
+                details.info.summary || '',
+                details.info.description || '',
+                +details.cloneToMarket.categoryId
+              ]).pipe(
+                concatMap(() => this.fetchProductTemplate(+clonedTemplResp.id))
+              );
+            } else {
+              return this.fetchProductTemplate(+clonedTemplResp.id);
+            }
+          }
+
+          return throwError('Invalid Market Template');
+        })
+      );
+
+      updates$.push(cloneTempl$);
+
+    } else {
+      updates$.push(this.fetchProductTemplate(templateId));
+    }
+
+    // NB! Ensure template details are the last to be fetched from all branches above!
+
+    return from(updates$).pipe(
+      concatAll(),
+      last(),
+      concatMap((templ: RespListingTemplate) => this.buildTemplateForProduct(templ))
+    );
+  }
+
+
   private fetchProductTemplate(productId: number): Observable<RespListingTemplate> {
     return this._rpc.call('template', ['get', productId]);
   }
@@ -155,7 +264,7 @@ export class SellService {
   private cloneTemplate(templateId: number, marketId?: number): Observable<RespListingTemplate> {
     const params = ['clone', templateId];
     if (+marketId > 0) {
-      params.push(marketId);
+      params.push(+marketId);
     }
     return this._rpc.call('template', params);
   }
