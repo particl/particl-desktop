@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, of, Subject, BehaviorSubject, concat, merge } from 'rxjs';
-import { map, catchError, takeUntil, tap, concatMap, mapTo } from 'rxjs/operators';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of, Subject, BehaviorSubject, concat, merge, iif, defer } from 'rxjs';
+import { map, catchError, takeUntil, tap, concatMap, mapTo, take } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -15,11 +15,12 @@ import { RegionListService } from '../../services/region-list/region-list.servic
 import { DataService } from '../../services/data/data.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { SellTemplateFormComponent } from '../sell-template-form/sell-template-form.component';
-import { getValueOrDefault } from 'app/main-market/shared/utils';
+import { PublishTemplateModalComponent, PublishTemplateModalInputs } from './publish-template-modal/publish-template-modal.component';
+import { getValueOrDefault, isBasicObjectType } from 'app/main-market/shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { Template, TemplateFormDetails, CreateTemplateRequest, TemplateRequestImageItem, UpdateTemplateRequest } from '../sell.models';
-import { Market, CategoryItem } from 'app/main-market/services/data/data.models';
-import { ESCROW_RELEASE_TYPE } from 'app/main-market/shared/market.models';
+import { Market, CategoryItem } from '../../services/data/data.models';
+import { ESCROW_RELEASE_TYPE } from '../../shared/market.models';
 
 
 enum TextContent {
@@ -32,10 +33,11 @@ enum TextContent {
   ERROR_FAILED_SAVE = 'Could not save the changes to the template',
   ERROR_IMAGE_REMOVAL = 'Could not remove the selected image',
   ERROR_IMAGE_ADD = 'One or more images selected were not valid',
+  ERROR_PUBLISH_TEMPLATE_TYPE = 'This template may not be published',
   PROCESSING_TEMPLATE_SAVE = 'Saving the current changes',
-  // PROCESSING_TEMPLATE_PUBLISH = 'Publishing the template to the selected market',
-  // PUBLISH_FAILED = 'Failed to publish the template',
-  // PUBLISH_SUCCESS = 'Successfully created a listing!'
+  PROCESSING_TEMPLATE_PUBLISH = 'Publishing the template to the selected market',
+  PUBLISH_FAILED = 'Failed to publish the template',
+  PUBLISH_SUCCESS = 'Successfully created a listing!'
 }
 
 
@@ -71,11 +73,13 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _store: Store,
     private _regionService: RegionListService,
     private _sharedService: DataService,
     private _snackbar: SnackbarService,
     private _sellService: SellService,
+    private _unlocker: WalletEncryptionService,
     private _dialog: MatDialog
   ) {
     const regionsMap = this._regionService.getCountryList().map(c => ({id: c.iso, name: c.name}));
@@ -112,13 +116,15 @@ export class NewListingComponent implements OnInit, OnDestroy {
     );
 
     // Watch the identity - if it changes, load up the new markets associated with that identity and filter out existing market templates
+    //    also filtering out markets which cannot be published to
     const identityMarkets$ = this._store.select(MarketState.currentIdentity).pipe(
       tap((currentId) => {
         let availableMarkets = this.profileMarkets.filter(m => m.identityId === currentId.id);
         if (this.savedTempl) {
           if (this.savedTempl.type === 'BASE') {
             availableMarkets = availableMarkets.filter(m =>
-              !this.savedTempl.baseTemplate.marketHashes.includes(m.receiveAddress)
+              !this.savedTempl.baseTemplate.marketHashes.includes(m.receiveAddress) &&
+              (m.type === 'MARKETPLACE' || m.type === 'STOREFRONT_ADMIN')
             );
           } else if (this.savedTempl.type === 'MARKET') {
             availableMarkets = availableMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
@@ -135,11 +141,16 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
     const processingForm$ = this.processingChangesControl.valueChanges.pipe(
 
-      tap((isProcessing) => {
-        if (!!isProcessing) {
+      tap((processingValue) => {
+        if (processingValue > 0) {
+          let message = TextContent.PROCESSING_TEMPLATE_SAVE;
+
+          if (processingValue === 2) {
+            message = TextContent.PROCESSING_TEMPLATE_PUBLISH;
+          }
           this._dialog.open(ProcessingModalComponent, {
             disableClose: true,
-            data: { message: TextContent.PROCESSING_TEMPLATE_SAVE }
+            data: { message }
           });
         } else if (this._dialog.openDialogs.length) {
           this._dialog.closeAll();
@@ -246,58 +257,84 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
 
   publishTemplate(): void {
+    if (!this.isTemplatePublishable) {
+      return;
+    }
 
+    this.doTemplateSave().subscribe(
+      (success) => {
+        if (!success) {
+          this._snackbar.open(TextContent.ERROR_FAILED_SAVE, 'warn');
+          return;
+        }
+
+        if (!isBasicObjectType(this.savedTempl.marketDetails) || !this.savedTempl.marketDetails.marketKey) {
+          this._snackbar.open(TextContent.ERROR_PUBLISH_TEMPLATE_TYPE, 'warn');
+          return;
+        }
+
+        const selectedMarket = this.profileMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
+        if (!selectedMarket.length) {
+          this._snackbar.open(TextContent.ERROR_PUBLISH_TEMPLATE_TYPE, 'warn');
+          return;
+        }
+
+        const openDialog$ = defer(() => {
+          const modalData: PublishTemplateModalInputs = {
+            templateID: this.savedTempl.id,
+            title: this.savedTempl.savedDetails.title,
+            marketName: selectedMarket[0].name,
+            categoryName: this.savedTempl.marketDetails.category.name
+          };
+
+          const dialog = this._dialog.open(
+            PublishTemplateModalComponent,
+            {data: modalData}
+          );
+
+          return dialog.afterClosed().pipe(
+            take(1),
+            concatMap((details: {duration: number} | null) => iif(
+                () => isBasicObjectType(details) && (+details.duration > 0),
+
+                defer(() => this._unlocker.unlock({timeout: 15}).pipe(
+                  concatMap((unlocked) => iif(
+
+                    () => unlocked,
+
+                    defer(() => {
+                      this.processingChangesControl.setValue(2);
+                      return this._sellService.publishMarketTemplate(this.savedTempl.id, +details.duration).pipe(
+                        catchError(() => of(false)),
+                        tap((isSuccess) => {
+                          this.processingChangesControl.setValue(0);
+
+                          if (isSuccess) {
+                            this._snackbar.open(TextContent.PUBLISH_SUCCESS);
+                            this._router.navigate(['../'], {relativeTo: this._route, queryParams: {selectedSellTab: 'templates'}});
+                          } else {
+                            this._snackbar.open(TextContent.PUBLISH_FAILED, 'warn');
+                          }
+                        })
+                      );
+                    })
+                  ))
+                ))
+            ))
+          );
+
+        });
+
+        this._unlocker.unlock({timeout: 30}).pipe(
+          concatMap(isUnlocked => iif(() => isUnlocked, openDialog$))
+        ).subscribe();
+      }
+    );
   }
 
 
-  // publishTemplate() {
-  //   if (!this.canActionForm) {
-  //     return;
-  //   }
-
-    // this.doTemplateSave().pipe(
-    //   last()
-    // ).subscribe(
-    //   () => {
-    //     const dialog = this._dialog.open(
-    //       PublishTemplateModalComponent,
-    //       {data: {templateID: this.savedTempl.id}}
-    //     );
-    //     dialog.componentInstance.isConfirmed.pipe(
-    //       take(1),
-    //       concatMap((resp) => this._unlocker.unlock({timeout: 20}).pipe(
-    //         concatMap((unlocked) => {
-    //           const publish$ = defer(() => {
-    //             this._dialog.open(ProcessingModalComponent, {
-    //               disableClose: true,
-    //               data: { message: TextContent.PROCESSING_TEMPLATE_PUBLISH }
-    //             });
-
-    //             return this._sellService.publishTemplate(this.savedTempl.id, resp.market, resp.duration, null, false).pipe(
-    //               finalize(() => this._dialog.closeAll())
-    //             );
-    //           });
-    //           return iif(() => unlocked, publish$);
-    //         })
-    //       ))
-    //     ).subscribe(
-    //       () => {
-    //         this._snackbar.open(TextContent.PUBLISH_SUCCESS);
-    //         this._router.navigate(['../'], {relativeTo: this._route, queryParams: {selectedSellTab: 'templates'}});
-    //       },
-    //       () => {
-    //         this._snackbar.open(TextContent.PUBLISH_FAILED, 'err');
-    //       }
-    //     );
-
-    //     dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
-    //   }
-    // );
-  // }
-
-
   private doTemplateSave(): Observable<boolean> {
-    this.processingChangesControl.setValue(true);
+    this.processingChangesControl.setValue(1);
 
     const formValues = this.templateForm.getFormValues();
 
@@ -447,7 +484,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
     }
 
     return responseObs$.pipe(
-      tap(() => this.processingChangesControl.setValue(false))
+      tap(() => this.processingChangesControl.setValue(0))
     );
   }
 

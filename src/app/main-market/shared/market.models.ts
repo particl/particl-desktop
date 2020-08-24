@@ -217,6 +217,14 @@ export interface RespListingTemplate {
 }
 
 
+export interface RespListingItemTemplatePost {
+  result: string;  // Should be: 'Sent' | 'Not Sent'; but sometimes seems to include '.' characters sometimes not, etc
+  msgid?: string;
+  txid?: string;
+  fee?: number;
+}
+
+
 export interface RespCategoryAdd {
   id: number;
   key: string;

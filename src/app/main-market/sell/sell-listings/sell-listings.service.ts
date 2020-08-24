@@ -37,6 +37,9 @@ export class SellListingsService {
 
 
   private buildListings(templateList: RespListingTemplate[]): SellListing[] {
+    // So why this complicated route?
+    // Because we need such details as which Base Template the listing refers to, or
+    //    which parent Market Template (if applicable) it refers to, etc
     const settings = this._store.selectSnapshot(MarketState.settings);
     const actualListings: SellListing[] = [];
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, concat, throwError, from } from 'rxjs';
-import { concatMap, mapTo, catchError, last, concatAll } from 'rxjs/operators';
+import { concatMap, mapTo, catchError, last, concatAll, map } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -9,7 +9,7 @@ import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { DataService } from '../services/data/data.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
-import { RespListingTemplate } from '../shared/market.models';
+import { RespListingTemplate, RespListingItemTemplatePost } from '../shared/market.models';
 import { Template, TemplateSavedDetails, CreateTemplateRequest, UpdateTemplateRequest } from './sell.models';
 
 
@@ -256,6 +256,25 @@ export class SellService {
   }
 
 
+  estimatePublishFee(templateId: number, durationDays: number): Observable<number> {
+    return this._rpc.call('template', ['post', templateId, durationDays, true]).pipe(
+      map((resp: RespListingItemTemplatePost) => {
+        if (isBasicObjectType(resp) && (+resp.fee > 0)) {
+          return +resp.fee;
+        }
+        throwError('Invalid market request!');
+      })
+    );
+  }
+
+
+  publishMarketTemplate(templateId: number, durationDays: number): Observable<boolean> {
+    return this._rpc.call('template', ['post', templateId, durationDays, false]).pipe(
+      map((resp: RespListingItemTemplatePost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+
   private fetchProductTemplate(productId: number): Observable<RespListingTemplate> {
     return this._rpc.call('template', ['get', productId]);
   }
@@ -474,120 +493,5 @@ export class SellService {
       escrowSeller: 100,
     };
   }
-
-
-  // getTemplateSize(templateId: number): Observable<RespTemplateSize> {
-  //   return this._rpc.call('template', ['size', templateId]);
-  // }
-
-
-  // updateExistingTemplate(templateID: number, details: UpdateTemplateData): Observable<void> {
-  //   const updates$: Observable<any>[] = [];
-  //   if (details.info) {
-  //     const rpc$ = this._rpc.call('template', [
-  //       'information',
-  //       'update',
-  //       templateID,
-  //       details.info.title || '',
-  //       details.info.shortDescription || '',
-  //       details.info.longDescription || '',
-  //       +details.info.category || null
-  //     ]);
-  //     updates$.push(rpc$);
-  //   }
-  //   if (details.payment) {
-  //     const args = [
-  //       'payment',
-  //       'update',
-  //       templateID,
-  //       details.payment.salesType,
-  //       details.payment.currency,
-  //       details.payment.basePrice,
-  //       details.payment.domesticShippingPrice,
-  //       details.payment.foreignShippingPrice
-  //     ];
-  //     updates$.push(this._rpc.call('template', args));
-  //   }
-  //   if (details.shippingFrom) {
-  //     updates$.push(this._rpc.call('template', ['location', 'update', templateID, details.shippingFrom]));
-  //   }
-  //   if (details.shippingTo) {
-  //     if (details.shippingTo.add) {
-  //       details.shippingTo.add.forEach(dest =>
-  //         updates$.push(this._rpc.call('template', ['shipping', 'add', templateID, dest, 'SHIPS']))
-  //       );
-  //     }
-  //     if (details.shippingTo.remove) {
-  //       details.shippingTo.remove.forEach(dest =>
-  //         updates$.push(this._rpc.call('template', ['shipping', 'remove', templateID, dest, 'SHIPS']))
-  //       );
-  //     }
-  //   }
-  //   if (details.images) {
-  //     details.images.forEach(image => {
-  //       const imageParts = image.data.split(',');
-  //       const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
-  //       updates$.push(this._rpc.call('template', ['image', 'add', templateID, '', image.type, image.encoding, imgData]));
-  //     });
-  //   }
-
-  //   if (updates$.length <= 0) {
-  //     // prevent error
-  //     updates$.push(of(null));
-  //   }
-
-  //   return from(updates$).pipe(
-  //     concatAll(),
-  //     last()
-  //   );
-  // }
-
-
-  // publishTemplate(
-  //   templateID: number, marketID: number, duration: number, categoryID: number = null, estimateOnly: boolean = true
-  // ): Observable<any> {  // TODO: create relevant return type and set it correctly here when it is known
-
-  //   let obs = of();
-
-  //   if (+categoryID > 0) {
-  //     obs = this.fetchTemplate(templateID).pipe(
-  //       concatMap((template: ListingTemplate) => {
-  //         const details: UpdateTemplateData = {
-  //           info: {
-  //             title: template.information.title,
-  //             shortDescription: template.information.summary,
-  //             longDescription: template.information.description,
-  //             category: categoryID
-  //           }
-  //         };
-  //         return this.updateExistingTemplate(templateID, details);
-  //       })
-  //     );
-  //   }
-
-  //   return obs.pipe(concatMap(() => this._rpc.call('template', ['post', templateID, duration, marketID, estimateOnly])));
-  // }
-
-
-  // cloneTemplate(sourceID: number): Observable<any> {
-  //   return this._rpc.call('template', ['clone', sourceID]);
-  // }
-
-
-  // createNewCategory(name: string, parentID: number, marketID: number): Observable<number> {
-  //   return this._rpc.call('category', ['add', marketID, name, '', parentID]).pipe(
-  //     map((resp: RespCategoryAdd) => {
-  //       return resp.id;
-  //     })
-  //   );
-  // }
-
-
-  // deleteTemplate(templateID: number): Observable<boolean> {
-  //   return this._rpc.call('template', ['remove', +templateID]).pipe(
-  //     catchError(() => of(false)),
-  //     map(resp => typeof resp === 'boolean' ? resp : true)
-  //   );
-  // }
 
 }
