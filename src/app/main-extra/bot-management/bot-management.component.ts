@@ -26,62 +26,70 @@ export class BotManagementComponent implements OnInit {
     { title: 'Inactive',     amount: '1', value: 'inactive', }
   ];
 
-  public bots: any = [
+  public activeBots: any = [
     {
       id: '1',
       image: './assets/images/placeholder_3-4.jpg',
       title: 'Layout Testing Bot',
       summary: 'Placeholder bot for testing the new Bot Management page',
-      active: true
+      status: 'active',
+      type: 'Exchange'
     },
     {
       id: '2',
       image: './assets/images/placeholder_4-3.jpg',
-      title: 'Another Testing Bot and second line stuff',
-      summary: 'Placeholder bot for testing the new Bot Management page',
-      active: false
+      title: 'Another Testing Bot and second line stuff which is longer than ususal',
+      summary: 'Placeholder bot for testing the new Bot Management page is cropped as well, oh noes!',
+      status: 'inactive',
+      type: 'Chat'
     },
     {
       id: '3',
       image: './assets/images/placeholder_3-4.jpg',
       title: 'SimpleSwap Exchange bot',
       summary: 'Hey, need some $PART, yo?',
-      active: false
+      status: 'inactive',
+      type: 'Chat'
     },
     {
       id: '4',
       image: './assets/images/placeholder_3-4.jpg',
       title: 'Another Testing Bot',
       summary: 'Placeholder bot for testing the new Bot Management page',
-      active: true
+      status: 'active',
+      type: 'Gambling'
     },
     {
       id: '1',
       image: './assets/images/placeholder_4-3.jpg',
       title: 'Layout Testing Bot',
       summary: 'Placeholder bot for testing the new Bot Management page',
-      active: true
+      status: 'active',
+      type: 'Exchange'
     },
     {
       id: '2',
       image: './assets/images/placeholder_1-1.jpg',
       title: 'Another Testing Bot',
       summary: 'Placeholder bot for testing the new Bot Management page',
-      active: true
+      status: 'active',
+      type: 'Gambling'
     },
     {
       id: '3',
       image: './assets/images/placeholder_3-4.jpg',
       title: 'SimpleSwap Exchange bot',
       summary: 'Hey, need some $PART, yo?',
-      active: false
+      status: 'inactive',
+      type: 'Prediction'
     },
     {
       id: '4',
       image: './assets/images/placeholder_3-4.jpg',
       title: 'Another Testing Bot',
       summary: 'Placeholder bot for testing the new Bot Management page',
-      active: false
+      status: 'inactive',
+      type: 'Prediction'
     }
   ];
 

@@ -65,7 +65,7 @@ mat-card.bot {
   }
   .mat-card-header {
     display: block;
-    height: 77px;
+    height: 100px;
     padding-top: var(--card-padding);
     cursor: pointer;
     .mat-card-title,
@@ -79,15 +79,54 @@ mat-card.bot {
     }
     .mat-card-title {
       font-size: 15px;
+      margin: 0;
     }
     .mat-card-subtitle {
       font-size: 11.5px;
       color: var(--text-muted);
+      .type-status {
+        margin: 8px 0;
+        .status {
+          display: inline-block;
+          border: 1px solid var(--bg-muted);
+          border-radius: var(--radius);
+          padding: 1px 5px 0 17px;
+          text-transform: uppercase;
+          margin-right: 8px;
+          position: relative;
+          &.active {
+            &::before {
+              background: var(--color-success);
+            }
+          }
+          &.inactive {
+            &::before {
+              background: var(--bg-muted);
+            }
+          }
+          &::before {
+            --dot-size: 6px;
+            content: "";
+            width: var(--dot-size);
+            height: var(--dot-size);
+            display: block;
+            border-radius: 50%;
+            position: absolute;
+            left: 6px;
+            top: 5px;
+          }
+        }
+        .type {
+          display: inline-block;
+        }
+      }
     }
   }
   .mat-card-actions {
-    margin: 0 -8px;
+    margin: 8px -16px 0;
     text-align: center;
-    padding: 12px 0 10px;
+    .mat-button {
+      padding: 4px;
+    }
   }
 }

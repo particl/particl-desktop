@@ -66,9 +66,13 @@
   </div><!-- .filter -->
 
   <div class="content with-filter">
+
+    <h2 class="section-title">8 Active Bots</h2>
+    + BOT DETAIL MODAL!
+
     <div class="bot-grid">
 
-      <mat-card class="bot" *ngFor="let bot of bots">
+      <mat-card class="bot" *ngFor="let bot of activeBots">
 
         <div mat-card-image (click)="openbotDetailModal(bot.id, false)">
           <img class="img" [src]="bot.image" [alt]="bot.title">
@@ -79,16 +83,20 @@
             {{ bot.title }}
           </mat-card-title>
           <mat-card-subtitle>
+            <div class="type-status">
+              <div class="status {{ bot.status }}"><span></span>{{ bot.status }}</div>
+              <div class="type">{{ bot.type }}</div>
+            </div>
             {{ bot.summary }}
           </mat-card-subtitle>
         </mat-card-header>
 
         <mat-card-actions>
-          <button mat-button *ngIf="!bot.active" class="activate small" color="accent">
+          <button mat-button *ngIf="bot.status == 'inactive'" class="activate full-width small" color="accent">
             <mat-icon fontIcon="part-small-plus"></mat-icon>
             Activate
           </button>
-          <button mat-button *ngIf="bot.active" class="deactivate small" color="warn">
+          <button mat-button *ngIf="bot.status == 'active'" class="deactivate full-width small" color="warn">
             <mat-icon fontIcon="part-small-minus"></mat-icon>
             Deactivate
           </button>
@@ -97,6 +105,8 @@
       </mat-card><!-- .bot -->
 
     </div><!-- .bot-grid -->
+
+    <h2 class="section-title">0 Inactive Bots</h2>
 
 
     <div class="loading-container" *ngIf="isLoadingBig">
@@ -113,6 +123,26 @@
       </div>
     </div><!-- .loading-container -->
 
+    <div class="no-results --smaller">
+      <p>
+        No more Bots
+      </p>
+      <p class="help-text">
+        You've reached the end of all available Bots
+        <!--Why not to <a href="#">build a new Bot</a> youself?-->
+      </p>
+    </div><!-- .no-results -->
+
+    <div class="no-results">
+      <img class="illustration" src="./assets/app-exchange/illustrations/no-bots.svg" alt="No Bots found">
+      <p>
+        No Bots available
+      </p>
+      <p class="help-text">
+        Sorry, it looks like there aren't available Bots at this moment
+      </p>
+    </div><!-- .no-results -->
+    
     <div class="no-results">
       <img class="illustration" src="./assets/app-exchange/illustrations/no-bots.svg" alt="No Bots found">
       <p>
