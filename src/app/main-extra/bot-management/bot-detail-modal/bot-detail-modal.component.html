@@ -9,34 +9,38 @@
   <div class="row">
 
     <div class="image">
-      <img src="./assets/images/placeholder_4-3.jpg" class="img">
+      <img src="{{ bot.image }}" class="img">
     </div><!-- .image -->
     
     <div class="info">
-      <h2 class="name">This is Bot's name</h2>
+      <h2 class="name">{{ bot.title }}</h2>
       <div class="meta">
-        <div class="type">Exchange</div>
+        <div class="status {{ bot.status }}"><span></span>{{ bot.status }}</div>
+        <div class="type">{{ bot.type }}</div>
       </div>
       <p class="desc">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur ratione in numquam, aliquam iusto asperiores nisi modi dolores facilis sint, illum hic mollitia dolorum.
+        {{ bot.description }}
       </p>
 
       <div class="details">
         <h3 class="item-subtitle">Details</h3>
         <table>
+          <!-- @TODO: if value missing, hide the whole <tr> -->
           <tr>
             <th class="title">
               <mat-icon fontIcon="part-globe"></mat-icon>
               Homepage
             </th>
-            <td class="value"><a href="https://particl.io" target="_blank" matTooltip="Link opens in new browser tab" matTooltipPosition="after">particl-community.com/exchange-bot</a></td>
+            <td class="value">
+              <a href="{{ bot.homepage }}" target="_blank" matTooltip="Link opens in new browser tab" matTooltipPosition="after">{{ bot.homepage }}</a>
+            </td>
           </tr>
           <tr>
             <th class="title">
               <mat-icon fontIcon="part-qr"></mat-icon>
               Address
             </th>
-            <td class="value"><div class="address">paqiHKdyc2rAak1tp3Z8EeeFNH154XrTC6</div></td>
+            <td class="value"><div class="address">{{ bot.address }}</div></td>
           </tr>
         </table>
       </div><!-- .details -->
@@ -49,17 +53,21 @@
               <mat-icon fontIcon="part-circle-user"></mat-icon>
               Name/nick
             </th>
-            <td class="value">BotCreator the Great</td>
+            <td class="value">{{ bot.author.name }}</td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontIcon="part-pen-2"></mat-icon>
+              E-mail
+            </th>
+            <td class="value enable-select">{{ bot.author.email }}</td>
           </tr>
           <tr>
             <th class="title">
               <mat-icon fontIcon="part-language"></mat-icon>
-              Contact
+              Chat
             </th>
-            <td class="value">
-              <strong>Email:</strong> botcreator@particl-community.com<br>
-              <strong>Riot:</strong> botcreator@matrix.org
-            </td>
+            <td class="value enable-select">{{ bot.author.chat }}</td>
           </tr>
         </table>
       </div><!-- .author -->
@@ -71,14 +79,21 @@
 
 
 <mat-dialog-actions fxLayoutAlign="space-between center">
+
   <button mat-button mat-dialog-close>
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
+
   <div class="right">
-    <button mat-raised-button color="primary">
-      <mat-icon fontIcon="part-check"></mat-icon>
+    <button mat-raised-button *ngIf="!bot.enabled" color="primary">
+      <mat-icon fontIcon="part-plus"></mat-icon>
       Enable Bot
     </button>
+    <button mat-raised-button *ngIf="bot.enabled" color="warn">
+      <mat-icon fontIcon="part-minus"></mat-icon>
+      Disable Bot
+    </button>
   </div>
+
 </mat-dialog-actions>

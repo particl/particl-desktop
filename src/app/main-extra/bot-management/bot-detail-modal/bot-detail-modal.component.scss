@@ -25,15 +25,41 @@
       font-size: 20px;
     }
     .meta {
-      margin: 4px 0 18px;
+      margin: 8px 0 18px;
+      color: var(--text-muted);
+      .status {
+        display: inline-block;
+        border: 1px solid var(--bg-muted);
+        border-radius: var(--radius);
+        padding: 1px 5px 0 17px;
+        text-transform: uppercase;
+        font-size: 11px;
+        margin-right: 12px;
+        position: relative;
+        &.active {
+          &::before {
+            background: var(--color-success);
+          }
+        }
+        &.inactive {
+          &::before {
+            background: var(--bg-muted);
+          }
+        }
+        &::before {
+          --dot-size: 6px;
+          content: "";
+          width: var(--dot-size);
+          height: var(--dot-size);
+          display: block;
+          border-radius: 50%;
+          position: absolute;
+          left: 6px;
+          top: 6px;
+        }
+      }
       .type {
         display: inline-block;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
-        padding: 0 6px;
-        border-radius: var(--radius);
-        font-size: 11px;
       }
     }
     .desc {
@@ -43,7 +69,7 @@
 
   .author {
     flex: 50%;
-    margin-right: 30px;
+    margin: 0 0 30px;
     strong {
       font-weight: 500;
     }
