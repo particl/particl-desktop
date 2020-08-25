@@ -68,17 +68,15 @@
   <div class="content with-filter">
 
     <h2 class="section-title">8 Active Bots</h2>
-    + BOT DETAIL MODAL!
-
     <div class="bot-grid">
 
       <mat-card class="bot" *ngFor="let bot of activeBots">
 
-        <div mat-card-image (click)="openbotDetailModal(bot.id, false)">
+        <div mat-card-image (click)="openBotDetailModal()">
           <img class="img" [src]="bot.image" [alt]="bot.title">
         </div>
 
-        <mat-card-header (click)="openbotDetailModal(bot.id, false)">
+        <mat-card-header (click)="openBotDetailModal()">
           <mat-card-title>
             {{ bot.title }}
           </mat-card-title>

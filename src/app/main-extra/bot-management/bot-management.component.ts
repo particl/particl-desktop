@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+
+import { BotDetailModalComponent } from './bot-detail-modal/bot-detail-modal.component';
 
 @Component({
   selector: 'app-bot-management',
@@ -93,9 +96,15 @@ export class BotManagementComponent implements OnInit {
     }
   ];
 
-  constructor() { }
+  constructor(
+    private _dialog: MatDialog
+  ) { }
 
   ngOnInit() {
+  }
+
+  openBotDetailModal(): void {
+    const dialog = this._dialog.open(BotDetailModalComponent);
   }
 
 }

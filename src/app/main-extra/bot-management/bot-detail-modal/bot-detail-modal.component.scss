@@ -1,0 +1,90 @@
+@import './src/assets/config'; // import shared colors etc.
+
+.dialog-content {
+  width: 50rem;
+}
+
+.row {
+  display: flex;
+
+  .image {
+    flex: 0 0 250px;
+    margin-right: 30px;
+    img {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+    }
+  }
+
+  .info {
+    .name {
+      margin: 0;
+      font-weight: 500;
+      font-size: 20px;
+    }
+    .meta {
+      margin: 4px 0 18px;
+      .type {
+        display: inline-block;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
+        padding: 0 6px;
+        border-radius: var(--radius);
+        font-size: 11px;
+      }
+    }
+    .desc {
+      color: var(--text-muted);
+    }
+  }
+
+  .author {
+    flex: 50%;
+    margin-right: 30px;
+    strong {
+      font-weight: 500;
+    }
+  }
+
+  .details {
+    flex: 50%;
+    a {
+      @extend %tfx;
+      color: var(--text);
+      outline: none;
+      &:focus,
+      &:hover {
+        color: var(--color-secondary);
+      }
+    }
+    .address {
+      @extend %enable-select;
+      font-family: var(--font-mono);
+    }
+  }
+
+}
+
+table {
+  border-spacing: 0;
+  th {
+    color: var(--text-muted);
+    font-weight: 500;
+    padding: 3px 24px 0 0;
+    text-align: left;
+    vertical-align: top;
+    .mat-icon {
+      color: hsla(var(--text-muted-hsl), 0.45);
+      font-size: 14px;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+    }
+  }
+  td {
+    padding: 3px 0 0;
+  }
+}
