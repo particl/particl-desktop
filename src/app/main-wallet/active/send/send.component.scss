@@ -38,6 +38,13 @@
         font-weight: 600;
       }
     }
+    &.mat-accent {
+      .desc {
+        .amount {
+          color: var(--color-secondary); // color-code private TXs by secondary (blue) color
+        }
+      }
+    }
   }
   .name { // balance type
     font-weight: 500;
