@@ -202,8 +202,15 @@ body {
         padding: 1px 6px;
       }
     }
-  }
-}
+
+    // "clear filtering by X" button
+    .clear-specific-filter {
+      padding: 6px 12px;
+      width: 100%;
+    }
+
+  } // << .filter-card
+}// << .filter
 
 
 // ------ 2.5. RADIO SWITCHERS ------ //
