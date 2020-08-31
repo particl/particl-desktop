@@ -1,19 +1,27 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Subject, of, Observable, defer, forkJoin, merge, timer, } from 'rxjs';
-import { tap, catchError, finalize, takeUntil, switchMap, distinctUntilChanged, debounceTime, map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
+import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, } from 'rxjs';
+import { tap, catchError, finalize, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap } from 'rxjs/operators';
+
+import { Store } from '@ngxs/store';
+import { MarketState } from 'app/main-market/store/market.state';
+
 import { DataService } from '../../services/data/data.service';
 import { SellService } from '../sell.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+
+import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
+
 import { Market } from '../../services/data/data.models';
 import { ProductItem, TEMPLATE_STATUS_TYPE } from '../sell.models';
-import { Store } from '@ngxs/store';
-import { MarketState } from 'app/main-market/store/market.state';
 
 
 enum TextContent {
   UNKNOWN_MARKET = '<unknown>',
-  LOAD_ERROR = 'An error occurred loading products'
+  LOAD_ERROR = 'An error occurred loading products',
+  ERROR_DELETE_PRODUCT = 'An error occurred while deleting the product!'
 }
 
 
@@ -55,6 +63,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private timerTick$: Subject<void> = new Subject();
   private marketUpdateControl: FormControl = new FormControl();
+  private actionRefreshControl: FormControl = new FormControl();
   private activeIdentityId: number = 0;
 
 
@@ -63,7 +72,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _sellService: SellService,
     private _sharedService: DataService,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _dialog: MatDialog
   ) { }
 
 
@@ -128,7 +138,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     const productDisplay$ = merge(
       init$,
       search$,
-      orderBy$
+      orderBy$,
+      this.actionRefreshControl.valueChanges.pipe(takeUntil(this.destroy$))
     ).pipe(
       switchMap(() => this.updateProductDisplay()),
       tap((displayIndexes) => {
@@ -171,12 +182,32 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
-  actionCloneProduct(marketTemplId: number, isMarketClone: boolean = false): void {
+  actionDeleteProduct(productId: number): void {
+    const foundProductIdx = this.allProducts.findIndex(p => p.id === productId);
+    if ((foundProductIdx < 0) || (this.allProducts[foundProductIdx].markets.length > 0)) {
+      return;
+    }
 
+    this._dialog.open(DeleteTemplateModalComponent).afterClosed().pipe(
+      concatMap((isConfirmed: boolean | undefined) => iif(
+        () => isConfirmed,
+        defer(() => this._sellService.deleteTemplate(productId))
+      ))
+    ).subscribe(
+      (success) => {
+        if (!success) {
+          this._snackbar.open(TextContent.ERROR_DELETE_PRODUCT, 'warn');
+          return;
+        }
+
+        this.allProducts.splice(foundProductIdx, 1);
+        this.actionRefreshControl.setValue(null);
+      }
+    );
   }
 
 
-  actionDeleteProduct(productId: number): void {
+  actionCloneProduct(itemId: number, isMarketClone: boolean = false): void {
 
   }
 
@@ -188,6 +219,30 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   openPublishProductModal(productId: number): void {
 
+  }
+
+
+  openPreviewListingModal(templateId: number): void {
+    this._sellService.createListingPreviewFromTemplate(templateId).subscribe(
+      (listing) => {
+        if (+listing.id > 0) {
+          const data: ListingItemDetailInputs = {
+            listing,
+            canChat: false,
+            initTab: 'default',
+            displayActions: {
+              cart: false,
+              governance: false,
+              fav: false
+            }
+          };
+          this._dialog.open(
+            ListingDetailModalComponent,
+            { data }
+          );
+        }
+      }
+    );
   }
 
 

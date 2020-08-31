@@ -1,5 +1,12 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
+export interface DeleteTemplateModalInput {
+  title: string;
+}
+
 
 @Component({
   templateUrl: './delete-template-modal.component.html',
@@ -7,15 +14,13 @@ import { MatDialogRef } from '@angular/material';
 })
 export class DeleteTemplateModalComponent {
 
-  @Output() isConfirmed: EventEmitter<void> = new EventEmitter();
-
   constructor(
+    @Inject(MAT_DIALOG_DATA) private data: DeleteTemplateModalInput,
     private _dialogRef: MatDialogRef<DeleteTemplateModalComponent>,
   ) { }
 
 
   confirmDelete() {
-    this.isConfirmed.emit();
-    this._dialogRef.close();
+    this._dialogRef.close(true);
   }
 }

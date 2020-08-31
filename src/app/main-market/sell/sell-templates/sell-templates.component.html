@@ -156,6 +156,9 @@
                   <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-button class="tiny icon-only" matTooltip="Clone To Market" (click)="actionCloneProduct(marketTempl.id, true)">
                     <mat-icon fontIcon="part-copy"></mat-icon>
                   </button>
+                  <button mat-button class="tiny icon-only" matTooltip="Preview as a listing" (click)="openPreviewListingModal(marketTempl.id )">
+                    <mat-icon fontIcon="part-zoom-in"></mat-icon>
+                  </button>
                   <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishExistingMarketModal(marketTempl.id)">
                     <mat-icon fontIcon="part-rocket"></mat-icon>
                   </button>

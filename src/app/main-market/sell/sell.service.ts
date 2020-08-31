@@ -7,6 +7,7 @@ import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { DataService } from '../services/data/data.service';
+import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
 import { RespListingTemplate, RespListingItemTemplatePost } from '../shared/market.models';
@@ -18,6 +19,7 @@ import {
   ProductItem,
   ProductMarketTemplate,
   TEMPLATE_STATUS_TYPE } from './sell.models';
+import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail.models';
 
 
 @Injectable()
@@ -26,7 +28,8 @@ export class SellService {
   constructor(
     private _rpc: MarketRpcService,
     private _store: Store,
-    private _sharedService: DataService
+    private _sharedService: DataService,
+    private _regionService: RegionListService
   ) {}
 
 
@@ -288,6 +291,22 @@ export class SellService {
   publishMarketTemplate(templateId: number, durationDays: number): Observable<boolean> {
     return this._rpc.call('template', ['post', templateId, durationDays, false]).pipe(
       map((resp: RespListingItemTemplatePost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+
+  deleteTemplate(templateId: number): Observable<boolean> {
+    return this._rpc.call('template', ['remove', templateId]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
+    );
+  }
+
+
+  createListingPreviewFromTemplate(templateId: number): Observable<ListingItemDetail> {
+    return this._rpc.call('template', ['get', templateId]).pipe(
+      catchError(() => of(null)),
+      map((resp: RespListingTemplate) => this.buildListingDetailFromTemplate(resp))
     );
   }
 
@@ -749,6 +768,150 @@ export class SellService {
     });
 
     return allProductItems;
+  }
+
+
+  private buildListingDetailFromTemplate(src: RespListingTemplate): ListingItemDetail {
+    const listingItem = {
+      id: 0,
+      marketId: 0,
+      hash: '',
+      title: '',
+      summary: '',
+      description: '',
+      images: {
+        featured: -1,
+        images: [],
+      },
+      price: {
+        base: 0,
+        shippingDomestic: 0,
+        shippingIntl: 0,
+      },
+      shippingFrom: {
+        code: '',
+        name: ''
+      },
+      shippingTo: [],
+      category: {
+        id: 0,
+        title: '',
+      },
+      seller: '',
+      timeData: {
+        expires: 0,
+        created: 0,
+      },
+      escrow: {
+        buyerRatio: 100,
+        sellerRatio: 100,
+      },
+      extra: {
+        flaggedProposal: '',
+        isOwn: true,
+        favouriteId: 0
+      },
+    };
+
+    if (isBasicObjectType(src)) {
+
+      const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+
+      listingItem.id = +src.id > 0 ? +src.id : listingItem.id;
+      listingItem.hash = getValueOrDefault(src.hash, 'string', listingItem.hash);
+      listingItem.timeData.created = +src.createdAt > 0 ? +src.createdAt : listingItem.timeData.created;
+
+      if (isBasicObjectType(src.ItemInformation)) {
+        listingItem.title = getValueOrDefault(src.ItemInformation.title, 'string', listingItem.title);
+        listingItem.summary = getValueOrDefault(src.ItemInformation.shortDescription, 'string', listingItem.summary);
+        listingItem.description = getValueOrDefault(src.ItemInformation.longDescription, 'string', listingItem.description);
+
+        const countryCodes: string[] = [];
+        let sourceCode = '';
+        if (isBasicObjectType(src.ItemInformation.ItemLocation)) {
+          sourceCode = getValueOrDefault(src.ItemInformation.ItemLocation.country, 'string', listingItem.shippingFrom.code);
+          if (sourceCode.length) {
+            countryCodes.push(sourceCode);
+          }
+        }
+
+        if (Array.isArray(src.ItemInformation.ShippingDestinations)) {
+          const sourceCodes = src.ItemInformation.ShippingDestinations.filter(dest =>
+            isBasicObjectType(dest) && dest.shippingAvailability === 'SHIPS' && (typeof dest.country === 'string')
+          ).map(dest => dest.country);
+
+          countryCodes.push(...sourceCodes);
+        }
+
+        const countries = this._regionService.findCountriesByIsoCodes(countryCodes);
+
+        const sourceCountryIdx = countries.findIndex(c => c.iso === sourceCode);
+        if (sourceCountryIdx > -1) {
+          listingItem.shippingFrom.code = countries[sourceCountryIdx].iso;
+          listingItem.shippingFrom.name = countries[sourceCountryIdx].name;
+          const sourceIdx = countryCodes.findIndex(cc => cc === sourceCode);
+          countryCodes.splice(sourceIdx, 1);
+        }
+
+        countryCodes.forEach(cc => {
+          const country = countries.find(c => c.iso === cc);
+          if (country) {
+            listingItem.shippingTo.push({code: country.iso, name: country.name});
+          }
+        });
+
+        if (Array.isArray(src.ItemInformation.ItemImages)) {
+          src.ItemInformation.ItemImages.forEach( (img, imgIdx) => {
+            if (isBasicObjectType(img) && Array.isArray(img.ItemImageDatas)) {
+              let orig: string;
+              let thumb: string;
+              img.ItemImageDatas.forEach(imgData => {
+                if (isBasicObjectType(imgData)) {
+                  if (imgData.imageVersion === 'ORIGINAL') {
+                    orig = formatImagePath(typeof imgData.dataId === 'string' ? imgData.dataId : '', marketPort);
+                  } else if (imgData.imageVersion === 'THUMBNAIL') {
+                    thumb = formatImagePath(typeof imgData.dataId === 'string' ? imgData.dataId : '', marketPort);
+                  }
+                }
+              });
+
+              if ((orig.length > 0) && (thumb.length > 0)) {
+                listingItem.images.images.push({THUMBNAIL: thumb, IMAGE: orig});
+
+                if (img.featured) {
+                  listingItem.images.featured = imgIdx;
+                }
+              }
+            }
+          });
+        }
+
+        if (isBasicObjectType(src.ItemInformation.ItemCategory)) {
+          listingItem.category.id = getValueOrDefault(src.ItemInformation.ItemCategory.id, 'number', listingItem.category.id);
+          listingItem.category.title = getValueOrDefault(src.ItemInformation.ItemCategory.name, 'string', listingItem.category.title);
+        }
+      }
+
+      if (isBasicObjectType(src.PaymentInformation)) {
+
+        if (isBasicObjectType(src.PaymentInformation.ItemPrice)) {
+          listingItem.price.base = +src.PaymentInformation.ItemPrice.basePrice > 0 ?
+            +src.PaymentInformation.ItemPrice.basePrice : listingItem.price.base;
+
+          if (isBasicObjectType(src.PaymentInformation.ItemPrice.ShippingPrice)) {
+            listingItem.price.shippingDomestic = +src.PaymentInformation.ItemPrice.ShippingPrice.domestic > 0 ?
+              +src.PaymentInformation.ItemPrice.ShippingPrice.domestic : listingItem.price.shippingDomestic;
+
+            listingItem.price.shippingIntl = +src.PaymentInformation.ItemPrice.ShippingPrice.international > 0 ?
+              +src.PaymentInformation.ItemPrice.ShippingPrice.international : listingItem.price.shippingIntl;
+          }
+        }
+      }
+    }
+
+    const actualListingItem: ListingItemDetail = listingItem;
+
+    return actualListingItem;
   }
 
 }
