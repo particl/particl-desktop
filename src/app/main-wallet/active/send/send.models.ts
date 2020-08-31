@@ -24,6 +24,7 @@ export interface TxTypeOption {
   value: TxType;
   help: string;
   description: string;
+  color: string;
 }
 
 

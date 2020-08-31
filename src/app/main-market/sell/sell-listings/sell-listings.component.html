@@ -11,7 +11,7 @@
 <!-- Listings > Filter -->
 <div class="filter">
 
-  <div class="buttons">
+  <!--div class="buttons">
     <button mat-raised-button color="primary" routerLink="new-listing" class="full-width">
       <mat-icon fontIcon="part-circle-plus"></mat-icon>
       Add new Product
@@ -20,7 +20,7 @@
       <mat-icon fontIcon="part-image-upload"></mat-icon>
       Import Products
     </button>
-  </div><!-- .buttons -->
+  </div--><!-- .buttons -->
 
   <h2 class="section-title">
     Search &amp; sort
@@ -64,12 +64,13 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <!-- Clear Product/Template filter -->
+    <!-- @TODO: clear product/template filter on click -->
+    <button mat-button class="small clear-specific-filter" color="warn"><!-- *ngIf="+filterBaseTemplateId.value > 0" -->
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Clear filtering by Product
+    </button>
   </mat-card><!-- .filter-card -->
-
-  <h2 class="section-title" *ngIf="+filterBaseTemplateId.value > 0">
-    <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>
-    Showing Limited Templates
-  </h2>
 
   <button mat-button color="basic" class="clear-filters" (click)="resetFilters()">
     <mat-icon fontIcon="part-clear-all"></mat-icon>

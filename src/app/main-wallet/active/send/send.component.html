@@ -26,7 +26,7 @@
 
           <mat-radio-group class="from-balance-type block-radio" name="sourceType" [formControl]="sourceType"
                             fxLayout="column" fxLayoutGap="10px">
-            <mat-radio-button class="balance" *ngFor="let option of selectorOptions" [value]="option.value" color="primary" fxFlex >
+            <mat-radio-button class="balance" *ngFor="let option of selectorOptions" [value]="option.value" [color]="option.color" fxFlex>
               <div class="name">{{ option.name }}</div>
               <!-- @TODO: in case of manual Coin control, swap "Available balance" with "Selected balance" -->
               <div class="desc">
@@ -131,7 +131,7 @@
           <mat-card class="section to-balance-type">
             <mat-radio-group class="to-balance-type block-radio" name="targetType" formControlName="targetType"
                 fxLayout="column" fxLayoutGap="10px">
-              <mat-radio-button class="balance" color="primary" *ngFor="let option of selectorOptions" [value]="option.value" [disabled]="option.value === sourceType.value">
+              <mat-radio-button class="balance" [color]="option.color" *ngFor="let option of selectorOptions" [value]="option.value" [disabled]="option.value === sourceType.value">
                 <div class="name">{{ option.name }}</div>
                 <div class="desc">{{ option.description }}</div>
               </mat-radio-button>

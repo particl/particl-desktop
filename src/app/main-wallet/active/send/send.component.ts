@@ -61,9 +61,9 @@ export class SendComponent implements OnInit, OnDestroy {
   ];
 
   readonly selectorOptions: TxTypeOption[] = [
-    { name: 'Public', balance: 0, coinInputs: [], displayedBalance: '0', value: 'part', help: '', description: 'Used for publishing of Listings and governance voting (on Listings and Proposals)' },
-    { name: 'Blind', balance: 0, coinInputs: [], displayedBalance: '0', value: 'blind', help: '', description: 'Offers medium privacy, hides transaction amounts' },
-    { name: 'Anon', balance: 0, coinInputs: [], displayedBalance: '0', value: 'anon', help: '', description: 'Used for spending on the Open Marketplace – offers highest privacy' }
+    { name: 'Public', balance: 0, coinInputs: [], displayedBalance: '0', value: 'part', help: '', description: 'Used for publishing of Listings and governance voting (on Listings and Proposals)', color: 'primary' },
+    { name: 'Blind', balance: 0, coinInputs: [], displayedBalance: '0', value: 'blind', help: '', description: 'Offers medium privacy, hides transaction amounts', color: 'accent' },
+    { name: 'Anon', balance: 0, coinInputs: [], displayedBalance: '0', value: 'anon', help: '', description: 'Used for spending on the Open Marketplace – offers highest privacy', color: 'accent' }
   ];
 
   private destroy$: Subject<void> = new Subject();
