@@ -10,7 +10,14 @@ import { DataService } from '../services/data/data.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
 import { RespListingTemplate, RespListingItemTemplatePost } from '../shared/market.models';
-import { Template, TemplateSavedDetails, CreateTemplateRequest, UpdateTemplateRequest } from './sell.models';
+import {
+  Template,
+  TemplateSavedDetails,
+  CreateTemplateRequest,
+  UpdateTemplateRequest,
+  ProductItem,
+  ProductMarketTemplate,
+  TEMPLATE_STATUS_TYPE } from './sell.models';
 
 
 @Injectable()
@@ -21,6 +28,16 @@ export class SellService {
     private _store: Store,
     private _sharedService: DataService
   ) {}
+
+
+  fetchAllProductTemplates(): Observable<ProductItem[]> {
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    return this._rpc.call('template', ['search', 0, 1000000, 'DESC', 'created_at', profileId]).pipe(
+      map((resp: RespListingTemplate[]) => {
+        return Array.isArray(resp) ? this.buildProductsFromTemplateList(resp) : [];
+      })
+    );
+  }
 
 
   fetchTemplateForProduct(productId: number): Observable<Template> {
@@ -275,6 +292,27 @@ export class SellService {
   }
 
 
+  calculateMarketTemplateStatus(templ: ProductMarketTemplate): TEMPLATE_STATUS_TYPE {
+    switch (true) {
+      case (templ.listings.count === 0) && (templ.hash.length === 0):
+        return TEMPLATE_STATUS_TYPE.UNPUBLISHED;
+        break;
+      case (templ.listings.latestExpiry > Date.now()):
+        return TEMPLATE_STATUS_TYPE.ACTIVE;
+        break;
+      case (
+          (templ.listings.latestExpiry > 0) && (templ.listings.latestExpiry < Date.now())
+        ) || (
+          (templ.listings.count === 0) && (templ.hash.length > 0)
+        ):
+        return TEMPLATE_STATUS_TYPE.EXPIRED;
+        break;
+      default:
+        return TEMPLATE_STATUS_TYPE.UNKNOWN;
+    }
+  }
+
+
   private fetchProductTemplate(productId: number): Observable<RespListingTemplate> {
     return this._rpc.call('template', ['get', productId]);
   }
@@ -492,6 +530,225 @@ export class SellService {
       escrowBuyer: 100,
       escrowSeller: 100,
     };
+  }
+
+
+  private buildProductsFromTemplateList(srcList: RespListingTemplate[]): ProductItem[] {
+    const allProductItems: ProductItem[] = [];
+    const settings = this._store.selectSnapshot(MarketState.settings);
+
+    const marketTemplMap: Map<number, RespListingTemplate> = new Map();
+    const baseTemplates: RespListingTemplate[] = [];
+
+    srcList.forEach(srcItem => {
+      if (isBasicObjectType(srcItem) && (+srcItem.id > 0)) {
+        if (+srcItem.parentListingItemTemplateId > 0) {
+          // is market template
+          marketTemplMap.set(+srcItem.id, srcItem);
+        } else {
+          // is base template
+          baseTemplates.push(srcItem);
+        }
+      }
+    });
+
+    baseTemplates.forEach(baseTempl => {
+      const newProduct: ProductItem = {
+        id: 0,
+        title: '',
+        summary: '',
+        created: 0,
+        updated: 0,
+        images: [],
+        priceBase: {whole: '', sep: '', fraction: ''},
+        priceShippingLocal: {whole: '', sep: '', fraction: ''},
+        priceShippingIntl: {whole: '', sep: '', fraction: ''},
+        sourceLocation: '',
+        markets: []
+      };
+
+      // Extract base template details for product information
+
+      newProduct.id = +baseTempl.id > 0 ? +baseTempl.id : newProduct.id;
+      newProduct.created = +baseTempl.createdAt > 0 ? +baseTempl.createdAt : newProduct.created;
+      newProduct.updated = +baseTempl.updatedAt > 0 ? +baseTempl.updatedAt : newProduct.updated;
+
+      if (isBasicObjectType(baseTempl.ItemInformation)) {
+        newProduct.title = getValueOrDefault(baseTempl.ItemInformation.title, 'string', newProduct.title);
+        newProduct.summary = getValueOrDefault(baseTempl.ItemInformation.shortDescription, 'string', newProduct.summary);
+
+        if (isBasicObjectType(baseTempl.ItemInformation.ItemLocation)) {
+          newProduct.sourceLocation = getValueOrDefault(
+            baseTempl.ItemInformation.ItemLocation.country, 'string', newProduct.sourceLocation
+          );
+        }
+
+        if (Array.isArray(baseTempl.ItemInformation.ItemImages)) {
+          baseTempl.ItemInformation.ItemImages.filter(img =>
+            isBasicObjectType(img)
+          ).sort((a, b) =>
+            +(!!a.featured) - +(!!b.featured)
+          ).forEach(img => {
+            if (Array.isArray(img.ItemImageDatas)) {
+              const foundSize = img.ItemImageDatas.find(datas => isBasicObjectType(datas) && datas.imageVersion === 'THUMBNAIL');
+              if (foundSize) {
+                const imgPath = getValueOrDefault(foundSize.dataId, 'string', '') === '' ?
+                    '' :
+                    formatImagePath(foundSize.dataId, settings.port);
+
+                if (imgPath.length) {
+                  newProduct.images.push(imgPath);
+                }
+              }
+            }
+          });
+        }
+
+        if (newProduct.images.length === 0) {
+          // ensure that at least the default blank image is created if no other images are found
+          newProduct.images.push('./assets/images/placeholder_4-3.jpg');
+        }
+      }
+
+      if (isBasicObjectType(baseTempl.PaymentInformation) && isBasicObjectType(baseTempl.PaymentInformation.ItemPrice)) {
+        const basePrice = new PartoshiAmount(baseTempl.PaymentInformation.ItemPrice.basePrice, true);
+        newProduct.priceBase = {
+          whole: basePrice.particlStringInteger(),
+          sep: basePrice.particlStringSep(),
+          fraction: basePrice.particlStringFraction()
+        };
+
+        if (isBasicObjectType(baseTempl.PaymentInformation.ItemPrice.ShippingPrice)) {
+          const localShip = new PartoshiAmount(baseTempl.PaymentInformation.ItemPrice.ShippingPrice.domestic, true);
+          newProduct.priceShippingLocal = {
+            whole: localShip.particlStringInteger(),
+            sep: localShip.particlStringSep(),
+            fraction: localShip.particlStringFraction()
+          };
+
+          const intlShip = new PartoshiAmount(baseTempl.PaymentInformation.ItemPrice.ShippingPrice.international, true);
+          newProduct.priceShippingIntl = {
+            whole: intlShip.particlStringInteger(),
+            sep: intlShip.particlStringSep(),
+            fraction: intlShip.particlStringFraction()
+          };
+        }
+      }
+
+      // Process any associated market templates
+
+      if (Array.isArray(baseTempl.ChildListingItemTemplates) && (baseTempl.ChildListingItemTemplates.length > 0)) {
+        baseTempl.ChildListingItemTemplates.forEach(basicMarketTempl => {
+
+          if (!isBasicObjectType(basicMarketTempl) || !(+basicMarketTempl.id > 0) || !(marketTemplMap.has(+basicMarketTempl.id))) {
+            return;
+          }
+
+          const newMarketDetails: ProductMarketTemplate = {
+            id: 0,
+            title: '',
+            priceBase: {whole: '', sep: '', fraction: ''},
+            marketKey: '',
+            categoryName: '',
+            hash: '',
+            status: TEMPLATE_STATUS_TYPE.UNPUBLISHED,
+            created: 0,
+            updated: 0,
+            listings: {
+              count: 0,
+              latestExpiry: 0
+            }
+          };
+
+          const marketTempl = marketTemplMap.get(+basicMarketTempl.id);
+
+          // process any "root" market template listings
+          if (Array.isArray(marketTempl.ListingItems)) {
+            marketTempl.ListingItems.forEach(li => {
+              if (isBasicObjectType(li)) {
+                newMarketDetails.listings.count += 1;
+
+                if ((+li.expiredAt > newMarketDetails.listings.latestExpiry)) {
+                  newMarketDetails.listings.latestExpiry = +li.expiredAt;
+                }
+              }
+            });
+          }
+
+          let latestMarketTempl = marketTempl;
+
+          if (Array.isArray(marketTempl.ChildListingItemTemplates)) {
+            marketTempl.ChildListingItemTemplates.forEach(childTempl => {
+              const childMarketTemplate = marketTemplMap.get(+childTempl.id);
+
+              if (childMarketTemplate) {
+                if (+childMarketTemplate.id > +latestMarketTempl.id) {
+                  // find the latest template
+                  latestMarketTempl = childMarketTemplate;
+                }
+
+                // process any "child" market template listings
+                if (Array.isArray(childMarketTemplate.ListingItems)) {
+                  childMarketTemplate.ListingItems.forEach(li => {
+                    if (isBasicObjectType(li)) {
+                      newMarketDetails.listings.count += 1;
+
+                      if ((+li.expiredAt > newMarketDetails.listings.latestExpiry)) {
+                        newMarketDetails.listings.latestExpiry = +li.expiredAt;
+                      }
+                    }
+                  });
+                }
+              }
+            });
+          }
+
+          // fill in newMarketDetails from the latest template
+          newMarketDetails.id = +latestMarketTempl.id > 0 ? +latestMarketTempl.id : newMarketDetails.id;
+          newMarketDetails.marketKey = getValueOrDefault(latestMarketTempl.market, 'string', newMarketDetails.marketKey);
+          newMarketDetails.hash = getValueOrDefault(latestMarketTempl.hash, 'string', newMarketDetails.hash);
+          newMarketDetails.created = +latestMarketTempl.createdAt > 0 ? +latestMarketTempl.createdAt : newMarketDetails.created;
+          newMarketDetails.updated = +latestMarketTempl.updatedAt > 0 ? +latestMarketTempl.updatedAt : newMarketDetails.updated;
+
+          if (isBasicObjectType(latestMarketTempl.ItemInformation)) {
+            newMarketDetails.title = getValueOrDefault(latestMarketTempl.ItemInformation.title, 'string', newMarketDetails.title);
+
+            if (isBasicObjectType(latestMarketTempl.ItemInformation.ItemCategory)) {
+              newMarketDetails.categoryName = getValueOrDefault(
+                latestMarketTempl.ItemInformation.ItemCategory.name, 'string', newMarketDetails.categoryName
+              );
+            }
+          }
+
+          if (
+            isBasicObjectType(latestMarketTempl.PaymentInformation) &&
+            isBasicObjectType(latestMarketTempl.PaymentInformation.ItemPrice)
+          ) {
+            const basePrice = new PartoshiAmount(latestMarketTempl.PaymentInformation.ItemPrice.basePrice, true);
+            newMarketDetails.priceBase = {
+              whole: basePrice.particlStringInteger(),
+              sep: basePrice.particlStringSep(),
+              fraction: basePrice.particlStringFraction()
+            };
+          }
+
+          newMarketDetails.status = this.calculateMarketTemplateStatus(newMarketDetails);
+
+
+          if (newMarketDetails.id > 0) {
+            newProduct.markets.push(newMarketDetails);
+          }
+
+        });
+      }
+
+      if (newProduct.id > 0) {
+        allProductItems.push(newProduct);
+      }
+
+    });
+
+    return allProductItems;
   }
 
 }

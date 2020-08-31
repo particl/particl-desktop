@@ -1,4 +1,6 @@
 import { PartoshiAmount } from 'app/core/util/utils';
+import { PriceItem } from '../shared/market.models';
+
 import {
   CURRENCY_TYPE,
   ESCROW_TYPE,
@@ -7,6 +9,16 @@ import {
   IMAGE_PROTOCOL,
   IMAGE_ENCODING,
 } from '../shared/market.models';
+
+
+export enum TEMPLATE_STATUS_TYPE {
+  UNKNOWN = 'unknown',
+  UNPUBLISHED = 'unpublished',
+  // published states next
+  PENDING = 'pending',
+  EXPIRED = 'expired',
+  ACTIVE = 'active'
+}
 
 
 export interface TemplateFormDetails {
@@ -109,4 +121,37 @@ export interface UpdateTemplateRequest {
     add: string[],
     remove: string[];
   };
+}
+
+
+export interface ProductMarketTemplate {
+  id: number;
+  title: string;
+  marketKey: string;
+  categoryName: string;
+  priceBase: PriceItem;
+  hash: string;
+  created: number;
+  updated: number;
+  status: TEMPLATE_STATUS_TYPE;
+  listings: {
+    count: number;
+    latestExpiry: number;
+  };
+}
+
+
+export interface ProductItem {
+  // base template details
+  id: number;
+  title: string;
+  summary: string;
+  created: number;
+  updated: number;
+  images: string[];
+  priceBase: PriceItem;
+  priceShippingLocal: PriceItem;
+  priceShippingIntl: PriceItem;
+  sourceLocation: string;
+  markets: ProductMarketTemplate[];
 }

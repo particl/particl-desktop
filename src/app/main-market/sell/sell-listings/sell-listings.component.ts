@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, merge, forkJoin, Observable, timer } from 'rxjs';
-import { catchError, finalize, tap, startWith, debounceTime, distinctUntilChanged, takeUntil, switchMap, map } from 'rxjs/operators';
+import { catchError, finalize, tap, startWith, debounceTime, distinctUntilChanged, takeUntil, switchMap } from 'rxjs/operators';
 
 import { SellListingsService } from './sell-listings.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -121,15 +121,15 @@ export class SellListingsComponent implements OnInit, OnDestroy {
         ),
 
         this._sellService.fetchAllListings().pipe(
-        catchError(() => {
-          this._snackbar.open(TextContent.ERROR_LOADING, 'warn');
-          return of([]);
-        }),
-        tap((listings) => {
-          this.allListings = listings;
-          this.startTimer();
-        }),
-      )
+          catchError(() => {
+            this._snackbar.open(TextContent.ERROR_LOADING, 'warn');
+            return of([]);
+          }),
+          tap((listings) => {
+            this.allListings = listings;
+            this.startTimer();
+          }),
+        )
     ).pipe(
       finalize(() => this.isLoading = false)
     );

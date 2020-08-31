@@ -127,7 +127,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
               (m.type === 'MARKETPLACE' || m.type === 'STOREFRONT_ADMIN')
             );
           } else if (this.savedTempl.type === 'MARKET') {
-            availableMarkets = availableMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
+            availableMarkets = this.profileMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
           }
         }
 
@@ -568,6 +568,9 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
   private updateFormActions(): void {
     this.isTemplateSavable = this.isFormValid;
-    this.isTemplatePublishable = this.isTemplateSavable && (this.errorMessage.value.length === 0) && (this.selectedMarketId > 0);
+    this.isTemplatePublishable = this.isTemplateSavable &&
+        (this.errorMessage.value.length === 0) &&
+        (this.selectedMarketId > 0) &&
+        (this.marketsList$.value.find(m => m.id === this.selectedMarketId) !== undefined);
   }
 }

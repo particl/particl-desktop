@@ -70,24 +70,25 @@
 <!-- Listings > list -->
 <div class="listings section with-filter">
 
-  <ng-container *ngIf="displayedTemplateIdxs.length > 0; else noTemplates">
-    <ng-container *ngFor="let templIdx of displayedTemplateIdxs">
-      <mat-expansion-panel class="product list-item no-padding" *appVar="allTemplates[templIdx] as templ">
+  <ng-container *ngIf="displayedProductIdxs.length > 0; else noTemplates">
+    <ng-container *ngFor="let templIdx of displayedProductIdxs">
+      <mat-expansion-panel class="product list-item no-padding" *appVar="allProducts[templIdx] as product">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper">
             <div class="photo">
-              <img [src]="templ.images[0]">
+              <img [src]="product.images[0]">
             </div>
             <div class="meta" fxFlex="1 1 100%">
-              <div class="name">{{ templ.title }}</div>
-              <span class="help-text">{{ templ.summary }}</span>
+              <div class="name">{{ product.title }}</div>
+              <span class="help-text">{{ product.summary }}</span>
             </div>
             <div class="status-wrap" fxFlex="0 0 140px">
               <div class="status --rounded">
                 <span class="dot"></span>
-                <span class="active">{{ templ.marketTemplates.countActiveMarkets }}</span><span class="total">/{{ templ.marketTemplates.templates.length }}</span>
+                <span class="active">{{ product.displayDetails.activeMarketCount }}</span><span class="total">/{{ product.markets.length }}</span>
               </div>
             </div>
+            <!--  TODO: WTF is this? Is it still applicable? -->
             <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
           </div>
         </mat-expansion-panel-header>
@@ -96,7 +97,7 @@
             <div class="product-details" fxFlex="37">
               <h3 class="item-subtitle">Gallery</h3>
               <div class="gallery">
-                <div class="image" *ngFor="let img of templ.images">
+                <div class="image" *ngFor="let img of product.images">
                   <img [src]="img">
                 </div>
               </div>
@@ -106,7 +107,7 @@
               <table class="inventory">
                 <!-- @TODO: until we have quantities, keep the infinity symbol -->
                 <tr><th>&infin;</th><td>In stock</td></tr>
-                <tr><th>{{ templ.marketTemplates.countAllListings }}</th><td>Published</td></tr>
+                <tr><th>{{ product.displayDetails.totalListings }}</th><td>Listings</td></tr>
                 <!-- <tr><th>{{ templ.marketTemplates.countOrdersActive }}</th><td>In Orders</td></tr> -->
                 <!-- <tr><th>{{ templ.marketTemplates.countOrdersComplete }}</th><td>Sold</td></tr> -->
               </table>
@@ -115,20 +116,20 @@
               <h3 class="item-subtitle">Pricing</h3>
               <table class="prices">
                 <tr>
-                  <th>Product</th><td>{{templ.basePrice.whole}}<small>{{ templ.basePrice.sep }}{{ templ.basePrice.fraction }}</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
+                  <th>Product</th><td>{{product.priceBase.whole}}<small>{{ product.priceBase.sep }}{{ product.priceBase.fraction }}</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
                 </tr>
                 <tr>
                   <th>Shipping</th>
                   <td>
-                    Local ({{templ.sourceLocation}}) &ndash; {{ templ.shippingPriceLocal.whole }}<small>{{ templ.shippingPriceLocal.sep }}{{ templ.shippingPriceLocal.fraction }}</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
-                    Worldwide &ndash; {{ templ.shippingPriceIntl.whole }}<small>{{ templ.shippingPriceIntl.sep }}{{ templ.shippingPriceIntl.fraction }}</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
+                    Local ({{product.sourceLocation}}) &ndash; {{ product.priceShippingLocal.whole }}<small>{{ product.priceShippingLocal.sep }}{{ product.priceShippingLocal.fraction }}</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
+                    Worldwide &ndash; {{ product.priceShippingIntl.whole }}<small>{{ product.priceShippingIntl.sep }}{{ product.priceShippingIntl.fraction }}</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
                   </td>
                 </tr>
               </table>
             </div><!-- .pricing -->
           </div><!-- .row -->
         </div><!-- .detail -->
-        <section class="market-templates-list" *ngIf="templ.marketTemplates.templates.length > 0">
+        <section class="market-templates-list" *ngIf="product.markets.length > 0">
           <table class="market-templates">
             <tr>
               <th>Status</th>
@@ -137,54 +138,52 @@
               <th class="price">Price</th>
               <th class="actions">Actions</th>
             </tr>
-            <tr *ngFor="let marketTempl of templ.marketTemplates.templates">
-              <td>
-                <span *ngIf="marketTempl.status !== null" class="status {{ marketTempl.status }} --plain" matTooltip="listing status: {{marketTempl.status}}" matTooltipPosition="before">
-                  <span class="dot"></span>
-                </span>
-                <span class="template-name">{{ marketTempl.title }}</span>
-              </td>
-              <td>{{ marketTempl.marketKey }}</td>
-              <td class="category">{{ marketTempl.category }}</td>
-              <td class="price">{{ marketTempl.basePrice }} PART</td>
-              <td class="actions">
-                <button *ngIf="marketTempl.actions.edit" mat-button class="tiny icon-only" matTooltip="Edit">
-                  <mat-icon fontIcon="part-pen-1"></mat-icon>
-                </button>
-                <button *ngIf="marketTempl.actions.clone" mat-button class="tiny icon-only" matTooltip="Clone">
-                  <mat-icon fontIcon="part-copy"></mat-icon>
-                </button>
-                <button *ngIf="marketTempl.actions.publish" mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishTemplateModal()">
-                  <mat-icon fontIcon="part-rocket"></mat-icon>
-                </button>
-              </td>
-            </tr>
+            <ng-container *ngFor="let marketTempl of product.markets">
+              <tr *ngIf="activeIdentityMarkets.includes(marketTempl.marketKey)">
+                <td>
+                  <span class="status {{ marketTempl.status }} --plain" matTooltip="listing status: {{marketTempl.status}}" matTooltipPosition="before">
+                    <span class="dot"></span>
+                  </span>
+                  <span class="template-name">{{ marketTempl.title }}</span>
+                </td>
+                <td>{{ (profileMarkets[marketTempl.marketKey] && profileMarkets[marketTempl.marketKey].name) || '' }}</td>
+                <td class="category">{{ marketTempl.categoryName }}</td>
+                <td class="price">{{ marketTempl.priceBase.whole }}{{ marketTempl.priceBase.sep }}{{ marketTempl.priceBase.fraction }} PART</td>
+                <td class="actions">
+                  <button mat-button class="tiny icon-only" matTooltip="Edit" routerLink="new-listing" [queryParams]="{templateID: marketTempl.id}">
+                    <mat-icon fontIcon="part-pen-1"></mat-icon>
+                  </button>
+                  <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-button class="tiny icon-only" matTooltip="Clone To Market" (click)="actionCloneProduct(marketTempl.id, true)">
+                    <mat-icon fontIcon="part-copy"></mat-icon>
+                  </button>
+                  <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishExistingMarketModal(marketTempl.id)">
+                    <mat-icon fontIcon="part-rocket"></mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
           </table>
         </section><!-- .market-templates-list -->
         <mat-action-row class="action-buttons">
           <div class="left">
-            <button *ngIf="templ.actions.delete" mat-button class="small" matTooltip="Delete Product" color="warn">
+            <button *ngIf="product.markets.length === 0" mat-button class="small" matTooltip="Delete Product" color="warn" (click)="actionDeleteProduct(product.id)">
               <mat-icon fontIcon="part-cross"></mat-icon>
               Delete
             </button>
-            <!-- @TODO: trigger modal with "edit template" component + append "(Copy)" to product's title input? -->
-            <button *ngIf="templ.actions.clone" mat-button class="small icon-only" matTooltip="Clone Product">
+            <button mat-button class="small icon-only" matTooltip="Clone Product" (click)="actionCloneProduct(product.id, false)">
               <mat-icon fontIcon="part-copy"></mat-icon>
             </button>
-            <!-- @TODO: trigger modal with "edit template" component -->
-            <button *ngIf="templ.actions.edit" mat-button class="small" matTooltip="Update Product">
+            <button mat-button class="small" matTooltip="Update Product" routerLink="new-listing" [queryParams]="{templateID: product.id}">
               <mat-icon fontIcon="part-pen-1"></mat-icon>
               Edit
             </button>
-            <!-- @TODO: redirect to Listings tab and filter out Listings based on this Product -->
-            <button *ngIf="templ.marketTemplates.countAllListings > 0" mat-button class="small" matTooltip="Show current Listings of this Product">
+            <button *ngIf="product.displayDetails.totalListings > 0" mat-button class="small" matTooltip="Show current Listings of this Product" [routerLink]="['./']" [queryParams]="{selectedSellTab: 'listings', SellListingsBaseTemplateID: product.id}">
               <mat-icon fontIcon="part-zoom-in"></mat-icon>
               Show Listings
             </button>
           </div>
           <div class="right">
-            <!-- @TODO: remove link to BatchPublishModal (I'm using it here for dev purposes, since the batch actions menu isn't working for me) -->
-            <button *ngIf="templ.actions.publish" mat-raised-button color="primary" (click)="openPublishTemplateModal()">
+            <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-raised-button color="primary" (click)="openPublishProductModal(product.id)">
               <mat-icon fontIcon="part-rocket"></mat-icon>
               Publish on Market
             </button>
@@ -196,7 +195,7 @@
 
   <ng-template #noTemplates>
     <!-- no listings at all -->
-    <div class="no-results" *ngIf="allTemplates.length === 0">
+    <div class="no-results" *ngIf="allProducts.length === 0">
       <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Products">
       <p>
         You don't have any Products yet
@@ -207,7 +206,7 @@
     </div><!-- .no-results -->
 
     <!-- no listings matching search -->
-    <div class="no-results" *ngIf="allTemplates.length > 0">
+    <div class="no-results" *ngIf="allProducts.length > 0">
       <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Products found">
       <p>
         No matching Products found
