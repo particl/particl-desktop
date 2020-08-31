@@ -83,27 +83,27 @@
       }
       &.staked {
         .mat-icon {
-          color: var(--color-warning);
+          color: var(--color-txtype-staked);
         }
       }
       &.orphan {
         .mat-icon {
-          color: hsla(var(--text-muted-hsl), 0.6);
+          color: var(--color-txtype-orphan);
         }
       }
       &.sent {
         .mat-icon {
-          color: var(--color-alert);
+          color: var(--color-txtype-sent);
         }
       }
       &.received {
         .mat-icon {
-          color: var(--color-primary);
+          color: var(--color-txtype-received);
         }
       }
       &.listing-fee {
         .mat-icon {
-          color: var(--color-secondary);
+          color: var(--color-txtype-listing-fee);
         }
       }
     }
@@ -127,10 +127,10 @@
       }
     }
     .negative {
-      color: var(--color-alert);
+      color: var(--tx-negative-amount);
       .point,
       .small {
-        color: hsla(var(--color-alert-hsl), 0.8);
+        color: var(--tx-negative-decimals);
       }
     }
     .mat-icon { // icon hiding private TX's value when wallet is locked

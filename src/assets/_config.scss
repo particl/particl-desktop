@@ -45,12 +45,14 @@ $break-xhd: 2200px;
 
   */
 
+  // @TODO @Allien: split vars into files for specific apps (where applicable)
+
   // --- Main colors
 
-  --color-primary: hsl(152, 62%, 55%); // primary green-ish color
+  --color-primary: hsl(152, 62%, 55%); // primary green-ish color (also "success" color, color-code for public TXs & Buyers in Market)
   --color-primary-hsl: 152, 62%, 55%;
 
-  --color-secondary: hsl(201, 83%, 47%); // new blue
+  --color-secondary: hsl(201, 83%, 47%); // new blue (also color-code for private TXs & Sellers in Market)
   --color-secondary-hsl: 201, 83%, 47%;
 
   --color-tertiary: hsl(250, 39%, 47%); // new purple
@@ -61,13 +63,13 @@ $break-xhd: 2200px;
   --color-success: var(--color-primary);
   --color-success-hsl: var(--color-primary-hsl);
 
-  --color-alert: hsl(358, 68%, 50%); // red
+  --color-alert: hsl(358, 68%, 50%); // used for alerts, negative and desctructive actions (default: red)
   --color-alert-hsl: 358, 68%, 50%;
 
-  --color-warning: hsl(41, 100%, 47%); // yellow-ish
+  --color-warning: hsl(41, 100%, 47%); // warnings, caution (default: yellow-orange)
   --color-warning-hsl: 41, 100%, 47%;
 
-  --color-info: var(--color-secondary); // blue-ish (e.g. status cold staking icon)
+  --color-info: var(--color-secondary); // informative (default: blue-ish)
   --color-info-hsl: var(--color-secondary-hsl);
 
   --color-white: hsl(0, 0%, 100%);
@@ -78,7 +80,7 @@ $break-xhd: 2200px;
   --text: hsl(192, 7%, 15%); // main text color (high priority content - headings etc.)
   --text-hsl: 192, 7%, 15%;
 
-  --text-muted: hsl(206, 6%, 46%); // lighter (for lower priority text)
+  --text-muted: hsl(206, 6%, 46%); // lighter text (for lower priority text)
   --text-muted-hsl: 206, 6%, 46%;
   
   // --- Background colors
@@ -95,9 +97,9 @@ $break-xhd: 2200px;
   --bg-black: var(--text); // inverted bg (sidebar)
   --bg-black-hsl: var(--text-hsl);
 
-  // --- Specific backgrounds
+  // --- Specific backgrounds --- //
 
-  // Dark sidebar
+  // Global: Dark sidebar
   --bg-sidebar: hsl(192, 7%, 15%);
   --bg-sidebar-hsl: 192, 7%, 15%;
   --bg-sidebar-lighter: hsl(192, 7%, 20%);
@@ -105,11 +107,15 @@ $break-xhd: 2200px;
   --bg-sidebar-darker: hsl(192, 7%, 10%);
   --bg-sidebar-darker-hsl: 192, 7%, 10%;
 
-  // Appbar switcher (formerly multiwallet)
+  // Global: Appbar switcher (formerly multiwallet)
   --bg-appbar: hsl(192, 7%, 10%); // dark appbar bg
   --bg-appbar-hsl: 192, 7%, 10%;
 
-  // TX confirmations
+  // Global: info/alert messages (secondary colors for gradients)
+  --color-alert-to-gradient: hsl(16, 75%, 50%);
+  --color-info-to-gradient: hsl(215, 83%, 47%);
+
+  // Wallet: TX confirmations, types
   --color-confirms-0-pct: var(--color-alert);
   --color-confirms-0-pct-hsl: var(--color-alert-hsl);
   --color-confirms-33-pct: hsl(16, 75%, 50%);
@@ -118,6 +124,13 @@ $break-xhd: 2200px;
   --color-confirms-66-pct-hsl: 30, 87%, 49%;
   --color-confirms-100-pct: var(--color-warning);
   --color-confirms-100-pct-hsl: var(--color-warning-hsl);
+  --color-txtype-staked: var(--color-warning);
+  --color-txtype-orphan: hsla(var(--text-muted-hsl), 0.6);
+  --color-txtype-sent: var(--color-alert);
+  --color-txtype-received: var(--color-primary);
+  --color-txtype-listing-fee: var(--color-secondary);
+  --color-tx-negative-amount: var(--color-alert);
+  --color-tx-negative-decimals: hsla(var(--color-alert-hsl), 0.8);
 
   /* ---------- LAYOUT & UI ---------- */
 
