@@ -156,12 +156,18 @@ export class SellListingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    const filterBaseTemplateId$ = this.filterBaseTemplateId.valueChanges.pipe(
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    );
+
     const refreshRequest$ = merge(
       init$,
       search$,
       sort$,
       filterStatus$,
       filterMarket$,
+      filterBaseTemplateId$,
     ).pipe(
       tap(() => {
         this.doFilterChange.setValue(true);
@@ -248,7 +254,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
     this.sortOrder.setValue('created');
     this.filterStatus.setValue('');
     this.filterMarket.setValue('');
-    this.filterBaseTemplateId.setValue('');
+    this.filterBaseTemplateId.setValue(0);
   }
 
 

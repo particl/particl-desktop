@@ -65,8 +65,7 @@
       </mat-select>
     </mat-form-field>
     <!-- Clear Product/Template filter -->
-    <!-- @TODO: clear product/template filter on click -->
-    <button mat-button class="small clear-specific-filter" color="warn"><!-- *ngIf="+filterBaseTemplateId.value > 0" -->
+    <button mat-button class="small clear-specific-filter" color="warn" (click)="this.filterBaseTemplateId.setValue(0)" [disabled]="!(+filterBaseTemplateId.value > 0)">
       <mat-icon fontIcon="part-cross"></mat-icon>
       Clear filtering by Product
     </button>
