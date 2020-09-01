@@ -157,7 +157,7 @@
                   <button mat-button class="tiny icon-only" matTooltip="Preview as a listing" (click)="openPreviewListingModal(marketTempl.id)">
                     <mat-icon fontIcon="part-zoom-in"></mat-icon>
                   </button>
-                  <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishExistingMarketModal(marketTempl.id)">
+                  <button [disabled]="marketTempl.categoryName.length === 0" mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishExistingMarketModal(product.id, marketTempl.id)">
                     <mat-icon fontIcon="part-rocket"></mat-icon>
                   </button>
                 </td>

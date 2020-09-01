@@ -91,6 +91,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
     if (this.isDataValid) {
       const durations$: Observable<any>[] = [];
+
       for (const duration of this.availableDurations) {
         durations$.push(
           this._sellService.estimatePublishFee(this.templateDetails.templateID, duration.value).pipe(

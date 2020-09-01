@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, } from 'rxjs';
-import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap } from 'rxjs/operators';
+import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
@@ -10,11 +10,15 @@ import { MarketState } from 'app/main-market/store/market.state';
 import { DataService } from '../../services/data/data.service';
 import { SellService } from '../sell.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
 import { BatchPublishModalComponent} from '../modals/batch-publish-modal/batch-publish-modal.component';
+import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../modals/publish-template-modal/publish-template-modal.component';
 import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 
+import { isBasicObjectType } from 'app/main-market/shared/utils';
 import { Market } from '../../services/data/data.models';
 import { ProductItem, TEMPLATE_STATUS_TYPE } from '../sell.models';
 
@@ -22,7 +26,10 @@ import { ProductItem, TEMPLATE_STATUS_TYPE } from '../sell.models';
 enum TextContent {
   UNKNOWN_MARKET = '<unknown>',
   LOAD_ERROR = 'An error occurred loading products',
-  ERROR_DELETE_PRODUCT = 'An error occurred while deleting the product!'
+  PUBLISH_WAIT = 'Publishing the template to the seleced market',
+  ERROR_DELETE_PRODUCT = 'An error occurred while deleting the product!',
+  PUBLISH_FAILED = 'Failed to publish the template',
+  PUBLISH_SUCCESS = 'Successfully created a listing!'
 }
 
 
@@ -74,6 +81,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     private _sellService: SellService,
     private _sharedService: DataService,
     private _snackbar: SnackbarService,
+    private _unlocker: WalletEncryptionService,
     private _dialog: MatDialog
   ) { }
 
@@ -135,6 +143,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+
+    const expiryReset$ = this.actionRefreshControl.valueChanges.pipe(
+      tap(() => this.resetMarketListingTimer()),
+      takeUntil(this.destroy$)
+    );
+
     const productDisplay$ = merge(
       init$,
       search$,
@@ -169,6 +183,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     merge(
       walletChange$,
       productDisplay$,
+      expiryReset$,
       marketChange$
     ).subscribe();
   }
@@ -212,8 +227,78 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
-  openPublishExistingMarketModal(marketTemplId: number): void {
+  openPublishExistingMarketModal(productId: number, marketTemplId: number): void {
 
+    const foundProduct = this.allProducts.find(p => p.id === productId);
+
+    if (!foundProduct) {
+      return;
+    }
+
+    const marketTempl = foundProduct.markets.find(m => m.id === marketTemplId);
+
+    if (!marketTempl) {
+      return;
+    }
+
+    const openDialog$ = defer(() => {
+      const modalData: PublishTemplateModalInputs = {
+        templateID: marketTemplId,
+        title: marketTempl.title,
+        marketName: this.profileMarkets[marketTempl.marketKey] ? this.profileMarkets[marketTempl.marketKey].name : '',
+        categoryName: marketTempl.categoryName
+      };
+
+      const dialog = this._dialog.open(
+        PublishTemplateModalComponent,
+        {data: modalData}
+      );
+
+      return dialog.afterClosed().pipe(
+        take(1),
+        concatMap((details: {duration: number} | null) => iif(
+          () => isBasicObjectType(details) && (+details.duration > 0),
+
+          defer(() => this._unlocker.unlock({timeout: 10}).pipe(
+            concatMap((unlocked) => iif(
+
+              () => unlocked,
+
+              defer(() => {
+
+                const loaderDialog = this._dialog.open(ProcessingModalComponent, {
+                  disableClose: true,
+                  data: { message: TextContent.PUBLISH_WAIT }
+                });
+
+                return this._sellService.publishMarketTemplate(marketTemplId, +details.duration).pipe(
+                  catchError(() => of(false)),
+                  tap((isSuccess) => {
+                    loaderDialog.close();
+
+                    if (isSuccess) {
+                      this._snackbar.open(TextContent.PUBLISH_SUCCESS);
+                      // fake the hash on the market template (if there isn't one already): we only care if a hash is set, not what it is
+                      if (marketTempl.hash.length === 0) {
+                        marketTempl.hash = 'abcdefg';
+                      }
+                      this.actionRefreshControl.setValue(null);
+                    } else {
+                      this._snackbar.open(TextContent.PUBLISH_FAILED, 'warn');
+                    }
+                  })
+                );
+              })
+            ))
+          ))
+        ))
+      );
+
+    });
+
+    this._unlocker.unlock({timeout: 30}).pipe(
+      concatMap(isUnlocked => iif(() => isUnlocked, openDialog$))
+    ).subscribe();
   }
 
 
