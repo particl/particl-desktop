@@ -5956,7 +5956,18 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
   integrity sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==
 
-handlebars@^4.7.0, handlebars@^4.7.6:
+handlebars@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.1.2.tgz#b6b37c1ced0306b221e094fc7aca3ec23b131b67"
+  integrity sha512-nvfrjqvt9xQ8Z/w0ijewdD/vvWDTOweBUm96NTr66Wfvo1mJenBLwcYmPs3TIBP5ruzYGD7Hx/DaM9RmhroGPw==
+  dependencies:
+    neo-async "^2.6.0"
+    optimist "^0.6.1"
+    source-map "^0.6.1"
+  optionalDependencies:
+    uglify-js "^3.1.4"
+
+handlebars@^4.7.6:
   version "4.7.6"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"
   integrity sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
@@ -8933,10 +8944,10 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.139:
-  version "0.1.139"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.139.tgz#6d8bea0f9647362f82dc6e3e7367caa77b7c1a29"
-  integrity sha512-qRbUsZVIzqUgKsauj+Dzdb9FYz9CQv9PNLMQbkvVcRWeeGr2RZCptKxB0YrUZv4Z3M6hsJoEYdog4kOQ1kOzog==
+omp-lib@^0.1.140:
+  version "0.1.140"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.140.tgz#62e4ded2179521c0c44880f4308a87cdcb4024d8"
+  integrity sha512-SMG1iWkIrgCmGk+gHdsaS05rYUUH9PmyGqDbEPxKLLJAPk77Tok9dVNIeeIuOY/+mIZcG/tcUQd0QsTlbC3iyw==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -9353,9 +9364,9 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9415,9 +9426,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-20.tgz:
-  version "0.3.0-20"
-  resolved "./particl-marketplace-0.3.0-20.tgz#24dbb1ea41982ad8f2adf2ee6602ddb9e291f302"
+particl-marketplace@./particl-marketplace-0.3.0-22.tgz:
+  version "0.3.0-22"
+  resolved "./particl-marketplace-0.3.0-22.tgz#594f4876894454441da0be857f44f80336c835b0"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9440,7 +9451,7 @@ particl-marketplace@./particl-marketplace-0.3.0-20.tgz:
     figlet "^1.2.0"
     fstream "^1.0.12"
     glob "^7.1.2"
-    handlebars "^4.7.0"
+    handlebars "4.1.2"
     helmet "^3.6.1"
     hoek "^4.2.1"
     inquirer "^3.2.0"
@@ -9457,7 +9468,7 @@ particl-marketplace@./particl-marketplace-0.3.0-20.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.139"
+    omp-lib "^0.1.140"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.4"
     path "^0.12.7"
