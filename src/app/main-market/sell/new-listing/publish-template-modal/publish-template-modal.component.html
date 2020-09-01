@@ -51,10 +51,10 @@
     </div><!-- .row -->
 
 
-    <p class="widget-help" *ngIf="!selectedDuration.value">
+    <p class="widget-help" *ngIf="selectedDurationOptionIndex === -1">
       Select a duration to display an estimate publishing fee.
     </p>
-    <ng-container *ngIf="(selectedDurationOptionIndex > -1) && (availableDurations[selectedDurationOptionIndex].estimateFee > -1); else hasFee">
+    <ng-container *ngIf="(selectedDurationOptionIndex > -1) && (availableDurations[selectedDurationOptionIndex].estimateFee === -1); else hasFee">
       <p class="warning">
         There was an error fetching the fee estimate, please check that:
       </p>
