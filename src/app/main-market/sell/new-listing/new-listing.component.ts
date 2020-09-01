@@ -15,7 +15,7 @@ import { RegionListService } from '../../services/region-list/region-list.servic
 import { DataService } from '../../services/data/data.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { SellTemplateFormComponent } from '../sell-template-form/sell-template-form.component';
-import { PublishTemplateModalComponent, PublishTemplateModalInputs } from './publish-template-modal/publish-template-modal.component';
+import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../modals/publish-template-modal/publish-template-modal.component';
 import { getValueOrDefault, isBasicObjectType } from 'app/main-market/shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { Template, TemplateFormDetails, CreateTemplateRequest, TemplateRequestImageItem, UpdateTemplateRequest } from '../sell.models';

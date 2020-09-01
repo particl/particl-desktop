@@ -88,8 +88,6 @@
                 <span class="active">{{ product.displayDetails.activeMarketCount }}</span><span class="total">/{{ product.markets.length }}</span>
               </div>
             </div>
-            <!--  TODO: WTF is this? Is it still applicable? -->
-            <mat-checkbox class="batch-select" matTooltip="Select Product" *ngIf="batchEditingActive" (click)="$event.stopPropagation()"></mat-checkbox>
           </div>
         </mat-expansion-panel-header>
         <div class="detail">
@@ -156,7 +154,7 @@
                   <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-button class="tiny icon-only" matTooltip="Clone To Market" (click)="actionCloneProduct(marketTempl.id, true)">
                     <mat-icon fontIcon="part-copy"></mat-icon>
                   </button>
-                  <button mat-button class="tiny icon-only" matTooltip="Preview as a listing" (click)="openPreviewListingModal(marketTempl.id )">
+                  <button mat-button class="tiny icon-only" matTooltip="Preview as a listing" (click)="openPreviewListingModal(marketTempl.id)">
                     <mat-icon fontIcon="part-zoom-in"></mat-icon>
                   </button>
                   <button mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishExistingMarketModal(marketTempl.id)">
@@ -186,7 +184,7 @@
             </button>
           </div>
           <div class="right">
-            <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-raised-button color="primary" (click)="openPublishProductModal(product.id)">
+            <button [disabled]="product.displayDetails.availableMarkets.length === 0" mat-raised-button color="primary" (click)="openPublishProductModal(product.id)">
               <mat-icon fontIcon="part-rocket"></mat-icon>
               Publish on Market
             </button>

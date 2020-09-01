@@ -13,7 +13,7 @@ import { SellListingsComponent } from './sell-listings/sell-listings.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
 import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { SellTemplateFormComponent } from './sell-template-form/sell-template-form.component';
-import { PublishTemplateModalComponent } from './new-listing/publish-template-modal/publish-template-modal.component';
+import { PublishTemplateModalComponent } from './modals/publish-template-modal/publish-template-modal.component';
 import { DeleteTemplateModalComponent } from './modals/delete-template-modal/delete-template-modal.component';
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';

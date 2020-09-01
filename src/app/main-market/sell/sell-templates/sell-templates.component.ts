@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, } from 'rxjs';
-import { tap, catchError, finalize, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap } from 'rxjs/operators';
+import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
@@ -12,6 +12,7 @@ import { SellService } from '../sell.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
+import { BatchPublishModalComponent} from '../modals/batch-publish-modal/batch-publish-modal.component';
 import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
 
 import { Market } from '../../services/data/data.models';
@@ -218,6 +219,13 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   openPublishProductModal(productId: number): void {
 
+  }
+
+
+  openBatchPublishModal(): void {
+    this._dialog.open(BatchPublishModalComponent, {
+      disableClose: true
+    });
   }
 
 
