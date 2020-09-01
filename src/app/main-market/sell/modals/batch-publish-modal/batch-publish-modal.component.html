@@ -17,6 +17,7 @@
     <section class="select-market" fxFlex="25">
       <label class="--larger">
         <h3 class="label">Publish to</h3>
+        <!-- @TODO: disable when batch publish is in progress -->
         <mat-form-field class="--plain --larger" appearance="fill">
           <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
           <mat-select placeholder="Select Market" [formControl]="selectedMarket">
@@ -32,6 +33,7 @@
       <div class="row" fxLayout fxLayoutAlign="flex-start flex-end">
         <label class="--larger">
           <h3 class="label">Publish duration</h3>
+          <!-- @TODO: disable when batch publish is in progress -->
           <mat-form-field class="--plain --larger" appearance="fill">
             <mat-icon matPrefix fontIcon="part-date"></mat-icon>
             <mat-select placeholder="Select duration" [formControl]="publishDuration">
@@ -41,8 +43,7 @@
             </mat-select>
           </mat-form-field>
         </label>
-        <div class="estimate-fee">
-          <!-- @TODO: initially show button only; when it's clicked, swap it for the fee value (if duration is changed, swap it back for the button) -->
+        <!--div class="estimate-fee">
           <button mat-button *ngIf="!feeCalculated" (click)="feeCalculated = !feeCalculated">
             <mat-icon fontIcon="part-stake"></mat-icon>
             Calc. fee
@@ -51,13 +52,14 @@
             Publishing fee:<br>
             <span class="fee">2.513541 PART</span>
           </div>
-        </div><!-- .estimate-fee -->
+        </div--><!-- .estimate-fee -->
       </div><!-- .row -->
     </section><!-- .duration -->
 
     <section class="select-preset" fxFlex="25">
       <label class="--larger">
         <h3 class="label">Select&hellip;</h3>
+        <!-- @TODO: disable when batch publish is in progress -->
         <mat-form-field class="--plain --larger" appearance="fill">
           <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
           <mat-select placeholder="Select Products" [formControl]="selectedProducts">
@@ -70,7 +72,7 @@
     </section><!-- .select-preset -->
     
   </div><!-- .row -->
-
+  
 </div><!-- mat-dialog-title -->
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
@@ -86,19 +88,7 @@
 
   <section class="available-products">
 
-    <!-- @TODO: show only before Market is selected -->
-    <div class="no-results --horizontal --smaller">
-      <img class="illustration" src="./assets/app-market/illustrations/batch-publish.svg" alt="Select Market first">
-      <div class="text">
-        <p>
-          Select Market for Publishing
-        </p>
-        <p class="help-text">
-          Please select a Market where you want to Publish your Products first
-        </p>
-      </div>
-    </div><!-- .no-results -->
-
+    <!-- State before publishing is triggered -->
     <mat-card class="product">
       <div class="photo">
         <img src="./assets/images/placeholder_4-3.jpg">
@@ -124,6 +114,7 @@
       </div>
     </mat-card>
 
+    <!-- State after publishing is triggered, but it can't proceed (shows some validation errors) -->
     <mat-card class="product">
       <div class="photo">
         <img src="./assets/images/placeholder_3-4.jpg">
@@ -149,13 +140,132 @@
       </div>
     </mat-card>
 
+    <!-- Publishing is in progress (waiting for Product to be processed) -->
+    <mat-card class="product">
+      <div class="photo">
+        <img src="./assets/images/placeholder_3-4.jpg">
+      </div>
+      <div class="meta">
+        <div class="title">Product waiting for Publishing</div>
+        <div class="publish-status">
+          <mat-icon fontIcon="part-cog" class="loading-progress"></mat-icon>
+          Publishing in progress
+        </div>
+      </div>
+      <div class="category-select">
+        <!-- @TODO: disable when batch publish is in progress -->
+        <mat-form-field class="--plain" appearance="fill">
+          <mat-select placeholder="Select category" [formControl]="categorySelect" disabled>
+            <mat-option *ngFor="let category of categories" [value]="category.value">
+              {{ category.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="publish-checkbox">
+        <!-- @TODO: disable when batch publish is in progress -->
+        <mat-checkbox disabled checked="checked">Publish</mat-checkbox>
+      </div>
+    </mat-card>
+
+    <!-- Published successfully -->
+    <mat-card class="product">
+      <div class="photo">
+        <img src="./assets/images/placeholder_3-4.jpg">
+      </div>
+      <div class="meta">
+        <div class="title">Successfully published</div>
+        <div class="publish-status">
+          <mat-icon fontIcon="part-circle-check"></mat-icon>
+          Successfully published
+        </div>
+      </div>
+      <div class="category-select">
+        <!-- @TODO: disable when batch publish is in progress -->
+        <mat-form-field class="--plain" appearance="fill">
+          <mat-select placeholder="Select category" [formControl]="categorySelect" disabled>
+            <mat-option *ngFor="let category of categories" [value]="category.value">
+              {{ category.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="publish-checkbox">
+        <!-- @TODO: disable when batch publish is in progress -->
+        <mat-checkbox disabled checked="checked">Publish</mat-checkbox>
+      </div>
+    </mat-card>
+
+    <!-- Publishing failed -->
+    <mat-card class="product">
+      <div class="photo">
+        <img src="./assets/images/placeholder_3-4.jpg">
+      </div>
+      <div class="meta">
+        <div class="title">Failed publishing</div>
+        <div class="publish-status">
+          <mat-icon fontIcon="part-alert"></mat-icon>
+          Publishing failed, please try again
+        </div>
+      </div>
+      <div class="category-select">
+        <!-- @TODO: re-enable if failed, keep selected value if possible -->
+        <mat-form-field class="--plain" appearance="fill">
+          <mat-select placeholder="Select category" [formControl]="categorySelect">
+            <mat-option *ngFor="let category of categories" [value]="category.value">
+              {{ category.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="publish-checkbox">
+        <!-- @TODO: re-enable if failed -->
+        <mat-checkbox>Publish</mat-checkbox>
+      </div>
+    </mat-card>
+
+    <!-- @TODO: show only before Market is selected -->
+    <div class="no-results --horizontal --smaller">
+      <img class="illustration" src="./assets/app-market/illustrations/batch-publish.svg" alt="Select Market first">
+      <div class="text">
+        <p>
+          Select Market for Publishing
+        </p>
+        <p class="help-text">
+          Please select a Market where you want to Publish your Products first
+        </p>
+      </div>
+    </div><!-- .no-results -->
+
   </section><!-- .available-products -->
 
 </mat-dialog-content>
 
 
+<mat-dialog-actions>
 
+  <!-- @TODO: 1) show only when publishing is in progress; 2) value as % of completion -->
+  <mat-progress-bar mode="determinate" value="27" color="accent" class="publish-progress"></mat-progress-bar>
 
+  <div class="row">
+    <!-- @TODO: disable all buttons when Publishing is in progress -->
+    <div class="right">
+      <button mat-button class="small" color="basic">
+        <mat-icon fontIcon="part-cross"></mat-icon>
+        Cancel &amp; close
+      </button>
+    </div>
+    <div class="left">
+      <button mat-raised-button color="primary">
+        <mat-icon fontIcon="part-check"></mat-icon>
+        Publish selected Products
+      </button>
+      <!-- @TODO: when in progress.. -->
+      <button mat-raised-button color="primary" disabled>
+        <mat-icon fontIcon="part-check"></mat-icon>
+        Publishing selected Products&hellip;
+      </button>
+    </div>
+  </div><!-- .row -->
 
-
-
+</mat-dialog-actions>
