@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-batch-publish-modal',
   templateUrl: './batch-publish-modal.component.html',
   styleUrls: ['./batch-publish-modal.component.scss']
 })

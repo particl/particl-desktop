@@ -395,10 +395,12 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
       const updateTemplateData: UpdateTemplateRequest = {};
 
+
       if (
         (parsedValues.title !== this.savedTempl.savedDetails.title) ||
         (parsedValues.summary !== this.savedTempl.savedDetails.summary) ||
-        (parsedValues.description !== this.savedTempl.savedDetails.description)
+        (parsedValues.description !== this.savedTempl.savedDetails.description) ||
+        ((this.savedTempl.type === 'MARKET') && (this.savedTempl.marketDetails.category.id !== parsedValues.selectedCategoryId))
       ) {
         updateTemplateData.info = {
           title: parsedValues.title,
@@ -406,8 +408,8 @@ export class NewListingComponent implements OnInit, OnDestroy {
           description: parsedValues.description
         };
 
-        if (this.savedTempl.marketDetails && this.savedTempl.marketDetails.category.id) {
-          updateTemplateData.info.category = this.savedTempl.marketDetails.category.id;
+        if (this.savedTempl.type === 'MARKET') {
+          updateTemplateData.info.category = parsedValues.selectedCategoryId;
         }
       }
 
