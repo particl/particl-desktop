@@ -116,13 +116,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
           return of([] as DisplayableProductItem[]);
         }),
         tap(products => {
+          this.isLoading = false;
           this.allProducts = products;
           this.marketUpdateControl.setValue(null);
           this.resetMarketListingTimer();
         })
       )
-    ).pipe(
-      finalize(() => this.isLoading = false)
     );
 
     const search$ = this.searchQuery.valueChanges.pipe(

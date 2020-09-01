@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, concat, throwError, from } from 'rxjs';
+import { Observable, of, throwError, from } from 'rxjs';
 import { concatMap, mapTo, catchError, last, concatAll, map } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -128,26 +128,22 @@ export class SellService {
         if (+data.marketId > 0) {
           // create a market template clone for this base template
           templateRetrieval$ = this.cloneTemplate(resp.id, +data.marketId).pipe(
-              concatMap((newMarketTempl: RespListingTemplate) => {
+            concatMap((newMarketTempl: RespListingTemplate) => {
 
-                if (isBasicObjectType(newMarketTempl) && (+newMarketTempl.id > 0)) {
-                  return concat(
+              if (isBasicObjectType(newMarketTempl) && (+newMarketTempl.id > 0)) {
+                // set the category now (since the market is now set)
+                return this._rpc.call(
+                  'information',
+                  ['update', +newMarketTempl.id, data.title, data.summary, data.description, +data.categoryId]
+                ).pipe(
+                  // finally, return the latest template details
+                  concatMap(() => this._rpc.call('template', ['get', +newMarketTempl.id])),
+                  catchError(() => of(null))
+                );
+              }
 
-                    // set the category now (since the market is now set)
-                    this._rpc.call(
-                      'information',
-                      ['update', +newMarketTempl.id, data.title, data.summary, data.description, +data.categoryId]
-                    ).pipe(
-                      catchError(() => of(null))
-                    ),
-
-                    // finally, return the latest template details
-                    this._rpc.call('template', ['get', +newMarketTempl.id])
-                  );
-                }
-
-                return throwError('invalid market template created!');
-              })
+              return throwError('invalid market template created!');
+            })
           );
         }
 
@@ -239,14 +235,29 @@ export class SellService {
 
           if (isBasicObjectType(clonedTemplResp) && (+clonedTemplResp.id > 0)) {
 
+            let title = '',
+                summary = '',
+                description = '';
+
+            if (isBasicObjectType(details.info)) {
+              title = details.info.title;
+              summary = details.info.summary;
+              description = details.info.description;
+            } else if (isBasicObjectType(clonedTemplResp.ItemInformation)) {
+              // if the update request did not modify any item info, then try obtain these details from the clone template details
+              title = getValueOrDefault(clonedTemplResp.ItemInformation.title, 'string', title);
+              summary = getValueOrDefault(clonedTemplResp.ItemInformation.shortDescription, 'string', summary);
+              description = getValueOrDefault(clonedTemplResp.ItemInformation.longDescription, 'string', description);
+            }
+
             if (+details.cloneToMarket.categoryId > 0) {
               return this._rpc.call('template', [
                 'information',
                 'update',
                 +clonedTemplResp.id,
-                details.info.title || '',
-                details.info.summary || '',
-                details.info.description || '',
+                title,
+                summary,
+                description,
                 +details.cloneToMarket.categoryId
               ]).pipe(
                 concatMap(() => this.fetchProductTemplate(+clonedTemplResp.id))
