@@ -151,7 +151,7 @@
                   <button mat-button class="tiny icon-only" matTooltip="Edit" routerLink="new-listing" [queryParams]="{templateID: marketTempl.id}">
                     <mat-icon fontIcon="part-pen-1"></mat-icon>
                   </button>
-                  <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-button class="tiny icon-only" matTooltip="Clone To Market" (click)="actionCloneProduct(marketTempl.id, true)">
+                  <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-button class="tiny icon-only" matTooltip="Clone To Market" (click)="actionCloneProduct(product.id, marketTempl.id)">
                     <mat-icon fontIcon="part-copy"></mat-icon>
                   </button>
                   <button mat-button class="tiny icon-only" matTooltip="Preview as a listing" (click)="openPreviewListingModal(marketTempl.id)">
@@ -171,7 +171,7 @@
               <mat-icon fontIcon="part-cross"></mat-icon>
               Delete
             </button>
-            <button mat-button class="small icon-only" matTooltip="Clone Product" (click)="actionCloneProduct(product.id, false)">
+            <button mat-button class="small icon-only" matTooltip="Clone Product" (click)="actionCloneProduct(product.id)">
               <mat-icon fontIcon="part-copy"></mat-icon>
             </button>
             <button mat-button class="small" matTooltip="Update Product" routerLink="new-listing" [queryParams]="{templateID: product.id}">

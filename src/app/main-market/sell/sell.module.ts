@@ -15,6 +15,8 @@ import { ImportListingsComponent } from './import-listings/import-listings.compo
 import { SellTemplateFormComponent } from './sell-template-form/sell-template-form.component';
 import { PublishTemplateModalComponent } from './modals/publish-template-modal/publish-template-modal.component';
 import { DeleteTemplateModalComponent } from './modals/delete-template-modal/delete-template-modal.component';
+import { BatchPublishModalComponent } from './modals/batch-publish-modal/batch-publish-modal.component';
+import { CloneTemplateModalComponent } from './modals/clone-template-modal/clone-template-modal.component';
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';
 import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
@@ -24,7 +26,6 @@ import { EscrowPaymentModalComponent } from './modals/escrow-payment-modal/escro
 import { OrderShippedModalComponent } from './modals/order-shipped-modal/order-shipped-modal.component';
 
 import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
-import { BatchPublishModalComponent } from './modals/batch-publish-modal/batch-publish-modal.component';
 
 
 const routes: Routes = [
@@ -53,6 +54,7 @@ const routes: Routes = [
     ImportListingsComponent,
     PublishTemplateModalComponent,
     DeleteTemplateModalComponent,
+    CloneTemplateModalComponent,
     BatchPublishModalComponent,
 
     SellOrdersComponent,
@@ -69,11 +71,13 @@ const routes: Routes = [
   entryComponents: [
     PublishTemplateModalComponent,
     DeleteTemplateModalComponent,
+    CloneTemplateModalComponent,
+    BatchPublishModalComponent,
+
     AcceptBidModalComponent,
     RejectBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
-    BatchPublishModalComponent
   ],
   providers: [
     SellService

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, } from 'rxjs';
-import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take } from 'rxjs/operators';
+import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
@@ -16,20 +16,23 @@ import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/de
 import { BatchPublishModalComponent} from '../modals/batch-publish-modal/batch-publish-modal.component';
 import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../modals/publish-template-modal/publish-template-modal.component';
 import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
+import { CloneTemplateModalInput, CloneTemplateModalComponent } from '../modals/clone-template-modal/clone-template-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 
 import { isBasicObjectType } from 'app/main-market/shared/utils';
 import { Market } from '../../services/data/data.models';
-import { ProductItem, TEMPLATE_STATUS_TYPE } from '../sell.models';
+import { ProductItem, TEMPLATE_STATUS_TYPE, ProductMarketTemplate } from '../sell.models';
 
 
 enum TextContent {
   UNKNOWN_MARKET = '<unknown>',
   LOAD_ERROR = 'An error occurred loading products',
-  PUBLISH_WAIT = 'Publishing the template to the seleced market',
+  PUBLISH_WAIT = 'Publishing the template to the selected market',
+  CLONE_WAIT = 'Creating your new product details',
   ERROR_DELETE_PRODUCT = 'An error occurred while deleting the product!',
+  ERROR_CLONE_ITEM = 'An error occurred during copying!',
   PUBLISH_FAILED = 'Failed to publish the template',
-  PUBLISH_SUCCESS = 'Successfully created a listing!'
+  PUBLISH_SUCCESS = 'Successfully created a listing!',
 }
 
 
@@ -107,19 +110,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       ),
 
       this._sellService.fetchAllProductTemplates().pipe(
-        map((products) => {
-          return products.map(p => {
-            const dp: DisplayableProductItem = {
-              ...p,
-              displayDetails: {
-                activeMarketCount: 0,
-                availableMarkets: [],
-                totalListings: p.markets.reduce((acc, market) => acc + market.listings.count, 0)
-              }
-            };
-            return dp;
-          });
-        }),
+        map((products) => products.map(p => this.createDisplayableProductItem(p))),
         catchError(() => {
           this._snackbar.open(TextContent.LOAD_ERROR, 'warn');
           return of([] as DisplayableProductItem[]);
@@ -222,8 +213,103 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
-  actionCloneProduct(itemId: number, isMarketClone: boolean = false): void {
+  actionCloneProduct(productId: number, marketTemplateId?: number): void {
+    const foundProduct = this.allProducts.find(p => p.id === productId);
+    if (!foundProduct) {
+      return;
+    }
 
+    let title = foundProduct.title;
+    const availableMarkets = [];
+
+    if (+marketTemplateId > 0) {
+      if (foundProduct.displayDetails.availableMarkets.length === 0) {
+        return;
+      }
+
+      const foundmarketTempl = foundProduct.markets.find(m => m.id === +marketTemplateId);
+
+      if (!foundmarketTempl) {
+        return;
+      }
+
+      title = foundmarketTempl.title;
+
+      foundProduct.displayDetails.availableMarkets.filter(
+        mkey => this.profileMarkets[mkey]
+      ).map(
+        mkey => ({id: this.profileMarkets[mkey].identityId, name: this.profileMarkets[mkey].name})
+      ).forEach(m => availableMarkets.push(m));
+    }
+
+
+    const modalData: CloneTemplateModalInput = {
+      templateTitle: title,
+      markets: availableMarkets
+    };
+
+    this._dialog.open(
+      CloneTemplateModalComponent,
+      {data: modalData}
+    ).afterClosed().pipe(
+      take(1),
+      concatMap((confirmationData) => iif(
+        () => isBasicObjectType(confirmationData),
+
+        iif(
+          () => confirmationData.isBaseClone,
+
+          defer(() => {
+            this._dialog.open(ProcessingModalComponent, {
+              disableClose: true,
+              data: { message: TextContent.CLONE_WAIT }
+            });
+            return this._sellService.cloneTemplateAsBaseProduct(productId);
+          }),
+
+          defer(() => iif(
+
+            () => (+confirmationData.marketId > 0) && (+confirmationData.categoryId > 0),
+
+            defer(() => {
+              this._dialog.open(ProcessingModalComponent, {
+                disableClose: true,
+                data: { message: TextContent.CLONE_WAIT }
+              });
+
+              return this._sellService.cloneTemplateAsMarketTemplate(
+                +marketTemplateId, +confirmationData.marketId, +confirmationData.categoryId
+              );
+            })
+
+          ))
+
+        ),
+      )),
+
+      finalize(() => this._dialog.closeAll())
+
+    ).subscribe(
+      (newItem: ProductItem | ProductMarketTemplate | null) => {
+        if (newItem === null) {
+          this._snackbar.open(TextContent.ERROR_CLONE_ITEM, 'warn');
+          return;
+        }
+
+        if (!(+marketTemplateId > 0)) {
+          this.allProducts.push(this.createDisplayableProductItem(newItem as ProductItem));
+        } else {
+          foundProduct.displayDetails.availableMarkets = foundProduct.displayDetails.availableMarkets.filter(
+            am => am !== (newItem as ProductMarketTemplate).marketKey
+          );
+          foundProduct.markets.push(newItem as ProductMarketTemplate);
+        }
+
+        this.actionRefreshControl.setValue(null);
+      },
+
+      () => this._snackbar.open(TextContent.ERROR_CLONE_ITEM, 'warn')
+    );
   }
 
 
@@ -303,7 +389,11 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
   openPublishProductModal(productId: number): void {
+    const foundProduct = this.allProducts.find(p => p.id === productId);
 
+    if (!foundProduct || foundProduct.markets.length === foundProduct.displayDetails.availableMarkets.length) {
+      return;
+    }
   }
 
 
@@ -399,6 +489,19 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       );
     }
 
+  }
+
+
+  private createDisplayableProductItem(p: ProductItem): DisplayableProductItem {
+    const dp: DisplayableProductItem = {
+      ...p,
+      displayDetails: {
+        activeMarketCount: 0,
+        availableMarkets: [],
+        totalListings: p.markets.reduce((acc, market) => acc + market.listings.count, 0)
+      }
+    };
+    return dp;
   }
 
 }
