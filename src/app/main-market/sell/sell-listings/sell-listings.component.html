@@ -97,7 +97,7 @@
                 <span class="category">{{ listing.categoryName }}</span>
               </div>
               <div class="status-wrap" fxFlex="0 0 140px">
-                <div class="status {{ listing.status === 'ACTIVE' ? 'pubished' : 'expired' }}">
+                <div class="status {{ listing.status === 'ACTIVE' ? 'published' : 'expired' }}">
                   <span class="dot"></span>
                   <ng-container [ngSwitch]="listing.status">
                     <ng-container *ngSwitchCase="'ACTIVE'">Published</ng-container>

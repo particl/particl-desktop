@@ -192,6 +192,7 @@
       position: relative;
       top: -1px;
       margin-right: 8px;
+      background: var(--bg-muted);
     }
     // Products & Listings
     &.unpublished .dot {
@@ -200,7 +201,8 @@
     &.pending .dot {
       background: var(--color-warning);
     }
-    &.published .dot {
+    &.published .dot,
+    &.active .dot {
       background: var(--color-success);
     }
     &.expiring .dot {

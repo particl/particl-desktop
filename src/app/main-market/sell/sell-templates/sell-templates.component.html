@@ -145,7 +145,7 @@
             <ng-container *ngFor="let marketTempl of product.markets">
               <tr *ngIf="activeIdentityMarkets.includes(marketTempl.marketKey)">
                 <td>
-                  <span class="status {{ marketTempl.status }} --plain" matTooltip="listing status: {{marketTempl.status}}" matTooltipPosition="before">
+                  <span class="status {{ marketTempl.status }} --plain" matTooltip="Listing {{marketTempl.status}}" matTooltipPosition="before">
                     <span class="dot"></span>
                   </span>
                   <span class="template-name">{{ marketTempl.title }}</span>
