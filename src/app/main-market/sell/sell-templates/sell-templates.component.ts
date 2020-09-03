@@ -298,6 +298,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
         if (!(+marketTemplateId > 0)) {
           this.allProducts.push(this.createDisplayableProductItem(newItem as ProductItem));
+          this.marketUpdateControl.setValue(null);
         } else {
           foundProduct.displayDetails.availableMarkets = foundProduct.displayDetails.availableMarkets.filter(
             am => am !== (newItem as ProductMarketTemplate).marketKey
