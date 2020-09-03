@@ -65,7 +65,7 @@
       </mat-select>
     </mat-form-field>
     <!-- Clear Product/Template filter -->
-    <button mat-button class="small clear-specific-filter" color="warn" (click)="this.filterBaseTemplateId.setValue(0)" [disabled]="!(+filterBaseTemplateId.value > 0)">
+    <button mat-button class="small clear-specific-filter" color="warn" (click)="this.filterBaseTemplateId.setValue(0)" *ngIf="+filterBaseTemplateId.value > 0">
       <mat-icon fontIcon="part-cross"></mat-icon>
       Clear filtering by Product
     </button>
@@ -158,20 +158,19 @@
 
           <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
             <div class="left">
-              <button mat-button matTooltip="Open Product listing details" (click)="navigateToTemplate(listing.idBaseTemplate, listing.marketKey)" class="small">
+              <button mat-button matTooltip="Open Product Listing details" (click)="navigateToTemplate(listing.idBaseTemplate, listing.marketKey)" class="small">
                 <mat-icon fontIcon="part-copy"></mat-icon>
-                Open Product Details
+                Show Product
               </button>
-              <button mat-button matTooltip="Edit product template" routerLink="new-listing" [queryParams]="{templateID: listing.idMarketTemplate}" class="small">
+              <button mat-button matTooltip="Edit Listing template" routerLink="new-listing" [queryParams]="{templateID: listing.idMarketTemplate}" class="small">
                 <mat-icon fontIcon="part-pen-1"></mat-icon>
-                Edit Product Template
+                Edit
               </button>
-              <button mat-button matTooltip="Open this listing" class="small" (click)="openPreview(listing.listingId)">
+              <button mat-button matTooltip="Open Listing details" class="small" (click)="openPreview(listing.listingId)">
                 <mat-icon fontIcon="part-zoom-in"></mat-icon>
-                Open Listing Details
+                Open
               </button>
             </div>
-
           </mat-action-row>
         </mat-expansion-panel><!-- .listing -->
       </mat-accordion>
