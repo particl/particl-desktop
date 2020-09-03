@@ -71,7 +71,7 @@
 <div class="listings section with-filter">
 
   <ng-container *ngIf="displayedProductIdxs.length > 0; else noTemplates">
-    <ng-container *ngFor="let templIdx of displayedProductIdxs">
+    <ng-container *ngFor="let templIdx of displayedProductIdxs; trackBy: trackByTemplateIdxFn">
       <mat-expansion-panel class="product list-item no-padding" *appVar="allProducts[templIdx] as product">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper">
@@ -184,7 +184,7 @@
             </button>
           </div>
           <div class="right">
-            <button [disabled]="product.displayDetails.availableMarkets.length === 0" mat-raised-button color="primary" (click)="openPublishProductModal(product.id)">
+            <button [disabled]="product.displayDetails.availableMarkets.length === 0" mat-raised-button color="primary" (click)="actionPublishProductToMarket(product.id)">
               <mat-icon fontIcon="part-rocket"></mat-icon>
               Publish on Market
             </button>

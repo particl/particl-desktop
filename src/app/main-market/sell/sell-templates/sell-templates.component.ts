@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, } from 'rxjs';
+import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, throwError, } from 'rxjs';
 import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -19,7 +19,7 @@ import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-m
 import { CloneTemplateModalInput, CloneTemplateModalComponent } from '../modals/clone-template-modal/clone-template-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 
-import { isBasicObjectType } from 'app/main-market/shared/utils';
+import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
 import { Market } from '../../services/data/data.models';
 import { ProductItem, TEMPLATE_STATUS_TYPE, ProductMarketTemplate } from '../sell.models';
 
@@ -58,7 +58,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   displayedProductIdxs: number[] = [];
   allProducts: DisplayableProductItem[] = [];
 
-  profileMarkets: {[key: string]: {name: string; identityId: number} } = {};
+  profileMarkets: {[key: string]: {id: number, name: string; identityId: number} } = {};
   activeIdentityMarkets: string[] = [];
 
   readonly sortCriteria: {title: string; value: string}[] = [
@@ -103,7 +103,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       this._sharedService.loadMarkets().pipe(
         tap(marketsList => {
           marketsList.forEach(market => {
-            this.profileMarkets[market.receiveAddress] = {name: market.name, identityId: market.identityId};
+            this.profileMarkets[market.receiveAddress] = {name: market.name, id: market.id, identityId: market.identityId};
           });
         }),
         catchError(() => of([] as Market[])),
@@ -213,103 +213,23 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   }
 
 
+  trackByTemplateIdxFn(idx: number, item: number) {
+    return item;
+  }
+
+
   actionCloneProduct(productId: number, marketTemplateId?: number): void {
-    const foundProduct = this.allProducts.find(p => p.id === productId);
-    if (!foundProduct) {
-      return;
-    }
-
-    let title = foundProduct.title;
-    const availableMarkets = [];
-
-    if (+marketTemplateId > 0) {
-      if (foundProduct.displayDetails.availableMarkets.length === 0) {
-        return;
-      }
-
-      const foundmarketTempl = foundProduct.markets.find(m => m.id === +marketTemplateId);
-
-      if (!foundmarketTempl) {
-        return;
-      }
-
-      title = foundmarketTempl.title;
-
-      foundProduct.displayDetails.availableMarkets.filter(
-        mkey => this.profileMarkets[mkey]
-      ).map(
-        mkey => ({id: this.profileMarkets[mkey].identityId, name: this.profileMarkets[mkey].name})
-      ).forEach(m => availableMarkets.push(m));
-    }
+    this.doCloneTemplate(productId, marketTemplateId).subscribe();
+  }
 
 
-    const modalData: CloneTemplateModalInput = {
-      templateTitle: title,
-      markets: availableMarkets
-    };
-
-    this._dialog.open(
-      CloneTemplateModalComponent,
-      {data: modalData}
-    ).afterClosed().pipe(
-      take(1),
-      concatMap((confirmationData) => iif(
-        () => isBasicObjectType(confirmationData),
-
-        iif(
-          () => confirmationData.isBaseClone,
-
-          defer(() => {
-            this._dialog.open(ProcessingModalComponent, {
-              disableClose: true,
-              data: { message: TextContent.CLONE_WAIT }
-            });
-            return this._sellService.cloneTemplateAsBaseProduct(productId);
-          }),
-
-          defer(() => iif(
-
-            () => (+confirmationData.marketId > 0) && (+confirmationData.categoryId > 0),
-
-            defer(() => {
-              this._dialog.open(ProcessingModalComponent, {
-                disableClose: true,
-                data: { message: TextContent.CLONE_WAIT }
-              });
-
-              return this._sellService.cloneTemplateAsMarketTemplate(
-                +marketTemplateId, +confirmationData.marketId, +confirmationData.categoryId
-              );
-            })
-
-          ))
-
-        ),
-      )),
-
-      finalize(() => this._dialog.closeAll())
-
-    ).subscribe(
-      (newItem: ProductItem | ProductMarketTemplate | null) => {
-        if (newItem === null) {
-          this._snackbar.open(TextContent.ERROR_CLONE_ITEM, 'warn');
-          return;
+  actionPublishProductToMarket(productId: number): void {
+    this.doCloneTemplate(productId, null, true).subscribe(
+      (marketTemplateId) => {
+        if (marketTemplateId > 0) {
+          this.openPublishExistingMarketModal(productId, marketTemplateId);
         }
-
-        if (!(+marketTemplateId > 0)) {
-          this.allProducts.push(this.createDisplayableProductItem(newItem as ProductItem));
-          this.marketUpdateControl.setValue(null);
-        } else {
-          foundProduct.displayDetails.availableMarkets = foundProduct.displayDetails.availableMarkets.filter(
-            am => am !== (newItem as ProductMarketTemplate).marketKey
-          );
-          foundProduct.markets.push(newItem as ProductMarketTemplate);
-        }
-
-        this.actionRefreshControl.setValue(null);
-      },
-
-      () => this._snackbar.open(TextContent.ERROR_CLONE_ITEM, 'warn')
+      }
     );
   }
 
@@ -386,15 +306,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     this._unlocker.unlock({timeout: 30}).pipe(
       concatMap(isUnlocked => iif(() => isUnlocked, openDialog$))
     ).subscribe();
-  }
-
-
-  openPublishProductModal(productId: number): void {
-    const foundProduct = this.allProducts.find(p => p.id === productId);
-
-    if (!foundProduct || foundProduct.markets.length === foundProduct.displayDetails.availableMarkets.length) {
-      return;
-    }
   }
 
 
@@ -503,6 +414,114 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       }
     };
     return dp;
+  }
+
+
+  private doCloneTemplate(productId: number, marketTemplateId?: number, cloneToMarket?: boolean): Observable<number> {
+    const foundProduct = this.allProducts.find(p => p.id === productId);
+
+    if (!foundProduct) {
+      return of (0);
+    }
+
+    let title = foundProduct.title;
+    const availableMarkets = [];
+    const cloningToMarket = (+marketTemplateId > 0) || (getValueOrDefault(cloneToMarket, 'boolean', false));
+
+    if (cloningToMarket) {
+      if (foundProduct.displayDetails.availableMarkets.length === 0) {
+        return of(0);
+      }
+
+      if (+marketTemplateId > 0) {
+        const foundmarketTempl = foundProduct.markets.find(m => m.id === +marketTemplateId);
+
+        if (!foundmarketTempl) {
+          return of(0);
+        }
+
+        title = foundmarketTempl.title;
+      }
+
+      foundProduct.displayDetails.availableMarkets.filter(
+        mkey => this.profileMarkets[mkey]
+      ).map(
+        mkey => ({id: this.profileMarkets[mkey].id, name: this.profileMarkets[mkey].name})
+      ).forEach(m => availableMarkets.push(m));
+    }
+
+    const modalData: CloneTemplateModalInput = {
+      templateTitle: title,
+      markets: availableMarkets
+    };
+
+    return this._dialog.open(
+      CloneTemplateModalComponent,
+      {data: modalData}
+    ).afterClosed().pipe(
+      take(1),
+      concatMap((confirmationData) => iif(
+        () => isBasicObjectType(confirmationData),
+
+        iif(
+          () => confirmationData.isBaseClone,
+
+          defer(() => {
+            const dialog = this._dialog.open(ProcessingModalComponent, {
+              disableClose: true,
+              data: { message: TextContent.CLONE_WAIT }
+            });
+            return this._sellService.cloneTemplateAsBaseProduct(productId).pipe(finalize(() => dialog.close()));
+          }),
+
+          defer(() => iif(
+
+            () => (+confirmationData.marketId > 0) && (+confirmationData.categoryId > 0),
+
+            defer(() => {
+              const dialog = this._dialog.open(ProcessingModalComponent, {
+                disableClose: true,
+                data: { message: TextContent.CLONE_WAIT }
+              });
+
+              // clone either the product or the market template to the market (preference given to marke template if set)
+              const idToClone = +marketTemplateId > 0 ? +marketTemplateId : productId;
+
+              return this._sellService.cloneTemplateAsMarketTemplate(
+                idToClone, +confirmationData.marketId, +confirmationData.categoryId
+              ).pipe(finalize(() => dialog.close()));
+            })
+
+          ))
+
+        ),
+      )),
+
+      catchError(() => of(null)),
+
+      tap((newItem: ProductItem | ProductMarketTemplate | null) => {
+        if (newItem === null) {
+          this._snackbar.open(TextContent.ERROR_CLONE_ITEM, 'warn');
+          return;
+        }
+
+        if (!cloningToMarket) {
+          // is a ProductItem type created
+          this.allProducts.push(this.createDisplayableProductItem(newItem as ProductItem));
+          this.marketUpdateControl.setValue(null);
+        } else {
+          // is a ProductMarketTemplate type created
+          foundProduct.displayDetails.availableMarkets = foundProduct.displayDetails.availableMarkets.filter(
+            am => am !== (newItem as ProductMarketTemplate).marketKey
+          );
+          foundProduct.markets.push(newItem as ProductMarketTemplate);
+        }
+
+        this.actionRefreshControl.setValue(null);
+      }),
+
+      map((newItem: ProductItem | ProductMarketTemplate | null) => newItem === null ? 0 : newItem.id)
+    );
   }
 
 }
