@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, throwError, } from 'rxjs';
+import { Subject, of, Observable, defer, forkJoin, merge, timer, iif } from 'rxjs';
 import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -69,6 +70,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   searchQuery: FormControl = new FormControl('');
   sortOrder: FormControl = new FormControl('updated');
+  filterBaseTemplateId: FormControl = new FormControl(0);
 
 
   private destroy$: Subject<void> = new Subject();
@@ -80,6 +82,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
   constructor(
     private _cdr: ChangeDetectorRef,
+    private _route: ActivatedRoute,
     private _store: Store,
     private _sellService: SellService,
     private _sharedService: DataService,
@@ -90,6 +93,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+
+    const initParams = this._route.snapshot.queryParams;
+
+    if (+initParams['TemplatesBaseTemplateID'] > 0) {
+      this.filterBaseTemplateId.setValue(+initParams['TemplatesBaseTemplateID']);
+    }
 
     const walletChange$ = this._store.select(MarketState.currentIdentity).pipe(
       tap(identity => {
@@ -144,7 +153,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       init$,
       search$,
       orderBy$,
-      this.actionRefreshControl.valueChanges.pipe(takeUntil(this.destroy$))
+      this.actionRefreshControl.valueChanges.pipe(takeUntil(this.destroy$)),
+      this.filterBaseTemplateId.valueChanges.pipe(takeUntil(this.destroy$))
     ).pipe(
       switchMap(() => this.updateProductDisplay()),
       tap((displayIndexes) => {
@@ -344,9 +354,11 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     return defer(() => {
       const searchString = this.searchQuery.value.toLowerCase();
       const sortBy = this.sortOrder.value;
+      const productIdFilter = this.filterBaseTemplateId.value;
 
       const indexes = this.allProducts.map(
-        (templ, idx) => templ.title.toLowerCase().includes(searchString) ? idx : -1
+        (prod, idx) => prod.title.toLowerCase().includes(searchString) && (productIdFilter > 0 ? prod.id === productIdFilter : true) ?
+          idx : -1
       ).filter(
         idx => (idx > -1)
       ).sort(

@@ -50,6 +50,12 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- Clear Product/Template filter -->
+    <button mat-button class="small clear-specific-filter" color="warn" (click)="this.filterBaseTemplateId.setValue(0)" [disabled]="!(+filterBaseTemplateId.value > 0)">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Clear filtering by Product
+    </button>
+
   </mat-card><!-- .filter-card -->
 
   <!-- <h2 class="section-title">
