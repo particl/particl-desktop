@@ -284,7 +284,7 @@ interface Proposal {
   expiredAt: number;
   updatedAt: number;
   createdAt: number;
-  ProposalOptions: Array<{
+  proposalOptions: Array<{
     id: number;
     proposalId: number;
     optionId: number;
@@ -538,7 +538,7 @@ export interface RespVoteGet {
   expiredAt: number;
   createdAt: number;
   updatedAt: number;
-  ProposalOptions: {
+  proposalOptions: {
     id: number;
     proposalId: number;
     optionId: number;

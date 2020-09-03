@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, Inject, ChangeDetectionStrategy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { GalleryItem, ImageItem } from '@ngx-gallery/core';
-import { Observable, Subject, timer, iif, defer, of } from 'rxjs';
-import { takeUntil, tap, take, concatMap, map, finalize, concatAll, catchError } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { Observable, Subject, timer, iif, defer, of, merge } from 'rxjs';
+import { takeUntil, tap, concatMap, finalize, catchError, switchMap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 import { ListingDetailService } from './listing-detail.service';
@@ -10,6 +11,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { ListingItemDetail } from './listing-detail.models';
+import { isBasicObjectType, getValueOrDefault } from '../utils';
 
 
 type InitialTabSelectionType = 'default' | 'chat';
@@ -49,14 +51,6 @@ export interface ListingItemDetailInputs {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ListingDetailModalComponent implements OnInit, OnDestroy {
-
-  private static isObject(obj: any): boolean {
-    return Object.prototype.toString.call(obj) === '[object Object]';
-  }
-
-  private static isArray(obj: any): boolean {
-    return Array.isArray(obj);
-  }
 
   @Output() eventFavouritedItem: EventEmitter<number> = new EventEmitter();
   @Output() eventFlaggedItem: EventEmitter<string> = new EventEmitter();
@@ -129,6 +123,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private selectedMarketId: number = 0;
   private isActioning: boolean = false;
+  private flagProposalControl: FormControl = new FormControl('');
 
 
   constructor(
@@ -140,27 +135,23 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     private _unlocker: WalletEncryptionService
   ) {
 
-    const isInputValuesObject = ListingDetailModalComponent.isObject(data);
-
+    const isInputValuesObject = isBasicObjectType(data);
     const userDestinationCountry = this._store.selectSnapshot(MarketState.settings).userRegion;
 
-    const input: ListingItemDetail = isInputValuesObject &&
-        ListingDetailModalComponent.isObject(data.listing) ?
-        JSON.parse(JSON.stringify(data.listing)) : {};
+    const input: ListingItemDetail = isInputValuesObject && isBasicObjectType(data.listing) ? JSON.parse(JSON.stringify(data.listing)) : {};
 
     if (typeof input.marketId === 'number' && input.marketId > 0) {
       this.selectedMarketId = input.marketId;
     }
 
-    const inputCategory = ListingDetailModalComponent.isObject(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
-    const inputEscrow = ListingDetailModalComponent.isObject(input.escrow) ? input.escrow : { buyerRatio: 0};
-    const inputTimeValues = ListingDetailModalComponent.isObject(input.timeData) ? input.timeData : { created: 0, expires: 0};
-    const inputExtras = ListingDetailModalComponent.isObject(input.extra) ?
-        input.extra : { isOwn: false, favouriteId: 0, flaggedProposal: '' };
+    const inputCategory = isBasicObjectType(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
+    const inputEscrow = isBasicObjectType(input.escrow) ? input.escrow : { buyerRatio: 0};
+    const inputTimeValues = isBasicObjectType(input.timeData) ? input.timeData : { created: 0, expires: 0};
+    const inputExtras = isBasicObjectType(input.extra) ? input.extra : { isOwn: false, favouriteId: 0, flaggedProposal: '' };
 
     // Validate and extract images
-    const isImagesObject = ListingDetailModalComponent.isObject(input.images);
-    let inputImages = !isImagesObject || !ListingDetailModalComponent.isArray(input.images.images) ?
+    const isImagesObject = isBasicObjectType(input.images);
+    let inputImages = !isImagesObject || !Array.isArray(input.images.images) ?
         [] :
         input.images.images.filter(img => (typeof img.THUMBNAIL === 'string') && (typeof img.IMAGE === 'string'));
 
@@ -178,9 +169,9 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     }
 
     // Validate and extract shipping info
-    const isShipSource = ListingDetailModalComponent.isObject(input.shippingFrom);
+    const isShipSource = isBasicObjectType(input.shippingFrom);
     const shipSource = isShipSource && (typeof input.shippingFrom.name === 'string') ? input.shippingFrom.name : '';
-    const isShipDests = ListingDetailModalComponent.isArray(input.shippingTo);
+    const isShipDests = Array.isArray(input.shippingTo);
     const shipDests: string[] = [];
     const isLocalShipping = userDestinationCountry.length > 0 &&
         userDestinationCountry === (isShipSource && (typeof input.shippingFrom.code === 'string') ? input.shippingFrom.code : '');
@@ -199,7 +190,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     canShip = canShip || (userDestinationCountry.length === 0) || (shipDests.length === 0);
 
     // Validate and extract initial pricing info
-    const inputPrice = ListingDetailModalComponent.isObject(input.price) ? input.price : { base: 0, shippingDomestic: 0, shippingIntl: 0};
+    const inputPrice = isBasicObjectType(input.price) ? input.price : { base: 0, shippingDomestic: 0, shippingIntl: 0};
     const shipBasePrice = new PartoshiAmount(+inputPrice.base, true);
     const shipLocalPrice = new PartoshiAmount(+inputPrice.shippingDomestic, true);
     const shipIntlPrice = new PartoshiAmount(+inputPrice.shippingIntl, true);
@@ -248,8 +239,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       isOwner: typeof inputExtras.isOwn === 'boolean' ? inputExtras.isOwn : false,
       favouriteId:  typeof inputExtras.favouriteId === 'number' ? inputExtras.favouriteId : 0,
       governance: {
-        proposalHash: typeof inputExtras.flaggedProposal === 'string' && inputExtras.flaggedProposal.length > 0 ?
-            inputExtras.flaggedProposal : '',
+        proposalHash: '',
         voteCast: -1,
         voteOptionKeep: -1,
         voteOptionRemove: -1
@@ -274,81 +264,85 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     }
   }
 
+
   ngOnInit() {
 
-    const voteDetail$ = defer(() =>
-      this._detailsService.fetchVotingAction(this.selectedMarketId, this.details.governance.proposalHash).pipe(
-        tap((resp) => {
-          if (
-            ListingDetailModalComponent.isObject(resp) &&
-            ListingDetailModalComponent.isObject(resp.votedProposalOption)
-          ) {
-
-            if (ListingDetailModalComponent.isArray(resp.ProposalOptions)) {
-              resp.ProposalOptions.forEach(po => {
-                if (po && po.description === 'KEEP') {
-                  this.details.governance.voteOptionKeep = +po.optionId >= 0 ? +po.optionId : -1;
-                }
-                if (po && po.description === 'REMOVE') {
-                  this.details.governance.voteOptionRemove = +po.optionId >= 0 ? +po.optionId : -1;
-                }
-              });
-
-              if ((typeof resp.votedProposalOption.Proposal.hash === 'string') && (this.details.governance.proposalHash.length === 0)) {
-                this.details.governance.proposalHash = resp.votedProposalOption.Proposal.hash;
-              }
-            }
-
-            if (typeof resp.votedProposalOption.optionId === 'number') {
-              this.details.governance.voteCast = resp.votedProposalOption.optionId;
-            }
-          }
-
-          this.displayActions.governance = true;
-        }),
-        tap(() => this._cdr.detectChanges())
-      )
-    );
-
-
     const query$ = [];
+    const hasSetActions = isBasicObjectType(this.data) && isBasicObjectType(this.data.displayActions);
+    const doDisplayGovernance = hasSetActions &&
+        getValueOrDefault(this.data.displayActions.governance, 'boolean', false) &&
+        (this.selectedMarketId > 0);
+    const providedProposalHash = isBasicObjectType(this.data) &&
+        isBasicObjectType(this.data.listing) &&
+        isBasicObjectType(this.data.listing.extra) ? getValueOrDefault(this.data.listing.extra.flaggedProposal, 'string', '') : '';
 
-    if (ListingDetailModalComponent.isObject(this.data) &&
-          ListingDetailModalComponent.isObject(this.data.displayActions) &&
-          (this.details.id > 0) &&
-          !this.itemExpiry.hasExpired
-    ) {
-      this.displayActions.cart = typeof this.data.displayActions.cart === 'boolean' ?
-          this.data.displayActions.cart : this.displayActions.cart;
+    if ( hasSetActions ) {
+      this.displayActions.cart = getValueOrDefault(this.data.displayActions.cart, 'boolean', this.displayActions.cart);
+      this.displayActions.fav = getValueOrDefault(this.data.displayActions.fav, 'boolean', this.displayActions.fav);
+      this.displayActions.governance = doDisplayGovernance;
 
-      this.displayActions.fav = (typeof this.data.displayActions.fav === 'boolean') ?
-          this.data.displayActions.fav : this.displayActions.fav;
+      if (doDisplayGovernance) {
 
-      if ((this.selectedMarketId > 0) &&
-          (typeof this.data.displayActions.governance === 'boolean') &&
-          this.data.displayActions.governance
-      ) {
-        if (this.details.governance.proposalHash.length > 0) {
-          // fetch the selected vote first
-          query$.push(voteDetail$.pipe(catchError(() => of())));
+        const flagChange$ = this.flagProposalControl.valueChanges.pipe(
+          switchMap((hashValue: string) => {
 
-        } else {
+            if (hashValue && !this.details.governance.proposalHash) {
+              this.details.governance.proposalHash = hashValue;
 
-          this.displayActions.governance = true;
-          // set up listener for flagged messages, so we know how the user voted
-          this._detailsService.getListenerFlaggedItem(this.details.hash).pipe(
-            map((resp) => {
-              if (this.details.governance.proposalHash.length === 0) {
-                this.details.governance.proposalHash = resp.hash;
-                this._cdr.detectChanges();
+              this.eventFlaggedItem.emit(hashValue);
+
+              if ((this.details.governance.voteOptionKeep >= 0) && (this.details.governance.voteOptionRemove >= 0)) {
+                return of(hashValue);
               }
-              return (this.details.governance.voteOptionKeep < 0) || (this.details.governance.voteOptionRemove < 0);
-            }),
-            concatMap((getVoteOptions) => iif(() => getVoteOptions, voteDetail$)),
-            take(1),
-            takeUntil(this.destroy$)
-          ).subscribe();
 
+              // options are missing, so fetch the available options (along with which option, if any, the user has previously selected)
+              return this._detailsService.fetchVotingAction(this.selectedMarketId, this.details.governance.proposalHash).pipe(
+                tap((voteData) => {
+
+                  if ( !isBasicObjectType(voteData) || !isBasicObjectType(voteData.votedProposalOption) ) {
+                    return;
+                  }
+
+                  if (Array.isArray(voteData.proposalOptions)) {
+                    voteData.proposalOptions.forEach(po => {
+
+                      if (po && po.description === 'KEEP') {
+                        this.details.governance.voteOptionKeep = +po.optionId >= 0 ?
+                          +po.optionId : this.details.governance.voteOptionKeep;
+                      }
+                      if (po && po.description === 'REMOVE') {
+                        this.details.governance.voteOptionRemove = +po.optionId >= 0 ?
+                          +po.optionId : this.details.governance.voteOptionRemove;
+                      }
+                    });
+                  }
+
+                  if (+voteData.votedProposalOption.optionId >= 0) {
+                    this.details.governance.voteCast = voteData.votedProposalOption.optionId;
+                  }
+                }),
+                tap(() => this._cdr.detectChanges())
+              );
+            }
+
+            return of(hashValue);
+          }),
+          takeUntil(this.destroy$)
+        );
+
+        query$.push(flagChange$);
+
+        if (!providedProposalHash) {
+          // item has not been flagged, so listen for any incoming indication to indicate differently
+          query$.push(
+            this._detailsService.getListenerFlaggedItem(this.details.hash).pipe(
+              tap((flagMsg) => {
+                if (isBasicObjectType(flagMsg) && (typeof flagMsg.hash === 'string')) {
+                  this.flagProposalControl.setValue(flagMsg.hash);
+                }
+              })
+            )
+          );
         }
       }
     }
@@ -361,7 +355,9 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
             if (now > this.itemExpiry.timestamp) {
               this.itemExpiry.hasExpired = true;
               this.itemExpiry.isSoon = false;
-              this.displayActions.governance = false;
+              if (this.displayActions.governance) {
+                this.details.governance.voteCast = NaN;
+              }
               this.displayActions.fav = false;
               this.destroy$.next();
             } else if (!this.itemExpiry.isSoon && this.isExpiringSoon(now, this.itemExpiry.timestamp)) {
@@ -378,11 +374,21 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
           takeUntil(this.destroy$)
         )
       );
+    } else {
+      if (this.displayActions.governance) {
+        this.details.governance.voteCast = NaN;
+      }
     }
 
     if (query$.length > 0) {
-      of(...query$).pipe(concatAll()).subscribe();
+      merge(...query$).subscribe();
     }
+
+    // Action the provided proposal value.
+    //  NB! From code above, no flagged message listener is set if this value exists. Which makes sense because we don't need to listen for
+    //  incoming flagged messages if its known that the item is already flagged.
+    //  However, still need to fetch the user vote and available options.
+    this.flagProposalControl.setValue(providedProposalHash);
   }
 
 
@@ -403,27 +409,16 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         () => unlocked,
         defer(() => this._detailsService.reportItem(this.details.id).pipe(
           tap((proposalHash) => {
-            if (proposalHash.length > 0) {
-              this.details.governance.proposalHash = proposalHash;
-              this._cdr.detectChanges();
-            } else {
-              this._snackbar.open(TextContent.FLAG_SET_FAILED, 'warn');
-            }
+            this.flagProposalControl.setValue(proposalHash);
           })
         ))
       )),
-      finalize(() => this.isActioning = false)
-    ).subscribe(
-      null,
-      () => {
+      catchError(() => {
         this._snackbar.open(TextContent.FLAG_SET_FAILED, 'warn');
-      },
-      () => {
-        if (this.details.governance.proposalHash.length > 0) {
-          this.eventFlaggedItem.emit(this.details.governance.proposalHash);
-        }
-      }
-    );
+        return of('');
+      }),
+      finalize(() => this.isActioning = false)
+    ).subscribe();
   }
 
 
