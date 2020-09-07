@@ -40,7 +40,7 @@ function minProductsSelectedValidator(): ValidatorFn {
 
 
 export interface BatchPublishModalInputs {
-  markets: {id: number; name: string}[];
+  markets: {id: number; name: string, key: string}[];
   products: BatchPublishProductItem[];
 }
 
@@ -51,7 +51,7 @@ export interface BatchPublishModalInputs {
 })
 export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
-  readonly availableMarkets: Array<{id: number; name: string}> = [];
+  readonly availableMarkets: Array<{id: number; name: string, key: string}> = [];
   readonly availableProducts: BatchPublishProductItem[] = [];
   readonly categories$: Observable<{id: number, name: string}[]>;
 
@@ -107,7 +107,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
     if (isBasicObjectType(this.data)) {
       if (Array.isArray(this.data.markets)) {
         this.data.markets.forEach(m => {
-          if (isBasicObjectType(m) && (typeof m.id === 'number') && (typeof m.name === 'string')) {
+          if (isBasicObjectType(m) && (typeof m.id === 'number') && (typeof m.name === 'string') && (typeof m.key === 'string')) {
             this.availableMarkets.push(m);
           }
         });
@@ -298,8 +298,15 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
   private async publishProducts(): Promise<void> {
     const selectedMarketId = +this.batchPublishForm.get('selectedMarket').value;
+    const selectedMarket = this.availableMarkets.find(m => m.id === selectedMarketId);
+
+    if (!selectedMarket) {
+      this.isProcessingControl.setValue(false);
+      return;
+    }
+
     const selectedDuration = +this.batchPublishForm.get('selectedDuration').value;
-    const productsToProcess: [number, number, number, number, number][] = [];
+    const productsToProcess: [number, number, number, number][] = [];
 
     const productControls = this.formAvailableProducts.controls;
 
@@ -308,7 +315,6 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
         productsToProcess.push([
           productIndex,  // for ease of reference later
           product.id,
-          selectedMarketId,
           +(productControls[productIndex] as FormArray).at(1).value,
           selectedDuration
         ]);
@@ -324,28 +330,27 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       const detailsToPublish = productsToProcess[ii];
       const productIndex = detailsToPublish[0];
       const productId = detailsToPublish[1];
-      const marketId = detailsToPublish[2];
-      const categoryId = detailsToPublish[3];
-      const duration = detailsToPublish[4];
+      const categoryId = detailsToPublish[2];
+      const duration = detailsToPublish[3];
 
       await this._sellService.batchPublishProductToMarket(
         productId,
-        marketId,
+        {id: selectedMarketId, key: selectedMarket.key},
         categoryId,
         duration
-      ).toPromise().then(
+      ).then(
         (resp) => {
 
           // Update the product with the current selected market/category values (avoids needing a complicated data "refresh")
 
-          const foundMarket = this.availableProducts[productIndex].existingMarkets.find(m => m.marketId === marketId);
+          const foundMarket = this.availableProducts[productIndex].existingMarkets.find(m => m.marketId === selectedMarketId);
 
           if (foundMarket) {
             foundMarket.categoryId = categoryId;
           } else {
             this.availableProducts[productIndex].existingMarkets.push({
-              marketId,
-              categoryId
+              categoryId,
+              marketId: selectedMarketId
             });
           }
 

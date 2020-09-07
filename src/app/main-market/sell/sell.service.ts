@@ -346,8 +346,126 @@ export class SellService {
   }
 
 
-  batchPublishProductToMarket(productId: number, marketId: number, categoryId: number, durationDays: number): Observable<boolean> {
-    return throwError(() => 'NOT IMPLEMENTED');
+  async batchPublishProductToMarket(
+    productId: number, market: {id: number, key: string}, categoryId: number, durationDays: number
+  ): Promise<boolean> {
+
+    /**
+     * One may wonder: WTF do we need both a market id and a market key for?
+     *
+     * Well, once upon a time there was a magical little database.
+     * Anybody happening past the little database, and making the right calling sound, would receive a plan for a great wonder,
+     * that would make the caller riches beyond their wildest dreams.
+     * Unfortunately, the riches were dependant on exactly where the great wonder was built. Luckily, the plan included
+     * the location details as well. Or so it seemed...
+     * However, when asking the magical little database to help in creating such a wonder from this magical plan, it wanted the
+     * potential builder to be an elightened one, and so expected that the location for this wonder of humanity was provided in a different
+     * format. Only the true hero would magically figure out how to get from the cryptic location mentioned to them, to getting the
+     * correct location value to give back to the little database.
+     *
+     * The End
+     *
+     * NB! If the next of the elightened is about to suggest that the first of the elightened should have known to make another call here to
+     * get the conversion map... please understand that the first of the enlightened that build the great wonders actually
+     * was truly enlightened and realized that this was nonsensical.
+     * Because making such a call for each and every wonder they were tasked with building was a waste and required unnecessary
+     * mental energy and processing. Much better to have the kingdom for which they were working (and hopefully already had such a map)
+     * to provide this for them instead. No map... no work. It was a tacky solution, if such was the magical database, then such
+     * brittle and flaky solutions were acceptable.
+     *
+     * And yes, my story telling sucks furry balls. Lesson though: consistency is key!
+     *
+     */
+
+    const productTemplate = await this.fetchProductTemplate(productId).toPromise();
+    if (!isBasicObjectType(productTemplate) || (+productTemplate.id !== productId)) {
+      throw new Error('Invalid product id: not a product');
+    }
+
+    let latestMarketTempl: RespListingTemplate;
+
+    if (Array.isArray(productTemplate.ChildListingItemTemplates)) {
+      const baseChild = productTemplate.ChildListingItemTemplates.find(mTempl =>
+        isBasicObjectType(mTempl) && (+mTempl.id > 0) && mTempl.market === market.key
+      );
+
+      if (baseChild) {
+
+        const currentMarketTempl = await this.fetchProductTemplate(+baseChild.id).toPromise();
+
+        if (!isBasicObjectType(currentMarketTempl) || (+currentMarketTempl.id !== +baseChild.id)) {
+          throw new Error('Invalid sourced market template');
+        }
+
+        if (Array.isArray(currentMarketTempl.ChildListingItemTemplates) && (currentMarketTempl.ChildListingItemTemplates.length > 0)) {
+
+          const latestChild = currentMarketTempl.ChildListingItemTemplates.filter(basicChild =>
+            isBasicObjectType(basicChild) && (+basicChild.id > 0)
+          ).sort((a, b) => b.id - a.id)[0];
+
+          if (latestChild) {
+            const recentEdited = await this.fetchProductTemplate(+latestChild.id).toPromise();
+
+            if (isBasicObjectType(recentEdited) && (+recentEdited.id === +latestChild.id)) {
+              latestMarketTempl = recentEdited;
+            }
+          }
+        } else {
+          latestMarketTempl = currentMarketTempl;
+        }
+
+        if (latestMarketTempl === undefined) {
+          throw new Error('Invalid sourced market template');
+        }
+      }
+    }
+
+    // market template with the relevant marketKey was not found. Need to clone the baseTemplate to create a marketTemplate
+    if (latestMarketTempl === undefined) {
+      const clonedTempl = await this.cloneTemplate(productId, market.id).toPromise();
+
+      if (!isBasicObjectType(clonedTempl) || !(+clonedTempl.id > 0)) {
+        throw new Error('Invalid cloned market template');
+      }
+
+      latestMarketTempl = clonedTempl;
+    }
+
+    // Check that the latest market template has the specified category id set
+    if (!isBasicObjectType(latestMarketTempl.ItemInformation)) {
+      throw new Error('Invalid template information');
+    }
+
+    if (latestMarketTempl.ItemInformation.itemCategoryId !== categoryId) {
+      // IF template hash is set, then clone template since template cannot be modified
+
+      if (getValueOrDefault(latestMarketTempl.hash, 'string', '').length > 0) {
+
+        const clonedTempl = await this.cloneTemplate(+latestMarketTempl.id, market.id).toPromise();
+
+        if (!isBasicObjectType(clonedTempl) || !(+clonedTempl.id > 0)) {
+          throw new Error('Invalid cloned market template');
+        }
+
+        latestMarketTempl = clonedTempl;
+      }
+
+      await this._rpc.call('information', [
+        'update',
+        +latestMarketTempl.id,
+        getValueOrDefault(latestMarketTempl.ItemInformation.title, 'string', ''),
+        getValueOrDefault(latestMarketTempl.ItemInformation.shortDescription, 'string', ''),
+        getValueOrDefault(latestMarketTempl.ItemInformation.longDescription, 'string', ''),
+        categoryId
+      ]).toPromise();
+    }
+
+    const success = await this.publishMarketTemplate(+latestMarketTempl.id, durationDays).toPromise();
+
+    if (!success) {
+      throw new Error('Publish Failed');
+    }
+    return success;
   }
 
 

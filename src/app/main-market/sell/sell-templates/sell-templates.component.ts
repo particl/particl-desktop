@@ -324,7 +324,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     const modalData: BatchPublishModalInputs = {
       markets: Object.keys(this.profileMarkets).map(mkey => ({
         id: this.profileMarkets[mkey].id,
-        name: this.profileMarkets[mkey].name
+        name: this.profileMarkets[mkey].name,
+        key: mkey
       })),
       products: this.allProducts.map(p => ({
         id: p.id,
