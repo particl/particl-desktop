@@ -14,7 +14,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 import { DeleteTemplateModalComponent } from '../modals/delete-template-modal/delete-template-modal.component';
-import { BatchPublishModalComponent} from '../modals/batch-publish-modal/batch-publish-modal.component';
+import { BatchPublishModalComponent, BatchPublishModalInputs } from '../modals/batch-publish-modal/batch-publish-modal.component';
 import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../modals/publish-template-modal/publish-template-modal.component';
 import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
 import { CloneTemplateModalInput, CloneTemplateModalComponent } from '../modals/clone-template-modal/clone-template-modal.component';
@@ -320,7 +320,25 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
   openBatchPublishModal(): void {
+
+    const modalData: BatchPublishModalInputs = {
+      markets: Object.keys(this.profileMarkets).map(mkey => ({
+        id: this.profileMarkets[mkey].id,
+        name: this.profileMarkets[mkey].name
+      })),
+      products: this.allProducts.map(p => ({
+        id: p.id,
+        name: p.title,
+        image: p.images[0],
+        existingMarkets: p.markets.map(pm => ({
+          marketId: this.profileMarkets[pm.marketKey] ? this.profileMarkets[pm.marketKey].id : 0,
+          categoryId: +pm.categoryId
+        }))
+      }))
+    };
+
     this._dialog.open(BatchPublishModalComponent, {
+      data: modalData,
       disableClose: true
     });
   }

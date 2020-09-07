@@ -11,6 +11,14 @@ import {
 } from '../shared/market.models';
 
 
+export const PublishDurations = [
+  { title: '1 day', value: 1 },
+  { title: '2 days', value: 2 },
+  { title: '4 days', value: 4 },
+  { title: '1 week', value: 7 }
+];
+
+
 export enum TEMPLATE_STATUS_TYPE {
   UNKNOWN = 'unknown',
   UNPUBLISHED = 'unpublished',
@@ -129,6 +137,7 @@ export interface ProductMarketTemplate {
   title: string;
   marketKey: string;
   categoryName: string;
+  categoryId: number;
   priceBase: PriceItem;
   hash: string;
   created: number;
@@ -154,4 +163,15 @@ export interface ProductItem {
   priceShippingIntl: PriceItem;
   sourceLocation: string;
   markets: ProductMarketTemplate[];
+}
+
+
+export interface BatchPublishProductItem {
+  id: number;
+  name: string;
+  image: string;
+  existingMarkets: {
+    marketId: number;
+    categoryId: number;
+  }[];
 }

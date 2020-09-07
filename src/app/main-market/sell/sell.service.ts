@@ -346,6 +346,11 @@ export class SellService {
   }
 
 
+  batchPublishProductToMarket(productId: number, marketId: number, categoryId: number, durationDays: number): Observable<boolean> {
+    return throwError(() => 'NOT IMPLEMENTED');
+  }
+
+
   deleteTemplate(templateId: number): Observable<boolean> {
     return this._rpc.call('template', ['remove', templateId]).pipe(
       mapTo(true),
@@ -789,6 +794,7 @@ export class SellService {
       priceBase: {whole: '', sep: '', fraction: ''},
       marketKey: '',
       categoryName: '',
+      categoryId: 0,
       hash: '',
       status: TEMPLATE_STATUS_TYPE.UNPUBLISHED,
       created: 0,
@@ -816,6 +822,9 @@ export class SellService {
       if (isBasicObjectType(src.ItemInformation.ItemCategory)) {
         newMarketDetails.categoryName = getValueOrDefault(
           src.ItemInformation.ItemCategory.name, 'string', newMarketDetails.categoryName
+        );
+        newMarketDetails.categoryId = getValueOrDefault(
+          src.ItemInformation.ItemCategory.id, 'number', newMarketDetails.categoryId
         );
       }
     }

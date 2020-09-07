@@ -12,6 +12,7 @@ import { WalletUTXOState } from 'app/main/store/main.state';
 import { SellService } from '../../sell.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
+import { PublishDurations } from '../../sell.models';
 import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
 
 
@@ -45,12 +46,10 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
   formIsValid: FormControl = new FormControl(false);
 
   readonly templateDetails: TemplateDetails;
-  readonly availableDurations: Array<{title: string; value: number, estimateFee: number }> = [
-    { title: '1 day', value: 1, estimateFee: -1 },
-    { title: '2 days', value: 2, estimateFee: -1 },
-    { title: '4 days', value: 4, estimateFee: -1 },
-    { title: '1 week', value: 7, estimateFee: -1 }
-  ];
+
+  readonly availableDurations: Array<{title: string; value: number, estimateFee: number }> = PublishDurations.map(
+    pd => ({...pd, estimateFee: -1})
+  );
 
 
   private destroy$: Subject<void> = new Subject();
