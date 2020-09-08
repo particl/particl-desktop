@@ -59,7 +59,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   displayedProductIdxs: number[] = [];
   allProducts: DisplayableProductItem[] = [];
 
-  profileMarkets: {[key: string]: {id: number, name: string; identityId: number} } = {};
+  profileMarkets: {[key: string]: {id: number, name: string; identityId: number, image: string} } = {};
   activeIdentityMarkets: string[] = [];
 
   readonly sortCriteria: {title: string; value: string}[] = [
@@ -112,7 +112,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       this._sharedService.loadMarkets().pipe(
         tap(marketsList => {
           marketsList.forEach(market => {
-            this.profileMarkets[market.receiveAddress] = {name: market.name, id: market.id, identityId: market.identityId};
+            this.profileMarkets[market.receiveAddress] = {
+              name: market.name,
+              id: market.id,
+              identityId: market.identityId,
+              image: market.image
+            };
           });
         }),
         catchError(() => of([] as Market[])),
@@ -245,16 +250,22 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const selectedMarket = this.profileMarkets[marketTempl.marketKey];
+
     const openDialog$ = defer(() => {
       const modalData: PublishTemplateModalInputs = {
         templateID: marketTemplId,
         title: marketTempl.title,
-        marketName: this.profileMarkets[marketTempl.marketKey] ? this.profileMarkets[marketTempl.marketKey].name : '',
+        marketName: selectedMarket ? selectedMarket.name : '',
         categoryName: marketTempl.categoryName
       };
 
       if (marketTempl.image.length) {
         modalData.templateImage = marketTempl.image;
+      }
+
+      if (selectedMarket.image) {
+        modalData.marketImage = selectedMarket.image;
       }
 
       const dialog = this._dialog.open(

@@ -14,6 +14,7 @@ export interface Market {
   type: MarketType;
   receiveAddress: string;
   identityId: number;
+  image: string;
 }
 
 

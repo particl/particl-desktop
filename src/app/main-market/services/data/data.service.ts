@@ -25,6 +25,7 @@ enum TextContent {
 export class DataService {
 
   private marketAddresses: string[];
+  private defaultMarketImage: string;
 
   constructor(
     private _rpc: MarketRpcService,
@@ -34,6 +35,8 @@ export class DataService {
     if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
       this.marketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
     }
+
+    this.defaultMarketImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
   }
 
 
@@ -61,7 +64,10 @@ export class DataService {
               name: this.marketAddresses.includes(market.receiveAddress) ? TextContent.OPEN_MARKET_NAME : market.name,
               type: market.type,
               receiveAddress: market.receiveAddress,
-              identityId: +market.identityId});
+              identityId: +market.identityId,
+              // TODO: set this correctly when market images are available
+              image: this.defaultMarketImage
+            });
           }
         }
         return filteredMarkets;

@@ -284,6 +284,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
             templateID: this.savedTempl.id,
             title: this.savedTempl.savedDetails.title,
             marketName: selectedMarket[0].name,
+            marketImage: selectedMarket[0].image,
             categoryName: this.savedTempl.marketDetails.category.name
           };
 
