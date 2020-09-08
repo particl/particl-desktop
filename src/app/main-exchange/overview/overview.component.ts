@@ -41,8 +41,12 @@ export class ExchangeOverviewComponent implements OnInit {
     // sort alphabetically
     { title: 'Bitcoin',   value: 'btc', },
     { title: 'DAI',       value: 'dai', },
-    { title: 'Horizen',   value: 'zen', },
-    { title: 'Particl',   value: 'part', }
+    { title: 'Monero',    value: 'xmr', },
+    { title: 'NIX',       value: 'nix', },
+    { title: 'Particl',   value: 'part', },
+    { title: 'Tether',    value: 'usdt', },
+    { title: 'USD Coin',  value: 'usdc', },
+    { title: 'ZCoin',     value: 'xzc', }
   ];
 
   exchange_status: Array<any> = [
