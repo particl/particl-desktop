@@ -37,14 +37,50 @@
   width: 34rem;
 }
 
-.mat-card {
-  margin-bottom: 30px;
-  &:last-of-type {
+.item-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 14px 18px;
+  .image {
+    --size: 60px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 16px;
+    position: relative;
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;  
+    }
+  }
+  .name {
+    font-size: 16px;
+    font-weight: 500;
     margin: 0;
+  }
+  .category {
+    color: var(--text-muted);
   }
 }
 
+.publishing-to {
+  text-align: center;
+  color: var(--text-muted);
+  margin: 32px 0 24px;
+  p {
+    font-size: 16px;
+    margin: 0 0 8px;
+  }
+}
 
+/* // redundant from before? category selection/creation no longer happens here..?
 // Select Category
 .select-category {  
   margin-bottom: var(--card-spacing);
@@ -93,4 +129,4 @@
     }
   }
 }
-
+*/

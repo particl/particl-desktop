@@ -1,6 +1,6 @@
 <div mat-dialog-title fxLayout fxLayoutAlign="space-between center">
   Publishing Listing
-  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity which will publish the Listing" matTooltipPosition="before">
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity&#13;which will publish the Listing" matTooltipPosition="after" matTooltipClass="multi-line">
     <div class="avatar">{{ currentIdentity.image }}</div>
     <div class="text">
       <div class="identity-name">{{ currentIdentity.name }}</div>
@@ -17,20 +17,28 @@
 
 <mat-dialog-content class="dialog-content">
 
-  <h2 class="section-title">{{templateDetails.title}}</h2>
+  <h2 class="section-title">Product to Publish</h2>
 
-  <h2 class="section-title">Publishing to&hellip;</h2>
-  <mat-card class="publish-to no-padding">
-    <label class="--larger">
-      {{ templateDetails.marketName }}
-    </label>
+  <mat-card class="product item-card">
+    <div class="image">
+      <img src="./assets/images/placeholder_4-3.jpg">
+    </div>
+    <h3 class="name">{{templateDetails.title}}</h3>
   </mat-card>
 
-  <h2 class="section-title">With Category</h2>
-  <mat-card class="select-category no-padding">
-    <label>
-      {{ templateDetails.categoryName }}
-    </label>
+  <div class="publishing-to">
+    <p>Publishing to</p>
+    <mat-icon fontIcon="part-arrow-down"></mat-icon>
+  </div>
+
+  <mat-card class="market item-card">
+    <div class="image">
+      <img src="./assets/images/placeholder_4-3.jpg">
+    </div>
+    <div class="meta">
+      <h3 class="name">{{ templateDetails.marketName }}</h3>
+      <div class="category">In category: {{ templateDetails.categoryName }}</div>
+    </div>
   </mat-card>
 
   <h2 class="section-title">Publish duration</h2>
