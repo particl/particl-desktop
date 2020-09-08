@@ -112,7 +112,8 @@
 
 
     <div class="content grid-container" infiniteScroll
-        [scrollWindow]="true"
+        [fromRoot]="true"
+        [infiniteScrollContainer]="'.always-scroll mat-sidenav-content'"
         [infiniteScrollDisabled]="(listings.length === 0) || atEndOfListings || isLoadingListings"
         (scrolled)="actionScroll.setValue(null)"
         *appVar="(availableCarts | async)[0] as selectedCart"
