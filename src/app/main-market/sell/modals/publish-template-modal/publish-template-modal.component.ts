@@ -19,7 +19,9 @@ import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
 interface TemplateDetails {
   templateID: number;
   title: string;
+  templateImage?: string;
   marketName: string;
+  marketImage?: string;
   categoryName: string;
 }
 
@@ -67,15 +69,19 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
       const actualData: TemplateDetails = {
         templateID: 0,
+        templateImage: './assets/images/placeholder_4-3.jpg',
         title: '',
         marketName: '',
-        categoryName: ''
+        marketImage: './assets/images/placeholder_4-3.jpg',
+        categoryName: '',
       };
 
       actualData.templateID = +this.data.templateID > 0 ? +this.data.templateID : actualData.templateID;
       actualData.title = getValueOrDefault(this.data.title, 'string', actualData.title);
       actualData.marketName = getValueOrDefault(this.data.marketName, 'string', actualData.marketName);
       actualData.categoryName = getValueOrDefault(this.data.categoryName, 'string', actualData.categoryName);
+      actualData.templateImage = getValueOrDefault(this.data.templateImage, 'string', actualData.templateImage);
+      actualData.marketImage = getValueOrDefault(this.data.marketImage, 'string', actualData.marketImage);
 
       this.isDataValid = actualData.templateID > 0;
       this.templateDetails = actualData;

@@ -99,7 +99,8 @@ export class SellService {
           concatAll(),
           last(),
           map((resp: RespListingTemplate) => {
-            const marketTempl = this.buildBasicProductMarketItem(resp);
+            const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+            const marketTempl = this.buildBasicProductMarketItem(resp, marketPort);
             return marketTempl.id > 0 ? marketTempl : null;
           }),
         );
@@ -883,7 +884,7 @@ export class SellService {
             });
           }
 
-          const newMarketDetails = this.buildBasicProductMarketItem(latestMarketTempl);
+          const newMarketDetails = this.buildBasicProductMarketItem(latestMarketTempl, settings.port);
           newMarketDetails.listings.count = listingCount;
           newMarketDetails.listings.latestExpiry = lastExpiryTimestamp;
           newMarketDetails.status = this.calculateMarketTemplateStatus(newMarketDetails);
@@ -905,7 +906,7 @@ export class SellService {
   }
 
 
-  private buildBasicProductMarketItem(src: RespListingTemplate): ProductMarketTemplate {
+  private buildBasicProductMarketItem(src: RespListingTemplate, marketPort: number): ProductMarketTemplate {
     const newMarketDetails: ProductMarketTemplate = {
       id: 0,
       title: '',
@@ -917,6 +918,7 @@ export class SellService {
       status: TEMPLATE_STATUS_TYPE.UNPUBLISHED,
       created: 0,
       updated: 0,
+      image: './assets/images/placeholder_4-3.jpg',
       listings: {
         count: 0,
         latestExpiry: 0
@@ -944,6 +946,22 @@ export class SellService {
         newMarketDetails.categoryId = getValueOrDefault(
           src.ItemInformation.ItemCategory.id, 'number', newMarketDetails.categoryId
         );
+      }
+
+      if (
+        (Array.isArray(src.ItemInformation.ItemImages)) &&
+        (src.ItemInformation.ItemImages.length)
+      ) {
+        let featured = src.ItemInformation.ItemImages.find(img => isBasicObjectType(img) && !!img.featured);
+        if (featured === undefined) {
+          featured = src.ItemInformation.ItemImages[0];
+        }
+
+        const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
+        const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
+        if (selected) {
+          newMarketDetails.image = formatImagePath(getValueOrDefault(selected.dataId, 'string', ''), marketPort) || newMarketDetails.image;
+        }
       }
     }
 

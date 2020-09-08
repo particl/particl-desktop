@@ -135,6 +135,7 @@ export interface UpdateTemplateRequest {
 export interface ProductMarketTemplate {
   id: number;
   title: string;
+  image: string;
   marketKey: string;
   categoryName: string;
   categoryId: number;

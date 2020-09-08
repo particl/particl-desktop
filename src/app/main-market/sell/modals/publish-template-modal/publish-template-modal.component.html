@@ -21,7 +21,7 @@
 
   <mat-card class="product item-card">
     <div class="image">
-      <img src="./assets/images/placeholder_4-3.jpg">
+      <img [src]="templateDetails.templateImage">
     </div>
     <h3 class="name">{{templateDetails.title}}</h3>
   </mat-card>
@@ -33,7 +33,7 @@
 
   <mat-card class="market item-card">
     <div class="image">
-      <img src="./assets/images/placeholder_4-3.jpg">
+      <img [src]="templateDetails.marketImage">
     </div>
     <div class="meta">
       <h3 class="name">{{ templateDetails.marketName }}</h3>

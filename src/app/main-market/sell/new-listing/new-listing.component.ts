@@ -287,6 +287,10 @@ export class NewListingComponent implements OnInit, OnDestroy {
             categoryName: this.savedTempl.marketDetails.category.name
           };
 
+          if (this.savedTempl.savedDetails.images[0]) {
+            modalData.templateImage = this.savedTempl.savedDetails.images[0].url;
+          }
+
           const dialog = this._dialog.open(
             PublishTemplateModalComponent,
             {data: modalData}

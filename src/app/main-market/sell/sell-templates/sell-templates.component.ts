@@ -253,6 +253,10 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         categoryName: marketTempl.categoryName
       };
 
+      if (marketTempl.image.length) {
+        modalData.templateImage = marketTempl.image;
+      }
+
       const dialog = this._dialog.open(
         PublishTemplateModalComponent,
         {data: modalData}
