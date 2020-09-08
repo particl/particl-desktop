@@ -132,32 +132,40 @@ export class DataService {
       description = getValueOrDefault(fromDetails.longDescription, 'string', description);
 
       // shipping source and destinations
-      const codes = [];
+      const countryCodes: string[] = [];
+      let sourceCountryCode = '';
 
       if (isBasicObjectType(fromDetails.ItemLocation)) {
-        shippingLocation.code = getValueOrDefault(fromDetails.ItemLocation.country, 'string', shippingLocation.code);
-        codes.push(shippingLocation.code);
+        sourceCountryCode = getValueOrDefault(fromDetails.ItemLocation.country, 'string', shippingLocation.code);
+        if (sourceCountryCode.length) {
+          countryCodes.push(sourceCountryCode);
+        }
       }
 
       if (Array.isArray(fromDetails.ShippingDestinations)) {
         fromDetails.ShippingDestinations.forEach((shipping) => {
           if ((getValueOrDefault(shipping.country, 'string', '') !== '') && (shipping.shippingAvailability === 'SHIPS')) {
-            codes.push(shipping.country);
+            countryCodes.push(shipping.country);
           }
         });
       }
 
-      const locations = this._regionService.findCountriesByIsoCodes(codes);
+      const locations = this._regionService.findCountriesByIsoCodes(countryCodes);
+      const sourceCountryIdx = locations.findIndex(c => c.iso === sourceCountryCode);
 
-      if (locations.length && (locations[0].iso === shippingLocation.code)) {
-        let source = locations[0];
-        if (codes.filter(c => c === shippingLocation.code).length === 1) {
-          source = locations.shift();
-        }
-        shippingLocation.name = source.name;
+      if (sourceCountryIdx > -1) {
+        shippingLocation.code = locations[sourceCountryIdx].iso;
+        shippingLocation.name = locations[sourceCountryIdx].name;
+        const sourceIdx = countryCodes.findIndex(cc => cc === sourceCountryCode);
+        countryCodes.splice(sourceIdx, 1);
       }
 
-      shippingDestinations = locations.map(l => ({code: l.iso, name: l.name}));
+      countryCodes.forEach(cc => {
+        const country = locations.find(c => c.iso === cc);
+        if (country) {
+          shippingDestinations.push({code: country.iso, name: country.name});
+        }
+      });
 
       // category
       if (isBasicObjectType(fromDetails.ItemCategory)) {
