@@ -82,7 +82,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private categoryList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
-
+  private didModifySomething: boolean = false;
   @ViewChildren('categorySelector') private categorySelectorChildren: QueryList<TreeSelectComponent>;
 
 
@@ -266,7 +266,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
 
   actionCloseModal() {
-    this._dialogRef.close();
+    this._dialogRef.close(this.didModifySomething);
   }
 
 
@@ -339,8 +339,8 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
         categoryId,
         duration
       ).then(
-        (resp) => {
-
+        () => {
+          this.didModifySomething = true;
           // Update the product with the current selected market/category values (avoids needing a complicated data "refresh")
 
           const foundMarket = this.availableProducts[productIndex].existingMarkets.find(m => m.marketId === selectedMarketId);

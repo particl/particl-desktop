@@ -118,19 +118,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         catchError(() => of([] as Market[])),
       ),
 
-      this._sellService.fetchAllProductTemplates().pipe(
-        map((products) => products.map(p => this.createDisplayableProductItem(p))),
-        catchError(() => {
-          this._snackbar.open(TextContent.LOAD_ERROR, 'warn');
-          return of([] as DisplayableProductItem[]);
-        }),
-        tap(products => {
-          this.isLoading = false;
-          this.allProducts = products;
-          this.marketUpdateControl.setValue(null);
-          this.resetMarketListingTimer();
-        })
-      )
+      this.loadProductItems()
     );
 
     const search$ = this.searchQuery.valueChanges.pipe(
@@ -153,7 +141,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       init$,
       search$,
       orderBy$,
-      this.actionRefreshControl.valueChanges.pipe(takeUntil(this.destroy$)),
+      expiryReset$,
       this.filterBaseTemplateId.valueChanges.pipe(takeUntil(this.destroy$))
     ).pipe(
       switchMap(() => this.updateProductDisplay()),
@@ -184,7 +172,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     merge(
       walletChange$,
       productDisplay$,
-      expiryReset$,
       marketChange$
     ).subscribe();
   }
@@ -338,10 +325,16 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       }))
     };
 
-    this._dialog.open(BatchPublishModalComponent, {
+    const dialog = this._dialog.open(BatchPublishModalComponent, {
       data: modalData,
       disableClose: true
     });
+
+    dialog.afterClosed().pipe(
+      take(1),
+      map(wasChanged => !!wasChanged),
+      concatMap((doReload) => iif(() => doReload, defer(() => this.loadProductItems())))
+    ).subscribe();
   }
 
 
@@ -366,6 +359,38 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+
+  private loadProductItems(): Observable<DisplayableProductItem[]> {
+    return defer(() => {
+
+      return of({}).pipe(
+        tap(() => {
+          this.isLoading = true;
+
+          // need to make certain that the selected indexes are also cleared (otherwise boom... race condition
+          //  towards an error: if marketupdatecontrol fires ui refresh before displayIndexes recalculation has completed, then errors)
+          this.displayedProductIdxs = [];
+          this.allProducts = [];
+          this._cdr.detectChanges();
+        }),
+
+        concatMap(() => this._sellService.fetchAllProductTemplates().pipe(
+          map((products) => products.map(p => this.createDisplayableProductItem(p))),
+          catchError(() => {
+            this._snackbar.open(TextContent.LOAD_ERROR, 'warn');
+            return of([] as DisplayableProductItem[]);
+          }),
+          tap(products => {
+            this.isLoading = false;
+            this.allProducts = products;
+            this.marketUpdateControl.setValue(null);
+            this.actionRefreshControl.setValue(null);
+          })
+        ))
+      );
+    });
   }
 
 
@@ -431,7 +456,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         () => this.resetMarketListingTimer()
       );
     }
-
   }
 
 
