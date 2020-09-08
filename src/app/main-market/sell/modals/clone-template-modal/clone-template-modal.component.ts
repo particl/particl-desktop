@@ -5,6 +5,9 @@ import { FormControl } from '@angular/forms';
 import { Observable, Subject, BehaviorSubject, of } from 'rxjs';
 import { tap, takeUntil, switchMap, map, catchError } from 'rxjs/operators';
 
+import { Store } from '@ngxs/store';
+import { MarketState } from 'app/main-market/store/market.state';
+
 import { DataService } from 'app/main-market/services/data/data.service';
 import { isBasicObjectType } from 'app/main-market/shared/utils';
 import { CategoryItem } from 'app/main-market/services/data/data.models';
@@ -12,6 +15,7 @@ import { CategoryItem } from 'app/main-market/services/data/data.models';
 
 export interface CloneTemplateModalInput {
   templateTitle: string;
+  templateImage?: string;
   markets: {name: string; id: number}[];
 }
 
@@ -23,6 +27,7 @@ export interface CloneTemplateModalInput {
 export class CloneTemplateModalComponent implements OnInit, OnDestroy {
 
   readonly productTitle: string = '';
+  readonly productImage: string = '';
   readonly availableMarkets: {name: string; id: number}[] = [];
   readonly categories$: Observable<CategoryItem[]>;
 
@@ -37,7 +42,8 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: CloneTemplateModalInput,
     private _dialogRef: MatDialogRef<CloneTemplateModalComponent>,
-    private _sharedService: DataService
+    private _sharedService: DataService,
+    private _store: Store
   ) {
 
     if (isBasicObjectType(this.data)) {
@@ -51,6 +57,12 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
 
       if (typeof this.data.templateTitle === 'string') {
         this.productTitle = this.data.templateTitle;
+      }
+
+      if (typeof this.data.templateImage === 'string') {
+        this.productImage = this.data.templateImage;
+      } else {
+        this.productImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
       }
     }
 

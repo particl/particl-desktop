@@ -484,6 +484,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     }
 
     let title = foundProduct.title;
+    let templateImage = foundProduct.images[0];
     const availableMarkets = [];
     const cloningToMarket = (+marketTemplateId > 0) || (getValueOrDefault(cloneToMarket, 'boolean', false));
 
@@ -500,6 +501,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         }
 
         title = foundmarketTempl.title;
+        templateImage = foundmarketTempl.image;
       }
 
       foundProduct.displayDetails.availableMarkets.filter(
@@ -513,6 +515,10 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       templateTitle: title,
       markets: availableMarkets
     };
+
+    if (templateImage.length) {
+      modalData.templateImage = templateImage;
+    }
 
     return this._dialog.open(
       CloneTemplateModalComponent,

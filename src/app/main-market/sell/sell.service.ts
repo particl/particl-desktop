@@ -100,7 +100,8 @@ export class SellService {
           last(),
           map((resp: RespListingTemplate) => {
             const marketPort = this._store.selectSnapshot(MarketState.settings).port;
-            const marketTempl = this.buildBasicProductMarketItem(resp, marketPort);
+            const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
+            const marketTempl = this.buildBasicProductMarketItem(resp, marketPort, defaultImagePath);
             return marketTempl.id > 0 ? marketTempl : null;
           }),
         );
@@ -730,6 +731,7 @@ export class SellService {
   private buildProductsFromTemplateList(srcList: RespListingTemplate[]): ProductItem[] {
     const allProductItems: ProductItem[] = [];
     const settings = this._store.selectSnapshot(MarketState.settings);
+    const defaultImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
 
     const marketTemplMap: Map<number, RespListingTemplate> = new Map();
     const baseTemplates: RespListingTemplate[] = [];
@@ -800,7 +802,7 @@ export class SellService {
 
         if (newProduct.images.length === 0) {
           // ensure that at least the default blank image is created if no other images are found
-          newProduct.images.push('./assets/images/placeholder_4-3.jpg');
+          newProduct.images.push(defaultImage);
         }
       }
 
@@ -884,7 +886,7 @@ export class SellService {
             });
           }
 
-          const newMarketDetails = this.buildBasicProductMarketItem(latestMarketTempl, settings.port);
+          const newMarketDetails = this.buildBasicProductMarketItem(latestMarketTempl, settings.port, defaultImage);
           newMarketDetails.listings.count = listingCount;
           newMarketDetails.listings.latestExpiry = lastExpiryTimestamp;
           newMarketDetails.status = this.calculateMarketTemplateStatus(newMarketDetails);
@@ -906,7 +908,7 @@ export class SellService {
   }
 
 
-  private buildBasicProductMarketItem(src: RespListingTemplate, marketPort: number): ProductMarketTemplate {
+  private buildBasicProductMarketItem(src: RespListingTemplate, marketPort: number, defaultImage: string): ProductMarketTemplate {
     const newMarketDetails: ProductMarketTemplate = {
       id: 0,
       title: '',
@@ -918,7 +920,7 @@ export class SellService {
       status: TEMPLATE_STATUS_TYPE.UNPUBLISHED,
       created: 0,
       updated: 0,
-      image: './assets/images/placeholder_4-3.jpg',
+      image: defaultImage,
       listings: {
         count: 0,
         latestExpiry: 0

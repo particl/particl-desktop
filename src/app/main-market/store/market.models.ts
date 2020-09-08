@@ -37,10 +37,16 @@ export interface MarketSettings {
 }
 
 
+export interface DefaultMarketConfig {
+  imagePath: string;
+}
+
+
 export interface MarketStateModel {
   started: StartedStatus;
   profile: Profile;
   identities: Identity[];
   identity: Identity;
+  defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
 }

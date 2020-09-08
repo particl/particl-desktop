@@ -135,6 +135,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     private _unlocker: WalletEncryptionService
   ) {
 
+    const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
+
     const isInputValuesObject = isBasicObjectType(data);
     const userDestinationCountry = this._store.selectSnapshot(MarketState.settings).userRegion;
 
@@ -158,7 +160,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         const hasNoImages = inputImages.length === 0;
 
     if (inputImages.length === 0) {
-      inputImages.push({THUMBNAIL: './assets/images/placeholder_4-3.jpg', IMAGE: './assets/images/placeholder_4-3.jpg'});
+      inputImages.push({THUMBNAIL: defaultImagePath, IMAGE: defaultImagePath});
     }
 
     const featuredImgIdx = isImagesObject ? +input.images.featured || 0 : 0;

@@ -72,8 +72,9 @@ export class ListingsService {
     return this._rpc.call('item', ['search', ...params]).pipe(
       map((resp: RespListingItem[]) => {
         const marketSettings = this._store.selectSnapshot(MarketState.settings);
+        const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
         const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
-        return resp.map((item) => this.createOverviewItem(item, profileId, marketSettings));
+        return resp.map((item) => this.createOverviewItem(item, profileId, marketSettings, defaultImagePath));
       })
     );
   }
@@ -111,12 +112,14 @@ export class ListingsService {
   }
 
 
-  private createOverviewItem(from: RespListingItem, profileId: number, marketSettings: MarketSettings): ListingOverviewItem {
+  private createOverviewItem(
+    from: RespListingItem, profileId: number, marketSettings: MarketSettings, defaultImage: string
+  ): ListingOverviewItem {
     let listingId = 0,
         title = '',
         summary = '',
         listingSeller = '',
-        imageSelected = './assets/images/placeholder_4-3.jpg',
+        imageSelected = defaultImage,
         isLocalShipping = false,
         isOwnListing = false,
         favId = 0,

@@ -4,7 +4,7 @@ import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operator
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
-import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail } from './market.models';
+import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
@@ -18,6 +18,9 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   profile: null,
   identities: [],
   identity: null,
+  defaultConfig: {
+    imagePath: './assets/images/placeholder_4-3.jpg'
+  },
   settings: {
     port: 3000,
     defaultIdentityID: 0,
@@ -81,6 +84,12 @@ export class MarketState {
   @Selector()
   static settings(state: MarketStateModel): MarketSettings {
     return state.settings;
+  }
+
+
+  @Selector()
+  static defaultConfig(state: MarketStateModel): DefaultMarketConfig {
+    return state.defaultConfig;
   }
 
 

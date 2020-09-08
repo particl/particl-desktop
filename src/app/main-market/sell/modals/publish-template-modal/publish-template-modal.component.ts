@@ -65,16 +65,18 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
     private _sellService: SellService,
   ) {
 
-    if (isBasicObjectType(this.data)) {
+    const defaultImgPath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
 
-      const actualData: TemplateDetails = {
-        templateID: 0,
-        templateImage: './assets/images/placeholder_4-3.jpg',
-        title: '',
-        marketName: '',
-        marketImage: './assets/images/placeholder_4-3.jpg',
-        categoryName: '',
-      };
+    const actualData: TemplateDetails = {
+      templateID: 0,
+      templateImage: defaultImgPath,
+      title: '',
+      marketName: '',
+      marketImage: defaultImgPath,
+      categoryName: '',
+    };
+
+    if (isBasicObjectType(this.data)) {
 
       actualData.templateID = +this.data.templateID > 0 ? +this.data.templateID : actualData.templateID;
       actualData.title = getValueOrDefault(this.data.title, 'string', actualData.title);
@@ -82,10 +84,10 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       actualData.categoryName = getValueOrDefault(this.data.categoryName, 'string', actualData.categoryName);
       actualData.templateImage = getValueOrDefault(this.data.templateImage, 'string', actualData.templateImage);
       actualData.marketImage = getValueOrDefault(this.data.marketImage, 'string', actualData.marketImage);
-
-      this.isDataValid = actualData.templateID > 0;
-      this.templateDetails = actualData;
     }
+
+    this.isDataValid = actualData.templateID > 0;
+    this.templateDetails = actualData;
 
   }
 

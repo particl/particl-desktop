@@ -94,8 +94,8 @@ export class SellListingsService {
   private buildListingItemsFromTemplate(marketTemplate: RespListingTemplate, rootTemplateId: number, marketPort: number): SellListing[] {
 
     const now = Date.now();
-
     const listings: SellListing[] = [];
+    const defaultImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
 
     if (marketTemplate && this.isArray(marketTemplate.ListingItems)) {
       marketTemplate.ListingItems.forEach(src => {
@@ -106,7 +106,7 @@ export class SellListingsService {
           listingId: 0,
           title: '',
           summary: '',
-          image: './assets/images/placeholder_4-3.jpg',
+          image: defaultImage,
           marketKey: '',
           categoryName: '',
           status: '',

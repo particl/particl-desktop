@@ -64,8 +64,9 @@ export class BuyCartService {
         defer(() => markets$.pipe(
           map((marketValues) => {
             const settings = this._store.selectSnapshot(MarketState.settings);
+            const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
             return cartItems.map(
-              item => this.buildCartItem(item, settings.port, marketValues)
+              item => this.buildCartItem(item, settings.port, defaultImagePath, marketValues)
             ).filter(
               l => (l.listingId > 0) && (l.id > 0)
             );
@@ -251,13 +252,15 @@ export class BuyCartService {
   }
 
 
-  private buildCartItem(from: RespCartItemListItem, marketPort: number, markets: { key: string, name: string; }[]): CartItem {
+  private buildCartItem(
+    from: RespCartItemListItem, marketPort: number, defaultImage: string, markets: { key: string, name: string; }[]
+  ): CartItem {
 
     const newCartItem: CartItem = {
       id: 0,
       listingId: 0,
       title: '',
-      image: './assets/images/placeholder_4-3.jpg',
+      image: defaultImage,
       category: '',
       marketName: '',
       expiryTime: 0,

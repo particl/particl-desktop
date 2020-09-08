@@ -16,7 +16,7 @@
         This will take your Product as-is and prepare it for publishing on a different Market
       </p>
     </div>
-    
+
     <div *ngIf="availableMarkets.length == 0">
       <p class="lead">
         Duplicate this Product to create another Product?
@@ -27,13 +27,13 @@
     </div>
 
   </header>
-    
+
 
   <h2 class="section-title">Product to clone</h2>
 
   <mat-card class="product">
     <div class="image">
-      <img src="./assets/images/placeholder_4-3.jpg">
+      <img [src]="productImage">
     </div>
     <h3 class="name">{{ productTitle }}</h3>
   </mat-card>
