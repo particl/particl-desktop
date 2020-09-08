@@ -9,7 +9,9 @@
       <mat-expansion-panel-header class="switcher-toggle">
         <div class="item">
           <div class="icon">{{ currentWallet.initial }}</div>
-          <div class="name">{{ currentWallet.displayName }}</div>
+          <div class="text">
+            <div class="name">{{ currentWallet.displayName }}</div>
+          </div>
         </div>
       </mat-expansion-panel-header>
 
@@ -17,8 +19,10 @@
         <div class="options">
           <a class="item" *ngFor="let wallet of otherWallets" (click)="navigateToWallet(wallet)" (keyup.enter)="navigateToWallet(wallet)" tabindex="0">
             <div class="icon">{{ wallet.initial }}</div>
-            <div class="name">{{ wallet.displayName }}</div>
-            <div class="value">Switch wallet</div>
+            <div class="text">
+              <div class="name">{{ wallet.displayName }}</div>
+              <div class="value">Switch wallet</div>
+            </div>
           </a>
         </div>
       </ng-template>
