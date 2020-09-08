@@ -10,16 +10,16 @@ import { ExchangePayModalComponent } from './exchange-pay-modal/exchange-pay-mod
 })
 export class NewExchangeComponent implements OnInit {
 
-  filters: any = {
-    search:   ''
-  };
-
   supported_coins: Array<any> = [
     // sort alphabetically
     { title: 'Bitcoin',   value: 'btc', },
     { title: 'DAI',       value: 'dai', },
-    { title: 'Horizen',   value: 'zen', },
-    { title: 'Particl',   value: 'part', }
+    { title: 'Monero',    value: 'xmr', },
+    { title: 'NIX',       value: 'nix', },
+    { title: 'Particl',   value: 'part', },
+    { title: 'Tether',    value: 'usdt', },
+    { title: 'USD Coin',  value: 'usdc', },
+    { title: 'ZCoin',     value: 'xzc', }
   ];
 
   exchanges_list: Array<any> = [

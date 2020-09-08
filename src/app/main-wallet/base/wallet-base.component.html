@@ -10,8 +10,10 @@
         <div class="item">
           <!-- TODO: offer various colors for wallets/whatever to easily tell them apart? -->
           <div class="icon">{{ currentWallet.initial }}</div>
-          <div class="name">{{ currentWallet.displayName }}</div>
-          <div class="value">{{ currentBalance }} PART</div>
+          <div class="text">
+            <div class="name">{{ currentWallet.displayName }}</div>
+            <div class="value">{{ currentBalance }} PART</div>
+          </div>
         </div>
       </mat-expansion-panel-header>
 
@@ -19,13 +21,17 @@
         <div class="options">
           <a class="item" *ngFor="let wallet of otherWallets;trackBy:trackByWalletsFn" (click)="navigateToWallet(wallet)" (keyup.enter)="navigateToWallet(wallet)" tabindex="0">
             <div class="icon">{{ wallet.initial }}</div>
-            <div class="name">{{ wallet.displayName }}</div>
-            <div class="value">Switch wallet</div>
+            <div class="text">
+              <div class="name">{{ wallet.displayName }}</div>
+              <div class="value">Switch wallet</div>
+            </div>
           </a>
           <a class="item" (click)="navigateToCreateWallet()" (keyup.enter)="navigateToCreateWallet()" tabindex="0">
             <div class="icon">+</div>
-            <div class="name"><em>New wallet</em></div>
-            <div class="value">Click to setup&hellip;</div>
+            <div class="text">
+              <div class="name"><em>New wallet</em></div>
+              <div class="value">Click to setup&hellip;</div>
+            </div>
           </a>
         </div>
       </ng-template>

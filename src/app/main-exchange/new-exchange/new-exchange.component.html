@@ -21,7 +21,7 @@
         <h3 class="box-title --larger">Send</h3>
       </header>
       <mat-form-field class="--plain --larger" appearance="fill">
-        <mat-select placeholder="Select coin/token" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+        <mat-select placeholder="Select coin/token">
           <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
             <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>
@@ -44,7 +44,7 @@
         <h3 class="box-title --larger">Receive</h3>
       </header>
       <mat-form-field class="--plain --larger" appearance="fill">
-        <mat-select placeholder="Select coin/token" [(ngModel)]="filters.sort" (selectionChange)="filter()">
+        <mat-select placeholder="Select coin/token">
           <mat-option class="coin-filter-option --larger" *ngFor="let coin of supported_coins" [value]="coin.value">
             <img src="./assets/app-exchange/coins/{{ coin.value.toUpperCase() }}.svg" alt="{{ coin.title }}" class="icon">
             {{ coin.title }} <small>({{ coin.value.toUpperCase() }})</small>

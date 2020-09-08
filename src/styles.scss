@@ -312,19 +312,26 @@ body {
       }
     }
     .item {
-      .icon {
-        background: var(--color-primary);
-        color: var(--color-white);
-        font-weight: 500;
+      .text {
+        max-width: calc(100% - var(--icon-size) - var(--icon-margin));
+        .icon {
+          background: var(--color-primary);
+          color: var(--color-white);
+          font-weight: 500;
+        }
       }
     }
   }
 
   // shared style for 1 instance item
   .item {
+    --icon-size: 28px;
+    --icon-margin: 11px;
     @extend %tfx;
     cursor: pointer;
-    display: block;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     box-sizing: border-box;
     width: 100%;
     padding: 10px 22px 10px 13px;
@@ -337,29 +344,30 @@ body {
     }
     .icon {
       background: hsla(var(--text-muted-hsl), 0.3);
-      width: 28px;
-      height: 28px;
-      line-height: 30px;
+      flex: 0 0 var(--icon-size);
+      width: var(--icon-size);
+      height: var(--icon-size);
+      line-height: calc(var(--icon-size) + 2px);
       font-size: 16px;
       text-align: center;
       text-transform: uppercase;
       border-radius: 50%;
-      float: left;
-      margin-right: 11px;
-      position: relative;
-      top: 2px;
+      margin: 2px var(--icon-margin) 2px 0;
     }
-    .name {
-      font-weight: 500;
-      color: var(--color-white);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .value {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .text {
+      max-width: calc(100% - var(--icon-size));
+      .name {
+        font-weight: 500;
+        color: var(--color-white);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .value {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
   }
 
