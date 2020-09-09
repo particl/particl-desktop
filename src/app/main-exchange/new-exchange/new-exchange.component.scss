@@ -125,21 +125,6 @@
       .name {
         flex: 0 0 40%;
         font-size: 15px;
-        .tag {
-          color: var(--color-secondary);
-          font-weight: 500;
-          font-size: 11px;
-          text-transform: uppercase;
-          border: 1px solid var(--color-secondary);
-          border-radius: var(--radius);
-          padding: 1px 5px;
-          margin-left: 4px;
-          position: relative;
-          top: -1px;
-          &:empty {
-            display: none;
-          }
-        }
       }
       .rate,
       .amount {
