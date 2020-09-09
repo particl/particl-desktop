@@ -162,7 +162,7 @@
 
 <mat-dialog-actions>
 
-  <mat-progress-bar *ngIf="isProcessingControl.value" mode="determinate" value="publishingInfo.progressPercent" color="accent" class="publish-progress"></mat-progress-bar>
+  <mat-progress-bar *ngIf="isProcessingControl.value" mode="determinate" [value]="publishingInfo.progressPercent" color="accent" class="publish-progress"></mat-progress-bar>
 
   <div class="row">
     <div class="right">
