@@ -79,7 +79,6 @@ export interface Template {
 
 export interface TemplateRequestImageItem {
   type: IMAGE_PROTOCOL;
-  encoding: IMAGE_ENCODING;
   data: string;
 }
 

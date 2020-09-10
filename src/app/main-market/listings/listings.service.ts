@@ -5,7 +5,7 @@ import { map, mapTo, catchError, filter } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 
 import { MarketState } from '../store/market.state';
-import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../shared/utils';
+import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
 
 import { PartoshiAmount } from 'app/core/util/utils';
 import { RespListingItem, RespCartItemAdd, RespItemFlag } from '../shared/market.models';
@@ -142,19 +142,13 @@ export class ListingsService {
       }
 
       // Image selection and processing
-      if (Array.isArray(fromDetails.ItemImages)) {
-        if (fromDetails.ItemImages.length) {
-          let featured = fromDetails.ItemImages.find(img => img.featured);
+      if (Array.isArray(fromDetails.Images)) {
+        if (fromDetails.Images.length) {
+          let featured = fromDetails.Images.find(img => img.featured);
           if (featured === undefined) {
-            featured = fromDetails.ItemImages[0];
+            featured = fromDetails.Images[0];
           }
-
-          const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
-          const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
-          if (selected) {
-            imageSelected = formatImagePath(
-              getValueOrDefault(selected.dataId, 'string', ''), marketSettings.port) || imageSelected;
-          }
+          imageSelected = parseImagePath(featured, 'MEDIUM', marketSettings.port) || imageSelected;
         }
       }
     }

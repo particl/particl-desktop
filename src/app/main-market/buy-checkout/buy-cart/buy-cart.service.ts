@@ -7,12 +7,13 @@ import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 import { RegionListService } from 'app/main-market/services/region-list/region-list.service';
 import { DataService } from '../../services/data/data.service';
 
-import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
+import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { RespMarketListMarketItem, RespCartItemListItem, RespAddressListItem, ADDRESS_TYPES, RespAddressAdd } from '../../shared/market.models';
+import { RespCartItemListItem, RespAddressListItem, ADDRESS_TYPES, RespAddressAdd } from '../../shared/market.models';
 import { ShippingAddress } from '../../shared/shipping-profile-address-form/shipping-profile-address.models';
 import { CartItem } from './buy-cart.models';
 import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
+import { Market } from '../../services/data/data.models';
 
 
 interface CartItemBidDetails {
@@ -43,15 +44,14 @@ export class BuyCartService {
 
 
   fetchCartItems(): Observable<CartItem[]> {
-    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     const cart = this._store.selectSnapshot(MarketState.availableCarts)[0];
 
     if (!(cart && (+cart.id > 0))) {
       return throwError('InvalidCart');
     }
 
-    const markets$ = this._rpc.call('market', ['list', profileId]).pipe(
-      map((markets: RespMarketListMarketItem[]) => {
+    const markets$ = this._sharedDataService.loadMarkets().pipe(
+      map((markets: Market[]) => {
         return markets.map(m => ({key: m.publishAddress, name: m.name}));
       }),
       catchError(() => of([]))
@@ -299,19 +299,15 @@ export class BuyCartService {
       }
 
       if (
-        (Array.isArray(from.ListingItem.ItemInformation.ItemImages)) &&
-        (from.ListingItem.ItemInformation.ItemImages.length)
+        (Array.isArray(from.ListingItem.ItemInformation.Images)) &&
+        (from.ListingItem.ItemInformation.Images.length)
       ) {
-        let featured = from.ListingItem.ItemInformation.ItemImages.find(img => img.featured);
+        let featured = from.ListingItem.ItemInformation.Images.find(img => img.featured);
         if (featured === undefined) {
-          featured = from.ListingItem.ItemInformation.ItemImages[0];
+          featured = from.ListingItem.ItemInformation.Images[0];
         }
 
-        const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
-        const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
-        if (selected) {
-          newCartItem.image = formatImagePath(getValueOrDefault(selected.dataId, 'string', ''), marketPort) || newCartItem.image;
-        }
+        newCartItem.image = parseImagePath(featured, 'MEDIUM', marketPort) || newCartItem.image;
       }
 
       if (isBasicObjectType(from.ListingItem.ItemInformation.ItemLocation)) {

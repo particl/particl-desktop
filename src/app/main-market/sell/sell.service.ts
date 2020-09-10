@@ -9,7 +9,7 @@ import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { getValueOrDefault, isBasicObjectType, formatImagePath } from '../shared/utils';
+import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
 import { RespListingTemplate, RespListingItemTemplatePost } from '../shared/market.models';
 import {
   Template,
@@ -159,7 +159,7 @@ export class SellService {
           const imageParts = image.data.split(',');
           const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
           queries.push(
-            this._rpc.call('template', ['image', 'add', templateID, '', image.type, image.encoding, imgData]).pipe(
+            this._rpc.call('image', ['add', 'template', templateID, image.type, imgData]).pipe(
               catchError(() => of(null))
             )
           );
@@ -267,7 +267,7 @@ export class SellService {
       details.images.forEach(image => {
         const imageParts = image.data.split(',');
         const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
-        updates$.push(this._rpc.call('template', ['image', 'add', templateId, '', image.type, image.encoding, imgData]));
+        updates$.push(this._rpc.call('image', ['add', 'template', templateId, image.type, imgData]));
       });
     }
 
@@ -673,17 +673,11 @@ export class SellService {
         ).map(dest => dest.country);
       }
 
-      if (Array.isArray(src.ItemInformation.ItemImages)) {
-        src.ItemInformation.ItemImages.forEach(img => {
-          if (isBasicObjectType(img) && Array.isArray(img.ItemImageDatas)) {
-            const foundImgData = img.ItemImageDatas.find(imgData =>
-              isBasicObjectType(imgData) && (imgData.imageVersion === 'ORIGINAL') && getValueOrDefault(imgData.dataId, 'string', '')
-            );
-
-            if (foundImgData) {
-              const imgPath = formatImagePath(foundImgData.dataId, marketPort);
-              saveDetails.images.push({id: +img.id, url: imgPath});
-            }
+      if (Array.isArray(src.ItemInformation.Images)) {
+        src.ItemInformation.Images.forEach(img => {
+          const foundImgData = parseImagePath(img, 'ORIGINAL', marketPort);
+          if (foundImgData) {
+            saveDetails.images.push({id: +img.id, url: foundImgData});
           }
         });
       }
@@ -779,23 +773,15 @@ export class SellService {
           );
         }
 
-        if (Array.isArray(baseTempl.ItemInformation.ItemImages)) {
-          baseTempl.ItemInformation.ItemImages.filter(img =>
+        if (Array.isArray(baseTempl.ItemInformation.Images)) {
+          baseTempl.ItemInformation.Images.filter(img =>
             isBasicObjectType(img)
           ).sort((a, b) =>
             +(!!a.featured) - +(!!b.featured)
           ).forEach(img => {
-            if (Array.isArray(img.ItemImageDatas)) {
-              const foundSize = img.ItemImageDatas.find(datas => isBasicObjectType(datas) && datas.imageVersion === 'THUMBNAIL');
-              if (foundSize) {
-                const imgPath = getValueOrDefault(foundSize.dataId, 'string', '') === '' ?
-                    '' :
-                    formatImagePath(foundSize.dataId, settings.port);
-
-                if (imgPath.length) {
-                  newProduct.images.push(imgPath);
-                }
-              }
+            const imgPath = parseImagePath(img, 'THUMBNAIL', settings.port);
+            if (imgPath.length) {
+              newProduct.images.push(imgPath);
             }
           });
         }
@@ -950,20 +936,12 @@ export class SellService {
         );
       }
 
-      if (
-        (Array.isArray(src.ItemInformation.ItemImages)) &&
-        (src.ItemInformation.ItemImages.length)
-      ) {
-        let featured = src.ItemInformation.ItemImages.find(img => isBasicObjectType(img) && !!img.featured);
+      if ((Array.isArray(src.ItemInformation.Images)) && src.ItemInformation.Images.length) {
+        let featured = src.ItemInformation.Images.find(img => isBasicObjectType(img) && !!img.featured);
         if (featured === undefined) {
-          featured = src.ItemInformation.ItemImages[0];
+          featured = src.ItemInformation.Images[0];
         }
-
-        const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
-        const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
-        if (selected) {
-          newMarketDetails.image = formatImagePath(getValueOrDefault(selected.dataId, 'string', ''), marketPort) || newMarketDetails.image;
-        }
+        newMarketDetails.image = parseImagePath(featured, 'MEDIUM', marketPort) || newMarketDetails.image;
       }
     }
 
@@ -1069,27 +1047,16 @@ export class SellService {
           }
         });
 
-        if (Array.isArray(src.ItemInformation.ItemImages)) {
-          src.ItemInformation.ItemImages.forEach( (img, imgIdx) => {
-            if (isBasicObjectType(img) && Array.isArray(img.ItemImageDatas)) {
-              let orig: string;
-              let thumb: string;
-              img.ItemImageDatas.forEach(imgData => {
-                if (isBasicObjectType(imgData)) {
-                  if (imgData.imageVersion === 'ORIGINAL') {
-                    orig = formatImagePath(typeof imgData.dataId === 'string' ? imgData.dataId : '', marketPort);
-                  } else if (imgData.imageVersion === 'THUMBNAIL') {
-                    thumb = formatImagePath(typeof imgData.dataId === 'string' ? imgData.dataId : '', marketPort);
-                  }
-                }
-              });
+        if (Array.isArray(src.ItemInformation.Images)) {
+          src.ItemInformation.Images.forEach( (img, imgIdx) => {
+            const orig = parseImagePath(img, 'MEDIUM', marketPort);
+            const thumb = parseImagePath(img, 'THUMBNAIL', marketPort);
 
-              if ((orig.length > 0) && (thumb.length > 0)) {
-                listingItem.images.images.push({THUMBNAIL: thumb, IMAGE: orig});
+            if ((orig.length > 0) && (thumb.length > 0)) {
+              listingItem.images.images.push({THUMBNAIL: thumb, IMAGE: orig});
 
-                if (img.featured) {
-                  listingItem.images.featured = imgIdx;
-                }
+              if (img.featured) {
+                listingItem.images.featured = imgIdx;
               }
             }
           });

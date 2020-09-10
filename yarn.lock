@@ -8944,10 +8944,10 @@ omggif@^1.0.9:
   resolved "https://registry.yarnpkg.com/omggif/-/omggif-1.0.10.tgz#ddaaf90d4a42f532e9e7cb3a95ecdd47f17c7b19"
   integrity sha512-LMJTtvgc/nugXj0Vcrrs68Mn2D1r0zf630VNtqtpI1FEO7e+O9FP4gqs9AcnBaSEeoHIPm28u6qgPR0oyEpGSw==
 
-omp-lib@^0.1.140:
-  version "0.1.140"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.140.tgz#62e4ded2179521c0c44880f4308a87cdcb4024d8"
-  integrity sha512-SMG1iWkIrgCmGk+gHdsaS05rYUUH9PmyGqDbEPxKLLJAPk77Tok9dVNIeeIuOY/+mIZcG/tcUQd0QsTlbC3iyw==
+omp-lib@^0.1.150:
+  version "0.1.150"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.150.tgz#b85075873b429549f3fed7f45f45778cceb4a03e"
+  integrity sha512-GKUT2LY/zNg8Yrzyuitg5cyk57ttUjIrwGbYVdjvQdLjKlYgBwphN7pG5Rpo1RX5QMMgx5DOZb/y7Dns5DV4jg==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -8955,7 +8955,7 @@ omp-lib@^0.1.140:
     particl-bitcore-lib "https://github.com/kewde/particl-bitcore-lib.git"
     pjson "^1.0.9"
     reflect-metadata "^0.1.12"
-    semverv "^5.6.4"
+    semverv "^5.6.5"
     tslib "^1.9.3"
     web-request "^1.0.7"
 
@@ -9364,9 +9364,9 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9426,9 +9426,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-23.tgz:
-  version "0.3.0-23"
-  resolved "./particl-marketplace-0.3.0-23.tgz#354df7c4ee4f5556264e15252fe24f4a0bc52580"
+particl-marketplace@./particl-marketplace-0.3.0-24.tgz:
+  version "0.3.0-24"
+  resolved "./particl-marketplace-0.3.0-24.tgz#23f2eabbbd8fddd81e8200d076b71e37ac201ac6"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9468,7 +9468,7 @@ particl-marketplace@./particl-marketplace-0.3.0-23.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.140"
+    omp-lib "^0.1.150"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.4"
     path "^0.12.7"
@@ -10996,10 +10996,10 @@ semver@~5.3.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.3.0.tgz#9b2ce5d3de02d17c6012ad326aa6b4d0cf54f94f"
   integrity sha1-myzl094C0XxgEq0yaqa00M9U+U8=
 
-semverv@^5.6.4:
-  version "5.6.4"
-  resolved "https://registry.yarnpkg.com/semverv/-/semverv-5.6.4.tgz#bbccb3ba6ceb5f928e147d79c56ebc2219137c09"
-  integrity sha512-xr1KZkOi42ErYGHUpRoGbZ7ZhssUgw/6dK1msdY5g1u/r9JoRIaFwf5cuEXyRtlYorLQlpXcsnZ63zWl6/TZ1g==
+semverv@^5.6.5:
+  version "5.6.5"
+  resolved "https://registry.yarnpkg.com/semverv/-/semverv-5.6.5.tgz#539404c56ab027384ecf1c2ecfad753dd5fbf4f1"
+  integrity sha512-oeC5Va4AlNJVfdlXmM/beEqScJF85HR3G0GgII42+kiLfYZfxYdV0RUDCdTVDk9RbiLnrlExg9KwryvtXICxkw==
   dependencies:
     js-sha256 "^0.9.0"
     lodash "^4.17.11"

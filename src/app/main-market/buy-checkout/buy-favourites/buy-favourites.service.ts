@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 
-import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
+import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
 import { RespFavoriteItem, RespCartItemAdd } from '../../shared/market.models';
 import { FavouritedListing } from './buy-favourites.models';
 import { PartoshiAmount } from 'app/core/util/utils';
@@ -83,18 +83,13 @@ export class FavouritesService {
           }
 
 
-          if (Array.isArray(fromListing.ItemInformation.ItemImages)) {
-            if (fromListing.ItemInformation.ItemImages.length) {
-              let featured = fromListing.ItemInformation.ItemImages.find(img => img.featured);
+          if (Array.isArray(fromListing.ItemInformation.Images)) {
+            if (fromListing.ItemInformation.Images.length) {
+              let featured = fromListing.ItemInformation.Images.find(img => img.featured);
               if (featured === undefined) {
-                featured = fromListing.ItemInformation.ItemImages[0];
+                featured = fromListing.ItemInformation.Images[0];
               }
-
-              const imgDatas = Array.isArray(featured.ItemImageDatas) ? featured.ItemImageDatas : [];
-              const selected = imgDatas.find(d => d.imageVersion && d.imageVersion === 'MEDIUM');
-              if (selected) {
-                image = formatImagePath(getValueOrDefault(selected.dataId, 'string', ''), marketPort) || image;
-              }
+              image = parseImagePath(featured, 'MEDIUM', marketPort) || image;
             }
           }
         }

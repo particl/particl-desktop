@@ -4,7 +4,7 @@ export type SALES_TYPE = 'SALE';
 export type ESCROW_TYPE = 'MAD_CT';
 export type CURRENCY_TYPE = 'PART';
 export type SHIPPING_AVAIL_TYPE = 'SHIPS' | 'DOES_NOT_SHIP' | 'ASK' | 'UNKNOWN';
-export type IMAGE_PROTOCOL = 'HTTPS' | 'LOCAL' | 'IPFS';
+export type IMAGE_PROTOCOL = 'REQUEST' | 'SMSG' | 'FILE';
 export type IMAGE_ENCODING = 'BASE64';
 export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'LARGE';
 export enum ADDRESS_TYPES { SHIPPING_OWN = 'SHIPPING_OWN', SHIPPING_BID = 'SHIPPING_BID' }
@@ -49,7 +49,7 @@ export interface RespIdentityListItem {
   createdAt: number;
   Profile: RespGeneralProfile;
   ShoppingCarts: RespCartListItem[];
-  Markets: RespMarketListMarketItem[];
+  Markets: RespIdentityMarketItem[];
 }
 
 
@@ -66,19 +66,83 @@ export interface RespCategoryList {
 }
 
 
-export interface RespMarketListMarketItem {
+export interface RespGeneralImageItem {
   id: number;
+  hash: string;
+  itemInformationId: null | number;
+  featured: 0 | 1;
+  ImageDatas: {
+    id: number;
+    protocol: IMAGE_PROTOCOL,
+    encoding: IMAGE_ENCODING,
+    imageVersion: IMAGE_VERSION,
+    imageHash: string;
+    dataId: string;
+    data: null | string;
+    imageId: number,
+    updatedAt: number;
+    createdAt: number;
+    originalMime: string | null;
+    originalName: string | null;
+  }[];
+}
+
+
+export interface RespIdentityMarketItem {
+  id: number;
+  msgid: null | string;
   name: string;
+  description: string;
+  region: string;
   type: MarketType;
   receiveKey: string;
   receiveAddress: string;
   publishKey: string;
   publishAddress: string;
+  imageId?: null | number;
+  hash: string;
+  generatedAt: number;
+  receivedAt: null | number;
+  postedAt: null | number;
   updatedAt: number;
   createdAt: number;
   profileId: number;
   identityId: number;
   removed: 0 | 1;
+}
+
+
+export interface RespMarketListMarketItem extends RespIdentityMarketItem {
+  FlaggedItem: any;
+  Profile: RespGeneralProfile;
+  Identity: any;
+  Image?: null | {
+    id: number;
+    hash: string;
+    itemInformationId: null | number;
+    featured: 0 | 1;
+    msgid: null | string;
+    target: null | string;
+    generatedAt: null | number;
+    postedAt: null | number;
+    receivedAt: null | number;
+    updatedAt: number;
+    createdAt: number;
+    ImageDatas: {
+      id: number;
+      protocol: IMAGE_PROTOCOL;
+      encoding: IMAGE_ENCODING;
+      imageVersion: IMAGE_VERSION;
+      imageHash: string;
+      dataId: string;
+      data: null | any;
+      imageId: number;
+      updatedAt: number;
+      createdAt: number;
+      originalMime: null | string;
+      originalName: null | string;
+    }[];
+  };
 }
 
 
@@ -129,30 +193,14 @@ export interface RespListingTemplateInformation {
     LocationMarker: any;
   };
   ItemCategory?: TemplateItemCategory;
-  ItemImages?: Array<{
-    id: number;
-    hash: string;
-    itemInformationId: number;
-    featured: 0 | 1;
-    ItemImageDatas: Array<{
-      id: number;
-      protocol: IMAGE_PROTOCOL,
-      encoding: IMAGE_ENCODING,
-      imageVersion: IMAGE_VERSION,
-      imageHash: string;
-      dataId: string;
-      data: string;
-      itemImageId: number,
-      updatedAt: number;
-      createdAt: number;
-      originalMime: string | null;
-      originalName: string | null;
-    }>;
-  }>;
+  Images?: RespGeneralImageItem[];
   ShippingDestinations?: {
     id: number;
     country: string;
-    shippingAvailability: SHIPPING_AVAIL_TYPE
+    shippingAvailability: SHIPPING_AVAIL_TYPE;
+    itemInformationId: number;
+    updatedAt: number;
+    createdAt: number;
   }[];
 }
 
@@ -178,6 +226,7 @@ export interface RespListingTemplate {
       id: number;
       type: ESCROW_TYPE;
       secondsToLock: number | null;
+      releaseType: ESCROW_RELEASE_TYPE;
       paymentInformationId: number;
       updatedAt: number;
       createdAt: number;
@@ -344,26 +393,7 @@ export interface RespListingItem {
       createdAt: number;
       LocationMarker: any;
     };
-    ItemImages: Array<{
-      id: number;
-      hash: string;
-      itemInformationId: number;
-      featured: 0 | 1;
-      ItemImageDatas: Array<{
-        id: number;
-        protocol: IMAGE_PROTOCOL,
-        encoding: IMAGE_ENCODING,
-        imageVersion: IMAGE_VERSION,
-        imageHash: string;
-        dataId: string;
-        data: string;
-        itemImageId: number,
-        updatedAt: number;
-        createdAt: number;
-        originalMime: string | null;
-        originalName: string | null;
-      }>;
-    }>;  // @TODO: Confirm this is the case
+    Images: RespGeneralImageItem[];  // @TODO: Confirm this is the case
     ShippingDestinations: Array<{
       id: number;
       country: string;

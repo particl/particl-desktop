@@ -7,7 +7,7 @@ import { MarketState } from '../../store/market.state';
 
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { isBasicObjectType, getValueOrDefault, formatImagePath } from 'app/main-market/shared/utils';
+import { isBasicObjectType, getValueOrDefault, parseImagePath } from 'app/main-market/shared/utils';
 import { RespListingTemplate } from '../../shared/market.models';
 import { SellListing } from './sell-listings.models';
 
@@ -133,24 +133,13 @@ export class SellListingsService {
             newListing.title = getValueOrDefault(src.ItemInformation.title, 'string', newListing.title);
             newListing.summary = getValueOrDefault(src.ItemInformation.shortDescription, 'string', newListing.summary);
 
-            if (this.isArray(src.ItemInformation.ItemImages)) {
-              src.ItemInformation.ItemImages.sort(
-                (a, b) => !!a.featured ? -1 : 0
-              );
-              if (isBasicObjectType(src.ItemInformation.ItemImages[0])) {
-                if (this.isArray(src.ItemInformation.ItemImages[0].ItemImageDatas)) {
-                  const foundSize = src.ItemInformation.ItemImages[0].ItemImageDatas.find(datas => datas.imageVersion === 'THUMBNAIL');
-                  if (foundSize) {
-                    const imgPath = getValueOrDefault(foundSize.dataId, 'string', '') === '' ?
-                      '' :
-                      formatImagePath(foundSize.dataId, marketPort);
-
-                    if (imgPath.length) {
-                      newListing.image = imgPath;
-                    }
-                  }
-                }
+            if (this.isArray(src.ItemInformation.Images) && src.ItemInformation.Images.length) {
+              let featured = src.ItemInformation.Images.find(img => img.featured);
+              if (featured === undefined) {
+                featured = src.ItemInformation.Images[0];
               }
+
+              newListing.image = parseImagePath(featured, 'THUMBNAIL', marketPort) || newListing.image;
             }
 
             if (isBasicObjectType(src.ItemInformation.ItemLocation)) {

@@ -356,7 +356,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
       foreignShippingPrice: +parsedShpIntlPrice > 0 ? parsedShpIntlPrice : '0',
       images: Array.isArray(formValues['pendingImages']) ?
           formValues['pendingImages'].map((image: string) => {
-            const imgData: TemplateRequestImageItem = {type: 'LOCAL', encoding: 'BASE64', data: image};
+            const imgData: TemplateRequestImageItem = {type: 'REQUEST', data: image};
             return imgData;
           }) :
           [],

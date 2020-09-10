@@ -10,7 +10,7 @@ import { RegionListService } from '../region-list/region-list.service';
 import * as marketConfig from '../../../../../modules/market/config.js';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
-import { formatImagePath, getValueOrDefault, isBasicObjectType } from '../../shared/utils';
+import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
 import { RespCategoryList, RespMarketListMarketItem, RespListingItem } from '../../shared/market.models';
 import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
 import { CategoryItem, Market } from './data.models';
@@ -64,6 +64,7 @@ export class DataService {
               name: this.marketAddresses.includes(market.receiveAddress) ? TextContent.OPEN_MARKET_NAME : market.name,
               type: market.type,
               receiveAddress: market.receiveAddress,
+              publishAddress: market.publishAddress,
               identityId: +market.identityId,
               // TODO: set this correctly when market images are available
               image: this.defaultMarketImage
@@ -116,9 +117,9 @@ export class DataService {
         escrowSeller = 100,
         escrowBuyer = 100,
         flaggedHash = '',
-        favouriteId = 0,
-        shippingDestinations = [] as {code: string, name: string}[];
+        favouriteId = 0;
 
+    const shippingDestinations = [] as {code: string, name: string}[];
     const shippingLocation = { code: '', name: ''};
     const category = { id: 0, title: '' };
     const images = { featured: 0, images: [] as {THUMBNAIL: string, IMAGE: string}[] };
@@ -174,28 +175,20 @@ export class DataService {
       }
 
       // images
-      if (Array.isArray(fromDetails.ItemImages)) {
-        fromDetails.ItemImages.forEach(img => {
-          if (img.featured) {
-            images.featured = images.images.length;
-          }
-          let thumbUrl = '';
-          let imgUrl = '';
-
-          if (Array.isArray(img.ItemImageDatas)) {
-            img.ItemImageDatas.forEach(d => {
-              if (d.imageVersion) {
-                if (d.imageVersion === 'MEDIUM' && getValueOrDefault(d.dataId, 'string', imgUrl)) { imgUrl = d.dataId; }
-                if (d.imageVersion === 'THUMBNAIL' && getValueOrDefault(d.dataId, 'string', thumbUrl)) { thumbUrl = d.dataId; }
-              }
-            });
-          }
+      if (Array.isArray(fromDetails.Images)) {
+        fromDetails.Images.forEach(img => {
+          const thumbUrl = parseImagePath(img, 'THUMBNAIL', marketSettings.port);
+          const imgUrl = parseImagePath(img, 'MEDIUM', marketSettings.port);
 
           if (thumbUrl && imgUrl) {
             images.images.push({
-              IMAGE: formatImagePath(imgUrl, marketSettings.port),
-              THUMBNAIL: formatImagePath(thumbUrl, marketSettings.port)
+              THUMBNAIL: thumbUrl,
+              IMAGE: imgUrl
             });
+
+            if (img.featured) {
+              images.featured = images.images.length - 1;
+            }
           }
         });
       }

@@ -1,4 +1,4 @@
-<app-page-intro><!-- [childPageAlias]="tabLabels[selectedTab]" -->
+<app-page-intro childPageAlias="Sell Orders">
   <ng-container page-title>Sell Orders</ng-container>
   <ng-container page-content>
     Manage your orders which you're selling to Buyers.
@@ -74,7 +74,7 @@
 
   <!-- *ngIf="orders?.length === 0" -->
   <div class="no-results">
-    <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders found">
+    <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders Available">
     <p>
       You don't have any market orders yet
     </p>
