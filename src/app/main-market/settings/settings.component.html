@@ -84,8 +84,8 @@
                       (change)="settingChangedValue(settingIdx)">
                       <h4 class="option">
                         {{ setting.title }}
-                        <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                        <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                        <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                        <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
                       </h4>
                       <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     </mat-checkbox>
@@ -99,8 +99,8 @@
                   <label>
                     <h4 class="option">
                       {{ setting.title }}
-                      <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
                     </h4>
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
@@ -126,8 +126,8 @@
                   <label>
                     <h4 class="option">
                       {{ setting.title }}
-                      <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
                     </h4>
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
@@ -147,8 +147,8 @@
                   <label>
                     <h4 class="option">
                       {{ setting.title }}
-                      <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
                     </h4>
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
@@ -168,8 +168,8 @@
                   <div class="button label">
                     <h4 class="option">
                       {{ setting.title }}
-                      <span class="tag" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag restart-required" *ngIf="setting.restartRequired">Requires restart</span>
+                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
                     </h4>
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>

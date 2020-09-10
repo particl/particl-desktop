@@ -219,7 +219,7 @@ $break-xhd: 2200px;
 
 // ------ 3.2. UI ELEMENTS ------ //
 
-%tag { // notification tags - e.g. in tabs: Orders [3]
+%notification { // "filled" notifications (in contrast to outlined "tags") - e.g. in tabs: Orders [3]
   @extend %tfx;
   font-size: 80%;
   color: var(--color-white);

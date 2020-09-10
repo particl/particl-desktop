@@ -214,7 +214,7 @@ mat-tab-group.mat-tab-group {
       .mat-icon {
         opacity: 0.9;
       }
-      .tag {
+      .notification {
         background-color: var(--color-primary);
       }
     }
@@ -225,8 +225,8 @@ mat-tab-group.mat-tab-group {
       opacity: 0.5;
     }
   }
-  .tag { // notification tags in tabs - e.g. Orders [3]
-    @extend %tag;
+  .notification { // notification tags in tabs - e.g. Orders [3]
+    @extend %notification;
     background-color: var(--bg-muted);
   }
 }
