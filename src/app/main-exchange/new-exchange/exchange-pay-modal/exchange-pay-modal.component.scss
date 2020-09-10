@@ -1,20 +1,9 @@
 @import './src/assets/config'; // import shared colors etc.
 
-.mat-dialog-title {
-  margin: -8px -24px 15px !important;
-  padding: 0 var(--paddingH);
-}
-
-button.modal-close {
-  top: 14px !important;
-}
 
 .dialog-content {
-  background: var(--bg);
   margin: 0 -24px !important;
   padding: var(--paddingV) var(--paddingH);
-  border-top: 1px solid var(--bg-muted);
-  border-bottom: 1px solid var(--bg-muted);
   width: 640px;
 }
 

@@ -392,7 +392,7 @@
       </button>
 
       <!-- @TODO: can we disable the button and switch label to "Added to Cart" after it has been added to cart? -->
-      <button mat-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired" appDebounceClick (debounceClick)="actionAddItemToCart()">
+      <button mat-raised-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired" appDebounceClick (debounceClick)="actionAddItemToCart()" color="primary">
         <mat-icon fontIcon="part-cart"></mat-icon>
         Add to Cart
       </button>

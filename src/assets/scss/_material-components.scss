@@ -384,24 +384,31 @@ mat-expansion-panel.mat-expansion-panel {
 
 .cdk-overlay-container {
   .mat-dialog-container {
+    --title-marginV: 14px;
     position: relative;
     max-width: 1000px;
+    padding: var(--title-marginV) 24px 24px 24px;
 
     // TODO @Allien: still needed?
     // Dialogs (small)
     .dialog-content {
       margin: 0 -24px;
+      &.--muted {
+        background: var(--bg);
+        border-top: 1px solid var(--bg-muted);
+        border-bottom: 1px solid var(--bg-muted);
+      }
     }
     .mat-dialog-title { // dialog title
       font-family: var(--font) !important;
       font-weight: 500;
-      font-size: 20px;
-      margin-bottom: 15px;
+      font-size: 18px;
+      margin-bottom: var(--title-marginV);
       padding-right: 50px;
       &.text-center {
         padding: 0;
       }
-      }
+    }
 
     mat-dialog-content {
       line-height: 1.5;
@@ -429,7 +436,7 @@ mat-expansion-panel.mat-expansion-panel {
       @extend %tfx;
       position: absolute;
       right: 16px; // align with modal's content padding
-      top: 20px;
+      top: 13px;
       z-index: 10;
       color: var(--bg-muted) !important;
       min-width: 36px;

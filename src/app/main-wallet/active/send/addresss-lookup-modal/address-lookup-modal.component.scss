@@ -68,12 +68,8 @@
     }
     .type {
       opacity: 0.6;
-      font-size: 11px;
-      color: var(--text);
-      text-transform: uppercase;
-      border: 1px solid hsla(var(--text-hsl), 0.7);
-      border-radius: var(--radius);
-      padding: 1px 5px;
+      top: 0;
+      display: inline;
     }
   }
 

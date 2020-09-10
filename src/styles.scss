@@ -845,7 +845,7 @@ kbd {
 // ------ 4.3. ALERTS (INFO/WARNING MESSAGES) ------ //
 
 // NEW "colorful" alerts (like messages below, but with more color)
-// markup: p.alert.--boxed.--warning>span
+// markup: p.alert.--boxed.--warning>span(>small)
 p.alert,
 div.alert {
   font-weight: 500;
@@ -992,12 +992,12 @@ p.info {
 .tag {
   display: inline-block;
   color: var(--text-muted);
-  font-size: 0.8em;
+  font-size: 11px;
   font-weight: 400;
   text-transform: uppercase;
   border: 1px solid hsla(var(--text-muted-hsl), 0.7);
   border-radius: var(--radius);
-  padding: 0 5px;
+  padding: 1px 6px;
   position: relative;
   top: -1px;
   margin-left: 6px;
@@ -1017,7 +1017,8 @@ p.info {
     border: 1px solid var(--color-alert);
   }
   &.--smaller {
-    font-size: 0.7rem;
+    font-size: 9px;
+    padding: 0 5px;
   }
 }
 

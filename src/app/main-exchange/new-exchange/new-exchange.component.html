@@ -93,7 +93,7 @@
         <mat-radio-button class="option" *ngFor="let option of exchanges_list" [value]="option.value" color="accent">
           <div class="exchange">
             <div class="image"><img src="{{ option.image }}" alt="{{ option.title }}"></div>
-            <div class="name">{{ option.title }} <span class="tag --smaller --secondary">{{ option.tag }}</span></div>
+            <div class="name">{{ option.title }} <span class="tag --secondary">{{ option.tag }}</span></div>
             <div class="rate">{{ option.rate }} BTC/PART</div><!-- (input coin) / (output coin) -->
             <div class="amount">{{ option.amount }} PART</div>
           </div>

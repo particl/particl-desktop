@@ -4,13 +4,8 @@
 .question-item {
   // header / toggle
   .header-wrapper {
-    .meta {
-      .origin-market {
-        margin-right: 10px;
-        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
-        padding: 1px 6px;
-        border-radius: var(--radius);
-      }
+    .origin-market {
+      margin: 0 10px 0 0;
     }
   }
   .status { // number of replies in thread
