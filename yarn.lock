@@ -9364,9 +9364,9 @@ particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/parti
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9426,9 +9426,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-24.tgz:
-  version "0.3.0-24"
-  resolved "./particl-marketplace-0.3.0-24.tgz#23f2eabbbd8fddd81e8200d076b71e37ac201ac6"
+particl-marketplace@./particl-marketplace-0.3.0-25.tgz:
+  version "0.3.0-25"
+  resolved "./particl-marketplace-0.3.0-25.tgz#df478b7aebcc7834c9d3bca87f9938369b582312"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable, Subject, empty, of } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -20,7 +20,7 @@ interface SocketMessageHandlers extends SocketMessageHandlersType {
 }
 
 @Injectable()
-export class MarketSocketService {
+export class MarketSocketService implements OnDestroy {
 
   private log: any = Log.create('market-socket.service id:' + Math.floor((Math.random() * 1000) + 1));
 
@@ -35,6 +35,20 @@ export class MarketSocketService {
 
   constructor() {
     this.log.d('starting service...');
+  }
+
+
+  ngOnDestroy() {
+    /**
+     * NB!! this service is registered in ngxs and thus is not destroyed when the market module is destroyed.
+     *
+     * Thus, due to current app structure, this only occurs when the app shuts down or is destroyed
+     * (after having launched the MP at least once)
+     *  However, this needs to exist for dev purposes: when reloading the window via hot-reload functionality, the websocket needs to be
+     * closed correctly, since the MP service is not stopped, so the socket connection remains open
+     * (despite the UI losing the connection due to the reload)
+     */
+    this.stopSocketService();
   }
 
 

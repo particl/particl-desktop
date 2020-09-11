@@ -18,6 +18,7 @@ type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 interface RespGeneralProfile {
   id: number;
   name: string;
+  imageId: null | number;
   updatedAt: number;
   createdAt: number;
 }
@@ -45,11 +46,13 @@ export interface RespIdentityListItem {
   path: string; // eg: m/4444446'/0'
   mnemonic: string | null;
   passphrase: string | null;
+  imageId: null | number;
   updatedAt: number;
   createdAt: number;
   Profile: RespGeneralProfile;
   ShoppingCarts: RespCartListItem[];
   Markets: RespIdentityMarketItem[];
+  Bids: any[];
 }
 
 
@@ -103,6 +106,7 @@ export interface RespIdentityMarketItem {
   hash: string;
   generatedAt: number;
   receivedAt: null | number;
+  expiredAt: null | number;
   postedAt: null | number;
   updatedAt: number;
   createdAt: number;
@@ -493,7 +497,7 @@ export interface RespFavoriteItem {
 export interface RespCartListItem {
   id: number;
   name: string;
-  profileId: number;
+  identityId: number;
   updatedAt: number;
   createdAt: number;
 }
