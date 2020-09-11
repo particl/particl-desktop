@@ -22,7 +22,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   identity: null,
   defaultConfig: {
     imagePath: './assets/images/placeholder_4-3.jpg',
-    hostName: `http://${environment.marketHost}:${environment.marketPort || 80}/`
+    url: `http://${environment.marketHost}:${environment.marketPort || 80}/`
   },
   settings: {
     port: environment.marketPort,
@@ -170,15 +170,15 @@ export class MarketState {
 
     return this._marketService.startMarketService(ctx.getState().settings.port).pipe(
       map(resp => {
-        const defaultConfig = JSON.parse(JSON.stringify(ctx.getState().defaultConfig));
-        defaultConfig.hostName = resp.url ? resp.url : defaultConfig.hostName;
+        const defaultConfig: DefaultMarketConfig = JSON.parse(JSON.stringify(ctx.getState().defaultConfig));
+        defaultConfig.url = resp.url ? resp.url : defaultConfig.url;
         ctx.patchState({defaultConfig});
         return resp.started;
       }),
       tap((isStarted) => {
         if (isStarted) {
           // the path appended here is necessary since the marketplace is using socket.io and this is needed specifically for socket.io
-          let url = `${ctx.getState().defaultConfig.hostName}socket.io/?EIO=3&transport=websocket`;
+          let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=3&transport=websocket`;
 
           if (url.startsWith('http')) {
             url = url.replace('http', 'ws');

@@ -47,7 +47,7 @@ export class BuyCartService {
     const cart = this._store.selectSnapshot(MarketState.availableCarts)[0];
 
     if (!(cart && (+cart.id > 0))) {
-      return throwError('InvalidCart');
+      return throwError('Invalid Cart');
     }
 
     const markets$ = this._sharedDataService.loadMarkets().pipe(
@@ -63,10 +63,10 @@ export class BuyCartService {
 
         defer(() => markets$.pipe(
           map((marketValues) => {
-            const settings = this._store.selectSnapshot(MarketState.settings);
+            const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
             const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
             return cartItems.map(
-              item => this.buildCartItem(item, settings.port, defaultImagePath, marketValues)
+              item => this.buildCartItem(item, marketUrl, defaultImagePath, marketValues)
             ).filter(
               l => (l.listingId > 0) && (l.id > 0)
             );
@@ -253,7 +253,7 @@ export class BuyCartService {
 
 
   private buildCartItem(
-    from: RespCartItemListItem, marketPort: number, defaultImage: string, markets: { key: string, name: string; }[]
+    from: RespCartItemListItem, marketUrl: string, defaultImage: string, markets: { key: string, name: string; }[]
   ): CartItem {
 
     const newCartItem: CartItem = {
@@ -307,7 +307,7 @@ export class BuyCartService {
           featured = from.ListingItem.ItemInformation.Images[0];
         }
 
-        newCartItem.image = parseImagePath(featured, 'MEDIUM', marketPort) || newCartItem.image;
+        newCartItem.image = parseImagePath(featured, 'MEDIUM', marketUrl) || newCartItem.image;
       }
 
       if (isBasicObjectType(from.ListingItem.ItemInformation.ItemLocation)) {

@@ -105,7 +105,7 @@ export class DataService {
 
 
   private createListingItemDetail(from: RespListingItem, marketId: number): ListingItemDetail {
-    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
 
     let title = '',
@@ -177,8 +177,8 @@ export class DataService {
       // images
       if (Array.isArray(fromDetails.Images)) {
         fromDetails.Images.forEach(img => {
-          const thumbUrl = parseImagePath(img, 'THUMBNAIL', marketSettings.port);
-          const imgUrl = parseImagePath(img, 'MEDIUM', marketSettings.port);
+          const thumbUrl = parseImagePath(img, 'THUMBNAIL', marketUrl);
+          const imgUrl = parseImagePath(img, 'MEDIUM', marketUrl);
 
           if (thumbUrl && imgUrl) {
             images.images.push({

@@ -99,9 +99,9 @@ export class SellService {
           concatAll(),
           last(),
           map((resp: RespListingTemplate) => {
-            const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+            const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
             const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
-            const marketTempl = this.buildBasicProductMarketItem(resp, marketPort, defaultImagePath);
+            const marketTempl = this.buildBasicProductMarketItem(resp, marketUrl, defaultImagePath);
             return marketTempl.id > 0 ? marketTempl : null;
           }),
         );
@@ -651,7 +651,7 @@ export class SellService {
 
   private extractTemplateSavedDetails(src: RespListingTemplate): TemplateSavedDetails {
 
-    const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+    const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
     const saveDetails = this.getDefaultTemplateSaveDetails();
 
     if (!isBasicObjectType(src)) {
@@ -675,7 +675,7 @@ export class SellService {
 
       if (Array.isArray(src.ItemInformation.Images)) {
         src.ItemInformation.Images.forEach(img => {
-          const foundImgData = parseImagePath(img, 'ORIGINAL', marketPort);
+          const foundImgData = parseImagePath(img, 'ORIGINAL', marketUrl);
           if (foundImgData) {
             saveDetails.images.push({id: +img.id, url: foundImgData});
           }
@@ -724,7 +724,7 @@ export class SellService {
 
   private buildProductsFromTemplateList(srcList: RespListingTemplate[]): ProductItem[] {
     const allProductItems: ProductItem[] = [];
-    const settings = this._store.selectSnapshot(MarketState.settings);
+    const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
     const defaultImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
 
     const marketTemplMap: Map<number, RespListingTemplate> = new Map();
@@ -779,7 +779,7 @@ export class SellService {
           ).sort((a, b) =>
             +(!!a.featured) - +(!!b.featured)
           ).forEach(img => {
-            const imgPath = parseImagePath(img, 'THUMBNAIL', settings.port);
+            const imgPath = parseImagePath(img, 'THUMBNAIL', marketUrl);
             if (imgPath.length) {
               newProduct.images.push(imgPath);
             }
@@ -872,7 +872,7 @@ export class SellService {
             });
           }
 
-          const newMarketDetails = this.buildBasicProductMarketItem(latestMarketTempl, settings.port, defaultImage);
+          const newMarketDetails = this.buildBasicProductMarketItem(latestMarketTempl, marketUrl, defaultImage);
           newMarketDetails.listings.count = listingCount;
           newMarketDetails.listings.latestExpiry = lastExpiryTimestamp;
           newMarketDetails.status = this.calculateMarketTemplateStatus(newMarketDetails);
@@ -894,7 +894,7 @@ export class SellService {
   }
 
 
-  private buildBasicProductMarketItem(src: RespListingTemplate, marketPort: number, defaultImage: string): ProductMarketTemplate {
+  private buildBasicProductMarketItem(src: RespListingTemplate, marketUrl: string, defaultImage: string): ProductMarketTemplate {
     const newMarketDetails: ProductMarketTemplate = {
       id: 0,
       title: '',
@@ -941,7 +941,7 @@ export class SellService {
         if (featured === undefined) {
           featured = src.ItemInformation.Images[0];
         }
-        newMarketDetails.image = parseImagePath(featured, 'MEDIUM', marketPort) || newMarketDetails.image;
+        newMarketDetails.image = parseImagePath(featured, 'MEDIUM', marketUrl) || newMarketDetails.image;
       }
     }
 
@@ -1002,7 +1002,7 @@ export class SellService {
 
     if (isBasicObjectType(src)) {
 
-      const marketPort = this._store.selectSnapshot(MarketState.settings).port;
+      const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
 
       listingItem.id = +src.id > 0 ? +src.id : listingItem.id;
       listingItem.hash = getValueOrDefault(src.hash, 'string', listingItem.hash);
@@ -1049,8 +1049,8 @@ export class SellService {
 
         if (Array.isArray(src.ItemInformation.Images)) {
           src.ItemInformation.Images.forEach( (img, imgIdx) => {
-            const orig = parseImagePath(img, 'MEDIUM', marketPort);
-            const thumb = parseImagePath(img, 'THUMBNAIL', marketPort);
+            const orig = parseImagePath(img, 'MEDIUM', marketUrl);
+            const thumb = parseImagePath(img, 'THUMBNAIL', marketUrl);
 
             if ((orig.length > 0) && (thumb.length > 0)) {
               listingItem.images.images.push({THUMBNAIL: thumb, IMAGE: orig});

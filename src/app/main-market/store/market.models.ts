@@ -38,7 +38,7 @@ export interface MarketSettings {
 
 
 export interface DefaultMarketConfig {
-  hostName: string;
+  url: string;
   imagePath: string;
 }
 

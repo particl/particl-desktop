@@ -12,7 +12,6 @@ import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/
 import { PartoshiAmount } from 'app/core/util/utils';
 import { RespListingItem, RespCartItemAdd, RespItemFlag } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
-import { MarketSettings } from '../store/market.models';
 import { SocketMessages_v03 } from '../shared/market-socket.models';
 
 
@@ -74,10 +73,11 @@ export class ListingsService {
 
     return this._rpc.call('item', ['search', ...params]).pipe(
       map((resp: RespListingItem[]) => {
-        const marketSettings = this._store.selectSnapshot(MarketState.settings);
+        const userDefaultRegion = this._store.selectSnapshot(MarketState.settings).userRegion;
+        const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
         const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
         const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
-        return resp.map((item) => this.createOverviewItem(item, profileId, marketSettings, defaultImagePath));
+        return resp.map((item) => this.createOverviewItem(item, profileId, marketUrl, defaultImagePath, userDefaultRegion));
       })
     );
   }
@@ -116,7 +116,7 @@ export class ListingsService {
 
 
   private createOverviewItem(
-    from: RespListingItem, profileId: number, marketSettings: MarketSettings, defaultImage: string
+    from: RespListingItem, profileId: number, marketUrl: string, defaultImage: string, userRegion: string
   ): ListingOverviewItem {
     let listingId = 0,
         title = '',
@@ -141,7 +141,7 @@ export class ListingsService {
       listingSeller = getValueOrDefault(from.seller, 'string', '');
 
       if (isBasicObjectType(fromDetails.ItemLocation)) {
-        isLocalShipping = marketSettings.userRegion === getValueOrDefault(fromDetails.ItemLocation.country, 'string', '');
+        isLocalShipping = userRegion === getValueOrDefault(fromDetails.ItemLocation.country, 'string', '');
       }
 
       // Image selection and processing
@@ -151,7 +151,7 @@ export class ListingsService {
           if (featured === undefined) {
             featured = fromDetails.Images[0];
           }
-          imageSelected = parseImagePath(featured, 'MEDIUM', marketSettings.port) || imageSelected;
+          imageSelected = parseImagePath(featured, 'MEDIUM', marketUrl) || imageSelected;
         }
       }
     }
@@ -163,7 +163,7 @@ export class ListingsService {
       if (isBasicObjectType(priceInfo.ItemPrice)) {
         price.add(new PartoshiAmount(priceInfo.ItemPrice.basePrice, true));
 
-        if ((marketSettings.userRegion.length > 0) && isBasicObjectType(priceInfo.ItemPrice.ShippingPrice)) {
+        if ((userRegion.length > 0) && isBasicObjectType(priceInfo.ItemPrice.ShippingPrice)) {
           if (isLocalShipping) {
             price.add( new PartoshiAmount(priceInfo.ItemPrice.ShippingPrice.domestic, true) );
           } else {

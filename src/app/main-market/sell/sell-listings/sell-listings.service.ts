@@ -40,7 +40,7 @@ export class SellListingsService {
     // So why this complicated route?
     // Because we need such details as which Base Template the listing refers to, or
     //    which parent Market Template (if applicable) it refers to, etc
-    const settings = this._store.selectSnapshot(MarketState.settings);
+    const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
     const actualListings: SellListing[] = [];
 
     const marketTemplMap: Map<number, RespListingTemplate> = new Map();
@@ -67,7 +67,7 @@ export class SellListingsService {
 
             // process any "root" market template listings
             if (this.isArray(rootMarketTempl.ListingItems)) {
-              const listingItems = this.buildListingItemsFromTemplate(rootMarketTempl, baseTempl.id, settings.port);
+              const listingItems = this.buildListingItemsFromTemplate(rootMarketTempl, baseTempl.id, marketUrl);
               actualListings.push(...listingItems);
             }
 
@@ -77,7 +77,7 @@ export class SellListingsService {
                 const childMarketTemplate = marketTemplMap.get(+childTempl.id);
 
                 if (childMarketTemplate && (+childMarketTemplate.id > 0)) {
-                  const listingItems = this.buildListingItemsFromTemplate(childMarketTemplate, baseTempl.id, settings.port);
+                  const listingItems = this.buildListingItemsFromTemplate(childMarketTemplate, baseTempl.id, marketUrl);
                   actualListings.push(...listingItems);
                 }
               });
@@ -91,7 +91,7 @@ export class SellListingsService {
   }
 
 
-  private buildListingItemsFromTemplate(marketTemplate: RespListingTemplate, rootTemplateId: number, marketPort: number): SellListing[] {
+  private buildListingItemsFromTemplate(marketTemplate: RespListingTemplate, rootTemplateId: number, marketUrl: string): SellListing[] {
 
     const now = Date.now();
     const listings: SellListing[] = [];
@@ -139,7 +139,7 @@ export class SellListingsService {
                 featured = src.ItemInformation.Images[0];
               }
 
-              newListing.image = parseImagePath(featured, 'THUMBNAIL', marketPort) || newListing.image;
+              newListing.image = parseImagePath(featured, 'THUMBNAIL', marketUrl) || newListing.image;
             }
 
             if (isBasicObjectType(src.ItemInformation.ItemLocation)) {

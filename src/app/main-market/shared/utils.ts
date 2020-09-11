@@ -10,7 +10,7 @@ export function isBasicObjectType(value: any): boolean {
 }
 
 
-export function parseImagePath(image: RespGeneralImageItem, version: IMAGE_VERSION, marketPort: number ): string {
+export function parseImagePath(image: RespGeneralImageItem, version: IMAGE_VERSION, url: string ): string {
   if (!isBasicObjectType(image) || !Array.isArray(image.ImageDatas)) {
     return '';
   }
@@ -21,6 +21,5 @@ export function parseImagePath(image: RespGeneralImageItem, version: IMAGE_VERSI
     return '';
   }
 
-  // @TODO zaSmilingIdiot 2020-09-10 -> protocol and host are hardcoded, but should be provided along with the port, perhaps as a full url
-  return `http://localhost:${marketPort}/api/images/${+image.id}/${version}`;
+  return `${url}${url[url.length - 1] !== '/' ? '/' : ''}api/images/${+image.id}/${version}`;
 }

@@ -25,9 +25,10 @@ export class FavouritesService {
   fetchFavourites(): Observable<FavouritedListing[]> {
     return this._rpc.call('favorite', ['list', this._store.selectSnapshot(MarketState.currentProfile).id]).pipe(
       map((resp: RespFavoriteItem[]) => {
-        const settings = this._store.selectSnapshot(MarketState.settings);
-        const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
-        return resp.map(item => this.createFavouriteItem(item, settings.port, defaultImagePath, settings.userRegion));
+        const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
+        const userDefaultRegion = this._store.selectSnapshot(MarketState.defaultConfig).url;
+        const defaultImagePath = this._store.selectSnapshot(MarketState.settings).userRegion;
+        return resp.map(item => this.createFavouriteItem(item, marketUrl, defaultImagePath, userDefaultRegion));
       })
     );
   }
@@ -46,7 +47,7 @@ export class FavouritesService {
   }
 
 
-  private createFavouriteItem(from: RespFavoriteItem, marketPort: number, defaultImage: string, userRegion: string): FavouritedListing {
+  private createFavouriteItem(from: RespFavoriteItem, marketUrl: string, defaultImage: string, userRegion: string): FavouritedListing {
 
     let favId = 0,
         listingId = 0,
@@ -89,7 +90,7 @@ export class FavouritesService {
               if (featured === undefined) {
                 featured = fromListing.ItemInformation.Images[0];
               }
-              image = parseImagePath(featured, 'MEDIUM', marketPort) || image;
+              image = parseImagePath(featured, 'MEDIUM', marketUrl) || image;
             }
           }
         }
