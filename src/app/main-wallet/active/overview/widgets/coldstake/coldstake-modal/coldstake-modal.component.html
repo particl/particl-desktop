@@ -5,38 +5,31 @@
 </button>
 
 
-<mat-dialog-content class="modal-content">
+<mat-dialog-content class="dialog-content --muted">
 
   <p class="lead">
     To activate Cold staking, enter the&nbsp;public key of&nbsp;your staking node (or&nbsp;a&nbsp;Pool)&nbsp;below
   </p>
+  
+  <mat-form-field class="pubkey --boxed --larger" appearance="fill" color="accent">
+    <mat-icon fontIcon="part-snowflake" matPrefix></mat-icon>
+    <input matInput [formControl]="addressField" placeholder="Enter staking node's public key" required>
+  </mat-form-field>
+
   <p class="help-text">
-    Cold staking delegates staking of&nbsp;your coins to&nbsp;other node (like your own Raspberri Pi/Rock64 or&nbsp;a&nbsp;public staking pool) while increasing security of&nbsp;your coins, as&nbsp;staking nodes cannot spend them.
+    Cold staking delegates staking of&nbsp;your coins to&nbsp;other node (like your own Raspberry Pi/Rock64 or&nbsp;a&nbsp;public staking pool) while increasing security of&nbsp;your coins, as&nbsp;staking nodes cannot spend them
   </p>
-
-  <div class="modal-highlight">
-
-    <p class="message --info">
-      Read more about
-      <a href="https://particl.wiki/learn/staking" target="_blank" matTooltip="Particl.wiki > Staking" tabindex="-1">Particl Staking</a> and check <a href="https://particl.wiki/tutorial/staking/cold-staking#get-staking-public-key" target="_blank" matTooltip="Particl.wiki > Cold staking" tabindex="-1">Getting staking public key</a> on&nbsp;Particl Wiki
-    </p>
-    
-    <mat-form-field class="pubkey --boxed --larger" appearance="fill">
-      <input matInput [formControl]="addressField" placeholder="Enter staking node's public key" required />
-    </mat-form-field>
-    
-  </div><!-- .modal-highlight -->
 
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions>
   <button type="button" mat-button mat-dialog-close>
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
 
-  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="activate()" [disabled]="addressField.invalid">
+  <button mat-raised-button color="accent" appDebounceClick (debounceClick)="activate()" [disabled]="addressField.invalid">
     <mat-icon fontIcon="part-snowflake"></mat-icon>
     Enable cold staking
   </button>

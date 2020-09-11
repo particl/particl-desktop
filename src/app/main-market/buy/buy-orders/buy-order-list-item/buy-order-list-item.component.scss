@@ -78,7 +78,9 @@
   .item-details { // shipping & pricing
     .buyer-info { // shipping address, contact info
       .shipping-info {
+        @extend %enable-select;
         small {
+          @extend %disable-select;
           @extend %tfx;
           opacity: 0;
           display: inline-block;
@@ -92,6 +94,7 @@
         }
       }
       .contact-info {
+        @extend %enable-select;
         margin-bottom: 0;
       }
     }

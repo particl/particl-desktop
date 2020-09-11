@@ -389,7 +389,6 @@ mat-expansion-panel.mat-expansion-panel {
     max-width: 1000px;
     padding: var(--title-marginV) 24px 24px 24px;
 
-    // TODO @Allien: still needed?
     // Dialogs (small)
     .dialog-content {
       margin: 0 -24px;
@@ -430,6 +429,16 @@ mat-expansion-panel.mat-expansion-panel {
           transform-origin: 50px 35px;
         }
       }
+    }
+
+    .mat-dialog-actions {
+      //border-top: 1px solid var(--bg-muted);
+      margin: 0 -24px -24px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: auto; // fix default (?) styling
     }
 
     .modal-close { // new modal close button (use with `mat-button color="warn"`

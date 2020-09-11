@@ -17,23 +17,26 @@
     </label>
 
     <market-shipping-address-form
-        [srcAddress]="address"
-        [isEditable]="true"
-        (isValid)="setFormValid($event)">
+      [srcAddress]="address"
+      [isEditable]="true"
+      (isValid)="setFormValid($event)">
     </market-shipping-address-form>
 
   </mat-dialog-content>
 
 
-  <mat-dialog-actions fxLayoutAlign="space-between center">
-    <button mat-button color="warn" *ngIf="!isNew" [disabled]="!canAction" (click)="deleteAddress()">
-      <mat-icon fontIcon="part-circle-remove"></mat-icon>
-      Delete Profile
-    </button>
-
-    <button mat-raised-button color="primary" [disabled]="!canAction" (click)="setAddress()">
-      <mat-icon fontIcon="part-check"></mat-icon>
-      {{ isNew ? 'Save Profile' : 'Update Profile' }}
-    </button>
+  <mat-dialog-actions>
+    <div class="left">
+      <button mat-button color="warn" *ngIf="!isNew" [disabled]="!canAction" (click)="deleteAddress()">
+        <mat-icon fontIcon="part-circle-remove"></mat-icon>
+        Delete Profile
+      </button>
+    </div>
+    <div class="right">
+      <button mat-raised-button color="primary" [disabled]="!canAction" (click)="setAddress()">
+        <mat-icon fontIcon="part-check"></mat-icon>
+        {{ isNew ? 'Save new Profile' : 'Update Profile' }}
+      </button>
+    </div>
   </mat-dialog-actions>
 </ng-container>
