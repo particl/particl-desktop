@@ -28,7 +28,7 @@
   }
 }
 
-.dialog-content {
+.mat-dialog-content {
   max-height: calc(85vh - 200px); // offset higher mat-dialog-title & -actions
   background: var(--bg);
   border-top: 1px solid var(--bg-muted);
