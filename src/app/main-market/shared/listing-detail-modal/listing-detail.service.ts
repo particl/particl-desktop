@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { Observable, of, iif } from 'rxjs';
 import { map, mapTo, catchError, filter, concatMap } from 'rxjs/operators';
-import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 
+import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
-import { isBasicObjectType } from '../utils';
 
+import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
+import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
+
+import { isBasicObjectType } from '../utils';
 import { RespListingItem, RespCartItemAdd, RespItemFlag, RespVoteGet, RespVotePost } from '../market.models';
 import { SocketMessages_v03 } from '../market-socket.models';
 
@@ -16,12 +18,13 @@ export class ListingDetailService {
 
   constructor(
     private _rpc: MarketRpcService,
+    private _socket: MarketSocketService,
     private _store: Store
   ) {}
 
 
   getListenerFlaggedItem(itemHash: string): Observable<SocketMessages_v03.ProposalAdded> {
-    return this._rpc.getSocketMessageListener('MPA_PROPOSAL_ADD').pipe(
+    return this._socket.getSocketMessageListener('MPA_PROPOSAL_ADD').pipe(
       filter((msg) => msg && (msg.category === 'ITEM_VOTE') && (msg.target === itemHash))
     );
   }

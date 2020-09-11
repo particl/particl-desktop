@@ -2,12 +2,14 @@ import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
 import { of, defer, iif, timer } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { MarketSocketService } from '../services/market-rpc/market-socket.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
 import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
+import { environment } from 'environments/environment';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -19,10 +21,11 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   identities: [],
   identity: null,
   defaultConfig: {
-    imagePath: './assets/images/placeholder_4-3.jpg'
+    imagePath: './assets/images/placeholder_4-3.jpg',
+    hostName: `http://${environment.marketHost}:${environment.marketPort || 80}/`
   },
   settings: {
-    port: 3000,
+    port: environment.marketPort,
     defaultIdentityID: 0,
     defaultProfileID: 0,
     userRegion: ''
@@ -51,8 +54,8 @@ export class MarketState {
      *
      * 2. If using ngxsOnInit(), remember that it is called only the first time the state is added to the global store!
      *    - So despite the market module potentially being "loaded" multuple times, this function will only execute on the 1st market load.
-     *    - for clean separation, we should be bootstrapping this module as another whole app inside this one...
-     *      We'll get to this goal eventually... or at least thats the current foward direction.
+     *    - for clean separation, we should be bootstrapping this market module as another whole app inside the main application...
+     *      We'll get to such a goal eventually... or at least thats the current foward direction.
      */
 
   @Selector()
@@ -101,6 +104,7 @@ export class MarketState {
 
   constructor(
     private _marketService: MarketRpcService,
+    private _socketService: MarketSocketService,
     private _settingsService: SettingsService
   ) {}
 
@@ -165,6 +169,23 @@ export class MarketState {
     );
 
     return this._marketService.startMarketService(ctx.getState().settings.port).pipe(
+      map(resp => {
+        const defaultConfig = JSON.parse(JSON.stringify(ctx.getState().defaultConfig));
+        defaultConfig.hostName = resp.url ? resp.url : defaultConfig.hostName;
+        ctx.patchState({defaultConfig});
+        return resp.started;
+      }),
+      tap((isStarted) => {
+        if (isStarted) {
+          // the path appended here is necessary since the marketplace is using socket.io and this is needed specifically for socket.io
+          let url = `${ctx.getState().defaultConfig.hostName}socket.io/?EIO=3&transport=websocket`;
+
+          if (url.startsWith('http')) {
+            url = url.replace('http', 'ws');
+          }
+          this._socketService.startSocketService(url);
+        }
+      }),
       catchError((err) => {
         ctx.patchState({started: StartedStatus.FAILED});
         return of(false);
@@ -180,6 +201,7 @@ export class MarketState {
 
   @Action(MarketActions.StopMarketService)
   stopMarketServices(ctx: StateContext<MarketStateModel>) {
+    this._socketService.stopSocketService();
     this._marketService.stopMarketService();
     ctx.setState(JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES)));
   }

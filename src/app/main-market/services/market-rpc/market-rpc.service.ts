@@ -4,42 +4,18 @@ import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
 import { AppSettingsState } from 'app/core/store/appsettings.state';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
-import { Observable, throwError as observableThrowError, Subject, empty } from 'rxjs';
+import { Observable, throwError as observableThrowError } from 'rxjs';
 import { tap, map, catchError } from 'rxjs/operators';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { IpcService } from 'app/core/services/ipc.service';
 import { AppSettingsStateModel, CoreConnectionModel } from 'app/core/store/app.models';
-import { environment } from 'environments/environment';
-import { SupportedMessageTypes, SocketMessages_v03 } from '../../shared/market-socket.models';
 
-
-interface SocketDataObject {
-  n: number;
-  data: any;
-}
-
-type SocketMessageHandlersType = { [P in keyof SupportedMessageTypes]: Subject<SupportedMessageTypes[P]>};
-type SocketMessageListeners = { [P in keyof SupportedMessageTypes]: Observable<SupportedMessageTypes[P]>};
-
-interface SocketMessageHandlers extends SocketMessageHandlersType {
-  // simplistic attempt at indicating that the type has some form of iterator
-  dontUseThis?: string;
-}
 
 @Injectable()
 export class MarketRpcService {
 
   private log: any = Log.create('market.service id:' + Math.floor((Math.random() * 1000) + 1));
-  private url: string = `http://${environment.marketHost}:${environment.marketPort}/`;
+  private url: string = '';
   private isConnected: boolean = false;
-
-  private marketSocket: WebSocketSubject<SocketDataObject | number> = null;
-
-  private MESSAGE_HANDLERS: SocketMessageHandlers = {
-    MPA_LISTING_ADD_03: null,
-    MPA_COMMENT_ADD: null,
-    MPA_PROPOSAL_ADD: null
-  };
 
 
   constructor(
@@ -51,7 +27,7 @@ export class MarketRpcService {
   }
 
 
-  startMarketService(marketPort: number): Observable<boolean> {
+  startMarketService(marketPort: number): Observable<{url: string, started: boolean}> {
     const appSettings: AppSettingsStateModel = this._store.selectSnapshot(AppSettingsState);
 
     return this._ipc.runCommand('start-market', null, marketPort, appSettings.zmqPort).pipe(
@@ -61,16 +37,14 @@ export class MarketRpcService {
         if (started) {
           const connDetails: CoreConnectionModel = this._store.selectSnapshot(CoreConnectionState);
           this.url = `http://${connDetails.rpcbind}:${marketPort}/`;
-
-          this.setupWebSocket();
         }
-      })
+      }),
+      map((isStarted) => ({started: isStarted, url: this.url}))
     );
   }
 
 
   stopMarketService() {
-    this.closeWebSocket();
     this._ipc.runCommand('stop-market', null, null);
     this.isConnected = false;
   }
@@ -106,13 +80,6 @@ export class MarketRpcService {
   }
 
 
-  getSocketMessageListener<K extends keyof SocketMessageListeners>(msgType: K): SocketMessageListeners[K] {
-    return (this.MESSAGE_HANDLERS[msgType] === null) ?
-      empty() :
-      this.MESSAGE_HANDLERS[msgType].asObservable() as SocketMessageListeners[K];
-  }
-
-
   private extractMPErrorMessage(errorObj: any): string {
     if (errorObj && typeof errorObj.message === 'string') {
       return errorObj.message;
@@ -120,123 +87,6 @@ export class MarketRpcService {
       return this.extractMPErrorMessage(errorObj.error);
     }
     return 'Invalid marketplace request';
-  }
-
-
-  private closeWebSocket() {
-    if (this.marketSocket !== null) {
-      this.marketSocket.complete();
-      this.marketSocket = null;
-    }
-  }
-
-
-  private setupWebSocket(): void {
-
-    const needsCreation = this.marketSocket === null;
-
-    if (needsCreation) {
-      let url = this.url;
-      if (url.startsWith('http')) {
-        url = url.replace('http', 'ws');
-      }
-      // this appears to be necessary since the marketplace is using socket.io
-      url += 'socket.io/?EIO=3&transport=websocket';
-
-      // create the websocket
-      this.marketSocket = webSocket({
-        url: url,
-        openObserver: {
-          next: () => this.log.i('websocket connection established')
-        },
-        deserializer: ({data}) => {
-          const retValue: SocketDataObject = {
-            n: 0,
-            data: null
-          };
-          if (typeof data === 'string') {
-            let n = 0;
-            for (const ch of data) {
-              if (!(+ch < Number.MAX_SAFE_INTEGER)) {
-                break;
-              }
-              n++;
-            }
-            if (n > 0) {
-              retValue.n = +data.slice(0, n);
-            }
-            if (n < (data.length - 1)) {
-              try {
-                retValue.data = JSON.parse(data.slice(n));
-              } catch (e) {}
-            }
-          } else if (typeof data === 'object') {
-            try {
-              retValue.data = JSON.parse(JSON.stringify(data));
-            } catch (e) {}
-          }
-          return retValue;
-        }
-      });
-
-      // setup msg handlers
-      this.setupMessageListeners();
-
-    }
-
-    if (this.isConnected && (this.marketSocket.closed || needsCreation)) {
-      this.marketSocket.subscribe(
-        (msg: SocketDataObject) => {
-          if (Array.isArray(msg.data) && (typeof msg.data[0] === 'string')) {
-            const msgKey = msg.data[0];
-            if (msgKey === 'serverping') {
-              // keepalive: respond to the server's ping
-              this.marketSocket.next(2);
-            } else if ((this.MESSAGE_HANDLERS[msgKey] !== undefined) && (typeof msg.data[1] === 'string')) {
-              try {
-                this.MESSAGE_HANDLERS[msgKey].next(JSON.parse(msg.data[1]));
-              } catch (e) {
-                // error parsing message data: invalid message received so ignoring it
-              }
-            }
-
-          }
-        },
-        (err) => this.log.er('websocket connection errored: ', err),
-        () => {
-          this.log.i('websocket connection closed');
-          this.stopMessageListeners();
-        }
-      );
-    }
-
-  }
-
-
-  private stopMessageListeners() {
-    const msgKeys = Object.keys(this.MESSAGE_HANDLERS);
-
-    for (const key of msgKeys) {
-      const sub = this.MESSAGE_HANDLERS[key];
-      if (sub !== null) {
-        try {
-          sub.complete();
-        } catch (e) { }
-        this.MESSAGE_HANDLERS[key] = null;
-      }
-    }
-  }
-
-
-  private setupMessageListeners() {
-
-    this.stopMessageListeners();
-
-    this.MESSAGE_HANDLERS = {
-      MPA_LISTING_ADD_03: new Subject<SocketMessages_v03.AddListing>(),
-      MPA_COMMENT_ADD: new Subject<SocketMessages_v03.CommentAdded>(),
-      MPA_PROPOSAL_ADD: new Subject<SocketMessages_v03.ProposalAdded>()
-    };
   }
 
 }

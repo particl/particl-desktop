@@ -9,6 +9,7 @@ import { MarketState } from './store/market.state';
 import { MarketBaseComponent } from './base/market-base.component';
 import { AlphaMainnetWarningComponent } from './base/alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { MarketRpcService } from './services/market-rpc/market-rpc.service';
+import { MarketSocketService } from './services/market-rpc/market-socket.service';
 import { DataService } from './services/data/data.service';
 import { RegionListService } from './services/region-list/region-list.service';
 
@@ -54,6 +55,7 @@ const routes: Routes = [
   ],
   providers: [
     MarketRpcService,
+    MarketSocketService,
     DataService,
     RegionListService
   ],

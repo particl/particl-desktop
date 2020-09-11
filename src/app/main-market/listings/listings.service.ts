@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { Observable, of } from 'rxjs';
 import { map, mapTo, catchError, filter } from 'rxjs/operators';
-import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 
+import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
 
+import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { MarketSocketService } from '../services/market-rpc/market-socket.service';
+
+import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { RespListingItem, RespCartItemAdd, RespItemFlag } from '../shared/market.models';
 import { ListingOverviewItem } from './listings.models';
@@ -19,23 +21,24 @@ export class ListingsService {
 
   constructor(
     private _rpc: MarketRpcService,
+    private _socket: MarketSocketService,
     private _store: Store
   ) {}
 
 
   getListenerNewListings(): Observable<SocketMessages_v03.AddListing> {
-    return this._rpc.getSocketMessageListener('MPA_LISTING_ADD_03');
+    return this._socket.getSocketMessageListener('MPA_LISTING_ADD_03');
   }
 
 
   getListenerFlaggedItems(): Observable<SocketMessages_v03.ProposalAdded> {
-    return this._rpc.getSocketMessageListener('MPA_PROPOSAL_ADD').pipe(
+    return this._socket.getSocketMessageListener('MPA_PROPOSAL_ADD').pipe(
       filter((msg) => msg && (msg.category === 'ITEM_VOTE'))
     );
   }
 
   getListenerComments(): Observable<SocketMessages_v03.CommentAdded> {
-    return this._rpc.getSocketMessageListener('MPA_COMMENT_ADD').pipe(
+    return this._socket.getSocketMessageListener('MPA_COMMENT_ADD').pipe(
       filter((msg) => msg && (typeof msg.commentType === 'string') && (msg.commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS'))
     );
   }
