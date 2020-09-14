@@ -29,9 +29,6 @@
 .mat-dialog-content {
   width: 60rem;
   padding: 5px 0;
-  background: var(--bg);
-  border-top: 1px solid var(--bg-muted);
-  border-bottom: 1px solid var(--bg-muted);
 }
 
 .available-utxos {
@@ -79,11 +76,4 @@
     flex: 10%;
     padding: 0 24px 0 12px;
   }
-}
-
-
-
-
-.mat-dialog-actions {
-  margin: 0 -12px -24px;
 }

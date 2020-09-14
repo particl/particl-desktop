@@ -1,7 +1,9 @@
-<div mat-dialog-title>Confirm payment</div>
+<mat-dialog-title>Confirm payment</mat-dialog-title>
+
 <button mat-button color="warn" class="modal-close" mat-dialog-close><!-- tabindex="-1" -->
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
+
 
 <mat-dialog-content>
 
@@ -33,7 +35,7 @@
     <mat-icon class="arrow-icon" fontIcon="part-arrow-down"></mat-icon>
 
     <div class="receiver-info">
-      <div class="label">Listing name of item being bought</div>
+      <div class="label"><span class="qty">1&times;</span> Listing name of item being bought</div>
       <code class="address">Pf94seller'sAddress842NFFS32d1f</code>
     </div>
 
@@ -70,10 +72,9 @@
       <span class="fiat">&asymp; 2.52 USD</span>
     </p>
 
-  </div>
-
-
+  </div><!-- .tx-confirmation -->
 </mat-dialog-content>
+
 
 <mat-dialog-actions>
   <button mat-button mat-dialog-close (click)="dialogClose()">

@@ -1,12 +1,12 @@
 <ng-container *appVar="(isActionable | async) as canAction">
-  <div mat-dialog-title>Edit Shipping profile</div>
+  <mat-dialog-title>Edit Shipping profile</mat-dialog-title>
 
   <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
     <mat-icon fontIcon="part-cross"></mat-icon>
   </button>
 
 
-  <mat-dialog-content>
+  <mat-dialog-content class="--muted">
 
     <label class="--larger">
       <h3 class="label">Shipping profile name</h3>

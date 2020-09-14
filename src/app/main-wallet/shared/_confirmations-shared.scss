@@ -73,6 +73,11 @@
     font-size: 18px;
     margin-bottom: 8px;
     padding: 0 24px;
+    .qty {
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-right: 6px;
+    }
   }
   & > .address {
     @extend %enable-select;

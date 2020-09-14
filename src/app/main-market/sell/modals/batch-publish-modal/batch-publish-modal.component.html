@@ -1,5 +1,5 @@
 <ng-container [formGroup]="batchPublishForm">
-  <div mat-dialog-title>
+  <mat-dialog-title>
 
     <div fxLayout fxLayoutAlign="space-between center">
       Batch Publish Listings
@@ -20,7 +20,6 @@
           <mat-form-field class="--plain --larger" appearance="fill">
             <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
             <mat-select placeholder="Select Market" formControlName="selectedMarket">
-              <mat-option value="" class="--larger"></mat-option>
               <mat-option *ngFor="let market of availableMarkets" [value]="market.id" class="--larger">
                 {{ market.name }}
               </mat-option>
@@ -36,7 +35,6 @@
             <mat-form-field class="--plain --larger" appearance="fill">
               <mat-icon matPrefix fontIcon="part-date"></mat-icon>
               <mat-select placeholder="Select duration" formControlName="selectedDuration">
-                <mat-option value="" class="--larger"></mat-option>
                 <mat-option *ngFor="let duration of publishDurations" [value]="duration.value" class="--larger">
                   {{ duration.title }}
                 </mat-option>
@@ -62,7 +60,6 @@
           <mat-form-field class="--plain --larger" appearance="fill">
             <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
             <mat-select placeholder="Select Products" formControlName="presetControl">
-              <mat-option value="" class="--larger"></mat-option>
               <mat-option *ngFor="let preset of productPresets" [value]="preset.value" class="--larger">
                 {{ preset.title }}
               </mat-option>
@@ -73,13 +70,13 @@
 
     </div><!-- .row -->
 
-  </div><!-- mat-dialog-title -->
+  </mat-dialog-title>
 
   <button mat-button color="warn" class="modal-close" tabindex="-1" (click)="actionCloseModal()" [disabled]="isProcessingControl.value">
     <mat-icon fontIcon="part-cross"></mat-icon>
   </button>
 
-  <mat-dialog-content>
+  <mat-dialog-content class="--muted">
 
     <p class="introduction help-text">
       Batch Publish will process your Products and publish them to a selected Market. You won’t have an option to customize Listing’s description, pricing etc.<br>
@@ -122,7 +119,7 @@
               </div>
             </div>
             <ng-container>
-              <div class="category-select">
+              <div class="category-select" matTooltip="Select category" matTooltipPosition="before">
                 <tree-select
                   #categorySelector
                   [data$]="categories$"
@@ -130,7 +127,6 @@
                   [isParentNodesSelectable]="false"
                   placeholderLabel="Select a category"
                   prefixIcon="part-filter"
-                  [labelStyles]="['--larger']"
                   (onClosed)="setProductCategory(formProductIdx, $event[0])">
                 </tree-select>
               </div>
@@ -166,7 +162,7 @@
 
   <div class="row">
     <div class="right">
-      <button mat-button class="small" color="basic" (click)="actionCloseModal()" [disabled]="isProcessingControl.value">
+      <button mat-button color="basic" (click)="actionCloseModal()" [disabled]="isProcessingControl.value">
         <mat-icon fontIcon="part-cross"></mat-icon>
         Cancel &amp; close
       </button>

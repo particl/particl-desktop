@@ -57,8 +57,7 @@ p.lead {
   align-items: center;
   .qr-code {
     --qr-size: 200px;
-    display: block;
-    width: var(--qr-size);
+    flex: 0 0 var(--qr-size);
     height: var(--qr-size);
     margin-right: 30px;
   }

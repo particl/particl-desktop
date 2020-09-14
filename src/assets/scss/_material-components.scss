@@ -382,46 +382,49 @@ mat-expansion-panel.mat-expansion-panel {
 
 // ------ 2.6. MODALS ------ //
 
-.mat-dialog-container {
-  position: relative;
-  max-width: 1000px;
-  padding: 14px 24px 24px 24px;
-  .modal-close { // new modal close button (use with `mat-button color="warn"`
-    @extend %tfx;
-    position: absolute;
-    right: 16px; // align with modal's content padding
-    top: 13px;
-    z-index: 10;
-    color: var(--bg-muted) !important;
-    min-width: 36px;
-    padding: 0;
-    border-radius: 50%;
-    overflow: hidden;
-    .mat-icon {
-      font-size: 16px;
-      line-height: 1.4;
-      margin: 0;
-    }
-    &:hover,
-    &:focus {
-      color: var(--color-alert) !important;
+.cdk-overlay-container { // needs high specificity to override default Mat styling
+  .mat-dialog-container {
+    position: relative;
+    max-width: 1000px;
+    padding: 18px 24px 24px 24px;
+    .modal-close { // new modal close button (use with `mat-button color="warn"`
+      @extend %tfx;
+      position: absolute;
+      right: 16px; // align with modal's content padding
+      top: 11px;
+      z-index: 10;
+      color: var(--bg-muted) !important;
+      min-width: 36px;
+      padding: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      .mat-icon {
+        font-size: 16px;
+        line-height: 1.4;
+        margin: 0;
+      }
+      &:hover,
+      &:focus {
+        color: var(--color-alert) !important;
+      }
     }
   }
 }
 
 mat-dialog-title,
-.mat-dialog-title { // dialog title | @TODO Allien: remove all remaining .mat-dialog-titles
+.mat-dialog-title {
+  display: block;
   font-family: var(--font) !important;
   font-weight: 500;
   font-size: 18px;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
   padding-right: 50px;
   &.text-center {
     padding: 0;
   }
 }
 
-mat-dialog-content {
+mat-dialog-content.mat-dialog-content {
   line-height: 1.5;
   margin: 0 -24px;
   &.--muted {
@@ -449,7 +452,7 @@ mat-dialog-content {
   }
 }
 
-mat-dialog-actions {
+mat-dialog-actions.mat-dialog-actions {
   //border-top: 1px solid var(--bg-muted);
   margin: 0 -24px -24px;
   padding: 12px 16px;

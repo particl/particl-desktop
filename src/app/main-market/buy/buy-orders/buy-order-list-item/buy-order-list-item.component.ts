@@ -7,6 +7,7 @@ import { PayOrderModalComponent } from './../pay-order-modal/pay-order-modal.com
 import { ConfirmOrderDeliveredModalComponent } from './../confirm-order-delivered-modal/confirm-order-delivered-modal.component';
 
 @Component({
+  //selector: 'app-buy-order-list-item',
   templateUrl: './buy-order-list-item.component.html',
   styleUrls: ['./buy-order-list-item.component.scss']
 })

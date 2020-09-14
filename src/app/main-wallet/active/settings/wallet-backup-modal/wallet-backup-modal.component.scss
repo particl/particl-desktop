@@ -1,11 +1,11 @@
 @import './src/assets/config'; // import shared colors etc.
 
-.mat-dialog-title {
+mat-dialog-title {
   margin: 0 !important;
 }
 
 .mat-dialog-content {
-  width: 40rem;
+  width: 34rem;
   .alert {
     margin-top: 0;
   }

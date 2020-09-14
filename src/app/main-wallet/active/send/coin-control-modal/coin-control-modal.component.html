@@ -1,4 +1,4 @@
-<div mat-dialog-title>
+<mat-dialog-title>
   Coin selection
 
   <div class="selection-overview">
@@ -16,14 +16,14 @@
     </div>
   </div><!-- .selection-overview -->
 
-</div><!-- mat-dialog-title -->
+</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<mat-dialog-content>
+<mat-dialog-content class="--muted">
 
   <table class="available-utxos" matSort (matSortChange)="sortData($event)" cellspacing="0">
     <tr>
@@ -50,9 +50,9 @@
     Cancel
   </button>
   <div class="right">
-    <button mat-button class="small" (click)="actionDeselectAll()" [disabled]="selectedCount === 0">
+    <button mat-button (click)="actionDeselectAll()" [disabled]="selectedCount === 0">
       <mat-icon fontIcon="part-select"></mat-icon>
-      (De)select all
+      Deselect all
     </button>
     <button mat-raised-button color="primary" (click)="actionMakeSelection()">
       <mat-icon fontIcon="part-check"></mat-icon>

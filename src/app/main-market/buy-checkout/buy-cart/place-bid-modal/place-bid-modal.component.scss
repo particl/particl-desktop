@@ -2,11 +2,8 @@
 
 .mat-dialog-content {
   width: 450px;
-  background: var(--bg);
   padding: 24px;
   margin-bottom: -24px !important; // offset missing mat-dialog-actions
-  border-top: 1px solid var(--bg-muted);
-  border-bottom: 1px solid var(--bg-muted);
   @include break(l) {
     width: 500px;
   }
