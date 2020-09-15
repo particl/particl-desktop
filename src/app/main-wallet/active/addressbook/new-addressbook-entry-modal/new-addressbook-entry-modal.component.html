@@ -1,10 +1,11 @@
-<div mat-dialog-title>Add new address</div>
+<mat-dialog-title>Add new address</mat-dialog-title>
+
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 <form [formGroup]="addAddressForm" (ngSubmit)="addAddressbookEntry()" #formDir="ngForm">
-  <mat-dialog-content class="modal-content">
+  <mat-dialog-content>
 
     <p class="lead">
       Save 3rd-party's address (e.g. your friend's) for later use.
@@ -61,7 +62,7 @@
   </mat-dialog-content><!-- mat-dialog-content -->
 
 
-  <mat-dialog-actions fxLayoutAlign="space-between center">
+  <mat-dialog-actions>
     <button type="button" mat-button mat-dialog-close>
       <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel

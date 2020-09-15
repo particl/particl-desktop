@@ -1,9 +1,9 @@
-<div mat-dialog-title class="title">Syncing with network</div>
+<mat-dialog-title>Syncing with network</mat-dialog-title>
 <button mat-button color="warn" class="modal-close" mat-dialog-close>
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
-<mat-dialog-content class="modal-content">
+<mat-dialog-content>
 
   <p *ngIf="(totalConnections | async) < 1" class="message --warning">
     Warning: No peers connected &ndash; please check your internet connection

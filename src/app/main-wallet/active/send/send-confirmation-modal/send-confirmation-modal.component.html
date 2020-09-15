@@ -1,9 +1,11 @@
-<div mat-dialog-title>Confirm transaction</div>
+<mat-dialog-title>Confirm transaction</mat-dialog-title>
+
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
-<div mat-dialog-content class="dialog-content">
+
+<mat-dialog-content>
 
   <!--TX confirmation-->
   <div class="tx-confirmation">
@@ -61,9 +63,10 @@
     </p>
   </div><!-- TX confirmation -->
 
-</div><!-- .dialog-content -->
+</mat-dialog-content>
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+
+<mat-dialog-actions>
   <button mat-button mat-dialog-close>
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel

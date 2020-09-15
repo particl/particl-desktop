@@ -1,18 +1,17 @@
-<div mat-dialog-title class="title">Disable Cold staking</div>
+<mat-dialog-title>Disable Cold staking</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<mat-dialog-content class="modal-content">
+<mat-dialog-content class="--muted">
 
   <p class="lead">
-    Disable Cold Staking and move your funds back to your wallet from your staking node (or a Pool).
+    Disable Cold Staking and move your funds back to your wallet from your staking node (or a Pool)
   </p>
-  <p class="message --warning">
-    Disabling Cold Staking will create {{ txCount }} transaction(s) and will consume
-    <strong>{{ fees }}&nbsp;PART</strong> in fees.
+  <p class="alert --boxed --warning">
+    <span>Disabling Cold Staking will create {{ txCount }} transaction(s) and will consume <strong>{{ fees }}&nbsp;PART</strong> in fees.</span>
   </p>
   <p *ngIf="errorTXs > 0">
     Note that {{ errorTXs }} transaction(s) should be created but cannot due to errors. This should not be problematic as cold staking will be disabled anyway.
@@ -25,7 +24,7 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions>
 
   <button mat-button mat-dialog-close>
     <mat-icon fontIcon="part-cross"></mat-icon>

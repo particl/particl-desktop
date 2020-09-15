@@ -191,9 +191,9 @@
             </button>
           </div>
           <div class="right">
-            <button [disabled]="product.displayDetails.availableMarkets.length === 0" mat-raised-button color="primary" (click)="actionPublishProductToMarket(product.id)">
+            <button [disabled]="product.displayDetails.availableMarkets.length === 0" mat-raised-button color="primary" (click)="actionPublishProductToMarket(product.id)" matTooltip="Clone for publishing&#13;on another Market" matTooltipPosition="before" matTooltipClass="multi-line">
               <mat-icon fontIcon="part-rocket"></mat-icon>
-              Publish on Market
+              Clone Product
             </button>
           </div>
         </mat-action-row>

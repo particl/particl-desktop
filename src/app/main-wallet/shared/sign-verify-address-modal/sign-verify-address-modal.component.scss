@@ -1,10 +1,13 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-.modal-content {
+.mat-dialog-content {
   width: 35rem;
   p {
     &.lead {
       margin-top: 0;
     }
+  }
+  .modal-highlight {
+    margin-bottom: 0;
   }
 }

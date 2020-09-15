@@ -3,7 +3,7 @@
 
 // ------ LAYOUT ------ //
 
-.modal-content {
+.mat-dialog-content {
   width: 37rem;
 }
 
@@ -18,4 +18,8 @@
   img {
     width: 12rem;
   }
+}
+
+.modal-highlight {
+  margin-bottom: 0;
 }

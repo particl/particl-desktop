@@ -1,10 +1,10 @@
-<div mat-dialog-title>Restart now?</div>
+<mat-dialog-title>Restart now?</mat-dialog-title>
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<div mat-dialog-content class="dialog-content">
+<mat-dialog-content>
   <p class="lead">
     Particl Desktop needs to be restarted in order to apply relevant changes.
   </p>
@@ -12,10 +12,10 @@
     Would you like to restart now?<br>
     Particl Desktop will relaunch automatically.
   </p>
-</div>
+</mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions>
   <button mat-button mat-dialog-close (click)="dialogClose()">
     <mat-icon fontIcon="part-cross"></mat-icon>
     No, I will restart manually later

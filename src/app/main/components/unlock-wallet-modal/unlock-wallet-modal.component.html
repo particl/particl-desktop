@@ -1,11 +1,11 @@
-<div mat-dialog-title class="title">Unlock your wallet</div>
+<mat-dialog-title>Unlock your wallet</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<mat-dialog-content class="modal-content">
+<mat-dialog-content>
   <p class="lead">
     Please enter your password to unlock the wallet
   </p>
@@ -61,11 +61,12 @@
 </mat-dialog-content>
 
 
-<mat-dialog-actions fxLayoutAlign="end center">
-
-  <button color="warn" mat-raised-button appDebounceClick (debounceClick)="unlock()" [disabled]="(password.length === 0) || isProcessing">
-    <mat-icon fontIcon="part-lock-open"></mat-icon>
-    Unlock wallet
-  </button>
-
+<mat-dialog-actions>
+  <div class="left"></div>
+  <div class="right">
+    <button color="warn" mat-raised-button appDebounceClick (debounceClick)="unlock()" [disabled]="(password.length === 0) || isProcessing">
+      <mat-icon fontIcon="part-lock-open"></mat-icon>
+      Unlock wallet
+    </button>
+  </div>
 </mat-dialog-actions>

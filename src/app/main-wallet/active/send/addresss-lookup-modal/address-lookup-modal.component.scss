@@ -15,9 +15,9 @@
   align-items: flex-end;
 }
 
-.modal-content {
-  background: var(--bg);
+.mat-dialog-content {
   width: 49rem;
+  border-top: none;
 }
 
 .list-data {
@@ -68,12 +68,8 @@
     }
     .type {
       opacity: 0.6;
-      font-size: 11px;
-      color: var(--text);
-      text-transform: uppercase;
-      border: 1px solid hsla(var(--text-hsl), 0.7);
-      border-radius: var(--radius);
-      padding: 1px 5px;
+      top: 0;
+      display: inline;
     }
   }
 
@@ -86,13 +82,11 @@
 }
 
 // Bottom bar with pagination
-.modal-actions {
-  min-height: auto;
-  padding: 0;
+.mat-dialog-actions {
+  padding: 2px 16px;
   .mat-paginator {
-    border-top: 1px solid var(--bg-muted);
-    margin: 0 -24px;
-    width: calc(100% + 48px);
-    padding: 8px;
+    width: calc(100% + 32px);
+    margin: 0 -16px;
+    padding: 0 12px;
   }
 }

@@ -214,13 +214,13 @@
                     [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
               <mat-icon fontIcon="part-flag"></mat-icon>
             </button>
-            <button mat-button color="basic" class="small">
+            <button mat-button color="basic" class="small" matTooltip="Copy Market ID for sharing">
               <mat-icon fontIcon="part-copy"></mat-icon>
-              Copy Market ID
+              Copy ID
             </button>
             <button mat-button color="basic" class="small" matTooltip="Edit Market details" (click)="openEditMarketModal()">
               <mat-icon fontIcon="part-pen-1"></mat-icon>
-              Edit Market
+              Edit
             </button>
             <button mat-button color="basic" class="small icon-only"
                     [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
@@ -252,7 +252,7 @@
                           matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
               </h3>
               <div class="desc">
-                <span class="tag admin">
+                <span class="admin tag --tertiary">
                   <mat-icon fontIcon="part-verified"></mat-icon>
                   Admin
                 </span>
@@ -309,7 +309,7 @@
             </button>
             <button mat-button color="basic" class="small" matTooltip="Edit Market details" (click)="openEditMarketModal()">
               <mat-icon fontIcon="part-pen-1"></mat-icon>
-              Edit Market
+              Edit
             </button>
             <button mat-button color="basic" class="small icon-only"
                     [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">

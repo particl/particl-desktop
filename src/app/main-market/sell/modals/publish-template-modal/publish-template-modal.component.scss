@@ -1,7 +1,7 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-.mat-dialog-title {
-  margin-top: -8px;
+mat-dialog-title {
+  margin: -8px 0 10px;
   .selected-identity {
     font-size: 15px;
     line-height: 1.4;
@@ -28,10 +28,7 @@
   }
 }
 
-.dialog-content {
-  background: var(--bg);
-  border-top: 1px solid var(--bg-muted);
-  border-bottom: 1px solid var(--bg-muted);
+.mat-dialog-content {
   margin: 0 -24px !important;
   padding: var(--paddingV) var(--paddingH);
   width: 34rem;

@@ -1,4 +1,4 @@
-<div mat-dialog-title class="title">Address lookup</div>
+<mat-dialog-title>Address lookup</mat-dialog-title>
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
@@ -24,7 +24,7 @@
 
 </form><!-- .control-bar -->
 
-<div mat-dialog-content class="modal-content">
+<mat-dialog-content class="--muted">
 
   <mat-list class="list-data">
     <ng-container *ngFor="let address of displayedAddresses;trackBy:displayedAddressTrackFn">
@@ -32,15 +32,15 @@
       <mat-list-item class="address-entry" [ngClass]="address.type" (click)="onSelectAddress(address)" (keyup.enter)="onSelectAddress(address)" tabindex="0">
         <div fxFlex="1 1 300px" class="label">{{ address.label }}</div>
         <div fxFlex="1 1 400px" class="address">{{ address.address }}</div>
-        <div fxFlex="0 0 80px" class="text-right"><span class="type">{{ address.type }}</span></div>
+        <div fxFlex="0 0 80px" class="text-right"><span class="type tag">{{ address.type }}</span></div>
       </mat-list-item>
     </ng-container>
   </mat-list>
 
-</div><!-- .modal-content -->
+</mat-dialog-content>
 
 
-<mat-dialog-actions class="modal-actions">
+<mat-dialog-actions>
   <app-paginator
     [length]="pageFilters.resultsTotalCount"
     [pageSize]="pageFilters.pageSize"

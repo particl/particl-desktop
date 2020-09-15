@@ -1,7 +1,7 @@
 @import './src/assets/_config'; // import shared colors etc.
 
-.mat-dialog-title {
-  margin-top: -8px;
+mat-dialog-title {
+  margin: -8px 0 15px;
   .selected-identity {
     font-size: 15px;
     line-height: 1.4;
@@ -28,11 +28,9 @@
   }
 }
 
-.dialog-content {
-  max-height: calc(85vh - 200px); // offset higher mat-dialog-title & -actions
-  background: var(--bg);
-  border-top: 1px solid var(--bg-muted);
-  border-bottom: 1px solid var(--bg-muted);
+.mat-dialog-content {
+  height: calc(85vh - 200px); // offset higher mat-dialog-title & -actions
+  width: 56rem;
   margin: 0 -24px !important;
   padding: calc(var(--paddingV) - 8px) var(--paddingH);
   .introduction {
@@ -115,8 +113,11 @@
         }
       }
     }
+    .category-select {
+      flex: 0 0 250px;
+    }
     .publish-checkbox {
-      margin: 0 24px 0 14px;
+      margin: 0 24px 0 20px;
     }
   }
 
@@ -133,9 +134,9 @@
 .mat-dialog-actions {
   display: block;
   .publish-progress { // mat-progress-bar
-    --mat-padding: 24px;
-    margin: -8px calc(-1 * var(--mat-padding)) 13px;
-    width: calc(100% + 2 * var(--mat-padding));
+    --actions-paddingH: 16px;
+    margin: -12px calc(-1 * var(--actions-paddingH)) 13px;
+    width: calc(100% + 2 * var(--actions-paddingH));
     height: 5px;
   }
   .row {

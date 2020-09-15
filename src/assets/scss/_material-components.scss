@@ -382,54 +382,16 @@ mat-expansion-panel.mat-expansion-panel {
 
 // ------ 2.6. MODALS ------ //
 
-.cdk-overlay-container {
+.cdk-overlay-container { // needs high specificity to override default Mat styling
   .mat-dialog-container {
     position: relative;
     max-width: 1000px;
-
-    // TODO @Allien: still needed?
-    // Dialogs (small)
-    .dialog-content {
-      margin: 0 -24px;
-    }
-    .mat-dialog-title { // dialog title
-      font-family: var(--font) !important;
-      font-weight: 500;
-      font-size: 20px;
-      margin-bottom: 15px;
-      padding-right: 50px;
-      &.text-center {
-        padding: 0;
-      }
-      }
-
-    mat-dialog-content {
-      line-height: 1.5;
-      // TODO @Allien: is the spinner here needed anymore? (in Sync modal only?)
-      .mat-progress-spinner { // loading spinners
-        width: 100px;
-        height: 100px;
-        padding: 0 !important;
-        position: absolute;
-        left: calc((100% - 100px) / 2);
-        top: calc((100% - 100px) / 2);
-        z-index: 10;
-        background: hsla(var(--color-white-hsl), 0.9);
-        box-shadow: 0 0 70px var(--bg-muted);
-        border-radius: 50%;
-        svg {
-          width: 70px !important;
-          height: 70px !important;
-          transform-origin: 50px 35px;
-        }
-      }
-    }
-
+    padding: 18px 24px 24px 24px;
     .modal-close { // new modal close button (use with `mat-button color="warn"`
       @extend %tfx;
       position: absolute;
       right: 16px; // align with modal's content padding
-      top: 20px;
+      top: 11px;
       z-index: 10;
       color: var(--bg-muted) !important;
       min-width: 36px;
@@ -446,8 +408,58 @@ mat-expansion-panel.mat-expansion-panel {
         color: var(--color-alert) !important;
       }
     }
-
   }
+}
+
+mat-dialog-title,
+.mat-dialog-title {
+  display: block;
+  font-family: var(--font) !important;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 18px;
+  padding-right: 50px;
+  &.text-center {
+    padding: 0;
+  }
+}
+
+mat-dialog-content.mat-dialog-content {
+  line-height: 1.5;
+  margin: 0 -24px;
+  &.--muted {
+    background: var(--bg);
+    border-top: 1px solid var(--bg-muted);
+    border-bottom: 1px solid var(--bg-muted);
+  }
+  // TODO @Allien: is the spinner here needed anymore? (in Sync modal only?)
+  .mat-progress-spinner { // loading spinners
+    width: 100px;
+    height: 100px;
+    padding: 0 !important;
+    position: absolute;
+    left: calc((100% - 100px) / 2);
+    top: calc((100% - 100px) / 2);
+    z-index: 10;
+    background: hsla(var(--color-white-hsl), 0.9);
+    box-shadow: 0 0 70px var(--bg-muted);
+    border-radius: 50%;
+    svg {
+      width: 70px !important;
+      height: 70px !important;
+      transform-origin: 50px 35px;
+    }
+  }
+}
+
+mat-dialog-actions.mat-dialog-actions {
+  //border-top: 1px solid var(--bg-muted);
+  margin: 0 -24px -24px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: auto; // fix default (?) styling
 }
 
 

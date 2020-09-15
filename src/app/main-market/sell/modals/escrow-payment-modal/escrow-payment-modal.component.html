@@ -1,9 +1,11 @@
-<div mat-dialog-title>Fund escrow</div>
+<mat-dialog-title>Fund escrow</mat-dialog-title>
+
 <button mat-button color="warn" class="modal-close" mat-dialog-close><!-- tabindex="-1" -->
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
-<mat-dialog-content class="dialog-content">
+
+<mat-dialog-content>
 
   <!-- TODO: show on alpha mainnet only | do we really need it when we have the banner on top of Market? -->
   <p class="message --warning">
@@ -45,12 +47,11 @@
       <span class="fiat">&asymp; 2.52 USD</span>
     </p>
 
-  </div>
+  </div><!-- .tx-confirmation -->
+</mat-dialog-content>
 
 
-</mat-dialog-content><!-- .dialog-content -->
-
-<mat-dialog-actions fxLayoutAlign="space-between center">
+<mat-dialog-actions>
   <button mat-button mat-dialog-close (click)="dialogClose()">
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel

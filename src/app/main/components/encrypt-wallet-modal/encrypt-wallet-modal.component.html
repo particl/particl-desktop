@@ -1,5 +1,5 @@
-<div mat-dialog-title *ngIf="!hasPassword" class="title">Encrypt your wallet</div>
-<div mat-dialog-title *ngIf="hasPassword" class="title">Confirm your password</div>
+<mat-dialog-title *ngIf="!hasPassword">Encrypt your wallet</mat-dialog-title>
+<mat-dialog-title *ngIf="hasPassword">Confirm your password</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
@@ -10,7 +10,7 @@
 
 
 <ng-template #newpass>
-  <mat-dialog-content class="modal-content">
+  <mat-dialog-content>
 
     <div class="row">
 
@@ -52,7 +52,7 @@
 
   </mat-dialog-content>
 
-  <mat-dialog-actions fxLayoutAlign="space-between center">
+  <mat-dialog-actions>
     <button mat-button mat-dialog-close>
       <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
@@ -68,7 +68,7 @@
 
 
 <ng-template #confirm>
-  <mat-dialog-content class="modal-content">
+  <mat-dialog-content>
 
     <div class="row">
 
@@ -109,7 +109,7 @@
 
   </mat-dialog-content>
 
-  <mat-dialog-actions fxLayoutAlign="space-between center">
+  <mat-dialog-actions>
     <button mat-button mat-dialog-close>
       <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
