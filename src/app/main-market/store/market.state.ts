@@ -201,8 +201,8 @@ export class MarketState {
 
   @Action(MarketActions.StopMarketService)
   stopMarketServices(ctx: StateContext<MarketStateModel>) {
-    this._socketService.stopSocketService();
     this._marketService.stopMarketService();
+    this._socketService.stopSocketService();
     ctx.setState(JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES)));
   }
 

@@ -24,6 +24,13 @@ export namespace SocketMessages_v03 {
     receiver: string;
     commentType: 'LISTINGITEM_QUESTION_AND_ANSWERS' | 'PROPOSAL_QUESTION_AND_ANSWERS' | 'MARKETPLACE_COMMENT' | 'PRIVATE_MESSAGE';
   }
+
+
+  export interface BidReceived {
+    id: number;
+    hash: string;
+    market: string;  // market receive address
+  }
 }
 
 
@@ -31,4 +38,5 @@ export interface SupportedMessageTypes {
   MPA_LISTING_ADD_03: SocketMessages_v03.AddListing;
   MPA_PROPOSAL_ADD: SocketMessages_v03.ProposalAdded;
   MPA_COMMENT_ADD: SocketMessages_v03.CommentAdded;
+  MPA_BID_03: SocketMessages_v03.BidReceived;
 }

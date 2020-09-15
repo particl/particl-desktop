@@ -12,6 +12,15 @@ export enum ESCROW_RELEASE_TYPE { ANON = 'anon', BLIND = 'blind' }
 export enum COMMENT_TYPES {
   LISTINGITEM_QUESTION_AND_ANSWERS = 'LISTINGITEM_QUESTION_AND_ANSWERS'
 }
+export enum BID_TYPES {
+  SHIPPING_BID = 'SHIPPING_BID'
+}
+export enum ORDER_ITEM_STATUS {
+  BIDDED = 'BIDDED'
+}
+export enum ORDER_STATUS {
+  RECEIVED = 'RECEIVED'
+}
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
@@ -21,6 +30,75 @@ interface RespGeneralProfile {
   imageId: null | number;
   updatedAt: number;
   createdAt: number;
+}
+
+
+interface RespGeneralIdentity {
+  id: number;
+  profileId: number;
+  type: 'MARKET' | 'PROFILE';
+  wallet: string;
+  address: string;
+  hdseedid: string;
+  path: string;
+  mnemonic: string | null;
+  passphrase: string | null;
+  imageId: number | null;
+  updatedAt: number;
+  createdAt: number;
+  Profile: RespGeneralProfile;
+}
+
+
+interface GeneralBasicBid {
+  id: number;
+  msgid: string;
+  type: 'MPA_BID_03';  // TODO: Are there others??
+  bidder: string;
+  hash: string;
+  generatedAt: number;
+  identityId: number;
+  listingItemId: number;
+  addressId: number;
+  parentBidId: number | null;
+  expiryTime: number | null;
+  receivedAt: number;
+  postedAt: number;
+  expiredAt: number;
+  updatedAt: number;
+  createdAt: number;
+}
+
+
+interface RespGeneralBidItem extends GeneralBasicBid {
+  BidDatas: {
+    id: number;
+    key: string;    // eg: "market.address", or "order.hash"
+    value: string;
+    bidId: number;
+    updatedAt: number;
+    createdAt: number;
+  }[];
+  OrderItem: {
+    id: number;
+    status: ORDER_ITEM_STATUS,
+    itemHash: string;
+    orderId: number;
+    bidId: number;
+    updatedAt: number;
+    createdAt: number;
+    Order: {
+      id: number;
+      status: ORDER_STATUS;
+      generatedAt: number;
+      hash: string;
+      buyer: string;
+      seller: string;
+      addressId: number;
+      updatedAt: number;
+      createdAt: number;
+    }
+  };
 }
 
 
@@ -36,23 +114,10 @@ export interface RespProfileListItem extends RespGeneralProfile {}
 // tslint:enable:no-empty-interface
 
 
-export interface RespIdentityListItem {
-  id: number;
-  profileId: number;
-  type: 'MARKET' | 'PROFILE';
-  wallet: string;  // eg: 'profiles/DEFAULT/particl-market'
-  address: string;
-  hdseedid: string;
-  path: string; // eg: m/4444446'/0'
-  mnemonic: string | null;
-  passphrase: string | null;
-  imageId: null | number;
-  updatedAt: number;
-  createdAt: number;
-  Profile: RespGeneralProfile;
+export interface RespIdentityListItem extends RespGeneralIdentity {
   ShoppingCarts: RespCartListItem[];
   Markets: RespIdentityMarketItem[];
-  Bids: any[];
+  Bids: GeneralBasicBid[];
 }
 
 
@@ -478,7 +543,7 @@ export interface RespListingItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   };
-  Bids: any[];
+  Bids?: RespGeneralBidItem[];
   FlaggedItem?: RespListingItemFlagged;
 }
 
@@ -670,4 +735,28 @@ export interface RespCommentListItem {
 export interface RespCommentPost {
   result: string;
   msgid: string;
+}
+
+
+export interface RespBidSearchItem extends RespGeneralBidItem {
+  ShippingAddress: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    title: null;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    country: string;
+    zipCode: string;
+    type: BID_TYPES;
+    profileId: number;
+    updatedAt: number;
+    createdAt: number;
+    Profile: RespGeneralProfile;
+  };
+  ChildBids: GeneralBasicBid[]; // TODO: is this used??
+  ListingItem: RespListingItem;
+  Identity: RespGeneralIdentity;
 }

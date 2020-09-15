@@ -29,7 +29,8 @@ export class MarketSocketService implements OnDestroy {
   private MESSAGE_HANDLERS: SocketMessageHandlers = {
     MPA_LISTING_ADD_03: null,
     MPA_COMMENT_ADD: null,
-    MPA_PROPOSAL_ADD: null
+    MPA_PROPOSAL_ADD: null,
+    MPA_BID_03: null
   };
 
 
@@ -55,12 +56,20 @@ export class MarketSocketService implements OnDestroy {
   startSocketService(socketpath: string): Observable<boolean> {
     if (this.marketSocket === null || this.marketSocket.closed) {
       this.setupWebSocket(socketpath);
+      this.setupMessageListeners();
     }
     return of(this.marketSocket.closed || this.marketSocket.hasError);
   }
 
 
   stopSocketService() {
+    // TODO: zaSmilingIdiot: 2020-09-14 unfortunately, there's a somewhat of a race condition that exists here, which needs to be fixed
+    // The call to `this.marketSocket.complete();` takes some time to complete (possibly different thread) so the method may complete
+    //  before the connection is properly closed. However, this is method call is typically followed by a close of the market server, which
+    //  terminates the market process... if that executes quicker than the completion of the socket completion, an error occurs since the
+    //  socket frm the extneral server is immediately shutdown without any chance to clean up itself.
+
+    // stop the websocket
     if (this.marketSocket !== null) {
       try {
         this.marketSocket.complete();
@@ -69,6 +78,8 @@ export class MarketSocketService implements OnDestroy {
         this.log.er('websocket completion failed: ', err);
       }
     }
+    // stop all the listeners
+    this.stopMessageListeners();
   }
 
 
@@ -116,9 +127,6 @@ export class MarketSocketService implements OnDestroy {
         return retValue;
       }
     });
-
-    // setup msg handlers
-    this.setupMessageListeners();
 
     this.marketSocket.subscribe(
       (msg: SocketDataObject) => {
@@ -171,7 +179,8 @@ export class MarketSocketService implements OnDestroy {
     this.MESSAGE_HANDLERS = {
       MPA_LISTING_ADD_03: new Subject<SocketMessages_v03.AddListing>(),
       MPA_COMMENT_ADD: new Subject<SocketMessages_v03.CommentAdded>(),
-      MPA_PROPOSAL_ADD: new Subject<SocketMessages_v03.ProposalAdded>()
+      MPA_PROPOSAL_ADD: new Subject<SocketMessages_v03.ProposalAdded>(),
+      MPA_BID_03: new Subject<SocketMessages_v03.BidReceived>(),
     };
   }
 
