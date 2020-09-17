@@ -23,16 +23,16 @@
               width: 6px;
               height: 6px;
               border-radius: 50%;
-              background: var(--color-primary);
+              background: var(--color-secondary);
               position: absolute;
               bottom: 10px;
-              right: 23px;
+              left: 22px;
               &::before {
                 content: "";
                 display: block;
                 width: 6px;
                 height: 6px;
-                border: 2px solid hsla(var(--color-primary-hsl), 0.4);
+                border: 2px solid hsla(var(--color-secondary-hsl), 0.4);
                 border-radius: 50%;
                 position: relative;
                 top: -2px;
