@@ -33,7 +33,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
 };
 
 
-const NULL_IDENTITY: Identity = { id: 0, name: '-', displayName: '-', icon: '', path: '', carts: [] };
+const NULL_IDENTITY: Identity = { id: 0, name: '-', displayName: '-', address: '', icon: '', path: '', carts: [] };
 
 
 @State<MarketStateModel>({
@@ -241,6 +241,7 @@ export class MarketState {
                 name: idItem.wallet,
                 displayName: idName,
                 icon: idName[0],
+                address: idItem.address,
                 path: idItem.path,
                 id: idItem.id,
                 carts: availableCarts

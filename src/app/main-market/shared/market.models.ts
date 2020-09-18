@@ -16,10 +16,40 @@ export enum BID_TYPES {
   SHIPPING_BID = 'SHIPPING_BID'
 }
 export enum ORDER_ITEM_STATUS {
-  BIDDED = 'BIDDED'
+  BIDDED = 'BIDDED',
+  AWAITING_ESCROW = 'AWAITING_ESCROW',
+  ESCROW_LOCKED = 'ESCROW_LOCKED',
+  ESCROW_COMPLETED = 'ESCROW_COMPLETED',
+  SHIPPING = 'SHIPPING',
+  COMPLETE = 'COMPLETE',
+  REJECTED = 'BID_REJECTED'
 }
 export enum ORDER_STATUS {
-  RECEIVED = 'RECEIVED'
+  RECEIVED = 'RECEIVED',
+  SENT = 'SENT',
+  PROCESSING = 'PROCESSING',
+  SHIPPING = 'SHIPPING',
+  COMPLETE = 'COMPLETE',
+  REJECTED = 'REJECTED'
+}
+export enum BID_STATUS {
+  BID_CREATED = 'MPA_BID_03',
+  BID_ACCEPTED = 'MPA_ACCEPT_03',
+  ESCROW_REQUESTED = 'MPA_LOCK_03',
+  ESCROW_COMPLETED = 'MPA_COMPLETE',
+  ITEM_SHIPPED = 'MPA_SHIP',
+  COMPLETED = 'MPA_RELEASE',
+  BID_REJECTED = 'MPA_REJECT_03',
+  ORDER_CANCELLED = 'MPA_CANCELLED'
+}
+export enum BID_DATA_KEY {
+  MARKET_KEY = 'market.address',
+  ORDER_HASH = 'order.hash',
+  ESCROW_MEMO = 'complete.memo',
+  ESCROW_TX_ID = 'txid.complete',
+  SHIPPING_MEMO = 'shipping.memo',
+  RELEASE_MEMO = 'release.memo',
+  RELEASE_TX_ID = 'txid.release'
 }
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
@@ -53,7 +83,7 @@ interface RespGeneralIdentity {
 interface GeneralBasicBid {
   id: number;
   msgid: string;
-  type: 'MPA_BID_03';  // TODO: Are there others??
+  type: BID_STATUS;
   bidder: string;
   hash: string;
   generatedAt: number;
@@ -70,15 +100,41 @@ interface GeneralBasicBid {
 }
 
 
-interface RespGeneralBidItem extends GeneralBasicBid {
+interface GeneralChildBid extends GeneralBasicBid {
   BidDatas: {
     id: number;
-    key: string;    // eg: "market.address", or "order.hash"
+    key: BID_DATA_KEY;
     value: string;
     bidId: number;
     updatedAt: number;
     createdAt: number;
   }[];
+}
+
+
+interface OrderBidItem extends GeneralChildBid {
+  ChildBids: GeneralChildBid[];
+  ListingItem: RespListingItem;
+  ShippingAddress: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    title: string | null;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    country: string;
+    zipCode: string;
+    type: BID_TYPES;
+    profileId: number;
+    updatedAt: number;
+    createdAt: number;
+  };
+}
+
+
+interface RespGeneralBidItem extends GeneralChildBid {
   OrderItem: {
     id: number;
     status: ORDER_ITEM_STATUS,
@@ -117,7 +173,6 @@ export interface RespProfileListItem extends RespGeneralProfile {}
 export interface RespIdentityListItem extends RespGeneralIdentity {
   ShoppingCarts: RespCartListItem[];
   Markets: RespIdentityMarketItem[];
-  Bids: GeneralBasicBid[];
 }
 
 
@@ -522,7 +577,7 @@ export interface RespListingItem {
       };
     };
   };
-  MessagingInformation: any[];  // @TODO: ???
+  MessagingInformation: any[];
   ListingItemObjects: any[];
   FavoriteItems: Array<{
     id: number;
@@ -756,7 +811,47 @@ export interface RespBidSearchItem extends RespGeneralBidItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   };
-  ChildBids: GeneralBasicBid[]; // TODO: is this used??
+  ChildBids: GeneralChildBid[]; // contains updated bid messages (used when bid has progressed beyond initial state)
   ListingItem: RespListingItem;
   Identity: RespGeneralIdentity;
+}
+
+
+export interface RespOrderSearchItem {
+  id: number;
+  status: ORDER_STATUS;
+  generatedAt: number;
+  hash: string;
+  buyer: string;
+  seller: string;
+  addressId: number;
+  updatedAt: number;
+  createdAt: number;
+  OrderItems: {
+      id: number;
+      status: ORDER_ITEM_STATUS;
+      itemHash: string;
+      orderId: number;
+      bidId: number;
+      updatedAt: number;
+      createdAt: number;
+      Bid: OrderBidItem;
+  }[];
+  ShippingAddress: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    title: string | null;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    country: string;
+    zipCode: string;
+    type: BID_TYPES;
+    profileId: number;
+    updatedAt: number;
+    createdAt: number;
+    Profile: RespGeneralProfile;
+  };
 }

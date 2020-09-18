@@ -18,6 +18,7 @@ export interface Identity {
   name: string;
   displayName: string;
   path: string;
+  address: string;
   icon: string;
   carts: CartDetail[];
 }
