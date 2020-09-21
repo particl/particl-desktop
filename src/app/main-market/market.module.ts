@@ -12,6 +12,7 @@ import { MarketRpcService } from './services/market-rpc/market-rpc.service';
 import { MarketSocketService } from './services/market-rpc/market-socket.service';
 import { DataService } from './services/data/data.service';
 import { RegionListService } from './services/region-list/region-list.service';
+import { BidOrderService } from './services/orders/orders.service';
 
 
 const routes: Routes = [
@@ -57,7 +58,8 @@ const routes: Routes = [
     MarketRpcService,
     MarketSocketService,
     DataService,
-    RegionListService
+    RegionListService,
+    BidOrderService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

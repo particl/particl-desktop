@@ -31,11 +31,6 @@ export class SellListingsService {
   }
 
 
-  private isArray(obj: any): boolean {
-    return Array.isArray(obj);
-  }
-
-
   private buildListings(templateList: RespListingTemplate[]): SellListing[] {
     // So why this complicated route?
     // Because we need such details as which Base Template the listing refers to, or
@@ -59,20 +54,20 @@ export class SellListingsService {
     });
 
     baseTemplList.forEach(baseTempl => {
-      if (this.isArray(baseTempl.ChildListingItemTemplates)) {
+      if (Array.isArray(baseTempl.ChildListingItemTemplates)) {
         baseTempl.ChildListingItemTemplates.forEach(basicMarketTempl => {
           const rootMarketTempl = marketTemplMap.get(+basicMarketTempl.id);
 
           if (rootMarketTempl && (+rootMarketTempl.id > 0)) {
 
             // process any "root" market template listings
-            if (this.isArray(rootMarketTempl.ListingItems)) {
+            if (Array.isArray(rootMarketTempl.ListingItems)) {
               const listingItems = this.buildListingItemsFromTemplate(rootMarketTempl, baseTempl.id, marketUrl);
               actualListings.push(...listingItems);
             }
 
             // process any "child" market template listings
-            if (this.isArray(rootMarketTempl.ChildListingItemTemplates)) {
+            if (Array.isArray(rootMarketTempl.ChildListingItemTemplates)) {
               rootMarketTempl.ChildListingItemTemplates.forEach(childTempl => {
                 const childMarketTemplate = marketTemplMap.get(+childTempl.id);
 
@@ -97,7 +92,7 @@ export class SellListingsService {
     const listings: SellListing[] = [];
     const defaultImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
 
-    if (marketTemplate && this.isArray(marketTemplate.ListingItems)) {
+    if (marketTemplate && Array.isArray(marketTemplate.ListingItems)) {
       marketTemplate.ListingItems.forEach(src => {
 
         const newListing: SellListing = {
@@ -133,7 +128,7 @@ export class SellListingsService {
             newListing.title = getValueOrDefault(src.ItemInformation.title, 'string', newListing.title);
             newListing.summary = getValueOrDefault(src.ItemInformation.shortDescription, 'string', newListing.summary);
 
-            if (this.isArray(src.ItemInformation.Images) && src.ItemInformation.Images.length) {
+            if (Array.isArray(src.ItemInformation.Images) && src.ItemInformation.Images.length) {
               let featured = src.ItemInformation.Images.find(img => img.featured);
               if (featured === undefined) {
                 featured = src.ItemInformation.Images[0];
