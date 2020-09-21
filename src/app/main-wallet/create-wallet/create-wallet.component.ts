@@ -148,7 +148,9 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
           this.reset();
         }
         this.walletName = wname;
-        this.isEncrypted = (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted');
+        this.isEncrypted = (
+          (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted')
+        ) || (+info.unlocked_until > 0);
       }
     );
 

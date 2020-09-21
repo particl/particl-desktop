@@ -1,6 +1,6 @@
 import { Directive, Input, ElementRef, Renderer, HostListener, OnInit, Output, EventEmitter, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { throttleTime } from 'rxjs/operators';
 
 /** Focus the given element based on a condition */
 @Directive({
@@ -43,7 +43,7 @@ export class FocusTimeoutDirective {
   selector: '[appDebounceClick]'
 })
 export class DebounceClickDirective implements OnInit, OnDestroy {
-  @Input() debounceTime: number = 250;
+  @Input() debounceTime: number = 1000;
   @Output() debounceClick: EventEmitter<any> = new EventEmitter();
   private clicks: Subject<any> = new Subject();
   private subscription: Subscription;
@@ -52,7 +52,7 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.clicks.pipe(
-      debounceTime(this.debounceTime)
+      throttleTime(this.debounceTime)
     ).subscribe(e => this.debounceClick.emit(e));
   }
 
