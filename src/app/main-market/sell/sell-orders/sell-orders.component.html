@@ -37,7 +37,6 @@
       <mat-checkbox color="primary" [formControl]="queryFilterAttention">Orders requiring action</mat-checkbox>
     </div>
     <div class="checkbox">
-      <!-- TODO: change here - instead of "hide completed", we'll do this: hide Completed and Rejected by default, show them when this is checked: -->
       <mat-checkbox color="primary" [formControl]="queryFilterComplete">Show inactive &amp; archived</mat-checkbox>
     </div>
 
@@ -93,8 +92,8 @@
               </div>
             </div>
             <div class="status-wrap" fxFlex="0 0 140px">
-              <div class="status bidding"><!-- TODO: remove "bidding" class, add: {{ order?.step }} {{ order?.type }} -->
-                <span class="dot"></span> bidding<!-- TODO: {{ order?.step }} -->
+              <div class="status" [class.activexxxxxxxx]="orderItem.currentState.actions.PRIMARY.length > 0" [class.waitingxxxxxxxx]="orderItem.currentState.actions.PRIMARY.length === 0">
+                <span class="dot"></span> {{ orderItem.currentState.state.filterLabel || orderItem.currentState.state.label }}
               </div>
             </div>
           </div>
@@ -103,7 +102,7 @@
         <div class="status-info">
           <div class="text">
             <h2 class="item-title">Order #{{orderItem.orderId}}</h2>
-            <p>Order has been paid for and it's waiting for Seller to package and ship it to you<!--TODO: {{ orderActivity?.status_info }}--></p>
+            <p>{{ orderItem.currentState.state.stateInfo.seller }}
           </div>
           <p class="item-info">
             ID: {{orderItem.orderHash}}<br>
@@ -113,68 +112,65 @@
         </div><!-- .status-info -->
 
         <div class="progress-graph" fxLayout>
-          <!-- TODO: finished steps as `.done` -->
-          <div class="bidding step done" fxFlex>
-            <div class="value">Bidding</div>
-            <div class="dot"></div>
-          </div>
-          <div class="payment step done" fxFlex>
-            <div class="value">Payment</div>
-            <div class="dot"></div>
-          </div>
-          <!-- TODO: active steps as `.active` -->
-          <div class="escrow step active" fxFlex>
-            <div class="value">Escrow Lock</div>
-            <div class="dot"></div>
-          </div>
-          <!-- TODO: future steps as `.upcoming` -->
-          <div class="packaging step upcoming" fxFlex>
-            <div class="value">Packaging</div>
-            <div class="dot"></div>
-          </div>
-          <div class="shipping step upcoming" fxFlex>
-            <div class="value">Shipping</div>
-            <div class="dot"></div>
-          </div>
-          <!-- TODO: when order is completed, keep this Completed step as `.active` -->
-          <div class="completed step upcoming" fxFlex>
-            <div class="value">Completed</div>
-            <div class="dot"></div>
-          </div>
-        </div>
+          <ng-container *ngIf="+happyBuyflow[orderItem.currentState.state.stateId] >= 0; else errorBuyFlow">
+            <div  *ngFor="let step of happyBuyflow.steps; index as stepIdx"
+                  class="step"
+                  [class.done]="+happyBuyflow[orderItem.currentState.state.stateId] > stepIdx"
+                  [class.active]="+happyBuyflow[orderItem.currentState.state.stateId] === stepIdx"
+                  [class.upcoming]="+happyBuyflow[orderItem.currentState.state.stateId] < stepIdx"
+                  fxFlex>
+              <div class="value">{{ step.title }}</div>
+              <div class="dot"></div>
+            </div>
+          </ng-container>
 
-        <!-- TODO: when rejected, mark Bidding as `.rejected` (obviously show only Bidding & Rejected steps) -->
-        <!--div class="progress-graph" fxLayout>
-          <div class="bidding step rejected" fxFlex>
-            <div class="value">Bidding</div>
-            <div class="dot"></div>
-          </div>
-          <div class="rejected step" fxFlex>
-            <div class="value">Rejected</div>
-            <div class="dot"></div>
-          </div>
-        </div-->
+          <ng-template #errorBuyFlow>
+            <div class="step rejected" fxFlex>
+              <div class="value">Bidding</div>
+              <div class="dot"></div>
+            </div>
+            <div class="step rejected" fxFlex>
+              <div class="value">Cancelled</div>
+              <div class="dot"></div>
+            </div>
+          </ng-template>
+        </div>
 
         <div class="detail">
 
-          <div class="highlights"><!-- TODO: show only if anything below is active: -->
+          <div class="highlights" *ngIf="orderItem.extraDetails !== undefined">
             <table>
-              <tr>
-                <th>Shipping details</th>
-                <!--td>{{ memo }}</td--><!-- *ngIf="(memo.length > 0)" -->
-                <td><em>Seller didn't provide any additional info</em></td><!-- *ngIf="!(memo.length > 0)" -->
+              <tr *ngIf="orderItem.extraDetails.escrowMemo.length > 0">
+                <th>Buyer shipping notes</th>
+                <td><em>{{ orderItem.extraDetails.escrowMemo }}</em></td>
               </tr>
-              <tr><!-- *ngIf="additionalInfo.transactionID.length > 0" -->
+              <tr *ngIf="orderItem.extraDetails.shippingMemo.length > 0">
+                <th>Seller's shipping notes</th>
+                <td><em>{{ orderItem.extraDetails.shippingMemo }}</em></td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.releaseMemo.length > 0">
+                <th>Buyer's review</th>
+                <td><em>{{ orderItem.extraDetails.releaseMemo }}</em></td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.escrowTxn.length > 0">
                 <th>Escrow TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer.particl.io/tx/45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068" target="_blank" title="Open in Block Explorer"><!--{{ additionalInfo.transactionID }}-->45baea1e0362b8eaf2d06e680c1b75ec43101a1573b558725abaa21c754d4068</a>
+                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="Open escrow txid in Block Explorer">{{orderItem.extraDetails.escrowTxn}}</a>
                   </div>
                 </td>
               </tr>
-              <tr><!-- *ngIf="additionalInfo.rejectMessage.length > 0" -->
+              <tr *ngIf="orderItem.extraDetails.releaseTxn.length > 0">
+                <th>Release TXID</th>
+                <td>
+                  <div class="txid">
+                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="Open escrow txid in Block Explorer">{{orderItem.extraDetails.releaseTxn}}</a>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.rejectionReason.length > 0">
                 <th>Rejected for</th>
-                <td><!--{{ additionalInfo.rejectMessage }}-->Not in stock</td>
+                <td>{{ orderItem.extraDetails.rejectionReason }}</td>
               </tr>
             </table>
           </div><!-- .highlights -->
@@ -183,7 +179,6 @@
 
             <div class="buyer-info" fxFlex="auto">
               <h3 class="item-subtitle">Shipping details</h3>
-              <!--app-shipping-address [shippingAddress]="order?.ShippingAddress"></app-shipping-address-->
               <p class="shipping-info">
                 {{orderItem.shippingDetails.name}}<small>&ndash; Name</small><br>
                 {{orderItem.shippingDetails.addressLine1}}<small>&ndash; Street</small><br>
@@ -193,16 +188,17 @@
                 {{orderItem.shippingDetails.code}}<small>&ndash; ZIP</small><br>
                 {{orderItem.shippingDetails.country}}<small>&ndash; Country</small>
               </p>
+
               <!-- TODO: contact details implementation -->
-              <p class="contact-info"><!-- *ngIf="(contactDetails.email.length > 0) || (contactDetails.phone.length > 0)" -->
-                <span><!-- *ngIf="(contactDetails.email.length > 0)" -->
-                  <a href="mailto:my.name@buyer-central.com">my.name@buyer-central.com</a><!--{{contactDetails.email}}-->
+              <!-- <p class="contact-info">
+                <span>
+                  <a href="mailto:my.name@buyer-central.com">my.name@buyer-central.com</a>
                 </span>
                 <br>
-                <span><!-- *ngIf="(contactDetails.phone.length > 0)" -->
-                  +548 1843 1548 3511<!--{{contactDetails.phone}}-->
+                <span>
+                  +548 1843 1548 3511
                 </span>
-              </p>
+              </p> -->
             </div><!-- .buyer-info -->
 
             <div class="pricing-info" fxFlex="auto">
@@ -239,47 +235,53 @@
                   </tr>
                 </tbody>
               </table>
-              <p>
-                Escrow payment will be automatically returned after sucessfull delivery of the Order.
+              <p *ngIf="(orderItem.extraDetails !== undefined) && +happyBuyflow[orderItem.currentState.state.stateId] >= 0">
+                <ng-container *ngIf="(orderItem.extraDetails.escrowTxn.length === 0)">
+                  Escrow has not been made yet. Only ship the items when escrow has been created!
+                </ng-container>
+                <ng-container *ngIf="(orderItem.extraDetails.escrowTxn.length > 0) && (orderItem.extraDetails.releaseTxn.length === 0)">
+                  Escrow payment will be automatically returned after sucessfull delivery of the Order.
+                </ng-container>
+                <ng-container *ngIf="orderItem.extraDetails.releaseTxn.length > 0">
+                  Order is complete: no further actions are necessary
+                </ng-container>
               </p>
             </div><!-- .info -->
 
           </div><!-- .item-details -->
         </div><!-- .detail -->
 
-        <!-- TODO: actionable buttons implementation -->
         <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
           <div class="left">
-            <button *ngFor="let actionable of secondaryActions"
-                    mat-button color="{{actionable.colour}}"
-                    [disabled]="actionable.disabled || actionable.locked"
+            <button *ngFor="let actionable of orderItem.currentState.actions.ALTERNATIVE"
+                    mat-button [color]="actionable.details.colour"
+                    [matTooltip]="actionable.details.tooltip"
                     appDebounceClick
-                    (debounceClick)="executeAction(actionable)"
+                    (debounceClick)="executeAction(orderItem, actionable.toState)"
                     class="small">
-              <mat-icon fontSet="partIcon" fontIcon="{{actionable.icon}}"></mat-icon>
-              {{ actionable.text }}
+              <mat-icon fontSet="partIcon" [fontIcon]="actionable.details.icon"></mat-icon>
+              {{ actionable.details.label }}
             </button>
             <button mat-button matTooltip="Preview listing" class="small" appDebounceClick (debounceClick)="openListingDetailModal(orderItem.listing.id)">
               <mat-icon fontIcon="part-zoom-in"></mat-icon>
-              Open
+              View Listing
             </button>
           </div>
           <div class="right">
-            <button *ngFor="let actionable of primaryActions"
-                    mat-raised-button color="{{actionable.colour}}" matTooltip="{{ actionable.tooltip }}"
-                    [disabled]="actionable.disabled || actionable.locked"
+            <button *ngFor="let actionable of orderItem.currentState.actions.PRIMARY"
+                    mat-raised-button [color]="actionable.details.colour" [matTooltip]="actionable.details.tooltip"
                     appDebounceClick
-                    (debounceClick)="executeAction(actionable)">
-              <mat-icon fontSet="partIcon" fontIcon="{{ actionable.icon }}"></mat-icon>
-              {{ actionable.text }}
+                    (debounceClick)="executeAction(orderItem, actionable.toState)">
+              <mat-icon fontSet="partIcon" [fontIcon]="actionable.details.icon"></mat-icon>
+              {{ actionable.details.label }}
             </button>
 
-            <!-- @TODO: remove these; purely for testing >> -->
-            <button mat-button (click)="openAcceptBidModal()">Accept</button>
-            <button mat-button (click)="openRejectBidModal()">Reject</button>
-            <button mat-button (click)="openEscrowPaymentModal()">Pay</button>
-            <button mat-button (click)="openOrderShippedModal()">Shipped</button>
-            <!-- @TODO: << remove these; purely for testing -->
+            <button *ngFor="let actionable of orderItem.currentState.actions.PLACEHOLDER_LABEL"
+                    mat-raised-button [color]="actionable.details.colour" [matTooltip]="actionable.details.tooltip"
+                    [disabled]="true">
+              <mat-icon fontSet="partIcon" [fontIcon]="actionable.details.icon"></mat-icon>
+              {{ actionable.details.label }}
+            </button>
 
           </div>
         </mat-action-row>

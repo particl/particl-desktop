@@ -14,13 +14,19 @@ import { DataService } from '../../services/data/data.service';
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
 import { WalletInfoStateModel } from 'app/main/store/main.models';
-import { OrderItem } from '../../services/orders/orders.models';
+import { OrderItem, BuyFlowOrderType, OrderUserType } from '../../services/orders/orders.models';
 import { Identity } from '../../store/market.models';
-import { BID_STATUS } from '../../shared/market.models';
 
 
 enum TextContent {
-  LOADING_ERROR = 'Failed to load orders correctly'
+  LOADING_ERROR = 'Failed to load orders correctly',
+  FILTER_LABEL_ALL_ORDERS = 'All Items',
+  ORDER_UPDATE_ERROR = 'Order update failed'
+}
+
+interface BuyflowStep {
+  value: BuyFlowOrderType;
+  title: string;
 }
 
 
@@ -41,30 +47,24 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
   queryFilterStatus: FormControl = new FormControl('');
 
   filterOptionsMarkets: {[marketKey: string]: string } = {};
+  filterOptionsStatus: {value: BuyFlowOrderType | '', title: string, count: number}[] = [];
 
-  // TODO: FIX THIS TO BE GENERIC (REQUESTED FROM SERVICE)
-  filterOptionsStatus: {value: BID_STATUS | '', title: string, count: number}[] = [
-    { value: '', title: 'All orders', count: 0 },
-    { value: BID_STATUS.BID_CREATED, title: 'Bidding', count: 0 },
-    { value: BID_STATUS.BID_ACCEPTED, title: 'Awaiting payment', count: 0 },
-    { value: BID_STATUS.ESCROW_REQUESTED, title: 'Escrow requested', count: 0 },
-    { value: BID_STATUS.ESCROW_COMPLETED, title: 'Packaging', count: 0 },
-    { value: BID_STATUS.ITEM_SHIPPED, title: 'Shipping', count: 0 },
-    { value: BID_STATUS.COMPLETED, title: 'Completed', count: 0 },
-    { value: BID_STATUS.BID_REJECTED, title: 'Rejected', count: 0 },
-    { value: BID_STATUS.ORDER_CANCELLED, title: 'Cancelled', count: 0 }
-  ];
-
+  happyBuyflow: { steps: BuyflowStep[], stateLookup: {[state in BuyFlowOrderType]?: number} } = {
+    steps: [],
+    stateLookup: {},
+  };
 
   filteredOrderIdxs: number[] = [];
   ordersList: OrderItem[] = [];
 
 
+  private readonly viewer: OrderUserType = 'SELLER';
   private destroy$: Subject<void> = new Subject();
   private currentIdentity: Identity = null;
   private loadOrdersControl: FormControl = new FormControl(true);
   private loadMarketsControl: FormControl = new FormControl();
   private renderOrdersControl: FormControl = new FormControl();
+
 
   constructor(
     private _store: Store,
@@ -73,7 +73,17 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
     private _sharedService: DataService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog
-  ) { }
+  ) {
+    const madctStates = this._orderService.getOrderedStateList('MAD_CT');
+
+    this.filterOptionsStatus = madctStates.map(
+      osl => ({title: osl.filterLabel ? osl.filterLabel : osl.label, value: osl.stateId, count: 0})
+    );
+    this.filterOptionsStatus.unshift({title: TextContent.FILTER_LABEL_ALL_ORDERS, value: '', count: 0});
+
+    this.happyBuyflow.steps = madctStates.filter(s => s.order >= 0).map(s => ({title: s.label, value: s.stateId}));
+    this.happyBuyflow.steps.forEach((step, stepIdx) => this.happyBuyflow[step.value] = stepIdx);
+  }
 
 
   ngOnInit() {
@@ -103,10 +113,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
         tap(markets => {
           this.filterOptionsMarkets = {};
           markets.forEach(m => this.filterOptionsMarkets[m.key] = m.name);
-
-          if (markets.length > 0) {
-            this.loadOrdersControl.setValue(true);
-          }
+          this.loadOrdersControl.setValue(true);
         }),
       )),
       takeUntil(this.destroy$)
@@ -119,6 +126,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
         if (!!doClear) {
           this.filteredOrderIdxs = [];
           this.ordersList = [];
+          this.filterOptionsStatus.forEach(s => s.count = 0);
         }
 
         this._cdr.detectChanges();
@@ -126,7 +134,39 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       }),
       switchMap(() => this.fetchOrders().pipe(
         tap(orders => {
-          this.ordersList.push(...orders);
+          const isInit = this.ordersList.length === 0;
+
+          if (isInit) {
+            this.ordersList.push(...orders);
+          }
+
+          orders.forEach(newOrder => {
+            // update filter counts
+            const optionAll = this.filterOptionsStatus.find(s => s.value === '');
+            if (optionAll) {
+              optionAll.count++;
+            }
+
+            const optionStatus = this.filterOptionsStatus.find(s => s.value === newOrder.currentState.state.stateId);
+            if (optionStatus) {
+              optionStatus.count++;
+            }
+
+            // update the order list if existing order were retrieved
+            if (!isInit) {
+              const existingOrderIdx = this.ordersList.findIndex(o => o.orderId === newOrder.orderId);
+
+              if (existingOrderIdx === -1) {
+                this.ordersList.push(newOrder);
+              } else if (
+                (this.ordersList[existingOrderIdx].currentState.state.stateId !== newOrder.currentState.state.stateId) &&
+                (this.ordersList[existingOrderIdx].orderId === newOrder.orderId)
+              ) {
+                this.ordersList[existingOrderIdx] = newOrder;
+              }
+            }
+          });
+
           this.isLoading = false;
           this.renderOrdersControl.setValue(null);
           this._cdr.detectChanges();
@@ -163,8 +203,6 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
 
     // TODO: On incoming message updates, check that the message market is current and do a reload of orders
-
-    // TODO: actionables for each order item
 
 
     merge(
@@ -230,12 +268,30 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
   }
 
 
+  executeAction(orderItem: OrderItem, moveToState: BuyFlowOrderType): void {
+    this._orderService.actionOrderItem(orderItem, moveToState, this.viewer).subscribe(
+      (newItem) => {
+        if (
+          (orderItem.orderId === newItem.orderId) &&
+          (orderItem.currentState.state.stateId !== newItem.currentState.state.stateId)
+        ) {
+          const foundOrderIdx = this.ordersList.findIndex(o => o.orderId === orderItem.orderId);
+          if (foundOrderIdx > -1) {
+            this.ordersList[foundOrderIdx] = newItem;
+          }
+        }
+      },
+      (err) => this._snackbar.open(TextContent.ORDER_UPDATE_ERROR, 'err')
+    );
+  }
+
+
   private fetchOrders(): Observable<OrderItem[]> {
     if (!this.currentIdentity || !this.currentIdentity.address) {
       return of([] as OrderItem[]);
     }
 
-    let obs$ = this._orderService.fetchBids('SELLER');
+    let obs$ = this._orderService.fetchBids(this.viewer);
     if (Object.keys(this.filterOptionsMarkets).length === 0) {
       obs$ = throwError('Market Load Error');
     }
@@ -272,11 +328,18 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
       const idxList: number[] = [];
 
-      // TODO: use other filters (the last 3) - depends on item's current state or actions
-
       this.ordersList.forEach((order, orderIdx) => {
         const addItem = order.listing.title.toLocaleLowerCase().includes(searchString) &&
-            (!filterMarket ? true : order.marketKey === filterMarket);
+            (!filterMarket ? true : order.marketKey === filterMarket) &&
+            (
+              filterStatus ?
+              order.currentState.state.stateId === filterStatus :
+
+              (showOnlyAttention ? order.currentState.actions.PRIMARY.length > 0 : true) &&
+              (!showComplete ?
+                (order.currentState.actions.PRIMARY.length > 0) || (order.currentState.actions.ALTERNATIVE.length > 0) : true
+              )
+            );
 
         if (addItem) {
           idxList.push(orderIdx);

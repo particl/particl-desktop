@@ -19,7 +19,6 @@ import { BatchPublishModalComponent } from './modals/batch-publish-modal/batch-p
 import { CloneTemplateModalComponent } from './modals/clone-template-modal/clone-template-modal.component';
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';
-import { SellOrderListItemComponent } from './sell-order-list-item/sell-order-list-item.component';
 import { AcceptBidModalComponent } from './modals/accept-bid-modal/accept-bid-modal.component';
 import { RejectBidModalComponent } from './modals/reject-bid-modal/reject-bid-modal.component';
 import { EscrowPaymentModalComponent } from './modals/escrow-payment-modal/escrow-payment-modal.component';
@@ -58,7 +57,6 @@ const routes: Routes = [
     BatchPublishModalComponent,
 
     SellOrdersComponent,
-    SellOrderListItemComponent,
     AcceptBidModalComponent,
     RejectBidModalComponent,
     EscrowPaymentModalComponent,

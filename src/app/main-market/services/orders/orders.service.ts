@@ -13,16 +13,16 @@ import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shar
 import { BID_DATA_KEY, ORDER_ITEM_STATUS, RespOrderSearchItem, ESCROW_TYPE } from '../../shared/market.models';
 import {
   OrderItem,
-  AAIBuyflowController,
-  AABuyFlow,
-  ORDER_USER_TYPE,
-  AABuyFlowDetails,
-  FLOW,
-  FLOW_ORDER_STATUS,
-  AABuyFlowStates,
-  AABuyFlowActions,
-  AAUsableStateDetails,
-  AABuyFlowState
+  OrderUserType,
+  BuyFlowType,
+  BuyFlowOrderType,
+  IBuyflowController,
+  BuyFlowStore,
+  BuyFlow,
+  BuyFlowStateStore,
+  BuyFlowState,
+  BuyFlowActionStore,
+  BuyflowStateDetails
 } from './orders.models';
 
 
@@ -92,16 +92,24 @@ enum TextContent {
   PLACEHOLDER_DELIVERY_PENDING = 'Waiting for delivery',
   PLACEHOLDER_DELIVERY_PENDING_TOOLTIP = 'Awaiting confirmation of successfull delivery by Buyer',
   PLACEHOLDER_ORDER_COMPLETE = 'Order complete',
+
+  REJECT_REASON_OUT_OF_STOCK = 'Out of stock',
+  REJECT_REASON_UNKNOWN = 'Unknown reason provided'
 }
 
 
 @Injectable()
-export class BidOrderService implements AAIBuyflowController {
+export class BidOrderService implements IBuyflowController {
 
   private defaultMarketImage: string;
-  private buyflows: AABuyFlow = {
+
+  private buyflows: BuyFlowStore = {
     UNSUPPORTED: this.buildBuyflowUnsupported(),
     MAD_CT: this.buildBuyFlowMadCT()
+  };
+
+  private rejectionOptions: {[key: string]: string} = {
+    OUT_OF_STOCK: TextContent.REJECT_REASON_OUT_OF_STOCK
   };
 
 
@@ -115,7 +123,7 @@ export class BidOrderService implements AAIBuyflowController {
   }
 
 
-  fetchBids(userType: ORDER_USER_TYPE): Observable<OrderItem[]> {
+  fetchBids(userType: OrderUserType): Observable<OrderItem[]> {
     const identity = this._store.selectSnapshot(MarketState.currentIdentity);
     const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
     const userQuery = [
@@ -150,9 +158,9 @@ export class BidOrderService implements AAIBuyflowController {
   }
 
 
-  getOrderedStateList(buyflow: FLOW): AABuyFlowState[] {
+  getOrderedStateList(buyflow: BuyFlowType): BuyFlowState[] {
     const selectedBuyflow = isBasicObjectType(this.buyflows[buyflow]) ? this.buyflows[buyflow] : this.buyflows.UNSUPPORTED;
-    const states = Object.values(selectedBuyflow.states);
+    const states = Object.keys(selectedBuyflow.states).map(s => selectedBuyflow.states[s] as BuyFlowState);
 
     return [
       ...states.filter(s => s.order >= 0).sort((a, b) => a.order - b.order),
@@ -161,7 +169,7 @@ export class BidOrderService implements AAIBuyflowController {
   }
 
 
-  getStateDetails(buyflow: FLOW, stateId: FLOW_ORDER_STATUS, user: ORDER_USER_TYPE): AAUsableStateDetails {
+  getStateDetails(buyflow: BuyFlowType, stateId: BuyFlowOrderType, user: OrderUserType): BuyflowStateDetails {
     if (buyflow && isBasicObjectType(this.buyflows[buyflow]) && stateId && isBasicObjectType(this.buyflows[buyflow].states[stateId])) {
       const hasActions = Array.isArray(this.buyflows[buyflow].actions[stateId]);
       return {
@@ -187,7 +195,7 @@ export class BidOrderService implements AAIBuyflowController {
   }
 
 
-  actionOrderItem(orderItem: OrderItem, toState: FLOW_ORDER_STATUS, asUser: ORDER_USER_TYPE): Observable<OrderItem> {
+  actionOrderItem(orderItem: OrderItem, toState: BuyFlowOrderType, asUser: OrderUserType): Observable<OrderItem> {
     // TODO: Implement this
     return throwError(() => of('NOT IMPLEMENTED'));
   }
@@ -276,6 +284,55 @@ export class BidOrderService implements AAIBuyflowController {
       return newOrder;
     }
 
+    if (Array.isArray(src.OrderItems[0].Bid.ChildBids) && src.OrderItems[0].Bid.ChildBids.length > 0 ) {
+
+      // find the child bid with the highest quantity of bid datas
+      let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
+      src.OrderItems[0].Bid.ChildBids.forEach(childBid => {
+        if (isBasicObjectType(childBid) && Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
+          foundBidDatas = childBid.BidDatas;
+        }
+      });
+
+      // we always have 2 at least, since ORDER_HASH and MARKET_KEY are always present. Additional items means extra info available
+      if (foundBidDatas.length > 2) {
+        newOrder.extraDetails = {
+          escrowMemo: '',
+          shippingMemo: '',
+          releaseMemo: '',
+          escrowTxn: '',
+          releaseTxn: '',
+          rejectionReason: ''
+        };
+        foundBidDatas.forEach(d => {
+          if (isBasicObjectType(d)) {
+            switch (d.key) {
+              case BID_DATA_KEY.ESCROW_MEMO:
+                newOrder.extraDetails.escrowMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.escrowMemo);
+                break;
+              case BID_DATA_KEY.SHIPPING_MEMO:
+                newOrder.extraDetails.shippingMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.shippingMemo);
+                break;
+              case BID_DATA_KEY.RELEASE_MEMO:
+                newOrder.extraDetails.releaseMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseMemo);
+                break;
+              case BID_DATA_KEY.ESCROW_TX_ID:
+                newOrder.extraDetails.escrowTxn = getValueOrDefault(d.value, 'string', newOrder.extraDetails.escrowTxn);
+                break;
+              case BID_DATA_KEY.RELEASE_TX_ID:
+                newOrder.extraDetails.releaseTxn = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
+                break;
+              case BID_DATA_KEY.REJECT_REASON:
+                const reasonKey = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
+                newOrder.extraDetails.rejectionReason = this.rejectionOptions[reasonKey] || TextContent.REJECT_REASON_UNKNOWN;
+                break;
+            }
+          }
+        });
+      }
+
+    }
+
     if (isBasicObjectType(src.ShippingAddress)) {
       newOrder.shippingDetails.name = `${getValueOrDefault(src.ShippingAddress.firstName, 'string', '')} ${getValueOrDefault(src.ShippingAddress.lastName, 'string', '')}`;
       newOrder.shippingDetails.addressLine1 = getValueOrDefault(
@@ -301,7 +358,7 @@ export class BidOrderService implements AAIBuyflowController {
     let itemCountry = '';
     const listingItem = src.OrderItems[0].Bid.ListingItem;
 
-    const itemViewer: ORDER_USER_TYPE = +listingItem.listingItemTemplateId > 0 ? 'SELLER' : 'BUYER';
+    const itemViewer: OrderUserType = +listingItem.listingItemTemplateId > 0 ? 'SELLER' : 'BUYER';
 
     if (isBasicObjectType(listingItem.ItemInformation)) {
       newOrder.listing.title = getValueOrDefault(listingItem.ItemInformation.title, 'string', newOrder.listing.title);
@@ -382,11 +439,11 @@ export class BidOrderService implements AAIBuyflowController {
   }
 
 
-  private buildBuyFlowMadCT(): AABuyFlowDetails {
+  private buildBuyFlowMadCT(): BuyFlow {
 
-    const buyflowType: FLOW = 'MAD_CT';
-    const states: AABuyFlowStates = {};
-    const actions: AABuyFlowActions = {};
+    const buyflowType: BuyFlowType = 'MAD_CT';
+    const states: BuyFlowStateStore = {};
+    const actions: BuyFlowActionStore = {};
 
     states[ORDER_ITEM_STATUS.CREATED] = {
       buyflow: buyflowType,
@@ -402,8 +459,8 @@ export class BidOrderService implements AAIBuyflowController {
     states[ORDER_ITEM_STATUS.REJECTED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.REJECTED,
-      label: TextContent.STATE_CREATED_LABEL,
-      order: -1,
+      label: TextContent.STATE_REJECTED_LABEL,
+      order: -2,
       stateInfo: {
         buyer: TextContent.STATE_REJECTED_STATUS_BUYER,
         seller: TextContent.STATE_REJECTED_STATUS_SELLER
@@ -414,7 +471,7 @@ export class BidOrderService implements AAIBuyflowController {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.CANCELLED,
       label: TextContent.STATE_CANCELLED_LABEL,
-      order: -2,
+      order: -1,
       stateInfo: {
         buyer: TextContent.STATE_CANCELLED_STATUS_BUYER,
         seller: TextContent.STATE_CANCELLED_STATUS_SELLER
@@ -477,64 +534,230 @@ export class BidOrderService implements AAIBuyflowController {
     };
 
 
-    // TODO: IMPLEMENT ACTIONS
     actions[ORDER_ITEM_STATUS.CREATED] = [
       {
-        fromState: ORDER_ITEM_STATUS.CREATED, toState: ORDER_ITEM_STATUS.ACCEPTED, user: 'SELLER', actionType: 'PRIMARY', details: {
+        fromState: ORDER_ITEM_STATUS.CREATED,
+        toState: ORDER_ITEM_STATUS.ACCEPTED,
+        user: 'SELLER',
+        actionType: 'PRIMARY',
+        details: {
           label: TextContent.ACTION_ACCEPT_LABEL, tooltip: TextContent.ACTION_ACCEPT_TOOLTIP, colour: 'primary', icon: 'part-check'
         }
       },
       {
-        fromState: ORDER_ITEM_STATUS.CREATED, toState: ORDER_ITEM_STATUS.REJECTED, user: 'SELLER', actionType: 'PRIMARY', details: {
+        fromState: ORDER_ITEM_STATUS.CREATED,
+        toState: ORDER_ITEM_STATUS.REJECTED,
+        user: 'SELLER',
+        actionType: 'PRIMARY',
+        details: {
           label: TextContent.ACTION_REJECT_LABEL, tooltip: TextContent.ACTION_REJECT_TOOLTIP, colour: 'warn', icon: 'part-cross'
         }
       },
       {
-        fromState: ORDER_ITEM_STATUS.CREATED, toState: ORDER_ITEM_STATUS.CANCELLED, user: 'BUYER', actionType: 'ALTERNATIVE', details: {
+        fromState: ORDER_ITEM_STATUS.CREATED,
+        toState: ORDER_ITEM_STATUS.CANCELLED,
+        user: 'BUYER',
+        actionType: 'ALTERNATIVE',
+        details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
         }
       },
       {
-        fromState: ORDER_ITEM_STATUS.CREATED, toState: null, user: 'BUYER', actionType: 'PLACEHOLDER_LABEL', details: {
+        fromState: ORDER_ITEM_STATUS.CREATED,
+        toState: null,
+        user: 'BUYER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
           label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: '', colour: 'primary', icon: 'part-date'
         }
       }
     ];
+
     actions[ORDER_ITEM_STATUS.ACCEPTED] = [
       {
-        fromState: ORDER_ITEM_STATUS.ACCEPTED, toState: ORDER_ITEM_STATUS.CANCELLED, user: 'SELLER', actionType: 'ALTERNATIVE', details: {
+        fromState: ORDER_ITEM_STATUS.ACCEPTED,
+        toState: ORDER_ITEM_STATUS.CANCELLED,
+        user: 'SELLER',
+        actionType: 'ALTERNATIVE',
+        details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
         }
       },
       {
-        fromState: ORDER_ITEM_STATUS.ACCEPTED, toState: null, user: 'SELLER', actionType: 'PLACEHOLDER_LABEL', details: {
+        fromState: ORDER_ITEM_STATUS.ACCEPTED,
+        toState: null,
+        user: 'SELLER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
           label: TextContent.PLACEHOLDER_ESCROW_PENDING, tooltip: TextContent.PLACEHOLDER_ESCROW_PENDING_TOOLTIP, colour: 'primary', icon: 'part-date'
         }
       },
       {
-        fromState: ORDER_ITEM_STATUS.ACCEPTED, toState: ORDER_ITEM_STATUS.CANCELLED, user: 'BUYER', actionType: 'ALTERNATIVE', details: {
+        fromState: ORDER_ITEM_STATUS.ACCEPTED,
+        toState: ORDER_ITEM_STATUS.CANCELLED,
+        user: 'BUYER',
+        actionType: 'ALTERNATIVE',
+        details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
         }
       },
       {
-        fromState: ORDER_ITEM_STATUS.ACCEPTED, toState: ORDER_ITEM_STATUS.ESCROW_REQUESTED, user: 'BUYER', actionType: 'PRIMARY', details: {
+        fromState: ORDER_ITEM_STATUS.ACCEPTED,
+        toState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+        user: 'BUYER',
+        actionType: 'PRIMARY',
+        details: {
           label: TextContent.ACTION_REQUEST_ESCROW_LABEL, tooltip: TextContent.ACTION_REQUEST_ESCROW_TOOLTIP, colour: 'primary', icon: 'part-check'
         }
       }
     ];
-    actions[ORDER_ITEM_STATUS.ESCROW_REQUESTED] = [];
-    actions[ORDER_ITEM_STATUS.ESCROW_COMPLETED] = [];
-    actions[ORDER_ITEM_STATUS.SHIPPED] = [];
-    actions[ORDER_ITEM_STATUS.COMPLETE] = [];
-    actions[ORDER_ITEM_STATUS.REJECTED] = [];
-    actions[ORDER_ITEM_STATUS.CANCELLED] = [];
+    actions[ORDER_ITEM_STATUS.ESCROW_REQUESTED] = [
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+        toState: ORDER_ITEM_STATUS.CANCELLED,
+        user: 'SELLER',
+        actionType: 'ALTERNATIVE',
+        details: {
+          label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+        toState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+        user: 'SELLER',
+        actionType: 'PRIMARY',
+        details: {
+          label: TextContent.ACTION_COMPLETE_ESCROW_LABEL, tooltip: TextContent.ACTION_COMPLETE_ESCROW_TOOLTIP, colour: 'primary', icon: 'part-check'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+        toState: ORDER_ITEM_STATUS.CANCELLED,
+        user: 'BUYER',
+        actionType: 'ALTERNATIVE',
+        details: {
+          label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+        toState: null,
+        user: 'BUYER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: '', colour: 'primary', icon: 'part-date'
+        }
+      }
+    ];
+    actions[ORDER_ITEM_STATUS.ESCROW_COMPLETED] = [
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+        toState: ORDER_ITEM_STATUS.SHIPPED,
+        user: 'SELLER',
+        actionType: 'PRIMARY',
+        details: {
+          label: TextContent.ACTION_SHIP_LABEL, tooltip: TextContent.ACTION_SHIP_TOOLTIP, colour: 'primary', icon: 'part-check'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+        toState: null,
+        user: 'BUYER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: TextContent.PLACEHOLDER_SHIPPING_PENDING_TOOLTIP,
+          colour: 'primary', icon: 'part-date'
+        }
+      }
+    ];
+    actions[ORDER_ITEM_STATUS.SHIPPED] = [
+      {
+        fromState: ORDER_ITEM_STATUS.SHIPPED,
+        toState: null,
+        user: 'SELLER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_DELIVERY_PENDING, tooltip: TextContent.PLACEHOLDER_DELIVERY_PENDING_TOOLTIP,
+          colour: 'primary', icon: 'part-date'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.SHIPPED,
+        toState: ORDER_ITEM_STATUS.COMPLETE,
+        user: 'BUYER',
+        actionType: 'PRIMARY',
+        details: {
+          label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
+        }
+      }
+    ];
+    actions[ORDER_ITEM_STATUS.COMPLETE] = [
+      {
+        fromState: ORDER_ITEM_STATUS.COMPLETE,
+        toState: null,
+        user: 'SELLER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_ORDER_COMPLETE, tooltip: '', colour: 'primary', icon: 'part-check'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.COMPLETE,
+        toState: null,
+        user: 'BUYER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_ORDER_COMPLETE, tooltip: '', colour: 'primary', icon: 'part-check'
+        }
+      },
+    ];
+    actions[ORDER_ITEM_STATUS.REJECTED] = [
+      {
+        fromState: ORDER_ITEM_STATUS.REJECTED,
+        toState: null,
+        user: 'SELLER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_REJECTED, tooltip: '', colour: 'primary', icon: 'part-error'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.REJECTED,
+        toState: null,
+        user: 'BUYER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_REJECTED, tooltip: '', colour: 'primary', icon: 'part-error'
+        }
+      }
+    ];
+    actions[ORDER_ITEM_STATUS.CANCELLED] = [
+      {
+        fromState: ORDER_ITEM_STATUS.CANCELLED,
+        toState: null,
+        user: 'SELLER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_CANCELLED, tooltip: '', colour: 'primary', icon: 'part-error'
+        }
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.CANCELLED,
+        toState: null,
+        user: 'BUYER',
+        actionType: 'PLACEHOLDER_LABEL',
+        details: {
+          label: TextContent.PLACEHOLDER_CANCELLED, tooltip: '', colour: 'primary', icon: 'part-error'
+        }
+      }
+    ];
 
     return { states, actions };
   }
 
 
-  private buildBuyflowUnsupported(): AABuyFlowDetails {
-    const states: AABuyFlowStates = {
+  private buildBuyflowUnsupported(): BuyFlow {
+    const states: BuyFlowStateStore = {
       UNKNOWN: {
         buyflow: 'UNSUPPORTED',
         stateId: 'UNKNOWN',

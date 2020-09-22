@@ -33,89 +33,50 @@ export interface OrderItem {
     code: string;
     country: string;
   };
-  currentState?: AAUsableStateDetails;
+  currentState?: BuyflowStateDetails;
 
-  // orderDetails: {
-  //   shippingMemo: string;
-  //   releaseMemo: string;
-  //   escrowTxn: string;
-  //   releaseTxn: string;
-  //   rejectionReason: string;
-  //   cancelReason: string;
-  // };
+  extraDetails?: {
+    escrowMemo: string;
+    shippingMemo: string;
+    releaseMemo: string;
+    escrowTxn: string;
+    releaseTxn: string;
+    rejectionReason: string;
+  };
 }
 
 
-export type ORDER_USER_TYPE = 'BUYER' | 'SELLER';
+export type OrderUserType = 'BUYER' | 'SELLER';
 
-export type FLOW = ESCROW_TYPE | 'UNSUPPORTED';
+export type BuyFlowType = ESCROW_TYPE | 'UNSUPPORTED';
 
-export type FLOW_ORDER_STATUS = ORDER_ITEM_STATUS | 'UNKNOWN';
+export type BuyFlowOrderType = ORDER_ITEM_STATUS | 'UNKNOWN';
 
-// ------------- BEGIN TEMP -----------------
-
-export type BuyFlowSequences = {
-  [stateType in FLOW]?: Buyflow;
-};
-
-export type Buyflow = {
-  [orderState in FLOW_ORDER_STATUS]?: UserState;
-};
-
-export type UserState = {
-  [user in ORDER_USER_TYPE]: State
-};
-
-export interface State {
-  buyflow: FLOW;
-  stateId: FLOW_ORDER_STATUS;
-  userType: ORDER_USER_TYPE;
-  label: string;
-  filterLabel?: string;
-  statusText: string;
-  actionsPrimary: StateActionOption[];
-  actionsSecondary: StateActionOption[];
-  actionsPlaceholders: StateActionOption[];
-}
-
-export interface StateActionOption {
-  icon: string;
-  tooltip: string;
-  label: string;
-}
-
-
-
-// ------------- END TEMP -----------------
 
 // We're not creating a state machine for each and every order. Instead, we create a single state machine for each buyflow type,
 //  and then provides methods to lookup the current state ad actions, for each order. More like a workflow than a state machine...
-export interface AAIBuyflowController {
-  getOrderedStateList(buyflow: FLOW): AABuyFlowState[];
-  getStateDetails(buyflow: FLOW, stateId: FLOW_ORDER_STATUS, user: ORDER_USER_TYPE): AAUsableStateDetails;
-  actionOrderItem(orderItem: OrderItem, toState: FLOW_ORDER_STATUS, asUser: ORDER_USER_TYPE): Observable<OrderItem>;
+export interface IBuyflowController {
+  getOrderedStateList(buyflow: BuyFlowType): BuyFlowState[];
+  getStateDetails(buyflow: BuyFlowType, stateId: BuyFlowOrderType, user: OrderUserType): BuyflowStateDetails;
+  actionOrderItem(orderItem: OrderItem, toState: BuyFlowOrderType, asUser: OrderUserType): Observable<OrderItem>;
 }
 
-export type AABuyFlow = {
-  [flowType in FLOW]?: AABuyFlowDetails;
+export type BuyFlowStore = {
+  [buyflow in BuyFlowType]?: BuyFlow;
 };
 
-export interface AABuyFlowDetails {
-  states: AABuyFlowStates;
-  actions: AABuyFlowActions;
+export interface BuyFlow {
+  states: BuyFlowStateStore;
+  actions: BuyFlowActionStore;
 }
 
-export type AABuyFlowStates = {
-  [state in FLOW_ORDER_STATUS]?: AABuyFlowState
+export type BuyFlowStateStore = {
+  [state in BuyFlowOrderType]?: BuyFlowState
 };
 
-export type AABuyFlowActions = {
-  [fromState in FLOW_ORDER_STATUS]?: AABuyflowActionable[];
-};
-
-export interface AABuyFlowState {
-  buyflow: FLOW;
-  stateId: FLOW_ORDER_STATUS;
+export interface BuyFlowState {
+  buyflow: BuyFlowType;
+  stateId: BuyFlowOrderType;
   label: string;
   filterLabel?: string;
   order: number;
@@ -125,24 +86,28 @@ export interface AABuyFlowState {
   };
 }
 
-type ACTIONABLE_TYPE = 'PRIMARY' | 'ALTERNATIVE' | 'PLACEHOLDER_LABEL';
+type BuyflowActionType = 'PRIMARY' | 'ALTERNATIVE' | 'PLACEHOLDER_LABEL';
 
-export interface AABuyflowActionable {
-  fromState: FLOW_ORDER_STATUS;
-  toState: FLOW_ORDER_STATUS | null;
-  user: ORDER_USER_TYPE;
-  actionType: ACTIONABLE_TYPE;
+export type BuyFlowActionStore = {
+  [fromState in BuyFlowOrderType]?: BuyflowAction[];
+};
+
+export interface BuyflowAction {
+  fromState: BuyFlowOrderType;
+  toState: BuyFlowOrderType | null;
+  user: OrderUserType;
+  actionType: BuyflowActionType;
   details: {
     label: string;
     tooltip: string;
-    colour?: 'primary' | 'warn';
-    icon?: string;
+    colour: 'primary' | 'warn';
+    icon: string;
   };
   // TODO: include key for actual transition function
 }
 
 
-export interface AAUsableStateDetails {
-  state: AABuyFlowState;
-  actions: { [actionType in ACTIONABLE_TYPE]: AABuyflowActionable[] };
+export interface BuyflowStateDetails {
+  state: BuyFlowState;
+  actions: { [actionType in BuyflowActionType]: BuyflowAction[] };
 }
