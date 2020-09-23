@@ -19,10 +19,16 @@
         <strong>Warning!</strong> Only confirm the delivery if you have received the item in real life &ndash; this Order involves real PART coins!
       </p>
       <p class="help-text">
-        Confirming successfull delivery will finalize this Order and release your funds locked in Escrow.
+        Confirming successful delivery will finalize this Order and release your funds locked in Escrow.
       </p>
     </div>
 
+    <p class="message --info">
+      Leave an optional confirmation of delivery message for the seller
+      <mat-form-field class="full-width --boxed --larger" appearance="fill" color="accent">
+        <mat-icon matPrefix fontIcon="part-check"></mat-icon>
+        <input [formControl]="reviewMemo" matInput type="text" placeholder="Optional review message">
+      </mat-form-field>
   </div>
 </mat-dialog-content>
 
@@ -32,7 +38,7 @@
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()">
     <mat-icon fontIcon="part-check"></mat-icon>
     Yes, I received the Order
   </button>

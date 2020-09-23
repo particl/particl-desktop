@@ -1,4 +1,4 @@
-<mat-dialog-title>Confirm payment</mat-dialog-title>
+<mat-dialog-title>Request Escrow Finalization</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close><!-- tabindex="-1" -->
   <mat-icon fontIcon="part-cross"></mat-icon>
@@ -6,9 +6,7 @@
 
 
 <mat-dialog-content>
-
-  <!-- TODO: show on alpha mainnet only | do we really need it when we have the banner on top of Market? -->
-  <p class="message --warning">
+  <p class="message --warning" *ngIf="!(isTestnet | async)">
     <strong>Warning:</strong> you are about to spend real PART coins on an ongoing development version of Particl Marketplace &ndash; things might break!
   </p>
 
@@ -20,13 +18,13 @@
         <mat-icon class="icon public" fontIcon="part-cart-2"></mat-icon>
         <div class="title">You're buying</div>
         <p class="help-text">
-          Seller accepted your bid &ndash; pay for your Order and&nbsp;Escrow deposit
+          Seller accepted your bid &ndash; request escrow for your Item and Escrow deposit
         </p>
       </div>
     </div>
 
     <div class="tx-amount">
-      <span class="big">132</span><span class="point">.</span><span class="small">865416</span>&ensp;
+      <span class="big">{{ itemPricing.whole }}</span><span class="point">{{ itemPricing.sep }}</span><span class="small">{{ itemPricing.fraction }}</span>&ensp;
       <span class="currency">PART</span>
       <!-- TODO: until fiat estimations are implemented, hide them -->
       <div class="fiat">&asymp; 3.42 USD</div>
@@ -35,8 +33,8 @@
     <mat-icon class="arrow-icon" fontIcon="part-arrow-down"></mat-icon>
 
     <div class="receiver-info">
-      <div class="label"><span class="qty">1&times;</span> Listing name of item being bought</div>
-      <code class="address">Pf94seller'sAddress842NFFS32d1f</code>
+      <div class="label"><span class="qty">1&times;</span> {{ listingTitle }}</div>
+      <code class="address">{{ orderHash }}</code>
     </div>
 
     <div class="contact-info">
@@ -46,42 +44,28 @@
         <label fxFlex="50%">
           <mat-form-field class="--boxed full-width" appearance="fill">
             <span matPrefix>Tel:</span>
-            <input type="tel" matInput placeholder="Telephone number" name="phone" maxlength="30">
+            <input type="tel" matInput [formControl]="inputContactPhone" placeholder="Telephone number" name="phone">
           </mat-form-field>
         </label>
         <label fxFlex="50%">
           <mat-form-field class="--boxed full-width" appearance="fill">
             <span matPrefix>E-mail:</span>
-            <input type="email" matInput placeholder="E-mail address" name="email" email maxlength="255" />
+            <input type="email" matInput [formControl]="inputContactEmail" placeholder="E-mail address" name="email" />
           </mat-form-field>
         </label>
       </div>
     </div>
-
-    <p class="fee-info">
-      <!-- Not needed, since we have the pricing breakdown in Order detail already..
-      Listing price:<span class="amount">{{ bidItem?.PricingInformation(country)?.base?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.base?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.base?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-
-      Shipping:<span class="amount">{{ bidItem?.PricingInformation(country)?.shipping?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.shipping?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.shipping?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-
-      Escrow:<span class="amount">{{ bidItem?.PricingInformation(country)?.escrow?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.escrow?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.escrow?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 0.05 USD</span><br>
-
-      Total amount:<span class="amount">{{ bidItem?.PricingInformation(country)?.total?.particlStringInteger() }}{{ bidItem?.PricingInformation(country)?.total?.particlStringSep() }}{{ bidItem?.PricingInformation(country)?.total?.particlStringFraction() }} PART</span><span class="fiat">&asymp; 3.47 USD</span-->
-      Transaction fee:
-      <span class="amount">0.05121 PART</span>
-      <span class="fiat">&asymp; 2.52 USD</span>
-    </p>
 
   </div><!-- .tx-confirmation -->
 </mat-dialog-content>
 
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close (click)="dialogClose()">
+  <button mat-button mat-dialog-close>
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="confirm()" [disabled]="processing">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()">
     <mat-icon fontIcon="part-check"></mat-icon>
     Confirm &amp; Pay
   </button>

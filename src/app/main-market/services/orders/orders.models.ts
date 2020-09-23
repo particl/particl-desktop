@@ -2,6 +2,17 @@ import { Observable } from 'rxjs';
 import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE, BID_DATA_KEY } from '../../shared/market.models';
 
 
+export interface GenericOrderModalInputs {
+  orderItem: OrderItem;
+}
+
+
+export interface OrderModalResponse {
+  doAction: boolean;
+  params: ActionTransitionParams;
+}
+
+
 export interface OrderItem {
   orderId: number;
   orderItemId: number;

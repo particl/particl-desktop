@@ -27,7 +27,7 @@
     <strong>Warning!</strong> If you don't ship the item to the Buyer, you will lose your Escrow deposit!
     <mat-form-field class="full-width --boxed --larger" appearance="fill" color="accent">
       <mat-icon matPrefix fontIcon="part-truck"></mat-icon>
-      <input matInput type="text" placeholder="Additional shipping info (e.g. tracking number)">
+      <input [formControl]="shippingMemo" matInput type="text" placeholder="Additional shipping info (e.g. tracking number)">
     </mat-form-field>
   </p>
 
@@ -39,7 +39,7 @@
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()">
     <mat-icon fontIcon="part-check"></mat-icon>
     Yes, Order is shipped
   </button>

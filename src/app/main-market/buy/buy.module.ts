@@ -6,7 +6,6 @@ import { MarketSharedModule } from '../shared/shared.module';
 import { BuyComponent } from './buy.component';
 import { BuyCommentsComponent } from './buy-comments/buy-comments.component';
 import { BuyOrdersComponent } from './buy-orders/buy-orders.component';
-import { BuyOrderListItemComponent } from './buy-orders/buy-order-list-item/buy-order-list-item.component';
 import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bid-modal.component';
 import { ConfirmOrderDeliveredModalComponent } from './buy-orders/confirm-order-delivered-modal/confirm-order-delivered-modal.component';
 import { PayOrderModalComponent } from './buy-orders/pay-order-modal/pay-order-modal.component';
@@ -33,7 +32,6 @@ const routes: Routes = [
     BuyComponent,
     BuyCommentsComponent,
     BuyOrdersComponent,
-    BuyOrderListItemComponent,
     CancelBidModalComponent,
     ConfirmOrderDeliveredModalComponent,
     PayOrderModalComponent,

@@ -29,7 +29,7 @@
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="primary">
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()">
     <mat-icon fontIcon="part-check"></mat-icon>
     Yes, accept bid
   </button>
