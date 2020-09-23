@@ -70,7 +70,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
   ordersList: OrderItem[] = [];
 
 
-  private readonly viewer: OrderUserType = 'SELLER';
+  private readonly viewer: OrderUserType = 'BUYER';
   private destroy$: Subject<void> = new Subject();
   private currentIdentity: Identity = null;
   private loadOrdersControl: FormControl = new FormControl(true);
