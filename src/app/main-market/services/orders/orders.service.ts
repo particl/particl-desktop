@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, throwError, of, iif, defer } from 'rxjs';
+import { map, concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -22,6 +22,7 @@ import {
   BuyFlowStateStore,
   BuyFlowState,
   BuyFlowActionStore,
+  ActionTransitionParams,
   BuyflowStateDetails
 } from './orders.models';
 
@@ -118,19 +119,25 @@ export class BidOrderService implements IBuyflowController {
     private _store: Store,
     private _regionService: RegionListService
   ) {
-
     this.defaultMarketImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
   }
 
 
-  fetchBids(userType: OrderUserType): Observable<OrderItem[]> {
+  fetchBids(
+    userType: OrderUserType,
+    orderField: 'created_at' | 'updated_at' = 'created_at',
+    orderItemStatus?: ORDER_ITEM_STATUS,
+    listingItemId?: number
+  ): Observable<OrderItem[]> {
     const identity = this._store.selectSnapshot(MarketState.currentIdentity);
     const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
     const userQuery = [
       userType === 'BUYER' ? identity.address : null,
       userType === 'SELLER' ? identity.address : null
     ];
-    return this._rpc.call('order', ['search', 0, 1_000_000, 'DESC', 'created_at', null, null, ...userQuery]).pipe(
+    return this._rpc.call(
+      'order', ['search', 0, 1_000_000, 'DESC', orderField, +listingItemId || null, orderItemStatus || null, ...userQuery]
+    ).pipe(
       map((respItems: RespOrderSearchItem[]) => {
         const items: OrderItem[] = [];
 
@@ -155,6 +162,21 @@ export class BidOrderService implements IBuyflowController {
         return items;
       })
     );
+  }
+
+
+  getListenerIdsForUser(userType: OrderUserType): string[]  {
+    // @TODO: zaSmilingIdiot 2020-09-21 -> Listeners should be a factor of the current buyflow
+    //  This needs to be moved to the buyflow object and a lookup from there needs to occur instead of the below 'manual' calc.
+    let listeners: string[] = [];
+
+    if (userType === 'SELLER') {
+      listeners = ['MPA_BID_03', 'MPA_CANCEL_03', 'MPA_LOCK_03', 'MPA_RELEASE'];
+    } else if (userType === 'BUYER') {
+      listeners = ['MPA_REJECT_03', 'MPA_CANCEL_03', 'MPA_ACCEPT_03', 'MPA_COMPLETE', 'MPA_SHIP'];
+    }
+
+    return listeners;
   }
 
 
@@ -195,9 +217,117 @@ export class BidOrderService implements IBuyflowController {
   }
 
 
-  actionOrderItem(orderItem: OrderItem, toState: BuyFlowOrderType, asUser: OrderUserType): Observable<OrderItem> {
-    // TODO: Implement this
-    return throwError(() => of('NOT IMPLEMENTED'));
+  actionOrderItem(
+    orderItem: OrderItem, toState: BuyFlowOrderType, asUser: OrderUserType, otherParams?: ActionTransitionParams
+  ): Observable<OrderItem> {
+    if (!isBasicObjectType(orderItem) || !isBasicObjectType(orderItem.currentState) || !orderItem.currentState.state) {
+      return throwError(() => of('INVALID ORDERITEM'));
+    }
+
+    const buyflow = orderItem.currentState.state.buyflow;
+    const currentState = orderItem.currentState.state.stateId;
+    const buyflowStates = this.getStateDetails(buyflow, currentState, asUser);
+    const actionable = buyflowStates.actions.PRIMARY.find(a => a.toState === toState) ||
+          buyflowStates.actions.ALTERNATIVE.find(a => a.toState === toState);
+
+    if (!actionable) {
+      return throwError(() => of('INVALID ACTION'));
+    }
+
+    return actionable.transition(orderItem, otherParams || {}).pipe(
+      concatMap((isSuccessful: boolean) => iif(
+        () => isSuccessful,
+
+        // Fake a 'order get' request, since that doesn't exist: search for orders with increased criteria to narrow the result set,
+        //  and then find the correct one...
+        defer(() => this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
+          map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
+        )),
+
+        // wasn't updated, so return the existing orderItem
+        defer(() => of(orderItem))
+      ))
+    );
+  }
+
+
+  private actionBidAccept(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return this._rpc.call('bid', ['accept', orderItem.baseBidId, identityId ]).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionBidReject(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const params = ['reject', orderItem.baseBidId];
+    params.push(this._store.selectSnapshot(MarketState.currentIdentity).id);
+
+    if (isBasicObjectType(extraParams) && (typeof extraParams.memo === 'string')) {
+      params.push(extraParams.memo);
+    }
+    return this._rpc.call('bid', params).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionBidCancel(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return this._rpc.call('bid', ['cancel', orderItem.baseBidId, identityId ]).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionBidEscrowLock(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const params = ['lock', orderItem.orderItemId];
+
+    if (isBasicObjectType(extraParams)) {
+      if (extraParams[BID_DATA_KEY.DELIVERY_EMAIL]) {
+        params.push(BID_DATA_KEY.DELIVERY_EMAIL, extraParams[BID_DATA_KEY.DELIVERY_EMAIL]);
+      }
+      if (extraParams[BID_DATA_KEY.DELIVERY_PHONE]) {
+        params.push(BID_DATA_KEY.DELIVERY_PHONE, extraParams[BID_DATA_KEY.DELIVERY_PHONE]);
+      }
+    }
+    return this._rpc.call('escrow', params).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionBidEscrowComplete(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const params = ['complete', orderItem.orderItemId];
+
+    if (isBasicObjectType(extraParams) && extraParams.memo) {
+      params.push(extraParams.memo);
+    }
+    return this._rpc.call('escrow', params).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionOrderShip(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const params = ['ship', orderItem.orderItemId];
+
+    if (isBasicObjectType(extraParams) && extraParams.memo) {
+      params.push(extraParams.memo);
+    }
+    return this._rpc.call('orderitem', params).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionOrderComplete(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    const params = ['complete', orderItem.orderItemId];
+
+    if (isBasicObjectType(extraParams) && extraParams.memo) {
+      params.push(extraParams.memo);
+    }
+    return this._rpc.call('escrow', params).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+  private actionInvalid(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
+    return throwError(() => of('INVALID ACTION'));
   }
 
 
@@ -280,6 +410,11 @@ export class BidOrderService implements IBuyflowController {
       country: '',
     };
 
+    newOrder.contactDetails = {
+      email: '',
+      phone: ''
+    };
+
     if (!(newOrder.orderId > 0) || !(newOrder.orderItemId > 0) || !(newOrder.baseBidId > 0)) {
       return newOrder;
     }
@@ -325,6 +460,12 @@ export class BidOrderService implements IBuyflowController {
               case BID_DATA_KEY.REJECT_REASON:
                 const reasonKey = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
                 newOrder.extraDetails.rejectionReason = this.rejectionOptions[reasonKey] || TextContent.REJECT_REASON_UNKNOWN;
+                break;
+              case BID_DATA_KEY.DELIVERY_EMAIL:
+                newOrder.contactDetails.email = getValueOrDefault(d.value, 'string', newOrder.contactDetails.email);
+                break;
+              case BID_DATA_KEY.DELIVERY_PHONE:
+                newOrder.contactDetails.phone = getValueOrDefault(d.value, 'string', newOrder.contactDetails.phone);
                 break;
             }
           }
@@ -542,7 +683,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PRIMARY',
         details: {
           label: TextContent.ACTION_ACCEPT_LABEL, tooltip: TextContent.ACTION_ACCEPT_TOOLTIP, colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionBidAccept.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.CREATED,
@@ -551,7 +693,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PRIMARY',
         details: {
           label: TextContent.ACTION_REJECT_LABEL, tooltip: TextContent.ACTION_REJECT_TOOLTIP, colour: 'warn', icon: 'part-cross'
-        }
+        },
+        transition: this.actionBidReject.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.CREATED,
@@ -560,7 +703,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'ALTERNATIVE',
         details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
-        }
+        },
+        transition: this.actionBidCancel.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.CREATED,
@@ -569,7 +713,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: '', colour: 'primary', icon: 'part-date'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       }
     ];
 
@@ -581,7 +726,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'ALTERNATIVE',
         details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
-        }
+        },
+        transition: this.actionBidCancel.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ACCEPTED,
@@ -590,7 +736,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_ESCROW_PENDING, tooltip: TextContent.PLACEHOLDER_ESCROW_PENDING_TOOLTIP, colour: 'primary', icon: 'part-date'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ACCEPTED,
@@ -599,7 +746,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'ALTERNATIVE',
         details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
-        }
+        },
+        transition: this.actionBidCancel.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ACCEPTED,
@@ -608,7 +756,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PRIMARY',
         details: {
           label: TextContent.ACTION_REQUEST_ESCROW_LABEL, tooltip: TextContent.ACTION_REQUEST_ESCROW_TOOLTIP, colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionBidEscrowLock.bind(this)
       }
     ];
     actions[ORDER_ITEM_STATUS.ESCROW_REQUESTED] = [
@@ -619,7 +768,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'ALTERNATIVE',
         details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
-        }
+        },
+        transition: this.actionBidCancel.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
@@ -628,7 +778,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PRIMARY',
         details: {
           label: TextContent.ACTION_COMPLETE_ESCROW_LABEL, tooltip: TextContent.ACTION_COMPLETE_ESCROW_TOOLTIP, colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionBidEscrowComplete.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
@@ -637,7 +788,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'ALTERNATIVE',
         details: {
           label: TextContent.ACTION_CANCEL_LABEL, tooltip: TextContent.ACTION_CANCEL_TOOLTIP, colour: 'warn', icon: 'part-cross'
-        }
+        },
+        transition: this.actionBidCancel.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
@@ -646,7 +798,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: '', colour: 'primary', icon: 'part-date'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       }
     ];
     actions[ORDER_ITEM_STATUS.ESCROW_COMPLETED] = [
@@ -657,7 +810,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PRIMARY',
         details: {
           label: TextContent.ACTION_SHIP_LABEL, tooltip: TextContent.ACTION_SHIP_TOOLTIP, colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionOrderShip.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
@@ -667,7 +821,8 @@ export class BidOrderService implements IBuyflowController {
         details: {
           label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: TextContent.PLACEHOLDER_SHIPPING_PENDING_TOOLTIP,
           colour: 'primary', icon: 'part-date'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       }
     ];
     actions[ORDER_ITEM_STATUS.SHIPPED] = [
@@ -679,7 +834,8 @@ export class BidOrderService implements IBuyflowController {
         details: {
           label: TextContent.PLACEHOLDER_DELIVERY_PENDING, tooltip: TextContent.PLACEHOLDER_DELIVERY_PENDING_TOOLTIP,
           colour: 'primary', icon: 'part-date'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.SHIPPED,
@@ -688,7 +844,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PRIMARY',
         details: {
           label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionOrderComplete.bind(this)
       }
     ];
     actions[ORDER_ITEM_STATUS.COMPLETE] = [
@@ -699,7 +856,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_ORDER_COMPLETE, tooltip: '', colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.COMPLETE,
@@ -708,7 +866,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_ORDER_COMPLETE, tooltip: '', colour: 'primary', icon: 'part-check'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       },
     ];
     actions[ORDER_ITEM_STATUS.REJECTED] = [
@@ -719,7 +878,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_REJECTED, tooltip: '', colour: 'primary', icon: 'part-error'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.REJECTED,
@@ -728,7 +888,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_REJECTED, tooltip: '', colour: 'primary', icon: 'part-error'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       }
     ];
     actions[ORDER_ITEM_STATUS.CANCELLED] = [
@@ -739,7 +900,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_CANCELLED, tooltip: '', colour: 'primary', icon: 'part-error'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.CANCELLED,
@@ -748,7 +910,8 @@ export class BidOrderService implements IBuyflowController {
         actionType: 'PLACEHOLDER_LABEL',
         details: {
           label: TextContent.PLACEHOLDER_CANCELLED, tooltip: '', colour: 'primary', icon: 'part-error'
-        }
+        },
+        transition: this.actionInvalid.bind(this)
       }
     ];
 

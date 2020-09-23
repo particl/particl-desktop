@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE } from '../../shared/market.models';
+import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE, BID_DATA_KEY } from '../../shared/market.models';
 
 
 export interface OrderItem {
@@ -33,8 +33,11 @@ export interface OrderItem {
     code: string;
     country: string;
   };
+  contactDetails?: {
+    phone: string;
+    email: string;
+  };
   currentState?: BuyflowStateDetails;
-
   extraDetails?: {
     escrowMemo: string;
     shippingMemo: string;
@@ -88,6 +91,10 @@ export interface BuyFlowState {
 
 type BuyflowActionType = 'PRIMARY' | 'ALTERNATIVE' | 'PLACEHOLDER_LABEL';
 
+export type ActionTransitionParams = {
+  [key in BID_DATA_KEY.DELIVERY_EMAIL | BID_DATA_KEY.DELIVERY_PHONE | 'memo']?: string;
+};
+
 export type BuyFlowActionStore = {
   [fromState in BuyFlowOrderType]?: BuyflowAction[];
 };
@@ -103,7 +110,7 @@ export interface BuyflowAction {
     colour: 'primary' | 'warn';
     icon: string;
   };
-  // TODO: include key for actual transition function
+  transition(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean>;
 }
 
 

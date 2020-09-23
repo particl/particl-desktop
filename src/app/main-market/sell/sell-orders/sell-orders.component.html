@@ -141,7 +141,7 @@
           <div class="highlights" *ngIf="orderItem.extraDetails !== undefined">
             <table>
               <tr *ngIf="orderItem.extraDetails.escrowMemo.length > 0">
-                <th>Buyer shipping notes</th>
+                <th>Seller's escrow creation notes</th>
                 <td><em>{{ orderItem.extraDetails.escrowMemo }}</em></td>
               </tr>
               <tr *ngIf="orderItem.extraDetails.shippingMemo.length > 0">
@@ -189,16 +189,15 @@
                 {{orderItem.shippingDetails.country}}<small>&ndash; Country</small>
               </p>
 
-              <!-- TODO: contact details implementation -->
-              <!-- <p class="contact-info">
-                <span>
-                  <a href="mailto:my.name@buyer-central.com">my.name@buyer-central.com</a>
+              <p class="contact-info">
+                <span *ngIf="orderItem.contactDetails.email.length > 0">
+                  {{orderItem.contactDetails.email }}
                 </span>
                 <br>
-                <span>
-                  +548 1843 1548 3511
+                <span *ngIf="orderItem.contactDetails.phone.length > 0">
+                  {{orderItem.contactDetails.phone }}
                 </span>
-              </p> -->
+              </p>
             </div><!-- .buyer-info -->
 
             <div class="pricing-info" fxFlex="auto">

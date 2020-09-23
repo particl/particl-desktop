@@ -4,6 +4,7 @@ import { Observable, Subject, empty, of } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { SupportedMessageTypes, SocketMessages_v03 } from '../../shared/market-socket.models';
+import { finalize } from 'rxjs/operators';
 
 
 interface SocketDataObject {
@@ -30,7 +31,14 @@ export class MarketSocketService implements OnDestroy {
     MPA_LISTING_ADD_03: null,
     MPA_COMMENT_ADD: null,
     MPA_PROPOSAL_ADD: null,
-    MPA_BID_03: null
+    MPA_BID_03: null,
+    MPA_ACCEPT_03: null,
+    MPA_REJECT_03: null,
+    MPA_CANCEL_03: null,
+    MPA_LOCK_03: null,
+    MPA_RELEASE: null,
+    MPA_SHIP: null,
+    MPA_COMPLETE: null,
   };
 
 
@@ -128,7 +136,12 @@ export class MarketSocketService implements OnDestroy {
       }
     });
 
-    this.marketSocket.subscribe(
+    this.marketSocket.pipe(
+      finalize(() => {
+        this.log.i('websocket connection finalized... stopping message listeners');
+        this.stopMessageListeners();
+      })
+    ).subscribe(
       (msg: SocketDataObject) => {
         if (Array.isArray(msg.data) && (typeof msg.data[0] === 'string')) {
           const msgKey = msg.data[0];
@@ -148,7 +161,6 @@ export class MarketSocketService implements OnDestroy {
       (err) => this.log.er('websocket connection errored: ', err),
       () => {
         this.log.i('websocket connection closed');
-        this.stopMessageListeners();
       }
     );
   }
@@ -181,6 +193,13 @@ export class MarketSocketService implements OnDestroy {
       MPA_COMMENT_ADD: new Subject<SocketMessages_v03.CommentAdded>(),
       MPA_PROPOSAL_ADD: new Subject<SocketMessages_v03.ProposalAdded>(),
       MPA_BID_03: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_ACCEPT_03: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_REJECT_03: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_CANCEL_03: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_LOCK_03: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_RELEASE: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_SHIP: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_COMPLETE: new Subject<SocketMessages_v03.BidReceived>(),
     };
   }
 

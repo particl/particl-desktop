@@ -39,4 +39,11 @@ export interface SupportedMessageTypes {
   MPA_PROPOSAL_ADD: SocketMessages_v03.ProposalAdded;
   MPA_COMMENT_ADD: SocketMessages_v03.CommentAdded;
   MPA_BID_03: SocketMessages_v03.BidReceived;
+  MPA_ACCEPT_03: SocketMessages_v03.BidReceived;
+  MPA_REJECT_03: SocketMessages_v03.BidReceived;
+  MPA_CANCEL_03: SocketMessages_v03.BidReceived;
+  MPA_LOCK_03: SocketMessages_v03.BidReceived;
+  MPA_RELEASE: SocketMessages_v03.BidReceived;
+  MPA_SHIP: SocketMessages_v03.BidReceived;
+  MPA_COMPLETE: SocketMessages_v03.BidReceived;
 }

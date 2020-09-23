@@ -1,27 +1,41 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, of, merge, defer, throwError } from 'rxjs';
-import { takeUntil, tap, map, switchMap, catchError, startWith, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Observable, Subject, of, merge, defer, throwError, iif } from 'rxjs';
+import {
+  takeUntil, tap, map, switchMap, catchError, startWith, debounceTime,
+  distinctUntilChanged, filter, auditTime, concatMap, finalize
+} from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { WalletInfoState } from 'app/main/store/main.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { BidOrderService } from '../../services/orders/orders.service';
 import { DataService } from '../../services/data/data.service';
+import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { RejectBidModalComponent } from '../modals/reject-bid-modal/reject-bid-modal.component';
+import { CancelBidModalComponent } from '../modals/cancel-bid-modal/cancel-bid-modal.component';
+import { EscrowPaymentModalComponent } from '../modals/escrow-payment-modal/escrow-payment-modal.component';
+import { OrderShippedModalComponent } from '../modals/order-shipped-modal/order-shipped-modal.component';
+import { AcceptBidModalComponent } from '../modals/accept-bid-modal/accept-bid-modal.component';
+import { isBasicObjectType } from '../../shared/utils';
 
 import { WalletInfoStateModel } from 'app/main/store/main.models';
-import { OrderItem, BuyFlowOrderType, OrderUserType } from '../../services/orders/orders.models';
+import { OrderItem, BuyFlowOrderType, OrderUserType, ActionTransitionParams } from '../../services/orders/orders.models';
 import { Identity } from '../../store/market.models';
+import { ORDER_ITEM_STATUS } from '../../shared/market.models';
 
 
 enum TextContent {
   LOADING_ERROR = 'Failed to load orders correctly',
   FILTER_LABEL_ALL_ORDERS = 'All Items',
-  ORDER_UPDATE_ERROR = 'Order update failed'
+  ORDER_UPDATE_ERROR = 'Order update failed',
+  ACTIONING_ORDER = 'Processing the selected item'
 }
 
 interface BuyflowStep {
@@ -69,10 +83,12 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
   constructor(
     private _store: Store,
     private _cdr: ChangeDetectorRef,
+    private _socket: MarketSocketService,
     private _orderService: BidOrderService,
     private _sharedService: DataService,
     private _snackbar: SnackbarService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _unlocker: WalletEncryptionService
   ) {
     const madctStates = this._orderService.getOrderedStateList('MAD_CT');
 
@@ -201,8 +217,36 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       tap(() => this.renderOrdersControl.setValue(null))
     );
 
+    /**
+     * Doing the socket subscription here instead of the service, because:
+     *    the orders service is not destroyed when the component goes out of scope
+     *    (is not a component provided service but a market module one),
+     *    leaving no way to reliably determine when to unsubscribe from the created (and subscribed) socket listener observables.
+     *    The alternative would be to create a store of socket listeners with a tracker of subcribers
+     *    and then ask the subscribers to unregister themselves, but thats beating aound the bush for no real benefit.
+     *    Until an alternative solution presents itself, the socket listeners are registered in the component.
+     */
 
-    // TODO: On incoming message updates, check that the message market is current and do a reload of orders
+    const listeners$: Observable<any>[] = [];
+
+    // typecasting the string to 'any' so as to ignore the tslint issue about a string being an invalid argument
+    this._orderService.getListenerIdsForUser(this.viewer).forEach(id =>
+      listeners$.push(this._socket.getSocketMessageListener(id as any).pipe(takeUntil(this.destroy$)))
+    );
+
+    let incomingUpdate$ = of({});
+    if (listeners$.length > 0) {
+      incomingUpdate$ = merge(...listeners$).pipe(
+        tap((msg) => console.log('@@@@@@@ incoming msg received', msg)),
+        filter(msg => isBasicObjectType(msg) && (typeof this.filterOptionsMarkets[msg.market] === 'string')),
+        auditTime(10_000), // After first message arrives, wait x number of seconds (for more possible arriving messages), before continuing
+        tap(() => {
+          console.log('@@@@@@@ after auditTime... firing now to update display');
+          this.loadOrdersControl.setValue(false);
+        }),
+        takeUntil(this.destroy$)
+      );
+    }
 
 
     merge(
@@ -210,7 +254,8 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       marketLoader$,
       orderLoader$,
       updateDisplay$,
-      filterChange$
+      filterChange$,
+      incomingUpdate$
     ).subscribe();
   }
 
@@ -269,7 +314,69 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
 
   executeAction(orderItem: OrderItem, moveToState: BuyFlowOrderType): void {
-    this._orderService.actionOrderItem(orderItem, moveToState, this.viewer).subscribe(
+    // @TODO: zaSmilingIdiot 2020-09-21 -> This lookup for the modals to display should probably all be handled in the service.
+    //  However, since the service is not destroyed when the component is, and the order service would
+    //    then also require matdialog and other service availability, it leaves instances of these additional services
+    //    hanging around for no real benefit or reason.
+    //  Hence, doing this 'manual' checking here for now, but this needs to be resolved/moved in the future
+
+    let actionable$: Observable<OrderItem>;
+    let modalComponent: any;
+    const modalData = {
+      orderItem
+    };
+
+    const action$ = (extraArgs?: ActionTransitionParams) => {
+      return defer(() => {
+        this._dialog.open(ProcessingModalComponent, {
+          disableClose: true,
+          data: { message: TextContent.ACTIONING_ORDER }
+        });
+
+        return this._unlocker.unlock({timeout: 10}).pipe(
+          concatMap((unlocked) => iif(
+            () => unlocked,
+            defer(() => this._orderService.actionOrderItem(orderItem, moveToState, this.viewer, extraArgs))
+          ))
+        );
+      });
+    };
+
+    switch (moveToState) {
+      case ORDER_ITEM_STATUS.ACCEPTED:
+        modalComponent = AcceptBidModalComponent;
+        break;
+      case ORDER_ITEM_STATUS.REJECTED:
+        modalComponent = RejectBidModalComponent;
+        break;
+      case ORDER_ITEM_STATUS.CANCELLED:
+        modalComponent = CancelBidModalComponent;
+        break;
+      case ORDER_ITEM_STATUS.ESCROW_COMPLETED:
+        modalComponent = EscrowPaymentModalComponent;
+        break;
+      case ORDER_ITEM_STATUS.SHIPPED:
+        modalComponent = OrderShippedModalComponent;
+        break;
+    }
+
+    if (modalComponent === undefined) {
+      actionable$ = action$();
+    } else {
+      actionable$ = this._dialog.open(
+        modalComponent,
+        { data: modalData }
+      ).afterClosed().pipe(
+        concatMap((modalResponse) => iif(
+          () => isBasicObjectType(modalResponse) && !!modalResponse.doAction,
+          action$(modalResponse.params)
+        ))
+      );
+    }
+
+    actionable$.pipe(
+      finalize(() => this._dialog.closeAll())
+    ).subscribe(
       (newItem) => {
         if (
           (orderItem.orderId === newItem.orderId) &&
@@ -278,6 +385,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
           const foundOrderIdx = this.ordersList.findIndex(o => o.orderId === orderItem.orderId);
           if (foundOrderIdx > -1) {
             this.ordersList[foundOrderIdx] = newItem;
+            this._cdr.detectChanges();
           }
         }
       },

@@ -23,6 +23,7 @@ import { AcceptBidModalComponent } from './modals/accept-bid-modal/accept-bid-mo
 import { RejectBidModalComponent } from './modals/reject-bid-modal/reject-bid-modal.component';
 import { EscrowPaymentModalComponent } from './modals/escrow-payment-modal/escrow-payment-modal.component';
 import { OrderShippedModalComponent } from './modals/order-shipped-modal/order-shipped-modal.component';
+import { CancelBidModalComponent } from './modals/cancel-bid-modal/cancel-bid-modal.component';
 
 import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
 
@@ -59,6 +60,7 @@ const routes: Routes = [
     SellOrdersComponent,
     AcceptBidModalComponent,
     RejectBidModalComponent,
+    CancelBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
 
@@ -74,6 +76,7 @@ const routes: Routes = [
 
     AcceptBidModalComponent,
     RejectBidModalComponent,
+    CancelBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
   ],

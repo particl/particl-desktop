@@ -51,7 +51,9 @@ export enum BID_DATA_KEY {
   SHIPPING_MEMO = 'shipping.memo',
   RELEASE_MEMO = 'release.memo',
   RELEASE_TX_ID = 'txid.release',
-  REJECT_REASON = 'reject.reason'
+  REJECT_REASON = 'reject.reason',
+  DELIVERY_PHONE = 'delivery.phone',
+  DELIVERY_EMAIL = 'delivery.email'
 }
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 

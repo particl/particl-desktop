@@ -13,7 +13,6 @@ import {
   MatStepperModule, MatSlideToggleModule, MatAutocompleteModule, MatButtonToggleModule,
   MatTableModule, MatTreeModule, MatSortModule
 } from '@angular/material';
-//import { MatSortModule } from '@angular/material/sort';
 
 import { A11yModule } from '@angular/cdk/a11y';
 import { PortalModule } from '@angular/cdk/portal';
