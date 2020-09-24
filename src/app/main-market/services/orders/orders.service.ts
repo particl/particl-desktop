@@ -91,10 +91,11 @@ enum TextContent {
   PLACEHOLDER_ESCROW_PENDING_TOOLTIP = 'Waiting for buyer to proceed to escrow step',
   PLACEHOLDER_SHIPPING_PENDING_TOOLTIP = 'Shipment of item is pending',
   PLACEHOLDER_DELIVERY_PENDING = 'Waiting for delivery',
-  PLACEHOLDER_DELIVERY_PENDING_TOOLTIP = 'Awaiting confirmation of successfull delivery by Buyer',
+  PLACEHOLDER_DELIVERY_PENDING_TOOLTIP = 'Awaiting confirmation of successful delivery by Buyer',
   PLACEHOLDER_ORDER_COMPLETE = 'Order complete',
 
   REJECT_REASON_OUT_OF_STOCK = 'Out of stock',
+  REJECT_REASON_NO_REASON = 'No reason provided',
   REJECT_REASON_UNKNOWN = 'Unknown reason provided'
 }
 
@@ -110,7 +111,8 @@ export class BidOrderService implements IBuyflowController {
   };
 
   private rejectionOptions: {[key: string]: string} = {
-    OUT_OF_STOCK: TextContent.REJECT_REASON_OUT_OF_STOCK
+    OUT_OF_STOCK: TextContent.REJECT_REASON_OUT_OF_STOCK,
+    NO_REASON: TextContent.REJECT_REASON_NO_REASON
   };
 
 
@@ -162,6 +164,10 @@ export class BidOrderService implements IBuyflowController {
         return items;
       })
     );
+  }
+
+  getRejectReasons(): {key: string, label: string}[] {
+    return Object.keys(this.rejectionOptions).map(key => ({key, label: this.rejectionOptions[key]}));
   }
 
 
@@ -823,6 +829,16 @@ export class BidOrderService implements IBuyflowController {
           colour: 'primary', icon: 'part-date'
         },
         transition: this.actionInvalid.bind(this)
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+        toState: ORDER_ITEM_STATUS.COMPLETE,
+        user: 'BUYER',
+        actionType: 'PRIMARY',
+        details: {
+          label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
+        },
+        transition: this.actionOrderComplete.bind(this)
       }
     ];
     actions[ORDER_ITEM_STATUS.SHIPPED] = [

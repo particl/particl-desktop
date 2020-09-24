@@ -239,7 +239,7 @@
                   Escrow has not been made yet. Only ship the items when escrow has been created!
                 </ng-container>
                 <ng-container *ngIf="(orderItem.extraDetails.escrowTxn.length > 0) && (orderItem.extraDetails.releaseTxn.length === 0)">
-                  Escrow payment will be automatically returned after sucessfull delivery of the Order.
+                  Escrow payment will be automatically returned after successful delivery of the Order.
                 </ng-container>
                 <ng-container *ngIf="orderItem.extraDetails.releaseTxn.length > 0">
                   Order is complete: no further actions are necessary

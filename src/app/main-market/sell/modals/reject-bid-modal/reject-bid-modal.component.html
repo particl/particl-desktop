@@ -19,6 +19,14 @@
         By rejecting this bid, the Buyer will not be able to purchase your item.
       </p>
     </div>
+    <div>
+      <mat-select placeholder="Optional Rejection Reason" [formControl]="inputReason">
+        <mat-option [value]="" class="--larger"></mat-option>
+        <mat-option *ngFor="let reason of reasonOptions" [value]="reason.key" class="--larger">
+          {{ reason.label }}
+        </mat-option>
+      </mat-select>
+    </div>
 
   </div>
 </mat-dialog-content>

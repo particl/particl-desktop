@@ -152,6 +152,10 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
 
           if (isInit) {
             this.ordersList.push(...orders);
+          } else {
+            // Ensure that the filters are cleared if there were not already
+            //  (wouldn't be if finding updates rather than requesting from scratch)
+            this.filterOptionsStatus.forEach(s => s.count = 0);
           }
 
           orders.forEach(newOrder => {
@@ -361,7 +365,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
       ).afterClosed().pipe(
         concatMap((modalResponse) => iif(
           () => isBasicObjectType(modalResponse) && !!modalResponse.doAction,
-          action$(modalResponse.params)
+          defer(() => action$(modalResponse.params))
         ))
       );
     }
@@ -377,6 +381,19 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
           const foundOrderIdx = this.ordersList.findIndex(o => o.orderId === orderItem.orderId);
           if (foundOrderIdx > -1) {
             this.ordersList[foundOrderIdx] = newItem;
+
+            const decStatus = this.filterOptionsStatus.find(s => s.value === orderItem.currentState.state.stateId);
+            if (decStatus) {
+              decStatus.count--;
+            }
+
+            const incStatus = this.filterOptionsStatus.find(s => s.value === newItem.currentState.state.stateId);
+            if (incStatus) {
+              incStatus.count++;
+            }
+
+            this.renderOrdersControl.setValue(null);
+
             this._cdr.detectChanges();
           }
         }

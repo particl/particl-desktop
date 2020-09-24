@@ -143,6 +143,7 @@ export class MarketSocketService implements OnDestroy {
       })
     ).subscribe(
       (msg: SocketDataObject) => {
+        console.log('@@@@ GOT WEBSOCKET MESSAGE: ', msg);
         if (Array.isArray(msg.data) && (typeof msg.data[0] === 'string')) {
           const msgKey = msg.data[0];
           if (msgKey === 'serverping') {
