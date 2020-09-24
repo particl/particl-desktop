@@ -6,7 +6,7 @@ export type TxType = 'anon' | 'blind' | 'part';
 
 export const MIN_RING_SIZE = 3;
 export const MAX_RING_SIZE = 32;
-export const DEFAULT_RING_SIZE = 5;
+export const DEFAULT_RING_SIZE = 24;
 
 
 export interface TabModel {
