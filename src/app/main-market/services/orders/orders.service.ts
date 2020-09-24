@@ -322,7 +322,7 @@ export class BidOrderService implements IBuyflowController {
   }
 
   private actionOrderComplete(orderItem: OrderItem, extraParams: ActionTransitionParams): Observable<boolean> {
-    const params = ['complete', orderItem.orderItemId];
+    const params = ['release', orderItem.orderItemId];
 
     if (isBasicObjectType(extraParams) && extraParams.memo) {
       params.push(extraParams.memo);
