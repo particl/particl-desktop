@@ -11,7 +11,8 @@ import { AvailableMarket } from '../management.models';
 
 enum TextContent {
   LOAD_MARKETS_ERROR = 'Error while attempting to load available markets',
-  COPIED_TO_CLIPBOARD = 'Copied to clipboard...'
+  COPIED_TO_CLIPBOARD = 'Copied to clipboard...',
+  JOIN_MARKET_SUCCESS = 'Market succesfsully added'
 }
 
 
@@ -135,8 +136,25 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   }
 
 
-  actionJoinMarket(market: AvailableMarket): void {
-    // TODO: implement this
+  actionJoinMarket(idx: number): void {
+    if ((idx < 0) || (idx >= this.marketsList.length)) {
+      return;
+    }
+    const marketItem = this.marketsList[idx];
+    this.marketsList.splice(idx, 1);
+
+    this._cdr.detectChanges();
+
+    this._manageService.joinAvailableMarket(marketItem.id).pipe(
+      tap((isSuccess) => {
+        if (!isSuccess) {
+          this.marketsList.splice(idx, 0, marketItem);
+          this._cdr.detectChanges();
+        } else {
+          this._snackbar.open(TextContent.JOIN_MARKET_SUCCESS);
+        }
+      })
+    );
   }
 
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable,  } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, mapTo, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -109,6 +109,16 @@ export class MarketManagementService {
 
         return resp;
       })
+    );
+  }
+
+
+  joinAvailableMarket(marketId: number): Observable<boolean> {
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    return this._rpc.call('market', ['join', profileId, marketId, identityId]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
     );
   }
 
