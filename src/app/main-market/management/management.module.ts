@@ -5,6 +5,8 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { ManagementComponent } from './management.component';
 import { CreateMarketComponent } from './create-market/create-market.component';
 import { EditMarketModalComponent } from './edit-market-modal/edit-market-modal.component';
+import { MarketBrowserComponent } from './market-browser/market-browser.component';
+import { JoinedMarketsComponent } from './joined-markets/joined-markets.component';
 
 
 const routes: Routes = [
@@ -24,6 +26,8 @@ const routes: Routes = [
   ],
   declarations: [
     ManagementComponent,
+    MarketBrowserComponent,
+    JoinedMarketsComponent,
     CreateMarketComponent,
     EditMarketModalComponent
   ],

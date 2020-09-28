@@ -1,47 +1,46 @@
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
-import { EditMarketModalComponent } from './edit-market-modal/edit-market-modal.component';
+
+interface MarketManageTab {
+  icon: string;
+  title: string;
+  templ: string;
+}
+
 
 @Component({
   templateUrl: './management.component.html',
-  styleUrls: ['./management.component.scss']
+  styleUrls: ['./management.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManagementComponent {
 
-  public isLoading: boolean = false;
-  public isPageLoading: boolean = false;
-
-  public selectedTab: number = 0;
-  public tabLabels: Array<string> = ['available', 'owned'];
-  public showJoinMarketForm: boolean = false;
-
-  searchQuery: FormControl = new FormControl('');
-
-  markets_status: Array<any> = [
-    { title: 'Show joined & available', value: 'all' },
-    { title: 'Joined Markets only',     value: 'joined' },
-    { title: 'Available Markets only',  value: 'available' }
+  readonly tabs: MarketManageTab[] = [
+    { title: 'Your Markets', icon: 'part-shop', templ: 'joined'},
+    { title: 'Browser', icon: 'part-globe', templ: 'browser'},
   ];
 
-  markets_filtering: Array<any> = [
-    { title: 'All markets',       value: '' },
-    { title: 'Community Markets', value: 'community' },
-    { title: 'Storefronts',       value: 'storefronts' }
-  ];
 
-  constructor(
-    private _dialog: MatDialog
-  ) {}
+  private selectedTabIdx: number = 0;
 
-  changeTab(index: number): void {
-    // this.clear();
-    this.selectedTab = index;
+
+  constructor() {}
+
+
+  get selectedTempl(): string {
+    return this.tabs[this.selectedTabIdx].templ;
   }
 
-  openEditMarketModal(): void {
-    const dialog = this._dialog.open(EditMarketModalComponent);
+
+  get selectedIdx(): number {
+    return this.selectedTabIdx;
+  }
+
+
+  changeTab(idx: number) {
+    if ((idx !== this.selectedTabIdx) && (idx >= 0) && (idx < this.tabs.length)) {
+      this.selectedTabIdx = idx;
+    }
   }
 
 }

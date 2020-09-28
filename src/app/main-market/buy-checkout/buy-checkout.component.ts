@@ -9,7 +9,6 @@ interface BuyCheckoutTab {
 }
 
 @Component({
-  selector: 'market-buy-checkout',
   templateUrl: './buy-checkout.component.html',
   styleUrls: ['./buy-checkout.component.scss']
 })

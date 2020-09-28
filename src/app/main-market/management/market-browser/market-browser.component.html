@@ -1,0 +1,176 @@
+<div class="container-block">
+
+  <app-page-intro [childPageAlias]="'MarketBrowser'">
+    <ng-container page-title>Market browser</ng-container>
+    <ng-container page-content>
+      Manage your Markets – browse and join available Markets on Particl platform.
+    </ng-container>
+    <ng-container page-help>
+      Find and join a Market to shop. Not all Markets are listed publicly; you may need their Market ID to join them. Sellers can sell on the default Open Marketplace (available to all users) or create their own public or storefront Markets.
+    </ng-container>
+  </app-page-intro>
+
+
+  <div class="filter">
+
+    <div class="buttons">
+      <!-- Join Market button -->
+      <button mat-raised-button color="primary" *ngIf="!showJoinMarketForm"
+              (click)="showJoinMarketForm = true"
+              class="join-button-toggle full-width"
+              matTooltip="Join a new Market using its Market ID"
+              matTooltipPosition="above">
+        <mat-icon fontIcon="part-nodes"></mat-icon>
+        Join via Market ID
+      </button>
+      <!-- Join Market form (replaces button on click) -->
+      <mat-card class="join-form" *ngIf="showJoinMarketForm">
+        <!-- TODO: can we make the input auto-focused after clicking on the button above? -->
+        <input type="text" placeholder="Enter Market ID"
+               (keyup.escape)="showJoinMarketForm = false">
+        <button mat-raised-button color="primary" class="join-button">Join</button>
+      </mat-card>
+
+    </div><!-- .buttons -->
+
+
+    <h2 class="section-title">
+      Search
+    </h2>
+
+    <mat-form-field class="--boxed" appearance="fill">
+      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
+      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+    </mat-form-field>
+
+    <h2 class="section-title">
+      Filter
+    </h2>
+
+    <mat-card class="filter-card">
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select placeholder="Show joined & available">
+          <mat-option *ngFor="let status of markets_status" [value]="status.value">
+            {{ status.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-radio-group class="radio-group block-radio"><!-- [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()" -->
+        <mat-radio-button class="filter-option" *ngFor="let type of markets_filtering" value="{{ type.value }}" color="primary">
+          {{ type.title }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
+
+    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter (sidebar) -->
+
+
+  <!-- .loading-container -->
+  <div class="loading-container" *ngIf="isPageLoading">
+    <div class="loading-info">
+      <div class="loading-image">
+        <img src="./assets/particl-logo-symbol.svg">
+      </div>
+      <p class="title">
+        Hang on, we're loading the Markets
+      </p>
+      <p class="help-text">
+        This might take a while
+      </p>
+    </div>
+  </div><!-- .loading-container -->
+
+
+  <!-- Management > Market list -->
+  <div class="markets section with-filter"><!-- infiniteScroll
+    [infiniteScrollContainer]="pagination.infinityScrollSelector"
+    [fromRoot]="true"
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="50"
+    (scrolled)="loadNextPage()" -->
+
+    <mat-accordion>
+
+      <mat-expansion-panel class="market list-item no-padding">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="photo">
+              <img src="/assets/images/placeholder_4-3.jpg">
+            </div>
+            <div class="info" fxFlex="1 1 100%">
+              <h3 class="box-title --larger">
+                <span class="name">Available Market title</span>
+                <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
+                <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
+                          matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
+                </h3>
+              <div class="desc">
+                <span class="market-type">Storefront</span>
+              </div>
+            </div><!-- .meta -->
+          </div>
+        </mat-expansion-panel-header>
+        <div class="details">
+          <h3 class="item-subtitle">Market summary</h3>
+          <p class="desc">
+            Small summary/description of this Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
+          </p>
+        </div>
+        <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+          <div class="left">
+            <button mat-button color="basic" class="small">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+              Copy &amp; share Market ID
+            </button>
+          </div>
+          <div class="right">
+            <button mat-raised-button color="primary">
+              <mat-icon fontIcon="part-circle-plus"></mat-icon>
+              Join this Market
+            </button>
+          </div>
+        </mat-action-row>
+      </mat-expansion-panel><!-- .market -->
+
+    </mat-accordion>
+
+    <div class="no-results"><!--  [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
+      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
+      <p>
+        No Markets found
+      </p>
+      <p class="help-text">
+        If you're looking for a specific Market, ask any its member for the Market ID and join it manually
+      </p>
+    </div><!-- .no-results -->
+
+  </div><!-- .markets (content) -->
+</div><!-- .container-block -->
+
+
+
+<!-- // ------ CONTEXTUAL MENUS ------ // -->
+
+<!-- Report Market -->
+<mat-menu #report="matMenu" class="report --smaller">
+  <div class="heading">
+    <h3 class="title">Report Market</h3>
+    <p class="help-text">Mark this Market as inappropriate (or not)</p>
+  </div>
+  <button mat-menu-item>
+    <mat-icon fontIcon="part-thumb-up" color="primary"></mat-icon>
+    <span>Market is OK</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon fontIcon="part-thumb-down" color="warn"></mat-icon>
+    <span>Report as inappropriate</span>
+  </button>
+</mat-menu>
