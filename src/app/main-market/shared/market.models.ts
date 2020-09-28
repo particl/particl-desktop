@@ -12,6 +12,14 @@ export enum ESCROW_RELEASE_TYPE { ANON = 'anon', BLIND = 'blind' }
 export enum COMMENT_TYPES {
   LISTINGITEM_QUESTION_AND_ANSWERS = 'LISTINGITEM_QUESTION_AND_ANSWERS'
 }
+export enum MARKET_REGION {
+  WORLDWIDE = 'WORLDWIDE',
+  EUROPE = 'EUROPE',
+  ASIA_PACIFIC = 'ASIA_PACIFIC',
+  MIDDLE_EAST_AFRICA = 'MIDDLE_EAST_AFRICA',
+  NORTH_AMERICA = 'NORTH_AMERICA',
+  SOUTH_AMERICA = 'SOUTH_AMERICA'
+}
 export enum BID_TYPES {
   SHIPPING_BID = 'SHIPPING_BID'
 }
@@ -220,7 +228,7 @@ export interface RespIdentityMarketItem {
   msgid: null | string;
   name: string;
   description: string;
-  region: string;
+  region: MARKET_REGION;
   type: MarketType;
   receiveKey: string;
   receiveAddress: string;

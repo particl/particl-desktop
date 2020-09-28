@@ -22,7 +22,7 @@
 
 <ng-template #addressTemplate let-addressType="type" let-newText="newAddressText">
   <ng-container *ngIf="![null, undefined].includes(activeAddress.address); else emptyAddress">
-    
+
     <div class="container-flex with-tab-bar">
       <mat-card class="receive-address">
         <div class="address-details">

@@ -15,21 +15,15 @@
 
     <div class="buttons">
       <!-- Join Market button -->
-      <button mat-raised-button color="primary" *ngIf="!showJoinMarketForm"
-              (click)="showJoinMarketForm = true"
+      <button mat-raised-button color="primary"
+              appDebounceClick
+              (debounceClick)="openMarketJoinModal()"
               class="join-button-toggle full-width"
               matTooltip="Join a new Market using its Market ID"
               matTooltipPosition="above">
         <mat-icon fontIcon="part-nodes"></mat-icon>
         Join via Market ID
       </button>
-      <!-- Join Market form (replaces button on click) -->
-      <mat-card class="join-form" *ngIf="showJoinMarketForm">
-        <!-- TODO: can we make the input auto-focused after clicking on the button above? -->
-        <input type="text" placeholder="Enter Market ID"
-               (keyup.escape)="showJoinMarketForm = false">
-        <button mat-raised-button color="primary" class="join-button">Join</button>
-      </mat-card>
 
     </div><!-- .buttons -->
 
@@ -39,33 +33,43 @@
     </h2>
 
     <mat-form-field class="--boxed" appearance="fill">
-      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
-      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchControl" (keyup.escape)="searchControl.setValue('')">
+      <button *ngIf="searchControl.value.length > 0" matSuffix mat-button class="small" (click)="searchControl.setValue('')" matTooltip="Clear" matTooltipPosition="after">
         <mat-icon fontIcon="part-clear-all"></mat-icon>
       </button>
-      <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+      <mat-icon *ngIf="searchControl.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
     </mat-form-field>
 
     <h2 class="section-title">
       Filter
     </h2>
 
-    <mat-card class="filter-card">
+    <!-- <mat-card class="filter-card">
       <mat-form-field class="--plain" appearance="fill">
-        <mat-select placeholder="Show joined & available">
-          <mat-option *ngFor="let status of markets_status" [value]="status.value">
-            {{ status.title }}
+        <mat-select placeholder="Show joined & available" [formControl]="filterJoinedControl">
+          <mat-option *ngFor="let option of optionsFilterMarketJoined" [value]="option.value">
+            {{ option.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-radio-group class="radio-group block-radio"><!-- [(ngModel)]="filters.hashItems" (change)="clearAndLoadPage()" -->
-        <mat-radio-button class="filter-option" *ngFor="let type of markets_filtering" value="{{ type.value }}" color="primary">
-          {{ type.title }}
+    </mat-card> -->
+
+    <mat-card class="filter-card">
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select [formControl]="filterRegionControl">
+          <mat-option *ngFor="let option of optionsFilterMarketRegion" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-radio-group class="radio-group block-radio" [formControl]="filterTypeControl">
+        <mat-radio-button class="filter-option" *ngFor="let option of optionsFilterMarketType" [value]="option.value" color="primary">
+          {{ option.label }}
         </mat-radio-button>
       </mat-radio-group>
     </mat-card>
 
-    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+    <button mat-button color="basic" class="clear-filters" (click)="clearFilters()">
       <mat-icon fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
@@ -73,104 +77,92 @@
   </div><!-- .filter (sidebar) -->
 
 
-  <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isPageLoading">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        Hang on, we're loading the Markets
-      </p>
-      <p class="help-text">
-        This might take a while
-      </p>
-    </div>
-  </div><!-- .loading-container -->
-
-
   <!-- Management > Market list -->
-  <div class="markets section with-filter"><!-- infiniteScroll
-    [infiniteScrollContainer]="pagination.infinityScrollSelector"
-    [fromRoot]="true"
-    [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="50"
-    (scrolled)="loadNextPage()" -->
+  <div class="markets section with-filter">
 
     <mat-accordion>
+      <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
+        <ng-container *ngFor="let marketIdx of displayedMarkets; trackBy: trackByMarketIdxFn">
 
-      <mat-expansion-panel class="market list-item no-padding">
-        <mat-expansion-panel-header class="header">
-          <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-            <div class="photo">
-              <img src="/assets/images/placeholder_4-3.jpg">
-            </div>
-            <div class="info" fxFlex="1 1 100%">
-              <h3 class="box-title --larger">
-                <span class="name">Available Market title</span>
-                <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
-                <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
-                          matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
-                </h3>
-              <div class="desc">
-                <span class="market-type">Storefront</span>
+          <mat-expansion-panel class="market list-item no-padding" *appVar="marketsList[marketIdx] as marketItem">
+            <mat-expansion-panel-header class="header">
+              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="photo">
+                  <img [src]="marketItem.image">
+                </div>
+                <div class="info" fxFlex="1 1 100%">
+                  <h3 class="box-title --larger">
+                    <span class="name">{{ marketItem.name }}</span>
+                    <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
+                    <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
+                              matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
+                    </h3>
+                  <div class="desc">
+                    <span class="market-type"><ng-container *ngIf="marketItem.publishKey === null; else marketTypeMarketplace">Storefront</ng-container><ng-template #marketTypeMarketplace>Marketplace</ng-template></span>
+                    <span class="market-type">{{ marketItem.region }}</span>
+                  </div>
+                </div><!-- .meta -->
               </div>
-            </div><!-- .meta -->
-          </div>
-        </mat-expansion-panel-header>
-        <div class="details">
-          <h3 class="item-subtitle">Market summary</h3>
-          <p class="desc">
-            Small summary/description of this Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
-          </p>
-        </div>
-        <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
-          <div class="left">
-            <button mat-button color="basic" class="small">
-              <mat-icon fontIcon="part-copy"></mat-icon>
-              Copy &amp; share Market ID
-            </button>
-          </div>
-          <div class="right">
-            <button mat-raised-button color="primary">
-              <mat-icon fontIcon="part-circle-plus"></mat-icon>
-              Join this Market
-            </button>
-          </div>
-        </mat-action-row>
-      </mat-expansion-panel><!-- .market -->
+            </mat-expansion-panel-header>
+            <div class="details">
+              <h3 class="item-subtitle">Market summary</h3>
+              <p class="desc">
+                {{ marketItem.summary }}
+              </p>
+            </div>
+            <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+              <div class="left">
+                <button mat-button color="basic" class="small" ngxClipboard [cbContent]="marketItem.receiveKey || ''" (click)="actionCopiedToClipBoard()">
+                  <mat-icon fontIcon="part-copy"></mat-icon>
+                  Copy &amp; share Market ID
+                </button>
+                <button mat-button *ngIf="marketItem.publishKey !== null" color="basic" class="small" ngxClipboard [cbContent]="marketItem.publishKey || ''" (click)="actionCopiedToClipBoard()">
+                  <mat-icon fontIcon="part-copy"></mat-icon>
+                  Copy &amp; share publish key
+                </button>
+              </div>
+              <div class="right">
+                <button mat-raised-button color="primary" appDebounceClick (debounceClick)="actionJoinMarket(marketItem)">
+                  <mat-icon fontIcon="part-circle-plus"></mat-icon>
+                  Join this Market
+                </button>
+              </div>
+            </mat-action-row>
+          </mat-expansion-panel><!-- .market -->
+
+        </ng-container>
+      </ng-container>
 
     </mat-accordion>
 
-    <div class="no-results"><!--  [hidden]="(pages.length !== 0) && (pages[0]?.listings.length !== 0)" -->
-      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
-      <p>
-        No Markets found
-      </p>
-      <p class="help-text">
-        If you're looking for a specific Market, ask any its member for the Market ID and join it manually
-      </p>
-    </div><!-- .no-results -->
+
+    <ng-template #noMarketsVisible>
+      <div class="no-results" *ngIf="marketsList.length === 0">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No markets available">
+        <p>
+          No markets promoted
+        </p>
+        <p class="help-text">
+          If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
+        </p>
+      </div>
+
+      <!-- when searching/filtering: -->
+      <div class="no-results" *ngIf="marketsList.length > 0">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No markets matching filter criteria">
+        <p>
+          No Markets found
+        </p>
+        <p class="help-text">
+          If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
+        </p>
+      </div>
+    </ng-template>
 
   </div><!-- .markets (content) -->
 </div><!-- .container-block -->
 
 
-
-<!-- // ------ CONTEXTUAL MENUS ------ // -->
-
-<!-- Report Market -->
-<mat-menu #report="matMenu" class="report --smaller">
-  <div class="heading">
-    <h3 class="title">Report Market</h3>
-    <p class="help-text">Mark this Market as inappropriate (or not)</p>
-  </div>
-  <button mat-menu-item>
-    <mat-icon fontIcon="part-thumb-up" color="primary"></mat-icon>
-    <span>Market is OK</span>
-  </button>
-  <button mat-menu-item>
-    <mat-icon fontIcon="part-thumb-down" color="warn"></mat-icon>
-    <span>Report as inappropriate</span>
-  </button>
-</mat-menu>
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->
