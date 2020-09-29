@@ -20,7 +20,7 @@ import { getValueOrDefault, isBasicObjectType } from 'app/main-market/shared/uti
 import { PartoshiAmount } from 'app/core/util/utils';
 import { Template, TemplateFormDetails, CreateTemplateRequest, TemplateRequestImageItem, UpdateTemplateRequest } from '../sell.models';
 import { Market, CategoryItem } from '../../services/data/data.models';
-import { ESCROW_RELEASE_TYPE } from '../../shared/market.models';
+import { ESCROW_RELEASE_TYPE, MarketType } from '../../shared/market.models';
 
 
 enum TextContent {
@@ -124,7 +124,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
           if (this.savedTempl.type === 'BASE') {
             availableMarkets = availableMarkets.filter(m =>
               !this.savedTempl.baseTemplate.marketHashes.includes(m.receiveAddress) &&
-              (m.type === 'MARKETPLACE' || m.type === 'STOREFRONT_ADMIN')
+              (m.type === MarketType.MARKETPLACE || m.type === MarketType.STOREFRONT_ADMIN)
             );
           } else if (this.savedTempl.type === 'MARKET') {
             availableMarkets = this.profileMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);

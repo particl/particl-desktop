@@ -1,5 +1,4 @@
 
-export type MarketType = 'MARKETPLACE' | 'STOREFRONT' | 'STOREFRONT_ADMIN';
 export type SALES_TYPE = 'SALE';
 export type ESCROW_TYPE = 'MAD_CT';
 export type CURRENCY_TYPE = 'PART';
@@ -7,6 +6,12 @@ export type SHIPPING_AVAIL_TYPE = 'SHIPS' | 'DOES_NOT_SHIP' | 'ASK' | 'UNKNOWN';
 export type IMAGE_PROTOCOL = 'REQUEST' | 'SMSG' | 'FILE';
 export type IMAGE_ENCODING = 'BASE64';
 export type IMAGE_VERSION = 'ORIGINAL' | 'RESIZED' | 'THUMBNAIL' | 'MEDIUM' | 'LARGE';
+
+export enum MarketType {
+  MARKETPLACE = 'MARKETPLACE',
+  STOREFRONT = 'STOREFRONT',
+  STOREFRONT_ADMIN = 'STOREFRONT_ADMIN'
+}
 export enum ADDRESS_TYPES { SHIPPING_OWN = 'SHIPPING_OWN', SHIPPING_BID = 'SHIPPING_BID' }
 export enum ESCROW_RELEASE_TYPE { ANON = 'anon', BLIND = 'blind' }
 export enum COMMENT_TYPES {
@@ -402,7 +407,7 @@ export interface RespListingTemplate {
 }
 
 
-export interface RespListingItemTemplatePost {
+export interface RespItemPost {
   result: string;  // Should be: 'Sent' | 'Not Sent'; but sometimes seems to include '.' characters sometimes not, etc
   msgid?: string;
   txid?: string;

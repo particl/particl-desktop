@@ -93,9 +93,6 @@
                 <div class="info" fxFlex="1 1 100%">
                   <h3 class="box-title --larger">
                     <span class="name">{{ marketItem.name }}</span>
-                    <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
-                    <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
-                              matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
                     </h3>
                   <div class="desc">
                     <span class="market-type"><ng-container *ngIf="marketItem.publishKey === null; else marketTypeMarketplace">Storefront</ng-container><ng-template #marketTypeMarketplace>Marketplace</ng-template></span>

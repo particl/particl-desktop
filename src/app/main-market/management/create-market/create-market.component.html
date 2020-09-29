@@ -11,7 +11,7 @@
   </app-page-intro>
 
 
-  <form class="market-form"><!-- [formGroup]="createMarketFormGroup" -->
+  <form class="market-form" [formGroup]="marketForm">
 
     <h2 class="section-title">
       Market details
@@ -22,26 +22,26 @@
       <label>
         <mat-form-field class="--larger --plain" appearance="fill">
           <h3 class="label">Market name</h3>
-          <input matInput placeholder="Choose a name for your Market" #name maxlength="35" required><!-- formControlName="marketName" -->
-          <mat-hint align="end">{{ name.value?.length || 0 }}/35</mat-hint>
+          <input matInput #name placeholder="Choose a name for your Market" formControlName="name">
+          <mat-hint align="end">{{ name.value.length }}/{{ MAX_NAME }}</mat-hint>
         </mat-form-field>
       </label>
 
       <label>
         <mat-form-field class="--larger --plain" appearance="fill">
           <h3 class="label">Market description</h3>
-          <textarea matInput #description rows="4" placeholder="Describe your Market in short, so that users will know what they'll find there" maxlength="150" required></textarea><!-- formControlName="marketDescription" -->
-          <mat-hint align="end">{{ description.value?.length || 0 }}/150</mat-hint>
+          <textarea matInput rows="4" #description formControlName="summary" placeholder="Describe your Market in short, so that users will know what they'll find there"></textarea>
+          <mat-hint align="end">{{ description.value.length }}/{{ MAX_SUMMARY }}</mat-hint>
         </mat-form-field>
       </label>
 
       <div class="market-image" fxLayout>
-        <div id="drag-n-drop" class="drag-n-drop" fxFlex="130px">
-          <input class="hide-file" type="file" accept="image/*" multiple="true" id="fileInput">
-          <button mat-button color="accent" (click)="uploadPicture()" class="small">
+        <div #dropArea class="drag-n-drop" fxFlex="130px">
+          <input class="hide-file" type="file" accept="image/*" #fileInputSelector>
+          <button mat-button color="accent" (click)="addImage()" class="small">
             Upload a logo
           </button>
-          <p>or drag'n'drop</p>
+          <p>or drag'n'drop here</p>
         </div>
         <div class="desc" fxFlex="0 1 100%">
           <h3 class="box-title">Market logo/image</h3>
@@ -52,6 +52,17 @@
             <li>Max size 2 MB</li>
           </ul>
         </div>
+
+        <div class="gallery">
+
+          <div class="photo-wrapper" *ngIf="formImageControl.value.length > 0">
+            <img [src]="formImageControl.value">
+            <div class="icons">
+              <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="formImageControl.setValue('')">
+              </mat-icon>
+            </div>
+          </div>
+        </div><!-- .gallery -->
       </div>
 
     </mat-card><!-- market details -->
@@ -61,44 +72,60 @@
     </h2>
 
     <mat-card fxLayout fxLayoutGap="30px" class="market-type">
-      <div class="half" fxFlex="50%">
-        <mat-radio-button name="market-type" value="storefront" class="larger" color="accent">
-          Storefront
-        </mat-radio-button>
-        <p class="help-text">
-          With Storefront, only you (and those you appoint) are in control of the Market &ndash; nobody else can sell on it
-        </p>
-      </div>
-      <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
-      <div class="half" fxFlex="50%">
-        <mat-radio-button name="market-type" value="community-market" class="larger" color="accent">
-          Community Market
-        </mat-radio-button>
-        <p class="help-text">
-          Community Markets give all rights and permissions to all its members &ndash; everybody on the Market can sell on it
-        </p>
-      </div>
+      <mat-radio-group name="marketType" formControlName="marketType">
+        <div class="half" fxFlex="50%">
+          <mat-radio-button name="market-type" [value]="marketTypeOptions.STOREFRONT_ADMIN" class="larger" color="accent">
+            Storefront
+          </mat-radio-button>
+          <p class="help-text">
+            With Storefront, only you (and those you appoint) are in control of the Market &ndash; nobody else can sell on it
+          </p>
+        </div>
+        <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
+        <div class="half" fxFlex="50%">
+          <mat-radio-button name="market-type" [value]="marketTypeOptions.MARKETPLACE" class="larger" color="accent">
+            Community Market
+          </mat-radio-button>
+          <p class="help-text">
+            Community Markets give all rights and permissions to all its members &ndash; everybody on the Market can sell on it
+          </p>
+        </div>
+      </mat-radio-group>
     </mat-card><!-- market type -->
+
+
+    <h2 class="section-title">
+      Market Region
+    </h2>
+
+    <mat-card fxLayout fxLayoutGap="30px" class="market-type">
+      <mat-select placeholder="Filter by Market" formControlName="region">
+        <mat-option *ngFor="let option of optionsMarketRegions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-card><!-- market region -->
 
 
 
     <h2 class="section-title">
       Market preview &ndash; Looking good!
     </h2>
-    
-    <!-- TODO: include "Market listing item" as it will be seen in Market browser, for preview; only remove/disable bottom action buttons -->
+
     <mat-expansion-panel class="market list-item no-padding">
       <mat-expansion-panel-header class="header">
         <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
           <div class="photo">
-            <img src="/assets/images/placeholder_4-3.jpg">
+            <img *ngIf="formImageControl.value.length > 0" [src]="formImageControl.value">
+            <img *ngIf="formImageControl.value.length === 0" [src]="(marketConfig | async).imagePath">
           </div>
           <div class="info" fxFlex="1 1 100%">
             <h3 class="box-title --larger">
-              <span class="name">Joined Market title</span>
+              <span class="name">{{ name.value }}</span>
             </h3>
             <div class="desc">
-              <span class="tag">Community Market</span>
+              <span class="tag">{{ labelType }}</span>
+              <span class="tag">{{ labelRegion }}</span>
             </div>
           </div><!-- .meta -->
         </div>
@@ -106,70 +133,22 @@
       <div class="details">
         <h2 class="section-title">Market summary</h2>
         <p class="desc">
-          This is a summary/description of a joined Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
+          {{ description.value }}
         </p>
       </div>
     </mat-expansion-panel><!-- .market -->
 
-
-    <h2 class="section-title">
-      Optional steps
-    </h2>
-
-    <mat-expansion-panel class="promote list-item no-padding">
-      <mat-expansion-panel-header class="header">
-        <mat-icon fontSet="partIcon" fontIcon="part-notification-speaker"></mat-icon>
-        <div class="text">
-          <strong>Promote</strong> in Market browser
-        </div>
-      </mat-expansion-panel-header>
-      <div class="details" fxLayout fxLayoutGap="46px">
-        <div class="desc" fxFlex="60%">
-          <p>
-            Markets are not listed in the Market browser by default. You can promote your Market to publish it to Market browser for a few days and onboard more potential Buyers.
-          </p>
-          <p class="help-text">
-            This fee goes back to the stakers on Particl network for their support.
-          </p>
-        </div>
-        <div class="form" fxFlex="40%">
-          <h3 class="box-title">Days to promote</h3>
-          <mat-form-field class="promo-duration --plain full-width" appearance="fill">
-            <mat-select [(value)]="promoDuration">
-              <mat-option value="none">Select duration</mat-option>
-              <mat-option value="1d">1 day</mat-option>
-              <mat-option value="3d">3 days</mat-option>
-              <mat-option value="5d">5 days</mat-option>
-              <mat-option value="7d">1 week</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <table class="full-width">
-            <tr>
-              <th>Promo duration</th>
-              <td>{{ promoDuration }}</td>
-            </tr>
-            <tr>
-              <th>Total promo fee</th>
-              <!-- FIXME: implement dynamic fee -->
-              <td>2.1428 PART</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </mat-expansion-panel><!-- .promote -->
-
-
-    <div class="actions" fxLayoutAlign="space-between center">
-      <button mat-button>
-        <mat-icon fontIcon="part-cross"></mat-icon>
-        Cancel Market creation
-      </button>
-      <button mat-raised-button color="primary">
-        <mat-icon fontIcon="part-check"></mat-icon>
-        Confirm &amp; Create Market
-      </button>
-    </div>
-
   </form>
+
+  <div class="actions" fxLayoutAlign="space-between center">
+    <button mat-button type="button" [routerLink]="['../']">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel Market creation
+    </button>
+    <button mat-raised-button type="button" color="primary" [disabled]="marketForm.invalid" appDebounceClick (debounceClick)="actionCreateMarket()">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Confirm &amp; Create Market
+    </button>
+  </div>
 
 </div><!-- .container-block -->

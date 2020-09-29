@@ -10,7 +10,7 @@ import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
-import { RespListingTemplate, RespListingItemTemplatePost } from '../shared/market.models';
+import { RespListingTemplate, RespItemPost } from '../shared/market.models';
 import {
   Template,
   TemplateSavedDetails,
@@ -331,7 +331,7 @@ export class SellService {
 
   estimatePublishFee(templateId: number, durationDays: number): Observable<number> {
     return this._rpc.call('template', ['post', templateId, durationDays, true]).pipe(
-      map((resp: RespListingItemTemplatePost) => {
+      map((resp: RespItemPost) => {
         if (isBasicObjectType(resp) && (+resp.fee > 0)) {
           return +resp.fee;
         }
@@ -343,7 +343,7 @@ export class SellService {
 
   publishMarketTemplate(templateId: number, durationDays: number): Observable<boolean> {
     return this._rpc.call('template', ['post', templateId, durationDays, false]).pipe(
-      map((resp: RespListingItemTemplatePost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+      map((resp: RespItemPost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
     );
   }
 

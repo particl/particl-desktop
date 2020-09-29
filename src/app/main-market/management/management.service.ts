@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, mapTo, catchError } from 'rxjs/operators';
+import { Observable, of, iif, defer, throwError } from 'rxjs';
+import { map, mapTo, catchError, concatMap, last } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
-import { MARKET_REGION, MarketType, RespMarketListMarketItem } from '../shared/market.models';
-import { AvailableMarket } from './management.models';
+import { MARKET_REGION, RespMarketListMarketItem, RespItemPost } from '../shared/market.models';
+import { AvailableMarket, CreateMarketRequest } from './management.models';
 
 
 enum TextContent {
@@ -119,6 +119,60 @@ export class MarketManagementService {
     return this._rpc.call('market', ['join', profileId, marketId, identityId]).pipe(
       mapTo(true),
       catchError(() => of(false))
+    );
+  }
+
+
+  // TODO: return type should be mapped to an JoinedMarket type (or whatever the JoinedMarket page uses)
+  createMarket(details: CreateMarketRequest): Observable<any> {
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+
+    const params = [
+      'add',
+      profileId,
+      details.name,
+      details.marketType,
+      null,
+      null,
+      identityId
+    ];
+
+    if (getValueOrDefault(details.description, 'string', '').length > 0) {
+      params.push(details.description);
+    }
+
+    if (details.region) {
+      params.push(details.region);
+    }
+
+    return this._rpc.call('market', params).pipe(
+      concatMap(market => iif(
+
+        () => isBasicObjectType(details.image),
+
+        defer(() =>
+          this._rpc.call('image', ['add', 'market', +market.id, details.image.type, details.image.data]).pipe(
+            concatMap(() => this._rpc.call('market', ['get', market.id, true])),
+            catchError(() => of(market))
+        )),
+
+        defer(() => of(market))
+      )),
+      last(),
+      map((market: RespMarketListMarketItem) => market) // TODO: do the correct mapping here
+    );
+  }
+
+
+  estimateMarketPromotionFee(marketId: number, durationDays: number): Observable<number> {
+    return this._rpc.call('market', ['post', marketId, durationDays, true]).pipe(
+      map((resp: RespItemPost) => {
+        if (isBasicObjectType(resp) && (+resp.fee > 0)) {
+          return +resp.fee;
+        }
+        throwError('Invalid Estimation');
+      })
     );
   }
 
