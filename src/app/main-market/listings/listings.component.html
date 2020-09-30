@@ -34,7 +34,7 @@
         <mat-form-field class="--plain" appearance="fill" matTooltip="Switch Markets" matTooltipPosition="after">
           <mat-select placeholder="Switch active Market" [value]="activeMarket?.id" (selectionChange)="changeMarket($event.value)">
             <mat-option *ngFor="let market of marketsList" [value]="market.id">
-              <img class="image" width="25" height="25" src="/assets/images/placeholder_1-1.jpg">
+              <img class="image" width="25" height="25" [src]="market.image">
               {{ market.name }}
             </mat-option>
           </mat-select>

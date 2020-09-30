@@ -52,6 +52,7 @@ export class DataService {
 
   loadMarkets(identityId?: number): Observable<Market[]> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
 
     return this._rpc.call('market', ['list', profileId]).pipe(
       retryWhen(genericPollingRetryStrategy()),
@@ -59,6 +60,14 @@ export class DataService {
         const filteredMarkets: Market[] = [];
         for (const market of marketsReq) {
           if ( !identityId || (market.identityId === identityId) ) {
+
+            let marketImg = this.defaultMarketImage;
+            if (isBasicObjectType(market.Image) && Array.isArray(market.Image.ImageDatas)) {
+              if (market.Image.ImageDatas.find(d => isBasicObjectType(d) && d.imageVersion === 'THUMBNAIL')) {
+                marketImg = parseImagePath(market.Image, 'THUMBNAIL', marketUrl);
+              }
+            }
+
             filteredMarkets.push({
               id: +market.id,
               name: this.marketAddresses.includes(market.receiveAddress) ? TextContent.OPEN_MARKET_NAME : market.name,
@@ -66,8 +75,7 @@ export class DataService {
               receiveAddress: market.receiveAddress,
               publishAddress: market.publishAddress,
               identityId: +market.identityId,
-              // TODO: set this correctly when market images are available
-              image: this.defaultMarketImage
+              image: marketImg
             });
           }
         }
