@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, iif, merge, of, defer, combineLatest, timer } from 'rxjs';
@@ -84,6 +85,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _cdr: ChangeDetectorRef,
+    private _route: ActivatedRoute,
     private _store: Store,
     private _listingService: ListingsService,
     private _sharedService: DataService,
@@ -180,8 +182,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
         let selectedMarket: Market = market || this.activeMarket;
 
         if (selectedMarket) {
+
           selectedMarket = this.availableMarkets.find(m => m.id === selectedMarket.id);
+
+        } else if (isInitialLoad) {
+          const initParams = this._route.snapshot.queryParams;
+
+          if (+initParams['SelectedMarketId'] > 0) {
+            selectedMarket = this.availableMarkets.find(m => m.id === +initParams['SelectedMarketId']);
+          }
         }
+
         if (!selectedMarket) {
           selectedMarket = this.availableMarkets[0];
         }

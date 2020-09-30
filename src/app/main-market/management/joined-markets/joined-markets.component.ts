@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, merge, defer, of, iif } from 'rxjs';
@@ -35,6 +36,7 @@ interface FilterOption {
 })
 export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
+  readonly listingsPagePath: string;
   marketTypeOptions: typeof MarketType = MarketType;
 
   optionsFilterMarketType: FilterOption[] = [
@@ -61,11 +63,28 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _cdr: ChangeDetectorRef,
+    private _route: ActivatedRoute,
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
   ) {
     this.optionsFilterMarketRegion = this._manageService.getMarketRegions();
+
+    // Build up path to listings
+    const target: string[] = [];
+    const pathSegments = this._route.snapshot.pathFromRoot;
+    for (const segment of pathSegments) {
+      if (segment.url && (segment.url.length === 1) && segment.url[0].path) {
+        target.push(segment.url[0].path);
+      }
+    }
+
+    if (target.length > 0) {
+      target.pop();
+    }
+
+    const parentUrl = `/${target.join('/')}`;
+    this.listingsPagePath = `${parentUrl}/listings`;
   }
 
 

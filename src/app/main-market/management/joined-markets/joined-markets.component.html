@@ -159,7 +159,7 @@
                   <mat-icon fontIcon="part-pen-1"></mat-icon>
                   Edit Categories
                 </button>
-                <button mat-raised-button color="primary">
+                <button mat-raised-button color="primary" [routerLink]="listingsPagePath" [queryParams]="{SelectedMarketId: marketItem.id}">
                   <mat-icon fontIcon="part-bag"></mat-icon>
                   Browse Market
                 </button>
