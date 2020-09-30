@@ -4,10 +4,34 @@ export interface AvailableMarket {
   id: number;
   name: string;
   image: string;
-  region: string;
+  region: {
+    label: string;
+    value: string;
+  };
   summary: string;
   receiveKey: string;
   publishKey: string | null;
+}
+
+
+export interface JoinedMarket {
+  id: number;
+  name: string;
+  summary: string;
+  image: string;
+  region: {
+    label: string;
+    value: string;
+  };
+  marketType: MarketType;
+  receiveKey: string;
+  publishKey: string | null;
+  governance?: {
+    proposalHash: string;
+    voteCast: number;
+    voteOptionKeep: number;
+    voteOptionRemove: number;
+  };
 }
 
 

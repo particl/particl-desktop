@@ -96,7 +96,7 @@
                     </h3>
                   <div class="desc">
                     <span class="market-type"><ng-container *ngIf="marketItem.publishKey === null; else marketTypeMarketplace">Storefront</ng-container><ng-template #marketTypeMarketplace>Marketplace</ng-template></span>
-                    <span class="market-type">{{ marketItem.region }}</span>
+                    <span class="market-type">{{ marketItem.region.label }}</span>
                   </div>
                 </div><!-- .meta -->
               </div>

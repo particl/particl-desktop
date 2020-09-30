@@ -7,8 +7,8 @@ import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
-import { MARKET_REGION, RespMarketListMarketItem, RespItemPost } from '../shared/market.models';
-import { AvailableMarket, CreateMarketRequest } from './management.models';
+import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType } from '../shared/market.models';
+import { AvailableMarket, CreateMarketRequest, JoinedMarket } from './management.models';
 
 
 enum TextContent {
@@ -30,6 +30,7 @@ export class MarketManagementService {
 
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
+  private readonly marketDefaultImage: string;
 
 
   constructor(
@@ -43,6 +44,10 @@ export class MarketManagementService {
     this.marketRegionsMap.set(MARKET_REGION.EUROPE, TextContent.LABEL_REGION_EUROPE);
     this.marketRegionsMap.set(MARKET_REGION.MIDDLE_EAST_AFRICA, TextContent.LABEL_REGION_MIDDLE_EAST_AFRICA);
     this.marketRegionsMap.set(MARKET_REGION.ASIA_PACIFIC, TextContent.LABEL_REGION_ASIA_PACIFIC);
+
+    const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+
+    this.marketDefaultImage = defaultConfig.imagePath;
   }
 
 
@@ -74,7 +79,10 @@ export class MarketManagementService {
               name: '',
               summary: '',
               image: marketDefaultConfig.imagePath,
-              region: MARKET_REGION.WORLDWIDE,
+              region: {
+                value: MARKET_REGION.WORLDWIDE,
+                label: ''
+              },
               receiveKey: '',
               publishKey: null,
             };
@@ -88,10 +96,11 @@ export class MarketManagementService {
               newMarketItem.name = getValueOrDefault(market.name, 'string', newMarketItem.name);
               newMarketItem.summary = getValueOrDefault(market.description, 'string', newMarketItem.summary);
 
-              const regionLabel = getValueOrDefault(market.region, 'string', newMarketItem.region);
-              newMarketItem.region = this.marketRegionsMap.get(regionLabel as MARKET_REGION) || regionLabel;
-              newMarketItem.receiveKey = getValueOrDefault(market.receiveKey, 'string', market.receiveKey);
-              newMarketItem.publishKey = getValueOrDefault(market.publishKey, 'string', market.publishKey);
+              const regionMarket = getValueOrDefault(market.region, 'string', MARKET_REGION.WORLDWIDE);
+              newMarketItem.region.label = this.marketRegionsMap.get(regionMarket);
+              newMarketItem.region.value = regionMarket;
+              newMarketItem.receiveKey = getValueOrDefault(market.receiveKey, 'string', newMarketItem.receiveKey);
+              newMarketItem.publishKey = getValueOrDefault(market.publishKey, 'string', newMarketItem.publishKey);
 
               if (isBasicObjectType(market.Image)) {
                 if (
@@ -116,6 +125,24 @@ export class MarketManagementService {
   }
 
 
+  searchJoinedMarkets(): Observable<JoinedMarket[]> {
+    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return this._rpc.call('market', ['list', profileId]).pipe(
+      map((markets: RespMarketListMarketItem[]) => {
+        const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
+        return Array.isArray(markets)
+        ? markets.filter(m =>
+            isBasicObjectType(m) && +m.identityId === identityId
+          ).map(m =>
+            this.buildJoinedMarket(m, marketUrl)
+          )
+        : [];
+      })
+    );
+  }
+
+
   joinAvailableMarket(marketId: number): Observable<boolean> {
     const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
@@ -126,8 +153,13 @@ export class MarketManagementService {
   }
 
 
+  leaveMarket(marketId: number): Observable<void> {
+    return this._rpc.call('market', ['remove', marketId]);
+  }
+
+
   // TODO: return type should be mapped to an JoinedMarket type (or whatever the JoinedMarket page uses)
-  createMarket(details: CreateMarketRequest): Observable<any> {
+  createMarket(details: CreateMarketRequest): Observable<JoinedMarket> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
 
@@ -163,7 +195,10 @@ export class MarketManagementService {
         defer(() => of(market))
       )),
       last(),
-      map((market: RespMarketListMarketItem) => market) // TODO: do the correct mapping here
+      map((market: RespMarketListMarketItem) => {
+        const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
+        return this.buildJoinedMarket(market, marketUrl);
+      })
     );
   }
 
@@ -177,6 +212,51 @@ export class MarketManagementService {
         throwError('Invalid Estimation');
       })
     );
+  }
+
+
+  private buildJoinedMarket(src: RespMarketListMarketItem, marketUrl: string): JoinedMarket {
+    const newItem: JoinedMarket = {
+      id: 0,
+      name: '',
+      summary: '',
+      image: this.marketDefaultImage,
+      region: {
+        label: '',
+        value: MARKET_REGION.WORLDWIDE
+      },
+      marketType: MarketType.MARKETPLACE,
+      receiveKey: '',
+      publishKey: null,
+    };
+
+    if (!isBasicObjectType(src)) {
+      return newItem;
+    }
+
+    newItem.id = +src.id > 0 ? +src.id : newItem.id;
+    newItem.name = getValueOrDefault(src.name, 'string', newItem.name);
+    newItem.summary = getValueOrDefault(src.description, 'string', newItem.summary);
+
+    if (isBasicObjectType(src.Image)) {
+      if (
+        Array.isArray(src.Image.ImageDatas) &&
+        (src.Image.ImageDatas.length > 0) &&
+        isBasicObjectType(src.Image.ImageDatas[0])
+      ) {
+        newItem.image = parseImagePath(src.Image, src.Image.ImageDatas[0].imageVersion, marketUrl);
+      }
+    }
+
+    newItem.marketType = getValueOrDefault(src.type, 'string', newItem.marketType);
+
+    const regionMarket = getValueOrDefault(src.region, 'string', MARKET_REGION.WORLDWIDE);
+    newItem.region.label = this.marketRegionsMap.get(regionMarket);
+    newItem.region.value = regionMarket;
+    newItem.receiveKey = getValueOrDefault(src.receiveKey, 'string', newItem.receiveKey);
+    newItem.publishKey = getValueOrDefault(src.publishKey, 'string', newItem.publishKey);
+
+    return newItem;
   }
 
 }

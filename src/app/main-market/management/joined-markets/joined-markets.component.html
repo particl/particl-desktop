@@ -26,11 +26,11 @@
     </h2>
 
     <mat-form-field class="--boxed" appearance="fill">
-      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
-      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchControl" (keyup.escape)="searchControl.setValue('')">
+      <button *ngIf="searchControl.value.length > 0" matSuffix mat-button class="small" (click)="searchControl.setValue('')" matTooltip="Clear" matTooltipPosition="after">
         <mat-icon fontIcon="part-clear-all"></mat-icon>
       </button>
-      <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+      <mat-icon *ngIf="searchControl.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
     </mat-form-field>
 
     <h2 class="section-title">
@@ -38,14 +38,21 @@
     </h2>
 
     <mat-card class="filter-card">
-      <mat-radio-group class="radio-group block-radio">
-        <mat-radio-button class="filter-option" *ngFor="let type of markets_filtering" value="{{ type.value }}" color="primary">
-          {{ type.title }}
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select [formControl]="filterRegionControl">
+          <mat-option *ngFor="let option of optionsFilterMarketRegion" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-radio-group class="radio-group block-radio" [formControl]="filterTypeControl">
+        <mat-radio-button class="filter-option" *ngFor="let option of optionsFilterMarketType" [value]="option.value" color="primary">
+          {{ option.label }}
         </mat-radio-button>
       </mat-radio-group>
     </mat-card>
 
-    <button mat-button color="basic" class="clear-filters" (click)="clear()">
+    <button mat-button color="basic" class="clear-filters" (click)="clearFilters()">
       <mat-icon fontIcon="part-clear-all"></mat-icon>
       Clear all filters
     </button>
@@ -53,194 +60,148 @@
   </div><!-- .filter (sidebar) -->
 
 
-  <!-- .loading-container -->
-  <div class="loading-container" *ngIf="isPageLoading">
-    <div class="loading-info">
-      <div class="loading-image">
-        <img src="./assets/particl-logo-symbol.svg">
-      </div>
-      <p class="title">
-        Hang on, we're loading the Markets
-      </p>
-      <p class="help-text">
-        This might take a while
-      </p>
-    </div>
-  </div><!-- .loading-container -->
-
-
   <!-- Management > Market list -->
-  <div class="markets section with-filter"><!-- infiniteScroll
-    [infiniteScrollContainer]="pagination.infinityScrollSelector"
-    [fromRoot]="true"
-    [infiniteScrollDistance]="2"
-    [infiniteScrollThrottle]="50"
-    (scrolled)="loadNextPage()" -->
+  <div class="markets section with-filter">
 
     <mat-accordion>
 
-      <!-- Example: Joined market -->
-      <mat-expansion-panel class="market list-item no-padding">
-        <mat-expansion-panel-header class="header">
-          <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-            <div class="photo">
-              <img src="/assets/images/placeholder_4-3.jpg">
-            </div>
-            <div class="info" fxFlex="1 1 100%">
-              <h3 class="box-title --larger">
-                <span class="name">Joined Market title</span>
-                <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
-                <mat-icon fontIcon="part-notification-speaker" class="promoted"
-                          matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon>
-              </h3>
-              <div class="desc">
-                <span class="market-type">Community Market</span>
-              </div>
-            </div><!-- .meta -->
-          </div>
-        </mat-expansion-panel-header>
-        <div class="details">
-          <h3 class="item-subtitle">Market summary</h3>
-          <p class="desc">
-            This is a summary/description of a joined Market. It shouldn't be very long, so it fits on this line here, so let's limit the characters in Market creation..
-          </p>
-        </div>
-        <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
-          <div class="left">
-            <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market">
-              <mat-icon fontIcon="part-cross"></mat-icon>
-              Leave
-            </button>
-            <!-- @TODO: show only on 3rd party Markets (ie. those which you joined) -->
-            <button mat-button color="basic" class="small icon-only"
-                    [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
-              <mat-icon fontIcon="part-flag"></mat-icon>
-            </button>
-            <button mat-button color="basic" class="small" matTooltip="Copy Market ID for sharing">
-              <mat-icon fontIcon="part-copy"></mat-icon>
-              Copy ID
-            </button>
-            <button mat-button color="basic" class="small" matTooltip="Edit Market details" (click)="openEditMarketModal()">
-              <mat-icon fontIcon="part-pen-1"></mat-icon>
-              Edit
-            </button>
-            <button mat-button color="basic" class="small icon-only"
-                    [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
-              <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-            </button>
-          </div>
-          <div class="right">
-            <button mat-raised-button color="primary">
-              <mat-icon fontIcon="part-bag"></mat-icon>
-              Browse Market
-            </button>
-          </div>
-        </mat-action-row>
-      </mat-expansion-panel><!-- .market -->
+      <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
+        <ng-container *ngFor="let marketIdx of displayedMarkets; trackBy: trackByMarketIdxFn">
 
-
-      <!-- Example: Own storefront -->
-      <mat-expansion-panel class="market list-item no-padding">
-        <mat-expansion-panel-header class="header">
-          <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-            <div class="photo">
-              <img src="/assets/images/placeholder_4-3.jpg">
-            </div>
-            <div class="info" fxFlex="1 1 100%">
-              <h3 class="box-title --larger">
-                <span class="name">My Storefront title</span>
-                <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
-                <!--mat-icon fontIcon="part-notification-speaker" class="promoted"
-                          matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon-->
-              </h3>
-              <div class="desc">
-                <span class="admin tag --tertiary">
-                  <mat-icon fontIcon="part-verified"></mat-icon>
-                  Admin
-                </span>
-                <span class="market-type">Storefront</span>
+          <!-- Example: Joined market -->
+          <mat-expansion-panel class="market list-item no-padding" *appVar="marketsList[marketIdx] as marketItem">
+            <mat-expansion-panel-header class="header">
+              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="photo">
+                  <img [src]="marketItem.image">
+                </div>
+                <div class="info" fxFlex="1 1 100%">
+                  <h3 class="box-title --larger">
+                    <span class="name">{{ marketItem.name }}</span>
+                    <!-- Note: "Promoted" Markets stick to top of the list | "3 days" marks remaining time of promotion -->
+                    <!-- <mat-icon fontIcon="part-notification-speaker" class="promoted"
+                              matTooltip="Promoted Market (3 days)" matTooltipPosition="after"></mat-icon> -->
+                  </h3>
+                  <div class="desc">
+                    <span *ngIf="marketItem.marketType === marketTypeOptions.STOREFRONT_ADMIN" class="admin tag --tertiary">
+                      <mat-icon fontIcon="part-verified"></mat-icon>
+                      Admin
+                    </span>
+                    <span class="market-type">
+                      <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
+                      <ng-template #marketTypeStorefront>Storefront</ng-template>
+                    </span>
+                    <span class="market-type">{{ marketItem.region.label }}</span>
+                  </div>
+                </div><!-- .meta -->
               </div>
-            </div><!-- .meta -->
-          </div>
-        </mat-expansion-panel-header>
-        <div class="details">
-          <h3 class="item-subtitle">Storefront summary</h3>
-          <p class="desc">
-            Some intro to Storefront that I've either created or got its Admin key.
-          </p>
-          <!-- TODO: Show these `.keys` only when user has "admin/publishing" rights for Storefront-type Market: -->
-          <div class="keys" fxLayout fxLayoutGap="30px">
-            <div class="public" fxFlex="50%">
-              <h3 class="box-title">
-                Market ID
-                <button mat-button color="accent" class="small" matTooltip="Copy Market ID">
-                  <mat-icon fontIcon="part-copy"></mat-icon>
-                  Copy
-                </button>
+            </mat-expansion-panel-header>
+            <div class="details">
+              <h3 class="item-subtitle">
+                <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefrontSummary">Market Summary</ng-container>
+                <ng-template #marketTypeStorefrontSummary>Storefront Summary</ng-template>
               </h3>
-              <div class="key">P4H1drJsX9sP4ek2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5W</div>
-              <p class="help-text">
-                Key required to join this Market. You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
+              <p class="desc">
+                {{ marketItem.summary }}
               </p>
+              <div *ngIf="marketItem.marketType === marketTypeOptions.STOREFRONT_ADMIN" class="keys" fxLayout fxLayoutGap="30px">
+                <div class="public" fxFlex="50%">
+                  <h3 class="box-title">
+                    Market ID
+                    <button mat-button color="accent" class="small" matTooltip="Copy Market ID" ngxClipboard [cbContent]="marketItem.receiveKey || ''" (click)="actionCopiedToClipBoard()">
+                      <mat-icon fontIcon="part-copy"></mat-icon>
+                      Copy
+                    </button>
+                  </h3>
+                  <div class="key">{{marketItem.receiveKey}}</div>
+                  <p class="help-text">
+                    Key required to join this Market. You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
+                  </p>
+                </div>
+                <div class="private" fxFlex="50%">
+                  <ng-container *ngIf="marketItem.pubishKey !== null">
+                    <h3 class="box-title">
+                      Publish key
+                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishKey || ''" (click)="actionCopiedToClipBoard()">
+                        <mat-icon fontIcon="part-copy"></mat-icon>
+                        Copy
+                      </button>
+                    </h3>
+                    <div class="key">{{ marketItem.publishKey }}</div>
+                    <p class="help-text">
+                      Whoever has this Private key will have access for selling on your Market. Share it with trusted people only (e.g. colleagues from your Store)!
+                    </p>
+                  </ng-container>
+                </div>
+              </div><!-- .keys -->
             </div>
-            <div class="private" fxFlex="50%">
-              <h3 class="box-title">
-                Admin key
-                <button mat-button color="warn" class="small" matTooltip="Copy Admin key">
-                  <mat-icon fontIcon="part-copy"></mat-icon>
-                  Copy
+            <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+              <div class="left">
+                <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market" appDebounceClick (debounceClick)="actionLeaveMarket(marketIdx)">
+                  <mat-icon fontIcon="part-cross"></mat-icon>
+                  Leave
                 </button>
-              </h3>
-              <div class="key">2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek</div>
-              <p class="help-text">
-                Whoever has this Private key will have access for selling on your Market. Share it with trusted people only (e.g. colleagues from your Store)!
-              </p>
-            </div>
-          </div><!-- .keys -->
-        </div><!-- .details -->
-        <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
-          <div class="left">
-            <button mat-button color="warn" class="small" matTooltip="Disconnect from this Market">
-              <mat-icon fontIcon="part-cross"></mat-icon>
-              Leave
-            </button>
-            <!-- @TODO: show only on 3rd party Markets (ie. those which you joined) -->
-            <button mat-button color="basic" class="small icon-only"
-                    [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
-              <mat-icon fontIcon="part-flag"></mat-icon>
-            </button>
-            <button mat-button color="basic" class="small" matTooltip="Edit Market details" (click)="openEditMarketModal()">
-              <mat-icon fontIcon="part-pen-1"></mat-icon>
-              Edit
-            </button>
-            <button mat-button color="basic" class="small icon-only"
-                    [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
-              <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-            </button>
-          </div>
-          <div class="right">
-            <button mat-raised-button color="primary">
-              <mat-icon fontIcon="part-bag"></mat-icon>
-              Browse Storefront
-            </button>
-          </div>
-        </mat-action-row>
-      </mat-expansion-panel><!-- .market -->
+                <button mat-button color="basic" class="small icon-only" *ngIf="marketItem.marketType !== marketTypeOptions.STOREFRONT_ADMIN"
+                        [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
+                  <mat-icon fontIcon="part-flag"></mat-icon>
+                </button>
+                <button mat-button color="basic" class="small" matTooltip="Copy Market ID for sharing" *ngIf="marketItem.marketType !== marketTypeOptions.STOREFRONT_ADMIN" ngxClipboard [cbContent]="marketItem.receiveKey || ''" (click)="actionCopiedToClipBoard()">
+                  <mat-icon fontIcon="part-copy"></mat-icon>
+                  Copy Market ID
+                </button>
+                <button mat-button color="basic" class="small icon-only"
+                        [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
+                  <mat-icon fontIcon="part-notification-speaker"></mat-icon>
+                </button>
+              </div>
+              <div class="right">
+                <button mat-button *ngIf="marketItem.marketType === marketTypeOptions.STOREFRONT_ADMIN" color="basic" class="small" matTooltip="Edit Market categories" appDebounceClick (debounceClick)="actionOpenCategoryEditorModal(marketIdx)">
+                  <mat-icon fontIcon="part-pen-1"></mat-icon>
+                  Edit Categories
+                </button>
+                <button mat-raised-button color="primary">
+                  <mat-icon fontIcon="part-bag"></mat-icon>
+                  Browse Market
+                </button>
+              </div>
+            </mat-action-row>
+          </mat-expansion-panel><!-- .market -->
+
+        </ng-container>
+      </ng-container>
 
     </mat-accordion>
 
-    <div class="no-results">
-      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
-      <p>
-        No Markets found
-      </p>
-      <p class="help-text">
-        If you're looking for a specific Market, ask any its member for the Market ID and join it manually
-      </p>
-    </div><!-- .no-results -->
+    <ng-template #noMarketsVisible>
+      <div class="no-results" *ngIf="marketsList.length === 0">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No markets available">
+        <p>
+          No markets promoted
+        </p>
+        <p class="help-text">
+          If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
+        </p>
+      </div>
+
+      <!-- when searching/filtering: -->
+      <div class="no-results" *ngIf="marketsList.length > 0">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No markets matching filter criteria">
+        <p>
+          No Markets found
+        </p>
+        <p class="help-text">
+          If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
+        </p>
+      </div>
+    </ng-template>
 
   </div><!-- .markets (content) -->
 </div><!-- .container-block -->
+
+
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->
 
 
 

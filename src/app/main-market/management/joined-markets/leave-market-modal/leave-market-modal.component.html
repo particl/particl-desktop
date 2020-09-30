@@ -1,0 +1,37 @@
+<mat-dialog-title>Leave Market</mat-dialog-title>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+  <div>
+    {{ marketName }}
+  </div>
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/reject-cancel-bid.svg" alt="Remove market">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Are you sure you want to leave this market?
+      </p>
+      <p class="help-text"></p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" appDebounceClick (debounceClick)="doAction()">
+    <mat-icon fontIcon="part-circle-remove"></mat-icon>
+    Yes, leave market
+  </button>
+</mat-dialog-actions>

@@ -188,7 +188,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
         const addItem =
             market.name.toLocaleLowerCase().includes(searchString) &&
             // (doJoinedFilter ? market.isJoined === isJoined : true) &&
-            (filterRegion ? filterRegion === market.region : true) &&
+            (filterRegion ? filterRegion === market.region.value : true) &&
             (doTypeFilter ? isStorefront === (market.publishKey === null) : true);
 
         if (addItem) {
