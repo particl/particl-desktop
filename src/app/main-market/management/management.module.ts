@@ -7,6 +7,7 @@ import { ManagementComponent } from './management.component';
 import { CreateMarketComponent } from './create-market/create-market.component';
 import { EditMarketModalComponent } from './edit-market-modal/edit-market-modal.component';
 import { MarketBrowserComponent } from './market-browser/market-browser.component';
+import { JoinWithDetailsModalComponent } from './market-browser/join-with-details-modal/join-with-details-modal.component';
 import { JoinedMarketsComponent } from './joined-markets/joined-markets.component';
 import { MarketManagementService } from './management.service';
 
@@ -29,12 +30,16 @@ const routes: Routes = [
   ],
   declarations: [
     ManagementComponent,
+
     MarketBrowserComponent,
+    JoinWithDetailsModalComponent,
+
     JoinedMarketsComponent,
     CreateMarketComponent,
     EditMarketModalComponent
   ],
   entryComponents: [
+    JoinWithDetailsModalComponent,
     EditMarketModalComponent
   ],
   providers: [

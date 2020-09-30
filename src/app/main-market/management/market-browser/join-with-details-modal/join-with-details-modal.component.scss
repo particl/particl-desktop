@@ -1,0 +1,118 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/market-list-item'; // shared market item (in lists)
+
+
+// ------ UI ------ //
+
+.drag-n-drop {
+  border: 2px dashed var(--bg-muted);
+  border-radius: 4px;
+  background: var(--bg);
+  height: 130px;
+  margin: 0 32px 0 0;
+  padding: 32px 4px 25px;
+  text-align: center;
+  p {
+    margin: 6px 0 0;
+    color: var(--text-muted);
+  }
+  .hide-file {
+    @extend %hide;
+  }
+}
+
+// ------ LAYOUT ------ //
+
+form.market-form { // form = stepper content (centered)
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.market-details {
+  .market-image {
+    padding: 24px 28px;
+    .desc {
+      padding-top: 8px;
+      p,
+      ul {
+        color: var(--text-muted);
+      }
+    }
+  }
+}
+
+.market-type {
+  .mat-divider {
+    margin-top: -24px;
+    margin-bottom: -24px;
+  }
+  p {
+    margin-bottom: 0;
+  }
+}
+
+.promote { // promote your Market
+  .header {
+    font-size: 15px;
+    color: var(--text-muted);
+    strong {
+      font-weight: 500;
+      color: var(--text);
+    }
+    .mat-icon {
+      color: var(--color-secondary);
+      margin-right: 16px;
+    }
+  }
+  .details {
+    border-top: 1px dashed var(--bg-muted);
+    padding: 8px 24px 24px;
+    font-size: 13px;
+    .box-title {
+      margin: 14px 0 0;
+    }
+    .promo-duration { // select
+      margin: 6px 0 14px;
+    }
+    table {
+      width: 100%;
+      border-spacing: 0;
+      th {
+        color: var(--text-muted);
+        font-weight: 500;
+        text-align: left;
+        padding: 2px 0;
+      }
+      td {
+        text-align: right;
+      }
+    }
+  }
+}
+
+.actions { // next/prev buttons
+  margin-top: var(--paddingV);
+  button {
+    margin: 0;
+  }
+}
+
+
+
+
+// NEW STYLES
+
+.market-details {
+  padding: 0;
+}
+
+/*
+.subtitle {
+  @extend %box-title;
+  padding: 22px 24px 0;
+  margin: 0 0 -0.9em 0;
+  position: relative;
+  z-index: 2;
+}
+*/
+

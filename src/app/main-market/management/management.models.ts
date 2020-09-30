@@ -20,4 +20,6 @@ export interface CreateMarketRequest {
     type: IMAGE_PROTOCOL;
     data: string;
   };
+  receiveKey?: string;
+  publishKey?: string;
 }

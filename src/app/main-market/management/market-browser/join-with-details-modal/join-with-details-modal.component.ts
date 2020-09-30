@@ -1,100 +1,79 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Observable, Subject, merge} from 'rxjs';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { MatDialogRef } from '@angular/material';
+import { Subject } from 'rxjs';
 import { takeUntil, tap, finalize } from 'rxjs/operators';
 
-import { Select } from '@ngxs/store';
-import { MarketState } from 'app/main-market/store/market.state';
-
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { MarketManagementService } from '../management.service';
-import { MarketTypeValidator } from './create-market.validators';
-import { MarketType } from '../../shared/market.models';
-import { DefaultMarketConfig } from '../../store/market.models';
-import { CreateMarketRequest } from '../management.models';
+import { MarketManagementService } from '../../management.service';
+import { CreateMarketRequest } from '../../management.models';
+import { MarketType } from '../../../shared/market.models';
+
+
+function marketKeyValidator(): ValidatorFn {
+  return (control: FormGroup): ValidationErrors | null => {
+    const type = control.get('marketType');
+    const keyPublish = control.get('marketType');
+    return { 'marketkey': true };
+  };
+}
 
 
 enum TextContent {
-  ERROR_IMAGE_ADD = 'The image selected was not valid',
-  ERROR_MARKET_ADD = 'Error while attempting to add the market',
-  SUCCESS_MARKET_ADD = 'Successfully added the market',
-  LABEL_TYPE_MARKETPLACE = 'Marketplace',
-  LABEL_TYPE_STOREFRONT = 'Storefront',
+  ERROR_IMAGE_ADD = 'The image selected is not valid',
+  MARKET_JOIN_SUCCESS = 'Successfully joined this market',
+  MARKET_JOIN_ERROR = 'Failed to join the specified market'
 }
 
 
 @Component({
-  templateUrl: './create-market.component.html',
-  styleUrls: ['./create-market.component.scss']
+  templateUrl: './join-with-details-modal.component.html',
+  styleUrls: ['./join-with-details-modal.component.scss']
 })
-export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
+export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  @Select(MarketState.defaultConfig) marketConfig: Observable<DefaultMarketConfig>;
+
+  isProcessing: boolean = false;
   marketTypeOptions: typeof MarketType = MarketType;
   optionsMarketRegions: {value: string; label: string}[];
-
-  labelRegion: string = '';
-  labelType: string = '';
 
   marketForm: FormGroup;
 
   readonly MAX_NAME: number;
   readonly MAX_SUMMARY: number;
 
+
   private destroy$: Subject<void> = new Subject();
-  private isProcessing: boolean = false;
 
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
   @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
 
 
   constructor(
-    private _route: ActivatedRoute,
-    private _router: Router,
-    private _snackbar: SnackbarService,
+    private _dialogRef: MatDialogRef<JoinWithDetailsModalComponent>,
     private _manageService: MarketManagementService,
+    private _snackbar: SnackbarService,
   ) {
     this.marketForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_NAME)]),
       summary: new FormControl('', [Validators.maxLength(this.MAX_SUMMARY)]),
       image: new FormControl(''),
-      marketType: new FormControl('', [Validators.required, MarketTypeValidator()]),
-      region: new FormControl('')
+      marketType: new FormControl('', [Validators.required]),
+      region: new FormControl(''),
+      keyReceive: new FormControl('', [Validators.required]), // TODO: implement validations
+      keyPublish: new FormControl('')  // TODO: implement validations
     });
 
     this.optionsMarketRegions = this._manageService.getMarketRegions();
     this.MAX_NAME = this._manageService.MAX_MARKET_NAME;
     this.MAX_SUMMARY = this._manageService.MAX_MARKET_SUMMARY;
-
-    const foundRegion = this.optionsMarketRegions.find(mr => mr.value === this.marketForm.get('region').value);
-    if (foundRegion) {
-      this.labelRegion = foundRegion.label;
-    }
   }
 
 
   ngOnInit() {
-    merge(
-      this.marketForm.get('region').valueChanges.pipe(
-        tap(value => {
-          const foundRegion = this.optionsMarketRegions.find(mr => mr.value === value);
-          if (foundRegion) {
-            this.labelRegion = foundRegion.label;
-          }
-        }),
-        takeUntil(this.destroy$)
-      ),
-      this.marketForm.get('marketType').valueChanges.pipe(
-        tap(value => {
-          switch (value) {
-            case MarketType.MARKETPLACE: this.labelType = TextContent.LABEL_TYPE_MARKETPLACE; break;
-            case MarketType.STOREFRONT_ADMIN: this.labelType = TextContent.LABEL_TYPE_STOREFRONT; break;
-            default: this.labelType = '';
-          }
-        }),
-        takeUntil(this.destroy$)
-      )
+    this.marketForm.get('marketType').valueChanges.pipe(
+      tap(() => this.marketForm.get('keyPublish').setValue('')),
+      takeUntil(this.destroy$)
     ).subscribe();
   }
 
@@ -121,21 +100,24 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
 
-  addImage() {
-    this.fileInputSelector.nativeElement.click();
-  }
-
-
   get formImageControl(): AbstractControl {
     return this.marketForm.get('image');
   }
 
+  get formMarketTypeControl(): AbstractControl {
+    return this.marketForm.get('marketType');
+  }
 
-  actionCreateMarket(): void {
+
+  addImage(): void {
+    this.fileInputSelector.nativeElement.click();
+  }
+
+
+  doAction(): void {
     if (!this.marketForm.valid || this.isProcessing) {
       return;
     }
-
     this.isProcessing = true;
 
     const createRequest: CreateMarketRequest = {
@@ -161,21 +143,39 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
 
+    const recKey = this.marketForm.get('keyReceive').value;
+    const pubKey = this.marketForm.get('keyPublish').value;
+
+    createRequest.receiveKey = recKey;
+
+    if (pubKey) {
+      createRequest.publishKey = pubKey;
+
+      if (pubKey === recKey) {
+        createRequest.marketType = MarketType.MARKETPLACE;
+      }
+
+    } else {
+      if (createRequest.marketType === MarketType.MARKETPLACE) {
+        createRequest.publishKey = recKey;
+      }
+    }
+
     this._manageService.createMarket(createRequest).pipe(
       finalize(() => this.isProcessing = false)
     ).subscribe(
       (market) => {
-        this._snackbar.open(TextContent.SUCCESS_MARKET_ADD);
-        this._router.navigate(['../'], {relativeTo: this._route});
+        this._snackbar.open(TextContent.MARKET_JOIN_SUCCESS);
+        this._dialogRef.close();
       },
       (err) => {
-        this._snackbar.open(TextContent.ERROR_MARKET_ADD, 'warn');
+        this._snackbar.open(TextContent.MARKET_JOIN_ERROR, 'warn');
       }
     );
   }
 
 
-  private processPictures(event: any, dnd: boolean = false) {
+  private processPictures(event: any, dnd: boolean = false): void {
     let sourceFiles: File[] = [];
     if (dnd) {
       for (const f of event.dataTransfer.files) {

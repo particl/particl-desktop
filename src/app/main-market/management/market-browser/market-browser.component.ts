@@ -6,6 +6,7 @@ import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinc
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
+import { JoinWithDetailsModalComponent } from './join-with-details-modal/join-with-details-modal.component';
 import { AvailableMarket } from '../management.models';
 
 
@@ -164,7 +165,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
 
 
   openMarketJoinModal() {
-    // TODO: implement this
+    this._dialog.open(JoinWithDetailsModalComponent);
   }
 
 

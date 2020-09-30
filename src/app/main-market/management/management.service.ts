@@ -25,6 +25,9 @@ enum TextContent {
 @Injectable()
 export class MarketManagementService {
 
+  readonly MAX_MARKET_NAME: number = 50;
+  readonly MAX_MARKET_SUMMARY: number = 150;
+
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
 
@@ -133,8 +136,8 @@ export class MarketManagementService {
       profileId,
       details.name,
       details.marketType,
-      null,
-      null,
+      getValueOrDefault(details.receiveKey, 'string', '').length > 0 ? details.receiveKey : null,
+      getValueOrDefault(details.publishKey, 'string', '').length > 0 ? details.publishKey : null,
       identityId
     ];
 
