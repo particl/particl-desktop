@@ -215,6 +215,13 @@ export class MarketManagementService {
   }
 
 
+  promoteMarket(marketId: number, durationDays: number): Observable<boolean> {
+    return this._rpc.call('market', ['post', marketId, durationDays, false]).pipe(
+      map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+    );
+  }
+
+
   private buildJoinedMarket(src: RespMarketListMarketItem, marketUrl: string): JoinedMarket {
     const newItem: JoinedMarket = {
       id: 0,

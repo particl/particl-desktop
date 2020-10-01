@@ -1,0 +1,78 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+mat-dialog-title {
+  margin: -8px 0 10px;
+  .selected-identity {
+    font-size: 15px;
+    line-height: 1.4;
+    .avatar {
+      --avatar-size: 36px;
+      background: var(--color-primary);
+      color: var(--color-white);
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      line-height: var(--avatar-size);
+      text-align: center;
+      border-radius: 50%;
+      font-size: 20px;
+      margin: 0 12px 0 0;
+    }
+    .identity-name {
+      font-size: 16px;
+    }
+    .available-balance {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+  }
+}
+
+.mat-dialog-content {
+  margin: 0 -24px !important;
+  padding: var(--paddingV) var(--paddingH);
+  width: 34rem;
+}
+
+.item-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 14px 18px;
+  .image {
+    --size: 60px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 16px;
+    position: relative;
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  .name {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+  }
+  .category {
+    color: var(--text-muted);
+  }
+}
+
+.publishing-to {
+  text-align: center;
+  color: var(--text-muted);
+  margin: 32px 0 24px;
+  p {
+    font-size: 16px;
+    margin: 0 0 8px;
+  }
+}

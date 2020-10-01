@@ -6,12 +6,15 @@ import { Observable, Subject, merge, defer, of, iif } from 'rxjs';
 import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, take, concatMap } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { MarketManagementService } from '../management.service';
 import { LeaveMarketConfirmationModalComponent } from './leave-market-modal/leave-market-modal.component';
 import { CategoryEditorModalComponent } from './category-editor-modal/category-editor-modal.component';
+import { PromoteMarketConfirmationModalComponent } from './promote-market-modal/promote-market-modal.component';
 import { JoinedMarket } from '../management.models';
 import { MarketType } from 'app/main-market/shared/market.models';
 import { GenericModalInfo } from './joined-markets.models';
+import { getValueOrDefault } from 'app/main-market/shared/utils';
 
 
 enum TextContent {
@@ -19,6 +22,8 @@ enum TextContent {
   COPIED_TO_CLIPBOARD = 'Copied to clipboard...',
   LEAVE_MARKET_ERROR_GENERIC = 'Error while attempting to leave the market',
   LEAVE_MARKET_ERROR_DEFAULT_MARKET = 'A default market cannot be removed',
+  PROMOTION_SUCCESS = 'Successfully promoted the market!',
+  PROMOTION_ERROR = 'Failed to promote the market'
 }
 
 
@@ -67,6 +72,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
+    private _unlocker: WalletEncryptionService
   ) {
     this.optionsFilterMarketRegion = this._manageService.getMarketRegions();
 
@@ -197,6 +203,10 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
 
   actionOpenCategoryEditorModal(idx: number): void {
+    if ((idx < 0) || (idx >= this.marketsList.length) || !this.marketsList[idx]) {
+      return;
+    }
+
     const market = this.marketsList[idx];
 
     const data: GenericModalInfo = {
@@ -206,6 +216,65 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
       CategoryEditorModalComponent,
       { data }
     );
+  }
+
+
+  actionOpenPromoteMarketModal(idx: number): void {
+    if ((idx < 0) || (idx >= this.marketsList.length) || !this.marketsList[idx]) {
+      return;
+    }
+
+    const openModal$ = defer(() => {
+      const market = this.marketsList[idx];
+      const data: GenericModalInfo = {
+        market
+      };
+
+      const _dialog = this._dialog.open(
+        PromoteMarketConfirmationModalComponent,
+        { data }
+      );
+
+      return _dialog.afterClosed().pipe(
+        concatMap((dialogResp) => iif(
+          () => getValueOrDefault(dialogResp, 'number', 0) && (+dialogResp > 0),
+
+          defer(() => this._unlocker.unlock({timeout: 10}).pipe(
+            concatMap((isUnlocked) => iif(
+              () => isUnlocked,
+
+              defer(() => this._manageService.promoteMarket(market.id, dialogResp))
+            ))
+          ))
+        ))
+      );
+    });
+
+    this._unlocker.unlock({timeout: 90}).pipe(
+      concatMap((isUnlocked: boolean) => iif(() => isUnlocked, openModal$))
+    ).subscribe(
+      (isSuccess) => {
+        if (!isSuccess) {
+          this._snackbar.open(TextContent.PROMOTION_ERROR, 'warn');
+          return;
+        }
+
+        this._snackbar.open(TextContent.PROMOTION_SUCCESS);
+        // TODO: add display of promoted market here
+      },
+      () => this._snackbar.open(TextContent.PROMOTION_ERROR, 'warn')
+    );
+
+  }
+
+
+  actionVoteKeep(marketId: number) {
+
+  }
+
+
+  actionVoteRemove(marketId: number) {
+
   }
 
 

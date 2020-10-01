@@ -1,0 +1,59 @@
+<mat-dialog-title fxLayout fxLayoutAlign="space-between center">
+  Promote Market
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity&#13;which will publish the Listing" matTooltipPosition="after" matTooltipClass="multi-line">
+    <div class="avatar">{{ currentIdentity.image }}</div>
+    <div class="text">
+      <div class="identity-name">{{ currentIdentity.name }}</div>
+      <div class="available-balance">Publishing balance: {{ currentBalanceControl.value }}</div>
+    </div>
+  </div>
+</mat-dialog-title>
+
+
+<mat-dialog-content>
+  Promote {{ marketName }}
+  <div class="details" fxLayout fxLayoutGap="46px">
+    <div class="desc" fxFlex="60%">
+      <p>
+        Markets are not listed in the Market browser by default. You can promote your Market to publish it to Market browser for a few days and onboard more potential Buyers.
+      </p>
+      <p class="help-text">
+        This fee goes back to the stakers on Particl network for their support.
+      </p>
+    </div>
+    <div class="form" fxFlex="40%">
+      <h3 class="box-title">Days to promote</h3>
+      <mat-form-field class="promo-duration --plain full-width" appearance="fill">
+        <mat-select [formControl]="selectedDurationControl">
+          <mat-option [value]="0">Select duration</mat-option>
+          <mat-option *ngFor="let option of optionsPublishDurations" [value]="option.value">{{option.title}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <table class="full-width">
+        <tr>
+          <th>Promo duration (days)</th>
+          <td>{{ selectedDurationControl.value }}</td>
+        </tr>
+        <tr>
+          <th>Total promo fee</th>
+          <td>{{ selectedFeeControl.value }} PART</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()" [disabled]="publishForm.invalid">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Publish Listing
+  </button>
+
+</mat-dialog-actions>

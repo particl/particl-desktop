@@ -149,8 +149,7 @@
                   <mat-icon fontIcon="part-copy"></mat-icon>
                   Copy Market ID
                 </button>
-                <button mat-button color="basic" class="small icon-only"
-                        [matMenuTriggerFor]="promote" matTooltip="Promote in Market browser">
+                <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser" appDebounceClick (debounceClick)="actionOpenPromoteMarketModal(marketIdx)">
                   <mat-icon fontIcon="part-notification-speaker"></mat-icon>
                 </button>
               </div>
@@ -206,30 +205,6 @@
 
 
 <!-- // ------ CONTEXTUAL MENUS ------ // -->
-
-<!-- Promote Market -->
-<mat-menu #promote="matMenu" class="promote --smaller">
-  <div class="heading">
-    <h3 class="title">Promote Market</h3>
-    <p class="help-text">Market will be pinned to top in Market browser</p>
-  </div>
-  <button mat-menu-item>
-    <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-    <span>for 1 day</span><span class="muted right">1.01 PART</span>
-  </button>
-  <button mat-menu-item>
-    <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-    <span>for 3 days</span><span class="muted right">3.03 PART</span>
-  </button>
-  <button mat-menu-item>
-    <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-    <span>for 5 days</span><span class="muted right">5.05 PART</span>
-  </button>
-  <button mat-menu-item>
-    <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-    <span>for 1 week</span><span class="muted right">7.07 PART</span>
-  </button>
-</mat-menu>
 
 <!-- Report Market -->
 <mat-menu #report="matMenu" class="report --smaller">
