@@ -139,7 +139,7 @@ export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnD
     if (imageReq.length) {
       createRequest.image = {
         data: imageReq,
-        type: 'FILE'
+        type: 'REQUEST'
       };
     }
 

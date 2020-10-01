@@ -1,5 +1,6 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { Observable, Subject, merge} from 'rxjs';
 import { takeUntil, tap, finalize } from 'rxjs/operators';
@@ -7,6 +8,7 @@ import { takeUntil, tap, finalize } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
 import { MarketTypeValidator } from './create-market.validators';
@@ -21,6 +23,7 @@ enum TextContent {
   SUCCESS_MARKET_ADD = 'Successfully added the market',
   LABEL_TYPE_MARKETPLACE = 'Marketplace',
   LABEL_TYPE_STOREFRONT = 'Storefront',
+  PROCESSING_ADD_MARKET = 'Busy creating your market'
 }
 
 
@@ -43,7 +46,6 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly MAX_SUMMARY: number;
 
   private destroy$: Subject<void> = new Subject();
-  private isProcessing: boolean = false;
 
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
   @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
@@ -54,6 +56,7 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private _snackbar: SnackbarService,
     private _manageService: MarketManagementService,
+    private _dialog: MatDialog
   ) {
     this.marketForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_NAME)]),
@@ -132,11 +135,11 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   actionCreateMarket(): void {
-    if (!this.marketForm.valid || this.isProcessing) {
+    if (!this.marketForm.valid) {
       return;
     }
 
-    this.isProcessing = true;
+    this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.PROCESSING_ADD_MARKET}});
 
     const createRequest: CreateMarketRequest = {
       name: this.marketForm.get('name').value,
@@ -157,12 +160,12 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     if (imageReq.length) {
       createRequest.image = {
         data: imageReq,
-        type: 'FILE'
+        type: 'REQUEST'
       };
     }
 
     this._manageService.createMarket(createRequest).pipe(
-      finalize(() => this.isProcessing = false)
+      finalize(() => this._dialog.closeAll())
     ).subscribe(
       (market) => {
         this._snackbar.open(TextContent.SUCCESS_MARKET_ADD);

@@ -186,11 +186,15 @@ export class MarketManagementService {
 
         () => isBasicObjectType(details.image),
 
-        defer(() =>
-          this._rpc.call('image', ['add', 'market', +market.id, details.image.type, details.image.data]).pipe(
+        defer(() => {
+          const imageParts = details.image.data.split(',');
+          const imgData = imageParts.length === 2 ? imageParts[1] : details.image.data;
+
+          return this._rpc.call('image', ['add', 'market', +market.id, details.image.type, imgData]).pipe(
             concatMap(() => this._rpc.call('market', ['get', market.id, true])),
             catchError(() => of(market))
-        )),
+          );
+        }),
 
         defer(() => of(market))
       )),
