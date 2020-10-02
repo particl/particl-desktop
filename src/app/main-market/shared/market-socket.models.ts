@@ -31,6 +31,12 @@ export namespace SocketMessages_v03 {
     hash: string;
     market: string;  // market receive address
   }
+
+  export interface MarketAdded {
+    id: number;
+    hash: string;
+    name: string;
+  }
 }
 
 
@@ -46,4 +52,5 @@ export interface SupportedMessageTypes {
   MPA_RELEASE: SocketMessages_v03.BidReceived;
   MPA_SHIP: SocketMessages_v03.BidReceived;
   MPA_COMPLETE: SocketMessages_v03.BidReceived;
+  MPA_MARKET_ADD: SocketMessages_v03.MarketAdded;
 }

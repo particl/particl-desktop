@@ -148,7 +148,6 @@ export class MarketManagementService {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     return this._rpc.call('market', ['join', profileId, marketId, identityId]).pipe(
       mapTo(true),
-      catchError(() => of(false))
     );
   }
 

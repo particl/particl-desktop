@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material';
 import { Observable, Subject, merge, defer, of, iif } from 'rxjs';
 import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, take, concatMap } from 'rxjs/operators';
 
+import { Store } from '@ngxs/store';
+
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { MarketManagementService } from '../management.service';
@@ -15,6 +17,7 @@ import { JoinedMarket } from '../management.models';
 import { MarketType } from 'app/main-market/shared/market.models';
 import { GenericModalInfo } from './joined-markets.models';
 import { getValueOrDefault } from 'app/main-market/shared/utils';
+import { MarketState } from 'app/main-market/store/market.state';
 
 
 enum TextContent {
@@ -69,6 +72,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _store: Store,
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
@@ -76,7 +80,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   ) {
     this.optionsFilterMarketRegion = this._manageService.getMarketRegions();
 
-    // Build up path to listings
+    // Build up path to listings page
     const target: string[] = [];
     const pathSegments = this._route.snapshot.pathFromRoot;
     for (const segment of pathSegments) {
@@ -96,16 +100,12 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    const load$ = this._manageService.searchJoinedMarkets().pipe(
-      catchError(() => {
-        this._snackbar.open(TextContent.LOAD_MARKETS_ERROR, 'warn');
-        return of([] as JoinedMarket[]);
-      }),
-      tap(markets => {
-        this.isLoading = false;
-        this.marketsList = markets;
-        this.renderFilteredControl.setValue(null);
-      })
+    const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
+      concatMap((iden) => iif(
+        () => iden && iden.id > 0,
+        defer(() => this.loadMarkets()),
+      )),
+      takeUntil(this.destroy$)
     );
 
     const filterChange$ = merge(
@@ -126,14 +126,14 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
     const render$ = this.renderFilteredControl.valueChanges.pipe(
       switchMap(() => this.getFilteredItems()),
       tap((indexes) => {
-        this.displayedMarkets = indexes;
+        this.displayedMarkets = this.marketsList.length > 0 ? indexes : [];
         this._cdr.detectChanges();
       }),
       takeUntil(this.destroy$)
     );
 
     merge(
-      load$,
+      identityChange$,
       filterChange$,
       render$
     ).subscribe();
@@ -163,6 +163,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   actionCopiedToClipBoard(): void {
     this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
   }
+
 
   actionLeaveMarket(idx: number) {
 
@@ -260,7 +261,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
         }
 
         this._snackbar.open(TextContent.PROMOTION_SUCCESS);
-        // TODO: add display of promoted market here
+        // TODO: add indication of "promotion" here
       },
       () => this._snackbar.open(TextContent.PROMOTION_ERROR, 'warn')
     );
@@ -275,6 +276,29 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   actionVoteRemove(marketId: number) {
 
+  }
+
+
+  private loadMarkets(): Observable<JoinedMarket[]> {
+    return of({}).pipe(
+      tap(() => {
+        this.isLoading = true;
+        this.displayedMarkets = [];
+        this.marketsList = [];
+        this._cdr.detectChanges();
+      }),
+      concatMap(() => this._manageService.searchJoinedMarkets().pipe(
+        catchError(() => {
+          this._snackbar.open(TextContent.LOAD_MARKETS_ERROR, 'warn');
+          return of([] as JoinedMarket[]);
+        }),
+        tap(markets => {
+          this.isLoading = false;
+          this.marketsList = markets;
+          this.renderFilteredControl.setValue(null);
+        })
+      ))
+    );
   }
 
 

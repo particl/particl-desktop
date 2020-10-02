@@ -44,16 +44,6 @@
       Filter
     </h2>
 
-    <!-- <mat-card class="filter-card">
-      <mat-form-field class="--plain" appearance="fill">
-        <mat-select placeholder="Show joined & available" [formControl]="filterJoinedControl">
-          <mat-option *ngFor="let option of optionsFilterMarketJoined" [value]="option.value">
-            {{ option.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </mat-card> -->
-
     <mat-card class="filter-card">
       <mat-form-field class="--plain" appearance="fill">
         <mat-select [formControl]="filterRegionControl">
@@ -109,14 +99,6 @@
             </div>
             <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
               <div class="left">
-                <button mat-button color="basic" class="small" ngxClipboard [cbContent]="marketItem.receiveKey || ''" (click)="actionCopiedToClipBoard()">
-                  <mat-icon fontIcon="part-copy"></mat-icon>
-                  Copy &amp; share Market ID
-                </button>
-                <button mat-button *ngIf="marketItem.publishKey !== null" color="basic" class="small" ngxClipboard [cbContent]="marketItem.publishKey || ''" (click)="actionCopiedToClipBoard()">
-                  <mat-icon fontIcon="part-copy"></mat-icon>
-                  Copy &amp; share publish key
-                </button>
               </div>
               <div class="right">
                 <button mat-raised-button color="primary" appDebounceClick (debounceClick)="actionJoinMarket(marketIdx)">

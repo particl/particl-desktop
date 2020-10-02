@@ -39,6 +39,7 @@ export class MarketSocketService implements OnDestroy {
     MPA_RELEASE: null,
     MPA_SHIP: null,
     MPA_COMPLETE: null,
+    MPA_MARKET_ADD: null,
   };
 
 
@@ -200,6 +201,7 @@ export class MarketSocketService implements OnDestroy {
       MPA_RELEASE: new Subject<SocketMessages_v03.BidReceived>(),
       MPA_SHIP: new Subject<SocketMessages_v03.BidReceived>(),
       MPA_COMPLETE: new Subject<SocketMessages_v03.BidReceived>(),
+      MPA_MARKET_ADD: new Subject<SocketMessages_v03.MarketAdded>(),
     };
   }
 

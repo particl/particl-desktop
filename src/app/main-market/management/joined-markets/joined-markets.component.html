@@ -145,10 +145,6 @@
                         [matMenuTriggerFor]="report" matTooltip="Report inappropriate Market">
                   <mat-icon fontIcon="part-flag"></mat-icon>
                 </button>
-                <button mat-button color="basic" class="small" matTooltip="Copy Market ID for sharing" *ngIf="marketItem.marketType !== marketTypeOptions.STOREFRONT_ADMIN" ngxClipboard [cbContent]="marketItem.receiveKey || ''" (click)="actionCopiedToClipBoard()">
-                  <mat-icon fontIcon="part-copy"></mat-icon>
-                  Copy Market ID
-                </button>
                 <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser" appDebounceClick (debounceClick)="actionOpenPromoteMarketModal(marketIdx)">
                   <mat-icon fontIcon="part-notification-speaker"></mat-icon>
                 </button>
