@@ -2,9 +2,10 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, merge, Observable, defer } from 'rxjs';
-import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap } from 'rxjs/operators';
+import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
 import { MarketManagementService } from '../management.service';
 import { JoinWithDetailsModalComponent } from './join-with-details-modal/join-with-details-modal.component';
 import { AvailableMarket } from '../management.models';
@@ -57,6 +58,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
 
   constructor(
     private _cdr: ChangeDetectorRef,
+    private _socket: MarketSocketService,
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog
@@ -66,18 +68,6 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    // const load$ = this._manageService.searchAvailableMarkets().pipe(
-    //   catchError(() => {
-    //     this._snackbar.open(TextContent.LOAD_MARKETS_ERROR, 'warn');
-    //     return of([] as AvailableMarket[]);
-    //   }),
-    //   tap(markets => {
-    //     this.isLoading = false;
-    //     this.marketsList = markets;
-    //     this.renderFilteredControl.setValue(null);
-    //   })
-    // );
-
 
     const filterChange$ = merge(
       this.searchControl.valueChanges.pipe(
@@ -104,10 +94,18 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
     );
 
 
+    const listener$ = this._socket.getSocketMessageListener('MPA_MARKET_ADD').pipe(
+      auditTime(10_000), // After first message arrives, wait x number of seconds (for more possible arriving messages), before continuing
+      switchMap(() => this.loadMarkets()),
+      takeUntil(this.destroy$)
+    );
+
+
     merge(
       this.loadMarkets(),
       filterChange$,
-      render$
+      render$,
+      listener$,
     ).subscribe();
   }
 
@@ -179,10 +177,10 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadMarkets(): Observable<AvailableMarket[]> {
+  private loadMarkets(showLoadingBar: boolean = true): Observable<AvailableMarket[]> {
     return of({}).pipe(
       tap(() => {
-        this.isLoading = true;
+        this.isLoading = showLoadingBar;
         this.displayedMarkets = [];
         this.marketsList = [];
         this._cdr.detectChanges();
