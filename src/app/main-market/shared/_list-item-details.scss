@@ -83,10 +83,11 @@
     .item-info { // title and status text
       @extend %enable-select;
       text-align: right;
-      margin: 0 0 0 30px;
-      flex: 0 0 180px;
+      margin: 0 0 0 60px;
+      flex: 0 0 220px;
       font-size: 11px;
       line-height: 1.6;
+      word-break: break-all;
     }
     .item-title { // order no.
       font-size: 20px;
@@ -195,6 +196,13 @@
       background: var(--bg-muted);
     }
     // Products & Listings
+    &.active .dot {
+      background: var(--color-success);
+    }
+    &.waiting .dot {
+      background: var(--color-warning);
+    }
+    // @TODO Allien: remove unneeded specific statuses below:
     &.unpublished .dot {
       background: var(--bg-muted);
     }
@@ -241,6 +249,8 @@
       }
     }
     // animated notifications in Order statuses
+    &.sell.active,
+    &.buy.active,
     &.sell.bidding,
     &.buy.payment,
     &.sell.escrow,
@@ -263,6 +273,10 @@
         top: -2px;
         left: -2px;
       }
+    }
+    &.buy.active .dot::after,
+    &.sell.active .dot::after {
+      border-color: var(--color-success);
     }
     &.sell.bidding .dot::after {
       border-color: var(--color-warning);

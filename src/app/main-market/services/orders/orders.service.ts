@@ -47,7 +47,7 @@ enum TextContent {
   STATE_ACCEPTED_STATUS_BUYER = 'Seller accepted your bid - please make the request for escrow to be created',
   STATE_ACCEPTED_STATUS_SELLER = 'Awaiting on buyer to confirm proceeding to creating escrow',
 
-  STATE_ESCROW_LOCKED_LABEL = 'Escrow Pending',
+  STATE_ESCROW_LOCKED_LABEL = 'Escrow',
   STATE_ESCROW_LOCKED_STATUS_BUYER = 'Waiting on seller to complete the escrow',
   STATE_ESCROW_LOCKED_STATUS_SELLER = 'Buyer has requested escrow - please proceed to completing your escrow payment (this will lock the funds to escrow)',
 

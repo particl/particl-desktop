@@ -92,7 +92,7 @@
               </div>
             </div>
             <div class="status-wrap" fxFlex="0 0 140px">
-              <div class="status" [class.activexxxxxxxx]="orderItem.currentState.actions.PRIMARY.length > 0" [class.waitingxxxxxxxx]="orderItem.currentState.actions.PRIMARY.length === 0">
+              <div class="buy status" [class.active]="orderItem.currentState.actions.PRIMARY.length > 0" [class.waiting]="orderItem.currentState.actions.PRIMARY.length === 0">
                 <span class="dot"></span> {{ orderItem.currentState.state.filterLabel || orderItem.currentState.state.label }}
               </div>
             </div>
@@ -141,7 +141,7 @@
           <div class="highlights" *ngIf="orderItem.extraDetails !== undefined">
             <table>
               <tr *ngIf="orderItem.extraDetails.escrowMemo.length > 0">
-                <th>Seller's escrow creation notes</th>
+                <th>Seller's escrow notes</th>
                 <td><em>{{ orderItem.extraDetails.escrowMemo }}</em></td>
               </tr>
               <tr *ngIf="orderItem.extraDetails.shippingMemo.length > 0">
@@ -156,7 +156,7 @@
                 <th>Escrow TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="Open escrow txid in Block Explorer">{{orderItem.extraDetails.escrowTxn}}</a>
+                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="{{orderItem.extraDetails.escrowTxn}}">Open in Block Explorer</a>
                   </div>
                 </td>
               </tr>
@@ -164,7 +164,7 @@
                 <th>Release TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="Open escrow txid in Block Explorer">{{orderItem.extraDetails.releaseTxn}}</a>
+                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="{{orderItem.extraDetails.releaseTxn}}">Open in Block Explorer</a>
                   </div>
                 </td>
               </tr>
@@ -293,7 +293,7 @@
     <div class="no-results" *ngIf="ordersList.length === 0">
       <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders Available">
       <p>
-        You don't have any market orders yet
+        You don't have any market Orders yet
       </p>
       <p class="help-text">
         Visit the Marketplace and start buying or selling today!
