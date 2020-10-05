@@ -8,6 +8,7 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
 import { MarketState } from './store/market.state';
 import { MarketBaseComponent } from './base/market-base.component';
 import { AlphaMainnetWarningComponent } from './base/alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { IdentityAddDetailsModalComponent } from './base/identity-add-modal/identity-add-details-modal.component';
 import { MarketRpcService } from './services/market-rpc/market-rpc.service';
 import { MarketSocketService } from './services/market-rpc/market-socket.service';
 import { DataService } from './services/data/data.service';
@@ -49,10 +50,12 @@ const routes: Routes = [
   ],
   declarations: [
     MarketBaseComponent,
-    AlphaMainnetWarningComponent
+    AlphaMainnetWarningComponent,
+    IdentityAddDetailsModalComponent
   ],
   entryComponents: [
-    AlphaMainnetWarningComponent
+    AlphaMainnetWarningComponent,
+    IdentityAddDetailsModalComponent
   ],
   providers: [
     MarketRpcService,

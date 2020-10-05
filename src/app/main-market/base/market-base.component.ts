@@ -6,11 +6,12 @@ import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
 import { MarketActions } from '../store/market.actions';
 import { MainActions } from 'app/main/store/main.actions';
-import { Subject, Observable, concat } from 'rxjs';
-import { takeUntil, tap,  map, startWith, finalize, concatMap } from 'rxjs/operators';
+import { Subject, Observable, concat, iif, defer, of } from 'rxjs';
+import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
+import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-add-details-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { StartedStatus, Identity } from '../store/market.models';
 import { WalletInfoStateModel, WalletUTXOStateModel } from 'app/main/store/main.models';
@@ -21,8 +22,10 @@ import { environment } from 'environments/environment';
 enum TextContent {
   IDENTITY_LOAD_ERROR = 'Failed to load markets',
   MARKET_LOADING = 'Activating the selected market',
-  MARKET_ACTIVATE_SUCCESS = 'Successfully loaded market',
-  MARKET_ACTIVATE_ERROR = 'Failed to activate and load the selected market'
+  MARKET_ACTIVATE_SUCCESS = 'Successfully switched identity',
+  MARKET_ACTIVATE_ERROR = 'Failed to activate and change to the selected identity',
+  IDENTITY_ADD_SUCCESS = 'Successfully created the new Identity',
+  IDENTITY_ADD_ERROR = 'Failed to create the new Identity',
 }
 
 
@@ -149,6 +152,28 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   openWarningMessage() {
     this._dialog.open(AlphaMainnetWarningComponent);
+  }
+
+
+  openCreateIdentityModal() {
+    this._dialog.open(IdentityAddDetailsModalComponent).afterClosed().pipe(
+      concatMap((idName) => iif(
+        () => (typeof idName === 'string') && (idName.length > 0),
+        defer(() =>
+          this._store.dispatch(new MarketActions.CreateMarketIdentity(idName)).pipe(
+            mapTo(true),
+            catchError(() => of(false)),
+            tap(success => {
+              if (success) {
+                this._snackbar.open(TextContent.IDENTITY_ADD_SUCCESS);
+                return;
+              }
+              this._snackbar.open(TextContent.IDENTITY_ADD_ERROR, 'warn');
+            })
+          )
+        )
+      ))
+    ).subscribe();
   }
 
 

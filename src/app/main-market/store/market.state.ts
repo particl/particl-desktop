@@ -1,5 +1,5 @@
 import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
-import { of, defer, iif, timer } from 'rxjs';
+import { of, defer, iif, timer, throwError } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
@@ -10,6 +10,7 @@ import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
 import { environment } from 'environments/environment';
+import { isBasicObjectType, getValueOrDefault } from '../shared/utils';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -216,7 +217,7 @@ export class MarketState {
 
 
   @Action(MarketActions.LoadIdentities)
-  loadMarketIdentities(ctx: StateContext<MarketStateModel>) {
+  loadIdentities(ctx: StateContext<MarketStateModel>) {
     const state = ctx.getState();
     if ((state.started === StartedStatus.STARTED) || (state.started === StartedStatus.PENDING)) {
       const profileId = state.profile.id;
@@ -227,25 +228,9 @@ export class MarketState {
         map((identityList: RespIdentityListItem[]) => {
           const ids: Identity[] = [];
           identityList.forEach((idItem: RespIdentityListItem) => {
-            if (idItem.type === 'MARKET') {
-              const idName = String(idItem.wallet.split(`${state.profile.name}/`)[1]);
-              const availableCarts: CartDetail[] = [];
-              if (idItem.ShoppingCarts && idItem.ShoppingCarts.length) {
-                idItem.ShoppingCarts.forEach(cart => {
-                  if (cart && (+cart.id > 0)) {
-                    availableCarts.push({id: +cart.id, name: typeof cart.name === 'string' ? cart.name : ''});
-                  }
-                });
-              }
-              ids.push({
-                name: idItem.wallet,
-                displayName: idName,
-                icon: idName[0],
-                address: idItem.address,
-                path: idItem.path,
-                id: idItem.id,
-                carts: availableCarts
-              });
+            const id = this.buildIdentityItem(idItem, state.profile.name);
+            if (id.id > 0) {
+              ids.push(id);
             }
           });
 
@@ -324,6 +309,32 @@ export class MarketState {
   }
 
 
+  @Action(MarketActions.CreateMarketIdentity)
+  createMarketIdentity(ctx: StateContext<MarketStateModel>, { identityName }: MarketActions.CreateMarketIdentity) {
+
+    if (typeof identityName !== 'string' && !identityName) {
+      return throwError(() => of('Invalid Identity Name'));
+    }
+
+    const state = ctx.getState();
+
+    if (state.started !== StartedStatus.STARTED) {
+      return throwError(() => of('Market Not Started'));
+    }
+
+    const profileId = state.profile.id;
+
+    return this._marketService.call('identity', ['add', profileId, identityName]).pipe(
+      tap((identityResp: RespIdentityListItem) => {
+        const newId = this.buildIdentityItem(identityResp, state.profile.name);
+        if ((newId.id > 0) && (ctx.getState().profile.id === profileId)) {
+          ctx.patchState({ identities: [...ctx.getState().identities, newId]});
+        }
+      })
+    );
+  }
+
+
   @Action(MarketActions.SetSetting)
   changeMarketSetting(ctx: StateContext<MarketStateModel>, action: MarketActions.SetSetting) {
     const currentState = ctx.getState();
@@ -372,6 +383,51 @@ export class MarketState {
     }
 
     ctx.patchState({settings: newStateSettings});
+  }
+
+
+  private buildIdentityItem(src: RespIdentityListItem, profileName: string): Identity {
+    const newItem: Identity = {
+      id: 0,
+      name: '',
+      displayName: '',
+      icon: '',
+      address: '',
+      carts: [],
+      path: ''
+    };
+
+    if (!isBasicObjectType(src)) {
+      return newItem;
+    }
+
+    if (src.type === 'MARKET') {
+      newItem.name = getValueOrDefault(src.wallet, 'string', newItem.name);
+      if (profileName) {
+        const parts = newItem.name.split(`${profileName}/`);
+        if (parts.length >= 2) {
+          newItem.displayName = parts[1];
+        } else {
+          newItem.displayName = name;
+        }
+      }
+
+      newItem.icon = newItem.displayName[0];
+      newItem.address = getValueOrDefault(src.address, 'string', newItem.address);
+
+      if (Array.isArray(src.ShoppingCarts)) {
+        src.ShoppingCarts.forEach(cart => {
+          if (isBasicObjectType(cart) && (+cart.id > 0)) {
+            newItem.carts.push({id: +cart.id, name: typeof cart.name === 'string' ? cart.name : ''});
+          }
+        });
+      }
+
+      newItem.id = +src.id > 0 ? +src.id : newItem.id;
+    }
+
+    return newItem;
+
   }
 
 }

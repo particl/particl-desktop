@@ -23,6 +23,13 @@
             </div>
           </a>
         </div>
+        <a class="item" tabindex="0" appDebounceClick (debounceClick)="openCreateIdentityModal()">
+          <div class="icon">+</div>
+          <div class="text">
+            <div class="name"><em>New identity</em></div>
+            <div class="value">Click to setup&hellip;</div>
+          </div>
+        </a>
       </ng-template>
 
     </mat-expansion-panel>
@@ -63,7 +70,7 @@
   <main-topbar></main-topbar>
 
   <div class="alpha-warning" fxLayoutAlign="stretch stretch" *ngIf="isWarningVisible">
-    <button class="button tiny" mat-button color="warn" (click)="openWarningMessage()" fxFlex="1 1 100%">
+    <button class="button tiny" mat-button color="warn" appDebounceClick (debounceClick)="openWarningMessage()" fxFlex="1 1 100%">
       <mat-icon fontIcon="part-alert"></mat-icon>
       The Particl Marketplace is still in development - use it at your own risk!
       (Click here to read all the details first!)
