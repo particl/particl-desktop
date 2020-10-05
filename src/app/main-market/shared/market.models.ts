@@ -254,7 +254,15 @@ export interface RespIdentityMarketItem {
 
 
 export interface RespMarketListMarketItem extends RespIdentityMarketItem {
-  FlaggedItem: any;
+  FlaggedItem: {
+    id: number;
+    listingItemId: null;
+    marketId: number;
+    proposalId: number;
+    reason: string;
+    createdAt: number;
+    updatedAt: number;
+  };
   Profile: RespGeneralProfile;
   Identity: any;
   Image?: null | {

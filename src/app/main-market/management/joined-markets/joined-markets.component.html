@@ -104,7 +104,7 @@
               <p class="desc">
                 {{ marketItem.summary }}
               </p>
-              <div *ngIf="marketItem.marketType === marketTypeOptions.STOREFRONT_ADMIN" class="keys" fxLayout fxLayoutGap="30px">
+              <div class="keys" fxLayout fxLayoutGap="30px">
                 <div class="public" fxFlex="50%">
                   <h3 class="box-title">
                     Market ID
@@ -119,9 +119,22 @@
                   </p>
                 </div>
                 <div class="private" fxFlex="50%">
-                  <ng-container *ngIf="marketItem.pubishKey !== null">
+                  <ng-container *ngIf="marketTypeOptions.MARKETPLACE !== marketItem.marketType">
                     <h3 class="box-title">
-                      Publish key
+                      Market Access Key
+                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishAddress || ''" (click)="actionCopiedToClipBoard()">
+                        <mat-icon fontIcon="part-copy"></mat-icon>
+                        Copy
+                      </button>
+                    </h3>
+                    <div class="key">{{ marketItem.publishAddress }}</div>
+                    <p class="help-text">
+                      This access key allows for someone to join this market and only make purchases (ie: cannot create new product listings).
+                    </p>
+                  </ng-container>
+                  <ng-container *ngIf="marketTypeOptions.STOREFRONT !== marketItem.marketType">
+                    <h3 class="box-title">
+                      Market Publish Key
                       <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishKey || ''" (click)="actionCopiedToClipBoard()">
                         <mat-icon fontIcon="part-copy"></mat-icon>
                         Copy
@@ -129,7 +142,7 @@
                     </h3>
                     <div class="key">{{ marketItem.publishKey }}</div>
                     <p class="help-text">
-                      Whoever has this Private key will have access for selling on your Market. Share it with trusted people only (e.g. colleagues from your Store)!
+                      Whoever has this Publish key will have access to selling on your Market. Share it with trusted people only (e.g. colleagues from your Store)
                     </p>
                   </ng-container>
                 </div>

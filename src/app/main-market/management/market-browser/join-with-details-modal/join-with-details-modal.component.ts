@@ -1,22 +1,13 @@
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import { Subject } from 'rxjs';
-import { takeUntil, tap, finalize } from 'rxjs/operators';
+import {  finalize } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../../management.service';
 import { CreateMarketRequest } from '../../management.models';
 import { MarketType } from '../../../shared/market.models';
-
-
-function marketKeyValidator(): ValidatorFn {
-  return (control: FormGroup): ValidationErrors | null => {
-    const type = control.get('marketType');
-    const keyPublish = control.get('marketType');
-    return { 'marketkey': true };
-  };
-}
+import { AddressHelper } from 'app/core/util/utils';
 
 
 enum TextContent {
@@ -30,20 +21,16 @@ enum TextContent {
   templateUrl: './join-with-details-modal.component.html',
   styleUrls: ['./join-with-details-modal.component.scss']
 })
-export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnDestroy {
+export class JoinWithDetailsModalComponent implements AfterViewInit {
 
 
-  isProcessing: boolean = false;
-  marketTypeOptions: typeof MarketType = MarketType;
-  optionsMarketRegions: {value: string; label: string}[];
+  readonly marketTypeOptions: typeof MarketType = MarketType;
+  readonly optionsMarketRegions: {value: string; label: string}[];
 
-  marketForm: FormGroup;
-
+  readonly marketForm: FormGroup;
   readonly MAX_NAME: number;
   readonly MAX_SUMMARY: number;
 
-
-  private destroy$: Subject<void> = new Subject();
 
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
   @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
@@ -58,23 +45,14 @@ export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnD
       name: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_NAME)]),
       summary: new FormControl('', [Validators.maxLength(this.MAX_SUMMARY)]),
       image: new FormControl(''),
-      marketType: new FormControl('', [Validators.required]),
       region: new FormControl(''),
       keyReceive: new FormControl('', [Validators.required]), // TODO: implement validations
-      keyPublish: new FormControl('')  // TODO: implement validations
+      keyPublish: new FormControl('', [Validators.required])  // TODO: implement validations
     });
 
     this.optionsMarketRegions = this._manageService.getMarketRegions();
     this.MAX_NAME = this._manageService.MAX_MARKET_NAME;
     this.MAX_SUMMARY = this._manageService.MAX_MARKET_SUMMARY;
-  }
-
-
-  ngOnInit() {
-    this.marketForm.get('marketType').valueChanges.pipe(
-      tap(() => this.marketForm.get('keyPublish').setValue('')),
-      takeUntil(this.destroy$)
-    ).subscribe();
   }
 
 
@@ -94,18 +72,8 @@ export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnD
   }
 
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-
   get formImageControl(): AbstractControl {
     return this.marketForm.get('image');
-  }
-
-  get formMarketTypeControl(): AbstractControl {
-    return this.marketForm.get('marketType');
   }
 
 
@@ -115,27 +83,30 @@ export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnD
 
 
   doAction(): void {
-    if (!this.marketForm.valid || this.isProcessing) {
+    if (!this.marketForm.valid || this.marketForm.disabled) {
       return;
     }
-    this.isProcessing = true;
+    this.marketForm.disable();
+
+    const descReq = this.marketForm.get('summary').value;
+    const regionReq = this.marketForm.get('region').value;
+    const imageReq = this.marketForm.get('image').value;
+    const recKey = this.marketForm.get('keyReceive').value;
+    const pubKey = this.marketForm.get('keyPublish').value;
 
     const createRequest: CreateMarketRequest = {
       name: this.marketForm.get('name').value,
-      marketType: this.marketForm.get('marketType').value
+      marketType: MarketType.MARKETPLACE,
     };
 
-    const descReq = this.marketForm.get('summary').value;
     if (descReq.length) {
       createRequest.description = descReq;
     }
 
-    const regionReq = this.marketForm.get('region').value;
     if (regionReq.length) {
       createRequest.region = regionReq;
     }
 
-    const imageReq = this.marketForm.get('image').value;
     if (imageReq.length) {
       createRequest.image = {
         data: imageReq,
@@ -143,26 +114,19 @@ export class JoinWithDetailsModalComponent implements OnInit, AfterViewInit, OnD
       };
     }
 
-    const recKey = this.marketForm.get('keyReceive').value;
-    const pubKey = this.marketForm.get('keyPublish').value;
+    createRequest.receiveKey = recKey || '';
+    createRequest.publishKey = pubKey || '';
 
-    createRequest.receiveKey = recKey;
+    const addressHelper = new AddressHelper();
 
-    if (pubKey) {
-      createRequest.publishKey = pubKey;
-
-      if (pubKey === recKey) {
-        createRequest.marketType = MarketType.MARKETPLACE;
-      }
-
-    } else {
-      if (createRequest.marketType === MarketType.MARKETPLACE) {
-        createRequest.publishKey = recKey;
-      }
+    if (addressHelper.testAddress(pubKey, 'public')) {
+      createRequest.marketType = MarketType.STOREFRONT;
+    } else if (recKey !== pubKey) {
+      createRequest.marketType = MarketType.STOREFRONT_ADMIN;
     }
 
     this._manageService.createMarket(createRequest).pipe(
-      finalize(() => this.isProcessing = false)
+      finalize(() => this.marketForm.enable())
     ).subscribe(
       (market) => {
         this._snackbar.open(TextContent.MARKET_JOIN_SUCCESS);

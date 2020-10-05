@@ -97,12 +97,12 @@ export class AddressHelper {
   addressPrivateRegex: RegExp = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/ ;
   addressBothRegex: RegExp = /^[pPrR25tT][a-km-zA-HJ-NP-Z1-9]{25,}$/ ;
 
-  testAddress(address: string, type?: string): boolean {
+  testAddress(address: string, type?: 'public' | 'private'): boolean {
     return this[(type ? type === 'public'
     ? 'addressPublicRegex' : 'addressPrivateRegex' : 'addressBothRegex')].test(address);
   }
 
-  getAddressType(address: string): string {
+  getAddressType(address: 'public' | 'private'): string {
     return (this.testAddress(address) ?
       (this.testAddress(address, 'public') ? 'public' : 'private') :
       '');

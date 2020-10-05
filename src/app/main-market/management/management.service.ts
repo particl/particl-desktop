@@ -17,7 +17,7 @@ enum TextContent {
   LABEL_REGION_NORTH_AMERICA = 'North Americas',
   LABEL_REGION_SOUTH_AMERICA = 'Cerntral & Southern America',
   LABEL_REGION_EUROPE = 'Europe',
-  LABEL_REGION_MIDDLE_EAST_AFRICA = 'WMiddle East & Africa',
+  LABEL_REGION_MIDDLE_EAST_AFRICA = 'Middle East & Africa',
   LABEL_REGION_ASIA_PACIFIC = 'Asia Pacific'
 }
 
@@ -237,7 +237,8 @@ export class MarketManagementService {
       },
       marketType: MarketType.MARKETPLACE,
       receiveKey: '',
-      publishKey: null,
+      publishKey: '',
+      publishAddress: ''
     };
 
     if (!isBasicObjectType(src)) {
@@ -265,6 +266,7 @@ export class MarketManagementService {
     newItem.region.value = regionMarket;
     newItem.receiveKey = getValueOrDefault(src.receiveKey, 'string', newItem.receiveKey);
     newItem.publishKey = getValueOrDefault(src.publishKey, 'string', newItem.publishKey);
+    newItem.publishAddress = getValueOrDefault(src.publishAddress, 'string', newItem.publishAddress);
 
     return newItem;
   }

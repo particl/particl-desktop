@@ -10,7 +10,7 @@
   "keywords": [
     "particl",
     "angular2",
-    "angular7",
+    "angular8",
     "angular-cli",
     "electron",
     "webpack",
@@ -194,8 +194,8 @@
     "got": "^9.6.0",
     "hammerjs": "^2.0.8",
     "lodash": "^4.17.11",
-    "ngx-material-file-input": "^2.0.0",
     "ngx-infinite-scroll": "^8.0.0",
+    "ngx-material-file-input": "^2.0.0",
     "node-unzip-2": "^0.2.1",
     "particl-bot-manager": "^0.0.15",
     "particl-market-import-core": "^0.0.11",

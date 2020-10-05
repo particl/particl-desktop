@@ -26,6 +26,7 @@ export interface JoinedMarket {
   marketType: MarketType;
   receiveKey: string;
   publishKey: string | null;
+  publishAddress: string;  // For storefront related usage
   governance?: {
     proposalHash: string;
     voteCast: number;

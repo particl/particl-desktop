@@ -63,46 +63,10 @@
 
       </mat-card><!-- market details -->
 
-      <!-- @TODO: The market type and the ID/key input should probably be first in this modal -->
-      <!-- @TODO: The market type selection maybe requires some additional text around it, to indicate the dangers of selecting the wrong type of market :) -->
-      <!-- @TODO: The help text below, for each option, definitely needs some re-working! -->
-      <h2 class="section-title">
-        Market type
-      </h2>
-
-      <mat-card fxLayout fxLayoutGap="30px" class="market-type">
-        <mat-radio-group name="marketType" formControlName="marketType">
-          <div>
-            <mat-radio-button name="market-type" [value]="marketTypeOptions.STOREFRONT" class="larger" color="accent">
-              Storefront
-            </mat-radio-button>
-            <p class="help-text">
-              Use this option if you only have the market ID and you know that you will not be able to publish product listings to the market.
-            </p>
-          </div>
-          <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
-          <div>
-            <mat-radio-button name="market-type" [value]="marketTypeOptions.STOREFRONT_ADMIN" class="larger" color="accent">
-              Storefront Admin
-            </mat-radio-button>
-            <p class="help-text">
-              The market ID and publish key differs. NB! Ensure that the publish key (if obtained) is correct - inputting an invalid publish key will prevent your published product listings from being received by buyers
-            </p>
-          </div>
-          <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
-          <div>
-            <mat-radio-button name="market-type" [value]="marketTypeOptions.MARKETPLACE" class="larger" color="accent">
-              Community Market
-            </mat-radio-button>
-            <p class="help-text">
-              Anybody can publish product listings to this market -OR- you have both the market ID and the publish key and they are the same
-            </p>
-          </div>
-        </mat-radio-group>
-      </mat-card><!-- market type -->
+      <!-- @TODO: The market type and the ID/key input should probably be first in this modal, followed by name and then all the optional inputs (description, image, region, etc) -->
 
       <h2 class="section-title">
-        Market ID and possible publish key
+        Market ID and Access/Publish Key
       </h2>
 
       <mat-card class="market-type">
@@ -113,14 +77,13 @@
           </mat-form-field>
         </label>
 
-        <label *ngIf="formMarketTypeControl.value !== marketTypeOptions.MARKETPLACE">
+        <label>
           <mat-form-field class="--larger --plain" appearance="fill">
-            <h3 class="label">Publish key</h3>
-            <input matInput placeholder="Optional key allowing products listings to be created" formControlName="keyPublish">
+            <h3 class="label">Access/Publish key</h3>
+            <input matInput placeholder="Market Key of the market to be joined" formControlName="keyPublish">
           </mat-form-field>
         </label>
 
-        <p>marketType Value is: {{ formMarketTypeControl.value }}</p>
       </mat-card><!-- market type -->
 
 
@@ -147,7 +110,7 @@
     <mat-icon fontIcon="part-cross"></mat-icon>
     Close
   </button>
-  <button mat-raised-button color="warn" [disabled]="marketForm.invalid || isProcessing" appDebounceClick (debounceClick)="doAction()">
+  <button mat-raised-button color="warn" [disabled]="marketForm.invalid || marketForm.disabled" appDebounceClick (debounceClick)="doAction()">
     <mat-icon fontIcon="part-circle-plus"></mat-icon>
     Join Existing Market
   </button>
