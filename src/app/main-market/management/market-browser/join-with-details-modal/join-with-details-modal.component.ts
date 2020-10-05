@@ -46,8 +46,8 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
       summary: new FormControl('', [Validators.maxLength(this.MAX_SUMMARY)]),
       image: new FormControl(''),
       region: new FormControl(''),
-      keyReceive: new FormControl('', [Validators.required]), // TODO: implement validations
-      keyPublish: new FormControl('', [Validators.required])  // TODO: implement validations
+      keyReceive: new FormControl('', [Validators.required, Validators.minLength(25)]),
+      keyPublish: new FormControl('', [Validators.required, Validators.minLength(25)])
     });
 
     this.optionsMarketRegions = this._manageService.getMarketRegions();

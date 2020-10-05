@@ -51,7 +51,7 @@ export class DetailAddressComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if ('address' in changes) {
       const address: FilteredAddress = changes.address.currentValue;
-      this._addressType = (new AddressHelper()).getAddressType(address.address) as AddressType;
+      this._addressType = (new AddressHelper()).getAddressType(address.address as AddressType) as AddressType;
       this.isEditing = false;
       this.newLabel = address.label || '';
 
