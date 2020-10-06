@@ -86,11 +86,14 @@
                       <mat-icon fontIcon="part-verified"></mat-icon>
                       Admin
                     </span>
-                    <span class="market-type">
+                    <span class="market-type tag">
                       <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
                       <ng-template #marketTypeStorefront>Storefront</ng-template>
                     </span>
-                    <span class="market-type">{{ marketItem.region.label }}</span>
+                    <span class="market-region">
+                      <mat-icon fontIcon="part-globe"></mat-icon>
+                      {{ marketItem.region.label }}
+                    </span>
                   </div>
                 </div><!-- .meta -->
               </div>

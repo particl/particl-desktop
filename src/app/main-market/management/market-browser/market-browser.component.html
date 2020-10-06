@@ -85,8 +85,11 @@
                     <span class="name">{{ marketItem.name }}</span>
                     </h3>
                   <div class="desc">
-                    <span class="market-type"><ng-container *ngIf="marketItem.publishKey === null; else marketTypeMarketplace">Storefront</ng-container><ng-template #marketTypeMarketplace>Marketplace</ng-template></span>
-                    <span class="market-type">{{ marketItem.region.label }}</span>
+                    <span class="market-type tag">
+                      <ng-container *ngIf="marketItem.publishKey === null; else marketTypeMarketplace">Storefront</ng-container>
+                      <ng-template #marketTypeMarketplace>Community Market</ng-template>
+                    </span>
+                    <span class="market-region">{{ marketItem.region.label }}</span>
                   </div>
                 </div><!-- .meta -->
               </div>
@@ -116,9 +119,9 @@
 
     <ng-template #noMarketsVisible>
       <div class="no-results" *ngIf="marketsList.length === 0">
-        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No markets available">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets available">
         <p>
-          No markets promoted
+          No Markets promoted
         </p>
         <p class="help-text">
           If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
@@ -127,12 +130,12 @@
 
       <!-- when searching/filtering: -->
       <div class="no-results" *ngIf="marketsList.length > 0">
-        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No markets matching filter criteria">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
         <p>
           No Markets found
         </p>
         <p class="help-text">
-          If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
+          Sorry, we haven't found any Market matching your criteria
         </p>
       </div>
     </ng-template>
