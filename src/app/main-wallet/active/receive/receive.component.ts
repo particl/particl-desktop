@@ -118,7 +118,7 @@ export class ReceiveComponent implements OnInit {
               label: this.DEFAULT_LABEL,
               owned: 'true',
               root: '',
-              id: tab.activeAddress.id + 1
+              id: (tab.activeAddress.id || -1) + 1
             };
 
             tab.activeAddress = newAddress;
