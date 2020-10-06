@@ -13,14 +13,14 @@
     <p class="desc">
       <ng-content select="[page-content]"></ng-content>
     </p>
-    <p class="message --info" #pageInfo>
-      <ng-content select="[page-info]"></ng-content>
-    </p>
-    <p class="message --warning" #pageWarning>
-      <ng-content select="[page-warning]"></ng-content>
-    </p>
     <p class="help-text">
       <ng-content select="[page-help]"></ng-content>
+    </p>
+    <p class="alert --boxed --info" #pageInfo>
+      <ng-content select="[page-info]"></ng-content>
+    </p>
+    <p class="alert --boxed --warning" #pageWarning>
+      <ng-content select="[page-warning]"></ng-content>
     </p>
   </div>
 </div> <!-- .page-intro -->

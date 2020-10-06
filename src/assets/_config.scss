@@ -69,6 +69,9 @@ $break-xhd: 2200px;
   --color-warning: hsl(41, 100%, 47%); // warnings, caution (default: yellow-orange)
   --color-warning-hsl: 41, 100%, 47%;
 
+  --color-warning-alt: hsl(24, 82%, 49%); // orange (between alert and warning)
+  --color-warning-alt-hsl: 24, 82%, 49%;
+
   --color-info: var(--color-secondary); // informative (default: blue-ish)
   --color-info-hsl: var(--color-secondary-hsl);
 
