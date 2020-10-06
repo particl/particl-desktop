@@ -262,6 +262,7 @@ export interface RespMarketListMarketItem extends RespIdentityMarketItem {
     reason: string;
     createdAt: number;
     updatedAt: number;
+    Proposal?: Proposal;
   };
   Profile: RespGeneralProfile;
   Identity: any;

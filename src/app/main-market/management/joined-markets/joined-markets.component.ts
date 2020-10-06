@@ -2,22 +2,24 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, merge, defer, of, iif } from 'rxjs';
-import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, take, concatMap } from 'rxjs/operators';
+import { Observable, Subject, merge, defer, of, iif, throwError } from 'rxjs';
+import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, take, concatMap, filter } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
+import { MarketState } from 'app/main-market/store/market.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { MarketManagementService } from '../management.service';
+import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
 import { LeaveMarketConfirmationModalComponent } from './leave-market-modal/leave-market-modal.component';
 import { CategoryEditorModalComponent } from './category-editor-modal/category-editor-modal.component';
 import { PromoteMarketConfirmationModalComponent } from './promote-market-modal/promote-market-modal.component';
-import { JoinedMarket } from '../management.models';
+import { MarketGovernanceModalComponent } from '../market-governance-modal/market-governance-modal.component';
+import { getValueOrDefault, isBasicObjectType } from 'app/main-market/shared/utils';
+import { JoinedMarket, GovernanceActions } from '../management.models';
 import { MarketType } from 'app/main-market/shared/market.models';
 import { GenericModalInfo } from './joined-markets.models';
-import { getValueOrDefault } from 'app/main-market/shared/utils';
-import { MarketState } from 'app/main-market/store/market.state';
 
 
 enum TextContent {
@@ -26,7 +28,9 @@ enum TextContent {
   LEAVE_MARKET_ERROR_GENERIC = 'Error while attempting to leave the market',
   LEAVE_MARKET_ERROR_DEFAULT_MARKET = 'A default market cannot be removed',
   PROMOTION_SUCCESS = 'Successfully promoted the market!',
-  PROMOTION_ERROR = 'Failed to promote the market'
+  PROMOTION_ERROR = 'Failed to promote the market',
+  GOVERNANCE_ACTION_SUCCESS = 'Successfully actioned the market',
+  GOVERNANCE_ACTION_FAILURE = 'Failed to take action on the market. Please try again',
 }
 
 
@@ -73,6 +77,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
     private _store: Store,
+    private _socket: MarketSocketService,
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
@@ -117,7 +122,9 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
       ),
 
       this.filterRegionControl.valueChanges.pipe(takeUntil(this.destroy$)),
+
       this.filterTypeControl.valueChanges.pipe(takeUntil(this.destroy$))
+
     ).pipe(
       tap(() => this.renderFilteredControl.setValue(null)),
       takeUntil(this.destroy$)
@@ -132,10 +139,29 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    const flagMsgListener$ = this._socket.getSocketMessageListener('MPA_PROPOSAL_ADD').pipe(
+      filter((msg) => isBasicObjectType(msg) &&
+        (msg.category === 'MARKET_VOTE') &&
+        (typeof msg.target === 'string') &&
+        (msg.target.length > 0) &&
+        (typeof msg.hash === 'string') &&
+        (msg.hash.length > 0)
+      ),
+      tap((msg) => {
+        const found = this.marketsList.find(m => m.receiveAddress === msg.target);
+        if (found && !found.isFlagged) {
+          found.isFlagged = true;
+          this._cdr.detectChanges();
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
+
     merge(
       identityChange$,
       filterChange$,
-      render$
+      render$,
+      flagMsgListener$
     ).subscribe();
   }
 
@@ -269,13 +295,52 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   }
 
 
-  actionVoteKeep(marketId: number) {
+  actionOpenGovernanceModal(marketId: number) {
+    this._dialog.open(
+      MarketGovernanceModalComponent,
+      { data: { marketId } }
+    ).afterClosed().pipe(
 
-  }
+      concatMap((resp: any) => iif(
+        () => isBasicObjectType(resp) && (typeof resp.proposalHash === 'string') && (+resp.marketId > 0) && (+resp.action > 0),
 
+        defer(() => this._unlocker.unlock({timeout: 30}).pipe(
+          concatMap((isUnlocked) => iif(
+            () => isUnlocked,
 
-  actionVoteRemove(marketId: number) {
+            defer(() => {
+              let obs$: Observable<any>;
 
+              switch (resp.action) {
+                case GovernanceActions.FLAG: obs$ = this._manageService.flagMarket(+resp.marketId); break;
+                case GovernanceActions.VOTE_KEEP:
+                case GovernanceActions.VOTE_REMOVE:
+                  obs$ = this._manageService.voteForMarket(+resp.marketId, resp.proposalHash, +resp.voteCast); break;
+              }
+
+              if (obs$ !== undefined) {
+                return obs$;
+              }
+
+              return throwError(() => of('INVALID ACTION'));
+            })
+          ))
+        ))
+
+      ))
+    ).subscribe(
+      () => {
+        this._snackbar.open(TextContent.GOVERNANCE_ACTION_SUCCESS);
+        const foundMarket = this.marketsList.find(m => m.id === marketId);
+        if (foundMarket && !foundMarket.isFlagged) {
+          foundMarket.isFlagged = true;
+          this._cdr.detectChanges();
+        }
+      },
+      () => {
+        this._snackbar.open(TextContent.GOVERNANCE_ACTION_FAILURE, 'warn');
+      }
+    );
   }
 
 

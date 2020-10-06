@@ -1,0 +1,85 @@
+<mat-dialog-title fxLayout fxLayoutAlign="space-between center">
+  Market Governance
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity&#13; applying the governance measures below" matTooltipPosition="after" matTooltipClass="multi-line">
+    <div class="avatar">{{ currentIdentity.image }}</div>
+    <div class="text">
+      <div class="identity-name">{{ currentIdentity.name }}</div>
+      <div class="available-balance">Publishing balance: {{ currentBalance }}</div>
+    </div>
+  </div>
+</mat-dialog-title>
+
+
+<!-- Has not been flagged yet-->
+<ng-container *ngIf="proposalHash.length === 0 else flaggedMarketView">
+
+  <mat-dialog-content>
+    <div class="no-results" *ngIf="isLoading">
+      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="Retrieving market's governance details">
+      <p>
+        Retrieving market's governance details
+      </p>
+    </div>
+
+    <div class="row" *ngIf="!isLoading">
+      <div class="text">
+        <p class="lead">
+          Certain you want to flag this market?
+        </p>
+        <p class="help-text">
+          About to indicate that this market should be removed. Others may vote to indicate their preference, blah blah blah
+        </p>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" *ngIf="!isLoading" appDebounceClick (debounceClick)="doAction(GovernanceActions.FLAG)">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Flag this market
+    </button>
+  </mat-dialog-actions>
+
+</ng-container>
+
+
+<ng-template #flaggedMarketView>
+
+  <mat-dialog-content>
+    <div class="row">
+      <div class="text">
+        <p class="lead">
+          The market has been flagged previously.
+        </p>
+        <p class="help-text">
+          You can choose to help remove it, or help keep it visible and active. Choose wisely, young padawan
+        </p>
+      </div>
+      <div class="text" *ngIf="+voteCastId >= 0">
+        <p *ngIf="+voteCastId === +voteRemoveId"> Seem to have voted previously to remove this item</p>
+        <p *ngIf="+voteCastId === +voteKeepId"> Seem to have voted previously to keep this item</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+
+    <button mat-raised-button color="warn" *ngIf="(voteCastId === -1) || (voteCastId === voteKeepId)" appDebounceClick (debounceClick)="doAction(GovernanceActions.VOTE_REMOVE)">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Remove Market
+    </button>
+    <button mat-raised-button color="primary" *ngIf="(voteCastId === -1) || (voteCastId === voteRemoveId)" appDebounceClick (debounceClick)="doAction(GovernanceActions.VOTE_KEEP)">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Keep Market
+    </button>
+  </mat-dialog-actions>
+
+</ng-template>

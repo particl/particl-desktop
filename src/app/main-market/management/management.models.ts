@@ -1,5 +1,13 @@
 import { IMAGE_PROTOCOL, MarketType, MARKET_REGION } from '../shared/market.models';
 
+
+export enum GovernanceActions {
+  FLAG = 1,
+  VOTE_KEEP = 2,
+  VOTE_REMOVE = 3
+}
+
+
 export interface AvailableMarket {
   id: number;
   name: string;
@@ -25,14 +33,10 @@ export interface JoinedMarket {
   };
   marketType: MarketType;
   receiveKey: string;
-  publishKey: string | null;
-  publishAddress: string;  // For storefront related usage
-  governance?: {
-    proposalHash: string;
-    voteCast: number;
-    voteOptionKeep: number;
-    voteOptionRemove: number;
-  };
+  publishKey: string;
+  receiveAddress: string;
+  publishAddress: string;
+  isFlagged: boolean;
 }
 
 
@@ -47,4 +51,13 @@ export interface CreateMarketRequest {
   };
   receiveKey?: string;
   publishKey?: string;
+}
+
+
+export interface MarketGovernanceInfo {
+  marketId: number;
+  proposalHash: string;
+  voteKeepId: number | null;
+  voteRemoveId: number | null;
+  voteCastId: number | null;
 }

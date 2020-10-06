@@ -11,6 +11,7 @@ import { JoinedMarketsComponent } from './joined-markets/joined-markets.componen
 import { LeaveMarketConfirmationModalComponent } from './joined-markets/leave-market-modal/leave-market-modal.component';
 import { PromoteMarketConfirmationModalComponent } from './joined-markets/promote-market-modal/promote-market-modal.component';
 import { CategoryEditorModalComponent } from './joined-markets/category-editor-modal/category-editor-modal.component';
+import { MarketGovernanceModalComponent } from './market-governance-modal/market-governance-modal.component';
 import { MarketManagementService } from './management.service';
 
 
@@ -42,13 +43,17 @@ const routes: Routes = [
     CategoryEditorModalComponent,
 
     CreateMarketComponent,
+
+    MarketGovernanceModalComponent
   ],
   entryComponents: [
     JoinWithDetailsModalComponent,
 
     LeaveMarketConfirmationModalComponent,
     PromoteMarketConfirmationModalComponent,
-    CategoryEditorModalComponent
+    CategoryEditorModalComponent,
+
+    MarketGovernanceModalComponent
   ],
   providers: [
     MarketManagementService

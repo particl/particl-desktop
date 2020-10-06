@@ -69,9 +69,9 @@
 
   <!-- Management > Market list -->
   <div class="markets section with-filter">
+    <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
+      <mat-accordion>
 
-    <mat-accordion>
-      <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
         <ng-container *ngFor="let marketIdx of displayedMarkets; trackBy: trackByMarketIdxFn">
 
           <mat-expansion-panel class="market list-item no-padding" *appVar="marketsList[marketIdx] as marketItem">
@@ -110,10 +110,9 @@
           </mat-expansion-panel><!-- .market -->
 
         </ng-container>
-      </ng-container>
 
-    </mat-accordion>
-
+      </mat-accordion>
+    </ng-container>
 
     <ng-template #noMarketsVisible>
       <div class="no-results" *ngIf="marketsList.length === 0">

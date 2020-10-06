@@ -7,8 +7,8 @@ import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
-import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType } from '../shared/market.models';
-import { AvailableMarket, CreateMarketRequest, JoinedMarket } from './management.models';
+import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet } from '../shared/market.models';
+import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
 
 enum TextContent {
@@ -157,7 +157,6 @@ export class MarketManagementService {
   }
 
 
-  // TODO: return type should be mapped to an JoinedMarket type (or whatever the JoinedMarket page uses)
   createMarket(details: CreateMarketRequest): Observable<JoinedMarket> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
@@ -225,6 +224,70 @@ export class MarketManagementService {
   }
 
 
+  fetchMarketGovernanceDetails(marketId: number): Observable<MarketGovernanceInfo> {
+    // we're not retriving image data, so no need for marketUrl info (which is primarily used for the image processing)
+    return this._rpc.call('market', ['get', marketId, false]).pipe(
+      map((resp: RespMarketListMarketItem) => {
+        const newItem: MarketGovernanceInfo = {
+          marketId,
+          proposalHash: '',
+          voteCastId: null,
+          voteKeepId: null,
+          voteRemoveId: null
+        };
+
+        if (isBasicObjectType(resp) && (+resp.id > 0) && (resp.id === marketId)) {
+          if (isBasicObjectType(resp.FlaggedItem) && isBasicObjectType(resp.FlaggedItem.Proposal)) {
+            newItem.proposalHash = getValueOrDefault(resp.FlaggedItem.Proposal.hash, 'string', newItem.proposalHash);
+          }
+        }
+
+        return newItem;
+      }),
+      concatMap((govInfo) => iif(
+        () => govInfo.proposalHash.length > 0,
+
+        // get the vote related info
+        defer(() => this._rpc.call('vote', ['get', govInfo.marketId, govInfo.proposalHash]).pipe(
+          map((voteResp: RespVoteGet) => {
+            if (isBasicObjectType(voteResp)) {
+              if (isBasicObjectType(voteResp.votedProposalOption) && (+voteResp.votedProposalOption.optionId >= 0)) {
+                govInfo.voteCastId = +voteResp.votedProposalOption.optionId;
+              }
+
+              if (Array.isArray(voteResp.proposalOptions)) {
+                voteResp.proposalOptions.forEach(vo => {
+                  if (isBasicObjectType(vo) && (typeof vo.description === 'string') && (+vo.optionId >= 0)) {
+                    if (vo.description === 'KEEP') {
+                      govInfo.voteKeepId = vo.optionId;
+                    } else if (vo.description === 'REMOVE') {
+                      govInfo.voteRemoveId = vo.optionId;
+                    }
+                  }
+                });
+              }
+            }
+            return govInfo;
+          })
+        )),
+
+        // just return the governance info as is then
+        defer(() => of(govInfo))
+      ))
+    );
+  }
+
+
+  flagMarket(marketId: number): Observable<any> {
+    return this._rpc.call('market', ['flag', marketId]);
+  }
+
+
+  voteForMarket(marketId: number, proposalHash: string, optionId: number): Observable<any> {
+    return this._rpc.call('vote', ['post', marketId, proposalHash, optionId]);
+  }
+
+
   private buildJoinedMarket(src: RespMarketListMarketItem, marketUrl: string): JoinedMarket {
     const newItem: JoinedMarket = {
       id: 0,
@@ -238,7 +301,9 @@ export class MarketManagementService {
       marketType: MarketType.MARKETPLACE,
       receiveKey: '',
       publishKey: '',
-      publishAddress: ''
+      receiveAddress: '',
+      publishAddress: '',
+      isFlagged: false
     };
 
     if (!isBasicObjectType(src)) {
@@ -266,7 +331,9 @@ export class MarketManagementService {
     newItem.region.value = regionMarket;
     newItem.receiveKey = getValueOrDefault(src.receiveKey, 'string', newItem.receiveKey);
     newItem.publishKey = getValueOrDefault(src.publishKey, 'string', newItem.publishKey);
+    newItem.receiveAddress = getValueOrDefault(src.receiveAddress, 'string', newItem.receiveAddress);
     newItem.publishAddress = getValueOrDefault(src.publishAddress, 'string', newItem.publishAddress);
+    newItem.isFlagged = isBasicObjectType(src.FlaggedItem) && (+src.FlaggedItem.id > 0);
 
     return newItem;
   }
