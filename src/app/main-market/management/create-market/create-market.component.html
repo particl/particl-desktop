@@ -17,7 +17,7 @@
       Market details
     </h2>
 
-    <mat-card class="market-details">
+    <mat-card class="market-details no-padding">
 
       <label>
         <mat-form-field class="--larger --plain" appearance="fill">
@@ -36,16 +36,28 @@
       </label>
 
       <div class="market-image" fxLayout>
-        <div #dropArea class="drag-n-drop" fxFlex="130px">
+
+        <!-- No image selected: -->
+        <div #dropArea *ngIf="formImageControl.value.length == 0" class="drag-n-drop image" fxFlex="130px">
           <input class="hide-file" type="file" accept="image/*" #fileInputSelector>
           <button mat-button color="accent" (click)="addImage()" class="small">
             Upload a logo
           </button>
-          <p>or drag'n'drop here</p>
+          <p>or drag'n'drop</p>
         </div>
+        <!-- Image already uploaded: -->
+        <div *ngIf="formImageControl.value.length > 0" class="photo-wrapper image" fxFlex="130px">
+          <img [src]="formImageControl.value">
+          <div class="icons">
+            <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove image" (click)="formImageControl.setValue('')">
+              <mat-icon fontIcon="part-cross"></mat-icon>
+            </button>
+          </div>
+        </div>
+
         <div class="desc" fxFlex="0 1 100%">
           <h3 class="box-title">Market logo/image</h3>
-          <p>Upload your Market logo/photo for customized branding</p>
+          <p>Add a Market logo/photo for customized branding</p>
           <ul>
             <li>Square format only</li>
             <li>Recommended resolution 300 × 300 px</li>
@@ -53,17 +65,7 @@
           </ul>
         </div>
 
-        <div class="gallery">
-
-          <div class="photo-wrapper" *ngIf="formImageControl.value.length > 0">
-            <img [src]="formImageControl.value">
-            <div class="icons">
-              <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="formImageControl.setValue('')">
-              </mat-icon>
-            </div>
-          </div>
-        </div><!-- .gallery -->
-      </div>
+      </div><!-- .market-image -->
 
     </mat-card><!-- market details -->
 
@@ -98,14 +100,14 @@
       Market Region
     </h2>
 
-    <mat-card fxLayout fxLayoutGap="30px" class="market-type">
+    <mat-form-field class="--boxed --larger" appearance="fill">
+      <mat-icon matPrefix fontIcon="part-globe"></mat-icon>
       <mat-select placeholder="Filter by Market" formControlName="region">
         <mat-option *ngFor="let option of optionsMarketRegions" [value]="option.value">
           {{ option.label }}
         </mat-option>
       </mat-select>
-    </mat-card><!-- market region -->
-
+    </mat-form-field>
 
 
     <h2 class="section-title">
@@ -124,14 +126,17 @@
               <span class="name">{{ name.value }}</span>
             </h3>
             <div class="desc">
-              <span class="tag">{{ labelType }}</span>
-              <span class="tag">{{ labelRegion }}</span>
+              <span class="market-type tag">{{ labelType }}</span>
+              <span class="market-region">
+                <mat-icon fontIcon="part-globe"></mat-icon>
+                {{ labelRegion }}
+              </span>
             </div>
           </div><!-- .meta -->
         </div>
       </mat-expansion-panel-header>
       <div class="details">
-        <h2 class="section-title">Market summary</h2>
+        <h3 class="item-subtitle">Market summary</h3>
         <p class="desc">
           {{ description.value }}
         </p>
