@@ -84,7 +84,8 @@ export class MarketManagementService {
                 label: ''
               },
               receiveKey: '',
-              publishKey: null,
+              publishKey: '',
+              marketType: MarketType.STOREFRONT
             };
             if (
               !(+market.profileId > 0) &&
@@ -101,6 +102,7 @@ export class MarketManagementService {
               newMarketItem.region.value = regionMarket;
               newMarketItem.receiveKey = getValueOrDefault(market.receiveKey, 'string', newMarketItem.receiveKey);
               newMarketItem.publishKey = getValueOrDefault(market.publishKey, 'string', newMarketItem.publishKey);
+              newMarketItem.marketType = getValueOrDefault(market.type, 'string', newMarketItem.marketType);
 
               if (isBasicObjectType(market.Image)) {
                 if (

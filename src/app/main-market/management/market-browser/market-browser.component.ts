@@ -9,6 +9,7 @@ import { MarketSocketService } from '../../services/market-rpc/market-socket.ser
 import { MarketManagementService } from '../management.service';
 import { JoinWithDetailsModalComponent } from './join-with-details-modal/join-with-details-modal.component';
 import { AvailableMarket } from '../management.models';
+import { MarketType } from '../../shared/market.models';
 
 
 enum TextContent {
@@ -34,6 +35,8 @@ interface FilterOption {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketBrowserComponent implements OnInit, OnDestroy {
+
+  marketTypeOptions: typeof MarketType = MarketType;
 
   optionsFilterMarketType: FilterOption[] = [
     { label: 'All markets',       value: '' },

@@ -18,7 +18,8 @@ export interface AvailableMarket {
   };
   summary: string;
   receiveKey: string;
-  publishKey: string | null;
+  publishKey: string;
+  marketType: MarketType;
 }
 
 

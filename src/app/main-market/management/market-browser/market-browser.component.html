@@ -86,8 +86,8 @@
                     </h3>
                   <div class="desc">
                     <span class="market-type tag">
-                      <ng-container *ngIf="marketItem.publishKey === null; else marketTypeMarketplace">Storefront</ng-container>
-                      <ng-template #marketTypeMarketplace>Community Market</ng-template>
+                      <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
+                      <ng-template #marketTypeStorefront>Storefront</ng-template>
                     </span>
                     <span class="market-region">{{ marketItem.region.label }}</span>
                   </div>

@@ -6,7 +6,7 @@ import { Observable, Subject, merge, defer, of, iif, throwError } from 'rxjs';
 import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, take, concatMap, filter } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { MarketState } from 'app/main-market/store/market.state';
+import { MarketState } from '../../store/market.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -16,9 +16,9 @@ import { LeaveMarketConfirmationModalComponent } from './leave-market-modal/leav
 import { CategoryEditorModalComponent } from './category-editor-modal/category-editor-modal.component';
 import { PromoteMarketConfirmationModalComponent } from './promote-market-modal/promote-market-modal.component';
 import { MarketGovernanceModalComponent } from '../market-governance-modal/market-governance-modal.component';
-import { getValueOrDefault, isBasicObjectType } from 'app/main-market/shared/utils';
+import { getValueOrDefault, isBasicObjectType } from '../../shared/utils';
 import { JoinedMarket, GovernanceActions } from '../management.models';
-import { MarketType } from 'app/main-market/shared/market.models';
+import { MarketType } from '../../shared/market.models';
 import { GenericModalInfo } from './joined-markets.models';
 
 
