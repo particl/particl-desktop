@@ -66,6 +66,17 @@ export type BuyFlowType = ESCROW_TYPE | 'UNSUPPORTED';
 
 export type BuyFlowOrderType = ORDER_ITEM_STATUS | 'UNKNOWN';
 
+export enum StateStatusClass {
+  NONE = '',
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary',
+  TERTIARY = 'tertiary',
+  ALERT = 'alert',
+  WARNING = 'warning',
+  WARNING_OTHER = 'warning-alt',
+  INACTIVE = 'inactive'
+}
+
 
 // We're not creating a state machine for each and every order. Instead, we create a single state machine for each buyflow type,
 //  and then provides methods to lookup the current state ad actions, for each order. More like a workflow than a state machine...
@@ -98,6 +109,7 @@ export interface BuyFlowState {
     buyer: string;
     seller: string;
   };
+  statusClass: StateStatusClass;
 }
 
 type BuyflowActionType = 'PRIMARY' | 'ALTERNATIVE' | 'PLACEHOLDER_LABEL';

@@ -23,7 +23,8 @@ import {
   BuyFlowState,
   BuyFlowActionStore,
   ActionTransitionParams,
-  BuyflowStateDetails
+  BuyflowStateDetails,
+  StateStatusClass
 } from './orders.models';
 
 
@@ -592,6 +593,8 @@ export class BidOrderService implements IBuyflowController {
     const states: BuyFlowStateStore = {};
     const actions: BuyFlowActionStore = {};
 
+    // States:
+
     states[ORDER_ITEM_STATUS.CREATED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.CREATED,
@@ -600,7 +603,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_CREATED_STATUS_BUYER,
         seller: TextContent.STATE_CREATED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.ALERT
     };
 
     states[ORDER_ITEM_STATUS.REJECTED] = {
@@ -611,7 +615,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_REJECTED_STATUS_BUYER,
         seller: TextContent.STATE_REJECTED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.INACTIVE
     };
 
     states[ORDER_ITEM_STATUS.CANCELLED] = {
@@ -622,7 +627,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_CANCELLED_STATUS_BUYER,
         seller: TextContent.STATE_CANCELLED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.INACTIVE
     };
 
     states[ORDER_ITEM_STATUS.ACCEPTED] = {
@@ -633,7 +639,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_ACCEPTED_STATUS_BUYER,
         seller: TextContent.STATE_ACCEPTED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.WARNING_OTHER
     };
 
     states[ORDER_ITEM_STATUS.ESCROW_REQUESTED] = {
@@ -644,7 +651,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_ESCROW_LOCKED_STATUS_BUYER,
         seller: TextContent.STATE_ESCROW_LOCKED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.WARNING
     };
 
     states[ORDER_ITEM_STATUS.ESCROW_COMPLETED] = {
@@ -655,7 +663,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_ESCROW_COMPLETED_STATUS_BUYER,
         seller: TextContent.STATE_ESCROW_COMPLETED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.PRIMARY
     };
 
     states[ORDER_ITEM_STATUS.SHIPPED] = {
@@ -666,7 +675,8 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_SHIPPED_STATUS_BUYER,
         seller: TextContent.STATE_SHIPPED_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.SECONDARY
     };
 
     states[ORDER_ITEM_STATUS.COMPLETE] = {
@@ -677,9 +687,12 @@ export class BidOrderService implements IBuyflowController {
       stateInfo: {
         buyer: TextContent.STATE_COMPLETE_STATUS_BUYER,
         seller: TextContent.STATE_COMPLETE_STATUS_SELLER
-      }
+      },
+      statusClass: StateStatusClass.TERTIARY
     };
 
+
+    // Actions (the edges between states):
 
     actions[ORDER_ITEM_STATUS.CREATED] = [
       {
@@ -946,7 +959,8 @@ export class BidOrderService implements IBuyflowController {
         stateInfo: {
           buyer: TextContent.STATE_INVALID_STATUSTEXT,
           seller: TextContent.STATE_INVALID_STATUSTEXT,
-        }
+        },
+        statusClass: StateStatusClass.NONE
       }
     };
 
