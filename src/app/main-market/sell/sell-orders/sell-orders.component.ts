@@ -412,12 +412,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       return of([] as OrderItem[]);
     }
 
-    let obs$ = this._orderService.fetchBids(this.viewer);
-    if (Object.keys(this.filterOptionsMarkets).length === 0) {
-      obs$ = throwError('Market Load Error');
-    }
-
-    return obs$.pipe(
+    return this._orderService.fetchBids(this.viewer).pipe(
       catchError(() => {
         this._snackbar.open(TextContent.LOADING_ERROR, 'warn');
         return of([]);
