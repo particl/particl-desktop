@@ -129,13 +129,10 @@ mat-card.listing {
     position: relative;
     cursor: pointer;
     .img {
-      position: absolute; // fill in available space (= square container)
+      @extend %image-center-cover;
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover; // let image cover its container..
-      object-position: center; // ..and center it
     }
   }
   .mat-card-header {

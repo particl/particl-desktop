@@ -80,11 +80,7 @@ button.modal-close {
       width: 100%;
       height: 100%;
       img { // single product image
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: contain;
-        object-position: center;
+        @extend %image-center-cover;
       }
     }
     gallery { // multiple product images in gallery
@@ -244,11 +240,7 @@ button.modal-close {
       height: var(--image-size);
       margin: var(--image-margin);
       img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-        display: block;
+        @extend %image-center-cover;
       }
     }
   }
