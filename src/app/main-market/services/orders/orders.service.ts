@@ -60,7 +60,7 @@ enum TextContent {
   STATE_SHIPPED_STATUS_BUYER = 'Order has been shipped - when you receive it, mark it as delivered and the escrow funds will be released',
   STATE_SHIPPED_STATUS_SELLER = 'Order sent to buyer, waiting for buyer to confirm the delivery',
 
-  STATE_COMPLETE_LABEL = 'Complete',
+  STATE_COMPLETE_LABEL = 'Completed',
   STATE_COMPLETE_STATUS_BUYER = 'Successfully finalized order',
   STATE_COMPLETE_STATUS_SELLER = 'Order delivery confirmed by Buyer - order successfully finalized',
 

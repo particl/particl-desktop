@@ -68,13 +68,13 @@ export type BuyFlowOrderType = ORDER_ITEM_STATUS | 'UNKNOWN';
 
 export enum StateStatusClass {
   NONE = '',
-  PRIMARY = 'primary',
-  SECONDARY = 'secondary',
-  TERTIARY = 'tertiary',
-  ALERT = 'alert',
-  WARNING = 'warning',
-  WARNING_OTHER = 'warning-alt',
-  INACTIVE = 'inactive'
+  PRIMARY = 'color-primary',
+  SECONDARY = 'color-secondary',
+  TERTIARY = 'color-tertiary',
+  ALERT = 'color-alert',
+  WARNING = 'color-warning',
+  WARNING_OTHER = 'color-warning-alt',
+  INACTIVE = 'color-inactive'
 }
 
 

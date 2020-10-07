@@ -195,72 +195,35 @@
       margin-right: 8px;
       background: var(--bg-muted);
     }
-    // Products & Listings
-    &.active .dot {
-      background: var(--color-success);
-    }
-    &.waiting .dot {
-      background: var(--color-warning);
-    }
-    // @TODO Allien: remove unneeded specific statuses below:
-    &.unpublished .dot {
-      background: var(--bg-muted);
-    }
-    &.pending .dot {
-      background: var(--color-warning);
-    }
-    &.published .dot,
-    &.active .dot {
-      background: var(--color-success);
-    }
-    &.expiring .dot {
-      background: var(--color-warning);
-    }
-    &.expired .dot {
+    // Unified status colors
+    &.color-alert .dot { // Order bidding
       background: var(--color-alert);
     }
-    // Orders
-    &.bidding .dot {
+    &.color-warning-alt .dot { // Order accepted
+      background: var(--color-warning-alt);
+    }
+    &.color-warning .dot { // Order escrow
       background: var(--color-warning);
     }
-    &.payment .dot {
-      background: var(--color-confirms-33-pct);
+    &.color-primary .dot,
+    &.color-active .dot { // Order packaging, Bot active
+      background: var(--color-primary);
     }
-    &.escrow .dot {
-      background: var(--color-alert);
+    &.color-secondary .dot { // Order shipping
+      background: var(--color-secondary);
     }
-    &.packaging .dot {
-      background: var(--color-alert);
+    &.color-tertiary .dot { // Order completed
+      background: var(--color-tertiary);
     }
-    &.shipping .dot {
-      background: var(--color-success);
+    &.color-inactive .dot { // Order rejected/cancelled, Bot inactive
+      background: hsla(var(--text-muted-hsl), 0.4);
     }
-    &.complete {
-      color: hsla(var(--text-hsl, 0.5));
-      .dot {
-        background: hsla(var(--color-info-hsl, 0.5));
-      }
-    }
-    &.rejected,
-    &.cancelled {
-      color: hsla(var(--text-hsl, 0.5));
-      .dot {
-        background: var(--bg-muted);
-      }
-    }
-    // animated notifications in Order statuses
-    &.sell.active,
-    &.buy.active,
-    &.sell.bidding,
-    &.buy.payment,
-    &.sell.escrow,
-    &.sell.packaging,
-    &.buy.shipping,
-    &.expired {
-      // + in Listing statuses..
-      // @TODO we can use blink animation for own expired listing in future.
-      // &.expired
-      // {
+    // Pulsing animation for active statuses
+    &.order.sell.color-alert,
+    &.order.buy.color-warning-alt,
+    &.order.sell.color-warning,
+    &.order.sell.color-primary,
+    &.order.buy.color-secondary {
       .dot::after {
         content: '';
         animation: pulse-fade 1s infinite;
@@ -274,27 +237,20 @@
         left: -2px;
       }
     }
-    &.buy.active .dot::after,
-    &.sell.active .dot::after {
-      border-color: var(--color-success);
+    &.order.sell.color-alert .dot::after {
+      border-color: var(--color-alert);
     }
-    &.sell.bidding .dot::after {
+    &.order.buy.color-warning-alt .dot::after {
+      border-color: var(--color-warning-alt);
+    }
+    &.order.sell.color-warning .dot::after {
       border-color: var(--color-warning);
     }
-    &.buy.payment .dot::after {
-      border-color: var(--color-confirms-33-pct);
+    &.order.sell.color-primary .dot::after {
+      border-color: var(--color-primary);
     }
-    &.sell.escrow .dot::after {
-      border-color: var(--color-alert);
-    }
-    &.sell.packaging .dot::after {
-      border-color: var(--color-alert);
-    }
-    &.buy.shipping .dot::after {
-      border-color: var(--color-success);
-    }
-    &.expired .dot::after {
-      border-color: var(--color-alert);
+    &.order.buy.color-secondary .dot::after {
+      border-color: var(--color-secondary);
     }
   }
 }
