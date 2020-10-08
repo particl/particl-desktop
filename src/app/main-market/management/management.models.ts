@@ -35,6 +35,7 @@ export interface JoinedMarket {
   marketType: MarketType;
   receiveKey: string;
   publishKey: string;
+  publishKeyPublic: string;  // distinguishes between storefront (uses this) and storefront_admin (uses publishKey) sharing options
   receiveAddress: string;
   publishAddress: string;
   isFlagged: boolean;

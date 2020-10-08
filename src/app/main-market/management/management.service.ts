@@ -303,6 +303,7 @@ export class MarketManagementService {
       marketType: MarketType.MARKETPLACE,
       receiveKey: '',
       publishKey: '',
+      publishKeyPublic: '',
       receiveAddress: '',
       publishAddress: '',
       isFlagged: false
@@ -336,6 +337,19 @@ export class MarketManagementService {
     newItem.receiveAddress = getValueOrDefault(src.receiveAddress, 'string', newItem.receiveAddress);
     newItem.publishAddress = getValueOrDefault(src.publishAddress, 'string', newItem.publishAddress);
     newItem.isFlagged = isBasicObjectType(src.FlaggedItem) && (+src.FlaggedItem.id > 0);
+
+    switch (newItem.marketType) {
+      // case MarketType.STOREFRONT_ADMIN:
+      //   try {
+      //     newItem.publishKeyPublic = bitcore.PrivateKey.fromWIF(newItem.publishKey).toPublicKey().toString();
+      //   } catch (e) {
+      //     // invalid key perhaps?
+      //   }
+      //   break;
+      case MarketType.STOREFRONT:
+        newItem.publishKeyPublic = newItem.publishKey;
+        break;
+    }
 
     return newItem;
   }

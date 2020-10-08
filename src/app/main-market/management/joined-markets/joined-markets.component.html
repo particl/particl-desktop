@@ -124,12 +124,12 @@
                   <ng-container *ngIf="marketTypeOptions.MARKETPLACE !== marketItem.marketType">
                     <h3 class="box-title">
                       Market Access Key
-                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishAddress || ''" (click)="actionCopiedToClipBoard()">
+                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishKeyPublic || ''" (click)="actionCopiedToClipBoard()">
                         <mat-icon fontIcon="part-copy"></mat-icon>
                         Copy
                       </button>
                     </h3>
-                    <div class="key">{{ marketItem.publishAddress }}</div>
+                    <div class="key">{{ marketItem.publishKeyPublic }}</div>
                     <p class="help-text">
                       This access key allows for someone to join this market and only make purchases (ie: cannot create new product listings).
                     </p>
