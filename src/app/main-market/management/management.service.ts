@@ -270,7 +270,9 @@ export class MarketManagementService {
               }
             }
             return govInfo;
-          })
+          }),
+          // catch the vote get error, because not having a vote throws the error 'No votes found'.
+          catchError(() => of(govInfo))
         )),
 
         // just return the governance info as is then

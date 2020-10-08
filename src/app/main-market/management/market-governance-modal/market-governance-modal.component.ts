@@ -11,7 +11,7 @@ import { WalletUTXOState } from 'app/main/store/main.state';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { isBasicObjectType } from '../../shared/utils';
+import { isBasicObjectType, getValueOrDefault } from '../../shared/utils';
 import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
 import { GovernanceActions } from '../management.models';
 
@@ -84,9 +84,12 @@ export class MarketGovernanceModalComponent implements OnInit, OnDestroy {
     const initLoad$ = this._manageService.fetchMarketGovernanceDetails(this.marketId).pipe(
       tap(info => {
         this.proposalHash = info.proposalHash;
-        this.voteKeepId = +info.voteKeepId >= 0 ? +info.voteKeepId : this.voteKeepId;
-        this.voteRemoveId = +info.voteRemoveId >= 0 ? +info.voteRemoveId : this.voteRemoveId;
-        this.voteCastId = +info.voteCastId >= 0 ? +info.voteCastId : this.voteCastId;
+        this.voteKeepId = getValueOrDefault(info.voteKeepId, 'number', this.voteKeepId) >= 0 ?
+            info.voteKeepId : this.voteKeepId;
+        this.voteRemoveId = getValueOrDefault(info.voteRemoveId, 'number', this.voteRemoveId) >= 0 ?
+            info.voteRemoveId : this.voteRemoveId;
+        this.voteCastId = getValueOrDefault(info.voteCastId, 'number', this.voteCastId) >= 0 ?
+            info.voteCastId : this.voteCastId;
         this.isLoading = false;
       }),
       catchError(err => {
