@@ -228,7 +228,6 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     if ((this.fileInputSelector !== undefined) && (this.fileInputSelector.nativeElement !== undefined)) {
       this.fileInputSelector.nativeElement.value = '';
     }
-    this.fileInputSelector.nativeElement.value = '';
   }
 
 
