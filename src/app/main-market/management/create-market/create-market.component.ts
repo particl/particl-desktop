@@ -126,6 +126,9 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
 
   addImage() {
     this.fileInputSelector.nativeElement.click();
+    // Need to re-bind here since the native element is removed from the DOM once an image has been added, and the
+    //  newly inserted button element doesn't have the onchange event set.
+    this.fileInputSelector.nativeElement.onchange = this.processPictures.bind(this);
   }
 
 
@@ -221,6 +224,9 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     });
     if (failedImgs) {
       this._snackbar.open(TextContent.ERROR_IMAGE_ADD, 'warn');
+    }
+    if ((this.fileInputSelector !== undefined) && (this.fileInputSelector.nativeElement !== undefined)) {
+      this.fileInputSelector.nativeElement.value = '';
     }
     this.fileInputSelector.nativeElement.value = '';
   }

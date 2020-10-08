@@ -82,47 +82,6 @@ form.market-form { // form = stepper content (centered)
   }
 }
 
-/*
-.promote { // promote your Market
-  .header {
-    font-size: 15px;
-    color: var(--text-muted);
-    strong {
-      font-weight: 500;
-      color: var(--text);
-    }
-    .mat-icon {
-      color: var(--color-secondary);
-      margin-right: 16px;
-    }
-  }
-  .details {
-    border-top: 1px dashed var(--bg-muted);
-    padding: 8px 24px 24px;
-    font-size: 13px;
-    .box-title {
-      margin: 14px 0 0;
-    }
-    .promo-duration { // select
-      margin: 6px 0 14px;
-    }
-    table {
-      width: 100%;
-      border-spacing: 0;
-      th {
-        color: var(--text-muted);
-        font-weight: 500;
-        text-align: left;
-        padding: 2px 0;
-      }
-      td {
-        text-align: right;
-      }
-    }
-  }
-}
-*/
-
 .actions { // next/prev buttons
   margin-top: var(--paddingV);
   button {
