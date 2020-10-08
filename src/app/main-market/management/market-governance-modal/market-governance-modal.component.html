@@ -1,6 +1,6 @@
 <mat-dialog-title fxLayout fxLayoutAlign="space-between center">
   Market Governance
-  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity&#13; applying the governance measures below" matTooltipPosition="after" matTooltipClass="multi-line">
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity&#13;voting on the Market" matTooltipPosition="after" matTooltipClass="multi-line">
     <div class="avatar">{{ currentIdentity.image }}</div>
     <div class="text">
       <div class="identity-name">{{ currentIdentity.name }}</div>
@@ -13,7 +13,7 @@
 <!-- Has not been flagged yet-->
 <ng-container *ngIf="proposalHash.length === 0 else flaggedMarketView">
 
-  <mat-dialog-content>
+  <mat-dialog-content class="--muted">
     <div class="no-results" *ngIf="isLoading">
       <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="Retrieving market's governance details">
       <p>
@@ -22,12 +22,18 @@
     </div>
 
     <div class="row" *ngIf="!isLoading">
+      <div class="image">
+        <img class="illustration" src="./assets/app-market/illustrations/flag-market.svg" alt="Flag this Market">
+      </div>
       <div class="text">
         <p class="lead">
-          Certain you want to flag this market?
+          Do you really want to flag this Market?
         </p>
         <p class="help-text">
-          About to indicate that this market should be removed. Others may vote to indicate their preference, blah blah blah
+          This will vote with your coin weight (not spending them) to indicate that you find this Market inappropriate and would like to take it down.
+        </p>
+        <p class="help-text">
+          Other uses can vote as well &ndash; the whole community can determine the result.
         </p>
       </div>
     </div>
@@ -38,8 +44,8 @@
       <mat-icon fontIcon="part-cross"></mat-icon>
       Cancel
     </button>
-    <button mat-raised-button color="primary" *ngIf="!isLoading" appDebounceClick (debounceClick)="doAction(GovernanceActions.FLAG)">
-      <mat-icon fontIcon="part-cross"></mat-icon>
+    <button mat-raised-button color="warn" *ngIf="!isLoading" appDebounceClick (debounceClick)="doAction(GovernanceActions.FLAG)">
+      <mat-icon fontIcon="part-flag"></mat-icon>
       Flag this market
     </button>
   </mat-dialog-actions>
@@ -49,7 +55,7 @@
 
 <ng-template #flaggedMarketView>
 
-  <mat-dialog-content>
+  <mat-dialog-content class="--muted">
     <div class="row">
       <div class="text">
         <p class="lead">
