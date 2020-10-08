@@ -33,21 +33,23 @@
 
         <div class="market-image" fxLayout>
 
-          <!-- No image selected: -->
-          <div #dropArea *ngIf="formImageControl.value.length == 0" class="drag-n-drop image" fxFlex="130px">
-            <input class="hide-file" type="file" accept="image/*" #fileInputSelector>
-            <button mat-button color="accent" (click)="addImage()" class="small">
-              Add custom logo
-            </button>
-            <p>or drag'n'drop</p>
-          </div>
-          <!-- Image already uploaded: -->
-          <div *ngIf="formImageControl.value.length > 0" class="photo-wrapper image" fxFlex="130px">
-            <img [src]="formImageControl.value">
-            <div class="icons">
-              <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove image" (click)="formImageControl.setValue('')">
-                <mat-icon fontIcon="part-cross"></mat-icon>
+          <div #dropArea>
+            <!-- No image selected: -->
+            <div *ngIf="formImageControl.value.length === 0" class="drag-n-drop image" fxFlex="130px">
+              <input class="hide-file" type="file" accept="image/*" #fileInputSelector>
+              <button mat-button color="accent" (click)="addImage()" class="small">
+                Add custom logo
               </button>
+              <p>or drag'n'drop</p>
+            </div>
+            <!-- Image already uploaded: -->
+            <div *ngIf="formImageControl.value.length > 0" class="photo-wrapper image" fxFlex="130px">
+              <img [src]="formImageControl.value">
+              <div class="icons">
+                <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove image" (click)="formImageControl.setValue('')">
+                  <mat-icon fontIcon="part-cross"></mat-icon>
+                </button>
+              </div>
             </div>
           </div>
 
