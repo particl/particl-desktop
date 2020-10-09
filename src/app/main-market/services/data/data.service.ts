@@ -93,7 +93,7 @@ export class DataService {
 
 
   private parseCategories(category: RespCategoryList, marketKey: string = ''): CategoryItem {
-    const item = {
+    const item: CategoryItem = {
       id: category.id,
       name: category.name,
       children: []

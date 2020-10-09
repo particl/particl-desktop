@@ -8,6 +8,7 @@ import { MarketState } from '../store/market.state';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
 import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet } from '../shared/market.models';
+import { CategoryItem } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
 
@@ -289,6 +290,31 @@ export class MarketManagementService {
 
   voteForMarket(marketId: number, proposalHash: string, optionId: number): Observable<any> {
     return this._rpc.call('vote', ['post', marketId, proposalHash, optionId]);
+  }
+
+
+  addCategoryToMarket(categoryName: string, parentCategoryId: number, marketId: number): Observable<CategoryItem> {
+    return this._rpc.call('category', ['add', marketId, categoryName, '', parentCategoryId]).pipe(
+      map(resp => {
+        const newCategory: CategoryItem = {
+          id: 0,
+          name: '',
+          children: []
+        };
+
+        if (isBasicObjectType(resp)) {
+          newCategory.id = +resp.id > 0 ? +resp.id : newCategory.id;
+          newCategory.name = getValueOrDefault(resp.name, 'string', newCategory.name);
+        }
+
+        return newCategory;
+      })
+    );
+  }
+
+
+  removeCategory(categoryId: number): Observable<boolean> {
+    return this._rpc.call('category', ['remove', categoryId]).pipe(mapTo(true));
   }
 
 
