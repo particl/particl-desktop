@@ -14,16 +14,19 @@
 <ng-container *ngIf="proposalHash.length === 0 else flaggedMarketView">
 
   <mat-dialog-content class="--muted">
-    <div class="no-results" *ngIf="isLoading">
-      <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="Retrieving market's governance details">
+    <div class="no-results --smaller" *ngIf="isLoading">
+      <img class="illustration" src="./assets/images/illustrations/loading_animated.svg" alt="Retrieving market's governance details">
       <p>
-        Retrieving market's governance details
+        Loading Market details
+      </p>
+      <p class="help-text">
+        Retrieving market's governance details &ndash; please wait a bit
       </p>
     </div>
 
     <div class="row" *ngIf="!isLoading">
       <div class="image">
-        <img class="illustration" src="./assets/app-market/illustrations/flag-market.svg" alt="Flag this Market">
+        <img class="illustration" src="./assets/app-market/illustrations/market-governance.svg" alt="Flag this Market">
       </div>
       <div class="text">
         <p class="lead">
@@ -57,35 +60,49 @@
 
   <mat-dialog-content class="--muted">
     <div class="row">
+      <div class="image">
+        <img class="illustration" src="./assets/app-market/illustrations/market-governance.svg" alt="Vote on this Market">
+      </div>
       <div class="text">
-        <p class="lead">
-          The market has been flagged previously.
+        <p class="lead" *ngIf="+voteCastId < 0">
+          Do you really want to flag this Market?
+        </p>
+        <p class="lead" *ngIf="+voteCastId >= 0">
+          <span *ngIf="+voteCastId === +voteRemoveId">You already voted to take this Market down</span>
+          <span *ngIf="+voteCastId === +voteKeepId">You already voted to keep this Market online</span>
         </p>
         <p class="help-text">
-          You can choose to help remove it, or help keep it visible and active. Choose wisely, young padawan
+          Somebody already flagged this Market as inappropriate. You can vote to take it down or keep it online.
+        </p>
+        <p class="help-text">
+          Your vote is proportional to the amount of PART coins you own.
         </p>
       </div>
-      <div class="text" *ngIf="+voteCastId >= 0">
-        <p *ngIf="+voteCastId === +voteRemoveId"> Seem to have voted previously to remove this item</p>
-        <p *ngIf="+voteCastId === +voteKeepId"> Seem to have voted previously to keep this item</p>
-      </div>
+      
     </div>
   </mat-dialog-content>
 
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>
-      <mat-icon fontIcon="part-cross"></mat-icon>
-      Cancel
-    </button>
 
-    <button mat-raised-button color="warn" *ngIf="(voteCastId === -1) || (voteCastId === voteKeepId)" appDebounceClick (debounceClick)="doAction(GovernanceActions.VOTE_REMOVE)">
-      <mat-icon fontIcon="part-check"></mat-icon>
-      Remove Market
-    </button>
-    <button mat-raised-button color="primary" *ngIf="(voteCastId === -1) || (voteCastId === voteRemoveId)" appDebounceClick (debounceClick)="doAction(GovernanceActions.VOTE_KEEP)">
-      <mat-icon fontIcon="part-check"></mat-icon>
-      Keep Market
-    </button>
+  <mat-dialog-actions>
+
+    <div class="left">
+      <button mat-button mat-dialog-close>
+        <mat-icon fontIcon="part-cross"></mat-icon>
+        Cancel
+      </button>
+    </div>
+
+    <div class="right">
+      <button mat-raised-button color="primary" *ngIf="(voteCastId === -1) || (voteCastId === voteRemoveId)" appDebounceClick (debounceClick)="doAction(GovernanceActions.VOTE_KEEP)">
+        <mat-icon fontIcon="part-thumb-up"></mat-icon>
+        Keep Market
+      </button>
+      <button mat-raised-button color="warn" *ngIf="(voteCastId === -1) || (voteCastId === voteKeepId)" appDebounceClick (debounceClick)="doAction(GovernanceActions.VOTE_REMOVE)">
+        <mat-icon fontIcon="part-thumb-down"></mat-icon>
+        Remove Market
+      </button>
+    </div>
+
   </mat-dialog-actions>
 
 </ng-template>
