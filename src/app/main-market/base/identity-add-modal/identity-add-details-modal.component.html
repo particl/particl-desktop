@@ -1,35 +1,41 @@
-<mat-dialog-title>Create a new identity</mat-dialog-title>
+<mat-dialog-title>Create a new Market Identity</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<mat-dialog-content>
+<mat-dialog-content class="--muted">
   <div class="row">
 
     <div class="image">
-      <img class="illustration" src="./assets/app-market/illustrations/confirm-shipped.svg" alt="Complete the identity details">
+      <img class="illustration" src="./assets/app-market/illustrations/new-identity.svg" alt="Create a new identity">
     </div>
 
     <div class="text">
       <p class="lead">
-        Provide a name for the new identity
+        Create a new Market Identity
       </p>
       <p class="help-text">
-        The identity name is simply a means for easy distinction between different identities, and is not transmitted in any way.
+        Each wallet behaves like a separate Identity &ndash; this will basically create a new Market-enabled wallet for you.
+      </p>
+      <p class="help-text">
+        The Identity name is simply a means for easy distinction between different Identities (wallets), and is not transmitted in any way.
       </p>
     </div>
 
   </div>
 
-  <p class="message --info">
-    <strong>Important!</strong>A market may only be associated with a single identity: it will not be possible to add a market to this identity that has been added to another identity.
-    The identity may also need funds assigned to it in order to transact on the marketplace.
-    <mat-form-field class="full-width --boxed --larger" appearance="fill" color="accent">
-      <mat-icon matPrefix fontIcon="part-truck"></mat-icon>
-      <input [formControl]="identityName" matInput type="text" placeholder="Name of the new identity">
-    </mat-form-field>
+  <mat-form-field class="full-width --boxed --larger" appearance="fill" color="primary">
+    <mat-icon matPrefix fontIcon="part-person"></mat-icon>
+    <input [formControl]="identityName" matInput type="text" placeholder="Name of the new Identity">
+  </mat-form-field>
+
+  <p class="alert --warning --boxed">
+    <span>
+      A market may only be associated with a single identity &ndash; it will not be possible to add a market to this identity that has been added to another identity.
+      <small>The identity may also need funds assigned to it in order to transact on the marketplace.</small>
+    </span>
   </p>
 
 </mat-dialog-content>
@@ -41,7 +47,7 @@
     Cancel
   </button>
   <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()" [disabled]="identityName.invalid">
-    <mat-icon fontIcon="part-check"></mat-icon>
+    <mat-icon fontIcon="part-person-add"></mat-icon>
     Create Identity
   </button>
 </mat-dialog-actions>
