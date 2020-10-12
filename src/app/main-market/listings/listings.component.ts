@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, iif, merge, of, defer, combineLatest, timer } from 'rxjs';
-import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError, filter } from 'rxjs/operators';
+import { Observable, Subject, iif, merge, of, defer, timer } from 'rxjs';
+import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError, filter, mapTo } from 'rxjs/operators';
 import { xor } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -17,6 +17,7 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
 import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
 import { TreeSelectComponent } from '../shared/shared.module';
 
+import { isBasicObjectType } from '../shared/utils';
 import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { ListingOverviewItem } from './listings.models';
 import { CartDetail } from '../store/market.models';
@@ -44,9 +45,10 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   @Select(MarketState.availableCarts) availableCarts: Observable<CartDetail[]>;
 
-  // for easy rendering only
-  marketsList: Market[] = [];
   activeMarket: Market;
+  selectedMarketControl: FormControl = new FormControl(0);
+
+  // flags controlling whats displayed when
   hasNewListings: boolean = false;
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
@@ -62,20 +64,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
   // actionable mechanisms
   actionRefresh: FormControl = new FormControl();
   actionScroll: FormControl = new FormControl();
-  // details for filter lists
+
+  // lists of things
   categoriesList$: Observable<CategoryItem[]>;
   countryList$: Observable<Country[]>;
 
   listings: ListingOverviewItem[] = [];
+  marketsList: Market[] = [];
 
 
   private destroy$: Subject<void> = new Subject();
   private timerExpire$: Subject<void> = new Subject();
-  private market$: Subject<Market> = new Subject();
   private categorySource$: Subject<CategoryItem[]> = new Subject();
 
-  private availableMarkets: Market[] = [];
-  private PAGE_COUNT: number = 60;
+  private PAGE_COUNT: number = 80;
   private expiryValue: number = 0;
   private forceReload$: FormControl = new FormControl();
   @ViewChild('categorySelection', {static: false}) private componentCategory: TreeSelectComponent;
@@ -107,13 +109,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    let isInitialLoad = true;
+    let initialMarketIdSelected: number;
+
+    const initParams = this._route.snapshot.queryParams;
+    if (+initParams['SelectedMarketId'] > 0) {
+      initialMarketIdSelected = +initParams['SelectedMarketId'];
+    }
 
     // Websocket message update handlers
 
     const newMessageListings$ = this._listingService.getListenerNewListings().pipe(
       tap((resp) => {
-        if (resp && (resp.market === this.activeMarket.receiveAddress)) {
+        if (resp && this.activeMarket && (resp.market === this.activeMarket.receiveAddress)) {
           this.hasNewListings = true;
           this._cdr.detectChanges();
         }
@@ -126,7 +133,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const newMessageFlagged$ = this._listingService.getListenerFlaggedItems().pipe(
       filter(() => this.listings.length > 0),
       tap((resp) => {
-        if (resp.market && (resp.market === this.activeMarket.receiveAddress) && (typeof resp.target === 'string')) {
+        if (resp.market && this.activeMarket && (resp.market === this.activeMarket.receiveAddress) && (typeof resp.target === 'string')) {
           const listingsFound = this.listings.filter(l => l.hash === resp.target);
           if (listingsFound.length) {
             listingsFound.forEach(lf => lf.extras.isFlagged = true);
@@ -139,160 +146,131 @@ export class ListingsComponent implements OnInit, OnDestroy {
     );
 
 
-    const newMessageComment$ = this._listingService.getListenerComments().pipe(
-      filter(() => this.listings.length > 0),
-      tap((resp) => {
-        if (resp.target && (resp.receiver === this.activeMarket.receiveAddress) && (typeof resp.target === 'string')) {
-          const listing = this.listings.find(l => l.hash === resp.target);
-          if (listing) {
-            listing.extras.commentCount++;
-            this._cdr.detectChanges();
-          }
-        }
-      }),
-      catchError(() => of()),
-      takeUntil(this.destroy$)
-    );
+    // const newMessageComment$ = this._listingService.getListenerComments().pipe(
+    //   filter(() => this.listings.length > 0),
+    //   tap((resp) => {
+    //     if (
+    //       resp.target &&
+    //       this.activeMarket &&
+    //       (resp.receiver === this.activeMarket.receiveAddress) &&
+    //       (typeof resp.target === 'string')
+    //     ) {
+    //       const listing = this.listings.find(l => l.hash === resp.target);
+    //       if (listing) {
+    //         listing.extras.commentCount++;
+    //         this._cdr.detectChanges();
+    //       }
+    //     }
+    //   }),
+    //   catchError(() => of()),
+    //   takeUntil(this.destroy$)
+    // );
 
-    // If the identity changes, fetch the selected identity's markets.
+
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
-      concatMap((iden) => iif(
-        () => iden && iden.id > 0,
+      filter((identity) => isBasicObjectType(identity) && identity.id > 0),
+      tap(() => {
+        this.marketsList = [];
+        this.listings = [];
+        this.isLoadingListings = true;
+        this._cdr.detectChanges();
+      }),
+      switchMap((identity) => this._sharedService.loadMarkets(identity.id).pipe(
+        catchError(() => of([] as Market[])),
+        tap((markets: Market[]) => {
+          this.marketsList = markets;
 
-        this._sharedService.loadMarkets(iden.id).pipe(
-          tap((markets: Market[]) => {
-            this.availableMarkets = markets;
-            this.market$.next(null);
-          })
-        ),
 
-        defer(() => {
-          this.availableMarkets = [];
-          this.market$.next(null);
+          let selectedMarket: Market;
+
+          if (+initialMarketIdSelected > 0) {
+            selectedMarket = this.marketsList.find(m => m.id === +initialMarketIdSelected);
+            initialMarketIdSelected = 0;
+          }
+
+          if (!selectedMarket && isBasicObjectType(this.activeMarket) && this.activeMarket.id > 0) {
+            selectedMarket = this.marketsList.find(m => m.id === +this.activeMarket.id);
+          }
+
+          if (!selectedMarket) {
+            selectedMarket = this.marketsList[0];
+          }
+
+          this.selectedMarketControl.setValue(isBasicObjectType(selectedMarket) && (selectedMarket.id > 0) ? selectedMarket.id : 0);
         })
       )),
       takeUntil(this.destroy$)
     );
 
-    // When the market form field changes (user selected a new market/identity changed/whatever), ensure we have a valid market
-    //  and then load the categories for that market,
-    //  and then reset filters ( causing a new listings lookup to be generated :) )
-    const marketChange$ = this.market$.pipe(
-      map((market: Market) => {
-        let selectedMarket: Market = market || this.activeMarket;
 
-        if (selectedMarket) {
+    const marketChange$ = this.selectedMarketControl.valueChanges.pipe(
 
-          selectedMarket = this.availableMarkets.find(m => m.id === selectedMarket.id);
-
-        } else if (isInitialLoad) {
-          const initParams = this._route.snapshot.queryParams;
-
-          if (+initParams['SelectedMarketId'] > 0) {
-            selectedMarket = this.availableMarkets.find(m => m.id === +initParams['SelectedMarketId']);
-          }
+      map((srcMarketId: number) => {
+        let foundMarket;
+        if (+srcMarketId > 0) {
+          foundMarket = this.marketsList.find(m => m.id === +srcMarketId);
         }
-
-        if (!selectedMarket) {
-          selectedMarket = this.availableMarkets[0];
-        }
-
-        const updatedID = (selectedMarket && selectedMarket.id) || 0;
-        if (updatedID) {
-          this.activeMarket = selectedMarket;
-          this.marketsList = this.availableMarkets;
-        }
-        return selectedMarket;
+        this.activeMarket = foundMarket;
+        return isBasicObjectType(foundMarket) ? foundMarket.id : 0;
       }),
-      concatMap((market: Market) => iif(
-        () => !!market,
-        // load the categories for the selected market
-        defer(() => this._sharedService.loadCategories(+market.id).pipe(
-          tap((categories) => {
-            this.categorySource$.next(categories.categories);
-          }),
-          catchError(() => {
-            this.categorySource$.next([]);
-            return of(null);
-          })
+
+      concatMap(marketId => iif(
+        () => +marketId > 0,
+
+        defer(() => this.fetchMarketCategories(+marketId).pipe(
+          tap(() => this.resetFilters())
         )),
-        // invalid market loaded so set categories list to empty
+
         defer(() => {
           this.categorySource$.next([]);
-        })
-      )),
-      tap(() => {
-        this.resetFilters();
-        // necessary, for in case the filters are not reset (thus not causing a reload of listings for the selected market)
-        //  but also only if not on the first, inital load, since the filter reset above will cause the load action and this just
-        //  duplicates the load action.
-        if (isInitialLoad) {
-          isInitialLoad = false;
-        } else {
-          this.forceReload$.setValue(null);
-        }
-      }),
-      takeUntil(this.destroy$)
+          this.resetFilters();  // results in the reload of listings
+        }),
+      ))
     );
 
 
-    // search/filter watchers
+    const listingsReload$ = merge (
+      this.searchQuery.valueChanges.pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      ),
 
-    const search$ = this.searchQuery.valueChanges.pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      takeUntil(this.destroy$)
-    );
+      this.filterCategory.valueChanges.pipe(
+        distinctUntilChanged((prev: number[], curr: number[]) => (xor(prev, curr)).length === 0),
+        takeUntil(this.destroy$)
+      ),
 
-    const category$ = this.filterCategory.valueChanges.pipe(
-      distinctUntilChanged((prev: number[], curr: number[]) => (xor(prev, curr)).length === 0),
-      takeUntil(this.destroy$)
-    );
+      this.filterSourceRegion.valueChanges.pipe(
+        distinctUntilChanged((prev: string[], curr: string[]) => prev[0] === curr[0]),
+        map((selected) => selected[0]),
+        takeUntil(this.destroy$)
+      ),
 
-    const sourceRegion$ = this.filterSourceRegion.valueChanges.pipe(
-      distinctUntilChanged((prev: string[], curr: string[]) => prev[0] === curr[0]),
-      map((selected) => selected[0]),
-      takeUntil(this.destroy$)
-    );
+      this.filterTargetRegion.valueChanges.pipe(
+        distinctUntilChanged((prev: string[], curr: string[]) => prev[0] === curr[0]),
+        takeUntil(this.destroy$)
+      ),
 
-    const destRegion$ = this.filterTargetRegion.valueChanges.pipe(
-      distinctUntilChanged((prev: string[], curr: string[]) => prev[0] === curr[0]),
-      takeUntil(this.destroy$)
-    );
+      this.filterSeller.valueChanges.pipe(
+        distinctUntilChanged((prev: string, curr: string) => prev === curr),
+        takeUntil(this.destroy$)
+      ),
 
-    const seller$ = this.filterSeller.valueChanges.pipe(
-      distinctUntilChanged((prev: string, curr: string) => prev === curr),
-      takeUntil(this.destroy$)
-    );
-
-    const filterActions = [
-      search$,
-      category$,
-      sourceRegion$,
-      destRegion$,
-      seller$
-    ];
-
-    const filters$ = combineLatest(...filterActions).pipe(takeUntil(this.destroy$));
-    const refresh$ = this.actionRefresh.valueChanges.pipe(takeUntil(this.destroy$));
-    const flagged$ = this.filterFlagged.valueChanges.pipe(takeUntil(this.destroy$));
-
-    const reset$ = merge(filters$, refresh$, flagged$).pipe(
+      this.actionRefresh.valueChanges.pipe(takeUntil(this.destroy$)),
+      this.filterFlagged.valueChanges.pipe(takeUntil(this.destroy$)),
+      this.forceReload$.valueChanges.pipe(takeUntil(this.destroy$))
+    ).pipe(
       tap(() => {
         this.listings = [];
       }),
       takeUntil(this.destroy$)
     );
 
-    const scrolled$ = this.actionScroll.valueChanges.pipe(
-      takeUntil(this.destroy$)
-    );
-
-    // actually do the loading of listings when necessary
+    // actually do the loading of listings
     const loadListings$ = merge(
-      reset$,
-      scrolled$,
-      this.forceReload$.valueChanges.pipe(tap(() => this.listings = []), takeUntil(this.destroy$))
+      listingsReload$,
+      this.actionScroll.valueChanges.pipe(takeUntil(this.destroy$)),
     ).pipe(
 
       tap(() => {
@@ -340,6 +318,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
           this.isLoadingListings = false;
           this._cdr.detectChanges();  // force view update again here
         }),
+
+        concatMap(() => iif(
+          () => isBasicObjectType(this.activeMarket) && (this.activeMarket.type !== 'MARKETPLACE'),
+
+          // refresh the market categories for correct filtering options.
+          //  NB! fetching newly received items doesn't update the category list hence this step is required
+          defer(() => this.fetchMarketCategories(this.activeMarket.id))
+        ))
       )),
 
       takeUntil(this.destroy$)
@@ -347,12 +333,12 @@ export class ListingsComponent implements OnInit, OnDestroy {
     );
 
     merge(
-      loadListings$,
-      marketChange$,
       identityChange$,
+      marketChange$,
+      loadListings$,
       newMessageListings$,
       newMessageFlagged$,
-      newMessageComment$
+      // newMessageComment$
     ).subscribe();
 
   }
@@ -360,7 +346,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.listings = [];
-    this.market$.complete();
     this.categorySource$.complete();
     this.timerExpire$.next();
     this.timerExpire$.complete();
@@ -371,14 +356,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   trackByListingFn(_: number, item: any) {
     return item.id;
-  }
-
-
-  changeMarket(marketId: number): void {
-    const market = this.marketsList.find(m => m.id === marketId);
-    if (market) {
-      this.market$.next(market);
-    }
   }
 
 
@@ -550,6 +527,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   private fetchMarketListings(numItems: number): Observable<boolean> {
+    if (!this.activeMarket || !this.activeMarket.receiveAddress) {
+      return of(false);
+    }
     const itemCount = this.listings.length;
     return this._listingService.searchListingItems(
       (this.activeMarket && this.activeMarket.receiveAddress) || '',
@@ -615,6 +595,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
+  private fetchMarketCategories(marketId: number): Observable<boolean> {
+    return this._sharedService.loadCategories(+marketId).pipe(
+      catchError(() => of({categories: []})),
+      tap(categories => {
+        this.categorySource$.next(categories.categories);
+      }),
+      mapTo(true)
+    );
+  }
+
+
   private resetFilters(): void {
     const defaults = this.getDefaultFilterValues();
 
@@ -627,11 +618,13 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const fields = Object.keys(defaults);
     for (const field of fields) {
       try {
-        (this[field] as FormControl).setValue(defaults[field]);
+        (this[field] as FormControl).setValue(defaults[field], {emitEvent: false});
       } catch (err) {
         // oops
       }
     }
+
+    this.forceReload$.setValue(null);
   }
 
 

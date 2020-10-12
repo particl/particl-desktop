@@ -1,6 +1,6 @@
 <div class="container-block with-control-bar">
   <app-page-intro>
-    <ng-container page-title>{{ activeMarket ? activeMarket.name : '' }}</ng-container>
+    <ng-container page-title>{{ activeMarket?.name || '' }}</ng-container>
     <ng-container page-content>
       Here you will find all publicly available Listings for sale. This is also where your own Listings for sale will appear.<br>
       Keep in mind, that you can buy Listings here only with your private Anon balance.
@@ -32,7 +32,7 @@
       <mat-card class="filter-card">
 
         <mat-form-field class="--plain" appearance="fill" matTooltip="Switch Markets" matTooltipPosition="after">
-          <mat-select placeholder="Switch active Market" [value]="activeMarket?.id" (selectionChange)="changeMarket($event.value)">
+          <mat-select placeholder="Switch active Market" [formControl]="selectedMarketControl">
             <mat-option *ngFor="let market of marketsList" [value]="market.id">
               <img class="image" width="25" height="25" [src]="market.image">
               {{ market.name }}
