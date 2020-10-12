@@ -493,6 +493,19 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: true,
       } as MarketSetting);
 
+      advancedDetails.settings.push({
+        id: 'profile.useAnonBalanceForFees',
+        title: 'Use Spendable (Anon) balance for publishing fees',
+        description: 'While allowing for better anonymity of your publishing identity, this results in higher fees and may cause issues such as impacting the ability to batch publish listings or causing delays to published item visibility.',
+        isDisabled: false,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: marketSettings.useAnonBalanceForFees,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true,
+      } as MarketSetting);
+
       groups.push(advancedDetails);
 
 

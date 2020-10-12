@@ -16,7 +16,7 @@
       </div>
       <div class="key">
         <mat-icon fontIcon="part-public" matTooltip="Public balance" matTooltipPosition="before"></mat-icon>
-        Fees and Voting balance
+        <ng-container *ngIf="isAnonFeeBalance; else publicFees">Voting balance</ng-container><ng-template #publicFees>Fees and Voting Balance</ng-template>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
       </div>
       <div class="key">
         <mat-icon fontIcon="part-anon" matTooltip="Anon balance" matTooltipPosition="before"></mat-icon>
-        Spendable balance
+        <ng-container *ngIf="isAnonFeeBalance; else privateSpendOnly">Spendable balance and Fees</ng-container><ng-template #privateSpendOnly>Spendable balance</ng-template>
       </div>
     </div>
 

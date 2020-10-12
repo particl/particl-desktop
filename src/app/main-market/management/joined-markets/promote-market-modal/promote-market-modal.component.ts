@@ -2,15 +2,15 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Subject, merge } from 'rxjs';
-import { tap, takeUntil } from 'rxjs/operators';
+import { Subject, merge, combineLatest } from 'rxjs';
+import { tap, takeUntil, map } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
 import { MarketState } from '../../../store/market.state';
 
 import { MarketManagementService } from '../../management.service';
-import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
+import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { isBasicObjectType, getValueOrDefault } from '../../../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { GenericModalInfo } from '../joined-markets.models';
@@ -111,10 +111,16 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = this._store.select(WalletUTXOState).pipe(
-      tap((utxos: WalletUTXOStateModel) => {
-        this.publishForm.get('currentBalance').setValue(this.extractSpendableBalance(utxos.public));
+    const balanceChange$ = combineLatest(
+      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
+      this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
+    ).pipe(
+      map((values) => {
+        const utxosSet: WalletUTXOStateModel = values[0];
+        const settings = values[1];
+        return this.extractSpendableBalance(settings.useAnonBalanceForFees ? utxosSet.anon : utxosSet.public);
       }),
+      tap((balance) => this.publishForm.get('currentBalance').setValue(balance)),
       takeUntil(this.destroy$)
     );
 
@@ -158,7 +164,7 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
   }
 
 
-  private extractSpendableBalance(utxos: PublicUTXO[] = []): number {
+  private extractSpendableBalance(utxos: PublicUTXO[] | AnonUTXO[] = []): number {
     const tempBal = new PartoshiAmount(0);
 
     for (const utxo of utxos) {

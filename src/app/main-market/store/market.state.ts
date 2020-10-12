@@ -30,7 +30,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     defaultIdentityID: 0,
     defaultProfileID: 0,
     userRegion: '',
-    canModifyIdentities: false
+    canModifyIdentities: false,
+    useAnonBalanceForFees: false
   }
 };
 

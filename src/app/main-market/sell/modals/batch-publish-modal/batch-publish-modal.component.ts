@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject, ViewChildren, QueryList } from '@
 import { FormGroup, FormControl, Validators, FormArray, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable, Subject, BehaviorSubject, merge, of, iif, defer } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, merge, of, iif, defer, combineLatest } from 'rxjs';
 import { tap, takeUntil, distinctUntilChanged, switchMap, catchError, map, concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -15,7 +15,7 @@ import { SellService } from '../../sell.service';
 import { TreeSelectComponent } from '../../../shared/shared.module';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType } from 'app/main-market/shared/utils';
-import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
+import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { PublishDurations, BatchPublishProductItem } from '../../sell.models';
 
 
@@ -143,10 +143,16 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = this._store.select(WalletUTXOState).pipe(
-      tap((utxos: WalletUTXOStateModel) => {
-        this.currentBalance = this.extractSpendableBalance(utxos.public);
+    const balanceChange$ = combineLatest(
+      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
+      this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
+    ).pipe(
+      map((values) => {
+        const utxosSet: WalletUTXOStateModel = values[0];
+        const settings = values[1];
+        return this.extractSpendableBalance(settings.useAnonBalanceForFees ? utxosSet.anon : utxosSet.public);
       }),
+      tap((balance) => this.currentBalance = balance),
       takeUntil(this.destroy$)
     );
 
@@ -279,7 +285,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
   }
 
 
-  private extractSpendableBalance(utxos: PublicUTXO[] = []): number {
+  private extractSpendableBalance(utxos: PublicUTXO[] | AnonUTXO[] = []): number {
     const tempBal = new PartoshiAmount(0);
 
     for (const utxo of utxos) {
