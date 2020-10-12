@@ -611,7 +611,8 @@ tree-select {
   }
 }
 
-.mat-tree {
+mat-tree.mat-tree {
+  font-family: var(--font);
   .mat-checkbox-checked {
     color: var(--color-secondary);
     font-weight: 500;
