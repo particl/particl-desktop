@@ -36,6 +36,7 @@ export interface MarketSettings {
   defaultIdentityID: number;
   userRegion: string;
   canModifyIdentities: boolean;
+  useAnonBalanceForFees: boolean;
 }
 
 

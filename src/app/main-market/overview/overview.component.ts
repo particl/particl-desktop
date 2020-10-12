@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, Observable, concat } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { Subject, Observable, merge } from 'rxjs';
+import { takeUntil, tap, auditTime } from 'rxjs/operators';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { WalletUTXOState, WalletInfoState } from 'app/main/store/main.state';
@@ -43,6 +43,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   @Select(MarketState.currentIdentity) currentIdentity: Observable<Identity>;
 
+  isAnonFeeBalance: boolean;
+
   readonly listingsUrl: string;
   readonly buyerActions: ActionableItem[];
   readonly sellerActions: ActionableItem[];
@@ -64,6 +66,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _store: Store
   ) {
+
+
 
     // Define the actionable items...
     const ACTIONABLES: ActionableItem[] = [
@@ -177,11 +181,20 @@ export class OverviewComponent implements OnInit, OnDestroy {
     // @TODO: Implement the escrow locked balance lookup
     // @TODO: Implement the badge count queries for each item
 
+    const settingUpdate$ = this._store.select(MarketState.settings).pipe(
+      tap(marketSettings => {
+        this.isAnonFeeBalance = marketSettings.useAnonBalanceForFees;
+      }),
+      takeUntil(this.destroy$)
+    );
 
-    concat(
+
+    merge(
       spendable$,
-      pending$
+      pending$,
+      settingUpdate$
     ).pipe(
+      auditTime(200),
       takeUntil(this.destroy$)
     ).subscribe(
       // force change detection to run since we've updated something here

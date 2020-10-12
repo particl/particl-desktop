@@ -223,6 +223,11 @@ export class MarketManagementService {
 
 
   promoteMarket(marketId: number, durationDays: number): Observable<boolean> {
+    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
+    const postParams = ['post', marketId, durationDays, false, null, null];
+
+    postParams.push(usingAnonFees ? 'anon' : 'part');
+
     return this._rpc.call('market', ['post', marketId, durationDays, false]).pipe(
       map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
     );

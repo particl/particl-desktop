@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subject, of, Observable, merge, from } from 'rxjs';
-import { tap, takeUntil, catchError, concatAll } from 'rxjs/operators';
+import { Subject, of, Observable, merge, from, combineLatest } from 'rxjs';
+import { tap, takeUntil, catchError, concatAll, map } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
@@ -13,7 +13,7 @@ import { SellService } from '../../sell.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
 import { PublishDurations } from '../../sell.models';
-import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
+import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 
 
 interface TemplateDetails {
@@ -122,10 +122,16 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = this._store.select(WalletUTXOState).pipe(
-      tap((utxos: WalletUTXOStateModel) => {
-        this.currentBalance = this.extractSpendableBalance(utxos.public);
+    const balanceChange$ = combineLatest(
+      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
+      this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
+    ).pipe(
+      map((values) => {
+        const utxosSet: WalletUTXOStateModel = values[0];
+        const settings = values[1];
+        return this.extractSpendableBalance(settings.useAnonBalanceForFees ? utxosSet.anon : utxosSet.public);
       }),
+      tap((balance) => this.currentBalance = balance),
       takeUntil(this.destroy$)
     );
 
@@ -175,7 +181,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
   }
 
 
-  private extractSpendableBalance(utxos: PublicUTXO[] = []): number {
+  private extractSpendableBalance(utxos: PublicUTXO[] | AnonUTXO[] = []): number {
     const tempBal = new PartoshiAmount(0);
 
     for (const utxo of utxos) {

@@ -330,7 +330,12 @@ export class SellService {
 
 
   estimatePublishFee(templateId: number, durationDays: number): Observable<number> {
-    return this._rpc.call('template', ['post', templateId, durationDays, true]).pipe(
+    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
+    const postParams = ['post', templateId, durationDays, true, false];
+
+    postParams.push(usingAnonFees ? 'anon' : 'part');
+
+    return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => {
         if (isBasicObjectType(resp) && (+resp.fee > 0)) {
           return +resp.fee;
@@ -342,7 +347,12 @@ export class SellService {
 
 
   publishMarketTemplate(templateId: number, durationDays: number): Observable<boolean> {
-    return this._rpc.call('template', ['post', templateId, durationDays, false]).pipe(
+    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
+    const postParams = ['post', templateId, durationDays, false, false];
+
+    postParams.push(usingAnonFees ? 'anon' : 'part');
+
+    return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
     );
   }
