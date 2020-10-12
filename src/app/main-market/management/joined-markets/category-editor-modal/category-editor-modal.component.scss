@@ -3,33 +3,41 @@
 .mat-dialog-content {
   padding: 24px;
   width: 35rem;
+  min-height: 60vh;
 }
 
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  &.root { // 1st level
-    font-weight: 500;
-  }
-  ul { // subcategories
-    font-weight: 400;
-    margin-left: 32px;
-  }
-  .category { // item
-    background: var(--color-white);
-    margin: 0 0 var(--card-spacing);
-    box-shadow: 0 1px 4px var(--bg-muted);
-    border-radius: var(--radius);
-    padding: 0 24px;
-    height: 42px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.mat-tree {
+  background: transparent;
+  .mat-tree-node {
+    display: block;
+    min-height: auto;
+    overflow: visible;
+    .category {
+      @extend %mat-card;
+      border-radius: var(--radius);
+      margin-bottom: var(--card-spacing);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 28px;
+      font-size: 13px;
+      padding: 6px 8px 6px 16px;
+      &.first-level {
+        font-weight: 500;
+      }
+      &.add-new-form {
+        display: block;
+        padding: 0;
+      }
+      .toggle {
+        color: var(--text-muted);
+        margin-left: 4px;
+      }
+    }
     .name {
       flex: 0 1 100%;
     }
-    .mat-button {
+    .control {
       display: none;
       .add-new {
         flex: 0 1 5%;
@@ -41,15 +49,8 @@ ul {
     }
     &:hover {
       .mat-button {
-        display: block;
+        display: inline-block;
       }
     }
-  }
-  .add-new-form {
-    background: var(--color-white);
-    margin-bottom: var(--card-spacing);
-    box-shadow: 0 1px 4px var(--bg-muted);
-    border-radius: var(--radius);
-    overflow: hidden;
   }
 }

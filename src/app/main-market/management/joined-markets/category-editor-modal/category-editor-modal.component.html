@@ -20,80 +20,22 @@
 
   <h2 class="section-title">Manage existing categories</h2>
 
-  <!-- only for coding purposes, so it's not bloated that much.. can be removed once implemented ofc -->
-  <!-- <ng-template #item>
-    <div class="category">
-      <div class="name">
-        (Sub)category name
-      </div>
-      <button mat-button class="add-new tiny" matTooltip="Add sub-category here" (click)="$event.stopPropagation()">
-        <mat-icon fontIcon="part-small-plus"></mat-icon>
-        Add
-      </button>
-      <button mat-button class="remove tiny" color="warn" matTooltip="Remove category" (click)="$event.stopPropagation()">
-        <mat-icon fontIcon="part-circle-remove"></mat-icon>
-        Remove
-      </button>
-    </div>
-  </ng-template>
-
-  <ul class="root categories">
-    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-    <li>
-      <ng-container *ngTemplateOutlet="item"></ng-container>
-      <ul>
-        <li>
-          <ng-container *ngTemplateOutlet="item"></ng-container>
-          <ul>
-            <li>
-              <mat-form-field class="add-new-form --plain" appearance="fill">
-                <mat-icon matPrefix fontIcon="part-filter"></mat-icon>
-                <input matInput type="text" placeholder="Name of new sub-category">
-                <button matSuffix mat-button class="tiny icon-only" color="primary" matTooltip="Create sub-category" matTooltipPosition="after">
-                  <mat-icon fontIcon="part-check"></mat-icon>
-                </button>
-                <button matSuffix mat-button class="tiny icon-only" matTooltip="Cancel" matTooltipPosition="after">
-                  <mat-icon fontIcon="part-cross"></mat-icon>
-                </button>
-              </mat-form-field>
-            </li>
-            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-          </ul>
-        </li>
-        <li>
-          <ng-container *ngTemplateOutlet="item"></ng-container>
-          <ul>
-            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-            <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-          </ul>
-        </li>
-        <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-        <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-      </ul>
-    </li>
-    <li><ng-container *ngTemplateOutlet="item"></ng-container></li>
-  </ul> -->
-
-
   <div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
       <!-- LEAF NODE -->
 
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-        <div class="category">
+        <div class="category" [ngClass]="{ 'first-level': node.level === BASE_LEVEL }">
           <div class="name">
             {{node.name}}
           </div>
-          <button *ngIf="node.level < (MAX_DEPTH - 1)" mat-button class="add-new tiny" matTooltip="Add sub-category here"
+          <button *ngIf="node.level < (MAX_DEPTH - 1)" mat-button class="add-new control tiny" matTooltip="Add sub-category here"
             [disabled]="!isEditable" appDebounceClick (debounceClick)="insertSubCategory(node)">
             <mat-icon fontIcon="part-small-plus"></mat-icon>
             Add
           </button>
-          <button mat-button class="remove tiny" color="warn" matTooltip="Remove category"
+          <button mat-button class="remove control tiny" color="warn" matTooltip="Remove category"
             [disabled]="!isEditable" appDebounceClick (debounceClick)="removeCategory(node)">
             <mat-icon fontIcon="part-circle-remove"></mat-icon>
             Remove
@@ -105,11 +47,10 @@
       <!-- CATEGORY CAPTURE -->
 
       <mat-tree-node *matTreeNodeDef="let node; when: isNewItem" matTreeNodePadding>
-        <mat-form-field class="add-new-form --plain" appearance="fill">
+        <mat-form-field class="add-new-form category --plain" appearance="fill">
           <mat-icon matPrefix fontIcon="part-filter"></mat-icon>
           <input matInput type="text" #subcategoryName placeholder="Name of new sub-category">
-          <button matSuffix mat-button class="tiny icon-only" color="primary" matTooltip="Create sub-category" matTooltipPosition="after"
-              [disabled]="!isEditable || (subcategoryName.value === '')" appDebounceClick (debounceClick)="createSubCategory(node, subcategoryName.value)">
+          <button matSuffix mat-button class="tiny icon-only" color="primary" matTooltip="Create sub-category" matTooltipPosition="after" [disabled]="!isEditable || (subcategoryName.value === '')" appDebounceClick (debounceClick)="createSubCategory(node, subcategoryName.value)">
             <mat-icon fontIcon="part-check"></mat-icon>
           </button>
           <button matSuffix mat-button class="tiny icon-only" matTooltip="Cancel" matTooltipPosition="after"
@@ -123,17 +64,21 @@
       <!-- PARENT NODE -->
 
       <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-        <div class="category">
+        <div class="category" [ngClass]="{ 'first-level': node.level === BASE_LEVEL }">
           <div class="name">
             {{node.name}}
+            <button mat-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name" class="toggle tiny icon-only">
+              <mat-icon fontIcon="{{treeControl.isExpanded(node) ? 'part-triangle-down' : 'part-triangle-left'}}"></mat-icon>
+            </button>
           </div>
-          <button *ngIf="node.level < (MAX_DEPTH - 1)" mat-button class="add-new tiny" matTooltip="Add sub-category here"
+          <button *ngIf="node.level < (MAX_DEPTH - 1)" mat-button class="add-new control tiny" matTooltip="Add sub-category here"
             [disabled]="!isEditable" appDebounceClick (debounceClick)="insertSubCategory(node)">
             <mat-icon fontIcon="part-small-plus"></mat-icon>
             Add
           </button>
         </div>
       </mat-tree-node>
+
     </mat-tree>
   </div>
 
@@ -142,8 +87,11 @@
 
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>
-    <mat-icon fontIcon="part-cross"></mat-icon>
-    Close
-  </button>
+  <div class="left"></div>
+  <div class="right">    
+    <button mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Close
+    </button>
+  </div>
 </mat-dialog-actions>

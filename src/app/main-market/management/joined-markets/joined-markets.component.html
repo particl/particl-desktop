@@ -129,11 +129,11 @@
                   <p class="help-text">
                     This access key allows for someone to join this market and <strong>only make purchases</strong> (ie: cannot create new product listings).
                   </p>
-                  <button mat-button color="warn" class="small full-width" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'PUBLISH', 'PUBLIC')" *ngIf="!marketItem.publishPublicKey">
+                  <button mat-button color="accent" class="small full-width" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'PUBLISH', 'PUBLIC')" *ngIf="!marketItem.publishPublicKey">
                     <mat-icon fontIcon="part-copy"></mat-icon>
                     Show &amp; Copy Access key
                   </button>
-                  <div class="private key" *ngIf="marketItem.publishPublicKey">
+                  <div class="public key" *ngIf="marketItem.publishPublicKey">
                     {{marketItem.publishPublicKey}}
                   </div>
                 </ng-container>
