@@ -9391,7 +9391,19 @@ parseurl@~1.3.2, parseurl@~1.3.3:
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
   integrity sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==
 
-particl-bitcore-lib@^0.16.0, "particl-bitcore-lib@git://github.com/particl/particl-bitcore-lib.git":
+particl-bitcore-lib@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/particl-bitcore-lib/-/particl-bitcore-lib-0.16.0.tgz#3981f4b5ba9b59f86e5700491418c6194d4913fd"
+  integrity sha512-ZGxkd9gzZERl/KHUaS5pBOCfVpU1Cf2wTJXyIEpmSEwr9VvifCEjTpwPN8Q5jAHX0yg4IsY8GX9aiqnj36Lz1Q==
+  dependencies:
+    bn.js "=4.11.8"
+    bs58 "=4.0.1"
+    buffer-compare "=1.1.1"
+    elliptic "=6.4.0"
+    inherits "=2.0.1"
+    lodash "=4.17.11"
+
+"particl-bitcore-lib@git://github.com/particl/particl-bitcore-lib.git":
   version "0.16.0"
   resolved "git://github.com/particl/particl-bitcore-lib.git#b5e0c4a11e013a22ef23756c4dd086a183e744bc"
   dependencies:

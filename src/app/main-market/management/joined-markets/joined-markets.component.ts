@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, merge, defer, of, iif, throwError } from 'rxjs';
 import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, take, concatMap, filter } from 'rxjs/operators';
+import { ClipboardService } from 'ngx-clipboard';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -76,6 +77,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _clipboard: ClipboardService,
     private _store: Store,
     private _socket: MarketSocketService,
     private _manageService: MarketManagementService,
@@ -188,6 +190,25 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   actionCopiedToClipBoard(): void {
     this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
+  }
+
+
+  copyPublishKeyToClipboard(type: 'PUBLIC' | 'PRIVATE', privKey: string) {
+    if (type === 'PRIVATE') {
+      if (this._clipboard.copyFromContent(privKey)) {
+        this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
+      }
+    } else {
+      this._manageService.calculatePublicKeyFromPrivate(privKey).subscribe(
+
+        (pubKey) => {
+          if (pubKey && (pubKey.length > 0) && this._clipboard.copyFromContent(pubKey)) {
+            this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
+          }
+        }
+
+      );
+    }
   }
 
 

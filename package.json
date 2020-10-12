@@ -197,6 +197,7 @@
     "ngx-infinite-scroll": "^8.0.0",
     "ngx-material-file-input": "^2.0.0",
     "node-unzip-2": "^0.2.1",
+    "particl-bitcore-lib": "^0.16.0",
     "particl-bot-manager": "^0.0.15",
     "particl-market-import-core": "^0.0.11",
     "particl-marketplace": "./particl-marketplace-0.3.0-36.tgz",

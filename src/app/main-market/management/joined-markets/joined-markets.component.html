@@ -115,7 +115,6 @@
                       Copy
                     </button>
                   </h3>
-                  <div class="key">{{marketItem.receiveKey}}</div>
                   <p class="help-text">
                     Key required to join this Market. You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
                   </p>
@@ -124,12 +123,11 @@
                   <ng-container *ngIf="marketTypeOptions.MARKETPLACE !== marketItem.marketType">
                     <h3 class="box-title">
                       Market Access Key
-                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishKeyPublic || ''" (click)="actionCopiedToClipBoard()">
+                      <button mat-button color="warn" class="small" matTooltip="Copy Access key" appDebounceClick (debounceClick)="copyPublishKeyToClipboard('PUBLIC', marketItem.publishKey)">
                         <mat-icon fontIcon="part-copy"></mat-icon>
                         Copy
                       </button>
                     </h3>
-                    <div class="key">{{ marketItem.publishKeyPublic }}</div>
                     <p class="help-text">
                       This access key allows for someone to join this market and only make purchases (ie: cannot create new product listings).
                     </p>
@@ -137,12 +135,11 @@
                   <ng-container *ngIf="marketTypeOptions.STOREFRONT !== marketItem.marketType">
                     <h3 class="box-title">
                       Market Publish Key
-                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" ngxClipboard [cbContent]="marketItem.publishKey || ''" (click)="actionCopiedToClipBoard()">
+                      <button mat-button color="warn" class="small" matTooltip="Copy Publish key" appDebounceClick (debounceClick)="copyPublishKeyToClipboard('PRIVATE', marketItem.publishKey)">
                         <mat-icon fontIcon="part-copy"></mat-icon>
                         Copy
                       </button>
                     </h3>
-                    <div class="key">{{ marketItem.publishKey }}</div>
                     <p class="help-text">
                       Whoever has this Publish key will have access to selling on your Market. Share it with trusted people only (e.g. colleagues from your Store)
                     </p>

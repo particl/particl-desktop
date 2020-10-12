@@ -4,6 +4,7 @@ const cookie = require('../rpc/cookie');
 const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs').Observable;
+const bitcore = require('particl-bitcore-lib');
 // const importer = require('./importer/importer');
 
 // @TODO: zaSmilingIdiot 2020-03-18 -> This entire process is a mess, and needs to be done over! It works for its current purpose, but is really brittle, crappy code!
@@ -87,6 +88,31 @@ exports.init = function() {
       observer.complete();
     });
   });
+
+
+  rxIpc.registerListener('market-keygen', function(keyTypeRequired /* 'PRIVATE' | 'PUBLIC' */, fromKey /* string */ ) {
+    return Observable.create(observer => {
+      if ((typeof keyTypeRequired !== 'string') || !['PUBLIC'].includes(keyTypeRequired) || (typeof fromKey !== 'string')) {
+        observer.error('MP_KEYGEN_INVALID_PARAMS');
+      } else {
+        try {
+          let newKey;
+          switch (keyTypeRequired) {
+            case 'PUBLIC': newKey = bitcore.PrivateKey.fromWIF(fromKey).toPublicKey().toString(); break;
+          }
+          if ((typeof newKey !== 'string') || !(newKey.length > 0)) {
+            throw new Error('something went wrong');
+          } else {
+            observer.next(newKey);
+          }
+
+        } catch (err) {
+          observer.error('MP_KEYGEN_INVALID_KEY');
+        }
+        observer.complete();
+      }
+    });
+  });
 }
 
 
@@ -94,6 +120,7 @@ exports.destroy = function() {
   stop();
   rxIpc.removeListeners('start-market');
   rxIpc.removeListeners('stop-market');
+  rxIpc.removeListeners('market-keygen');
 }
 
 

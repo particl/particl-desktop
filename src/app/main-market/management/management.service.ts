@@ -5,6 +5,7 @@ import { map, mapTo, catchError, concatMap, last } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
+import { IpcService } from 'app/core/services/ipc.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
 import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet } from '../shared/market.models';
@@ -37,6 +38,7 @@ export class MarketManagementService {
   constructor(
     private _rpc: MarketRpcService,
     private _store: Store,
+    private _ipc: IpcService,
   ) {
     this.marketRegionsMap.set('', TextContent.LABEL_REGION_ALL);
     this.marketRegionsMap.set(MARKET_REGION.WORLDWIDE, TextContent.LABEL_REGION_WORLDWIDE);
@@ -315,6 +317,10 @@ export class MarketManagementService {
 
   removeCategory(categoryId: number): Observable<boolean> {
     return this._rpc.call('category', ['remove', categoryId]).pipe(mapTo(true));
+  }
+
+  calculatePublicKeyFromPrivate(privateKey: string): Observable<string> {
+    return this._ipc.runCommand('market-keygen', null, 'PUBLIC', privateKey);
   }
 
 
