@@ -210,10 +210,18 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    if ((marketItem.marketType === MarketType.STOREFRONT) && (key === 'PUBLISH') && (type === 'PUBLIC')) {
+      type = 'PRIVATE';
+    }
 
     if (type === 'PRIVATE') {
       if (this._clipboard.copyFromContent(targetKey)) {
-        marketItem.publishPrivateKey = key === 'PUBLISH' ? targetKey : marketItem.publishPrivateKey;
+        if (marketItem.marketType === MarketType.STOREFRONT) {
+          marketItem.publishPublicKey = key === 'PUBLISH' ? targetKey : marketItem.publishPublicKey;
+        } else {
+          marketItem.publishPrivateKey = key === 'PUBLISH' ? targetKey : marketItem.publishPrivateKey;
+        }
+
         marketItem.receivePrivateKey = key === 'RECEIVE' ? targetKey : marketItem.receivePrivateKey;
         this._cdr.detectChanges();
         this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
