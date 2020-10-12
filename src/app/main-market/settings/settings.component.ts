@@ -475,7 +475,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
       const advancedDetails: MarketSettingGroup = {
         name: 'Advanced Features',
-        icon: 'part-globe',
+        icon: 'part-flash',
         settings: [],
         errors: []
       };
