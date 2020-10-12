@@ -29,7 +29,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     port: environment.marketPort,
     defaultIdentityID: 0,
     defaultProfileID: 0,
-    userRegion: ''
+    userRegion: '',
+    canModifyIdentities: false
   }
 };
 

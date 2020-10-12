@@ -473,6 +473,29 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       groups.push(connectionDetails);
 
 
+      const advancedDetails: MarketSettingGroup = {
+        name: 'Advanced Features',
+        icon: 'part-globe',
+        settings: [],
+        errors: []
+      };
+
+      advancedDetails.settings.push({
+        id: 'profile.canModifyIdentities',
+        title: 'Enable multiple identities for the current profile',
+        description: 'Warning! Enabling this should be considered expirmental at this time AND requires manual intervention for various actions such as backups and restorations. Please only enable this if you know what you are doing!',
+        isDisabled: false,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: marketSettings.canModifyIdentities,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true,
+      } as MarketSetting);
+
+      groups.push(advancedDetails);
+
+
       observer.next(groups);
       observer.complete();
     });

@@ -35,6 +35,7 @@ export interface MarketSettings {
   defaultProfileID: number;
   defaultIdentityID: number;
   userRegion: string;
+  canModifyIdentities: boolean;
 }
 
 

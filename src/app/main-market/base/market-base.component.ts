@@ -13,7 +13,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-add-details-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { StartedStatus, Identity } from '../store/market.models';
+import { StartedStatus, Identity, MarketSettings } from '../store/market.models';
 import { WalletInfoStateModel, WalletUTXOStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { environment } from 'environments/environment';
@@ -45,6 +45,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   @Select(MarketState.filteredIdentitiesList) otherIdentities: Observable<Identity[]>;
   @Select(MarketState.currentIdentity) selectedIdentity: Observable<Identity>;
+  @Select(MarketState.settings) marketSettings: Observable<MarketSettings>;
 
   currentBalance: Observable<string>;
 

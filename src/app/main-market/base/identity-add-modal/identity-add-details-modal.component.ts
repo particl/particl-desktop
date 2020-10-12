@@ -10,7 +10,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class IdentityAddDetailsModalComponent {
 
   readonly MAX_NAME: number = 50;
-  identityName: FormControl = new FormControl('', [Validators.minLength(1), Validators.maxLength(this.MAX_NAME)]);
+  identityName: FormControl = new FormControl('', [Validators.required, Validators.maxLength(this.MAX_NAME)]);
 
   constructor(
     private _dialogRef: MatDialogRef<IdentityAddDetailsModalComponent>,
