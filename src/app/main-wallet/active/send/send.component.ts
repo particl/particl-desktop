@@ -54,6 +54,7 @@ export class SendComponent implements OnInit, OnDestroy {
 
   readonly minRingSize: number = MIN_RING_SIZE;
   readonly maxRingSize: number = MAX_RING_SIZE;
+  readonly defaultRingSize: number = DEFAULT_RING_SIZE;
 
   readonly tabs: TabModel[] = [
     { icon: 'part-send', type: 'send', title: 'Send payment'},
@@ -86,7 +87,7 @@ export class SendComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.targetForm = new FormGroup({
-      ringSize: new FormControl(DEFAULT_RING_SIZE, [Validators.min(this.minRingSize), Validators.max(this.maxRingSize)]),
+      ringSize: new FormControl(this.defaultRingSize, [Validators.min(this.minRingSize), Validators.max(this.maxRingSize)]),
       targetType: new FormControl('blind', targetTypeValidator(this.currentTabType, this.sourceType.value)),
       address: new FormControl('',
         publicAddressUsageValidator(this.currentTabType, this.sourceType.value),
