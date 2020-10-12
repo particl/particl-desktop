@@ -41,6 +41,14 @@ interface FilterOption {
 }
 
 
+interface DisplayableJoinedMarket extends JoinedMarket {
+  receivePrivateKey?: string;
+  receivePublicKey?: string;
+  publishPrivateKey?: string;
+  publishPublicKey?: string;
+}
+
+
 @Component({
   selector: 'market-joined-markets',
   templateUrl: './joined-markets.component.html',
@@ -68,7 +76,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   isLoading: boolean = true;
   displayedMarkets: number[] = [];
-  marketsList: JoinedMarket[] = [];
+  marketsList: DisplayableJoinedMarket[] = [];
 
 
   private destroy$: Subject<void> = new Subject();
@@ -188,21 +196,35 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   }
 
 
-  actionCopiedToClipBoard(): void {
-    this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
-  }
+  copyKeyToClipboard(marketIdx: number, key: 'RECEIVE' | 'PUBLISH', type: 'PUBLIC' | 'PRIVATE') {
+
+    if ((marketIdx >= this.marketsList.length) || (marketIdx < 0) || !isBasicObjectType(this.marketsList[marketIdx])) {
+      return;
+    }
+
+    const marketItem = this.marketsList[marketIdx];
+
+    const targetKey = key === 'PUBLISH' ? marketItem.publishKey : marketItem.receiveKey;
+
+    if (getValueOrDefault(targetKey, 'string', '').length === 0) {
+      return;
+    }
 
 
-  copyPublishKeyToClipboard(type: 'PUBLIC' | 'PRIVATE', privKey: string) {
     if (type === 'PRIVATE') {
-      if (this._clipboard.copyFromContent(privKey)) {
+      if (this._clipboard.copyFromContent(targetKey)) {
+        marketItem.publishPrivateKey = key === 'PUBLISH' ? targetKey : marketItem.publishPrivateKey;
+        marketItem.receivePrivateKey = key === 'RECEIVE' ? targetKey : marketItem.receivePrivateKey;
+        this._cdr.detectChanges();
         this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
       }
     } else {
-      this._manageService.calculatePublicKeyFromPrivate(privKey).subscribe(
-
+      this._manageService.calculatePublicKeyFromPrivate(targetKey).subscribe(
         (pubKey) => {
-          if (pubKey && (pubKey.length > 0) && this._clipboard.copyFromContent(pubKey)) {
+          if ((getValueOrDefault(pubKey, 'string', '').length > 0) && this._clipboard.copyFromContent(pubKey)) {
+            marketItem.publishPublicKey = key === 'PUBLISH' ? pubKey : marketItem.publishPublicKey;
+            marketItem.receivePublicKey = key === 'RECEIVE' ? pubKey : marketItem.receivePublicKey;
+            this._cdr.detectChanges();
             this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
           }
         }
@@ -365,7 +387,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadMarkets(): Observable<JoinedMarket[]> {
+  private loadMarkets(): Observable<DisplayableJoinedMarket[]> {
     return of({}).pipe(
       tap(() => {
         this.isLoading = true;
