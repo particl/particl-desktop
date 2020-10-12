@@ -113,7 +113,9 @@ export class MarketManagementService {
                   (market.Image.ImageDatas.length > 0) &&
                   isBasicObjectType(market.Image.ImageDatas[0])
                 ) {
-                  newMarketItem.image = parseImagePath(market.Image, market.Image.ImageDatas[0].imageVersion, marketDefaultConfig.url);
+                  newMarketItem.image = parseImagePath(
+                    market.Image, market.Image.ImageDatas[0].imageVersion, marketDefaultConfig.url
+                  ) || newMarketItem.image;
                 }
               }
 
@@ -361,7 +363,7 @@ export class MarketManagementService {
         (src.Image.ImageDatas.length > 0) &&
         isBasicObjectType(src.Image.ImageDatas[0])
       ) {
-        newItem.image = parseImagePath(src.Image, src.Image.ImageDatas[0].imageVersion, marketUrl);
+        newItem.image = parseImagePath(src.Image, src.Image.ImageDatas[0].imageVersion, marketUrl) || newItem.image;
       }
     }
 
