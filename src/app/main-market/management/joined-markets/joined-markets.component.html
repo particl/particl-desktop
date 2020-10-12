@@ -114,7 +114,7 @@
                 <p class="help-text">
                   <strong>Key required to join this Market.</strong> You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
                 </p>
-                <button mat-button color="accent" class="small full-width" ngxClipboard [cbContent]="marketItem.receiveKey || ''" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'RECEIVE', 'PRIVATE')">
+                <button mat-button color="accent" class="small full-width" ngxClipboard [cbContent]="marketItem.receiveKey || ''" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'RECEIVE', 'PRIVATE')" *ngIf="!marketItem.receivePrivateKey">
                   <mat-icon fontIcon="part-copy"></mat-icon>
                   Show &amp; Copy Market ID
                 </button>
@@ -129,7 +129,7 @@
                   <p class="help-text">
                     This access key allows for someone to join this market and <strong>only make purchases</strong> (ie: cannot create new product listings).
                   </p>
-                  <button mat-button color="warn" class="small full-width" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'PUBLISH', 'PUBLIC')">
+                  <button mat-button color="warn" class="small full-width" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'PUBLISH', 'PUBLIC')" *ngIf="!marketItem.publishPublicKey">
                     <mat-icon fontIcon="part-copy"></mat-icon>
                     Show &amp; Copy Access key
                   </button>
@@ -144,11 +144,11 @@
                   <p class="help-text">
                     Whoever has this Publish key will have <strong>rights to sell</strong> on your Market. Share it with trusted people only (e.g. colleagues from your Store).
                   </p>
-                  <button mat-button color="warn" class="small full-width" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'PUBLISH', 'PRIVATE')">
+                  <button mat-button color="warn" class="small full-width" appDebounceClick (debounceClick)="copyKeyToClipboard(marketIdx, 'PUBLISH', 'PRIVATE')" *ngIf="!marketItem.publishPrivateKey">
                     <mat-icon fontIcon="part-copy"></mat-icon>
                     Show &amp; Copy Publish key
                   </button>
-                  <div class="private key"*ngIf="marketItem.publishPrivateKey">
+                  <div class="private key" *ngIf="marketItem.publishPrivateKey">
                     {{marketItem.publishPrivateKey}}
                   </div>
                 </ng-container>
