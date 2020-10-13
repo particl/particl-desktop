@@ -63,7 +63,7 @@ export class DataService {
 
             let marketImg = this.defaultMarketImage;
             if (isBasicObjectType(market.Image) && Array.isArray(market.Image.ImageDatas)) {
-              marketImg = parseImagePath(market.Image, 'THUMBNAIL', marketUrl) || marketImg;
+              marketImg = parseImagePath(market.Image, 'ORIGINAL', marketUrl) || marketImg;
             }
 
             filteredMarkets.push({

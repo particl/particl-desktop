@@ -14,6 +14,7 @@ import { MarketSocketService } from './services/market-rpc/market-socket.service
 import { DataService } from './services/data/data.service';
 import { RegionListService } from './services/region-list/region-list.service';
 import { BidOrderService } from './services/orders/orders.service';
+import { MarketStartGuard } from './market.guard';
 
 
 const routes: Routes = [
@@ -21,14 +22,22 @@ const routes: Routes = [
     path: '',
     component: MarketBaseComponent,
     children: [
-      { path: 'overview', loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule) },
-      { path: 'management', loadChildren: () => import('./management/management.module').then(m => m.ManagementModule) },
-      { path: 'listings', loadChildren: () => import('./listings/listings.module').then(m => m.ListingsModule) },
-      { path: 'cart', loadChildren: () => import('./buy-checkout/buy-checkout.module').then(m => m.BuyCheckoutModule) },
-      { path: 'buy', loadChildren: () => import('./buy/buy.module').then(m => m.BuyModule) },
-      { path: 'sell', loadChildren: () => import('./sell/sell.module').then(m => m.SellModule) },
-      { path: 'settings', loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule) },
-      { path: 'loading', loadChildren: () => import('./loading/loading.module').then(m => m.LoadingModule) },
+      { path: 'overview', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule) },
+      { path: 'management', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./management/management.module').then(m => m.ManagementModule) },
+      { path: 'listings', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./listings/listings.module').then(m => m.ListingsModule) },
+      { path: 'cart', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./buy-checkout/buy-checkout.module').then(m => m.BuyCheckoutModule) },
+      { path: 'buy', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./buy/buy.module').then(m => m.BuyModule) },
+      { path: 'sell', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./sell/sell.module').then(m => m.SellModule) },
+      { path: 'settings',
+        loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule) },
+      { path: 'loading',
+        loadChildren: () => import('./loading/loading.module').then(m => m.LoadingModule) },
       { path: '**', redirectTo: 'overview' },
     ]
   }
@@ -58,6 +67,7 @@ const routes: Routes = [
     IdentityAddDetailsModalComponent
   ],
   providers: [
+    MarketStartGuard,
     MarketRpcService,
     MarketSocketService,
     DataService,
