@@ -200,7 +200,7 @@
     "particl-bitcore-lib": "^0.16.0",
     "particl-bot-manager": "^0.0.15",
     "particl-market-import-core": "^0.0.11",
-    "particl-marketplace": "./particl-marketplace-0.3.0-38.tgz",
+    "particl-marketplace": "./particl-marketplace-0.3.0-40.tgz",
     "particl-zmq": "^1.0.4",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
