@@ -657,6 +657,7 @@ export class SellService {
       }
     }
 
+    // market template may not be editable. If not, then clone it to create an editable version
     if (isBasicObjectType(latestSrcMarketTempl) &&
         (getValueOrDefault(latestSrcMarketTempl.hash, 'string', '').length > 0) &&
         (+latestSrcMarketTempl.id > 0)
@@ -671,7 +672,30 @@ export class SellService {
       if (!foundMarket) {
         throw Error('Failed fetching markets');
       }
+
+      let tempCategoryId = 0;
+
+      if (isBasicObjectType(latestSrcMarketTempl) && isBasicObjectType(latestSrcMarketTempl.ItemInformation)) {
+        tempCategoryId = getValueOrDefault(latestSrcMarketTempl.ItemInformation.itemCategoryId, 'number', 0);
+      }
+
       latestSrcMarketTempl = await this.cloneTemplate(+latestSrcMarketTempl.id, foundMarket.id).toPromise();
+
+      if (!isBasicObjectType(latestSrcMarketTempl) || !(isBasicObjectType(latestSrcMarketTempl.ItemInformation))) {
+        throw Error('Failed creating editable clone');
+      }
+
+      // ensure that the category on the newly cloned, editable template is set correctly
+      //  (if it was set on the non-editable variant of the template it was cloned from)
+      if (+tempCategoryId > 0) {
+
+        latestSrcMarketTempl.ItemInformation = await this._rpc.call('information', ['update', +latestSrcMarketTempl.id,
+          getValueOrDefault(latestSrcMarketTempl.ItemInformation.title, 'string', ''),
+          getValueOrDefault(latestSrcMarketTempl.ItemInformation.shortDescription, 'string', ''),
+          getValueOrDefault(latestSrcMarketTempl.ItemInformation.longDescription, 'string', ''),
+          +tempCategoryId
+        ]).toPromise();
+      }
     }
 
     if (!isBasicObjectType(latestSrcMarketTempl)) {
