@@ -183,8 +183,8 @@ export class DataService {
       // images
       if (Array.isArray(fromDetails.Images)) {
         fromDetails.Images.forEach(img => {
-          const thumbUrl = parseImagePath(img, 'THUMBNAIL', marketUrl);
-          const imgUrl = parseImagePath(img, 'MEDIUM', marketUrl);
+          const thumbUrl = parseImagePath(img, 'MEDIUM', marketUrl);
+          const imgUrl = parseImagePath(img, 'LARGE', marketUrl);
 
           if (thumbUrl && imgUrl) {
             images.images.push({

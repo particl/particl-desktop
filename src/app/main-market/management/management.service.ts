@@ -8,7 +8,7 @@ import { MarketState } from '../store/market.state';
 import { IpcService } from 'app/core/services/ipc.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
-import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet } from '../shared/market.models';
+import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet, IMAGE_SEND_TYPE } from '../shared/market.models';
 import { CategoryItem } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
@@ -29,10 +29,14 @@ export class MarketManagementService {
 
   readonly MAX_MARKET_NAME: number = 50;
   readonly MAX_MARKET_SUMMARY: number = 150;
+  readonly IMAGE_MAX_SIZE: number;
 
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
   private readonly marketDefaultImage: string;
+  private readonly IMAGE_SCALING_FACTOR: number = 0.6;
+  private readonly IMAGE_QUALITY_FACTOR: number = 0.9;
+  private readonly IMAGE_ITERATIONS: number = 50;
 
 
   constructor(
@@ -49,8 +53,10 @@ export class MarketManagementService {
     this.marketRegionsMap.set(MARKET_REGION.ASIA_PACIFIC, TextContent.LABEL_REGION_ASIA_PACIFIC);
 
     const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
 
     this.marketDefaultImage = defaultConfig.imagePath;
+    this.IMAGE_MAX_SIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
   }
 
 
@@ -167,6 +173,7 @@ export class MarketManagementService {
   createMarket(details: CreateMarketRequest): Observable<JoinedMarket> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
     const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
 
     const params = [
       'add',
@@ -195,7 +202,19 @@ export class MarketManagementService {
           const imageParts = details.image.data.split(',');
           const imgData = imageParts.length === 2 ? imageParts[1] : details.image.data;
 
-          return this._rpc.call('image', ['add', 'market', +market.id, details.image.type, imgData]).pipe(
+          return this._rpc.call('image', [
+            'add',
+            'market',
+            +market.id,
+            details.image.type,
+            imgData,
+            false,
+            false,
+            usePaidImageMsg ? IMAGE_SEND_TYPE.PAID : IMAGE_SEND_TYPE.FREE,
+            this.IMAGE_SCALING_FACTOR,
+            this.IMAGE_QUALITY_FACTOR,
+            this.IMAGE_ITERATIONS
+          ]).pipe(
             concatMap(() => this._rpc.call('market', ['get', market.id, true])),
             catchError(() => of(market))
           );
@@ -213,7 +232,12 @@ export class MarketManagementService {
 
 
   estimateMarketPromotionFee(marketId: number, durationDays: number): Observable<number> {
-    return this._rpc.call('market', ['post', marketId, durationDays, true]).pipe(
+    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
+    const postParams = ['post', marketId, durationDays, true, null, null];
+
+    postParams.push(usingAnonFees ? 'anon' : 'part');
+
+    return this._rpc.call('market', postParams).pipe(
       map((resp: RespItemPost) => {
         if (isBasicObjectType(resp) && (+resp.fee > 0)) {
           return +resp.fee;
@@ -230,7 +254,7 @@ export class MarketManagementService {
 
     postParams.push(usingAnonFees ? 'anon' : 'part');
 
-    return this._rpc.call('market', ['post', marketId, durationDays, false]).pipe(
+    return this._rpc.call('market', postParams).pipe(
       map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
     );
   }

@@ -23,7 +23,9 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   identity: null,
   defaultConfig: {
     imagePath: './assets/images/placeholder_4-3.jpg',
-    url: `http://${environment.marketHost}:${environment.marketPort || 80}/`
+    url: `http://${environment.marketHost}:${environment.marketPort || 80}/`,
+    imageMaxSizeFree: 153600,  // 150 KB
+    imageMaxSizePaid: 1_048_576 // 1 MB
   },
   settings: {
     port: environment.marketPort,
@@ -31,7 +33,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     defaultProfileID: 0,
     userRegion: '',
     canModifyIdentities: false,
-    useAnonBalanceForFees: false
+    useAnonBalanceForFees: false,
+    usePaidMsgForImages: true
   }
 };
 

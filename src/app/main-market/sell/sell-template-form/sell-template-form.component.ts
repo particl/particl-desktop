@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/fo
 import { Observable, Subject, of, merge } from 'rxjs';
 import { takeUntil, tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
+import { SellService } from '../sell.service';
 import { amountValidator, totalValueValidator, categorySelectedValidator } from './sell-template-form.validators';
 import { TreeSelectComponent } from '../../shared/shared.module';
 import { TemplateFormDetails } from '../sell.models';
@@ -31,6 +32,8 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   readonly MAX_TITLE: number = 50;
   readonly MAX_SHORT_DESCRIPTION: number = 200;
   readonly MAX_LONG_DESCRIPTION: number = 8000;
+  readonly MAX_IMAGE_SIZE: number;
+  readonly imageSizeLabel: string;
 
   private destroy$: Subject<void> = new Subject();
   private defaultCategoryId: number = 0;
@@ -43,7 +46,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   @ViewChild('categorySelector', {static: false}) private selectorCategory: TreeSelectComponent;
 
 
-  constructor() {
+  constructor(
+    private _sellService: SellService
+  ) {
     // The basic template information present on all templates
     this.templateForm = new FormGroup({
       title: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_TITLE)]),
@@ -60,6 +65,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       },
       [totalValueValidator, categorySelectedValidator]
     );
+
+    this.MAX_IMAGE_SIZE = this._sellService.IMAGE_MAX_SIZE;
+    this.imageSizeLabel = `${Math.round(Math.fround(this.MAX_IMAGE_SIZE / 1024))} KB`;
   }
 
 
@@ -241,10 +249,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       sourceFiles = Array.from(event.target.files);
     }
 
-    const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
     let failedImgs = false;
     sourceFiles.forEach((file: File) => {
-      if (file.size > MAX_IMAGE_SIZE) {
+      if (file.size > this.MAX_IMAGE_SIZE) {
         failedImgs = true;
       } else {
         const reader = new FileReader();

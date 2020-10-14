@@ -37,12 +37,15 @@ export interface MarketSettings {
   userRegion: string;
   canModifyIdentities: boolean;
   useAnonBalanceForFees: boolean;
+  usePaidMsgForImages: boolean;
 }
 
 
 export interface DefaultMarketConfig {
   url: string;
   imagePath: string;
+  imageMaxSizeFree: number;
+  imageMaxSizePaid: number;
 }
 
 

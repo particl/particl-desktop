@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subject, of, Observable, merge, from, combineLatest } from 'rxjs';
-import { tap, takeUntil, catchError, concatAll, map } from 'rxjs/operators';
+import { Subject, of, Observable, merge, combineLatest } from 'rxjs';
+import { tap, takeUntil, map } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
@@ -94,23 +94,24 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    let init$: Observable<any> = of(null);
+    let init$: Observable<number> = of(0);
 
     if (this.isDataValid) {
-      const durations$: Observable<any>[] = [];
 
-      for (const duration of this.availableDurations) {
-        durations$.push(
-          this._sellService.estimatePublishFee(this.templateDetails.templateID, duration.value).pipe(
-            tap((amount) => duration.estimateFee = amount),
-            catchError(() => of(duration.value)),
-          )
+      this.availableDurations.sort((a, b) => a.value - b.value);
+
+      const baseDuration = this.availableDurations.find(d => d.value > 0);
+      if (baseDuration) {
+        init$ = this._sellService.estimatePublishFee(this.templateDetails.templateID, baseDuration.value).pipe(
+          tap(fee => {
+            if (+fee > 0) {
+              this.availableDurations.forEach(dur => {
+                dur.estimateFee = new PartoshiAmount(dur.value / baseDuration.value).multiply(fee).particls();
+              });
+            }
+          })
         );
       }
-
-      init$ = from(durations$).pipe(
-        concatAll()
-      );
     }
 
 

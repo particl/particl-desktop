@@ -107,7 +107,8 @@ export class NewListingComponent implements OnInit, OnDestroy {
         this.errorMessage.setValue(TextContent.ERROR_EXISTING_TEMPLATE_FETCH);
         return of(null as Template);
       }),
-      tap(templ => this.resetTemplateDetails(templ))
+      tap(templ => this.resetTemplateDetails(templ)),
+      concatMap(() => this.verifyTemplateFits())
     );
 
     // Ensure that the markets are loaded first, since the template processing requires the market list
@@ -245,14 +246,19 @@ export class NewListingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.doTemplateSave().subscribe(
+    this.doTemplateSave().pipe(
+      concatMap((success) => iif(
+        () => success && (this.savedTempl.type === 'MARKET'),
+        defer(() => this.verifyTemplateFits().pipe(mapTo(success))),
+        defer(() => of(success))
+      ))
+    ).subscribe(
       (success) => {
         if (!success) {
           this._snackbar.open(TextContent.ERROR_FAILED_SAVE, 'warn');
         }
       }
     );
-
   }
 
 
@@ -261,10 +267,20 @@ export class NewListingComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.doTemplateSave().subscribe(
+    this.doTemplateSave().pipe(
+      concatMap((success) => iif(
+        () => success,
+        defer(() => this.verifyTemplateFits().pipe(mapTo(success))),
+        defer(() => of(success))
+      ))
+    ).subscribe(
       (success) => {
         if (!success) {
           this._snackbar.open(TextContent.ERROR_FAILED_SAVE, 'warn');
+          return;
+        }
+
+        if (!this.isTemplatePublishable) {
           return;
         }
 
@@ -561,6 +577,26 @@ export class NewListingComponent implements OnInit, OnDestroy {
     }
 
     this.templateForm.resetFormDetails(formDetails);
+  }
+
+
+  private verifyTemplateFits(): Observable<boolean> {
+    return of({}).pipe(
+      concatMap(() => iif(
+        () => !this.savedTempl || ( this.savedTempl.type !== 'MARKET'),
+
+        defer(() => of(true)),
+
+        defer(() => this._sellService.calculateTemplateFits(this.savedTempl.id).pipe(
+          tap(doesFit => {
+            if (!doesFit) {
+              this.errorMessage.setValue(TextContent.ERROR_MAX_TEMPLATE_SIZE);
+              this.updateFormActions();
+            }
+          })
+        )),
+      ))
+    );
   }
 
 

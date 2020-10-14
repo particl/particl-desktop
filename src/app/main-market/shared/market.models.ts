@@ -12,6 +12,10 @@ export enum MarketType {
   STOREFRONT = 'STOREFRONT',
   STOREFRONT_ADMIN = 'STOREFRONT_ADMIN'
 }
+export enum IMAGE_SEND_TYPE {
+  FREE = '0201',
+  PAID = '0300'
+}
 export enum ADDRESS_TYPES { SHIPPING_OWN = 'SHIPPING_OWN', SHIPPING_BID = 'SHIPPING_BID' }
 export enum ESCROW_RELEASE_TYPE { ANON = 'anon', BLIND = 'blind' }
 export enum COMMENT_TYPES {

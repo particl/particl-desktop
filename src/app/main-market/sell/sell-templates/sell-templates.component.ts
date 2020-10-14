@@ -31,7 +31,8 @@ enum TextContent {
   PUBLISH_WAIT = 'Publishing the template to the selected market',
   CLONE_WAIT = 'Creating your new product details',
   ERROR_DELETE_PRODUCT = 'An error occurred while deleting the product!',
-  ERROR_CLONE_ITEM = 'An error occurred during copying!',
+  ERROR_CLONE_ITEM = 'An error occurred cloning the selected item',
+  ERROR_TEMPLATE_SIZE = 'Maximum listing size exceeded - please reduce image or text sizes',
   PUBLISH_FAILED = 'Failed to publish the template',
   PUBLISH_SUCCESS = 'Successfully created a listing!',
 }
@@ -315,8 +316,16 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
     });
 
-    this._unlocker.unlock({timeout: 30}).pipe(
-      concatMap(isUnlocked => iif(() => isUnlocked, openDialog$))
+    this._sellService.calculateTemplateFits(marketTempl.id).pipe(
+      concatMap(doesFit => iif(
+        () => doesFit,
+        defer(() => this._unlocker.unlock({timeout: 30}).pipe(
+          concatMap(isUnlocked => iif(() => isUnlocked, openDialog$))
+        )),
+        defer(() => {
+          this._snackbar.open(TextContent.ERROR_TEMPLATE_SIZE, 'warn');
+        })
+      ))
     ).subscribe();
   }
 

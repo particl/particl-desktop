@@ -30,6 +30,8 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
   readonly marketForm: FormGroup;
   readonly MAX_NAME: number;
   readonly MAX_SUMMARY: number;
+  readonly MAX_IMAGE_SIZE: number;
+  readonly imageSizeLabel: string;
 
 
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
@@ -53,6 +55,8 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
     this.optionsMarketRegions = this._manageService.getMarketRegions();
     this.MAX_NAME = this._manageService.MAX_MARKET_NAME;
     this.MAX_SUMMARY = this._manageService.MAX_MARKET_SUMMARY;
+    this.MAX_IMAGE_SIZE = this._manageService.IMAGE_MAX_SIZE;
+    this.imageSizeLabel = `${Math.round(Math.fround(this.MAX_IMAGE_SIZE / 1024))} KB`;
   }
 
 
@@ -152,10 +156,9 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
       sourceFiles = Array.from(event.target.files);
     }
 
-    const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
     let failedImgs = false;
     sourceFiles.forEach((file: File) => {
-      if (file.size > MAX_IMAGE_SIZE) {
+      if (file.size > this.MAX_IMAGE_SIZE) {
         failedImgs = true;
       } else {
         const reader = new FileReader();

@@ -10,7 +10,7 @@ import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
-import { RespListingTemplate, RespItemPost } from '../shared/market.models';
+import { RespListingTemplate, RespItemPost, RespTemplateSize, IMAGE_SEND_TYPE } from '../shared/market.models';
 import {
   Template,
   TemplateSavedDetails,
@@ -25,17 +25,29 @@ import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail
 @Injectable()
 export class SellService {
 
+
+  readonly IMAGE_MAX_SIZE: number;
+
+  private readonly IMAGE_SCALING_FACTOR: number = 0.8;
+  private readonly IMAGE_QUALITY_FACTOR: number = 1;
+  private readonly IMAGE_ITERATIONS: number = 50;
+
+
   constructor(
     private _rpc: MarketRpcService,
     private _store: Store,
     private _sharedService: DataService,
     private _regionService: RegionListService
-  ) {}
+  ) {
+    const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    this.IMAGE_MAX_SIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
+  }
 
 
   fetchAllProductTemplates(): Observable<ProductItem[]> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
-    return this._rpc.call('template', ['search', 0, 1000000, 'DESC', 'created_at', profileId]).pipe(
+    return this._rpc.call('template', ['search', 0, 1_000_000, 'DESC', 'created_at', profileId]).pipe(
       map((resp: RespListingTemplate[]) => {
         return Array.isArray(resp) ? this.buildProductsFromTemplateList(resp) : [];
       })
@@ -110,6 +122,16 @@ export class SellService {
   }
 
 
+  calculateTemplateFits(templateId: number): Observable<boolean> {
+    return this._rpc.call('template', ['size', templateId]).pipe(
+      map((resp: RespTemplateSize) => {
+        return isBasicObjectType(resp) && !!resp.fits;
+      }),
+      catchError(() => of(true))  /// unrelated issues, such as not having a category set, can result in errors being thrown
+    );
+  }
+
+
   createNewTemplate(data: CreateTemplateRequest): Observable<Template> {
     /**
      *
@@ -122,6 +144,8 @@ export class SellService {
      */
 
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+    const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
+
     const addParams = [
       'add',
       profileId,
@@ -159,7 +183,19 @@ export class SellService {
           const imageParts = image.data.split(',');
           const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
           queries.push(
-            this._rpc.call('image', ['add', 'template', templateID, image.type, imgData]).pipe(
+            this._rpc.call('image', [
+              'add',
+              'template',
+              templateID,
+              image.type,
+              imgData,
+              false,
+              false,
+              usePaidImageMsg ? IMAGE_SEND_TYPE.PAID : IMAGE_SEND_TYPE.FREE,
+              this.IMAGE_SCALING_FACTOR,
+              this.IMAGE_QUALITY_FACTOR,
+              this.IMAGE_ITERATIONS
+            ]).pipe(
               catchError(() => of(null))
             )
           );
@@ -222,6 +258,7 @@ export class SellService {
      */
 
     const updates$: Observable<any>[] = [];
+    const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
 
     if (isBasicObjectType(details.info)) {
       const rpc$ = this._rpc.call('template', [
@@ -267,7 +304,18 @@ export class SellService {
       details.images.forEach(image => {
         const imageParts = image.data.split(',');
         const imgData = imageParts.length === 2 ? imageParts[1] : image.data;
-        updates$.push(this._rpc.call('image', ['add', 'template', templateId, image.type, imgData]));
+        updates$.push(this._rpc.call('image', ['add',
+          'template',
+          templateId,
+          image.type,
+          imgData,
+          false,
+          false,
+          usePaidImageMsg ? IMAGE_SEND_TYPE.PAID : IMAGE_SEND_TYPE.FREE,
+          this.IMAGE_SCALING_FACTOR,
+          this.IMAGE_QUALITY_FACTOR,
+          this.IMAGE_ITERATIONS
+        ]));
       });
     }
 
@@ -330,8 +378,11 @@ export class SellService {
 
 
   estimatePublishFee(templateId: number, durationDays: number): Observable<number> {
-    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
-    const postParams = ['post', templateId, durationDays, true, false];
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    const usingAnonFees = marketSettings.useAnonBalanceForFees;
+    const usePaidImageMsg = marketSettings.usePaidMsgForImages;
+
+    const postParams = ['post', templateId, durationDays, true, usePaidImageMsg];
 
     postParams.push(usingAnonFees ? 'anon' : 'part');
 
@@ -347,8 +398,11 @@ export class SellService {
 
 
   publishMarketTemplate(templateId: number, durationDays: number): Observable<boolean> {
-    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
-    const postParams = ['post', templateId, durationDays, false, false];
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    const usingAnonFees = marketSettings.useAnonBalanceForFees;
+    const usePaidImageMsg = marketSettings.usePaidMsgForImages;
+
+    const postParams = ['post', templateId, durationDays, false, usePaidImageMsg];
 
     postParams.push(usingAnonFees ? 'anon' : 'part');
 
@@ -789,7 +843,7 @@ export class SellService {
           ).sort((a, b) =>
             +(!!a.featured) - +(!!b.featured)
           ).forEach(img => {
-            const imgPath = parseImagePath(img, 'THUMBNAIL', marketUrl);
+            const imgPath = parseImagePath(img, 'ORIGINAL', marketUrl);
             if (imgPath.length) {
               newProduct.images.push(imgPath);
             }
@@ -951,7 +1005,7 @@ export class SellService {
         if (featured === undefined) {
           featured = src.ItemInformation.Images[0];
         }
-        newMarketDetails.image = parseImagePath(featured, 'MEDIUM', marketUrl) || newMarketDetails.image;
+        newMarketDetails.image = parseImagePath(featured, 'ORIGINAL', marketUrl) || newMarketDetails.image;
       }
     }
 
@@ -1059,8 +1113,8 @@ export class SellService {
 
         if (Array.isArray(src.ItemInformation.Images)) {
           src.ItemInformation.Images.forEach( (img, imgIdx) => {
-            const orig = parseImagePath(img, 'MEDIUM', marketUrl);
-            const thumb = parseImagePath(img, 'THUMBNAIL', marketUrl);
+            const orig = parseImagePath(img, 'ORIGINAL', marketUrl);
+            const thumb = parseImagePath(img, 'ORIGINAL', marketUrl);
 
             if ((orig.length > 0) && (thumb.length > 0)) {
               listingItem.images.images.push({THUMBNAIL: thumb, IMAGE: orig});

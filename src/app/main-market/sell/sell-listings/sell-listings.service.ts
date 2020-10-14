@@ -23,7 +23,7 @@ export class SellListingsService {
 
   fetchAllListings(): Observable<SellListing[]> {
     const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
-    return this._rpc.call('template', ['search', 0, 1000000, 'DESC', 'created_at', profileId]).pipe(
+    return this._rpc.call('template', ['search', 0, 1_000_000, 'DESC', 'created_at', profileId]).pipe(
       map((resp: RespListingTemplate[]) => {
         return this.buildListings(resp);
       })
@@ -128,13 +128,15 @@ export class SellListingsService {
             newListing.title = getValueOrDefault(src.ItemInformation.title, 'string', newListing.title);
             newListing.summary = getValueOrDefault(src.ItemInformation.shortDescription, 'string', newListing.summary);
 
-            if (Array.isArray(src.ItemInformation.Images) && src.ItemInformation.Images.length) {
-              let featured = src.ItemInformation.Images.find(img => img.featured);
+            // Use the template's images here, because the listing item data does not contin image information (like, wat?!), but
+            //  given that this is our own listings, any images should exist on the template from which the listing was created
+            if (Array.isArray(marketTemplate.ItemInformation.Images) && (marketTemplate.ItemInformation.Images.length > 0)) {
+              let featured = marketTemplate.ItemInformation.Images.find(img => isBasicObjectType(img) && !!img.featured);
               if (featured === undefined) {
-                featured = src.ItemInformation.Images[0];
+                featured = marketTemplate.ItemInformation.Images[0];
               }
 
-              newListing.image = parseImagePath(featured, 'THUMBNAIL', marketUrl) || newListing.image;
+              newListing.image = parseImagePath(featured, 'ORIGINAL', marketUrl) || newListing.image;
             }
 
             if (isBasicObjectType(src.ItemInformation.ItemLocation)) {

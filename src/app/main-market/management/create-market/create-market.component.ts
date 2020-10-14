@@ -44,8 +44,10 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly MAX_NAME: number;
   readonly MAX_SUMMARY: number;
+  readonly imageSizeLabel: string;
 
   private destroy$: Subject<void> = new Subject();
+  private readonly MAX_IMAGE_SIZE: number;
 
   @ViewChild('dropArea', {static: false}) private dropArea: ElementRef;
   @ViewChild('fileInputSelector', {static: false}) private fileInputSelector: ElementRef;
@@ -69,6 +71,8 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     this.optionsMarketRegions = this._manageService.getMarketRegions();
     this.MAX_NAME = this._manageService.MAX_MARKET_NAME;
     this.MAX_SUMMARY = this._manageService.MAX_MARKET_SUMMARY;
+    this.MAX_IMAGE_SIZE = this._manageService.IMAGE_MAX_SIZE;
+    this.imageSizeLabel = `${Math.round(Math.fround(this.MAX_IMAGE_SIZE / 1024))} KB`;
 
     const foundRegion = this.optionsMarketRegions.find(mr => mr.value === this.marketForm.get('region').value);
     if (foundRegion) {
@@ -191,10 +195,9 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
       sourceFiles = Array.from(event.target.files);
     }
 
-    const MAX_IMAGE_SIZE = 1024 * 1024 * 2; // (2MB)
     let failedImgs = false;
     sourceFiles.forEach((file: File) => {
-      if (file.size > MAX_IMAGE_SIZE) {
+      if (file.size > this.MAX_IMAGE_SIZE) {
         failedImgs = true;
       } else {
         const reader = new FileReader();
