@@ -26,8 +26,8 @@ export class FavouritesService {
     return this._rpc.call('favorite', ['list', this._store.selectSnapshot(MarketState.currentProfile).id]).pipe(
       map((resp: RespFavoriteItem[]) => {
         const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
-        const userDefaultRegion = this._store.selectSnapshot(MarketState.defaultConfig).url;
-        const defaultImagePath = this._store.selectSnapshot(MarketState.settings).userRegion;
+        const userDefaultRegion = this._store.selectSnapshot(MarketState.settings).userRegion;
+        const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
         return resp.map(item => this.createFavouriteItem(item, marketUrl, defaultImagePath, userDefaultRegion));
       })
     );
@@ -84,14 +84,12 @@ export class FavouritesService {
           }
 
 
-          if (Array.isArray(fromListing.ItemInformation.Images)) {
-            if (fromListing.ItemInformation.Images.length) {
-              let featured = fromListing.ItemInformation.Images.find(img => img.featured);
-              if (featured === undefined) {
-                featured = fromListing.ItemInformation.Images[0];
-              }
-              image = parseImagePath(featured, 'MEDIUM', marketUrl) || image;
+          if (Array.isArray(fromListing.ItemInformation.Images) && (fromListing.ItemInformation.Images.length > 0)) {
+            let featured = fromListing.ItemInformation.Images.find(img => img.featured);
+            if (featured === undefined) {
+              featured = fromListing.ItemInformation.Images[0];
             }
+            image = parseImagePath(featured, 'MEDIUM', marketUrl) || parseImagePath(featured, 'ORIGINAL', marketUrl) || image;
           }
         }
 

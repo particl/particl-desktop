@@ -84,7 +84,7 @@ export class DataService {
 
 
   getListingDetailsForMarket(id: number, marketId: number): Observable<ListingItemDetail> {
-    return this._rpc.call('item', ['get', id, true]).pipe(
+    return this._rpc.call('item', ['get', id, false]).pipe(
       map((resp: RespListingItem) => this.createListingItemDetail(resp, marketId))
     );
   }
@@ -183,8 +183,8 @@ export class DataService {
       // images
       if (Array.isArray(fromDetails.Images)) {
         fromDetails.Images.forEach(img => {
-          const thumbUrl = parseImagePath(img, 'MEDIUM', marketUrl);
-          const imgUrl = parseImagePath(img, 'LARGE', marketUrl);
+          const thumbUrl = parseImagePath(img, 'MEDIUM', marketUrl) || parseImagePath(img, 'ORIGINAL', marketUrl);
+          const imgUrl = parseImagePath(img, 'LARGE', marketUrl) || parseImagePath(img, 'ORIGINAL', marketUrl);
 
           if (thumbUrl && imgUrl) {
             images.images.push({

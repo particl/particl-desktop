@@ -151,7 +151,7 @@ export class ListingsService {
           if (featured === undefined) {
             featured = fromDetails.Images[0];
           }
-          imageSelected = parseImagePath(featured, 'MEDIUM', marketUrl) || imageSelected;
+          imageSelected = parseImagePath(featured, 'MEDIUM', marketUrl) || parseImagePath(featured, 'ORIGINAL', marketUrl) || imageSelected;
         }
       }
     }
