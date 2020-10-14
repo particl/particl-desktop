@@ -120,10 +120,10 @@
     >
 
       <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
-        <div mat-card-image (click)="openListingDetailModal(listing.id, false)">
+        <div mat-card-image appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id, false)">
           <img class="img" [src]="listing.image" [alt]="listing.title">
         </div>
-        <mat-card-header (click)="openListingDetailModal(listing.id, false)">
+        <mat-card-header appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id, false)">
           <mat-card-title>
             {{ listing.title }}
           </mat-card-title>
@@ -147,7 +147,7 @@
             <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
             <span>{{ listing.extras.isFlagged ? 'Flagged as inappropriate' : 'Report as inappropriate' }}</span>
           </button>
-          <button mat-menu-item (click)="openListingDetailModal(listing.id, true)">
+          <button mat-menu-item appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id, true)">
             <mat-icon fontIcon="part-chat-discussion"></mat-icon>
             <span>Questions &amp; Answers</span>
           </button>

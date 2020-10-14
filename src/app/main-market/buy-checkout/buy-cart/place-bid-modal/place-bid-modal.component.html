@@ -93,7 +93,7 @@
     <span>Inexplicably, there appears to be some Listing data missing</span>
   </p>
   <p *ngIf="errors.insufficientFunds" class="alert --boxed --warning">
-    <span>You appear to have insufficient Anon balance to complete this order <small>Convert more of your coins to Anon balance (in Wallet > Send/Convert) to continue</small></span>
+    <span>You appear to have insufficient spendable (Anon) balance to complete this order <small>Convert more of your coins to Anon balance (in Wallet > Send/Convert) to continue</small></span>
   </p>
   <p *ngIf="errors.insufficientUtxos" class="alert --boxed --info">
     <span>You don't have enough unspent Anon outputs, it's likely that one or more items will not be bought <small>To continue, convert more of your coins to Anon balance (in Wallet > Send/Convert) or split your UTXOs with Coin Control (advanced)</small></span>
@@ -106,7 +106,7 @@
       Looks good?
     </p>
     <p class="help-text">
-      After confirming this Order, it will be sent to Seller(s) &ndash; they will accept or reject your bids. Only if they accept, you will pay for this Order.
+      After confirming the placement of this order, it will be sent to the Seller(s) &ndash; they will accept or reject your bids. The total amount will be reserved in your wallet. Once the seller(s) accept and escrow is established will the funds be spent from your wallet.
     </p>
     <p>
       <button mat-raised-button color="primary" [disabled]="errors.invalidData || errors.insufficientFunds" (click)="confirmCheckout()">

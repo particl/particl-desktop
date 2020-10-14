@@ -93,7 +93,7 @@
     </div><!-- .detail -->
     <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
       <div class="left">
-        <button mat-button matTooltip="Preview listing" class="small" (click)="openListingDetailModal()">
+        <button mat-button matTooltip="Preview listing" class="small" appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal()">
           <mat-icon fontIcon="part-zoom-in"></mat-icon>
           Open Listing
         </button>

@@ -21,7 +21,7 @@
       </div>
 
       <mat-card *ngFor="let cartItem of cartItems; trackBy: trackByCartItemIdx" class="cart-item --cart-layout">
-        <div class="photo" (click)="openListingDetailModal(cartItem.listingId)">
+        <div class="photo" appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(cartItem.listingId)">
           <div class="overlay">
             <mat-icon fontIcon="part-zoom-in"></mat-icon>
           </div>
@@ -205,7 +205,7 @@
             </table>
             <mat-divider></mat-divider>
             <p class="help-text">
-              Note: Escrow payment will be automatically returned after successful delivery of the Order.
+              Note: Escrow amount will be automatically returned after successful delivery of the Order.
             </p>
           </mat-card>
 
