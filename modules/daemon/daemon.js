@@ -7,6 +7,7 @@ const daemonManager = require('../daemon/daemonManager');
 const daemonWarner  = require('./update');
 const daemonConfig  = require('./daemonConfig');
 const _auth         = require('../webrequest/http-auth');
+const _zmqServices  = require('../zmq/services');
 
 let daemon = undefined;
 let authRequested = false;
@@ -18,8 +19,11 @@ function daemonData(data, logger) {
 
 let attemptsToStart = 0;
 const maxAttempts = 10;
+const zmqDefaultPort = 36750;
 
-exports.start = function (doReindex = false) {
+
+exports.start = function (doReindex = false, zmqPort = zmqDefaultPort) {
+
   let options = _options.get();
 
   if (+options.addressindex !== 1) {
@@ -43,16 +47,24 @@ exports.start = function (doReindex = false) {
         : daemonManager.getPath();
 
 
-      const addedArgs = [
-        "-zmqpubsmsg=tcp://127.0.0.1:36750"
-      ];
+      const addedArgs = [];
+
+      if (options.dev) {
+        addedArgs.push('-rpccorsdomain=http://localhost:4200');
+      }
 
       if (doReindex) {
         log.info('Adding reindex flag to daemon startup');
         addedArgs.push('-reindex');
       }
 
-      const deamonArgs = [...process.argv, "-rpccorsdomain=http://localhost:4200", ...addedArgs];
+      // ZMQ subscription configuration
+      for (const zmqService of _zmqServices.required) {
+        // NB!!!!!!!!!! DO NOT USE 'localhost' as this WILL fail. NEEDS to be ip based for tcp:// protocol
+        addedArgs.push(`-zmqpub${zmqService}=tcp://127.0.0.1:${zmqPort}`);
+      }
+
+      const deamonArgs = [...process.argv, ...addedArgs];
       log.info(`starting daemon: ${deamonArgs.join(' ')}`);
 
       const child = spawn(daemonPath, deamonArgs);
@@ -73,7 +85,7 @@ exports.start = function (doReindex = false) {
         if (err.includes("-reindex") && attemptsToStart < maxAttempts) {
           log.error('Restarting the daemon with the -reindex flag.');
           attemptsToStart++;
-          exports.start(true);
+          exports.start(true, zmqPort);
         }
         daemonData(data, console.log);
       });

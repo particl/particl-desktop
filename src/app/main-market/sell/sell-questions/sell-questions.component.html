@@ -1,0 +1,130 @@
+<app-page-intro childPageAlias="Sell Comments">
+  <ng-container page-title>Buyers' Questions</ng-container>
+  <ng-container page-content>
+    This is where unread Buyers' questions on your Listings are collected.<br>
+    You can reply to your Buyers right from here to manage all the questions with ease.
+  </ng-container>
+  <ng-container page-help>
+    You can always open the Listings directly (clicking on their photo) and manage questions from there, if you prefer.
+  </ng-container>
+</app-page-intro>
+
+
+
+<!-- Questions > Filter -->
+<div class="filter">
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="searchQuery"
+          placeholder="Search Questions" (keyup.escape)="searchQuery.setValue('')">
+    <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+  <h2 class="section-title">
+    Filter
+  </h2>
+
+  <mat-card class="filter-card">
+    <div class="checkbox highlight">
+      <!-- @TODO: checked by default -->
+      <mat-checkbox color="primary">Unanswered questions only</mat-checkbox>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="All Markets" [(ngModel)]="filters.sort" (selectionChange)="clearAndLoadPage()">
+        <mat-option *ngFor="let filtering_market of listing_filtering_market" [value]="filtering_market.value">
+          {{ filtering_market.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-card>
+
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+
+<!-- Questions > list -->
+<div class="questions section with-filter">
+
+  <mat-expansion-panel class="question-item list-item no-padding">
+    <mat-expansion-panel-header class="header">
+      <div class="header-wrapper">
+        <div class="photo">
+          <img src="./assets/images/placeholder_4-3.jpg">
+        </div>
+        <div class="meta" fxFlex="1 1 100%">
+          <div class="name">
+            Listing name
+          </div>
+          <!-- TODO: implement display of Market where item is published -->
+          <span class="origin-market">Particl Open Market</span>
+          <span class="category">Furniture Incinerators</span>
+        </div>
+        <div class="status-wrap" fxFlex="0 0 140px">
+          <div class="status" matTooltip="New questions" matTooltipPosition="before">
+            <mat-icon fontIcon="part-chat"></mat-icon>
+            2
+          </div>
+        </div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="detail">
+      <mat-accordion>
+        <app-question-thread-list-item type="question"></app-question-thread-list-item>
+        <app-question-thread-list-item type="question"></app-question-thread-list-item>
+      </mat-accordion>
+    </div><!-- .detail -->
+    <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+      <div class="left">
+        <button mat-button matTooltip="Preview listing" class="small" appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal()">
+          <mat-icon fontIcon="part-zoom-in"></mat-icon>
+          Open Listing
+        </button>
+      </div>
+      <div class="right">
+        <button mat-button color="accent">
+          <mat-icon fontIcon="part-check"></mat-icon>
+          Mark all as read
+        </button>
+      </div>
+    </mat-action-row>
+  </mat-expansion-panel><!-- .question-item -->
+
+
+  <!-- *ngIf="questions?.length === 0" -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No Questions found">
+    <p>
+      No Questions from Buyers yet
+    </p>
+    <p class="help-text">
+      Looks like you're doing a great job with proper Listing descriptions or you're not selling anything yet
+    </p>
+  </div>
+
+  <!-- when searching/filtering: -->
+  <div class="no-results">
+    <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No Questions found">
+    <p>
+      No Questions found
+    </p>
+    <p class="help-text">
+      You don't have any Questions matching your search/filter
+    </p>
+  </div>
+
+</div><!-- .questions.list -->

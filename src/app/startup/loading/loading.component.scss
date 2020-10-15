@@ -1,0 +1,95 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+body {
+  margin: 0 !important;
+}
+
+.splash-container {
+  @extend %tfx;
+  background: url('../../../assets/splash-bg.jpg') no-repeat bottom left var(--bg-black);
+  background-size: 500px;
+  color: var(--bg);
+  text-align: center;
+  font-family: var(--font);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  @include break(l) {
+    background-size: 600px;
+  }
+  @include break(xl) {
+    background-size: 700px;
+  }
+  .content {
+    margin: auto;
+  }
+  .logo {
+    @extend %tfx;
+    width: 270px;
+    height: auto;
+    margin-bottom: 4rem;
+    @include break(l) {
+      width: 310px;
+      margin-bottom: 5rem;
+    }
+    @include break(xl) {
+      width: 350px;
+      margin-bottom: 8rem;
+    }
+  }
+  .quote {
+    font-size: 18px;
+    margin: 0;
+    .author {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+  }
+}
+
+.loading-wrapper {
+  position: absolute;
+  width: 100vw;
+  bottom: 1.5rem;
+  // pulsing dots animations
+  .loader {
+    color: var(--color-secondary);
+    font-size: 40px;
+    font-family: var(--font-mono);
+    span {
+      display: inline-block;
+      margin: 0 8px;
+      animation: pulse 0.6s alternate infinite ease-in-out;
+      transform-origin: bottom;
+      &:nth-child(2n+1) {
+        animation-delay: 0.15s;
+      }
+      &:nth-child(2n+2) {
+        animation-delay: 0.3s;
+      }
+      &:nth-child(2n+3) {
+        animation-delay: 0.45s;
+      }
+    }
+  }
+  // status message
+  .loading-status {
+    @extend %tfx;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    @include break(l) {
+      font-size: 13px;
+    }
+    @include break(xl) {
+      font-size: 14px;
+    }
+  }
+}
+
+@keyframes pulse {
+  to {
+    color: var(--color-tertiary);
+    font-size: 24px;
+  }
+}

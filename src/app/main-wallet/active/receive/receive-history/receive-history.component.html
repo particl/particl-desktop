@@ -1,0 +1,123 @@
+<div class="show-old">
+  <button mat-button class="small" (click)="isVisible.setValue(!isVisible.value)">
+    <ng-container *ngIf="isVisible.value">
+      <mat-icon fontIcon="part-triangle-up"></mat-icon>
+      Hide used addresses
+    </ng-container>
+    <ng-container *ngIf="!isVisible.value">
+      <mat-icon fontIcon="part-triangle-down"></mat-icon>
+      Show used addresses
+    </ng-container>
+  </button>
+</div>
+
+
+<!-- ====== OLD, USED ADDRESS ====== -->
+
+<div #scroll class="previous-addresses container-block" *ngIf="isVisible.value">
+
+  <app-page-intro [childPageAlias]="'receive'">
+    <ng-container page-title>Your used addresses</ng-container>
+    <ng-container page-content>
+      These are your previously used addresses.<br>
+      It is recommended not to reuse your old addresses.
+    </ng-container>
+    <ng-container page-help>
+      To increase your privacy, you should use a new address for each transaction.
+    </ng-container>
+  </app-page-intro>
+
+  <!-- Sorting, filtering -->
+  <div class="filter">
+
+    <div class="section search-sorting">
+      <h2 class="section-title">
+        Search addresses
+      </h2>
+
+      <mat-form-field class="--boxed" appearance="fill">
+        <input matInput type="text" [formControl]="searchQuery"
+              placeholder="Search Addresses" (keyup.escape)="searchQuery.setValue('')">
+        <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+        </button>
+        <mat-icon *ngIf="searchQuery.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+      </mat-form-field>
+
+      <p class="help-text">
+        These are your previously used addresses. It is recommended not to reuse your old addresses &ndash; to increase your privacy, you should use a new address for each transaction.
+      </p>
+    </div><!-- .search-sorting -->
+
+  </div><!-- .filter -->
+
+
+  <!-- Address list -->
+  <div class="address-list with-filter" *ngIf="activeAddress?.address">
+
+    <ng-template #loading>
+      <main-loading-placeholder></main-loading-placeholder>
+    </ng-template>
+
+    <ng-container *ngIf="!isLoading else loading">
+      <div class="no-results" *ngIf="filteredAddresses.length === 0">
+        <img class="illustration" src="./assets/app-wallet/illustrations/no-tx-address.svg" alt="No address found">
+        <p>
+          No address found
+        </p>
+        <p class="help-text">
+          You don't have any matching addresses
+        </p>
+      </div><!-- .no-results -->
+
+      <div class="list-data" *ngIf="filteredAddresses.length > 0">
+        <h2 class="section-title">Used addresses</h2>
+        <ng-container *ngFor="let address of filteredAddresses; trackBy: trackByAddressFn">
+
+          <mat-card class="address-info">
+
+            <div class="address-name cursor-pointer" (click)="openAddressDetailModal(address)">
+              <div class="address-id">
+                #{{ +address?.id + 1 || '' }}
+              </div>
+              <span class="address-label" [ngClass]="{'no-label': address.label === ''}">
+                {{ address?.label || '(No Label)' }}
+              </span>
+              <span class="address">
+                {{ address?.address || '' }}
+              </span>
+            </div>
+
+            <div class="address-actions" fxFlex="0 0 50px" fxLayoutAlign="end center">
+              <!-- Copy address -->
+              <button mat-button class="tiny icon-only" matTooltip="Copy address" (click)="copyToClipBoard()"
+              ngxClipboard [cbContent]="address?.address || ''">
+                <mat-icon fontIcon="part-copy"></mat-icon>
+              </button>
+              <!-- Sign/Verify public address only  -->
+              <button mat-button class="tiny icon-only" *ngIf="address.address.length < 35" matTooltip="Sign message"
+              (click)="openSignatureModal(address)" ngxClipboard>
+                <mat-icon fontIcon="part-person-check"></mat-icon>
+              </button>
+            </div><!-- .address-actions -->
+
+          </mat-card>
+        </ng-container>
+      </div><!-- .list-data -->
+
+      <!-- use a paginator for reset pagination after tab change. -->
+      <div class="receive-pagination">
+        <app-paginator
+          *ngIf="pageFilters.resultsTotalCount > 0"
+          #paginator
+          [length]="pageFilters.resultsTotalCount"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="pageOptions"
+          (page)="paginatorChangeHandler($event)">
+        </app-paginator>
+      </div>
+
+    </ng-container>
+
+  </div>
+</div>

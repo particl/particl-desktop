@@ -1,0 +1,29 @@
+<div class="status-icons" fxLayout="row" fxLayoutGap="14px">
+
+  <div class="status icon">
+    <img src="assets/icons/status/peers-{{ peerIcon }}.svg" matTooltip="Peers: {{ peerListCount }}" />
+  </div>
+
+  <div *ngIf="walletActivated"
+    class="encryption icon"
+    container="body"
+    (click)="toggleWalletStatus()">
+    <img src="assets/icons/status/encryption{{ walletStatusIcon }}.svg" [matTooltip]="(walletStatus | async)" />
+    <main-countdown-timer></main-countdown-timer>
+  </div>
+
+  <div class="coldstaking icon" *ngIf="(coldStakingEnabled | async)">
+    <img src="assets/icons/status/coldstaking.svg" matTooltip="Cold staking active" />
+  </div>
+
+  <div
+    class="zmq icon"
+    [ngClass]="zmqStatus">
+    <mat-icon [matTooltip]="zmqStatusMessage" fontIcon="part-nodes"></mat-icon>
+  </div>
+
+  <div class="warning icon" *ngIf="timeOffset !== 0">
+    <mat-icon matTooltip="Time offset: {{ timeOffset }}s" fontIcon="part-alert"></mat-icon>
+  </div>
+
+</div><!-- .status-icons -->

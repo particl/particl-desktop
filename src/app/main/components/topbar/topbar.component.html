@@ -1,0 +1,18 @@
+<mat-toolbar class="header-main" fxLayout fxLayoutAlign="space-between center">
+  <div class="left" fxFlex="0 1 100%">
+    <div class="title">
+      {{ title }}
+    </div>
+
+    <ng-content></ng-content>
+
+  </div>
+
+  <div class="right" fxFlex="1 0 1%">
+
+    <!-- Status icons -->
+    <main-status></main-status>
+
+  </div><!-- .right -->
+
+</mat-toolbar>

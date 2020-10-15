@@ -1,0 +1,23 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/market-list-item'; // shared market item (in lists)
+
+.mat-divider {
+  margin: 24px calc(-1 * var(--paddingH));
+}
+
+.keys {
+  .box-title {
+    margin: 24px 0 6px;
+  }
+  strong {
+    font-weight: 500;
+  }
+  .mat-button {
+    padding: 2px 12px; // unify button height with market keys
+  }
+  .key {
+    &:empty {
+      display: none;
+    }
+  }
+}

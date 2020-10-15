@@ -1,0 +1,70 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.page-intro {
+  @include gradient(hsla(var(--color-white-hsl), 0.7), var(--bg));
+  margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
+  padding: var(--paddingV) var(--paddingH);
+  font-size: 13px;
+
+  // collapsed (hidden) state styles
+  &.collapsed {
+    padding: calc(var(--paddingV) / 1.5) var(--paddingH);
+    .intro-toggle {
+      margin-top: 0;
+    }
+    h1 {
+      font-size: 1.55em;
+    }
+    & > .content {
+      display: none;
+    }
+  }
+
+  // toggle button
+  .intro-toggle {
+    @extend %tfx;
+    float: right;
+    margin: -12px -12px 0 0;
+    opacity: 0.5;
+    &:hover,
+    &:focus {
+      opacity: 1;
+    }
+  }
+
+  // page heading (always visible)
+  h1 {
+    margin: 0;
+    // @Allien: no longer used?
+    /*
+    .tag {
+      padding: 2px 6px;
+      font-size: 50%;
+    }
+    */
+  }
+
+  // content with help text (toggle-able)
+  .content {
+    margin-top: 16px;
+    font-weight: 400;
+    p {
+      color: var(--text-muted);
+      margin: 6px 0 0;
+    }
+    .desc {
+      line-height: 1.5;
+      @include break(l) {
+        font-size: 14.5px;
+        line-height: 1.6;
+      }
+    }
+    .alert {
+      margin-top: 16px;
+      color: var(--text);
+      &:empty {
+        display: none;
+      }
+    }
+  }
+}

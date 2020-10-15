@@ -1,0 +1,144 @@
+@import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+// --------- CHOOSE COINS --------- //
+
+.coin-filter-option { // specific coin selector with coin icons
+  .icon {
+    margin: 0 4px 0 0;
+    position: relative;
+    top: 6px;
+  }
+  small {
+    margin-left: 2px;
+    color: var(--text-muted);
+    font-size: 11px;
+  }
+}
+
+.choose-coins {
+  --icon-size: 64px;
+  margin: calc(var(--icon-size) / 2) auto 0;
+  max-width: 40rem;
+  .choose-coin {
+    padding: 0;
+    header {
+      text-align: center;
+      .icon {
+        box-shadow: 0 0 8px var(--bg-muted);
+        border-radius: 50%;
+        background: var(--color-white);
+        width: var(--icon-size);
+        height: var(--icon-size);
+        display: flex;
+        margin: calc(-1 * var(--icon-size) / 2) auto 18px;
+        .mat-icon {
+          margin: auto;
+          font-size: 24px;
+          &.part-arrow-up {
+            color: var(--color-secondary);
+          }
+          &.part-arrow-down {
+            color: var(--color-tertiary);
+          }
+        }
+      }
+    }
+  }
+  .part-transfer { // decorative "swap" icon between coin choosers
+    font-size: 24px;
+    color: hsla(var(--text-muted-hsl), 0.5);
+    animation: rotate 5s infinite linear;
+    margin: 0 36px;
+  }
+}
+
+.centered { // for "get offers" button + "confirm & pay"
+  text-align: center;
+  margin: var(--paddingV) var(--paddingH);
+  .help-text {
+    max-width: 30rem;
+    margin: 0 auto 24px;
+  }
+}
+
+
+// --------- CHOOSE EXCHANGE --------- //
+
+.choose-exchange {
+  --option-paddingV: 10px;
+  max-width: 40rem;
+  margin: calc(1.5 * var(--paddingV)) auto 0;
+
+  .exchange-header {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 8px;
+    display: flex;
+    .name {
+      flex: 0 0 47%;
+    }
+    .rate,
+    .amount {
+      flex: 0 0 26.5%;
+      text-align: right;
+    }
+  }
+
+  .exchanges {
+    padding: var(--option-paddingV) 0;
+    display: block;
+    .option {
+      padding: 0 16px;
+      &:hover,
+      &:focus {
+        background: hsla(var(--bg-hsl), 0.8);
+      }
+      &.mat-radio-checked {
+        .amount {
+          color: var(--color-secondary);
+          font-weight: 600;
+        }
+      }
+    }
+    .exchange {
+      display: flex;
+      align-items: center;
+      padding: var(--option-paddingV) 0;
+      .image {
+        --image-size: 5%;
+        flex: 0 0 var(--image-size);
+        padding-top: var(--image-size);
+        margin: 0 1.5% 0 0.5%;
+        position: relative;
+        img {
+          @extend %image-center-cover;
+          position: absolute;
+          top: 0;
+          border-radius: 50%;
+        }
+      }
+      .name {
+        flex: 0 0 40%;
+        font-size: 15px;
+      }
+      .rate,
+      .amount {
+        flex: 0 0 26.5%;
+        text-align: right;
+        color: var(--text-muted);
+      }
+    }
+  }
+}
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

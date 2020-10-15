@@ -1,0 +1,74 @@
+<mat-dialog-title>Confirm &amp; Exchange coins</mat-dialog-title>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="--muted">
+
+  <div class="spending-buying">
+
+    <mat-card class="half">
+      <div class="icon">
+        <img src="./assets/app-exchange/coins/BTC.svg" alt="BTC" class="coin">
+      </div>
+      <h3 class="box-title --larger">Spending</h3>
+      0.312 BTC
+    </mat-card>
+
+    <mat-icon fontIcon="part-arrow-right"></mat-icon>
+
+    <mat-card class="half">
+      <div class="icon">
+        <img src="./assets/app-exchange/coins/PART.svg" alt="PART" class="coin">
+      </div>
+      <h3 class="box-title --larger">Buying</h3>
+      &asymp; 3210 PART
+    </mat-card>
+
+  </div><!-- .spending-buying -->
+
+  <p class="lead">
+    Looking good? Make your payment below:
+  </p>
+
+  <mat-card class="payment-details">
+
+    <img src="./assets/images/placeholder_1-1.jpg" class="qr-code">
+    <div class="text">
+      <h3 class="box-title">Send</h3>
+      <p class="amount">0.312 BTC</p>
+      <h3 class="box-title">To address</h3>
+      <code class="address">bc1q58ct5zr3qs9fhulpexc6nrlk6zkdgvsplw3q0p34gz66jqnr9wfsymqecy</code>
+      <p class="help-text">
+        After you make the payment, you can safely close this window and check status of this exchange on Exchange Overview page
+      </p>
+    </div>
+
+  </mat-card><!-- .payment-details -->
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+
+  <div class="left">
+    <button mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel &amp; Close
+    </button>
+  </div>
+
+  <div class="right">
+    <button mat-button>
+      <mat-icon fontIcon="part-copy"></mat-icon>
+      Copy address
+    </button>
+    <!-- TODO: redirect to Exchange > Overview after clicking: -->
+    <button mat-raised-button color="primary" mat-dialog-close>
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Payment made
+    </button>
+  </div>
+
+</mat-dialog-actions>

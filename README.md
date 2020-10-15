@@ -44,7 +44,6 @@ yarn install
    * note: this command will auto-refresh the client on each saved change
    * `-testnet` – for running on testnet (omit for running the client on mainnet)
    * `-opendevtools` – automatically opens Developer Tools on client launch
-   * `-skipmarket` – skip launching internal market process
 
 #### Interact with particl-core daemon
 

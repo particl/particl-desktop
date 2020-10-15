@@ -1,0 +1,76 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ LAYOUT ------ //
+
+.mat-dialog-title {
+  margin: 0 !important;
+}
+
+.mat-dialog-content {
+  width: 24rem;
+  .modal-highlight {
+    padding: 24px 24px 0;
+    margin-bottom: 0;
+  }
+}
+
+
+// ------ UI ------ //
+
+strong {
+  font-weight: 500;
+}
+
+
+// ------ LAYOUT ------ //
+
+.password-field {
+  // show/hide password button
+  button[matSuffix] {
+    padding: 8px 12px;
+    margin-right: -12px;
+    .mat-icon {
+      margin: 0;
+    }
+  }
+
+}
+
+// toggle for more unlock options
+.additional-options {
+  margin: 0 -24px !important;
+  border-radius: 0;
+  box-shadow: none !important;
+  background: var(--bg);
+  .mat-expansion-panel-header {
+    max-height: 48px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    &.cdk-keyboard-focused {
+      color: var(--text);
+    }
+  }
+
+  // customize unlock duration
+  .unlock-timeout {
+    margin: 8px 0 16px;
+    .duration-input {
+      width: 50px;
+      padding: 0 0 0 8px;
+      margin: 0 8px;
+      border-radius: var(--radius);
+      border: 1px solid var(--bg-muted);
+      line-height: 2.2;
+    }
+  }
+
+  // unlock for staking only
+  .stake-only {
+    .help-text {
+      margin: 4px 0 0 24px;
+      max-width: 390px;
+    }
+  }
+
+} // << .additional-options

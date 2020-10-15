@@ -1,0 +1,97 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ UI ------ //
+
+.card {
+  padding: 0;
+}
+
+
+// ------ LAYOUT ------ //
+
+.section {
+  --dash: hsla(var(--bg-muted-hsl), 0.7);
+
+  // vertical list
+  &.list {
+    .item {
+      display: flex;
+      align-items: stretch;
+      border-top: 1px dashed var(--dash);
+      padding: 20px 26px 20px 6px;
+      &:first-of-type {
+        border: 0;
+      }
+      .icon {
+        flex: 0 0 75px;
+      }
+      .text {
+        flex: 1 1 100%;
+      }
+    }
+  }
+
+  // block grid
+  &.grid {
+    display: flex;
+    flex-wrap: wrap;
+    .item {
+      flex: 1 1 calc(25% - 1px);
+      display: block;
+      padding: 29px 0;
+      text-align: center;
+      border-right: 1px dashed var(--dash);
+      border-bottom: 1px dashed var(--dash);
+      &:nth-of-type(4n) {
+        border-right: 0;
+      }
+      &:nth-last-of-type(1),
+      &:nth-last-of-type(2),
+      &:nth-last-of-type(3),
+      &:nth-last-of-type(4) {
+        border-bottom: 0;
+      }
+      .title {
+        font-size: 14px;
+      }
+      .icon {
+        margin: 0 auto 8px;
+      }
+    }
+  }
+
+  // link item (shared)
+  .item {
+    @extend %tfx;
+    text-decoration: none;
+    color: var(--text);
+    &:hover,
+    &:focus {
+      background: hsla(var(--color-secondary-hsl), 0.02);
+      .icon {
+        .mat-icon {
+          color: var(--color-secondary);
+          transform: scale(1.2);
+        }
+      }
+    }
+    .icon {
+      margin: auto;
+      text-align: center;
+      .mat-icon {
+        @extend %tfx;
+        font-size: 20px;
+        color: var(--text-muted);
+      }
+    }
+    .title {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .desc {
+      color: var(--text-muted);
+      margin: 3px 0 0;
+    }
+  }
+
+}

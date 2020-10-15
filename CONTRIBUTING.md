@@ -104,4 +104,4 @@ Reviewers will either ask you for some code changes or approve the PR and merge 
   - [Responsive API](https://github.com/angular/flex-layout/wiki/Responsive-API) - for responsive layouts
 - **Icons**
   - all available icons are in [`/src/assets/icons/SVG`](https://github.com/particl/partgui/tree/dev/src/assets/icons/SVG)
-  - include via `<mat-icon fontSet="partIcon" fontIcon="part-<icon_name>"></mat-icon>`
+  - include via `<mat-icon fontIcon="part-<icon_name>"></mat-icon>`

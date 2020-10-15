@@ -1,8 +1,0 @@
-@import './src/assets/_config'; // import shared colors etc.
-
-.tag {
-  @extend %tag;
-  background: lighten($bg-black, 15%);
-  margin-left: auto;
-  font-size: 70%;
-}

@@ -1,0 +1,77 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.mat-dialog-content {
+  margin: 0 -24px !important;
+  padding: var(--paddingV) var(--paddingH);
+  width: 34rem;
+  .item-subtitle {
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+  p {
+    color: var(--text-muted);
+  }
+}
+
+.item-card {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 14px 18px;
+  .image {
+    --size: 60px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 16px;
+    position: relative;
+    img {
+      @extend %image-center-cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &.avatar { // for ID avatars
+      background: var(--color-primary);
+      color: var(--color-white);
+      text-align: center;
+      line-height: var(--size);
+      font-size: 26px;
+    }
+  }
+  .text {
+    .identity-name {
+      font-size: 16px;
+    }
+    .available-balance {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+  }
+  .name {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+  }
+  .category {
+    color: var(--text-muted);
+  }
+}
+
+.promo-duration {
+  table {
+    th {
+      font-weight: 400;
+      text-align: right;
+      padding-right: 10px;
+      width: 55%;
+      color: var(--text-muted);
+    }
+    td {
+      font-weight: 500;
+    }
+  }
+}

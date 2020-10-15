@@ -1,0 +1,29 @@
+import { PartoshiAmount } from 'app/core/util/utils';
+
+
+export interface CartItem {
+  id: number;
+  listingId: number;
+  title: string;
+  image: string;
+  category: string;
+  marketName: string;
+  shippingLocations: string[];
+  sourceLocation: string;
+  escrowPercent: number;
+  expiryTime: number;
+  price: {
+    base: PartoshiAmount;
+    shippingLocal: PartoshiAmount;
+    shippingIntl: PartoshiAmount;
+  };
+}
+
+
+export interface CartTotals {
+  itemBase: PartoshiAmount;
+  shippingOnly: PartoshiAmount;
+  cartTotal: PartoshiAmount;
+  escrowValue: PartoshiAmount;
+  orderTotal: PartoshiAmount;
+}

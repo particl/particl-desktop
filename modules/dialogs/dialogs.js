@@ -1,6 +1,6 @@
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
 const { dialog }    = require('electron');
-const Observable    = require('rxjs/Observable').Observable;
+const Observable    = require('rxjs').Observable;
 
 const IPC_CHANNEL_DIALOG = 'open-system-dialog';
 

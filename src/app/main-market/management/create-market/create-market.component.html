@@ -1,0 +1,161 @@
+<div class="container-block without-tab-bar">
+
+  <app-page-intro>
+    <ng-container page-title>Create new Market</ng-container>
+    <ng-container page-content>
+      Create your Market and sell your Products on your own terms.
+    </ng-container>
+    <ng-container page-help>
+      Your new Market will be invite-only &ndash; choose whether you want to be the only Seller on it (Storefront) or allow any member to sell (Community Markets).<br>Optional Market Promotion can help onboard new users.
+    </ng-container>
+  </app-page-intro>
+
+
+  <form class="market-form" [formGroup]="marketForm">
+
+    <h2 class="section-title">
+      Market details
+    </h2>
+
+    <mat-card class="market-details no-padding">
+
+      <label>
+        <mat-form-field class="--larger --plain" appearance="fill">
+          <h3 class="label">Market name</h3>
+          <input matInput #name placeholder="Choose a name for your Market" formControlName="name">
+          <mat-hint align="end">{{ name.value.length }}/{{ MAX_NAME }}</mat-hint>
+        </mat-form-field>
+      </label>
+
+      <label>
+        <mat-form-field class="--larger --plain" appearance="fill">
+          <h3 class="label">Market description</h3>
+          <textarea matInput rows="4" #description formControlName="summary" placeholder="Describe your Market in short, so that users will know what they'll find there"></textarea>
+          <mat-hint align="end">{{ description.value.length }}/{{ MAX_SUMMARY }}</mat-hint>
+        </mat-form-field>
+      </label>
+
+      <div class="market-image" fxLayout>
+
+        <div #dropArea>
+          <!-- No image selected: -->
+          <div *ngIf="formImageControl.value.length === 0" class="drag-n-drop image" fxFlex="130px">
+            <input class="hide-file" type="file" accept="image/*" #fileInputSelector>
+            <button mat-button color="accent" (click)="addImage()" class="small">
+              Upload a logo
+            </button>
+            <p>or drag'n'drop</p>
+          </div>
+          <!-- Image already uploaded: -->
+          <div *ngIf="formImageControl.value.length > 0" class="photo-wrapper image" fxFlex="130px">
+            <img [src]="formImageControl.value">
+            <div class="icons">
+              <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove image" (click)="formImageControl.setValue('')">
+                <mat-icon fontIcon="part-cross"></mat-icon>
+              </button>
+            </div>
+          </div>
+        </div><!-- #dropArea -->
+
+        <div class="desc" fxFlex="0 1 100%">
+          <h3 class="box-title">Market logo/image</h3>
+          <p>Add a Market logo/photo for customized branding</p>
+          <ul>
+            <li>Square format only</li>
+            <li>Recommended resolution 300 × 300 px</li>
+            <li>Max size {{imageSizeLabel}}</li>
+          </ul>
+        </div>
+
+      </div><!-- .market-image -->
+
+    </mat-card><!-- market details -->
+
+    <h2 class="section-title">
+      Market type
+    </h2>
+
+    <mat-card fxLayout fxLayoutGap="30px" class="market-type">
+      <mat-radio-group name="marketType" formControlName="marketType">
+        <div class="half" fxFlex="50%">
+          <mat-radio-button name="market-type" [value]="marketTypeOptions.STOREFRONT_ADMIN" class="larger" color="accent">
+            Storefront
+          </mat-radio-button>
+          <p class="help-text">
+            With Storefront, only you (and those you appoint) are in control of the Market &ndash; nobody else can sell on it
+          </p>
+        </div>
+        <mat-divider [vertical]="true" fxFlex="0 0 4px" class="thicker lighter dashed"></mat-divider>
+        <div class="half" fxFlex="50%">
+          <mat-radio-button name="market-type" [value]="marketTypeOptions.MARKETPLACE" class="larger" color="accent">
+            Community Market
+          </mat-radio-button>
+          <p class="help-text">
+            Community Markets give all rights and permissions to all its members &ndash; everybody on the Market can sell on it
+          </p>
+        </div>
+      </mat-radio-group>
+    </mat-card><!-- market type -->
+
+
+    <h2 class="section-title">
+      Market Region
+    </h2>
+
+    <mat-form-field class="--boxed --larger" appearance="fill">
+      <mat-icon matPrefix fontIcon="part-globe"></mat-icon>
+      <mat-select placeholder="Filter by Market" formControlName="region">
+        <mat-option *ngFor="let option of optionsMarketRegions" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <h2 class="section-title">
+      Market preview &ndash; Looking good!
+    </h2>
+
+    <mat-expansion-panel class="market list-item no-padding">
+      <mat-expansion-panel-header class="header">
+        <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+          <div class="photo">
+            <img *ngIf="formImageControl.value.length > 0" [src]="formImageControl.value">
+            <img *ngIf="formImageControl.value.length === 0" [src]="(marketConfig | async).imagePath">
+          </div>
+          <div class="info" fxFlex="1 1 100%">
+            <h3 class="box-title --larger">
+              <span class="name">{{ name.value }}</span>
+            </h3>
+            <div class="desc">
+              <span class="market-type tag">{{ labelType }}</span>
+              <span class="market-region">
+                <mat-icon fontIcon="part-globe"></mat-icon>
+                {{ labelRegion }}
+              </span>
+            </div>
+          </div><!-- .meta -->
+        </div>
+      </mat-expansion-panel-header>
+      <div class="details">
+        <h3 class="item-subtitle">Market summary</h3>
+        <p class="desc">
+          {{ description.value }}
+        </p>
+      </div>
+    </mat-expansion-panel><!-- .market -->
+
+  </form>
+
+  <div class="actions" fxLayoutAlign="space-between center">
+    <button mat-button type="button" [routerLink]="['../']">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel Market creation
+    </button>
+    <button mat-raised-button type="button" color="primary" [disabled]="marketForm.invalid" appDebounceClick (debounceClick)="actionCreateMarket()">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Confirm &amp; Create Market
+    </button>
+  </div>
+
+</div><!-- .container-block -->

@@ -1,0 +1,245 @@
+<app-header>
+  <div class="tab-bar">
+    <mat-tab-group
+      animationDuration="0ms"
+      [selectedIndex]="selectedTab.value"
+      (selectedIndexChange)="selectedTab.setValue($event)">
+      <mat-tab *ngFor="let tab of tabs">
+        <ng-template mat-tab-label>
+          <mat-icon [fontIcon]="tab.icon"></mat-icon>
+          {{ tab.title }}
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div><!-- .tab-bar -->
+</app-header>
+
+<div class="container-block with-tab-bar">
+  <ng-container *ngTemplateOutlet="currentTabType === 'send' ? sendHeader : transferHeader"></ng-container>
+
+  <div fxLayout="row" fxLayoutGap="35px">
+
+    <div class="from-box" fxFlex="0 0 320px">
+      <div class="sticky">
+        <h2 class="section-title">Pay from</h2>
+        <mat-card>
+
+          <mat-radio-group class="from-balance-type block-radio" name="sourceType" [formControl]="sourceType"
+                            fxLayout="column" fxLayoutGap="10px">
+            <mat-radio-button class="balance" *ngFor="let option of selectorOptions" [value]="option.value" [color]="option.color" fxFlex>
+              <div class="name">{{ option.name }}</div>
+              <!-- @TODO: in case of manual Coin control, swap "Available balance" with "Selected balance" -->
+              <div class="desc">
+                <ng-container *ngIf="option.coinInputs.length > 0">
+                  Selected Balance:
+                </ng-container>
+                <ng-container *ngIf="option.coinInputs.length === 0">
+                  Available balance:
+                </ng-container>
+                <span class="amount">{{ option.displayedBalance }}</span>
+                <mat-icon *ngIf="option.help.length > 0" fontIcon="part-circle-question" class="help-icon"
+                          [matTooltip]="option.help"></mat-icon>
+              </div>
+            </mat-radio-button>
+          </mat-radio-group>
+
+          <p class="widget-help">
+            <ng-container *ngIf="sourceType.value === 'part'">
+              In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender's and receiver's addresses.
+            </ng-container>
+            <ng-container *ngIf="sourceType.value === 'blind'">
+              Blinded transactions hide transaction amounts, but the sender's and receiver's addresses are still visible.
+            </ng-container>
+            <ng-container *ngIf="sourceType.value === 'anon'">
+              Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
+              addresses are hidden from public.
+            </ng-container>
+          </p>
+          <div class="buttons">
+            <button mat-button (click)="showAdvanced = !showAdvanced" *ngIf="sourceType.value === 'anon'" class="small advanced-options">
+              <mat-icon fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
+              Advanced options
+            </button>
+            <button mat-button (click)="openCoinControlModal()" class="small coin-control" matTooltip="Select TX inputs manually" matTooltipPosition="below">
+              <mat-icon fontIcon="part-stake"></mat-icon>
+              Coin control
+            </button>
+          </div>
+
+          <div *ngIf="sourceType.value === 'anon' && showAdvanced" class="advanced">
+            <div class="subtitle">Privacy level <small>(no. of ring sigs)</small></div>
+            <div class="privacy-level">
+              <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
+                <span
+                  fxFlex="0 0 50px"
+                  class="privacy-label low"
+                  (click)="ringSize.setValue(4)"
+                  matTooltip="Set low privacy"
+                  matTooltipPosition="below">Low
+                </span>
+                <span
+                  fxFlex="0 0 50px"
+                  class="privacy-label high"
+                  (click)="ringSize.setValue(16)"
+                  matTooltip="Set high privacy"
+                  matTooltipPosition="below">High
+                </span>
+                <span
+                  fxFlex="0 0 50px"
+                  class="privacy-label highest"
+                  (click)="ringSize.setValue(32)"
+                  matTooltip="Set highest privacy"
+                  matTooltipPosition="below">Highest
+                </span>
+              </div>
+
+              <mat-slider
+                thumbLabel
+                color="accent"
+                [min]="minRingSize"
+                (change)="ringSize.setValue($event.value)"
+                [max]="maxRingSize"
+                [value]="ringSize.value">
+              </mat-slider>
+
+              <div class="row" fxLayout fxLayoutAlign="spacebetween center">
+                <p class="widget-help">
+                  The higher privacy level is, the larger fee needs to be paid.
+                </p>
+                <button
+                  (click)="ringSize.setValue(defaultRingSize)"
+                  mat-button
+                  class="small"
+                  matTooltip="Set default privacy level">
+                  <mat-icon fontIcon="part-refresh"></mat-icon>
+                  Default
+                </button>
+              </div>
+
+            </div>
+          </div><!-- advanced -->
+        </mat-card>
+      </div>
+    </div>
+
+
+    <div class="to-box" fxFlex="1 1 100%">
+      <form name="walletSendForm" [formGroup]="targetForm">
+
+        <ng-container *ngIf="currentTabType === 'transfer'">
+          <h2 class="section-title">Convert to</h2>
+          <mat-card class="section to-balance-type">
+            <mat-radio-group class="to-balance-type block-radio" name="targetType" formControlName="targetType"
+                fxLayout="column" fxLayoutGap="10px">
+              <mat-radio-button class="balance" [color]="option.color" *ngFor="let option of selectorOptions" [value]="option.value" [disabled]="option.value === sourceType.value">
+                <div class="name">{{ option.name }}</div>
+                <div class="desc">{{ option.description }}</div>
+              </mat-radio-button>
+            </mat-radio-group>
+          </mat-card>
+        </ng-container>
+
+
+        <ng-container *ngIf="currentTabType === 'send'">
+          <h2 class="section-title">Pay to</h2>
+          <mat-card class="pay-to">
+
+            <label class="--larger">
+              <h3 class="label">Receiver's address</h3>
+              <mat-form-field appearance="fill" class="address --plain --larger">
+                <input matInput type="text" formControlName="address"
+                [class.verify-success]="address.valid"
+                [class.verify-error]="!address.valid"
+                placeholder="Receiver's address (required)"/>
+                <button matSuffix mat-button class="small" matTooltip="Load from Address Book" matTooltipPosition="before" (click)="openAddressLookup()">
+                  <mat-icon fontIcon="part-people"></mat-icon>
+                </button>
+              </mat-form-field>
+            </label>
+
+            <label>
+              <mat-form-field appearance="fill" class="address-label --plain --larger">
+                <h3 class="label">Receiver's name</h3>
+                <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
+              </mat-form-field>
+            </label>
+
+            <label>
+              <mat-form-field appearance="fill" class="narration --plain --larger">
+                <h3 class="label">Narration</h3>
+                <input matInput type="text" formControlName="narration" maxlength="24"
+                  [placeholder]="sourceType.value === 'part'
+                  ? 'Send a short public message with the payment (optional)'
+                  : 'Send a short private message with the payment (optional)'">
+                <mat-hint align="end">{{narration.value.length}} / 24</mat-hint>
+              </mat-form-field>
+            </label>
+
+          </mat-card><!-- .pay-to -->
+        </ng-container><!-- << Send -->
+
+
+        <!-- Send amount & buttons -->
+        <h2 class="section-title">Amount & confirmation</h2>
+        <div class="send-amount" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
+          <mat-form-field fxFlex="0 0 235px" appearance="fill" class="amount-to-send --boxed">
+            <!-- Send amount -->
+            <span matPrefix>PART&nbsp;</span>
+            <input matInput type="text" formControlName="amount" placeholder="0.00"
+                  [class.verify-sucess]="amount.valid"
+                  [class.verify-error]="amount.invalid">
+          </mat-form-field>
+          <mat-checkbox #sendall formControlName="isSendAll" class="send-all" color="warn">
+            Send All
+          </mat-checkbox>
+
+          <!-- Send buttons -->
+          <div class="actions" fxFlex="1 1 100%">
+            <button mat-raised-button color="primary" class="validate" appDebounceClick (debounceClick)="onSubmit()" [disabled]="targetForm.invalid || canBeProcessing">
+              <mat-icon fontIcon="part-check"></mat-icon>
+              Make payment
+            </button>
+          </div><!-- .actions -->
+        </div><!-- .send-amount -->
+
+
+      </form><!-- walletSendForm -->
+    </div><!-- .to-box -->
+
+  </div>
+</div>
+
+
+<ng-template #sendHeader>
+  <app-page-intro [childPageAlias]="'send-send'">
+    <ng-container page-title>Send payment</ng-container>
+    <ng-container page-content>
+      Send payments to anyone. You can adjust the level of privacy of your transactions by selecting balances listed in "Pay from".
+    </ng-container>
+    <ng-container page-help>
+      What are the differences between Blind and Anon balances? How do they affect my privacy? Learn more on Particl Wiki:
+      <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
+        <mat-icon fontIcon="part-wikipedia"></mat-icon>
+        Currency &amp; transaction types
+      </a>
+    </ng-container>
+  </app-page-intro>
+</ng-template>
+
+
+<ng-template #transferHeader>
+  <app-page-intro [childPageAlias]="'send-transfer'">
+    <ng-container page-title>Convert balances</ng-container>
+    <ng-container page-content>
+      Convert your coins between public and private balances.<br>
+      To increase your level of privacy, it's recommended to always keep some of your coins in private balances (Blind &amp; Anon).
+    </ng-container>
+    <ng-container page-help>
+      What are the differences between Blind and Anon balances? How do they affect your privacy? Learn more on Particl Wiki:
+      <a mat-button  target = "_blank" href="https://particl.wiki/learn/transaction-types" class="small">
+        <mat-icon fontIcon="part-wikipedia"></mat-icon>
+        Currency &amp; transaction types
+      </a>
+    </ng-container>
+  </app-page-intro>
+</ng-template>

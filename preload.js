@@ -52,8 +52,7 @@ class SafeIpcRenderer {
 
 window.ipc = new SafeIpcRenderer([
   'start-system',
-  'front-choosewallet',
-  'front-walletready',
+  'zmq-connect',
 
   'notification',
   'daemon',
@@ -61,6 +60,7 @@ window.ipc = new SafeIpcRenderer([
 
   'start-market',
   'stop-market',
+  'market-keygen',
 
   'zmq',
   'write-core-config',
@@ -70,13 +70,13 @@ window.ipc = new SafeIpcRenderer([
   'rx-ipc-check-reply',
   'rx-ipc-check-listener',
 
-  'importer-config',
-  'importer-load',
-  'importer-validate',
-  'importer-publish',
+  // 'importer-config',
+  // 'importer-load',
+  // 'importer-validate',
+  // 'importer-publish',
 
-  'start-bot-framework',
-  'stop-bot-framework'
+  // 'start-bot-framework',
+  // 'stop-bot-framework'
 ]);
 
 window.electron = true;

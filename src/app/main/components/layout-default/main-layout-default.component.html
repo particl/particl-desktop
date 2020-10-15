@@ -1,0 +1,33 @@
+<mat-sidenav-container fullscreen class="always-scroll">
+  <mat-sidenav #sidenav mode="side" opened="true" disableClose="true" class="sidebar">
+    <div class="sidebar-menu">
+
+      <div class="logo">
+        <div class="network-tag" *ngIf="(testnet | async)">testnet</div>
+        <img src="./assets/particl-logo.svg" alt="Particl">
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="menu-links">
+        <ng-content select="menu"></ng-content>
+      </div><!-- .menu-links -->
+
+      <div>
+        <ng-content select="sidebar"></ng-content>
+      </div>
+
+      <footer class="footer">
+        <block-sync-bar></block-sync-bar>
+        <div class="versions">
+          <ng-content select="app-version"></ng-content>
+          <main-version></main-version>
+        </div>
+      </footer><!-- .pin-to-bottom -->
+
+    </div><!-- .sidebar-menu -->
+  </mat-sidenav><!-- .sidebar -->
+
+  <ng-content></ng-content>
+
+</mat-sidenav-container>

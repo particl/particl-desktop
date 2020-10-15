@@ -1,58 +1,38 @@
 import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DirectiveModule } from './directive/directive.module';
-import { PipeModule } from './pipe/pipe.module';
-import { MaterialModule } from './material/material.module';
-// TODO: move to material
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { NvD3Module } from 'ng2-nvd3';
-// d3 and nvd3 required dependecies of 'ng2-nvd3' module.
-import 'd3';
-import 'nvd3';
 
 import { MatDialogModule } from '@angular/material';
 import { MatDialog } from '@angular/material';
-import { PaginatorComponent } from './paginator/paginator.component';
-import { GalleryModule } from '@ngx-gallery/core';
-import { LightboxModule } from '@ngx-gallery/lightbox';
-import { GallerizeModule } from '@ngx-gallery/gallerize';
-import 'hammerjs';
-import { BalanceComponent } from 'app/wallet/wallet/balances/balance.component';
-import { PageIntroComponent } from './main/shared/page-intro/page-intro.component';
+
+import { DirectiveModule } from './directive/directive.module';
+import { PipeModule } from './pipe/pipe.module';
+import { MaterialModule } from './material/material.module';
+
+import { PaginatorComponent } from 'app/core-ui/paginator/paginator.component';
+import { HeaderComponent } from 'app/core-ui/components/header/header.component';
+import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro.component';
 
 
 @NgModule({
   declarations: [
     PaginatorComponent,
-    BalanceComponent,
+    HeaderComponent,
     PageIntroComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     MatDialogModule, // todo move
-    InfiniteScrollModule,
-    NvD3Module,
-
-    // also can add a config options
-    GalleryModule, // GalleryModule.forRoot(galleryConfig?),
-    LightboxModule, // GalleryLightbox.forRoot(lightboxConfig?),
-    GallerizeModule,
     DirectiveModule,
     PipeModule
   ],
   exports: [
     MaterialModule,
     PaginatorComponent,
-    BalanceComponent,
-    InfiniteScrollModule,
-    NvD3Module,
     DirectiveModule,
-    GalleryModule,
-    LightboxModule,
-    GallerizeModule,
-    PageIntroComponent,
-    PipeModule
+    PipeModule,
+    HeaderComponent,
+    PageIntroComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

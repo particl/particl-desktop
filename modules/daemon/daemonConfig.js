@@ -1,5 +1,5 @@
 const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs/Observable').Observable;
+const Observable    = require('rxjs').Observable;
 const fs            = require('fs');
 const path          = require('path');
 const _del          = require('del');

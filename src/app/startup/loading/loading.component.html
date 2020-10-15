@@ -1,0 +1,25 @@
+<div class="splash-container">
+  <div class="content">
+
+    <img class="logo" src="assets/particl-logo.svg">
+
+    <blockquote class="quote">
+      <p>To hide the signal you must generate noise.</p>
+      <footer class="author">&mdash; Ido Kaiser</footer>
+    </blockquote>
+    
+  </div><!-- .content -->
+
+
+  <div class="loading-wrapper">
+
+    <div class="loader">
+      <span>&bull;</span><span>&bull;</span><span>&bull;</span>
+    </div>
+
+    <p class="loading-status" *ngIf="loadingMessage">
+      {{loadingMessage | async}}
+    </p>
+
+  </div><!-- .loading-wrapper -->
+</div><!-- .splash-container -->

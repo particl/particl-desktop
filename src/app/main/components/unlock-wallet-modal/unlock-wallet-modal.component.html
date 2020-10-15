@@ -1,0 +1,72 @@
+<mat-dialog-title>Unlock your wallet</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+  <p class="lead">
+    Please enter your password to unlock the wallet
+  </p>
+
+  <div class="modal-highlight" [@.disabled]="disableAnimation">
+
+    <mat-form-field class="password-field --boxed --larger" appearance="fill">
+      <mat-icon matPrefix fontIcon="part-lock"></mat-icon>
+      <input matInput name="password" id="password"
+              [type]="showPass ? 'text' : 'password'"
+              [appFocusTimeout]="true"
+              [(ngModel)]="password"
+              placeholder="Enter your password" />
+      <button mat-button matSuffix class="small"
+              (click)="showPass = !showPass"
+              [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
+              [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+        <mat-icon [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-expansion-panel class="additional-options" [expanded]="false">
+
+      <mat-expansion-panel-header>
+        Additional unlock options
+      </mat-expansion-panel-header>
+
+      <div class="unlock-timeout">
+        <strong>Unlock duration</strong>
+        <input  name="customTimeout"
+                class="duration-input"
+                [disabled]="!timeoutIsEditable || unlockForStaking"
+                type="number"
+                min="10"
+                step="100"
+                max="99999990"
+                [(ngModel)]="timeout">
+        seconds
+      </div>
+
+      <span *ngIf="showStakingUnlock" class="stake-only">
+        <mat-checkbox type="checkbox" name="stakeonly" value="stakeonly" [(ngModel)]="unlockForStaking">
+          <strong>Unlock for Staking only</strong>
+        </mat-checkbox>
+        <p class="help-text">
+          Unlock indefinitely for staking only &ndash; for spending your coins, you would need to do a full unlock
+        </p>
+      </span>
+
+    </mat-expansion-panel><!-- .additional-options -->
+
+  </div><!-- .modal-highlight -->
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <div class="left"></div>
+  <div class="right">
+    <button color="warn" mat-raised-button appDebounceClick (debounceClick)="unlock()" [disabled]="(password.length === 0) || isProcessing">
+      <mat-icon fontIcon="part-lock-open"></mat-icon>
+      Unlock wallet
+    </button>
+  </div>
+</mat-dialog-actions>

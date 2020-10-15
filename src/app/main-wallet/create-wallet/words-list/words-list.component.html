@@ -1,0 +1,34 @@
+<div class="word-list" fxLayout="row wrap" fxLayoutGap="1%">
+  <div class="item" fxFlex="19%" fxLayout fxLayoutAlign="space-between center" *ngFor="let word of sourceWords; let i = index; trackBy:trackByWordsFn">
+    <div class="word-no">
+      {{ i + 1 }}
+    </div>
+    <mat-form-field class="word --plain" appearance="fill">
+      <input
+        #phrase
+        matInput
+        class="enable-select"
+        [appFocusElement]="i === focused"
+        [(ngModel)]="words[i]" type="text" name="recovery"
+        [readonly]="readOnly"
+        [disabled]="sourceWords[i] !== ''"
+        [class.verify-error]="!validWord(i)"
+        (keyup)="checkFocus($event, i)" (paste)="splitAndFill(i)"
+        (blur)="onBlur(i)" (focus)="focused = i" />
+    </mat-form-field>
+  </div>
+</div><!-- .word-list -->
+
+<div class="actions" fxLayoutAlign="center center" *ngIf="!isVerification">
+
+  <button mat-button *ngIf="readOnly" (click)="copyToClipBoard()" ngxClipboard [cbContent]="sourceWords.join(' ')" class="copy">
+    <mat-icon fontIcon="part-copy"></mat-icon>
+    Copy to Clipboard
+  </button>
+
+  <button mat-button *ngIf="!readOnly" class="paste" (click)="pasteContent()">
+    <mat-icon fontIcon="part-past"></mat-icon>
+    Paste
+  </button>
+
+</div><!-- .actions -->

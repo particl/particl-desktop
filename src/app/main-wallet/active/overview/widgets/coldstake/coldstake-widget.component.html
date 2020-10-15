@@ -1,0 +1,143 @@
+<h2 class="section-title">Cold Staking</h2>
+
+<ng-container *ngTemplateOutlet="enabled">
+</ng-container>
+
+
+<!-- =============== ENABLED & ACTIVE =============== -->
+
+<ng-template #enabled>
+  <ng-container *ngIf="(isActivated | async); else isDeactivated">
+
+    <!-- =============== UNLOCKED WALLET =============== -->
+
+    <mat-expansion-panel *ngIf="isUnlocked || (coldStakePercent === 100)" class="coldstaking --active no-padding">
+      <mat-expansion-panel-header class="header">
+        <div class="dot"></div>
+        <div class="text">
+          <ng-container *ngIf="coldStakePercent < 98">
+            <div class="title">Activating <span class="progress">&ndash; {{coldStakePercent}}%</span></div>
+            <div class="status">Cold staking in progress</div>
+          </ng-container>
+          <ng-container *ngIf="coldStakePercent > 98">
+            <div class="title">Active <span class="progress">&ndash; {{coldStakePercent}}%</span></div>
+            <div class="status">Wallet is Cold staking</div>
+          </ng-container>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="content">
+        <mat-progress-bar class="progress-bar"
+          [color]="'primary'"
+          [bufferValue]="coldStakePercent"
+          [mode]="'determinate'"
+          [value]="coldStakePercent">
+        </mat-progress-bar>
+        <p class="help-text">
+          {{coldStakePercent}}% of your public balance is now safely Cold staking on your staking node (or a pool).
+          <span *ngIf="coldStakePercent < 98">Keep your wallet unlocked for staking and online until the activation reaches 100%. You can fast-forward this process by "Zapping" your coins below.</span>
+        </p>
+        <div class="buttons" fxLayout fxLayoutAlign="space-between center">
+          <a mat-button href="https://particl.wiki/learn/staking#cold-staking" target="_blank"
+            class="tiny" matTooltip="Learn more about Cold staking on Wiki">
+            <mat-icon fontIcon="part-circle-info"></mat-icon>
+            Info
+          </a>
+          <button mat-button color="accent" class="tiny"
+            matTooltip="Fast-forward to 100%"
+            (click)="zap()"
+            [disabled]="isProcessing"
+            *ngIf="coldStakePercent < 100">
+            <mat-icon fontIcon="part-lightning"></mat-icon>
+            Zap
+          </button>
+          <button mat-button color="warn" class="tiny"
+            matTooltip="Disable Cold Staking"
+            (click)="revert()"
+            [disabled]="isProcessing">
+            <mat-icon fontIcon="part-error"></mat-icon>
+            Disable
+          </button>
+        </div>
+      </div>
+    </mat-expansion-panel><!-- .coldstaking -->
+
+
+    <!-- =============== <100% PROGRESS + LOCKED WALLET =============== -->
+
+    <mat-expansion-panel *ngIf="coldStakePercent < 100 && !isUnlocked" class="coldstaking --paused no-padding">
+      <mat-expansion-panel-header class="header">
+        <div class="dot"></div>
+        <div class="text">
+          <div class="title">Paused <span class="progress">&ndash; {{coldStakePercent}}%</span></div>
+          <div class="status">Unlock wallet to continue</div>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="content">
+        <mat-progress-bar class="progress-bar"
+          [color]="'accent'"
+          [bufferValue]="coldStakePercent"
+          [mode]="'determinate'"
+          [value]="coldStakePercent">
+        </mat-progress-bar>
+        <p class="help-text">
+          {{coldStakePercent}}% of your public balance is already staking on your staking node (or a pool). Unlock your wallet to continue converting the remaining coins. You can also "zap" the remaining balance to convert it instantly.
+        </p>
+        <div class="buttons" fxLayout fxLayoutAlign="space-between center">
+          <a mat-button href="https://particl.wiki/learn/staking#cold-staking" target="_blank"
+            class="tiny" matTooltip="Learn more about Cold staking on Wiki">
+            <mat-icon fontIcon="part-circle-info"></mat-icon>
+            Info
+          </a>
+          <button mat-button color="accent" class="tiny"
+            matTooltip="Fast-forward to 100%"
+            (click)="zap()"
+            [disabled]="isProcessing"
+            *ngIf="coldStakePercent < 100">
+            <mat-icon fontIcon="part-lightning"></mat-icon>
+            Zap
+          </button>
+          <button mat-button color="warn" class="tiny"
+            matTooltip="Disable Cold Staking"
+            (click)="revert()"
+            [disabled]="isProcessing">
+            <mat-icon fontIcon="part-error"></mat-icon>
+            Disable
+          </button>
+        </div>
+      </div>
+    </mat-expansion-panel><!-- .coldstaking -->
+
+  </ng-container>
+</ng-template>
+
+
+<!-- =============== DEACTIVATED (default) =============== -->
+
+<ng-template #isDeactivated>
+
+  <mat-expansion-panel class="coldstaking --inactive no-padding">
+    <mat-expansion-panel-header class="header">
+      <div class="dot"></div>
+      <div class="text">
+        <div class="title">Inactive</div>
+        <div class="status">Cold staking not set up</div>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="content">
+      <p class="help-text">
+        Cold staking allows you to spend from one machine and stake from another, this greatly increases the safety of your coins.
+      </p>
+      <div class="buttons">
+        <a mat-button href="https://particl.wiki/learn/staking#cold-staking" target="_blank" class="full-width">
+          <mat-icon fontIcon="part-wikipedia"></mat-icon>
+          Learn more on Wiki
+        </a>
+        <button mat-raised-button color="accent" class="full-width" (click)="openColdStakeModal()">
+          <mat-icon fontIcon="part-snowflake"></mat-icon>
+          Set up Cold staking
+        </button>
+      </div>
+    </div>
+  </mat-expansion-panel><!-- .coldstaking -->
+
+</ng-template>

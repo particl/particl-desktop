@@ -1,0 +1,23 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../shared/shared.scss';
+
+
+.staking-overview { // listing of staking stats
+  width: 100%;
+  padding: 0;
+  margin: 0 0 8px;
+  .row {
+    display: flex;
+    .key {
+      @extend %lighter;
+      flex: auto;
+      padding: 10px 5px 10px 16px;
+    }
+    .value {
+      text-align: right;
+      font-weight: 500;
+      flex: auto;
+      padding: 10px 16px 10px 5px;
+    }
+  }
+}

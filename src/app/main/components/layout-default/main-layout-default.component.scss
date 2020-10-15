@@ -1,0 +1,56 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ GENERAL SIDEBAR (except instance switcher + menu items) ------ //
+
+.sidebar { // AKA .mat-sidenav
+  background-color: var(--bg-black);
+
+  .sidebar-menu {
+    width: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo {
+    width: 130px;
+    margin: 35px auto;
+    position: relative;
+    img {
+      display: block;
+    }
+    .network-tag { // display network (e.g. "testnet") if not on mainnet
+      color: var(--color-primary);
+      text-transform: uppercase;
+      font-weight: 600;
+      position: absolute;
+      background: hsla(var(--bg-black-hsl), 0.8);
+      font-size: 11px;
+      padding: 5px 8px;
+      bottom: -8px;
+      left: -8px;
+    }
+  }
+
+  .menu-links {
+    flex: 1 1 100%;
+    overflow-y: auto;
+    margin-bottom: -1px;
+    &::-webkit-scrollbar-thumb {
+      background: hsla(var(--bg-muted-hsl), 0.25);
+    }
+    &::-webkit-scrollbar-track {
+      background: var(--bg-black);
+    }
+  }
+
+  // widgets stuck to the bottom (sidebar's footer)
+  .footer {
+    @extend %menu-divider;
+    flex: 1 1 10px;
+    .versions {
+      margin: 0 0 14px;
+      padding: 14px 24px 0;
+    }
+  }
+
+}

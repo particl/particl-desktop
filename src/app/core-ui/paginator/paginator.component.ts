@@ -72,18 +72,18 @@ export class PaginatorComponent implements OnInit {
    * Whether there is a previous page.
    * @return {?}
    */
-  hasPreviousPage() {
+  hasPreviousPage(): boolean {
     return this.pageIndex >= 1 && this.pageSize !== 0;
-  };
+  }
 
   /**
    * Whether there is a next page.
    * @return {?}
    */
-  hasNextPage() {
+  hasNextPage(): boolean {
     const numberOfPages = Math.ceil(this.length / this.pageSize) - 1;
     return this.pageIndex < numberOfPages && this.pageSize !== 0;
-  };
+  }
 
   getRangeLabel(page: number, pageSize: number, length: number) {
     if (length === 0 || pageSize === 0) {
@@ -127,6 +127,6 @@ export class PaginatorComponent implements OnInit {
   }
 
   resetPagination(pageIndex: number): void {
-    this.pageIndex = pageIndex
+    this.pageIndex = pageIndex;
   }
 }

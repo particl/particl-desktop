@@ -19,23 +19,30 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
       2.2. Modifiers
       2.3. Tab/control bars
       2.4. Filters (sidebars)
-      2.5. Page intros (help titles)
+      2.5. Radio switchers (sidebar submenu)
+      2.6. Instance switcher (wallet selection)
+      2.7. App sidebar menu
     3. UI elements
       3.1. Buttons
       3.2. Addresses
-      3.3. Loading info
+      3.3. Loading info / bar
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
-      3.7. Tree browser
-      3.8. Tables
+      3.7. Tables
+      3.8. Details/summary expander
+      3.9. Modals
+      3.10. Detail/summary toggle
     4. Typography
-      4.1. Page subtitles
+      4.1. (Sub)titles (h2, h3..)
       4.2. Paragraph styles
+      4.3. Alerts (info/warning messages)
     5. Plug-ins
       5.1. Charts
-    6. Misc.
-      6.1. Info/warning messages (releases etc.)
+    6. Specific
+      6.1. T&C text
+      6.2. Versions (Client, Core, Apps)
+    7. Misc.
 
 */
 
@@ -47,13 +54,10 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
 
 body {
   @extend %disable-select;
-  font-family: $font;
-  background-color: $bg;
+  font-family: var(--font);
+  background-color: var(--bg);
   font-size: 13px;
   margin: 0;
-  @include break(l) {
-    font-size: 14px;
-  }
 }
 
 
@@ -66,33 +70,19 @@ body {
 // main container for content
 .container-block {
   @extend %clearfix;
-  padding: $padding;
-  @include break(l) {
-    padding: 45px $padding-l;
-  }
+  padding: var(--paddingV) var(--paddingH);
+}
+
+.container-flex {
+  display: flex;
 }
 
 
 // ------ 2.2. MODIFIERS ------ //
 
-// offset content from top (due to fixed status bar)
-.with-tab-bar {
-  margin-top: ($header-main-height + $tab-bar-height);
-}
-.without-tab-bar {
-  margin-top: $header-main-height;
-}
-
-.with-control-bar {
-  margin-top: ($header-main-height + $control-bar-height);
-}
-
 // content offset from left, when sticky sidebar is present
 .with-filter {
-  margin-left: $filter-width + $padding;
-  @include break(l) {
-    margin-left: $filter-width + $padding-l;
-  }
+  margin-left: calc(var(--filter-width) + var(--paddingH));
 }
 
 
@@ -100,28 +90,18 @@ body {
 
 // sticky tabs under status bar
 .tab-bar {
-  position: fixed;
-  top: $header-main-height;
+  position: sticky;
+  top: var(--header-main-height);
   z-index: 100;
-  left: $sidebar-width;
-  right: 6px;
-  background: rgba($bg, 0.95);
-  .buttons {
-    flex: 1 0 100px;
-    padding: 0 20px; // offset side padding
-    //border-left: 1px solid $bg-shadow;
-    border-bottom: 1px solid $bg-shadow;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-  }
+  height: calc(var(--tab-bar-height) + 1px);
+  background: hsla(var(--bg-hsl), 0.87);
 }
 
 // sticky control bars (eg. on Listings page)
 .control-bar {
   @extend .tab-bar;
-  padding: 0 28px 0 $padding;
-  border-bottom: 1px solid $bg-shadow;
+  padding: 0 28px 0 var(--paddingH);
+  border-bottom: 1px solid var(--bg-muted);
 }
 
 
@@ -129,16 +109,325 @@ body {
 
 .filter { // sticky sidebars in content area
   position: sticky;
-  top: ($header-main-height + $tab-bar-height + $padding);
-  width: $filter-width;
+  top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV) + 1px); // 1px for border
+  width: var(--filter-width);
   float: left;
   .without-tab-bar & {
-    top: ($header-main-height + $padding);
+    top: calc(var(--header-main-height) + var(--paddingV) + 1px);
   }
-  button.full-width {
-    margin-top: 10px;
+  .buttons { // main call-to-action buttons above filter
+    margin-bottom: 32px;
+    @include break(l) {
+      margin-bottom: 46px;
+    }
+    button {
+      margin-bottom: 12px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+    .button-group {
+      button {
+        border-radius: 0;
+        &:first-child {
+          border-top-left-radius: var(--radius);
+          border-bottom-left-radius: var(--radius);
+        }
+        &:last-child {
+          border-top-right-radius: var(--radius);
+          border-bottom-right-radius: var(--radius);
+        }
+      }
+    }
+  }
+  .filter-card {
+    padding: 0;
+    margin-bottom: 16px;
+
+    // checkboxes
+    .checkbox {
+      padding: 3px 18px;
+      &:first-of-type {
+        padding-top: 12px;
+      }
+      &:last-of-type {
+        padding-bottom: 12px;
+      }
+      &.highlight {
+        font-weight: 500;
+      }
+      .mat-checkbox {
+        margin: 3px 0;
+      }
+    }
+
+    // radio buttons
+    .radio-group {
+      --radio-paddingH: 16px;
+      width: 100%;
+      padding: 8px 0;
+      display: block;
+      .filter-option {
+        @extend %tfx;
+        width: 100%;
+        font-family: var(--font);
+        &:hover {
+          background: var(--bg-hover);
+          .amount {
+            color: var(--text);
+            background: var(--bg-muted);
+          }
+        }
+        &.mat-radio-checked {
+          .amount {
+            color: var(--color-white);
+            background: var(--color-secondary);
+          }
+        }
+        .mat-radio-label {
+          position: relative;
+          padding: 6px var(--radio-paddingH);
+          width: calc(100% - calc(2 * var(--radio-paddingH)));
+        }
+      }
+      .amount {
+        @extend %tfx;
+        font-weight: 500;
+        color: var(--text-muted);
+        background: hsla(var(--bg-muted-hsl), 0.4);
+        border-radius: var(--radius);
+        position: absolute;
+        right: var(--radio-paddingH);
+        top: 7px;
+        display: inline-block;
+        padding: 1px 6px;
+      }
+    }
+
+    // "clear filtering by X" button
+    .clear-specific-filter {
+      padding: 6px 12px;
+      width: 100%;
+    }
+
+  } // << .filter-card
+}// << .filter
+
+
+// ------ 2.5. RADIO SWITCHERS ------ //
+
+.radio-switcher { // ~ vertical tabs
+  @extend %mat-card;
+  border-radius: var(--radius);
+  overflow: hidden;
+  label {
+    input[type="radio"] { // radio button for functionality, hidden
+      position: absolute;
+      left: -999%;
+      margin: 0;
+      // active state
+      &:checked + .switcher-option {
+        font-weight: 600;
+        .mat-icon {
+          @extend %reset;
+          color: var(--color-secondary);
+          &.part-alert {
+            color: var(--color-alert);
+          }
+        }
+      }
+      // keyboard/mouse focus
+      &:focus + .switcher-option {
+        .mat-icon {
+          background: hsla(var(--color-secondary-hsl), 0.05);
+          padding: 8px;
+          margin: 0 4px 0 0;
+          &.part-alert {
+            background: hsla(var(--color-alert-hsl), 0.05);
+          }
+        }
+      }
+    }
+    .switcher-option { // container for all option's content
+      cursor: pointer;
+      background: var(--color-white);
+      border-top: 1px solid var(--bg-muted);
+      padding: 3px 8px;
+      font-size: 14px;
+      line-height: 40px;
+      font-weight: 500;
+      .mat-icon {
+        @extend %lightest;
+        @extend %tfx;
+        position: relative;
+        top: 3px;
+        padding: 0;
+        margin: 8px 12px 8px 8px;
+        border-radius: 50%;
+      }
+      &:hover {
+        .mat-icon {
+          @extend %lighter;
+        }
+      }
+    }
     &:first-of-type {
-      margin-top: 0;
+      .switcher-option {
+        border: none;
+      }
+    }
+  }
+}
+
+
+// ------ 2.6. INSTANCE SWITCHER (wallet selection) ------ //
+
+.instance-switcher {
+  box-shadow: none !important;
+  border-radius: 0;
+  background: var(--bg-black) !important;
+  margin: 0 !important;
+
+  // active instance + toggle
+  .switcher-toggle {
+    @extend %tfx;
+    font-family: var(--font);
+    color: hsla(var(--text-muted-hsl), 0.9);
+    min-height: min-content;
+    max-height: min-content;
+    padding: 0;
+    &:hover,
+    &:focus,
+    &.cdk-keyboard-focused {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.5) !important;
+      .item {
+        background: transparent;
+        color: hsla(var(--bg-muted-hsl), 0.7);
+      }
+      &.mat-expanded {
+        background: hsla(var(--bg-sidebar-darker-hsl), 0.8) !important;
+        .item {
+          background: transparent;
+        }
+      }
+    }
+    .item {
+      .text {
+        max-width: calc(100% - var(--icon-size) - var(--icon-margin));
+        .icon {
+          background: var(--color-primary);
+          color: var(--color-white);
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // shared style for 1 instance item
+  .item {
+    --icon-size: 28px;
+    --icon-margin: 11px;
+    @extend %tfx;
+    cursor: pointer;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 10px 22px 10px 13px;
+    font-size: 13px;
+    &:hover,
+    &:focus {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.8) !important;
+      color: hsla(var(--bg-muted-hsl), 0.7);
+      outline: none;
+    }
+    .icon {
+      background: hsla(var(--text-muted-hsl), 0.3);
+      flex: 0 0 var(--icon-size);
+      width: var(--icon-size);
+      height: var(--icon-size);
+      line-height: calc(var(--icon-size) + 2px);
+      font-size: 16px;
+      text-align: center;
+      text-transform: uppercase;
+      border-radius: 50%;
+      margin: 2px var(--icon-margin) 2px 0;
+    }
+    .text {
+      max-width: calc(100% - var(--icon-size));
+      .name {
+        font-weight: 500;
+        color: var(--color-white);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .value {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  // other switchable options (inactive instances)
+  .options {
+    color: var(--text-muted);
+    line-height: 1.3;
+  }
+
+}
+
+
+// ------ 2.7. APP SIDEBAR MENU ------ //
+
+.menu-items {
+  @extend %menu-divider;
+  padding-top: 1px; // offset divider box-shadow above
+  // single menu item
+  .menu-item {
+    @extend %tfx;
+    padding: 13px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    outline: none;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &.active {
+      .mat-icon { // highlight active menu item
+        color: var(--color-primary) !important;
+      }
+    }
+    &.disabled { // disabled items (eg. when Market is loading)
+      opacity: 0.4;
+      pointer-events: none;
+    }
+    .mat-icon {
+      @extend %tfx;
+      margin: 0 16px 0 0;
+      color: hsla(var(--bg-hsl), 0.2);
+    }
+    .text {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--color-white);
+    }
+    .notification { // order notifications
+      @extend %notification;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      opacity: 0.6;
+    }
+    &:hover,
+    &:focus {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.5);
+      .mat-icon {
+        color: hsla(var(--bg-hsl), 0.35);
+      }
     }
   }
 }
@@ -169,18 +458,18 @@ body {
 }
 
 
-// ------ 3.3. LOADING INFO ------ //
+// ------ 3.3. LOADING INFO / BAR ------ //
 
 .loading-container {
   text-align: center;
   position: fixed;
   z-index: 10;
-  top: $header-main-height;
-  left: $sidebar-width;
-  right: 0;
-  bottom: 8px;
+  top: var(--header-main-height);
+  left: calc(var(--multiwallet-width) + var(--sidebar-width));
+  right: var(--scrollbar-width);
+  bottom: 0;
   display: flex;
-  background: rgba($bg, 0.9);
+  background: hsla(var(--bg-hsl), 0.9);
   pointer-events: none;
   .loading-info { // text info for loading screens (e.g. Listings)
     margin: auto;
@@ -190,8 +479,8 @@ body {
       padding: 14px;
       margin: 0 auto 24px;
       border-radius: 50%;
-      background: $color-white;
-      box-shadow: 0 0 20px rgba($bg-black, 0.07);
+      background: var(--color-white);
+      box-shadow: 0 0 20px hsla(var(--bg-black-hsl), 0.07);
       & > img {
         animation: rotate 4s infinite;
         display: inline-block;
@@ -200,16 +489,30 @@ body {
       }
     }
     .title {
-      font-size: 17px;
+      font-size: 18px;
       text-transform: uppercase;
       font-weight: 600;
+      margin: 0 0 14px;
     }
     p {
-      margin: 12px;
+      margin: 0;
+      font-size: 13px;
     }
   }
 }
 
+.loading-bar {
+  .mat-progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: calc(var(--multiwallet-width) + var(--sidebar-width));
+    right: var(--scrollbar-width);
+    width: auto;
+    height: 6px;
+    border-top: 2px solid var(--color-white);
+    box-shadow: 0 0 20px hsla(var(--bg-black-hsl), 0.2);
+  }
+}
 
 // ------ 3.4. NO RESULTS (no TXs, no addresses, ..) ------ //
 
@@ -217,34 +520,71 @@ body {
   font-size: 18px;
   text-transform: uppercase;
   text-align: center;
-  padding: 170px 0;
-  border: 2px dashed $bg-shadow;
-  background: rgba($color-white, 0.5);
+  padding: 145px var(--paddingH);
+  border: 1px dashed var(--bg-muted);
+  background: hsla(var(--color-white-hsl), 0.45);
+  @include break(l) {
+    padding: 220px 0;
+  }
+  .illustration {
+    display: block;
+    max-width: 10rem;
+    margin: 0 auto 2rem;
+    pointer-events: none;
+    @include break(l) {
+      max-width: 15rem;
+      margin: 0 auto 3rem;
+    }
+  }
   p {
-    @extend %lightest;
+    color: var(--text-muted) !important;
+    margin-top: 0;
+    &.help-text {
+      color: hsla(var(--text-muted-hsl), 0.7) !important;
+      font-size: 13px;
+      text-transform: none;
+      margin: 0 auto;
+      max-width: 30rem;
+      .mat-icon {
+        margin: 0 4px;
+        line-height: 0;
+        position: relative;
+        top: 4px;
+      }
+      .mat-button {
+        .mat-icon {
+          top: -2px;
+          margin: 0 5px 0 0;
+        }
+      }
+    }
   }
   button {
     margin-top: 12px;
   }
-  .widget-help {
-    @extend %reset;
-    margin: 0;
-    text-transform: none;
-    font-size: 12px;
-    color: darken($bg-shadow, 17%);
-    .mat-icon {
-      font-size: 13px;
-      margin: 0 4px;
-      position: relative;
-      top: 2px;
+  &.--smaller {
+    padding: 50px var(--paddingH);
+    @include break(l) {
+      padding: 75px 0;
     }
-    .mat-button {
-      .mat-icon {
-        top: -2px;
-        margin: 0 5px 0 0;
-        font-size: 16px;
+  }
+  &.--horizontal { // more compact, horizontal layout (text besides illustration) - in Listing > Q/A
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+    .illustration {
+      max-width: 8rem;
+      margin: 0 2rem 0 0;
+      @include break(xl) {
+        max-width: 10rem;
+        margin: 0 3rem 0 0;
       }
     }
+  }
+  &.--no-bg {
+    background: transparent;
+    border: none;
   }
 }
 
@@ -252,20 +592,16 @@ body {
 // ------ 3.5. INPUT WITH ICON (eg. Search) ------ //
 
 .icon-input {
-  input {
-    .mat-input-element {
-      height: 20px;
-    }
-  }
   .mat-icon {
     position: absolute;
     right: 0;
-    top: 2px;
-    font-size: 21px;
+    top: calc(50% - 9px);
+    font-size: 16px;
+    line-height: 2.9em;
     cursor: pointer;
   }
   .mat-form-field-underline {
-    background-color: $bg-shadow;
+    background-color: var(--bg-muted);
   }
 }
 
@@ -279,38 +615,131 @@ body {
 }
 
 
-// ------ 3.7. TREE BORWSER ------ //
+// ------ 3.7. TABLES ------ //
 
-.mat-tree {
-  .category { // 1st level
-    min-height: 0;
-    .mat-button {
-      font-size: 13px;
-      .mat-icon {
-        color: $bg-shadow;
-      }
-    }
-    &[aria-expanded='true'] { // toggled category
-      .mat-icon {
-        color: $secondary;
-      }
-    }
+table {
+  &.full-width {
+    width: 100%;
   }
-  .subcategory { // 2nd level
-    min-height: 0;
-    padding: 4px 40px;
-    .mat-checkbox {
-      font-size: 13px;
+
+  // Pricing table (Buy/Sell > Orders; Buy > Checkout)
+  &.prices {
+    width: 100%;
+    max-width: 100%;
+    color: var(--text-muted);
+    border-collapse: collapse;
+    tr {
+      th,
+      td {
+        vertical-align: top;
+        padding: 4px 0 1px;
+        line-height: 1.5;
+        border-bottom: 1px solid transparent;
+      }
+      th {
+        text-align: left;
+        font-weight: 500;
+        padding-right: 7px;
+      }
+    }
+    tbody {
+      tr {
+        &:hover {
+          th,
+          td {
+            color: var(--text);
+            border-bottom: 1px solid var(--bg-muted);
+          }
+        }
+      }
+    }
+    .amount {
+      font-family: var(--font-mono);
+      text-align: right;
+      &.total,
+      &.escrow {
+        font-weight: 500;
+      }
+    }
+    tfoot {
+      th {
+        text-align: right;
+        padding: 4px 0 0;
+        font-weight: 500;
+      }
     }
   }
 }
 
 
-// ------ 3.8. TABLES ------ //
+// ------ 3.8. DETAILS/SUMMARY EXPANDER ------ //
 
-table {
-  &.full-width {
-    width: 100%;
+details { // Sell > Import & Product list item
+  background: var(--bg);
+  border-radius: var(--radius);
+  summary {
+    @extend %tfx;
+    cursor: pointer;
+    outline: none;
+    padding: 8px 16px;
+    &::-webkit-details-marker {
+      color: var(--text-muted);
+    }
+    &:hover,
+    &:focus {
+      color: var(--text);
+    }
+  }
+  .details {
+    padding: 1px 16px 4px;
+  }
+}
+
+
+// ------ 3.9. MODALS ------ //
+
+.mat-dialog-content {
+  // darker bg for highlighting inputs (e.g. encrypt, unlock wallet, coldstaking setup..)
+  .modal-highlight {
+    background: var(--bg);
+    padding: 24px;
+    margin: 24px -24px 8px;
+    border-top: 1px solid var(--bg-muted);
+    border-bottom: 1px solid var(--bg-muted);
+    p.message { // warning/info messages above the input
+      margin: 0;
+      padding: 0 0 10px 28px;
+      &::before {
+        top: 10px;
+        left: 0;
+      }
+    }
+    .mat-form-field {
+      margin-bottom: 16px;
+      &:last-of-type {
+        margin: 0;
+      }
+      & + p.message {
+        margin-top: 24px;
+      }
+    }
+  }
+}
+
+
+// ------ 3.10. DETAIL/SUMMARY TOGGLE ------ //
+
+// Usage: details > summary + .details
+details {
+  @extend %help-text;
+  margin-bottom: 16px;
+  .details {
+    p {
+      margin-top: 0;
+      strong {
+        font-weight: 500;
+      }
+    }
   }
 }
 
@@ -324,31 +753,85 @@ h1 {
 }
 
 
-// ------ 4.1. PAGE SUBTITLES ------ //
+// ------ 4.1. (SUB)TITLES ------ //
 
-.mat-list { // 'H2' subtitles in pages (e.g. '(un)used addresses' in Receive
-  &.list-data {
-    .mat-subheader {
-      @extend %subtitle;
-      height: auto;
-      margin: 10px 0 25px !important;
-      &.first {
-        margin-top: -10px !important;
-      }
-    }
+// Grey-ish all-caps "H2" headers, usually above boxes/cards
+.section-title {
+  font-size: 14px;
+  font-family: var(--font);
+  font-weight: normal;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin: 32px 0 16px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+  @include break(l) {
+    font-size: 16px;
+    margin: 46px 0 18px;
   }
 }
 
+// Bolder, all-caps "H3" headers, usually inside boxes/cards
+.box-title {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 13px;
+  margin-top: 0;
+  &.--larger {
+    font-size: 15px;
+  }
+}
+
+// Alternative to .box-titles ^
+.item-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 28px 0 14px;
+  color: var(--text);
+  @include break(l) {
+    font-size: 18px;
+    margin-top: 36px;
+  }
+}
 
 // ------ 4.2. PARAGRAPH STYLES ------ //
 
 p {
   line-height: 1.5;
+  // Highlighted 'lead' paragraphs
+  &.lead {
+    font-size: 15px;
+  }
+  &.text-muted {
+    color: var(--text-muted);
+  }
 }
 
-// Highlighted 'lead' paragraphs
-.lead {
-  font-size: 15px;
+pre {
+  font-family: var(--font-mono);
+}
+
+code {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-secondary);
+  background: hsla(var(--color-secondary-hsl), 0.15);
+  padding: 2px 6px;
+  border-radius: var(--radius);
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 95%;
+  line-height: 1.3;
+  border: 1px solid var(--bg-muted);
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  background: var(--bg);
+  display: inline-block;
+  padding: 2px 5px;
+  margin: 0 2px -3px;
 }
 
 // Help descriptions
@@ -358,12 +841,108 @@ p {
   margin-bottom: 25px;
 }
 
+
+// ------ 4.3. ALERTS (INFO/WARNING MESSAGES) ------ //
+
+// NEW "colorful" alerts (like messages below, but with more color)
+// markup: p.alert.--boxed.--warning>span(>small)
+p.alert,
+div.alert {
+  font-weight: 500;
+  margin: 24px 0;
+  display: flex;
+  align-items: stretch;
+  &::before {
+    flex: 0 0 56px;
+    font-family: 'part';
+    text-align: center;
+    color: var(--color-white);
+    font-size: 16px;
+    line-height: 52px;
+  }
+  span {
+    flex: 1 1 100%;
+    padding: 16px 18px;
+    align-self: center;
+  }
+  small { // help descriptions for alerts (e.g. for solutions to fixing the problem)
+    display: block;
+    margin-top: 4px;
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.85em;
+  }
+  .action-button {
+    padding-right: 16px;
+    align-self: center;
+  }
+  &.--boxed {
+    background: var(--color-white);
+    box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  &.--warning {
+    &::before {
+      content: '\ea03';
+      background: linear-gradient(to right, var(--color-alert) 0%, var(--color-alert-to-gradient) 100%);
+    }
+  }
+  &.--info {
+    &::before {
+      content: '\ea25';
+      background: linear-gradient(to right, var(--color-info) 0%, var(--color-info-to-gradient) 100%);
+    }
+  }
+}
+
+// NEW warning & info messages
+p.message {
+  font-weight: 500;
+  background: var(--bg);
+  padding: 16px 24px 16px 52px;
+  position: relative;
+  .mat-dialog-content & {
+    margin: 24px -24px;
+  }
+  &::before {
+    font-family: 'part';
+    font-size: 1.4em;
+    line-height: 0;
+    position: absolute;
+    top: 25px;
+    left: 24px;
+    margin-right: 8px;
+  }
+  // Info messages
+  &.--info {
+    &::before {
+      content: '\ea25'; // part-info icon
+      color: var(--color-info);
+    }
+    a {
+      color: var(--color-info);
+    }
+  }
+  // Warning messages
+  &.--warning {
+    &::before {
+      content: '\ea03'; // part-alert icon
+      color: var(--color-alert);
+    }
+    a {
+      color: var(--color-alert);
+    }
+  }
+}
+
+// @TODO @Allien: replace and remove:
 // Warning & Info messages
 p.warning,
 p.info {
   font-weight: 500;
   font-size: 13px;
-  background: $bg;
+  background: var(--bg);
   padding: 16px 24px 16px 52px;
   position: relative;
   .mat-dialog-content & {
@@ -379,53 +958,72 @@ p.info {
     left: 24px;
     margin-right: 8px;
   }
+  a {
+    &:focus,
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 }
 
 p.warning {
   &::before {
-    content: '\ea02'; // part-alert icon
-    color: $color-alert;
+    content: '\ea03'; // part-alert icon
+    color: var(--color-alert);
   }
   a {
-    @extend %tfx;
-    color: $color-alert;
-    &:hover {
-      color: darken($color-alert, 7%);
-    }
+    color: var(--color-alert);
   }
 }
 
 p.info {
   &::before {
-    content: '\ea19'; // part-info icon
-    color: $color-info;
+    content: '\ea25'; // part-info icon
+    color: var(--color-info);
   }
   a {
-    @extend %tfx;
-    color: $color-info;
-    &:hover {
-      color: darken($color-info, 7%);
-    }
+    color: var(--color-info);
   }
 }
 
-code {
-  color: darken($secondary, 10%);
-  background: rgba($secondary, 0.15);
-  padding: 1px 3px;
-  border-radius: $radius;
-}
 
-kbd {
-  font-size: 95%;
-  line-height: 1.3;
-  font-family: inherit;
-  border: 1px solid darken($bg-hover, 7%);
-  border-radius: 2px;
-  background: $bg;
+// ------ 4.4. TAGS ------ //
+
+.tag {
   display: inline-block;
-  padding: 2px 5px;
-  margin: 0 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: uppercase;
+  border: 1px solid hsla(var(--text-muted-hsl), 0.7);
+  border-radius: var(--radius);
+  padding: 1px 6px;
+  position: relative;
+  top: -1px;
+  margin-left: 6px;
+  &:empty { // hide empty tags
+    display: none;
+  }
+  &.--primary {
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+  }
+  &.--secondary {
+    color: var(--color-secondary);
+    border: 1px solid var(--color-secondary);
+  }
+  &.--tertiary {
+    color: var(--color-tertiary);
+    border: 1px solid var(--color-tertiary);
+  }
+  &.--alert {
+    color: var(--color-alert);
+    border: 1px solid var(--color-alert);
+  }
+  &.--smaller {
+    font-size: 9px;
+    padding: 0 5px;
+  }
 }
 
 
@@ -435,105 +1033,151 @@ kbd {
 
 // ------ 5.1. Charts ------ //
 
-.nvd3-svg {
-  // Pie/donut chart
-  .nv-slice {
-    stroke: $color-white;
-    stroke-width: 2px;
-  }
-  .nv-legend-text {
-    fill: $text;
-  }
-}
+// .nvd3-svg {
+//   // Pie/donut chart
+//   .nv-slice {
+//     stroke: var(--color-white);
+//     stroke-width: 2px;
+//   }
+//   .nv-legend-text {
+//     fill: var(--text);
+//   }
+// }
 
-.nvtooltip { // tooltips
-  z-index: 1000;
-  font-family: $font;
-  font-size: 12px;
-  color: $color-white;
-  background: rgba($bg-black, 0.85);
-  border-radius: $radius;
-  padding: 1px 4px;
-  .legend-color-guide > div {
-    height: 6px;
-    width: 6px;
-    margin-right: 2px;
-    display: inline-block;
-    border-radius: $radius;
-    position: relative;
-    top: -1px;
-  }
-  .key {
-    font-weight: 500;
-    margin: 0 3px;
-  }
-  .value {
-    font-size: 10px;
-    color: lighten($bg-black, 50%);
-    position: relative;
-    top: 1px;
-  }
-}
+// .nvtooltip { // tooltips
+//   z-index: 1000;
+//   font-family: var(--font);
+//   font-size: 12px;
+//   color: var(--color-white);
+//   background: hsla(var(--bg-black-hsl), 0.85);
+//   border-radius: var(--radius);
+//   padding: 1px 4px;
+//   .legend-color-guide > div {
+//     height: 6px;
+//     width: 6px;
+//     margin-right: 2px;
+//     display: inline-block;
+//     border-radius: var(--radius);
+//     position: relative;
+//     top: -1px;
+//   }
+//   .key {
+//     font-weight: 500;
+//     margin: 0 3px;
+//   }
+//   .value {
+//     font-size: 10px;
+//     color: hsla(var(--bg-black-hsl), 0.5);
+//     position: relative;
+//     top: 1px;
+//   }
+// }
 
 
 /* ------------------------------- *\
-    6. MISC
+    6. SPECIFIC
 \* ------------------------------- */
 
-// ------ 6.1. Info/warning messages (releases etc.) ------ //
+// ------ 6.1. T&C text ------ //
 
-.mat-sidenav-container {
-  // when top notification present (new release/announcement), push status bar etc. below
-  &.with-top-notification {
-    .header-main { // status bar
-      top: 61px;
+.terms-text {
+  text-align: justify;
+  color: var(--text-muted);
+  h2, b, strong {
+    color: var(--text);
+    font-weight: 500;
+    margin-top: 0;
+  }
+  h3 {
+    margin-top: 42px;
+  }
+  p {
+    line-height: 1.6;
+  }
+}
+
+
+// ------ 6.2. Versions (Client, Core, Apps) ------ //
+
+// Version info in Sidebar's footer (needs to be shared across multiple components/apps)
+.client-version {
+  @extend %enable-select;
+  display: block;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  .version {
+    @extend %tfx;
+    color: hsla(var(--color-white-hsl), 0.5);
+    margin-left: 2px;
+    &:hover {
+      color: var(--color-white);
     }
-    .balance-overview { // Overview
-      margin-top: 125px;
+
+    .selectable {
+      @extend %enable-select;
     }
-    .tab-bar,
-    .control-bar {
-      top: 125px;
+
+    // version check indicator
+    .dot {
+      @extend %tfx;
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      position: relative;
+      top: -1px;
+      margin: 0 5px 0 2px;
+      background: hsla(var(--text-muted-hsl), 0.8);
     }
-    .with-tab-bar { // content containers
-      margin-top: 175px;
-      .filter {
-        top: 210px;
-      }
-    }
-    .without-tab-bar { // content containers w/o tabs
-      margin-top: 125px;
-      .filter {
-        top: 160px;
-      }
-    }
-    app-listing {
-      .container-block.with-control-bar {
-        margin-top: 180px;
-      }
-    }
-    app-send {
-      .from-box {
-        .sticky {
-          top: 205px;
+    &.current {
+      &:hover {
+        .dot {
+          background: var(--color-primary);
         }
       }
     }
-    app-receive {
-      .container-flex {
-        &.with-tab-bar {
-          height: calc(100vh - 290px);
-          @include break(l) {
-            height: calc(100vh - 310px);
-          }
+    &.outdated {
+      font-weight: 700;
+      color: var(--color-white);
+      .dot {
+        background: var(--color-warning);
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid var(--color-warning);
+          position: absolute;
+          top: -2px;
+          left: -2px;
         }
       }
     }
-    app-add-item,
-    app-help {
-      .container-block {
-        margin-top: 125px;
+    &.unknown {
+      color: var(--color-white);
+      .dot {
+        background: var(--color-alert);
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 6px;
+          height: 6px;
+          display: block;
+          border-radius: 50%;
+          border: 1.5px solid var(--color-alert);
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
       }
     }
   }
 }
+
+/* ------------------------------- *\
+    7. MISC
+\* ------------------------------- */
+

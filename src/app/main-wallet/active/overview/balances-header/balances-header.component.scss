@@ -1,0 +1,66 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../widgets/shared/shared.scss';
+
+.balance-overview {
+  display: flex;
+  padding: 20px var(--paddingH);
+  .balance-item {
+    border-right: 1px solid var(--bg-muted);
+    margin-right: 2.5%;
+    flex: 1 1 250px;
+  }
+  table.balances {
+    @extend %enable-select;
+    flex: 1 0 200px;
+    th {
+      color: var(--text-muted);
+      font-weight: 400;
+      text-align: left;
+      line-height: 1.35;
+    }
+    td {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      text-align: right;
+    }
+  }
+}
+
+
+.balance {
+  @extend %enable-select;
+  display: inline-block;
+  padding-top: 14px;
+  @include break(l) {
+    padding-top: 10px;
+  }
+  & > .big {
+    font-size: 22px;
+    @include break(l) {
+      font-size: 26px;
+    }
+  }
+  & > .small {
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--text-muted);
+    @include break(l) {
+      font-size: 15px;
+    }
+  }
+  & > .description {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 6px;
+  }
+
+  // Horizontal balance (on one line, no big numbers)
+  &.horizontal {
+    padding: 0;
+    small {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+  }
+
+}

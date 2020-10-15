@@ -1,0 +1,46 @@
+<div class="console-modal">
+
+  <div mat-dialog-container>
+    <mat-tab-group>
+      <mat-tab label="Core console">
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div #debug class="console-modal-form" (scroll)="onScroll()">
+    <app-page-intro [canHideContent]="false">
+      <ng-container page-title>Core Console</ng-container>
+      <ng-container page-content>
+        Welcome to the Particl Core RPC console (for interacting with wallet).<br>
+        Type <code>help</code> for an overview of available commands.
+      </ng-container>
+      <ng-container page-help>
+        <strong>Warning:</strong> Scammers have been active, telling users to type commands here, stealing their wallet contents.<br>Do not use this console without fully understanding the ramification of a command.
+      </ng-container>
+    </app-page-intro>
+
+    <div class="content-modal" [ngClass]="{'input': list.type === 1}" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" *ngFor="let list of commandList">
+      <div fxFlex="1 1 100%" class="command">
+        <pre class="text-format" *ngIf="isJson(list.text)">{{ list.text | json }}</pre>
+        <pre class="text-format" [ngClass]="{'warn-text': list.code === -1}" *ngIf="!isJson(list.text)">{{ list.text }}</pre>
+      </div>
+      <div fxFlex="0 0 100px" class="time" *ngIf="list.type === 1">
+        {{ list.time }}
+      </div>
+    </div>
+  </div>
+
+  <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center">
+    <mat-form-field fxFlex="1 1 100%" appearance="fill" class="command-input --plain --larger">
+      <mat-icon matPrefix fontIcon="part-console"></mat-icon>
+      <input #commandInput matInput [(ngModel)]="command" placeholder="Enter command…" [appFocusTimeout]="true">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="useRunstringsParser" class="confirmation-checkbox" fxFlex="0 1 200px">
+      <small>Use runstrings (deprecated)</small>
+    </mat-checkbox>
+    <button mat-raised-button color="primary" [disabled]="!command || !waitingForRPC" (click)="rpcCall()" fxFlex="0 1 200px">
+      <mat-icon fontIcon="part-next-single"></mat-icon>
+      Enter
+    </button>
+  </div>
+</div>

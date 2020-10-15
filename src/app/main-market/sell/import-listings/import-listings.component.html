@@ -1,0 +1,248 @@
+<div class="container-block without-tab-bar">
+
+  <mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg --stepper-above-page-title" #stepper>
+    <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
+    <ng-template matStepperIcon="edit">
+      <custom-icon>
+        <mat-icon fontIcon="part-check"></mat-icon>
+      </custom-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <custom-icon>
+        <mat-icon fontIcon="part-pen-1"></mat-icon>
+      </custom-icon>
+    </ng-template>
+
+
+
+    <!-- ---------------------------------- 1. SELECT IMPORT ---------------------------------- -->
+
+    <mat-step [completed]="stepper.selectedIndex >= 0" [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>Select Import</ng-template>
+      <app-page-intro>
+        <ng-container page-title>Select Import</ng-container>
+        <ng-container page-content>
+          Already selling elsewhere? Do you want to import dozens of Products at once? We've got you covered!<br>
+          Choose your preferred Product import method below, specify import settings and continue to the next step
+        </ng-container>
+        <ng-container page-help>
+        </ng-container>
+      </app-page-intro>
+
+      <form class="stepper-content select-import" [formGroup]="firstFormGroup">
+
+        <div class="filter">
+          <h2 class="section-title">Select import source</h2>
+          <div class="radio-switcher">
+            <label *ngFor="let source of import_sources">
+              <input type="radio" name="option" [value]="source.value">
+              <div class="switcher-option">
+                <mat-icon [fontIcon]="source.icon"></mat-icon>
+                <span class="name">{{ source.title }}</span>
+              </div>
+            </label>
+          </div><!-- .radio-switcher -->
+        </div><!-- .filter-->
+
+        <!-- a) IMPORT FROM CSV -->
+        <div class="import-config with-filter">
+          <h2 class="section-title">Import from CSV file</h2>
+
+          <mat-card class="import-card">
+            <div class="text">
+              <p>
+                CSV (comma separated values) file is an universal way of importing your Products &ndash; you can download our <a href="./assets/templates/csv_template.csv" download>CSV example template</a> as a starting point
+              </p>
+              <details>
+                <summary>CSV column definitions</summary>
+                <div class="details">
+                  <p>
+                    These columns should be defined in your CSV import file &ndash; if any columns will be missing, you would have to fill them in in the next step manually.
+                  </p>
+                  <ul>
+                    <li><strong>title</strong>: Product's title (Listing name)</li>
+                    <li><strong>short_description</strong>: short sentence highlighting Product's key features</li>
+                    <li><strong>long_description</strong>: general description of the Product</li>
+                    <li><strong>base_price</strong>: price per Product (priced in PART)</li>
+                    <li><strong>category</strong>: Product's category matching available Open Marketplace categories</li>
+                    <li><strong>images</strong>: URLs to images of the Product (multiple images separated by comma and space)</li>
+                    <li><strong>domestic_shipping_price</strong>: price (in PART) for shipping the Product inside your country (specified later)</li>
+                    <li><strong>international_shipping_price</strong>: price for shipping the Product worldwide (outside your country)</li>
+                  </ul>
+                </div>
+              </details>
+            </div><!-- .text -->
+            <mat-divider></mat-divider>
+            <label class="--larger">
+              <h3 class="label">Select CSV import file</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text" placeholder="Select your .csv file" formControlName="firstCtrl" />
+              </mat-form-field>
+            </label>
+            <label class="--larger">
+              <h3 class="label">CSV separator</h3>
+              <p class="help-text">
+                Character used to separate values (usually comma or semicolon)
+              </p>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text" placeholder="CSV delimiter" formControlName="firstCtrl" />
+              </mat-form-field>
+            </label>
+            <p class="message --warning">Some import error occured, oops</p>
+          </mat-card>
+
+          <div class="action-buttons" fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" matStepperNext>
+              <mat-icon fontIcon="part-next-single"></mat-icon>
+              Process CSV import
+            </button>
+          </div>
+        </div><!-- .import-config -->
+
+        <!-- b) IMPORT FROM WOOCOMMERCE -->
+        <div class="import-config with-filter">
+          <h2 class="section-title">Import from WooCommerce</h2>
+
+          <mat-card class="import-card">
+            <div class="text">
+              <p>
+                WooCommerce is a popular e-commerce solution for WordPress &ndash; easily import your WooCommerce Products here
+              </p>
+              <details>
+                <summary>How to get WooCommerce export file?</summary>
+                <div class="details">
+                  <p>
+                    In WooCommerce admin, go to Products > All Products, click <strong>Export</strong> next to page's title. Leave pre-filled settings and click <strong>Generate CSV</strong>
+                  </p>
+                </div>
+              </details>
+            </div><!-- .text -->
+            <mat-divider></mat-divider>
+            <label class="--larger">
+              <h3 class="label">Select WooCommerce export file</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="text" placeholder="Select WooCommerce .csv file" formControlName="firstCtrl" />
+              </mat-form-field>
+            </label>
+            <label class="--larger">
+              <h3 class="label">PART/fiat currency conversion</h3>
+              <p class="help-text">
+                Set manual conversion rate &ndash; if you're selling for USD on your shop and PART/USD price is $5, enter "5"
+              </p>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <input matInput type="number" min="0" placeholder="Choose static PART rate" formControlName="firstCtrl" />
+              </mat-form-field>
+            </label>
+            <p class="message --warning">Some import error occured, oops</p>
+          </mat-card>
+
+          <div class="action-buttons" fxLayoutAlign="end center">
+            <button mat-raised-button color="primary" matStepperNext>
+              <mat-icon fontIcon="part-next-single"></mat-icon>
+              Process WooCommerce import
+            </button>
+          </div>
+        </div><!-- .import-config -->
+
+      </form><!-- .select-import.stepper-content -->
+    </mat-step>
+
+
+
+    <!-- ---------------------------------- 2. REVIEW IMPORT DATA ---------------------------------- -->
+
+    <mat-step [completed]="stepper.selectedIndex >= 1">
+      <ng-template matStepLabel>Review Import Data</ng-template>
+      <app-page-intro>
+        <ng-container page-title>Review Import Data</ng-container>
+        <ng-container page-content>
+          Here are the data processed from your Import &ndash; fill in the missing fields (if any) and update the rest to your liking<br>
+          When satisfied, check which Products you want to Import and save them into Product templates
+        </ng-container>
+        <ng-container page-help>
+        </ng-container>
+      </app-page-intro>
+
+      <form class="stepper-content review-import-data" [formGroup]="secondFormGroup">
+        <h2 class="section-title">2<!--{{listings.length}}--> Products found for import</h2>
+
+        <mat-accordion><!-- *ngIf="listings.length > 0" -->
+          <!-- @FIXME: why this doesn't panel have the expand animation? -->
+          <mat-expansion-panel class="imported-template list-item no-padding">
+            <mat-expansion-panel-header class="header">
+              <div class="header-wrapper">
+                <div class="photo">
+                  <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+                </div>
+                <div class="meta" fxFlex="1 1 100%">
+                  <div class="name">Imported Template title</div>
+                </div>
+                <div class="status-wrap" fxFlex="0 0 240px"><!-- *ngFor="let status of getStatus(listing?.status)" -->
+                  <!-- @TODO: `.expired` for errors (missing fields), `.published` for non-problematic: -->
+                  <div class="status expired">
+                    <!-- @TODO: in case of no errors, show "ready" instead -->
+                    <span class="dot"></span>2 missing fields
+                  </div>
+                </div>
+                <div class="publish-toggle" fxFlex>
+                  <!-- @TODO: if errors, uncheck & disable Publish checkbox -->
+                  <mat-checkbox disabled (click)="$event.stopPropagation()" color="primary">Import</mat-checkbox>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+            <div class="detail">
+              -- Add new Template component here --
+            </div>
+          </mat-expansion-panel><!-- .imported-template -->
+          <!-- @FIXME: why this doesn't panel have the expand animation? -->
+          <mat-expansion-panel class="imported-template list-item no-padding">
+            <mat-expansion-panel-header class="header">
+              <div class="header-wrapper">
+                <div class="photo">
+                  <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+                </div>
+                <div class="meta" fxFlex="1 1 100%">
+                  <div class="name">Another Imported Template</div>
+                </div>
+                <div class="status-wrap" fxFlex="0 0 240px"><!-- *ngFor="let status of getStatus(listing?.status)" -->
+                  <!-- @TODO: `.expired` for errors (missing fields), `.published` for non-problematic: -->
+                  <div class="status published">
+                    <!-- @TODO: in case of no errors, show "ready" instead -->
+                    <span class="dot"></span>ready
+                  </div>
+                </div>
+                <div class="publish-toggle" fxFlex>
+                  <mat-checkbox checked="checked" (click)="$event.stopPropagation()" color="primary">Import</mat-checkbox>
+                </div>
+              </div>
+            </mat-expansion-panel-header>
+            <div class="detail">
+              -- Add new Template component here --
+            </div>
+          </mat-expansion-panel><!-- .imported-template -->
+        </mat-accordion>
+
+        <p class="alert --boxed --warning">
+          <!-- @FIXME: replace text by meaningful error message ;) -->
+          <span>Ooops, some errors occured &ndash; missing fields or something, please correct them before Saving</span>
+        </p>
+
+        <div class="action-buttons" fxLayoutAlign="space-between center">
+          <button mat-button matStepperPrevious>
+            <mat-icon fontIcon="part-previous-single"></mat-icon>
+            Back
+          </button>
+          <!-- @TODO: enable if at least 1 template is marked for importing -->
+          <button mat-raised-button color="primary" matStepperNext>
+            <mat-icon fontIcon="part-next-single"></mat-icon>
+            Import &amp; Save
+          </button>
+        </div>
+
+      </form><!-- .review-import-data.stepper-content -->
+    </mat-step>
+
+
+
+  </mat-horizontal-stepper>
+</div><!-- .container-block -->

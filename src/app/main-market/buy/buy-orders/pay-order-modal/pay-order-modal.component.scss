@@ -1,0 +1,13 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../../../../main-wallet/shared/confirmations-shared'; // shared stuff for confirmation modals
+
+.contact-info {
+  background: var(--bg);
+  margin: 24px -24px;
+  padding: 24px 24px 8px;
+  border-top: 1px dashed var(--bg-muted);
+  border-bottom: 1px dashed var(--bg-muted);
+  .row {
+    margin: 24px 0 0;
+  }
+}

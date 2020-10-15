@@ -1,0 +1,85 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+$installer-minisidebar-width: 54px;
+$installer-sidebar-width: (270px - $installer-minisidebar-width);
+$installer-sidebar-padding: 30px;
+$installer-header-height: 96px;
+
+// Note: most of texts' styles are defined in `/src/styles.scss`
+
+.container-block {
+  margin-top: var(--header-main-height);
+}
+
+.mat-divider { // section divider
+  border-top: 1px solid var(--bg-sidebar-darker);
+  border-bottom: 1px solid var(--bg-sidebar-lighter);
+}
+
+.terms-sidebar-info {
+  padding: 20px 24px;
+  color: hsla(var(--color-white-hsl), 0.7);
+  h2 {
+    color: var(--color-white);
+    margin: 0 0 14px;
+  }
+}
+
+.terms {
+  @extend %disable-select;
+  & > .mini-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: var(--multiwallet-width);
+    background: var(--bg-sidebar-darker);
+  }
+  & > .sidebar {
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: var(--multiwallet-width);
+    background: var(--bg-sidebar);
+    color: var(--bg);
+    .logo {
+      width: 130px;
+      margin: 35px auto;
+      position: relative;
+      img {
+        display: block;
+      }
+    }
+  }
+  & > .content {
+    background: var(--bg);
+    margin-left: calc(var(--multiwallet-width) + var(--sidebar-width));
+    .header-main {
+      border-bottom: 1px solid var(--bg-muted);
+      background: var(--color-white);
+      padding-left: 35px;
+      padding-right: 26px;
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      position: fixed;
+      top: 0;
+      left: calc(var(--multiwallet-width) + var(--sidebar-width));
+      right: 0;
+      z-index: 100;
+    }
+  }
+}
+
+.action-buttons {
+  margin: 6px 35px 35px;
+  .confirmation-checkbox {
+    margin-right: 24px;
+    color: var(--text-muted);
+    strong {
+      font-weight: 500;
+      color: var(--text);
+    }
+  }
+}

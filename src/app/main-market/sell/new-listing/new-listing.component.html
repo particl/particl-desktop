@@ -1,0 +1,49 @@
+<div class="container-block">
+
+  <app-page-intro>
+    <ng-container page-title>{{ isNewTemplate ? 'Add new Product' : 'Edit your Product' }}</ng-container>
+    <ng-container page-content>
+      Create/modify a product &ndash; save it for publishing later or publish it right away to a selected Market
+    </ng-container>
+    <ng-container page-help>
+      To join or create new Markets, go to "Manage Markets" page
+    </ng-container>
+  </app-page-intro>
+
+  <market-sell-template-form
+    [listingTemplate]="null"
+    [regions$]="regions$"
+    [markets$]="markets$"
+    [categories$]="categories$"
+    (isValid)="updateFormValidity($event)"
+    (onChangeMarketId)="actionMarketSelectionChanged($event)"
+    (onImageImportError)="actionImageAddError($event)"
+    (onRequestImageRemoval)="actionImageRemovalRequest($event)"
+  ></market-sell-template-form>
+
+  <p class="alert --boxed --warning" *ngIf="errorMessage.value.length > 0">
+    <span><strong>Error:</strong> {{ errorMessage.value }}</span>
+  </p>
+
+
+  <div class="action-buttons" fxLayout fxLayoutAlign="space-between center">
+    <div class="left">
+      <button mat-button [routerLink]="['../']" [queryParams]="{selectedSellTab: 'templates'}" color="warn">
+        <mat-icon fontIcon="part-previous-single"></mat-icon>
+        To Products &amp; Listings
+      </button>
+    </div>
+    <div class="right" *ngIf="(saveButtonText.length > 0) && (publishButtonText.length > 0)">
+      <button [disabled]="!isTemplateSavable" mat-button matTooltip="Save template changes" appDebounceClick (debounceClick)="saveTemplate()">
+        <mat-icon fontIcon="part-date"></mat-icon>
+        {{ saveButtonText }}
+      </button>
+
+      <button [disabled]="!isTemplatePublishable" mat-raised-button color="primary" appDebounceClick (debounceClick)="publishTemplate()">
+        <mat-icon fontIcon="part-check"></mat-icon>
+        {{ publishButtonText }}
+      </button>
+    </div>
+  </div><!-- .action-buttons -->
+
+</div>

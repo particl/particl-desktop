@@ -2,7 +2,7 @@ const log = require('electron-log');
 const config = require('../daemon/daemonConfig');
 const botManager = require('particl-bot-manager');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
-const Observable = require('rxjs/Observable').Observable;
+const Observable = require('rxjs').Observable;
 
 // Stores the child process
 let child = undefined;

@@ -1,6 +1,6 @@
-import { Directive, Input, ElementRef, Renderer, HostListener, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Directive, Input, ElementRef, Renderer, HostListener, OnInit, Output, EventEmitter, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { throttleTime } from 'rxjs/operators';
 
 /** Focus the given element based on a condition */
 @Directive({
@@ -43,7 +43,7 @@ export class FocusTimeoutDirective {
   selector: '[appDebounceClick]'
 })
 export class DebounceClickDirective implements OnInit, OnDestroy {
-  @Input() debounceTime: number = 250;
+  @Input() debounceTime: number = 1000;
   @Output() debounceClick: EventEmitter<any> = new EventEmitter();
   private clicks: Subject<any> = new Subject();
   private subscription: Subscription;
@@ -52,7 +52,7 @@ export class DebounceClickDirective implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscription = this.clicks.pipe(
-      debounceTime(this.debounceTime)
+      throttleTime(this.debounceTime)
     ).subscribe(e => this.debounceClick.emit(e));
   }
 
@@ -85,3 +85,36 @@ export class ImagePreloadDirective {
   }
 }
 /* tslint:enable */
+
+
+@Directive({
+    // don't use 'ng' prefix since it's reserved for Angular
+    selector: '[appVar]',
+})
+export class TemplateVariableDirective<T = unknown> {
+    // https://angular.io/guide/structural-directives#typing-the-directives-context
+    static ngTemplateContextGuard<T>(dir: TemplateVariableDirective<T>, ctx: any): ctx is Context<T> {
+        return true;
+    }
+
+    private context?: Context<T>;
+
+    constructor(
+        private vcRef: ViewContainerRef,
+        private templateRef: TemplateRef<Context<T>>
+    ) {}
+
+    @Input()
+    set appVar(value: T) {
+        if (this.context) {
+            this.context.appVar = value;
+        } else {
+            this.context = { appVar: value };
+            this.vcRef.createEmbeddedView(this.templateRef, this.context);
+        }
+    }
+}
+
+interface Context<T> {
+    appVar: T;
+}

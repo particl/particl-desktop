@@ -1,0 +1,117 @@
+@import './src/assets/config'; // import shared colors etc.
+
+// ------ UI ------ //
+
+hr.divider {
+  border: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--bg-muted);
+}
+
+// ------ LAYOUT ------ //
+
+.mat-card {
+  padding: 0;
+  margin-bottom: 16px;
+}
+
+.actions { // buttons (cancel/apply/save)
+  margin-top: 16px;
+  display: flex;
+  align-content: space-between;
+  .left {
+    flex: 1 1 50%;
+    button {
+      margin: 0 10px 0 0;
+    }
+  }
+  .right {
+    flex: 1 1 50%;
+    text-align: right;
+    button {
+      margin: 0 0 0 10px;
+    }
+  }
+}
+
+
+// ------ FORMS ------ //
+
+.item {
+  @extend %tfx;
+  --item-paddingH: 24px;
+  --item-paddingV: 22px;
+  &.--with-error {
+    background: hsla(var(--color-alert-hsl), 0.015);
+  }
+  label,
+  .label {
+    display: block;
+    padding: var(--item-paddingV) var(--item-paddingH) 0;
+    &.checkbox,
+    &.button {
+     padding-bottom: var(--item-paddingV);
+     border-bottom: 1px solid var(--bg-muted);
+    }
+  }
+  .mat-form-field { // shared for form fields
+    display: block;
+    margin: 4px calc(-1 * var(--item-paddingH)) 0;
+    width: calc(100% + 2 * var(--item-paddingH));
+  }
+}
+
+.option { // main description of setting option
+  font-size: 15px;
+  font-weight: 500;
+  text-transform: none;
+  line-height: 1.5;
+  margin: 0 0 3px;
+}
+
+.desc { // help text for ^
+  @extend %help-text;
+  margin: 0;
+}
+
+.buttons { // action buttons in options
+  margin-bottom: 0;
+}
+
+mat-slider {
+  width: 100%;
+}
+
+.mat-form-field {
+  & + .mat-form-field {
+    margin-left: 12px;
+  }
+}
+
+// Error messages for category switcher
+.switcher-option.--with-error {
+  animation: pulse-color-alert infinite 1.5s;
+}
+
+
+// Error messages in options
+p.warning {
+  background: transparent;
+  padding: 0 0 0 26px;
+  margin: 8px 0;
+  color: var(--color-alert);
+  &::before {
+    top: 10px;
+    left: 0;
+  }
+}
+
+@keyframes pulse-color-alert {
+  0%,
+  100% {
+    box-shadow: -2px 0 0 hsla(var(--color-alert-hsl), 0.7) inset;
+  }
+  50% {
+    box-shadow: -4px 0 0 hsla(var(--color-alert-hsl), 0.7) inset;
+  }
+}

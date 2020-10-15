@@ -1,0 +1,31 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.sync-progress-wrapper {
+  cursor: pointer;
+  padding: 12px 24px 14px;
+  &:hover {
+    @include gradient(hsla(var(--color-info-hsl), 0.1), transparent);
+  }
+
+  .sync-info { // spinner with text
+    font-size: 11px;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--text-muted);
+
+    // spinner
+    .syncing-spinner {
+      display: inline-block;
+      position: relative;
+      top: 3.5px;
+      margin: 0 8px 0 0;
+    }
+
+    // text
+    .highlight {
+      color: var(--color-white);
+      font-weight: 500;
+    }
+
+  }
+}

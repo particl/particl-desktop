@@ -3,13 +3,13 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Particl Wallet": {
+    "ParticlWallet": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "outputPath": "dist",
             "index": "src/index.html",
@@ -23,7 +23,10 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "customWebpackConfig": {
+              "path": "src/custom-webpack.config.js"
+            }
           },
           "configurations": {
             "docker1": {
@@ -78,26 +81,26 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "Particl Wallet:build"
+            "browserTarget": "ParticlWallet:build"
           },
           "configurations": {
             "docker1": {
-              "browserTarget": "Particl Wallet:build:docker1"
+              "browserTarget": "ParticlWallet:build:docker1"
             },
             "docker2": {
-              "browserTarget": "Particl Wallet:build:docker2"
+              "browserTarget": "ParticlWallet:build:docker2"
             },
             "production": {
-              "browserTarget": "Particl Wallet:build:production"
+              "browserTarget": "ParticlWallet:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Particl Wallet:build"
+            "browserTarget": "ParticlWallet:build"
           }
         },
         "test": {
@@ -137,7 +140,7 @@
         }
       }
     },
-    "Particl Wallet-e2e": {
+    "ParticlWallet-e2e": {
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -146,7 +149,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "Particl Wallet:serve"
+            "devServerTarget": "ParticlWallet:serve"
           }
         },
         "lint": {
@@ -163,7 +166,7 @@
       }
     }
   },
-  "defaultProject": "Particl Wallet",
+  "defaultProject": "ParticlWallet",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

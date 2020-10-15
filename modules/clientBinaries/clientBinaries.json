@@ -88,26 +88,6 @@
           }
         },
         "win": {
-          "ia32": {
-            "download": {
-              "url": "https://github.com/particl/particl-core/releases/download/v0.18.1.7/particl-0.18.1.7-win32.zip",
-              "type": "zip",
-              "sha256": "d7aaa18d1517f8aa37d90c34b7628df5fa3b0ca7d3152449ae35f05c0a0f599c",
-              "bin": "particl-0.18.1.7/bin/particld.exe"
-            },
-            "bin": "particld.exe",
-            "commands": {
-              "sanity": {
-                "args": [
-                  "-version"
-                ],
-                "output": [
-                  "Particl Core Daemon",
-                  "0.18.1.7"
-                ]
-              }
-            }
-          },
           "x64": {
             "download": {
               "url": "https://github.com/particl/particl-core/releases/download/v0.19.1.1/particl-0.19.1.1-win64.zip",
