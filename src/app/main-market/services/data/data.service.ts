@@ -17,14 +17,14 @@ import { CategoryItem, Market } from './data.models';
 
 
 enum TextContent {
-  OPEN_MARKET_NAME = 'Open Marketplace'
+  OPEN_MARKET_NAME = 'Open Market'
 }
 
 
 @Injectable()
 export class DataService {
 
-  private marketAddresses: string[];
+  private openMarketAddresses: string[];
   private defaultMarketImage: string;
 
   constructor(
@@ -33,7 +33,7 @@ export class DataService {
     private _regionService: RegionListService,
   ) {
     if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
-      this.marketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
+      this.openMarketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
     }
 
     this.defaultMarketImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
@@ -68,7 +68,7 @@ export class DataService {
 
             filteredMarkets.push({
               id: +market.id,
-              name: this.marketAddresses.includes(market.receiveAddress) ? TextContent.OPEN_MARKET_NAME : market.name,
+              name: this.openMarketAddresses.includes(market.receiveAddress) ? TextContent.OPEN_MARKET_NAME : market.name,
               type: market.type,
               receiveAddress: market.receiveAddress,
               publishAddress: market.publishAddress,

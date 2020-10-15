@@ -559,6 +559,9 @@ export class SellService {
       case (templ.listings.latestExpiry > Date.now()):
         return TEMPLATE_STATUS_TYPE.ACTIVE;
         break;
+      case (templ.hash.length > 0) && (templ.updated > (Date.now() - 86_400_000)):
+        return TEMPLATE_STATUS_TYPE.PENDING;
+        break;
       case (
           (templ.listings.latestExpiry > 0) && (templ.listings.latestExpiry < Date.now())
         ) || (

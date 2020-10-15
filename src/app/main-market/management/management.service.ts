@@ -12,6 +12,8 @@ import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, Resp
 import { CategoryItem } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
+import * as marketConfig from '../../../../modules/market/config.js';
+
 
 enum TextContent {
   LABEL_REGION_ALL = 'All regions',
@@ -20,7 +22,9 @@ enum TextContent {
   LABEL_REGION_SOUTH_AMERICA = 'Cerntral & Southern America',
   LABEL_REGION_EUROPE = 'Europe',
   LABEL_REGION_MIDDLE_EAST_AFRICA = 'Middle East & Africa',
-  LABEL_REGION_ASIA_PACIFIC = 'Asia Pacific'
+  LABEL_REGION_ASIA_PACIFIC = 'Asia Pacific',
+
+  OPEN_MARKET_NAME = 'Open Market'
 }
 
 
@@ -33,6 +37,7 @@ export class MarketManagementService {
 
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
+  private openMarketAddresses: string[];
   private readonly marketDefaultImage: string;
   private readonly IMAGE_SCALING_FACTOR: number = 0.6;
   private readonly IMAGE_QUALITY_FACTOR: number = 0.9;
@@ -57,6 +62,10 @@ export class MarketManagementService {
 
     this.marketDefaultImage = defaultConfig.imagePath;
     this.IMAGE_MAX_SIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
+
+    if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
+      this.openMarketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
+    }
   }
 
 
@@ -378,7 +387,6 @@ export class MarketManagementService {
     }
 
     newItem.id = +src.id > 0 ? +src.id : newItem.id;
-    newItem.name = getValueOrDefault(src.name, 'string', newItem.name);
     newItem.summary = getValueOrDefault(src.description, 'string', newItem.summary);
 
     if (isBasicObjectType(src.Image)) {
@@ -401,6 +409,8 @@ export class MarketManagementService {
     newItem.receiveAddress = getValueOrDefault(src.receiveAddress, 'string', newItem.receiveAddress);
     newItem.publishAddress = getValueOrDefault(src.publishAddress, 'string', newItem.publishAddress);
     newItem.isFlagged = isBasicObjectType(src.FlaggedItem) && (+src.FlaggedItem.id > 0);
+
+    newItem.name = this.openMarketAddresses.includes(newItem.receiveAddress) ? TextContent.OPEN_MARKET_NAME : getValueOrDefault(src.name, 'string', newItem.name);
 
     return newItem;
   }
