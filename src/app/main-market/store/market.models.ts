@@ -38,6 +38,7 @@ export interface MarketSettings {
   canModifyIdentities: boolean;
   useAnonBalanceForFees: boolean;
   usePaidMsgForImages: boolean;
+  startupWaitTimeoutSeconds: number;
 }
 
 

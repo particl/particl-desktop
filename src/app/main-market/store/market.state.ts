@@ -34,7 +34,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     userRegion: '',
     canModifyIdentities: false,
     useAnonBalanceForFees: false,
-    usePaidMsgForImages: true
+    usePaidMsgForImages: true,
+    startupWaitTimeoutSeconds: 60
   }
 };
 
@@ -174,7 +175,9 @@ export class MarketState {
       ))
     );
 
-    return this._marketService.startMarketService(ctx.getState().settings.port).pipe(
+    const currentSettings = ctx.getState().settings;
+
+    return this._marketService.startMarketService(currentSettings.port, currentSettings.startupWaitTimeoutSeconds).pipe(
       map(resp => {
         const defaultConfig: DefaultMarketConfig = JSON.parse(JSON.stringify(ctx.getState().defaultConfig));
         defaultConfig.url = resp.url ? resp.url : defaultConfig.url;
