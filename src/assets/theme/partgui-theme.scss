@@ -1,4 +1,5 @@
 @import '~@angular/material/theming';
+@import '../config';
 @include mat-core();
 
 $app-primary-color: (
@@ -7,13 +8,13 @@ $app-primary-color: (
   200: #a3f6e2,
   300: #75f2d4,
   400: #47edc5,
-  500: #03e8b0,
+  500: $color,
   600: #03be91,
   700: #029470,
   800: #029471,
   900: #006064,
   A100: #8cf4db,
-  A200: #18ffff,
+  A200: $color,
   A400: #1aeab8,
   A700: #03a981,
   contrast: (
@@ -40,14 +41,14 @@ $app-secondary-color: (
   200: #a3f6e2,
   300: #75f2d4,
   400: #47edc5,
-  500: #03e8b0,
+  500: $color,
   600: #03be91,
   700: #029470,
   800: #029471,
   900: #006064,
-  A100: #47edc5,
-  A200: #75f2d4,
-  A400: #02a981,
+  A100: #8cf4db,
+  A200: $color,
+  A400: #1aeab8,
   A700: #03a981,
   contrast: (
     50: $black-87-opacity,
@@ -57,13 +58,13 @@ $app-secondary-color: (
     400: $black-87-opacity,
     500: #fff,
     600: #fff,
-    700: $white-87-opacity,
-    800: $white-87-opacity,
+    700: #fff,
+    800: #fff,
     900: $white-87-opacity,
     A100: $black-87-opacity,
-    A200: #fff,
-    A400: #fff,
-    A700: #fff,
+    A200: $black-87-opacity,
+    A400: $black-87-opacity,
+    A700: $black-87-opacity,
   )
 );
 
@@ -73,7 +74,7 @@ $app-red: (
   200: #ef9a9a,
   300: #e57373,
   400: #ef5350,
-  500: #f44336,
+  500: $color-alert,
   600: #e53935,
   700: #d32f2f,
   800: #c62828,

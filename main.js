@@ -16,7 +16,7 @@ if (process.platform === 'linux') {
 /* check for paths existence and create */
 [ app.getPath('userData'),
   app.getPath('userData') + '/testnet'
-].map(path => !fs.existsSync(path) && fs.mkdir(path));
+].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
 
 if (app.getVersion().includes('RC'))
   process.argv.push(...['-testnet']);
@@ -94,15 +94,24 @@ function initMainWindow() {
     minHeight: 675,
     icon:      path.join(__dirname, 'resources/icon.png'),
 
+    frame: true,
+    darkTheme: true,
+
     webPreferences: {
+      backgroundThrottling: false,
       webviewTag: false,
       nodeIntegration: false,
       sandbox: true,
       contextIsolation: false,
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
+  // Hide the menu bar, press ALT
+  // to show it again.
+  mainWindow.setMenuBarVisibility(false);
+  mainWindow.setAutoHideMenuBar(true);
+  
   // and load the index.html of the app.
   if (options.dev) {
     mainWindow.loadURL('http://localhost:4200');

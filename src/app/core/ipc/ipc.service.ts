@@ -20,6 +20,7 @@ export class IpcService {
 
     // if not electron, quit
     if (!window.electron) {
+      this.log.error('Not running in electron!')
       return;
     }
 
