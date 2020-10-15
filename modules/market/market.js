@@ -9,6 +9,8 @@ const bitcore = require('particl-bitcore-lib');
 
 // @TODO: zaSmilingIdiot 2020-03-18 -> This entire process is a mess, and needs to be done over! It works for its current purpose, but is really brittle, crappy code!
 
+const START_TIMEOUT = 60_000 ;// wait at least this many ms before deeming the MP to have failed starting (in case of a start error)
+
 // Stores the child process
 let child = undefined;
 let isStarted = null;
@@ -78,7 +80,7 @@ exports.init = function() {
           observer.error('MP_STARTUP_FAILURE');
           observer.complete();
         }
-      }, 15 * 1000);
+      }, START_TIMEOUT);
     });
   });
 
