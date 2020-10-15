@@ -1,9 +1,4 @@
 {
-  "linterOptions": {
-    "exclude": [
-      "__old"
-    ]
-  },
   "rulesDirectory": [
     "node_modules/codelyzer",
     "node_modules/tslint-microsoft-contrib"
