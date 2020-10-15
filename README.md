@@ -43,15 +43,13 @@ This repository is the user interface that works in combination with our [`parti
 [![Code Climate](https://codeclimate.com/github/particl/particl-desktop/badges/gpa.svg)](https://codeclimate.com/github/particl/particl-desktop)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/particl-desktop.svg)](https://greenkeeper.io/)
 
-For contributing to Particl Desktop, please read our [Contributing Guidelines](CONTRIBUTING.md) first.
-
 Join us in [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) on [Element](https://element.io) (formerly Riot) for more info and/or assistance.
 
 Keep in mind that the development currently happens on a private fork of this repo. 
 
 ### Requirements
 
-* [Node.js®](https://nodejs.org/) 6.4—7.10
+* [Node.js®](https://nodejs.org/) v10
 * [git](https://git-scm.com/)
 * [yarn](https://yarnpkg.com/en/)
 
