@@ -1,15 +1,18 @@
 # Particl Desktop
 
-> *"Particl is an open source project that aims to restore the balance of privacy on the internet."*
+![Particl Desktop 3.0 Preview](.github-readme/particl-desktop-3.0-preview.gif)
 
-![UI Preview](preview.gif)
+<p align="center">
+   <a href="https://github.com/particl/particl-desktop/releases"><img src=".github-readme/button-download.png" alt="Download Wallet"></a>
+   <a href="https://particl.io"><img src=".github-readme/button-website.png" alt="Official website"></a>
+   <a href="https://particl.news"><img src=".github-readme/button-news.png" alt="Lastest news"></a>
+   <a href="https://particl.wiki"><img src=".github-readme/button-wiki.png" alt="Project wiki"></a>
+</p>
 
-### Table of Contents
+**Table of Contents**
 
 * [About](#about)
-   * [Download](#download)
 * [Contribute](#contribute)
-* [Getting started](#getting-started)
    * [Requirements](#requirements)
    * [Installation](#installation)
    * [Development](#development)
@@ -19,20 +22,17 @@
 
 ## About
 
+> Particl is an open source project that aims to restore the balance of privacy on the internet
+
 Particl Desktop is our feature-rich flagship client, recommended for most users for interacting with Particl network.
 
 We provide a decentralized privacy platform with a suite of tools to enhance your online privacy:
 
 * **An anonymous cryptocurrency** – send and receive the PART cryptocurrency without revealing the transaction history
 * **End-to-end encrypted messaging** – communicate in a secure and decentralized manner without revealing your IP address
-* **A private marketplace** – buy and sell goods without leaving a trace (WIP on `market` branch)
-* **Community governance** – anyone can submit proposals to Particl network via decentralized voting & governance (WIP on `market` branch)
+* **A private marketplace** – buy and sell goods without leaving a trace
 
 This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
-
-#### Download
-
-[![Download the packaged wallet for Mac, Windows and Linux](download-button.png)](https://github.com/particl/particl-desktop/releases)
 
 
 ## Contribute
@@ -43,20 +43,19 @@ This repository is the user interface that works in combination with our [`parti
 [![Code Climate](https://codeclimate.com/github/particl/particl-desktop/badges/gpa.svg)](https://codeclimate.com/github/particl/particl-desktop)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/particl-desktop.svg)](https://greenkeeper.io/)
 
-For contributing to Particl Desktop, please read our [Contributing Guidelines](CONTRIBUTING.md) first.
+Join us in [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) on [Element](https://element.io) (formerly Riot) for more info and/or assistance.
 
-Join us in [#particl-dev:matrix.org](https://riot.im/app/#/room/#particl-dev:matrix.org) on [Riot](https://riot.im) for more info and/or assistance.
-
-
-## Getting started
+Keep in mind that the development currently happens on a private fork of this repo. 
 
 ### Requirements
 
-* [Node.js®](https://nodejs.org/) 6.4—7.10
+* [Node.js®](https://nodejs.org/) v10
 * [git](https://git-scm.com/)
 * [yarn](https://yarnpkg.com/en/)
 
 ### Installation
+
+Clone the repo & fetch dependencies:
 
 ```bash
 git clone https://github.com/particl/particl-desktop
@@ -66,7 +65,9 @@ yarn install
 
 ### Development
 
-> Note: most recent development happens on `market` branch
+> Note: most recent development happens on `dev` branch
+
+In project's folder:
 
 1. Run `ng serve` to start the dev server and keep it running
 1. In another terminal window, run `yarn run start:electron:dev -testnet --devtools` to start Particl Desktop on testnet (daemon will be updated and launched automatically)
@@ -76,7 +77,7 @@ yarn install
 
 #### Interact with particl-core daemon
 
-You can directly interact with the daemon ran by the Electron version.
+You can directly interact with the daemon ran by the Electron version:
 
 ```
 ./particl-cli -testnet getblockchaininfo
@@ -105,6 +106,7 @@ sudo apt-get install g++-multilib
 ### Development issues
 
 #### Blockchain syncing stuck
+
 Restart the app with `-reindex` flag:
 
 ```
@@ -112,15 +114,18 @@ yarn run start:electron:dev -testnet --devtools -reindex
 ```
 
 #### Marketplace fails to load
+
 Delete marketplace `database` folder and restart app:
 
-* Windows: `%appdata%\particl-market\testnet\`
-* macOS: `~/Library/Application Support/Particl/particl-market/testnet/`
-* Linux: `~/.particl-market/testnet/`
+| OS      | path                                                       |
+|---------|------------------------------------------------------------|
+| Linux   | `~/.particl-market/testnet/03/`                            |
+| Windows | `%APPDATA%/Particl Market/testnet/03/`                     |
+| macOS   | `~/Library/Application Support/particl-market/testnet/03/` |
 
 ### Other issues
 
-See our [Particl Wiki](https://particl.wiki/) for most common problems or join [#particlhelp:matrix.org](https://riot.im/app/#/room/#particlhelp:matrix.org) on [Riot](https://riot.im) for community help.
+See our [Particl Wiki](https://particl.wiki/) for most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
 
 
 ## Licence
