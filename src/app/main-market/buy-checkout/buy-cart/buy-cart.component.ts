@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRe
 import { MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { Subject, of, forkJoin, merge, Observable, combineLatest, iif, defer, timer } from 'rxjs';
-import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatAll, concatMap, mapTo } from 'rxjs/operators';
+import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatMap, mapTo } from 'rxjs/operators';
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 
@@ -93,7 +93,6 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   private cartModified: FormControl = new FormControl();
   private hasCartErrors: FormControl  = new FormControl(true);
   private isProcessing: boolean = false;  // internal (not necessarily visible) check to limit concurrent MP activity
-  private loadData$: Observable<{addresses: ShippingAddress[], cartItems: DisplayedCartItem[]}>;
 
   @ViewChild(ShippingProfileAddressFormComponent, {static: false}) private addressForm: ShippingProfileAddressFormComponent;
 
@@ -103,54 +102,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     private _unlocker: WalletEncryptionService,
     private _cdr: ChangeDetectorRef
-  ) {
-
-     // <-- LOAD CART ITEMS AND ADDRESSES INTO PAGE -->
-
-     const addressLoad$ = this._cartService.fetchSavedAddresses();
-
-     const cartLoad$ = this._cartService.fetchCartItems().pipe(
-       map((cartItems: CartItem[]) => {
-         return cartItems.map(ci => {
-           const dci: DisplayedCartItem = {
-             ...ci,
-             displayedPrices: {
-               item: {
-                 whole: ci.price.base.particlStringInteger(),
-                 sep: ci.price.base.particlStringSep(),
-                 fraction: ci.price.base.particlStringFraction()
-               },
-               shipping: { whole: '', sep: '', fraction: ''},
-               subtotal: { whole: '', sep: '', fraction: ''}
-             },
-             errors: {
-               expired: false,
-               expiring: false,
-               shipping: false
-             }
-           };
-           return dci;
-         });
-       })
-     );
-
-     this.loadData$ = forkJoin({
-       addresses: addressLoad$,
-       cartItems: cartLoad$
-     }).pipe(
-       catchError(() => {
-         this._snackbar.open(TextContent.LOADING_ERROR, 'warn');
-         return of({cartItems: [], addresses: []});
-       }),
-       tap(results => {
-         this.cartItems = results.cartItems;
-         this.addresses = results.addresses;
-         this.updateCartExpiryTimer();
-         this.updateCartItemPricing();
-         this.cartModified.setValue(true);
-       })
-     );
-  }
+  ) { }
 
 
   ngOnInit() {
@@ -214,8 +166,8 @@ export class BuyCartComponent implements OnInit, OnDestroy {
 
 
     const checkoutChecker$ = combineLatest(
-      addressValidity$.pipe(startWith(false), distinctUntilChanged()),
-      this.hasCartErrors.valueChanges.pipe(startWith(true))
+      addressValidity$.pipe(startWith(false), distinctUntilChanged(), takeUntil(this.destroy$)),
+      this.hasCartErrors.valueChanges.pipe(startWith(true), takeUntil(this.destroy$))
     ).pipe(
       map(([addressValid, cartValid]: [boolean, boolean]) => addressValid && !cartValid),
       tap(isValid => {
@@ -237,7 +189,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
           this.updateCartItemPricing();
           this.cartModified.setValue(true);
         }),
-        concatMap((identity) => iif(() => identity.id > 0, defer(() => this.loadData$))),
+        concatMap((identity) => iif(() => identity.id > 0, defer(() => this.fetchData()))),
         takeUntil(this.destroy$)
       )
     ).subscribe();
@@ -346,7 +298,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         if (!isCartStateGood) {
           this._snackbar.open(TextContent.BID_CONSISTENCY_ERROR, 'err');
         }
-        return this.loadData$;
+        return this.fetchData();
       });
 
       const bid$ = defer(() => {
@@ -490,7 +442,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
           this.cartModified.setValue(true);
         }),
 
-        defer(() => this.loadData$)
+        defer(() => this.fetchData())
       )),
       finalize(() => {
         this.isProcessing = false;
@@ -533,6 +485,54 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+
+  private fetchData(): Observable<{addresses: ShippingAddress[], cartItems: DisplayedCartItem[]}> {
+
+    const addressLoad$ = this._cartService.fetchSavedAddresses();
+
+     const cartLoad$ = this._cartService.fetchCartItems().pipe(
+       map((cartItems: CartItem[]) => {
+         return cartItems.map(ci => {
+           const dci: DisplayedCartItem = {
+             ...ci,
+             displayedPrices: {
+               item: {
+                 whole: ci.price.base.particlStringInteger(),
+                 sep: ci.price.base.particlStringSep(),
+                 fraction: ci.price.base.particlStringFraction()
+               },
+               shipping: { whole: '', sep: '', fraction: ''},
+               subtotal: { whole: '', sep: '', fraction: ''}
+             },
+             errors: {
+               expired: false,
+               expiring: false,
+               shipping: false
+             }
+           };
+           return dci;
+         });
+       })
+     );
+
+    return defer(() => forkJoin({
+      addresses: addressLoad$,
+      cartItems: cartLoad$
+    }).pipe(
+      catchError(() => {
+        this._snackbar.open(TextContent.LOADING_ERROR, 'warn');
+        return of({cartItems: [], addresses: []});
+      }),
+      tap(results => {
+        this.cartItems = results.cartItems;
+        this.addresses = results.addresses;
+        this.updateCartExpiryTimer();
+        this.updateCartItemPricing();
+        this.cartModified.setValue(true);
+      })
+    ));
   }
 
 

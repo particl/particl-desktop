@@ -44,36 +44,34 @@ export class BuyCartService {
 
 
   fetchCartItems(): Observable<CartItem[]> {
-    const cart = this._store.selectSnapshot(MarketState.availableCarts)[0];
+    const identity = this._store.selectSnapshot(MarketState.currentIdentity);
+    const cart = identity.carts[0];
 
     if (!(cart && (+cart.id > 0))) {
       return throwError('Invalid Cart');
     }
 
-    const markets$ = this._sharedDataService.loadMarkets().pipe(
-      map((markets: Market[]) => {
-        return markets.map(m => ({key: m.publishAddress, name: m.name}));
-      }),
-      catchError(() => of([]))
-    );
-
     return this._rpc.call('cartitem', ['list', +cart.id]).pipe(
       concatMap((cartItems: RespCartItemListItem[]) => iif(
         () => cartItems.length > 0,
 
-        defer(() => markets$.pipe(
+        defer(() => this._sharedDataService.loadMarkets(identity.id).pipe(
+          map((markets: Market[]) => {
+            return markets.map(m => ({key: m.publishAddress, name: m.name}));
+          }),
+          catchError(() => of([])),
           map((marketValues) => {
             const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
             const defaultImagePath = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
             return cartItems.map(
               item => this.buildCartItem(item, marketUrl, defaultImagePath, marketValues)
             ).filter(
-              l => (l.listingId > 0) && (l.id > 0)
+              l => (l.listingId > 0) && (l.id > 0) && (l.marketName.length > 0)
             );
           })
         )),
 
-        of([])
+        defer(() => of([]))
       ))
     );
   }
@@ -298,16 +296,16 @@ export class BuyCartService {
         });
       }
 
-      if (
-        (Array.isArray(from.ListingItem.ItemInformation.Images)) &&
-        (from.ListingItem.ItemInformation.Images.length)
-      ) {
+      if ((Array.isArray(from.ListingItem.ItemInformation.Images)) && (from.ListingItem.ItemInformation.Images.length > 0)) {
         let featured = from.ListingItem.ItemInformation.Images.find(img => img.featured);
         if (featured === undefined) {
           featured = from.ListingItem.ItemInformation.Images[0];
         }
 
-        newCartItem.image = parseImagePath(featured, 'MEDIUM', marketUrl) || newCartItem.image;
+        newCartItem.image =
+          parseImagePath(featured, 'MEDIUM', marketUrl) ||
+          parseImagePath(featured, 'ORIGINAL', marketUrl) ||
+          newCartItem.image;
       }
 
       if (isBasicObjectType(from.ListingItem.ItemInformation.ItemLocation)) {
