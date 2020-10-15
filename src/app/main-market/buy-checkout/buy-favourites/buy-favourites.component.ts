@@ -70,6 +70,10 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
     );
 
     const init$ = this._sharedService.loadMarkets().pipe(
+      finalize(() => {
+        this.isLoadingItems = false;
+        this.updateDisplayControl.setValue(null);
+      }),
       tap((marketsList) => {
         marketsList.forEach(market => {
           if (+market.identityId > 0) {
@@ -81,16 +85,13 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
       catchError(() => {
         this._snackbar.open(TextContent.FAILED_LOAD);
         return of(null);
-      }),
-      finalize(() => {
-        this.isLoadingItems = false;
-        this.updateDisplayControl.setValue(null);
       })
     );
 
     const display$ = this.updateDisplayControl.valueChanges.pipe(
       switchMap(() => this.setVisibleItems()),
-      tap(() => {
+      tap((indexes) => {
+        this.favDisplayIdxs = indexes;
         this._cdr.detectChanges();
       }),
       takeUntil(this.destroy$)
@@ -138,6 +139,10 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const pos = this.favDisplayIdxs.findIndex(favIdx => favIdx === idx);
+        if ((pos > -1) && (this.favDisplayIdxs[pos] === idx)) {
+          this.favDisplayIdxs.splice(pos, 1);
+        }
         this.favouriteList.splice(idx, 1);
         this.updateDisplayControl.setValue(null);
       }
@@ -173,7 +178,7 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
         let favId = listing.extra.favouriteId;
 
         dialogRef.componentInstance.eventFavouritedItem.subscribe(
-          (newFavId) => favId = newFavId
+          (newFavId) => favId = +newFavId
         );
 
         dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
@@ -183,12 +188,12 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
             const foundListingIdx = this.favouriteList.findIndex(f => f.listingId === listing.id);
 
             if ((foundListingIdx > -1) && (this.favouriteList[foundListingIdx].listingId === id)) {
-              if (favId === 0) {
-                this.favouriteList.splice(foundListingIdx, 1);
+              if (!(+favId > 0)) {
+                this.removeFromFav(foundListingIdx);
               } else {
                 this.favouriteList[foundListingIdx].favouriteId = favId;
+                this._cdr.detectChanges();
               }
-              this._cdr.detectChanges();
             }
           }
         });
