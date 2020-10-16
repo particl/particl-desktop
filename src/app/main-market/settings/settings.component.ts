@@ -53,7 +53,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   readonly pageDetails: PageInfo = {
     title: 'Market Settings',
     description: 'Adjust settings and configuration that apply only to the market application',
-    help: 'For configuration of global app settings, click the settings icon in bottom right corner'
+    help: 'For configuration of global app settings, click the settings icon in bottom left corner'
   } as PageInfo;
 
 
@@ -470,6 +470,21 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: false,
       } as MarketSetting);
 
+      connectionDetails.settings.push({
+        id: 'startupWaitTimeoutSeconds',
+        title: 'Marketplace Service Startup Timeout',
+        description: 'Number of seconds to wait for a successful startup response from the Marketplace service before deeming that the service has errored. Increasing this value may resolve startup issues on some slower machines (default: 60 seconds)',
+        isDisabled: false,
+        type: SettingType.NUMBER,
+        limits: { min: 20, max: 900 },
+        errorMsg: '',
+        currentValue: marketSettings.startupWaitTimeoutSeconds,
+        tags: [],
+        restartRequired: false,
+        validate: this.validateTimeout,
+        waitForServiceStart: false,
+      } as MarketSetting);
+
       groups.push(connectionDetails);
 
 
@@ -525,6 +540,11 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   private validatePortNumber(value: any, setting: Setting): string | null {
     const port = +value;
     return port > 0 && port <= 65535 ? null : 'Invalid port number';
+  }
+
+  private validateTimeout(value: any, setting: Setting): string | null {
+    const seconds = +value;
+    return seconds >= 20 && seconds <= 900 ? null : 'Invalid value (should be between 20 and 900)';
   }
 
 

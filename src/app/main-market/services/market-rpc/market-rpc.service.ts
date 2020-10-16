@@ -27,10 +27,10 @@ export class MarketRpcService {
   }
 
 
-  startMarketService(marketPort: number): Observable<{url: string, started: boolean}> {
+  startMarketService(marketPort: number, startupTimeout: number): Observable<{url: string, started: boolean}> {
     const appSettings: AppSettingsStateModel = this._store.selectSnapshot(AppSettingsState);
 
-    return this._ipc.runCommand('start-market', null, marketPort, appSettings.zmqPort).pipe(
+    return this._ipc.runCommand('start-market', null, marketPort, appSettings.zmqPort, startupTimeout).pipe(
       tap((started: boolean) => {
         this.isConnected = Boolean(started);  // ensure null response is converted accordingly
 
