@@ -18,8 +18,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
 
   private destroy$: Subject<void> = new Subject();
-  private readonly defaultStartPath: string = 'overview';
-  private readonly defaultFailurePath: string = 'settings';
+  private readonly defaultStartPath: string = '/main/market/overview/';
+  private readonly defaultFailurePath: string = '/main/market/settings/';
 
   private redirectPath: string = '';
 
@@ -46,11 +46,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
             this._router.navigate([this.redirectPath]);
             this.redirectPath = '';
           } else {
-            this._router.navigate([this.defaultStartPath], {relativeTo: this._route});
+            this._router.navigate([this.defaultStartPath]);
           }
           return;
         } else if (status !== StartedStatus.PENDING) {
-          this._router.navigate([this.defaultFailurePath], {relativeTo: this._route});
+          this._router.navigate([this.defaultFailurePath]);
           return;
         }
       }),

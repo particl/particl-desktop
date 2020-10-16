@@ -53,7 +53,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   readonly pageDetails: PageInfo = {
     title: 'Market Settings',
     description: 'Adjust settings and configuration that apply only to the market application',
-    help: 'For configuration of global app settings, click the settings icon in bottom right corner'
+    help: 'For configuration of global app settings, click the settings icon in bottom left corner'
   } as PageInfo;
 
 
