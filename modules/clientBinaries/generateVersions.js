@@ -159,8 +159,7 @@ got(`${releasesURL}`).then(response => {
     console.log('looking for tag=', tag)
     versions.forEach(version => {
       // select folders that match the current version
-      if (version.name.includes(tag + "-")) {
-        console.log('extractingt from version:', version.name)
+      if (version.name.includes(tag)) {
         // extract matching folder's platform
         var platformIndex = version.name.indexOf("-");
         var platform = version.name.substring(platformIndex + 1).replace('-unsigned', '');
@@ -170,14 +169,13 @@ got(`${releasesURL}`).then(response => {
       }
     })
 
-    const tagWithoutRc = tag.replace(/rc./g, "");
     // once we have all hashes
     Promise.all(promises).then(function () {
       // prepare JSON object for the output file
       var json = {
         clients: {
           particld: {
-            version: tagWithoutRc,
+            version: tag,
             platforms: {}
           }
         }
@@ -185,10 +183,11 @@ got(`${releasesURL}`).then(response => {
       // get asset details for each release entry
       let entry;
       release.assets.forEach(asset => {
-        if ((entry = getAssetDetails(asset, hashes, tagWithoutRc))) {
+        if ((entry = getAssetDetails(asset, hashes, tag))) {
           binaries.push(entry);
         }
       })
+
       // include entries in JSON object
       var platforms = json.clients.particld.platforms;
       binaries.forEach(binary => {
