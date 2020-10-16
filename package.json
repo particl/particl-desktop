@@ -6,14 +6,13 @@
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
   "homepage": "https://particl.io",
   "keywords": [
-    "particl",
-    "angular2",
-    "angular8"
+    "particl"
   ],
   "author": "Particl contributors",
   "scripts": {
     "generate:versions": "node modules/clientBinaries/generateVersions.js"
   },
+  "productName": "particl-desktop",
   "dependencies": {
     "got": "^9.6.0"
   }
