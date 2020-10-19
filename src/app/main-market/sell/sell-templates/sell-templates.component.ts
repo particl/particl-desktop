@@ -23,6 +23,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
 import { Market } from '../../services/data/data.models';
 import { ProductItem, TEMPLATE_STATUS_TYPE, ProductMarketTemplate } from '../sell.models';
+import { MarketType } from 'app/main-market/shared/market.models';
 
 
 enum TextContent {
@@ -113,12 +114,14 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       this._sharedService.loadMarkets().pipe(
         tap(marketsList => {
           marketsList.forEach(market => {
-            this.profileMarkets[market.receiveAddress] = {
-              name: market.name,
-              id: market.id,
-              identityId: market.identityId,
-              image: market.image
-            };
+            if ((market.type === MarketType.MARKETPLACE) || (market.type === MarketType.STOREFRONT_ADMIN)) {
+              this.profileMarkets[market.receiveAddress] = {
+                name: market.name,
+                id: market.id,
+                identityId: market.identityId,
+                image: market.image
+              };
+            }
           });
         }),
         catchError(() => of([] as Market[])),
