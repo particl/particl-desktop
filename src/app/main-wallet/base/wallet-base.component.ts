@@ -157,7 +157,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
             (wName === 'testnet') ||
             // avoid including the current active wallet
             (wallet.name === this._currentWallet.name) ||
-            // avoid market profiles (that are technically wallets but shouldn't be used as them)
+            // avoid market profiles (that are technically wallets but shouldn't be used as them for now)
             (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
           )) {
             this.otherWallets.push(this.processWallet(wallet.name));
@@ -179,15 +179,10 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
   private processWallet(name: string): IWallet {
     const usedName = name === null ?  TextContent.UNKNOWN_WALLET : name;
     let dispName = usedName === '' ? TextContent.DEFAULT_WALLETNAME : usedName;
-    let initial = dispName[0];
-    if (dispName.includes('/')) {
-      let dispNameParts = dispName.split('/');
-      if (dispNameParts.length > 2) {
-        dispNameParts = [dispNameParts[dispNameParts.length - 2 ], dispNameParts[dispNameParts.length - 1 ]];
-        initial = (dispNameParts[dispNameParts.length - 1])[0];
-      }
-      dispName = dispNameParts.join('/');
-    }
+    dispName = this.formatWalletDisplayName(dispName, '/');
+    dispName = this.formatWalletDisplayName(dispName, '\\');
+    const initial = dispName[0];
+
     return {
       name,
       initial,
@@ -224,5 +219,18 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
     if (this.walletSelector && this.walletSelector.opened) {
       this.walletSelector.close();
     }
+  }
+
+
+  private formatWalletDisplayName(originalName: string, char: string): string {
+    let dispName = originalName;
+    if (originalName.includes(char)) {
+      let dispNameParts = originalName.split(char);
+      if (dispNameParts.length > 2) {
+        dispNameParts = [dispNameParts[dispNameParts.length - 2 ], dispNameParts[dispNameParts.length - 1 ]];
+      }
+      dispName = dispNameParts.join(char);
+    }
+    return dispName;
   }
 }
