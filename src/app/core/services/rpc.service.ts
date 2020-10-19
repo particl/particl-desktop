@@ -110,7 +110,12 @@ export class RpcService {
 
     let url = `http://${this.hostname}:${this.port}`;
     if (!this.nonWalletCalls.includes(method)) {
-      url += `/wallet/${walletName}`;
+      /* replace here is crucial for wallets in folder structures on Windows:
+          - the path separator (backslash on Windows) is coverted to forward slash in the url,
+            so this url encodes any backslashes in the url to ensure wallet is named correctly in core
+            (otherwise core deems the wallet to not exist or be loaded)
+      */
+      url += `/wallet/${walletName.replace(/\\/g, '%5C')}`;
     }
 
     return this._http
