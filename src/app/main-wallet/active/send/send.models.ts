@@ -1,4 +1,5 @@
 import { AddressType } from '../../shared/address.models';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 export type TabType = 'transfer' | 'send';
@@ -68,7 +69,7 @@ export class SendTransaction {
 
   constructor() {}
 
-  getSendTypeParams(estimate: boolean = true): [
+  getSendTypeParams(estimate: boolean = true, utxoCount: number = 1): [
     TxType,
     TxType,
     Array<{address: string, amount: number, subfee: boolean, narr: string}>,
@@ -85,15 +86,34 @@ export class SendTransaction {
       ringSize = DEFAULT_RING_SIZE;
     }
 
+    const outputs: {address: string, amount: number, subfee: boolean, narr: string}[] = [];
+
+    if ((utxoCount > 0) && this.amount) {
+      const calculatedAmount = new PartoshiAmount(this.amount / utxoCount, false).particls();
+      const remainderAmount = new PartoshiAmount(this.amount, false);
+
+      for (let ii = 1; ii < utxoCount; ++ii) {
+        outputs.push({
+          address: this.targetAddress,
+          amount: calculatedAmount,
+          subfee: this.deductFeesFromTotal,
+          narr: this.narration
+        });
+        remainderAmount.subtract(new PartoshiAmount(calculatedAmount, false));
+      }
+      // Ensure that the last utxo captures any remainder non-evenly-divisble amount
+      outputs.push({
+        address: this.targetAddress,
+        amount: remainderAmount.particls(),
+        subfee: this.deductFeesFromTotal,
+        narr: this.narration
+      });
+    }
+
     return [
       this.source,
       this.getTargetType(),
-      [{
-        address: this.targetAddress,
-        amount: this.amount,
-        subfee: this.deductFeesFromTotal,
-        narr: this.narration
-      }],
+      outputs,
       null,
       null,
       ringSize,

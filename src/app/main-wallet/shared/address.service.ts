@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, forkJoin } from 'rxjs';
+import { Observable, of, forkJoin, iif, defer } from 'rxjs';
 import { retryWhen, concatMap, map, catchError } from 'rxjs/operators';
 import { partition } from 'lodash';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
@@ -53,7 +53,11 @@ export class AddressService {
 
   getDefaultStealthAddress(): Observable<string> {
     return this._rpc.call('liststealthaddresses', null).pipe(
-      map(list => list[0]['Stealth Addresses'][0]['Address'])
+      concatMap((list) => iif(
+        () => list[0] && list[0]['Stealth Addresses'] && list[0]['Stealth Addresses'][0] && (typeof list[0]['Stealth Addresses'][0]['Address'] === 'string'),
+        defer(() => of(list[0]['Stealth Addresses'][0]['Address'])),
+        defer(() => this.generateStealthAddress())
+      ))
     );
   }
 

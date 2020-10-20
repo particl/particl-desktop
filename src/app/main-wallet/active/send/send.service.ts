@@ -1,10 +1,10 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { Observable, of, throwError, iif } from 'rxjs';
+import { Observable, of, throwError, iif, defer } from 'rxjs';
 import { map, catchError, concatMap } from 'rxjs/operators';
 
-import { WalletUTXOState } from 'app/main/store/main.state';
+import { WalletUTXOState, WalletSettingsState } from 'app/main/store/main.state';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AddressService } from '../../shared/address.service';
 import { WalletUTXOStateModel, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
@@ -38,15 +38,26 @@ export class SendService {
 
 
   sendTypeTo(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
-    return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee));
+    let utxoCount = 1;
+    if (tx.targetTransfer === 'anon') {
+      utxoCount = this._store.selectSnapshot(WalletSettingsState.settings).anon_utxo_split || 1;
+    }
+
+    return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee, utxoCount));
   }
 
 
   runTransaction(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
     let source: Observable<SendTransaction>;
     if (tx.transactionType === 'transfer') {
-      source = this._addressService.getDefaultStealthAddress().pipe(
-        catchError(() => of('')),
+      let addressSource: Observable<string>;
+
+      if (estimateFee || (tx.targetTransfer !== 'anon')) {
+        addressSource = this._addressService.getDefaultStealthAddress();
+      } else { // is not estimating fee AND is an anon target
+        addressSource = this._addressService.generateStealthAddress();
+      }
+      source = addressSource.pipe(
         map((address) => {
           tx.targetAddress = address;
           return tx;
@@ -55,6 +66,9 @@ export class SendService {
     } else {
       source = this._addressService.validateAddress(tx.targetAddress).pipe(
         concatMap((resp: ValidatedAddress) => {
+          if (!resp.isvalid) {
+            return throwError('invalid targetAddress');
+          }
           if ((tx.transactionType === 'send') && (tx.source === 'part') && (resp.isstealthaddress === true)) {
             tx.targetTransfer = 'anon';
           }
@@ -77,7 +91,9 @@ export class SendService {
         }),
         // update the address label if provided AND a non-estimate request, but ignore any errors thrown (the primary activity succeeded)
         concatMap((result) => iif(
-          () => (tx.addressLabel.length <= 0) || estimateFee, of(result), labelupdate$.pipe(catchError(() => of(result)), map((r) => r))
+          () => (tx.addressLabel.length <= 0) || estimateFee,
+          defer(() => of(result)),
+          defer(() => labelupdate$.pipe(catchError(() => of(result)), map((r) => r)))
         ))
       ))
     );

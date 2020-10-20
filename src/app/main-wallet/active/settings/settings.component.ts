@@ -21,6 +21,11 @@ import { WalletSettingsStateModel } from 'app/main/store/main.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
 
 
+enum SpecificTextContent {
+  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${num}'
+}
+
+
 @Component({
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
@@ -333,6 +338,30 @@ export class WalletSettingsComponent implements OnInit {
     this.settingGroups.push(notificationsWallet);
 
 
+    const walletActions = {
+      name: 'Wallet Activity',
+      icon: 'part-globe',
+      settings: [],
+      errors: []
+    } as SettingGroup;
+
+    walletActions.settings.push({
+      id: 'anon_utxo_split',
+      title: 'Split UTXOS on sending to Stealth Address',
+      description: 'Creates a number of utxos when sending funds from this wallet to a stealth address. The higher the number, the greater the fees but the better for coin usage',
+      isDisabled: false,
+      type: SettingType.NUMBER,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: walletSettings.anon_utxo_split,
+      limits: {min: 1},
+      validate: this.actionValidateSplitUTXO
+    } as Setting);
+
+    this.settingGroups.push(walletActions);
+
+
     const dangerZone = {
       name: 'Danger zone',
       icon: 'part-alert',
@@ -368,6 +397,13 @@ export class WalletSettingsComponent implements OnInit {
       const message = success ? TextContent.SAVE_SUCCESSFUL : TextContent.SAVE_FAILED;
       this._snackbar.open(message);
     });
+  }
+
+  private actionValidateSplitUTXO(newValue: number, setting: Setting): string {
+    if (+newValue > 0) {
+      return '';
+    }
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${num}', '1');
   }
 
 }

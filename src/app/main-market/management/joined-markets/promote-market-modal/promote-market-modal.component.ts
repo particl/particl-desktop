@@ -45,8 +45,8 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
 
   readonly optionsPublishDurations: {title: string, value: number, estimateFee: number}[] = [
     { title: '1 day', value: 1, estimateFee: 0 },
-    { title: '2 days', value: 3, estimateFee: 0 },
-    { title: '4 days', value: 5, estimateFee: 0 },
+    { title: '3 days', value: 3, estimateFee: 0 },
+    { title: '5 days', value: 5, estimateFee: 0 },
     { title: '1 week', value: 7, estimateFee: 0 }
   ];
 
