@@ -352,13 +352,13 @@ export class SendComponent implements OnInit, OnDestroy {
     const trans = new SendTransaction();
     trans.transactionType = this.currentTabType;
     trans.source = this.sourceType.value;
-    trans.targetAddress = this.address.value;
     trans.targetTransfer = this.targetType.value;
     trans.amount = +this.amount.value;
     trans.narration = this.narration.value || '';
     trans.ringSize = this.ringSize.value;
     trans.deductFeesFromTotal = this.sendingAll.value;
     trans.addressLabel = trans.transactionType === 'send' ? this.addressLabel.value : '';
+    trans.targetAddress = trans.transactionType === 'send' ? this.address.value : '';
 
     if (selector && (selector.coinInputs.length > 0)) {
 
