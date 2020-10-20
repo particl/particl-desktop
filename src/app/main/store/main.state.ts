@@ -68,6 +68,7 @@ const DEFAULT_UTXOS_STATE: WalletUTXOStateModel = {
 const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
   notifications_payment_received: true,
   notifications_staking_reward: true,
+  anon_utxo_split: 3
 };
 
 
@@ -308,12 +309,19 @@ export class WalletUTXOState {
 })
 export class WalletSettingsState {
 
+
+  @Selector()
+  static settings(state: WalletSettingsStateModel): WalletSettingsStateModel {
+    return state;
+  }
+
+
   constructor(
     private _settings: SettingsService
   ) {}
 
   @Action(WalletDetailActions.GetSettings)
-  getWalletSettings(ctx: StateContext<WalletSettingsStateModel>, action: WalletDetailActions.GetSettings) {
+  loadWalletSettings(ctx: StateContext<WalletSettingsStateModel>, action: WalletDetailActions.GetSettings) {
 
     if (typeof action.walletName === 'string') {
       const updatedValues = JSON.parse(JSON.stringify(DEFAULT_WALLET_SETTINGS_STATE));

@@ -22,6 +22,7 @@ export interface WalletInfoStateModel {
 export interface WalletSettingsStateModel {
   notifications_payment_received: boolean;
   notifications_staking_reward: boolean;
+  anon_utxo_split: number;
 }
 
 
