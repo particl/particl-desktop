@@ -2,8 +2,8 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Subject, merge, combineLatest } from 'rxjs';
-import { tap, takeUntil, map } from 'rxjs/operators';
+import { Subject, merge, combineLatest, of } from 'rxjs';
+import { tap, takeUntil, map, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
@@ -88,17 +88,28 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
 
 
   ngOnInit() {
+    let init$ = of(0);
     if (this.publishForm.get('selectedDuration').enabled && (this.optionsPublishDurations.length > 0)) {
       this.optionsPublishDurations.sort((a, b) => a.value - b.value);
 
       const baseDuration = this.optionsPublishDurations.find(opt => opt.value > 0);
       if (baseDuration) {
-        this._manageService.estimateMarketPromotionFee(this.marketId, baseDuration.value).subscribe(
-          (fee) => {
+        init$ = this._manageService.estimateMarketPromotionFee(this.marketId, baseDuration.value).pipe(
+          tap((fee) => {
             this.optionsPublishDurations.forEach(opt => {
               opt.estimateFee = new PartoshiAmount(opt.value / baseDuration.value).multiply(fee).particls();
             });
-          }
+          }),
+          tap(() => {
+            const selectedDurationValue = +this.publishForm.get('selectedDuration').value;
+            if (selectedDurationValue > 0) {
+              const foundDurationOption = this.optionsPublishDurations.find(opt => opt.value === selectedDurationValue);
+              if (foundDurationOption) {
+                this.publishForm.get('selectedFee').setValue(foundDurationOption.estimateFee);
+              }
+            }
+          }),
+          catchError(() => of(0))
         );
       }
     }
@@ -135,7 +146,8 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
     merge(
       identityChange$,
       balanceChange$,
-      durationChange$
+      durationChange$,
+      init$
     ).subscribe();
   }
 

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject, of, Observable, merge, combineLatest } from 'rxjs';
-import { tap, takeUntil, map } from 'rxjs/operators';
+import { tap, takeUntil, map, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
@@ -109,7 +109,8 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
                 dur.estimateFee = new PartoshiAmount(dur.value / baseDuration.value).multiply(fee).particls();
               });
             }
-          })
+          }),
+          catchError(() => of(0)) // basically, do nothing if there is an error
         );
       }
     }
@@ -146,6 +147,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
     const validity$ = merge(
       balanceChange$,
       durationChange$,
+      init$
     ).pipe(
       tap(() => {
         this.formIsValid.setValue(
@@ -161,8 +163,7 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
     merge(
       identityChange$,
-      validity$,
-      init$
+      validity$
     ).subscribe();
   }
 
