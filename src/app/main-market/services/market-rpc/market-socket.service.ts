@@ -72,15 +72,11 @@ export class MarketSocketService implements OnDestroy {
 
 
   stopSocketService() {
-    // TODO: zaSmilingIdiot: 2020-09-14 unfortunately, there's a somewhat of a race condition that exists here, which needs to be fixed
-    // The call to `this.marketSocket.complete();` takes some time to complete (possibly different thread) so the method may complete
-    //  before the connection is properly closed. However, this is method call is typically followed by a close of the market server, which
-    //  terminates the market process... if that executes quicker than the completion of the socket completion, an error occurs since the
-    //  socket frm the extneral server is immediately shutdown without any chance to clean up itself.
 
     // stop the websocket
     if (this.marketSocket !== null) {
       try {
+        this.marketSocket.unsubscribe();
         this.marketSocket.complete();
         this.marketSocket = null;
       } catch (err) {
