@@ -130,6 +130,11 @@ export class NewListingComponent implements OnInit, OnDestroy {
           } else if (this.savedTempl.type === 'MARKET') {
             availableMarkets = this.profileMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
           }
+        } else {
+          // null template, so basically a base template
+          availableMarkets = availableMarkets.filter(m =>
+            (m.type === MarketType.MARKETPLACE || m.type === MarketType.STOREFRONT_ADMIN)
+          );
         }
 
         this.marketsList$.next(
