@@ -11,6 +11,7 @@ import { DateFormatter } from 'app/core/util/utils';
 export class ExchangeOverviewComponent implements OnInit {
 
   /* test only >>> */
+  isLoading: boolean = false;
 
   public exchange: any = {
     bot: {
@@ -29,7 +30,7 @@ export class ExchangeOverviewComponent implements OnInit {
     track_id: 'sdkfbsakfhdbaskjfd',
     created_date: '2020-04-21 15:38:12',
     updated_date: '2020-04-21 15:38:12',
-  }
+  };
 
   /* << test only */
 
@@ -66,6 +67,32 @@ export class ExchangeOverviewComponent implements OnInit {
       return '';
     }
     return new DateFormatter(new Date(date)).dateFormatter(false);
+  }
+
+  filter() {
+
+  }
+
+  clearAndLoadPage() {
+
+  }
+
+
+  clear() {
+
+  }
+
+
+  loadNextPage() {
+
+  }
+
+  requestUpdate() {
+
+  }
+
+  cancelExchange() {
+
   }
 
 }

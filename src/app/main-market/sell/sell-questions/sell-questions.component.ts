@@ -34,4 +34,12 @@ export class SellQuestionsComponent implements OnInit {
     const dialog = this._dialog.open(ListingDetailModalComponent);
   }
 
+  clearAndLoadPage() {
+
+  }
+
+  clearAllFilters() {
+
+  }
+
 }

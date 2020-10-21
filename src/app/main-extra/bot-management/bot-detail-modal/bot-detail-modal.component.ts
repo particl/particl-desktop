@@ -21,7 +21,7 @@ export class BotDetailModalComponent implements OnInit {
       email: 'botcreator@particl-community.com',
       chat: 'Riot: botcreator@matrix.org'
     }
-  }
+  };
 
   constructor() { }
 

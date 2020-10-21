@@ -381,7 +381,7 @@
       <mat-icon class="fav icon" fontSet="partIcon"
             [fontIcon]="details.favouriteId > 0 ? 'part-heart' : 'part-heart-outline'"
             [ngClass.active]="details.favouriteId > 0"></mat-icon>
-      {{ details.favouriteId > 0 ? 'Saved' : 'Save' }}
+      <ng-container *ngIf="+details.favouriteId > 0; else favouriteSaveLabel">Saved</ng-container><ng-template #favouriteSaveLabel>Save</ng-template>
     </button>
 
     <ng-container *ngIf="displayActions.cart">

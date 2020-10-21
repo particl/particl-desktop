@@ -11,6 +11,8 @@ import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/l
 })
 export class BuyCommentsComponent implements OnInit {
 
+  hasEncryptedWallet: boolean = false;
+
   searchQuery: FormControl = new FormControl('');
 
   filters: any = {
@@ -32,6 +34,14 @@ export class BuyCommentsComponent implements OnInit {
 
   openListingDetailModal(): void {
     const dialog = this._dialog.open(ListingDetailModalComponent);
+  }
+
+  clearAndLoadPage() {
+
+  }
+
+  clearAllFilters() {
+
   }
 
 }

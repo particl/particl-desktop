@@ -34,7 +34,7 @@ export class BotItemComponent implements OnInit {
         }
       ]
     }
-  }
+  };
 
   /* << test only */
 

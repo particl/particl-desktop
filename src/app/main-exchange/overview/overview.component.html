@@ -120,9 +120,9 @@
                   <img class="coin" src="./assets/app-exchange/coins/{{ exchange?.currency_to.toUpperCase() }}.svg">
                   ~{{ exchange?.amount_to | particlAmount }} {{ exchange?.currency_to.toUpperCase() }}
                 </div>
-                
+
                 <mat-spinner class="loading-spinner" [diameter]="16" color="accent"></mat-spinner><!-- *ngIf="updateInProgress[exchange.track_id]" -->
-                <button mat-button class="exchange-status" (click)="requestUpdate($event, exchange, pageIndex)" matTooltip="Request status update"><!-- [disabled]="updateInProgress[exchange.track_id]" *ngIf="!exchange.tx_to && !updateInProgress[exchange.track_id]" -->
+                <button mat-button class="exchange-status" (click)="requestUpdate()" matTooltip="Request status update"><!-- [disabled]="updateInProgress[exchange.track_id]" *ngIf="!exchange.tx_to && !updateInProgress[exchange.track_id]" -->
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-refresh"></mat-icon>
                   {{ exchange?.status }}
                 </button>
@@ -136,7 +136,7 @@
 
             </div>
           </mat-expansion-panel-header>
-        
+
           <div class="detail">
             <table class="exchange-details outgoing full-width">
               <tr>
@@ -189,7 +189,7 @@
                 </tr>
               </table>
               <div class="exchange-actions" fxFlex="0 0 100px">
-                <button mat-button color="warn" matTooltip="Cancel this Exchange" (click)="cancelExchange(exchange?.track_id, pageIndex)"><!-- *ngIf="!exchange.tx_from" -->
+                <button mat-button color="warn" matTooltip="Cancel this Exchange" (click)="cancelExchange()"><!-- *ngIf="!exchange.tx_from" -->
                   <mat-icon class="icon" fontSet="partIcon" fontIcon="part-circle-remove"></mat-icon>
                   Cancel
                 </button>
