@@ -19,9 +19,9 @@ export namespace SocketMessages_v03 {
   export interface CommentAdded {
     id: number;
     hash: string;
-    target: string;
-    sender: string;
-    receiver: string;
+    target: string;     // if commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS' then listingItem.hash
+    sender: string;     // sender's address
+    receiver: string;   // if commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS' then market.receiveAddress
     commentType: 'LISTINGITEM_QUESTION_AND_ANSWERS' | 'PROPOSAL_QUESTION_AND_ANSWERS' | 'MARKETPLACE_COMMENT' | 'PRIVATE_MESSAGE';
   }
 

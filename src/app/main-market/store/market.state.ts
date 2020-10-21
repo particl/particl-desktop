@@ -1,5 +1,5 @@
 import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
-import { of, defer, iif, timer, throwError } from 'rxjs';
+import { of, defer, iif, timer, throwError, merge } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
@@ -184,17 +184,6 @@ export class MarketState {
         ctx.patchState({defaultConfig});
         return resp.started;
       }),
-      tap((isStarted) => {
-        if (isStarted) {
-          // the path appended here is necessary since the marketplace is using socket.io and this is needed specifically for socket.io
-          let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=3&transport=websocket`;
-
-          if (url.startsWith('http')) {
-            url = url.replace('http', 'ws');
-          }
-          this._socketService.startSocketService(url);
-        }
-      }),
       catchError((err) => {
         ctx.patchState({started: StartedStatus.FAILED});
         return of(false);
@@ -202,7 +191,18 @@ export class MarketState {
       concatMap((isStarted: boolean) => iif(
         () => !isStarted,
         failed$,
-        profile$
+        defer(() => {
+          // the path appended here is necessary since the marketplace is using socket.io and this is needed specifically for socket.io
+          let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=3&transport=websocket`;
+
+          if (url.startsWith('http')) {
+            url = url.replace('http', 'ws');
+          }
+          return merge(
+            this._socketService.startSocketService(url),
+            profile$
+          );
+        })
       ))
     );
   }
@@ -236,7 +236,7 @@ export class MarketState {
         map((identityList: RespIdentityListItem[]) => {
           const ids: Identity[] = [];
           identityList.forEach((idItem: RespIdentityListItem) => {
-            const id = this.buildIdentityItem(idItem, state.profile.name);
+            const id = this.buildIdentityItem(idItem);
             if (id.id > 0) {
               ids.push(id);
             }
@@ -334,7 +334,7 @@ export class MarketState {
 
     return this._marketService.call('identity', ['add', profileId, identityName]).pipe(
       tap((identityResp: RespIdentityListItem) => {
-        const newId = this.buildIdentityItem(identityResp, state.profile.name);
+        const newId = this.buildIdentityItem(identityResp);
         if ((newId.id > 0) && (ctx.getState().profile.id === profileId)) {
           ctx.patchState({ identities: [...ctx.getState().identities, newId]});
         }
@@ -394,7 +394,7 @@ export class MarketState {
   }
 
 
-  private buildIdentityItem(src: RespIdentityListItem, profileName: string): Identity {
+  private buildIdentityItem(src: RespIdentityListItem): Identity {
     const newItem: Identity = {
       id: 0,
       name: '',
@@ -411,13 +411,9 @@ export class MarketState {
 
     if (src.type === 'MARKET') {
       newItem.name = getValueOrDefault(src.wallet, 'string', newItem.name);
-      if (profileName) {
-        const parts = newItem.name.split(`${profileName}/`);
-        if (parts.length >= 2) {
-          newItem.displayName = parts[1];
-        } else {
-          newItem.displayName = name;
-        }
+      newItem.displayName = getValueOrDefault(src.name, 'string', newItem.displayName);
+      if (!newItem.displayName) {
+        newItem.displayName = newItem.name;
       }
 
       newItem.icon = newItem.displayName[0];
