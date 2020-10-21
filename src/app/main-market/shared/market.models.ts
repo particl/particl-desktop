@@ -98,6 +98,7 @@ interface RespGeneralIdentity {
   updatedAt: number;
   createdAt: number;
   Profile: RespGeneralProfile;
+  name: string;
 }
 
 
