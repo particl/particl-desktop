@@ -10,6 +10,8 @@ export class ExchangeBotsComponent implements OnInit {
   filters: any = {
     search:   ''
   };
+  isLoadingBig: boolean = false;
+  bot: any = {};
 
   supported_coins: Array<any> = [
     // sort alphabetically
@@ -29,5 +31,11 @@ export class ExchangeBotsComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  clearAndLoadPage() {}
+
+  filter() {}
+
+  loadNextPage() {}
 
 }

@@ -134,7 +134,7 @@
           </market-shipping-address-form>
           <div class="save-profile">
             <mat-checkbox name="save-shipping-profile" [formControl]="modifyShippingProfile">
-              {{ +selectedAddress.value > 0 ? 'Update' : 'Save' }} shipping profile
+              <ng-container *ngIf="+selectedAddress.value > 0; else saveNewShippingLabel">Update shipping profile</ng-container><ng-template #saveNewShippingLabel>Save shipping profile</ng-template>
             </mat-checkbox>
             <label>
               <mat-form-field appearance="fill" class="--plain --larger" color="accent">

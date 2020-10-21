@@ -98,7 +98,7 @@
 
         <div class="right">
           <!-- Refresh Listings -->
-          <button mat-button class="small filter-button refresh"  (click)="actionRefresh.setValue()" [class.new-listings-available]="hasNewListings" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
+          <button mat-button class="small filter-button refresh"  (click)="actionRefresh.setValue(null)" [class.new-listings-available]="hasNewListings" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
             <mat-icon fontIcon="part-refresh"></mat-icon>
             Refresh
             <div class="dot"></div>
