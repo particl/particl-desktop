@@ -36,6 +36,6 @@
 @mixin gradient($top, $bottom) {
   background: linear-gradient(to bottom, $top 0%, $bottom 100%);
 }
-@mixin gradientH($left, $right) {
+@mixin gradient-h($left, $right) {
   background: linear-gradient(to right, $left 0%, $right 100%);
 }

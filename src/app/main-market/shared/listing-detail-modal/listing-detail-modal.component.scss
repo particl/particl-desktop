@@ -106,14 +106,14 @@ button.modal-close {
   }
   .expires-soon {
     font-weight: 500;
-    margin: 14px 0 0 0;
+    margin: 14px 0 0;
     .mat-icon {
       color: var(--color-info);
       position: relative;
       top: 3px;
       margin-right: 4px;
       &::after { // pulsating "ripple"
-        content: "";
+        content: '';
         display: block;
         border: 2px solid hsla(var(--color-info-hsl), 0.7);
         width: 12px;
@@ -138,7 +138,7 @@ button.modal-close {
       border-right: 1px solid hsla(var(--bg-muted-hsl), 0.6);
       padding-right: 32px;
       &:last-of-type {
-        border: none;
+        border: 0;
         margin: 0;
         padding: 0;
       }
@@ -200,19 +200,19 @@ button.modal-close {
   // Tabs' content
   .tab-content {
     min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
-    padding: var(--paddingV) var(--paddingH);
+    padding: var(--padding);
     line-height: 1.55;
     font-size: 14px;
   }
 
   .mat-card {
-    padding: var(--paddingV) var(--paddingH);
+    padding: var(--padding);
   }
 
   // Text description
   .description {
-    word-wrap: break-word;
     @extend %enable-select;
+    word-wrap: break-word;
     &.lead {
       font-weight: 500;
       font-size: 16px;

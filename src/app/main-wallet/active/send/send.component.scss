@@ -84,7 +84,7 @@
     top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV));
   }
   mat-card {
-    padding: 14px 24px 14px;
+    padding: 14px 24px;
     .buttons {
       margin: -18px 0 0;
     }
@@ -124,7 +124,7 @@
   .subtitle {
     @extend %box-title;
     padding: 22px 24px 0;
-    margin: 0 0 -0.9em 0;
+    margin: 0 0 -0.9em;
     position: relative;
     z-index: 2;
   }
@@ -157,8 +157,10 @@ mat-card.to-balance-type { // 'convert to..'
     font-family: var(--font-mono) !important;
     font-weight: 500;
     margin: 0;
-    span[matPrefix] {
-      font-weight: 400;
+    span {
+      &[matPrefix] {
+        font-weight: 400;
+      }
     }
   }
   .actions {

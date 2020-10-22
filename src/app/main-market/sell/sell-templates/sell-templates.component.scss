@@ -23,10 +23,10 @@
   }
   // Market Templates list
   section.market-templates-list {
-    padding: 0 0 8px 0;
+    padding: 0 0 8px;
     @include break(xl) {
       font-size: 15px;
-      padding: 0 0 16px 0;
+      padding: 0 0 16px;
     }
     table.market-templates {
       width: 100%;
@@ -35,7 +35,7 @@
         & > * {
           @extend %tfx;
           border-bottom: 1px solid hsla(var(--bg-muted-hsl), 0.25);
-          padding: 6px 6px;
+          padding: 6px;
           @include break(xl) {
             padding: 10px 6px;
           }
@@ -48,7 +48,7 @@
         }
         &:last-child {
           & > * {
-            border: none;
+            border: 0;
           }
         }
       }
@@ -85,7 +85,7 @@
   }
   .detail {
     border-top: 1px dashed var(--bg-muted);
-    padding: var(--paddingV) var(--paddingH);
+    padding: var(--padding);
     .item-subtitle {
       margin-top: 0;
     }

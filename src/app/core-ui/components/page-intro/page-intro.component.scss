@@ -3,7 +3,7 @@
 .page-intro {
   @include gradient(hsla(var(--color-white-hsl), 0.7), var(--bg));
   margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
-  padding: var(--paddingV) var(--paddingH);
+  padding: var(--padding);
   font-size: 13px;
 
   // collapsed (hidden) state styles

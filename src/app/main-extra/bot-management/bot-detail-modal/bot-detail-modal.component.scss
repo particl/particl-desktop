@@ -48,7 +48,7 @@
         }
         &::before {
           --dot-size: 6px;
-          content: "";
+          content: '';
           width: var(--dot-size);
           height: var(--dot-size);
           display: block;
