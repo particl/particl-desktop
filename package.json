@@ -246,7 +246,7 @@
     "ngx-clipboard": "^12.3.0",
     "node-sass": "^4.7.2",
     "protractor": "^5.3.0",
-    "sass-lint": "^1.10.2",
+    "sass-lint": "^1.13.0",
     "ts-node": "^5.0.0",
     "tslint": "^5.9.0",
     "tslint-microsoft-contrib": "^5.0.3",

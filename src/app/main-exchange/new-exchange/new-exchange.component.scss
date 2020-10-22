@@ -35,12 +35,12 @@
         .mat-icon {
           margin: auto;
           font-size: 24px;
-          &.part-arrow-up {
-            color: var(--color-secondary);
-          }
-          &.part-arrow-down {
-            color: var(--color-tertiary);
-          }
+        }
+        .part-arrow-up {
+          color: var(--color-secondary);
+        }
+        .part-arrow-down {
+          color: var(--color-tertiary);
         }
       }
     }
