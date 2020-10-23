@@ -1,9 +1,17 @@
 
-export interface ListingComment {
-  hash: string;
-  parentHash: null | string;
-  childCount: number;
+
+export interface ListingItemComment {
+  commentHash: string;
+  listingHash: string;
+  marketAddress: string;
+  sender: {
+    addressFull: string;
+    addressShort: string;
+  };
   created: number;
-  sender: string;
+  isMine: boolean;
+  isSeller: boolean;
   commentText: string;
+  parentCommentId: number;
+  children: ListingItemComment[];
 }

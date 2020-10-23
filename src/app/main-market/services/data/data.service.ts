@@ -248,6 +248,7 @@ export class DataService {
         shippingDomestic: shipLocal,
         shippingIntl: shipIntl
       },
+      marketHash: getValueOrDefault(from.market, 'string', ''),
       escrow: {
         buyerRatio: escrowBuyer,
         sellerRatio: escrowSeller

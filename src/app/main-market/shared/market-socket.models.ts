@@ -23,6 +23,10 @@ export namespace SocketMessages_v03 {
     sender: string;     // sender's address
     receiver: string;   // if commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS' then market.receiveAddress
     commentType: 'LISTINGITEM_QUESTION_AND_ANSWERS' | 'PROPOSAL_QUESTION_AND_ANSWERS' | 'MARKETPLACE_COMMENT' | 'PRIVATE_MESSAGE';
+    parent?: {
+      id: number;
+      hash: string;
+    };
   }
 
 
