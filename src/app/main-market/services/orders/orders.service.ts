@@ -520,7 +520,9 @@ export class BidOrderService implements IBuyflowController {
           featured = listingItem.ItemInformation.Images[0];
         }
 
-        newOrder.listing.image = parseImagePath(featured, 'MEDIUM', marketUrl) || newOrder.listing.image;
+        newOrder.listing.image =  parseImagePath(featured, 'MEDIUM', marketUrl) ||
+                                  parseImagePath(featured, 'ORIGINAL', marketUrl) ||
+                                  newOrder.listing.image;
       }
 
       if (isBasicObjectType(listingItem.ItemInformation.ItemLocation)) {
