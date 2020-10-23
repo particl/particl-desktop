@@ -67,6 +67,12 @@ section {
     }
   }
 
+  &.pricing-info {
+    .amount {
+      @extend %enable-select;
+    }
+  }
+
 } // section
 
 

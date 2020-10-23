@@ -202,7 +202,7 @@
     }
     .value { // name of step
       font-size: 13px;
-      margin-bottom: 3px;
+      margin-bottom: 6px;
       @include break(l) {
         margin-bottom: 4px;
       }
