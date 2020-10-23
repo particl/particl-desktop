@@ -15,17 +15,16 @@
       <p class="lead">
         Are you sure you want to reject this bid?
       </p>
+      <mat-form-field appearance="fill">
+        <mat-select placeholder="Rejection reason (optional)" [formControl]="inputReason">
+          <mat-option *ngFor="let reason of reasonOptions" [value]="reason.key">
+            {{ reason.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <p class="help-text">
         By rejecting this bid, the Buyer will not be able to purchase your item.
       </p>
-    </div>
-    <div>
-      <mat-select placeholder="Optional Rejection Reason" [formControl]="inputReason">
-        <mat-option [value]="" class="--larger"></mat-option>
-        <mat-option *ngFor="let reason of reasonOptions" [value]="reason.key" class="--larger">
-          {{ reason.label }}
-        </mat-option>
-      </mat-select>
     </div>
 
   </div>
