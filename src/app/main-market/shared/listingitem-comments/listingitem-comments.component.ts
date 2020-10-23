@@ -5,6 +5,9 @@ import { FormControl } from '@angular/forms';
 import { Observable, Subject, throwError, of, merge, iif, defer } from 'rxjs';
 import { tap, takeUntil, filter, switchMap, catchError, concatMap, mapTo } from 'rxjs/operators';
 
+import { Store } from '@ngxs/store';
+import { MarketState } from 'app/main-market/store/market.state';
+
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ListingCommentsService } from '../../services/comments/listing-comments.service';
 import { getValueOrDefault } from '../utils';
@@ -43,16 +46,18 @@ export class ListingItemCommentsComponent implements OnInit, OnDestroy {
 
 
   private destroy$: Subject<void> = new Subject();
-  private readonly PAGE_COUNT: number = 20;
+  private readonly PAGE_COUNT: number;
   private pageChangeControl: FormControl = new FormControl(0);
 
 
   constructor(
     private _cdr: ChangeDetectorRef,
+    private _store: Store,
     private _commentService: ListingCommentsService,
     private _snackbar: SnackbarService,
   ) {
     this.dataSource.data = [];
+    this.PAGE_COUNT = this._store.selectSnapshot(MarketState.settings).defaultListingCommentPageCount;
   }
 
 
