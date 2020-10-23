@@ -191,28 +191,54 @@
       margin-right: 8px;
       background: var(--bg-muted);
     }
-    // Unified status colors
-    &.color-alert .dot { // Order bidding
-      background: var(--color-alert);
+    // --- Unified status colors --- //
+    // Order bidding, Listing expired
+    &.color-alert,
+    &.expired {
+      .dot {
+        background: var(--color-alert);
+      }
     }
-    &.color-warning-alt .dot { // Order accepted
-      background: var(--color-warning-alt);
+    // Order accepted
+    &.color-warning-alt {
+      .dot {
+        background: var(--color-warning-alt);
+      }
     }
-    &.color-warning .dot { // Order escrow
-      background: var(--color-warning);
+    // Order escrow, Listing pending
+    &.color-warning,
+    &.pending {
+      .dot {
+        background: var(--color-warning);
+      }
     }
-    &.color-primary .dot,
-    &.color-active .dot { // Order packaging, Bot active
-      background: var(--color-primary);
+    // Order packaging, Bot/Listing active
+    &.color-primary,
+    &.color-active,
+    &.active {
+      .dot {
+        background: var(--color-primary);
+      }
     }
-    &.color-secondary .dot { // Order shipping
-      background: var(--color-secondary);
+    // Order shipping
+    &.color-secondary {
+      .dot {
+        background: var(--color-secondary);
+      }
     }
-    &.color-tertiary .dot { // Order completed
-      background: var(--color-tertiary);
+    // Order completed
+    &.color-tertiary {
+      .dot {
+        background: var(--color-tertiary);
+      }
     }
-    &.color-inactive .dot { // Order rejected/cancelled, Bot inactive
-      background: hsla(var(--text-muted-hsl), 0.4);
+    // Order rejected/cancelled, Bot inactive, Listing unpublished/unknown status
+    &.color-inactive,
+    &.unknown,
+    &.unpublished {
+      .dot {
+        background: hsla(var(--text-muted-hsl), 0.4);
+      }
     }
     // Pulsing animation for active statuses
     &.order.sell.color-alert,

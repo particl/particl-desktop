@@ -172,6 +172,7 @@
     }
   }
   .amount { // all the prices (item, shipping, total)
+    @extend %enable-select;
     display: block;
     font-family: var(--font-mono);
     &.part {
