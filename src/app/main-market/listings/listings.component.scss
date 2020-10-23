@@ -9,45 +9,46 @@
     align-self: flex-start; // needed for position:sticky
     height: auto;
     margin-right: 35px;
-    // Filter buttons at the bottom
-    .filter-buttons {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .filter-button {
-        line-height: 36px;
-        &.refresh {
-          position: relative;
-          &.new-listings-available { // when new ones are available
-            .dot { // notification dot
-              width: 6px;
-              height: 6px;
-              border-radius: 50%;
-              background: var(--color-secondary);
-              position: absolute;
-              bottom: 10px;
-              left: 22px;
-              &::before {
-                content: "";
-                display: block;
-                width: 6px;
-                height: 6px;
-                border: 2px solid hsla(var(--color-secondary-hsl), 0.4);
-                border-radius: 50%;
-                position: relative;
-                top: -2px;
-                left: -2px;
-                animation: dot-pulse infinite 1.2s;
-              }
-            }
-          }
-        }
-        &.flagged {
-          .mat-icon {
-            margin: 0;
-          }
-        }
+  }
+}
+
+// Filter buttons at the bottom
+.filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filter-button {
+  line-height: 36px;
+  &.refresh {
+    position: relative;
+  }
+  &.new-listings-available { // when new ones are available
+    .dot { // notification dot
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-secondary);
+      position: absolute;
+      bottom: 10px;
+      left: 22px;
+      &::before {
+        content: '';
+        display: block;
+        width: 6px;
+        height: 6px;
+        border: 2px solid hsla(var(--color-secondary-hsl), 0.4);
+        border-radius: 50%;
+        position: relative;
+        top: -2px;
+        left: -2px;
+        animation: dot-pulse infinite 1.2s;
       }
+    }
+  }
+  &.flagged {
+    .mat-icon {
+      margin: 0;
     }
   }
 }

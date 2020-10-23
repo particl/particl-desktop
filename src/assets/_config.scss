@@ -155,9 +155,11 @@ $break-xhd: 2200px;
 
   --paddingV: 35px; // default vertical padding
   --paddingH: 35px; // default horizontal padding
+  --padding: 35px; // all-in padding
   @include break(l) {
     --paddingV: 40px;
     --paddingH: 50px;
+    --padding: 40px 50px;
   }
 }
 

@@ -83,7 +83,7 @@
     }
     &.completed {
       padding: 2px 9px;
-      border: none;
+      border: 0;
       background: hsla(var(--bg-muted-hsl), 0.6);
       .icon {
         top: 2px;

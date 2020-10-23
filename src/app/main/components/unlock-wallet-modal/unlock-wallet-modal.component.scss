@@ -26,11 +26,13 @@ strong {
 
 .password-field {
   // show/hide password button
-  button[matSuffix] {
-    padding: 8px 12px;
-    margin-right: -12px;
-    .mat-icon {
-      margin: 0;
+  button {
+    &[matSuffix] {
+      padding: 8px 12px;
+      margin-right: -12px;
+      .mat-icon {
+        margin: 0;
+      }
     }
   }
 

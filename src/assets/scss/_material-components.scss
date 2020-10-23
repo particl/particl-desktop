@@ -499,7 +499,7 @@ mat-dialog-actions.mat-dialog-actions {
 // ------ 2.8. SIDENAV ------ //
 
 .mat-sidenav {
-  border: none !important;
+  border: 0 !important;
   &.sidebar { // app's sidebar, dark main menu
     .mat-drawer-inner-container {
       display: flex;
@@ -681,7 +681,7 @@ label {
   }
   .mat-form-field-infix {
     padding: 0;
-    border-top: none;
+    border-top: 0;
   }
   .mat-form-field-subscript-wrapper {
     overflow: visible;

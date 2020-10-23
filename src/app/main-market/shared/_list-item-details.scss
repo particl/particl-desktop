@@ -74,7 +74,7 @@
     color: var(--text-muted);
     padding: 30px;
     @include break(l) {
-      padding: var(--paddingV) var(--paddingH);
+      padding: var(--padding);
     }
     .item-info { // title and status text
       @extend %enable-select;
@@ -110,7 +110,7 @@
     border-top: 1px dashed var(--bg-muted);
     color: var(--text-muted);
     @include break(l) {
-      padding: var(--paddingV) var(--paddingH);
+      padding: var(--padding);
     }
     @include break(xl) {
       font-size: 15px;

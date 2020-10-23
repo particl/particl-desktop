@@ -32,13 +32,15 @@
 
   // --- Content ---
   .highlights { // shipping details, escrow TXID, rejection reason
-    --table-paddingH: 24px;
-    --table-paddingV: 16px;
-    @include break(l) {
-      --table-paddingH: 30px;
-      --table-paddingV: 20px;
-    }
     @extend %enable-select;
+    --table-padding: 16px 24px;
+    --table-paddingV: 16px;
+    --table-paddingH: 24px;
+    @include break(l) {
+      --table-padding: 20px 30px;
+      --table-paddingV: 20px;
+      --table-paddingH: 30px;
+    }
     background: hsla(var(--bg-muted-hsl), 0.2);
     border-radius: var(--radius);
     @include break(l) {
@@ -47,7 +49,7 @@
     }
     table {
       width: 100%;
-      padding: var(--table-paddingV) var(--table-paddingH);
+      padding: var(--table-padding);
       border-spacing: 0;
       line-height: 1.5;
       &:empty {
@@ -127,7 +129,7 @@
 }
 
 @mixin progress-line($color) { // "done" progress between two Order steps
-  content: "";
+  content: '';
   position: absolute;
   bottom: 8px;
   left: 50.5%;
@@ -160,7 +162,7 @@
         position: relative;
         &::before { // highlight current "dot" to indicate active step
           @extend %progress-dot;
-          content: "";
+          content: '';
           position: absolute;
           top: 0;
           left: 0;
