@@ -22,6 +22,7 @@
   }
   padding: 0;
   margin-bottom: var(--card-spacing) !important;
+  border-radius: var(--radius);
   .header {
     min-height: var(--list-item-size) !important;
     max-height: var(--list-item-size) !important;

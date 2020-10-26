@@ -15,21 +15,18 @@
       <p class="lead">
         Mark as delivered and complete this Order?
       </p>
-      <p class="message --info">
-        <strong>Warning!</strong> Only confirm the delivery if you have received the item in real life &ndash; this Order involves real PART coins!
-      </p>
       <p class="help-text">
         Confirming successful delivery will finalize this Order and release your funds locked in Escrow.
       </p>
-    </div>
-
-    <p class="message --info">
-      Leave an optional confirmation of delivery message for the seller
-      <mat-form-field class="full-width --boxed --larger" appearance="fill" color="accent">
-        <mat-icon matPrefix fontIcon="part-check"></mat-icon>
+      <p class="help-text">
+        Leave an optional delivery note for the seller:
+      </p>
+      <mat-form-field class="full-width --plain" appearance="fill" color="accent">
+        <mat-icon matPrefix fontIcon="part-recipe"></mat-icon>
         <input [formControl]="reviewMemo" matInput type="text" placeholder="Optional review message">
       </mat-form-field>
-    </p>
+    </div>
+
   </div>
 </mat-dialog-content>
 
