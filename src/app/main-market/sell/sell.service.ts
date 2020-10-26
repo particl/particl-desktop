@@ -568,7 +568,7 @@ export class SellService {
         return TEMPLATE_STATUS_TYPE.PENDING;
         break;
 
-      case templ.hash.length > 0:
+      case (templ.hash.length > 0) || (templ.listings.count > 0) || (templ.listings.latestExpiry > 0):
         return TEMPLATE_STATUS_TYPE.EXPIRED;
         break;
 
