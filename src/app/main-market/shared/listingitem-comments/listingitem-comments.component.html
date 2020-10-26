@@ -66,11 +66,11 @@
         <div class="detail">
           <ng-container matTreeNodeOutlet></ng-container>
 
-          <label class="reply-form" *ngIf="!(+node.parentCommentId > 0)">
+          <label class="reply-form" *ngIf="!(+node.parentCommentId > 0) && (node.commentHash.length > 0)">
             <!-- coloring based on user's side (primary for buyers, accent for sellers) - if you don't want the condition here, we can keep "accent" -->
             <mat-form-field appearance="fill" class="post-reply --plain --larger" color="accent">
               <mat-icon matPrefix fontIcon="part-language"></mat-icon>
-              <input matInput type="text" placeholder="Reply to this thread…" #replyThreadComment>
+              <input matInput type="text" [disabled]="isBusy" placeholder="Reply to this thread…" #replyThreadComment>
               <button matSuffix mat-button class="small" matTooltip="Reply" color="accent" matTooltipPosition="before" appDebounceClick (debounceClick)="addComment(replyThreadComment, node.commentHash)" [disabled]="isBusy || !!!replyThreadComment.value">
                 <mat-icon fontIcon="part-arrow-right"></mat-icon>
               </button>

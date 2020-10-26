@@ -3,7 +3,7 @@ import {MatTreeNestedDataSource} from '@angular/material/tree';
 import {NestedTreeControl} from '@angular/cdk/tree';
 import { FormControl } from '@angular/forms';
 import { Observable, Subject, throwError, of, merge, iif, defer } from 'rxjs';
-import { tap, takeUntil, filter, switchMap, catchError, concatMap, mapTo } from 'rxjs/operators';
+import { tap, takeUntil, filter, switchMap, catchError, concatMap, mapTo, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
@@ -18,7 +18,8 @@ enum TextContent {
   LABEL_SECTION_HEADER = 'Questions & Answers',
   LOADING_ERROR = 'Error occurred while loading comments',
   COMMENT_POST_ERROR = 'Error while creating your comment!',
-  COMMENT_UPDATE_ERROR = 'Comment created, but failed to update the display correctly'
+  COMMENT_UPDATE_ERROR = 'Comment created, but failed to update the display correctly',
+  COMMENT_LENGTH_ERROR = 'Comment exceeds maximum length allowed'
 }
 
 
@@ -43,6 +44,8 @@ export class ListingItemCommentsComponent implements OnInit, OnDestroy {
   isBusy: boolean = true;
   hasNewCommentsPending: boolean = false;
   hasMoreComments: boolean = false;
+
+  readonly MAX_COMMENT_LENGTH: number = 4000;
 
 
   private destroy$: Subject<void> = new Subject();
@@ -148,23 +151,53 @@ export class ListingItemCommentsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // this.isBusy = true;
-    // this._commentService.addListingComment(commentText, this.marketReceiveAddress, this.listingHash, !!parentHash ? parentHash : null).pipe(
-    //   tap((newComment) => {
-    //     if (newComment === null) {
-    //       throwError('FETCH ERROR');
-    //       return;
-    //     }
-    //   })
-    // ).subscribe(
-    //   (newComment) => {
-    //     this.dataSource.data = [newComment, ...this.dataSource.data];
-    //     element.value = '';
-    //   },
-    //   (err) => this._snackbar.open(
-    //     (typeof err === 'string') && (err === 'FETCH ERROR') ? TextContent.COMMENT_UPDATE_ERROR : TextContent.COMMENT_POST_ERROR,
-    //     'warn')
-    // );
+    if (commentText.length > this.MAX_COMMENT_LENGTH) {
+      this._snackbar.open(TextContent.COMMENT_LENGTH_ERROR, 'warn');
+      return;
+    }
+
+    this.isBusy = true;
+    this._commentService.addListingComment(commentText, this.marketReceiveAddress, this.listingHash, !!parentHash ? parentHash : null).pipe(
+      finalize(() => this.isBusy = false),
+      tap((newComment) => {
+        if (newComment === null) {
+          throwError('FETCH ERROR');
+          return;
+        }
+      })
+    ).subscribe(
+      (newComment) => {
+        newComment.isSeller = newComment.sender.addressFull === this.listingSellerAddress;
+
+        if (parentHash) {
+          const existingComments = this.dataSource.data;
+          const foundParentIdx = existingComments.findIndex(c => c.commentHash === parentHash);
+
+          if ((foundParentIdx > -1) && existingComments[foundParentIdx].commentHash === parentHash) {
+            const updatedComment = JSON.parse(JSON.stringify(existingComments[foundParentIdx]));
+            /**
+             * parentCommentId is simply used to determine whether a comment is a reply or not. Since this comment was a reply
+             *  to another thread, determine the correct parent comment id, or if this was the first reply, use any non-zero value to
+             *  ensure this reply is correctly identified as such. Probably better to use a boolean in this case... future someone's issue.
+             * (note: parent comment hash could have been used but numerical id is shorter and quicker to compare)
+             * */
+            newComment.parentCommentId = updatedComment.children.length > 0 ? updatedComment.children[0].parentCommentId : 1;
+            updatedComment.children.push(newComment);
+            // Splice and insert clone. Forces an update in the display (updating the children array value doesnt update the object's hash)
+            existingComments.splice(foundParentIdx, 1, updatedComment);
+            this.dataSource.data = existingComments;
+          }
+        } else {
+          this.dataSource.data = [newComment, ...this.dataSource.data];
+        }
+
+        element.value = '';
+        this._cdr.detectChanges();
+      },
+      (err) => this._snackbar.open(
+        (typeof err === 'string') && (err === 'FETCH ERROR') ? TextContent.COMMENT_UPDATE_ERROR : TextContent.COMMENT_POST_ERROR,
+        'warn')
+    );
   }
 
 

@@ -102,6 +102,7 @@ export class ListingCommentsService {
         newComment.sender.addressShort = newComment.sender.addressFull.slice(0, this.SENDER_SHORT_ADDRESS_LENGTH);
         newComment.isMine = true;
         newComment.commentText = comment;
+        newComment.listingHash = listingHash;
 
         return newComment;
       })
