@@ -277,3 +277,59 @@
     }
   }
 }
+
+
+// animated placeholder before items load
+.loading-placeholder {
+  /*
+  &.market { // shared for Orders, Listings etc.
+  }
+  */
+  &.orders { // Order-specific
+    .item {
+      --size: 80px;
+      height: var(--size);
+      padding: 0 20px 0 0;
+      @include break(l) {
+        --size: 85px;
+      }
+      @include break(xl) {
+        --size: 90px;
+      }
+      .photo {
+        flex: 0 0 var(--size);
+        height: var(--size);
+        display: block;
+        border-radius: 0;
+        margin-right: 24px;
+        @include break(l) {
+          margin-right: 30px;
+        }
+        @include break(xl) {
+          margin-right: 38px;
+        }
+      }
+      .name {
+        width: 96px;
+        height: 14px;
+        margin: 0 0 6px;
+        @include break(xl) {
+          height: 18px;
+        }
+      }
+      .meta {
+        width: 190px;
+        display: block;
+      }
+      .status {
+        text-align: right;
+        height: 28px;
+        margin-right: 20px;
+        width: 130px;
+      }
+      .arrow {
+        width: 16px;
+      }
+    }
+  }
+}
