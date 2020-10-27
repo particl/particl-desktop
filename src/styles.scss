@@ -531,7 +531,7 @@ body {
       height: 10px;
       width: 40%;
       &.--lighter {
-        background: hsla(var(--bg-muted-hsl), 0.3);
+        background: hsla(var(--bg-muted-hsl), 0.25);
       }
     }
   }

@@ -281,15 +281,13 @@
 
 // animated placeholder before items load
 .loading-placeholder {
-  /*
+
   &.market { // shared for Orders, Listings etc.
-  }
-  */
-  &.orders { // Order-specific
     .item {
       --size: 80px;
       height: var(--size);
       padding: 0 20px 0 0;
+      border-radius: var(--radius);
       @include break(l) {
         --size: 85px;
       }
@@ -318,7 +316,7 @@
         }
       }
       .meta {
-        width: 190px;
+        width: 120px;
         display: block;
       }
       .status {
@@ -332,4 +330,30 @@
       }
     }
   }
-}
+
+  &.orders { // Order-specific
+    .item {
+      .meta {
+        width: 190px;
+      }
+    }
+  }
+
+  &.templates {
+    .item {
+      .meta {
+        width: 90%;
+        max-width: 650px;
+        height: 30px;
+        @include break(xl) {
+          height: 16px;
+        }
+      }
+      .status {
+        width: 70px;
+        border-radius: 900px;
+      }
+    }
+  }
+
+} // .loading-placeholder
