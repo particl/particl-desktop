@@ -41,14 +41,16 @@
 
   </div><!-- .tx-confirmation -->
 
-  <div>
+  <div class="order-note">
     <p>
-      Optional pre-shipping notes for the buyer to be aware of
-      <mat-form-field class="full-width --boxed --larger" appearance="fill" color="accent">
-        <input [formControl]="escrowMemo" matInput type="text" placeholder="Additional pre-shipping notes for the buyer">
-      </mat-form-field>
+      <b>Pre-shipping note for the Buyer</b> (optional)
     </p>
+    <mat-form-field class="full-width --boxed" appearance="fill" color="accent">
+      <mat-icon matPrefix fontIcon="part-recipe"></mat-icon>
+      <input [formControl]="escrowMemo" matInput type="text" placeholder="Additional pre-shipping notes for the buyer">
+    </mat-form-field>
   </div>
+
 </mat-dialog-content>
 
 

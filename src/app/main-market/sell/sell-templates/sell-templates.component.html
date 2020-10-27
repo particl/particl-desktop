@@ -201,6 +201,35 @@
     </ng-container>
   </ng-container>
 
+
+  <!-- @TODO: add condition to show loading-placeholder when items are loading (duh :) -->
+  <!-- define the template, so we can reuse it -->
+  <ng-template #loadingPlaceholder>
+    <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="photo placeholder --lighter"></div>
+      <div fxFlex="1 0 400px">
+        <div class="name placeholder"></div>
+        <div class="meta placeholder --lighter"></div>
+      </div>
+      <div fxFlex="0 0 125px" fxLayout fxLayoutAlign="flex-end center">
+        <span class="status placeholder --lighter"></span>
+        <span class="arrow placeholder --lighter"></span>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- apply the template -->
+  <div class="loading-placeholder market templates">
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  </div>
+
+
   <ng-template #noTemplates>
     <!-- no listings at all -->
     <div class="no-results" *ngIf="allProducts.length === 0">

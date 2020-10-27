@@ -25,7 +25,7 @@ What you can't find here will be probably in `/src/assets/scss/material-componen
     3. UI elements
       3.1. Buttons
       3.2. Addresses
-      3.3. Loading info / bar
+      3.3. Loading info / bar / placeholders
       3.4. No results
       3.5. Input with icon
       3.6. QR codes
@@ -458,7 +458,7 @@ body {
 }
 
 
-// ------ 3.3. LOADING INFO / BAR ------ //
+// ------ 3.3. LOADING INFO / BAR / PLACEHOLDERS ------ //
 
 .loading-container {
   text-align: center;
@@ -513,6 +513,51 @@ body {
     box-shadow: 0 0 20px hsla(var(--bg-black-hsl), 0.2);
   }
 }
+
+// animated placeholder before items load
+.loading-placeholder {
+  $items: 9;
+  max-width: none;
+  .item {
+    animation: 1s ease infinite loading-pulse;
+    box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
+    background: var(--color-white);
+    padding: 0 24px;
+    margin-bottom: var(--card-spacing);
+    .placeholder {
+      background: hsla(var(--bg-muted-hsl), 0.5);
+      border-radius: var(--radius);
+      display: inline-block;
+      height: 10px;
+      width: 40%;
+      &.--lighter {
+        background: hsla(var(--bg-muted-hsl), 0.25);
+      }
+    }
+  }
+  @for $i from 1 through $items {
+    .item {
+      &:nth-child(#{$i}) {
+        animation-delay: $i * (0.1s);
+      }
+    }
+  }
+}
+@keyframes loading-pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.5;
+    transform: scale(0.975);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 
 // ------ 3.4. NO RESULTS (no TXs, no addresses, ..) ------ //
 

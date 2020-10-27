@@ -22,6 +22,7 @@
   }
   padding: 0;
   margin-bottom: var(--card-spacing) !important;
+  border-radius: var(--radius);
   .header {
     min-height: var(--list-item-size) !important;
     max-height: var(--list-item-size) !important;
@@ -276,3 +277,83 @@
     }
   }
 }
+
+
+// animated placeholder before items load
+.loading-placeholder {
+
+  &.market { // shared for Orders, Listings etc.
+    .item {
+      --size: 80px;
+      height: var(--size);
+      padding: 0 20px 0 0;
+      border-radius: var(--radius);
+      @include break(l) {
+        --size: 85px;
+      }
+      @include break(xl) {
+        --size: 90px;
+      }
+      .photo {
+        flex: 0 0 var(--size);
+        height: var(--size);
+        display: block;
+        border-radius: 0;
+        margin-right: 24px;
+        @include break(l) {
+          margin-right: 30px;
+        }
+        @include break(xl) {
+          margin-right: 38px;
+        }
+      }
+      .name {
+        width: 96px;
+        height: 14px;
+        margin: 0 0 6px;
+        @include break(xl) {
+          height: 18px;
+        }
+      }
+      .meta {
+        width: 120px;
+        display: block;
+      }
+      .status {
+        text-align: right;
+        height: 28px;
+        margin-right: 20px;
+        width: 130px;
+      }
+      .arrow {
+        width: 16px;
+      }
+    }
+  }
+
+  &.orders { // Order-specific
+    .item {
+      .meta {
+        width: 190px;
+      }
+    }
+  }
+
+  &.templates {
+    .item {
+      .meta {
+        width: 90%;
+        max-width: 650px;
+        height: 30px;
+        @include break(xl) {
+          height: 16px;
+        }
+      }
+      .status {
+        width: 70px;
+        border-radius: 900px;
+      }
+    }
+  }
+
+} // .loading-placeholder

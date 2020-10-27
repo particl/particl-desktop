@@ -46,6 +46,7 @@ button.modal-close {
       position: sticky;
       top: 0;
       background: var(--color-white);
+      padding-top: 6px;
       z-index: 20;
       .mat-tab-label {
         width: (100% / 3);

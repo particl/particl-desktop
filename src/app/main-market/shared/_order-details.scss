@@ -190,14 +190,32 @@
     }
     // rejected bid scenario
     &.rejected {
+      .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
+        background: var(--color-alert);
+        position: relative;
+      }
       &.bidding {
         position: relative;
         &::after { // recolor the progress bar from "bid => rejected" to red
           @include progress-line(var(--color-alert));
         }
       }
-      .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
-        background: var(--color-alert);
+      &.cancelled {
+        .dot {
+          &::before {
+            @extend %progress-dot;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: scale(1.7);
+            background: hsla(var(--color-alert-hsl), 0.35);
+            animation: progress-pulse 1.5s infinite;
+          }
+        }
+        .value {
+          font-weight: 500;
+        }
       }
     }
     .value { // name of step
