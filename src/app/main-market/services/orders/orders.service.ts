@@ -853,16 +853,16 @@ export class BidOrderService implements IBuyflowController {
         },
         transition: this.actionInvalid.bind(this)
       },
-      {
-        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
-        toState: ORDER_ITEM_STATUS.COMPLETE,
-        user: 'BUYER',
-        actionType: 'PRIMARY',
-        details: {
-          label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
-        },
-        transition: this.actionOrderComplete.bind(this)
-      }
+      // {
+      //   fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+      //   toState: ORDER_ITEM_STATUS.COMPLETE,
+      //   user: 'BUYER',
+      //   actionType: 'PRIMARY',
+      //   details: {
+      //     label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
+      //   },
+      //   transition: this.actionOrderComplete.bind(this)
+      // }
     ];
     actions[ORDER_ITEM_STATUS.SHIPPED] = [
       {
