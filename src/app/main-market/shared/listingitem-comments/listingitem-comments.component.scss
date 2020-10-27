@@ -1,6 +1,16 @@
 @import './src/assets/_config'; // import shared colors etc.
 @import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
+
+.section-title {
+  &:first-of-type { // make the first title inline-block, so Refresh button can stick to its side
+    display: inline-block;
+  }
+  & + .mat-button { // refresh button
+    margin-left: 4px;
+  }
+}
+
 .question-answer {
   --list-item-size: min-content; // scale dynamicly based on content's size
   font-size: 13px;
@@ -41,6 +51,27 @@
   }
 }
 
+.item { // message in a thread (both Q's and A's)
+  p {
+    font-size: 13px;
+  }
+  &.question {
+    p {
+      font-size: 15px;
+    }
+  }
+  &.seller {
+    p {
+      font-weight: 500;
+      color: var(--text);
+    }
+    .user {
+      color: var(--color-secondary);
+      background: hsla(var(--color-secondary-hsl), 0.1);
+    }
+  }
+}
+
 .meta {
   display: block;
   font-size: 12px;
@@ -76,6 +107,7 @@
   .time-date {
     font-size: 11.5px;
     margin-left: 12px;
+    color: var(--text-muted);
     @include break(xl) {
       font-size: 12.5px;
     }
@@ -88,17 +120,6 @@
   p {
     margin: 0;
   }
-  // seller's replies
-  &.seller {
-    p {
-      font-weight: 500;
-      color: var(--text);
-    }
-    .user {
-      color: var(--color-secondary);
-      background: hsla(var(--color-secondary-hsl), 0.1);
-    }
-  }
 }
 
 // reply form
@@ -109,5 +130,9 @@
   border-top: 1px dashed var(--bg-muted);
   @include break(xl) {
     margin: 32px -24px -32px;
+  }
+  &.new-question { // in Listing detail modal
+    margin: 0;
+    border: 0;
   }
 }

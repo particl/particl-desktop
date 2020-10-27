@@ -1,7 +1,10 @@
+<div class="listing-detail-modal">
 
-<div>
   <h2 class="section-title">{{ sectionHeaderLabel }}</h2>
-  <button mat-button [disabled]="!hasNewCommentsPending" appDebounceClick (debounceClick)="refreshCommentList()">refresh this list</button>
+  <button mat-button [disabled]="!hasNewCommentsPending" appDebounceClick (debounceClick)="refreshCommentList()" class="small">
+    <mat-icon fontIcon="part-refresh"></mat-icon>
+    Refresh list
+  </button>
 
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
 
@@ -15,7 +18,7 @@
     <!-- This is the tree node template for leaf nodes -->
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
 
-        <div class="answer" [class.seller]="node.isSeller">
+        <div class="answer item" [class.seller]="node.isSeller">
           <p>
             {{node.commentText}}
           </p>
@@ -40,10 +43,10 @@
       <mat-expansion-panel class="question-answer list-item no-padding">
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper">
-            <div class="question" fxFlex="1 1 100%">
-              <div class="text">
+            <div class="question item" [ngClass]="{ 'seller': node.isSeller }" fxFlex="1 1 100%">
+              <p class="text">
                 {{ node.commentText }}
-              </div>
+              </p>
               <div class="meta">
                 <span class="user">
                   <ng-container *ngIf="!node.isSeller; else labelUserSeller">
@@ -94,7 +97,7 @@
     <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No comments made yet">
     <div class="text">
       <p>
-        No Comments made on this Product as yet
+        No Q&A on this Product yet
       </p>
       <p class="help-text">
         Are you missing details from the Product's description or do you have some question for the Seller? Ask your questions below:
@@ -108,18 +111,16 @@
   </div><!-- .loading-bar -->
 
 
-  <div>
-    <h2 class="section-title">Add your comment</h2>
-    <label class="item reply-form">
-      <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
-      <mat-form-field appearance="fill" class="post-reply --boxed --larger" color="primary">
-        <mat-icon matPrefix fontIcon="part-language"></mat-icon>
-        <input matInput type="text" placeholder="Ask a question…" #newThreadComment [disabled]="isBusy">
-        <button matSuffix mat-button class="small" matTooltip="Reply" color="primary" matTooltipPosition="before" appDebounceClick (debounceClick)="addComment(newThreadComment, null)" [disabled]="isBusy || !!!newThreadComment.value">
-          <mat-icon fontIcon="part-arrow-right"></mat-icon>
-        </button>
-      </mat-form-field>
-    </label>
-  </div>
+  <h2 class="section-title">Add your comment</h2>
+  <label class="item reply-form new-question">
+    <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
+    <mat-form-field appearance="fill" class="post-reply --boxed --larger" color="primary">
+      <mat-icon matPrefix fontIcon="part-language"></mat-icon>
+      <input matInput type="text" placeholder="Ask a question…" #newThreadComment [disabled]="isBusy">
+      <button matSuffix mat-button class="small" matTooltip="Reply" color="primary" matTooltipPosition="before" appDebounceClick (debounceClick)="addComment(newThreadComment, null)" [disabled]="isBusy || !!!newThreadComment.value">
+        <mat-icon fontIcon="part-arrow-right"></mat-icon>
+      </button>
+    </mat-form-field>
+  </label>
 
 </div>
