@@ -67,7 +67,7 @@ enum TextContent {
   ACTION_CANCEL_LABEL = 'Cancel Bid',
   ACTION_CANCEL_TOOLTIP = 'Cancel the bid request',
 
-  ACTION_REJECT_LABEL = 'Reject bid & cancel bid',
+  ACTION_REJECT_LABEL = 'Reject & cancel bid',
   ACTION_REJECT_TOOLTIP = 'Reject this bid, cancelling the bid request',
 
   ACTION_ACCEPT_LABEL = 'Accept bid',

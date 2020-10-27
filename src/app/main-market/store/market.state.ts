@@ -24,7 +24,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   defaultConfig: {
     imagePath: './assets/images/placeholder_4-3.jpg',
     url: `http://${environment.marketHost}:${environment.marketPort || 80}/`,
-    imageMaxSizeFree: 153600,  // 150 KB
+    imageMaxSizeFree: 153_600,  // 150 KB
     imageMaxSizePaid: 1_048_576 // 1 MB
   },
   settings: {
@@ -35,7 +35,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     canModifyIdentities: false,
     useAnonBalanceForFees: false,
     usePaidMsgForImages: true,
-    startupWaitTimeoutSeconds: 60
+    startupWaitTimeoutSeconds: 60,
+    defaultListingCommentPageCount: 20,
   }
 };
 

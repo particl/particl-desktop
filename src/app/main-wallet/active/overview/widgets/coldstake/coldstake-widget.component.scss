@@ -47,7 +47,7 @@
       background: var(--color-info);
       position: relative;
       &::before { // pulsating notification "dot"
-        content: "";
+        content: '';
         width: 6px;
         height: 6px;
         border-radius: 50%;

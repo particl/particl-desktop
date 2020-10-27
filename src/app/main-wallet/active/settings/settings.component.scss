@@ -2,3 +2,7 @@
 
 // Inherit Global settings' styles (no need to duplicate them)
 @import '../../../main-extra/global-settings/global-settings.component.scss';
+
+.container-block {
+  min-height: calc(100vh - var(--header-main-height) - 2 * var(--paddingV)); // fill 100% of remaining vertical space
+}

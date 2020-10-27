@@ -39,6 +39,7 @@ export interface MarketSettings {
   useAnonBalanceForFees: boolean;
   usePaidMsgForImages: boolean;
   startupWaitTimeoutSeconds: number;
+  defaultListingCommentPageCount: number;
 }
 
 

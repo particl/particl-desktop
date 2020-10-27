@@ -9,7 +9,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
-import { QuestionThreadListItemComponent } from './question-thread-list-item/question-thread-list-item.component';
+import { ListingItemCommentsComponent } from './listingitem-comments/listingitem-comments.component';
 import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
 import { ShippingProfileAddressFormComponent } from './shipping-profile-address-form/shipping-profile-address-form.component';
 
@@ -24,13 +24,13 @@ import { ShippingProfileAddressFormComponent } from './shipping-profile-address-
   ],
   declarations: [
     TreeSelectComponent,
-    QuestionThreadListItemComponent,
+    ListingItemCommentsComponent,
     ListingDetailModalComponent,
     ShippingProfileAddressFormComponent
   ],
   exports: [
     TreeSelectComponent,
-    QuestionThreadListItemComponent,
+    ListingItemCommentsComponent,
     ListingDetailModalComponent,
     ShippingProfileAddressFormComponent,
     GalleryModule,

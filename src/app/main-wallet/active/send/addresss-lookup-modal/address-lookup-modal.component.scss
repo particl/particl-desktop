@@ -7,7 +7,7 @@
 // Top search/filter bar
 .control-bar {
   background: var(--color-white);
-  border: none;
+  border: 0;
   top: 0;
   height: auto;
   margin: 0 -24px;
@@ -17,7 +17,7 @@
 
 .mat-dialog-content {
   width: 49rem;
-  border-top: none;
+  border-top: 0;
 }
 
 .list-data {

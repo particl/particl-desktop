@@ -339,16 +339,16 @@ export class WalletSettingsComponent implements OnInit {
 
 
     const walletActions = {
-      name: 'Wallet Activity',
-      icon: 'part-globe',
+      name: 'Behavior',
+      icon: 'part-preferences',
       settings: [],
       errors: []
     } as SettingGroup;
 
     walletActions.settings.push({
       id: 'anon_utxo_split',
-      title: 'Split UTXOS on sending to Stealth Address',
-      description: 'Creates a number of utxos when sending funds from this wallet to a stealth address. The higher the number, the greater the fees but the better for coin usage',
+      title: 'Split UTXOs when sending Private TXs',
+      description: 'Creates a number of UTXOs when sending funds from this wallet to a stealth (private) address – higher the number, the greater anonymity, coin usage and fees (default: 3)',
       isDisabled: false,
       type: SettingType.NUMBER,
       errorMsg: '',

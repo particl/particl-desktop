@@ -70,7 +70,7 @@ body {
 // main container for content
 .container-block {
   @extend %clearfix;
-  padding: var(--paddingV) var(--paddingH);
+  padding: var(--padding);
 }
 
 .container-flex {
@@ -273,7 +273,7 @@ body {
     }
     &:first-of-type {
       .switcher-option {
-        border: none;
+        border: 0;
       }
     }
   }
@@ -584,7 +584,7 @@ body {
   }
   &.--no-bg {
     background: transparent;
-    border: none;
+    border: 0;
   }
 }
 

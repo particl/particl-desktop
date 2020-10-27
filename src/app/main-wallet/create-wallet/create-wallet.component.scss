@@ -43,7 +43,7 @@
         width: 8px;
         height: 8px;
         &::after {
-          content: "";
+          content: '';
           display: block;
           border: 1.5px solid var(--color-primary);
           width: 9px;
@@ -101,7 +101,7 @@
 .container-flex-stretched {
   display: flex;
   flex-direction: column;
-  padding: var(--paddingV) var(--paddingH);
+  padding: var(--padding);
   min-height: calc(100% - var(--header-main-height) - 2 * var(--paddingV)); // fill the remaining vertical space
   app-page-intro {
     flex: 0 1 1%;
@@ -317,7 +317,7 @@
 \* ------------------------------- */
 
 .wallet-ready.container-flex {
-  padding: var(--paddingV) var(--paddingH);
+  padding: var(--padding);
   height: calc(100vh - var(--header-main-height) - 2 * var(--paddingV)); // fill remaining vertical space
   text-align: center;
   .content-wrapper {

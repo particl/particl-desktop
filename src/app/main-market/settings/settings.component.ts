@@ -23,7 +23,10 @@ import {
 
 
 enum TextContent {
-  FAILED_SAVE = 'An error occurred saving this value'
+  FAILED_SAVE = 'An error occurred saving this value',
+  ERROR_PORT_NUM = 'Invalid port number',
+  ERROR_TIMEOUT = 'Invalid value (should be between 20 and 900)',
+  ERROR_POSITIVE_INT = 'Invalid value (should be greater than 0)'
 }
 
 interface MarketSetting extends Setting {
@@ -443,6 +446,20 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: true
       } as MarketSetting);
 
+      generalSettings.settings.push({
+        id: 'defaultListingCommentPageCount',
+        title: 'Paginated Comment Count',
+        description: 'The number of comment threads to load by default',
+        isDisabled: false,
+        type: SettingType.NUMBER,
+        errorMsg: '',
+        currentValue: marketSettings.defaultListingCommentPageCount,
+        validate: this.validatePositiveInteger,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true
+      } as MarketSetting);
+
       groups.push(generalSettings);
 
 
@@ -539,12 +556,17 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
   private validatePortNumber(value: any, setting: Setting): string | null {
     const port = +value;
-    return port > 0 && port <= 65535 ? null : 'Invalid port number';
+    return port > 0 && port <= 65535 ? null : TextContent.ERROR_PORT_NUM;
   }
 
   private validateTimeout(value: any, setting: Setting): string | null {
     const seconds = +value;
-    return seconds >= 20 && seconds <= 900 ? null : 'Invalid value (should be between 20 and 900)';
+    return seconds >= 20 && seconds <= 900 ? null : TextContent.ERROR_TIMEOUT;
+  }
+
+  private validatePositiveInteger(value: any, setting: Setting): string | null {
+    const num = +value;
+    return !!value && (num > 0) ? null : TextContent.ERROR_POSITIVE_INT;
   }
 
 
