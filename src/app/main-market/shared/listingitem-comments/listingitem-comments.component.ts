@@ -12,6 +12,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ListingCommentsService } from '../../services/comments/listing-comments.service';
 import { getValueOrDefault } from '../utils';
 import { ListingItemComment } from '../../services/comments/comments.models';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 
 enum TextContent {
@@ -58,6 +59,7 @@ export class ListingItemCommentsComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _commentService: ListingCommentsService,
     private _snackbar: SnackbarService,
+    private _unlocker: WalletEncryptionService
   ) {
     this.dataSource.data = [];
     this.PAGE_COUNT = this._store.selectSnapshot(MarketState.settings).defaultListingCommentPageCount;
@@ -157,14 +159,22 @@ export class ListingItemCommentsComponent implements OnInit, OnDestroy {
     }
 
     this.isBusy = true;
-    this._commentService.addListingComment(commentText, this.marketReceiveAddress, this.listingHash, !!parentHash ? parentHash : null).pipe(
+    this._unlocker.unlock({timeout: 10}).pipe(
       finalize(() => this.isBusy = false),
-      tap((newComment) => {
-        if (newComment === null) {
-          throwError('FETCH ERROR');
-          return;
-        }
-      })
+      concatMap((isUnlocked) => iif(
+        () => isUnlocked,
+
+        defer(() => this._commentService.addListingComment(
+          commentText, this.marketReceiveAddress, this.listingHash, !!parentHash ? parentHash : null
+          ).pipe(
+          tap((newComment) => {
+            if (newComment === null) {
+              throwError('FETCH ERROR');
+              return;
+            }
+          })
+        ))
+      ))
     ).subscribe(
       (newComment) => {
         newComment.isSeller = newComment.sender.addressFull === this.listingSellerAddress;
