@@ -452,9 +452,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
               order.currentState.state.stateId === filterStatus :
 
               (showOnlyAttention ? order.currentState.actions.PRIMARY.length > 0 : true) &&
-              (!showComplete ?
-                (order.currentState.actions.PRIMARY.length > 0) || (order.currentState.actions.ALTERNATIVE.length > 0) : true
-              )
+              (showComplete ? true : !order.currentState.state.isFinalState)
             );
 
         if (addItem) {

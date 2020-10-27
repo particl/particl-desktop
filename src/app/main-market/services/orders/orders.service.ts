@@ -602,6 +602,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.CREATED,
       label: TextContent.STATE_CREATED_LABEL,
       order: 0,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_CREATED_STATUS_BUYER,
         seller: TextContent.STATE_CREATED_STATUS_SELLER
@@ -614,6 +615,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.REJECTED,
       label: TextContent.STATE_REJECTED_LABEL,
       order: -2,
+      isFinalState: true,
       stateInfo: {
         buyer: TextContent.STATE_REJECTED_STATUS_BUYER,
         seller: TextContent.STATE_REJECTED_STATUS_SELLER
@@ -626,6 +628,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.CANCELLED,
       label: TextContent.STATE_CANCELLED_LABEL,
       order: -1,
+      isFinalState: true,
       stateInfo: {
         buyer: TextContent.STATE_CANCELLED_STATUS_BUYER,
         seller: TextContent.STATE_CANCELLED_STATUS_SELLER
@@ -638,6 +641,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.ACCEPTED,
       label: TextContent.STATE_ACCEPTED_LABEL,
       order: 1,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_ACCEPTED_STATUS_BUYER,
         seller: TextContent.STATE_ACCEPTED_STATUS_SELLER
@@ -650,6 +654,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
       label: TextContent.STATE_ESCROW_LOCKED_LABEL,
       order: 2,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_ESCROW_LOCKED_STATUS_BUYER,
         seller: TextContent.STATE_ESCROW_LOCKED_STATUS_SELLER
@@ -662,6 +667,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
       label: TextContent.STATE_ESCROW_COMPLETED_LABEL,
       order: 3,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_ESCROW_COMPLETED_STATUS_BUYER,
         seller: TextContent.STATE_ESCROW_COMPLETED_STATUS_SELLER
@@ -674,6 +680,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.SHIPPED,
       label: TextContent.STATE_SHIPPED_LABEL,
       order: 4,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_SHIPPED_STATUS_BUYER,
         seller: TextContent.STATE_SHIPPED_STATUS_SELLER
@@ -686,6 +693,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.COMPLETE,
       label: TextContent.STATE_COMPLETE_LABEL,
       order: 5,
+      isFinalState: true,
       stateInfo: {
         buyer: TextContent.STATE_COMPLETE_STATUS_BUYER,
         seller: TextContent.STATE_COMPLETE_STATUS_SELLER
@@ -956,6 +964,7 @@ export class BidOrderService implements IBuyflowController {
         buyflow: 'UNSUPPORTED',
         stateId: 'UNKNOWN',
         order: 0,
+        isFinalState: true,
         label: TextContent.STATE_INVALID_LABEL,
         filterLabel: TextContent.STATE_INVALID_LABEL,
         stateInfo: {

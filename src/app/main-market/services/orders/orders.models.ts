@@ -110,6 +110,7 @@ export interface BuyFlowState {
     seller: string;
   };
   statusClass: StateStatusClass;
+  isFinalState: boolean;
 }
 
 type BuyflowActionType = 'PRIMARY' | 'ALTERNATIVE' | 'PLACEHOLDER_LABEL';
