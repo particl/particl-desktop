@@ -25,7 +25,7 @@
     "ng": "ng",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/docs/**,**/coverage/**,**/packages/** && sass-lint -v",
+    "lint": "ng lint --type-check && htmlhint --ignore **/documentation/**,**/docs/**,**/coverage/**,**/packages/** && sass-lint -v -q",
     "e2e": "ng e2e",
     "generate:versions": "node modules/clientBinaries/generateVersions.js",
     "generate:documentation": "",
