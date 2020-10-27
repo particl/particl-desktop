@@ -5,7 +5,7 @@ import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
 import { MarketActions } from '../store/market.actions';
 import { MainActions } from 'app/main/store/main.actions';
-import { Subject, Observable, concat, iif, defer, of } from 'rxjs';
+import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
@@ -85,7 +85,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     ).subscribe();
 
 
-    this.currentBalance = concat(
+    this.currentBalance = merge(
       this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$))
     ).pipe(
@@ -97,6 +97,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
         }
         return '0';
       }),
+      takeUntil(this.destroy$)
     );
   }
 

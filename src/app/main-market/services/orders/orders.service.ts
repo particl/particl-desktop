@@ -520,7 +520,9 @@ export class BidOrderService implements IBuyflowController {
           featured = listingItem.ItemInformation.Images[0];
         }
 
-        newOrder.listing.image = parseImagePath(featured, 'MEDIUM', marketUrl) || newOrder.listing.image;
+        newOrder.listing.image =  parseImagePath(featured, 'MEDIUM', marketUrl) ||
+                                  parseImagePath(featured, 'ORIGINAL', marketUrl) ||
+                                  newOrder.listing.image;
       }
 
       if (isBasicObjectType(listingItem.ItemInformation.ItemLocation)) {
@@ -600,6 +602,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.CREATED,
       label: TextContent.STATE_CREATED_LABEL,
       order: 0,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_CREATED_STATUS_BUYER,
         seller: TextContent.STATE_CREATED_STATUS_SELLER
@@ -612,6 +615,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.REJECTED,
       label: TextContent.STATE_REJECTED_LABEL,
       order: -2,
+      isFinalState: true,
       stateInfo: {
         buyer: TextContent.STATE_REJECTED_STATUS_BUYER,
         seller: TextContent.STATE_REJECTED_STATUS_SELLER
@@ -624,6 +628,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.CANCELLED,
       label: TextContent.STATE_CANCELLED_LABEL,
       order: -1,
+      isFinalState: true,
       stateInfo: {
         buyer: TextContent.STATE_CANCELLED_STATUS_BUYER,
         seller: TextContent.STATE_CANCELLED_STATUS_SELLER
@@ -636,6 +641,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.ACCEPTED,
       label: TextContent.STATE_ACCEPTED_LABEL,
       order: 1,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_ACCEPTED_STATUS_BUYER,
         seller: TextContent.STATE_ACCEPTED_STATUS_SELLER
@@ -648,6 +654,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
       label: TextContent.STATE_ESCROW_LOCKED_LABEL,
       order: 2,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_ESCROW_LOCKED_STATUS_BUYER,
         seller: TextContent.STATE_ESCROW_LOCKED_STATUS_SELLER
@@ -660,6 +667,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
       label: TextContent.STATE_ESCROW_COMPLETED_LABEL,
       order: 3,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_ESCROW_COMPLETED_STATUS_BUYER,
         seller: TextContent.STATE_ESCROW_COMPLETED_STATUS_SELLER
@@ -672,6 +680,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.SHIPPED,
       label: TextContent.STATE_SHIPPED_LABEL,
       order: 4,
+      isFinalState: false,
       stateInfo: {
         buyer: TextContent.STATE_SHIPPED_STATUS_BUYER,
         seller: TextContent.STATE_SHIPPED_STATUS_SELLER
@@ -684,6 +693,7 @@ export class BidOrderService implements IBuyflowController {
       stateId: ORDER_ITEM_STATUS.COMPLETE,
       label: TextContent.STATE_COMPLETE_LABEL,
       order: 5,
+      isFinalState: true,
       stateInfo: {
         buyer: TextContent.STATE_COMPLETE_STATUS_BUYER,
         seller: TextContent.STATE_COMPLETE_STATUS_SELLER
@@ -843,16 +853,16 @@ export class BidOrderService implements IBuyflowController {
         },
         transition: this.actionInvalid.bind(this)
       },
-      {
-        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
-        toState: ORDER_ITEM_STATUS.COMPLETE,
-        user: 'BUYER',
-        actionType: 'PRIMARY',
-        details: {
-          label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
-        },
-        transition: this.actionOrderComplete.bind(this)
-      }
+      // {
+      //   fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+      //   toState: ORDER_ITEM_STATUS.COMPLETE,
+      //   user: 'BUYER',
+      //   actionType: 'PRIMARY',
+      //   details: {
+      //     label: TextContent.ACTION_COMPLETE_LABEL, tooltip: TextContent.ACTION_COMPLETE_TOOLTIP, colour: 'primary', icon: 'part-check'
+      //   },
+      //   transition: this.actionOrderComplete.bind(this)
+      // }
     ];
     actions[ORDER_ITEM_STATUS.SHIPPED] = [
       {
@@ -954,6 +964,7 @@ export class BidOrderService implements IBuyflowController {
         buyflow: 'UNSUPPORTED',
         stateId: 'UNKNOWN',
         order: 0,
+        isFinalState: true,
         label: TextContent.STATE_INVALID_LABEL,
         filterLabel: TextContent.STATE_INVALID_LABEL,
         stateInfo: {

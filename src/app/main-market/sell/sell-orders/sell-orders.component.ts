@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, of, merge, defer, throwError, iif } from 'rxjs';
+import { Observable, Subject, of, merge, defer, iif } from 'rxjs';
 import {
   takeUntil, tap, map, switchMap, catchError, startWith, debounceTime,
   distinctUntilChanged, filter, auditTime, concatMap, finalize
@@ -452,9 +452,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
               order.currentState.state.stateId === filterStatus :
 
               (showOnlyAttention ? order.currentState.actions.PRIMARY.length > 0 : true) &&
-              (!showComplete ?
-                (order.currentState.actions.PRIMARY.length > 0) || (order.currentState.actions.ALTERNATIVE.length > 0) : true
-              )
+              (showComplete ? true : !order.currentState.state.isFinalState)
             );
 
         if (addItem) {
