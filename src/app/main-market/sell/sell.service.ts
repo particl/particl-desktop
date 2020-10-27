@@ -553,22 +553,25 @@ export class SellService {
 
   calculateMarketTemplateStatus(templ: ProductMarketTemplate): TEMPLATE_STATUS_TYPE {
     switch (true) {
+
       case (templ.listings.count === 0) && (templ.hash.length === 0):
         return TEMPLATE_STATUS_TYPE.UNPUBLISHED;
         break;
+
       case (templ.listings.latestExpiry > Date.now()):
         return TEMPLATE_STATUS_TYPE.ACTIVE;
         break;
-      case (templ.hash.length > 0) && (templ.updated > (Date.now() - 86_400_000)):
+
+      case  (templ.hash.length > 0) &&
+            (templ.updated > (Date.now() - 86_400_000)) &&
+            ((templ.listings.count === 0) || (templ.listings.latestExpiry < Date.now())):
         return TEMPLATE_STATUS_TYPE.PENDING;
         break;
-      case (
-          (templ.listings.latestExpiry > 0) && (templ.listings.latestExpiry < Date.now())
-        ) || (
-          (templ.listings.count === 0) && (templ.hash.length > 0)
-        ):
+
+      case (templ.hash.length > 0) || (templ.listings.count > 0) || (templ.listings.latestExpiry > 0):
         return TEMPLATE_STATUS_TYPE.EXPIRED;
         break;
+
       default:
         return TEMPLATE_STATUS_TYPE.UNKNOWN;
     }
@@ -1053,6 +1056,7 @@ export class SellService {
     const listingItem = {
       id: 0,
       marketId: 0,
+      marketHash: '',
       hash: '',
       title: '',
       summary: '',
@@ -1094,10 +1098,13 @@ export class SellService {
     if (isBasicObjectType(src)) {
 
       const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
+      const identityAddress = this._store.selectSnapshot(MarketState.currentIdentity).address;
 
       listingItem.id = +src.id > 0 ? +src.id : listingItem.id;
       listingItem.hash = getValueOrDefault(src.hash, 'string', listingItem.hash);
       listingItem.timeData.created = +src.createdAt > 0 ? +src.createdAt : listingItem.timeData.created;
+
+      listingItem.seller = identityAddress;
 
       if (isBasicObjectType(src.ItemInformation)) {
         listingItem.title = getValueOrDefault(src.ItemInformation.title, 'string', listingItem.title);

@@ -14,6 +14,7 @@ interface ListingRegion {
 export interface ListingItemDetail {
   readonly id: number;
   readonly marketId: number;
+  readonly marketHash: string;
   readonly hash: string;
   readonly title: string;
   readonly summary: string;

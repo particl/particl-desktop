@@ -95,6 +95,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       };
     };
     category: string;
+    marketAddress: string;
+    seller: string;
     shipping: {
       source: string;
       selectedDestination: string;
@@ -231,6 +233,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         },
       },
       category: typeof inputCategory.title === 'string' ? inputCategory.title : TextContent.UNSET_VALUE,
+      marketAddress: getValueOrDefault(input.marketHash, 'string', ''),
+      seller: getValueOrDefault(input.seller, 'string', ''),
       shipping: {
         source: shipSource || TextContent.UNSET_VALUE,
         selectedDestination: userDestinationCountry,

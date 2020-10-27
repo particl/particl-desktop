@@ -800,7 +800,7 @@ export interface RespCartItemListItem {
 export interface RespCommentListItem {
   id: number;
   msgid: string;
-  parentCommentId: null | string;
+  parentCommentId: null | number;
   hash: string;
   sender: string;
   receiver: string;
