@@ -57,7 +57,7 @@ export class BuyCartService {
 
         defer(() => this._sharedDataService.loadMarkets(identity.id).pipe(
           map((markets: Market[]) => {
-            return markets.map(m => ({key: m.publishAddress, name: m.name}));
+            return markets.map(m => ({key: m.receiveAddress, name: m.name}));
           }),
           catchError(() => of([])),
           map((marketValues) => {
