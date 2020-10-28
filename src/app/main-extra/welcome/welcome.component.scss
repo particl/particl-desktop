@@ -23,16 +23,20 @@ body {
   }
   .content {
     margin: auto;
-    // fade-in animation (from 0 opacity)
-    animation: fade-in 0.6s 1;
-    animation-delay: 0.4s;
-    animation-fill-mode: forwards; // stay on the last "frame"
-    opacity: 0;
   }
 }
 
 .header-text {
   margin-bottom: 76px;
+  // slide-from-top animation (from 0 opacity)
+  animation: slide-from-top 0.6s 1;
+  animation-delay: 0.4s;
+  animation-fill-mode: forwards; // stay on the last "frame"
+  opacity: 0;
+  img {
+    width: 10rem;
+    margin: 0 auto 1.4rem;
+  }
   h1 {
     margin: 0 0 12px;
   }
@@ -45,6 +49,11 @@ body {
 
 .app-grid {
   display: flex;
+  // slide-from-bottom animation (from 0 opacity)
+  animation: slide-from-bottom 0.6s 1;
+  animation-delay: 0.4s;
+  animation-fill-mode: forwards; // stay on the last "frame"
+  opacity: 0;
   .app {
     @extend %tfx;
     flex: 20%;
@@ -58,7 +67,6 @@ body {
     background: var(--color-white);
     &:hover,
     &:focus {
-      //transform: scale(1.01);
       box-shadow: 0 0 0 8px hsla(var(--color-white-hsl), 0.1);
     }
     .mat-icon {
@@ -83,10 +91,20 @@ body {
   }
 }
 
-@keyframes fade-in {
+@keyframes slide-from-top {
   0% {
     opacity: 0;
     transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-from-bottom {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
