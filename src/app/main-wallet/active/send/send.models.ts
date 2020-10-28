@@ -112,7 +112,7 @@ export class SendTransaction {
 
     return [
       this.source,
-      this.getTargetType(),
+      this.targetTransfer,
       outputs,
       null,
       null,
@@ -123,8 +123,8 @@ export class SendTransaction {
     ];
   }
 
-  getTargetType(): TxType {
-    return this.transactionType === 'send' ? this.source : this.targetTransfer;
-  }
+  // private getTargetType(): TxType {
+  //   return this.transactionType === 'send' ? this.source : this.targetTransfer;
+  // }
 
 }
