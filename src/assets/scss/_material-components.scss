@@ -62,6 +62,13 @@ button,
     position: relative;
     top: -1px;
   }
+  &.large { // smaller buttons
+    min-width: auto;
+    line-height: 42px;
+    padding: 0 24px;
+    font-size: 15px;
+    font-weight: 500;
+  }
   &.small { // smaller buttons
     min-width: auto;
     line-height: 29px;

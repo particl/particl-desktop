@@ -78,4 +78,11 @@ section {
 
 .no-results { // in this case used instead of "mat-action-buttons
   margin-top: 30px;
+  .title {
+    color: var(--text) !important;
+  }
+  .help-text {
+    margin: 0 auto 12px;
+    color: var(--text-muted) !important;
+  }
 }
