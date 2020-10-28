@@ -132,7 +132,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       concatMap((idName) => iif(
         () => (typeof idName === 'string') && (idName.length > 0),
         defer(() =>
-          this._store.dispatch(new MarketActions.CreateMarketIdentity(idName)).pipe(
+          this._store.dispatch(new MarketActions.CreateIdentity(idName)).pipe(
             mapTo(true),
             catchError(() => of(false)),
             tap(success => {

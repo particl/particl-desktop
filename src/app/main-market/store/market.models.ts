@@ -1,3 +1,4 @@
+import { Market } from '../services/data/data.models';
 
 export enum StartedStatus {
   PENDING,
@@ -21,6 +22,7 @@ export interface Identity {
   address: string;
   icon: string;
   carts: CartDetail[];
+  markets: Market[];
 }
 
 
@@ -58,4 +60,34 @@ export interface MarketStateModel {
   identity: Identity;
   defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
+}
+
+
+export interface ListingsCommentsState {
+  title: string;
+  imageId: number;
+  readLast: number;
+  count: number;
+}
+
+
+export interface OrdersNotificationState {
+  readLast: number;
+  buyCount: number;
+  sellCount: number;
+}
+
+
+export interface NotificationsStateModel {
+  orders: { [marketKey: string]: OrdersNotificationState };
+  comments:  {
+    [marketKey: string]: {
+      buy: {
+        [listingHash: string]: ListingsCommentsState
+      };
+      sell: {
+        [listingHash: string]: ListingsCommentsState
+      };
+    };
+  };
 }

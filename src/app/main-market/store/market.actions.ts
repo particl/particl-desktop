@@ -1,4 +1,5 @@
 import { Identity } from './market.models';
+import { Market } from '../services/data/data.models';
 
 
 export namespace MarketActions {
@@ -25,14 +26,24 @@ export namespace MarketActions {
     constructor(public identity: Identity) {}
   }
 
-  export class CreateMarketIdentity {
-    static readonly type: string = '[Market] Create Market Identity';
+  export class CreateIdentity {
+    static readonly type: string = '[Market] Create Identity';
     constructor(public identityName: string) {}
+  }
+
+  export class AddIdentityMarket {
+    static readonly type: string = '[Market] Add Identity Market';
+    constructor(public market: Market) {}
   }
 
   export class SetSetting {
     static readonly type: string = '[Market] Save Market Setting';
     constructor(public key: string, public value: string | boolean | number) {}
+  }
+
+  export class StartNotifications {
+    static readonly type: string = '[Market] Start Notifications';
+    constructor(public marketReceiveKeys: string[]) {}
   }
 
 }

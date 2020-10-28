@@ -7,12 +7,13 @@ import { MarketState } from '../store/market.state';
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
-import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
+import { isBasicObjectType, getValueOrDefault, parseImagePath, parseMarketResponseItem } from '../shared/utils';
 import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet, IMAGE_SEND_TYPE } from '../shared/market.models';
 import { CategoryItem } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
 import * as marketConfig from '../../../../modules/market/config.js';
+import { MarketActions } from '../store/market.actions';
 
 
 enum TextContent {
@@ -234,6 +235,15 @@ export class MarketManagementService {
       last(),
       map((market: RespMarketListMarketItem) => {
         const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
+
+        const idMarket = parseMarketResponseItem(market, marketUrl);
+        if ((idMarket.id > 0) && (idMarket.identityId > 0)) {
+          if (idMarket.image.length === 0) {
+            idMarket.image = this.marketDefaultImage;
+          }
+          this._store.dispatch(new MarketActions.AddIdentityMarket(idMarket));
+        }
+
         return this.buildJoinedMarket(market, marketUrl);
       })
     );
