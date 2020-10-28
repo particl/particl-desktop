@@ -290,7 +290,6 @@
   </ng-container>
 
 
-  <!-- @TODO: add condition to show loading-placeholder when items are loading (duh :) -->
   <!-- define the template, so we can reuse it -->
   <ng-template #loadingPlaceholder>
     <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
@@ -306,20 +305,21 @@
     </div>
   </ng-template>
 
-  <!-- apply the template -->
-  <div class="loading-placeholder market orders">
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-    <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
-  </div>
-
 
   <ng-template #noOrdersVisible>
-    <div class="no-results" *ngIf="ordersList.length === 0">
+
+    <!-- show loading-placeholder when items are initially loading -->
+    <div class="loading-placeholder market orders" *ngIf="(ordersList.length === 0) && isLoading">
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    </div>
+
+    <div class="no-results" *ngIf="(ordersList.length === 0) && !isLoading">
       <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders Available">
       <p>
         You don't have any market orders yet
