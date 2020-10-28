@@ -12,6 +12,15 @@
           margin-bottom: 3px;
         }
       }
+      .help-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        @include break(l) {
+          -webkit-line-clamp: 2;
+        }
+      }
     }
     .status {
       span.total {
