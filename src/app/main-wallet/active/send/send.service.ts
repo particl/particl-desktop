@@ -64,13 +64,18 @@ export class SendService {
         })
       );
     } else {
+
       source = this._addressService.validateAddress(tx.targetAddress).pipe(
         concatMap((resp: ValidatedAddress) => {
           if (!resp.isvalid) {
             return throwError('invalid targetAddress');
           }
-          if ((tx.transactionType === 'send') && (tx.source === 'part') && (resp.isstealthaddress === true)) {
-            tx.targetTransfer = 'anon';
+          if (tx.transactionType === 'send') {
+            if (resp.isstealthaddress === true) {
+              tx.targetTransfer = 'anon';
+            } else {
+              tx.targetTransfer = tx.source;
+            }
           }
           return of(tx);
         })
