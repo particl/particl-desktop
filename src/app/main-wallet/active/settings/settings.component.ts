@@ -355,7 +355,7 @@ export class WalletSettingsComponent implements OnInit {
       tags: [],
       restartRequired: false,
       currentValue: walletSettings.anon_utxo_split,
-      limits: {min: 1},
+      limits: {min: 1, max: 20},
       validate: this.actionValidateSplitUTXO
     } as Setting);
 
@@ -400,7 +400,7 @@ export class WalletSettingsComponent implements OnInit {
   }
 
   private actionValidateSplitUTXO(newValue: number, setting: Setting): string {
-    if ((+newValue > 0) && (+newValue <= 50)) {
+    if ((+newValue > 0) && (+newValue <= 20) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
       return '';
     }
     return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', '1').replace('${max}', '20');
