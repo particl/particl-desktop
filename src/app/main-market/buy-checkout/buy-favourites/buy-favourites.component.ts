@@ -70,10 +70,6 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
     );
 
     const init$ = this._sharedService.loadMarkets().pipe(
-      finalize(() => {
-        this.isLoadingItems = false;
-        this.updateDisplayControl.setValue(null);
-      }),
       tap((marketsList) => {
         marketsList.forEach(market => {
           if (+market.identityId > 0) {
@@ -85,6 +81,10 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
       catchError(() => {
         this._snackbar.open(TextContent.FAILED_LOAD);
         return of(null);
+      }),
+      tap(() => {
+        this.isLoadingItems = false;
+        this.updateDisplayControl.setValue(null);
       })
     );
 
