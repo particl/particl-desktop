@@ -22,7 +22,7 @@ import { WalletDetailActions } from 'app/main/store/main.actions';
 
 
 enum SpecificTextContent {
-  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${num}'
+  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${min}, with a max of ${max}'
 }
 
 
@@ -348,7 +348,7 @@ export class WalletSettingsComponent implements OnInit {
     walletActions.settings.push({
       id: 'anon_utxo_split',
       title: 'Split UTXOs when sending Private TXs',
-      description: 'Creates a number of UTXOs when sending funds from this wallet to a stealth (private) address – higher the number, the greater anonymity, coin usage and fees (default: 3)',
+      description: 'Creates a number of UTXOs when sending funds from this wallet to a stealth (private) address – higher the number, the greater anonymity, coin usage and fees (default: 3, max: 20)',
       isDisabled: false,
       type: SettingType.NUMBER,
       errorMsg: '',
@@ -400,10 +400,10 @@ export class WalletSettingsComponent implements OnInit {
   }
 
   private actionValidateSplitUTXO(newValue: number, setting: Setting): string {
-    if (+newValue > 0) {
+    if ((+newValue > 0) && (+newValue <= 50)) {
       return '';
     }
-    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${num}', '1');
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', '1').replace('${max}', '20');
   }
 
 }
