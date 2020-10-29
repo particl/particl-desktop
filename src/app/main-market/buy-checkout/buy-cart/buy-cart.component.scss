@@ -20,13 +20,13 @@
     flex: 1 1 100%;
   }
   & > .price {
-    flex: 0 0 120px;
+    flex: 0 0 140px;
     text-align: right;
     @include break(l) {
-      flex: 0 0 140px;
+      flex: 0 0 170px;
     }
     @include break(xl) {
-      flex: 0 0 155px;
+      flex: 0 0 200px;
     }
   }
   & > .qty {
@@ -40,25 +40,27 @@
     }
   }
   & > .shipping {
-    flex: 0 0 120px;
+    flex: 0 0 140px;
     text-align: right;
     @include break(l) {
-      flex: 0 0 135px;
+      flex: 0 0 170px;
     }
     @include break(xl) {
-      flex: 0 0 150px;
+      flex: 0 0 200px;
     }
   }
+  /*
   & > .total {
-    flex: 0 0 130px;
+    flex: 0 0 140px;
     text-align: right;
     @include break(l) {
-      flex: 0 0 140px;
+      flex: 0 0 170px;
     }
     @include break(xl) {
-      flex: 0 0 155px;
+      flex: 0 0 200px;
     }
   }
+  */
   & > .remove {
     flex: 0 0 60px;
     @include break(l) {
@@ -140,9 +142,10 @@
       .market {
         display: inline-block;
         border: 1px solid hsla(var(--text-muted-hsl), 0.8);
-        padding: 2px 6px;
+        padding: 1px 6px;
         border-radius: var(--radius);
         margin-right: 10px;
+        font-size: 0.85em;
       }
     }
     .info { // warning/error messages
@@ -174,15 +177,12 @@
   .amount { // all the prices (item, shipping, total)
     @extend %enable-select;
     display: block;
-    font-family: var(--font-mono);
+    //font-family: var(--font-mono);
     &.part {
       color: var(--text);
     }
     @include break(l) {
-      font-size: 14px;
-    }
-    @include break(xl) {
-      font-size: 14.5px;
+      font-size: 15px;
     }
   }
   .total {
@@ -190,6 +190,9 @@
   }
   .remove {
     text-align: center;
+    .mat-icon {
+      top: 0;
+    }
   }
 } // << .cart-item
 
