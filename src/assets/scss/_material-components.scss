@@ -1094,5 +1094,8 @@ lightbox#lightbox-lightbox {
   border-radius: 0;
   gallery {
     background: hsla(var(--bg-sidebar-darker-hsl), 0.95);
+    .g-counter {
+      border-radius: var(--radius);
+    }
   }
 }

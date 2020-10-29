@@ -9,23 +9,25 @@
     <div class="product-gallery">
       <div class="gallery-carousel">
         <img *ngIf="details.images.hasNoImages" [src]="details.images.images[0].data.src">
-
+        <!-- https://github.com/MurhafSousli/ngx-gallery/wiki/Gallery-API -->
         <gallery
           *ngIf="!details.images.hasNoImages"
           gallerize
           [gestures]="false"
 
-          [style.height.px]="380"
-          [style.width.px]="450"
+          [style.height.px]="350"
+          [style.width.px]="430"
           [items]="details.images.images"
 
           slidingDirection="vertical"
-          [counter]="true"
-          counterPosition="bottom"
+          [autoPlay]="true"
+          [playerInterval]="10000"
+          [counter]="false"
+          [nav]="true"
           [thumb]="details.images.images.length > 1"
           thumbPosition="right"
-          [thumbWidth]="80"
-          [thumbHeight]="80">
+          [thumbWidth]="40"
+          [thumbHeight]="40">
         </gallery>
       </div>
     </div><!-- .product-gallery -->
