@@ -86,7 +86,7 @@
                 <span class="qty">&times;1</span>
               </div>
               <div class="hash id">{{orderItem.orderId}}</div>
-              <div class="hash" [style.backgroundColor]="'#' + orderItem.listing.hashPrefix">{{orderItem.listing.hashPrefix}}</div>
+              <div class="hash" [style.backgroundColor]="'#' + orderItem.orderHashShort">{{orderItem.orderHashShort}}</div>
               <div class="origin-market">
                 {{ filterOptionsMarkets[orderItem.marketKey] || '' }}
               </div>
