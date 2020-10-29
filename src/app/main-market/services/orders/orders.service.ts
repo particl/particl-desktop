@@ -343,6 +343,7 @@ export class BidOrderService implements IBuyflowController {
       orderId: 0,
       orderItemId: 0,
       orderHash: '',
+      orderHashShort: '',
       baseBidId: 0,
       marketKey: '',
       created: 0,
@@ -362,6 +363,7 @@ export class BidOrderService implements IBuyflowController {
     const orderItem = src.OrderItems[0];
     newOrder.orderItemId = +orderItem.id > 0 ? +orderItem.id : newOrder.orderItemId;
     newOrder.orderHash = getValueOrDefault(src.hash, 'string', newOrder.orderHash);
+    newOrder.orderHashShort = newOrder.orderHash.slice(0, 6);
     newOrder.baseBidId = +orderItem.Bid.id > 0 ? +orderItem.Bid.id : newOrder.orderItemId;
     newOrder.created = +src.createdAt > 0 ? +src.createdAt : newOrder.created;
     newOrder.updated = +src.updatedAt > 0 ? +src.updatedAt : newOrder.updated;
@@ -396,7 +398,6 @@ export class BidOrderService implements IBuyflowController {
       image: this.defaultMarketImage,
       id: 0,
       hash: '',
-      hashPrefix: ''
     };
 
     newOrder.pricing = {
@@ -511,7 +512,6 @@ export class BidOrderService implements IBuyflowController {
     if (isBasicObjectType(listingItem.ItemInformation)) {
       newOrder.listing.title = getValueOrDefault(listingItem.ItemInformation.title, 'string', newOrder.listing.title);
       newOrder.listing.hash = getValueOrDefault(listingItem.hash, 'string', newOrder.listing.hash);
-      newOrder.listing.hashPrefix = newOrder.listing.hash.substr(0, 6);
       newOrder.listing.id = +listingItem.id > 0 ? +listingItem.id : newOrder.listing.id;
 
       if (Array.isArray(listingItem.ItemInformation.Images) && listingItem.ItemInformation.Images.length) {

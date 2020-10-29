@@ -102,14 +102,17 @@
   <!-- Note: mat-action-buttons removed and all this moved to the bottom, so users have to scroll and check everything before submitting -->
   <div class="no-results --smaller --no-bg">
     <img class="illustration" src="./assets/app-market/illustrations/place-bid.svg" alt="Confirm your Order">
-    <p>
+    <p class="title">
       Looks good?
     </p>
     <p class="help-text">
-      After confirming the placement of this order, it will be sent to the Seller(s) &ndash; they will accept or reject your bids. The total amount will be reserved in your wallet. Once the seller(s) accept and escrow is established will the funds be spent from your wallet.
+      After confirming the placement of this order, it will be sent to the Seller(s) &ndash; they will accept or reject your bids. The total amount will be reserved in your wallet.
+    </p>
+    <p class="help-text">
+      Once the seller(s) accept and escrow is established will the funds be spent from your wallet.
     </p>
     <p>
-      <button mat-raised-button color="primary" [disabled]="errors.invalidData || errors.insufficientFunds" (click)="confirmCheckout()">
+      <button mat-raised-button class="large" color="primary" [disabled]="errors.invalidData || errors.insufficientFunds" (click)="confirmCheckout()">
         <mat-icon fontIcon="part-check"></mat-icon>
         Confirm Order &amp; Submit
       </button>

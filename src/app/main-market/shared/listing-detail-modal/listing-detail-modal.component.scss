@@ -46,6 +46,7 @@ button.modal-close {
       position: sticky;
       top: 0;
       background: var(--color-white);
+      box-shadow: 0 5px 6px -2px hsla(var(--bg-black-hsl), 0.15);
       padding-top: 6px;
       z-index: 20;
       .mat-tab-label {
@@ -68,7 +69,7 @@ button.modal-close {
 // Container for upper part (gallery, name, meta)
 .product-summary {
   margin: 0 -24px;
-  padding: 14px 24px 6px;
+  padding: 24px var(--paddingH) 16px;
   background: var(--color-white);
 
   // Featured photo/gallery
@@ -94,15 +95,17 @@ button.modal-close {
 .product-info {
   flex: 0 1 100%;
   line-height: 1.7;
-  margin-right: -24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   h1 {
     font-size: 22px;
     line-height: 1.4;
-    margin-bottom: 4px;
+    margin: 0 0 6px;
   }
   .short-desc {
     color: var(--text-muted);
-    font-size: 14px;
+    font-size: 0.9rem;
     margin: 0;
   }
   .expires-soon {
@@ -130,9 +133,10 @@ button.modal-close {
   // Price info
   .pricing {
     background: var(--bg);
-    border-radius: var(--radius);
-    margin: 24px var(--paddingH) 24px 0;
-    padding: 18px 24px;
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+    margin: 24px calc(-1 * var(--paddingH)) 24px 0;
+    padding: 18px 28px;
     display: flex;
     .item {
       margin-right: 24px;
@@ -150,12 +154,12 @@ button.modal-close {
       }
       .value {
         .big {
-          font-size: 18px;
+          font-size: 15px;
           line-height: 1.2;
           margin: 0;
         }
         .currency {
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 400;
           margin-left: 5px;
         }
@@ -180,6 +184,7 @@ button.modal-close {
       color: var(--text-muted);
       font-weight: 500;
       padding: 3px 24px 0 0;
+      width: 140px;
     }
     td {
       padding: 3px 0 0;

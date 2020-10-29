@@ -86,7 +86,7 @@
                 <span class="qty">&times;1</span>
               </div>
               <div class="hash id">{{orderItem.orderId}}</div>
-              <div class="hash" [style.backgroundColor]="'#' + orderItem.listing.hashPrefix">{{orderItem.listing.hashPrefix}}</div>
+              <div class="hash" [style.backgroundColor]="'#' + orderItem.orderHashShort">{{orderItem.orderHashShort}}</div>
               <div class="origin-market">
                 {{ filterOptionsMarkets[orderItem.marketKey] || '' }}
               </div>
@@ -289,8 +289,37 @@
     </ng-container>
   </ng-container>
 
+
+  <!-- define the template, so we can reuse it -->
+  <ng-template #loadingPlaceholder>
+    <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="photo placeholder --lighter"></div>
+      <div fxFlex="1 0 175px">
+        <div class="name placeholder"></div>
+        <div class="meta placeholder"></div>
+      </div>
+      <div fxFlex="1 0 155px" fxLayout fxLayoutAlign="flex-end center">
+        <span class="status placeholder --lighter"></span>
+        <span class="arrow placeholder --lighter"></span>
+      </div>
+    </div>
+  </ng-template>
+
+
   <ng-template #noOrdersVisible>
-    <div class="no-results" *ngIf="ordersList.length === 0">
+
+    <!-- show loading-placeholder when items are initially loading -->
+    <div class="loading-placeholder market orders" *ngIf="(ordersList.length === 0) && isLoading">
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    </div>
+
+    <div class="no-results" *ngIf="(ordersList.length === 0) && !isLoading">
       <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders Available">
       <p>
         You don't have any market Orders yet
@@ -301,7 +330,7 @@
     </div>
 
     <!-- when searching/filtering: -->
-    <div class="no-results" *ngIf="ordersList.length > 0">
+    <div class="no-results" *ngIf="(ordersList.length > 0) && !isLoading">
       <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders found">
       <p>
         No Orders found

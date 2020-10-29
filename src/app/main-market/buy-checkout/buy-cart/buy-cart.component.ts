@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { Subject, of, forkJoin, merge, Observable, combineLatest, iif, defer, timer } from 'rxjs';
 import { map, startWith, catchError, takeUntil, tap, distinctUntilChanged, finalize, concatMap, mapTo } from 'rxjs/operators';
+
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 
@@ -94,6 +96,8 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   private hasCartErrors: FormControl  = new FormControl(true);
   private isProcessing: boolean = false;  // internal (not necessarily visible) check to limit concurrent MP activity
 
+  private readonly ROUTE_TO_PURCHASED_ORDERS: string = '/main/market/buy/';
+
   @ViewChild(ShippingProfileAddressFormComponent, {static: false}) private addressForm: ShippingProfileAddressFormComponent;
 
   constructor(
@@ -101,7 +105,9 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
     private _unlocker: WalletEncryptionService,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _router: Router,
+    private _route: ActivatedRoute
   ) { }
 
 
@@ -381,10 +387,11 @@ export class BuyCartComponent implements OnInit, OnDestroy {
           if (
             resp &&
             Array.isArray(resp.cartItems) &&
-            (resp.cartItems.length  === 0) &&
+            (resp.cartItems.length === 0) &&
             isCartStateGood
           ) {
             this._snackbar.open(TextContent.BID_SUCCESSFUL);
+            this._router.navigate([this.ROUTE_TO_PURCHASED_ORDERS], {queryParams: {selectedBuyTab: 'orders'}});
           }
         } catch (e) {
           // eh?? what happened? -> resp changed.

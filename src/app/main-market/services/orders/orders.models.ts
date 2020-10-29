@@ -17,6 +17,7 @@ export interface OrderItem {
   orderId: number;
   orderItemId: number;
   orderHash: string;
+  orderHashShort: string;
   baseBidId: number;
   marketKey: string;
   created: number;
@@ -26,7 +27,6 @@ export interface OrderItem {
     image: string;
     id: number;
     hash: string;
-    hashPrefix: string;
   };
   pricing?: {
     basePrice: PriceItem;

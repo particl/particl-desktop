@@ -128,7 +128,7 @@
       font-weight: 500;
       color: var(--text);
       white-space: nowrap;
-      display: inline-block;
+      //display: inline-block;
       @include break(xl) {
         font-size: 16.5px;
       }
