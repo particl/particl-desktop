@@ -1,8 +1,15 @@
 <div class="console-modal">
+  <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+    <mat-icon fontIcon="part-cross"></mat-icon>
+  </button>
 
   <div mat-dialog-container>
     <mat-tab-group>
-      <mat-tab label="Core console">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-console-window"></mat-icon>
+          Core console
+        </ng-template>
       </mat-tab>
     </mat-tab-group>
   </div>
@@ -14,10 +21,11 @@
         Welcome to the Particl Core RPC console (for interacting with wallet).<br>
         Type <code>help</code> for an overview of available commands.
       </ng-container>
-      <ng-container page-help>
-        <strong>Warning:</strong> Scammers have been active, telling users to type commands here, stealing their wallet contents.<br>Do not use this console without fully understanding the ramification of a command.
-      </ng-container>
     </app-page-intro>
+
+    <p class="alert --boxed --warning">
+      <span>Scammers have been active, telling users to type commands here, stealing their wallet contents.<br>Do not use this console without fully understanding the ramification of a command.</span>
+    </p>
 
     <div class="content-modal" [ngClass]="{'input': list.type === 1}" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" *ngFor="let list of commandList">
       <div fxFlex="1 1 100%" class="command">
