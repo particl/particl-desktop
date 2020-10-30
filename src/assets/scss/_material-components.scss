@@ -234,7 +234,9 @@ mat-tab-group.mat-tab-group {
   }
   .notification { // notification tags in tabs - e.g. Orders [3]
     @extend %notification;
-    background-color: var(--bg-muted);
+    background-color: hsla(var(--text-muted-hsl), 0.5);
+    margin-left: 0.4rem;
+    color: var(--color-white);
   }
 }
 

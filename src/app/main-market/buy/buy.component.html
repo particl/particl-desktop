@@ -4,6 +4,8 @@
       <ng-template mat-tab-label>
         <mat-icon [fontIcon]="tab.icon"></mat-icon>
         {{ tab.title }}
+        <!-- @TODO: show only Orders requiring attention and unanswered Questions -->
+        <span class="notification">3</span>
       </ng-template>
     </mat-tab>
   </mat-tab-group>
