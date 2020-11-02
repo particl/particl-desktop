@@ -538,6 +538,19 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: true,
       } as MarketSetting);
 
+      advancedDetails.settings.push({
+        id: 'profile.usePaidMsgForImages',
+        title: 'Use Paid SMSG for publishing images',
+        description: 'Using paid SMSG (default) allows for larger images to be used but incurs a small fee per image, whereas free messages have no fees but have a greatly reduced image size.',
+        isDisabled: false,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: marketSettings.usePaidMsgForImages,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true,
+      } as MarketSetting);
+
       groups.push(advancedDetails);
 
 

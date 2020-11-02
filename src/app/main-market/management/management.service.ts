@@ -241,8 +241,10 @@ export class MarketManagementService {
 
 
   estimateMarketPromotionFee(marketId: number, durationDays: number): Observable<number> {
-    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
-    const postParams = ['post', marketId, durationDays, true, null, null];
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    const usingAnonFees = marketSettings.useAnonBalanceForFees;
+    const usePaidImageMsg = marketSettings.usePaidMsgForImages;
+    const postParams = ['post', marketId, durationDays, true, null, null, usePaidImageMsg];
 
     postParams.push(usingAnonFees ? 'anon' : 'part');
 
@@ -258,8 +260,10 @@ export class MarketManagementService {
 
 
   promoteMarket(marketId: number, durationDays: number): Observable<boolean> {
-    const usingAnonFees = this._store.selectSnapshot(MarketState.settings).useAnonBalanceForFees;
-    const postParams = ['post', marketId, durationDays, false, null, null];
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    const usingAnonFees = marketSettings.useAnonBalanceForFees;
+    const usePaidImageMsg = marketSettings.usePaidMsgForImages;
+    const postParams = ['post', marketId, durationDays, false, null, null, usePaidImageMsg];
 
     postParams.push(usingAnonFees ? 'anon' : 'part');
 

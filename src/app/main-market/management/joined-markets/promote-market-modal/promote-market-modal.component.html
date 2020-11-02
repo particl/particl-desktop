@@ -30,22 +30,29 @@
   <h3 class="item-subtitle">Days to promote</h3>
 
   <mat-card class="promo-duration item-card no-padding" fxLayout>
-    <mat-form-field class="promo-duration --plain --larger full-width" appearance="fill" fxFlex="40">
-      <mat-icon matPrefix fontIcon="part-date"></mat-icon>
-      <mat-select [formControl]="selectedDurationControl" placeholder="Select duration">
-        <mat-option class="--larger" *ngFor="let option of optionsPublishDurations" [value]="option.value">{{option.title}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <table class="full-width" fxFlex="60">
-      <tr>
-        <th>Promo duration</th>
-        <td>{{ selectedDurationControl.value }} days</td>
-      </tr>
-      <tr>
-        <th>Total promo fee</th>
-        <td>{{ selectedFeeControl.value }} PART</td>
-      </tr>
-    </table>
+    <div class="alert --boxed --warning full-width" *ngIf="errorMsg.length > 0; else durationSelector">
+      <span>
+        {{errorMsg}}
+      </span>
+    </div>
+    <ng-template #durationSelector>
+      <mat-form-field class="promo-duration --plain --larger full-width" appearance="fill" fxFlex="40">
+        <mat-icon matPrefix fontIcon="part-date"></mat-icon>
+        <mat-select [formControl]="selectedDurationControl" placeholder="Select duration">
+          <mat-option class="--larger" *ngFor="let option of optionsPublishDurations" [value]="option.value">{{option.title}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <table class="full-width" fxFlex="60">
+        <tr>
+          <th>Promo duration</th>
+          <td>{{ selectedDurationControl.value }} days</td>
+        </tr>
+        <tr>
+          <th>Total promo fee</th>
+          <td>{{ selectedFeeControl.value }} PART</td>
+        </tr>
+      </table>
+    </ng-template>
   </mat-card>
 
 </mat-dialog-content>
