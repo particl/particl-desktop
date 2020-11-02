@@ -421,7 +421,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
     }
     return this._sharedService.loadMarkets(this.currentIdentity.id).pipe(
       map(markets => {
-        return markets.map(m => ({key: m.publishAddress, name: m.name}));
+        return markets.map(m => ({key: m.receiveAddress, name: m.name}));
       }),
       catchError(() => of([]))
     );
