@@ -12,29 +12,6 @@
 
 // ------ ALERTS/NOTIFICATIONS ------ //
 
-/*
-.notification {
-  background: hsla(var(--color-info-hsl), 0.03);
-  box-shadow: 0 2px 20px -16px inset;
-  border-bottom: 1px solid var(--bg-muted);
-  padding: 8px calc(var(--paddingH) - 16px) 8px var(--paddingH);
-  font-size: 13px;
-  .text {
-    font-weight: 500;
-    margin: 0;
-    padding-left: 24px;
-    .mat-icon {
-      position: absolute;
-      left: var(--paddingH);
-      color: var(--color-info);
-    }
-  }
-  .button {
-    font-size: inherit;
-  }
-}
-*/
-
 .alpha-warning {
   border-bottom: 1px dashed var(--bg-muted);
   .mat-button {

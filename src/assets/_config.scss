@@ -226,15 +226,13 @@ $break-xhd: 2200px;
 
 %notification { // "filled" notifications (in contrast to outlined "tags") - e.g. in tabs: Orders [3]
   @extend %tfx;
-  font-size: 80%;
-  color: var(--color-white);
-  font-weight: 600;
-  line-height: 1.6;
-  background-color: var(--color-primary);
-  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: hsla(var(--bg-muted-hsl), 0.4);
+  border-radius: var(--radius);
   display: inline-block;
-  margin-left: 8px;
-  padding: 0 11px;
+  padding: 1px 5px;
 }
 
 %mat-card {
