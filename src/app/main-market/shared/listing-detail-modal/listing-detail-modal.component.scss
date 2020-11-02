@@ -334,6 +334,9 @@ mat-dialog-actions {
     }
     .voted {
       color: var(--text-muted);
+      p {
+        margin: 0;
+      }
     }
     .voted-icon {
       margin-right: 4px;

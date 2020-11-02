@@ -9477,9 +9477,9 @@ particl-market-import-core@^0.0.11:
     lodash "^4.17.15"
     rxjs "^6.5.2"
 
-particl-marketplace@./particl-marketplace-0.3.0-44.tgz:
-  version "0.3.0-44"
-  resolved "./particl-marketplace-0.3.0-44.tgz#9e757f9475769dbc4474e5f2e568eaa4e9e32687"
+particl-marketplace@./particl-marketplace-0.3.0-45.tgz:
+  version "0.3.0-45"
+  resolved "./particl-marketplace-0.3.0-45.tgz#93876b74cfd9dfb064980d7592d1e7b407e862db"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"

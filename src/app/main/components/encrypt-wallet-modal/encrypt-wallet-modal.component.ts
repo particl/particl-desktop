@@ -8,7 +8,7 @@ import { WalletInfoService } from '../../services/wallet-info/wallet-info.servic
 enum TextContent {
   PASSWORD_ERROR = 'The passwords do not match!',
   ENCRYPT_FAILED = 'Wallet failed to encrypt properly!',
-  ENCRYPT_SUCCESS = 'Wallet successfully encrypted: Please createa a new wallet backup'
+  ENCRYPT_SUCCESS = 'Wallet successfully encrypted: Please create a new wallet backup'
 }
 
 

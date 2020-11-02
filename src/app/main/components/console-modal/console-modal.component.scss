@@ -5,14 +5,16 @@
   width: auto;
   margin: -14px -24px -24px;
   padding: 0;
-  app-page-intro {
-    padding: var(--paddingV) var(--paddingH) 0;
-    display: block;
+  .mat-tab-group {
+    margin-top: -18px;
+  }
+  button.modal-close {
+    top: 6px;
   }
 
   // command input & button
   .command-actions {
-    padding: 1px 16px 1px 4px;
+    padding: 0 16px 1px 0;
     border-top: 1px solid var(--bg-muted);
     .command-input {
       font-family: var(--font-mono) !important;
@@ -25,17 +27,20 @@
 }
 
 .console-modal-form {
-  height: 70vh;
-  width: 950px;
   font-family: var(--font);
   overflow-y: scroll;
   background: var(--bg);
+  padding: var(--padding);
+  width: 800px;
+  height: 60vh;
+  .alert {
+    margin: -14px 0 var(--paddingV);
+  }
 }
 
 .content-modal {
   @extend %enable-select;
   max-height: none !important;
-  margin: 0 var(--paddingH) 32px;
   padding: 16px 20px;
   background: var(--color-white);
   border-bottom: 1px solid var(--bg-muted);

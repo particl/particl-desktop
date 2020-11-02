@@ -400,6 +400,9 @@ body {
       .mat-icon { // highlight active menu item
         color: var(--color-primary) !important;
       }
+      .notification {
+        background: var(--color-primary) !important;
+      }
     }
     &.disabled { // disabled items (eg. when Market is loading)
       opacity: 0.4;
@@ -417,16 +420,20 @@ body {
     }
     .notification { // order notifications
       @extend %notification;
+      background: hsla(var(--bg-hsl), 0.3);
+      color: var(--text);
       position: absolute;
+      top: 12px;
       right: 20px;
-      top: 10px;
-      opacity: 0.6;
     }
     &:hover,
     &:focus {
       background: hsla(var(--bg-sidebar-darker-hsl), 0.5);
       .mat-icon {
         color: hsla(var(--bg-hsl), 0.35);
+      }
+      .notification {
+        background: hsla(var(--bg-hsl), 0.5);
       }
     }
   }

@@ -13,10 +13,10 @@
       <div class="cart-header --cart-layout">
         <div class="photo">Preview</div>
         <div class="title">Title</div>
-        <div class="price">Price</div>
         <div class="qty">Qty</div>
+        <div class="price">Price</div>
         <div class="shipping">Shipping</div>
-        <div class="total">Subtotal</div>
+        <!--div class="total">Subtotal</div-->
         <div class="remove"></div>
       </div>
 
@@ -53,20 +53,20 @@
             </div>
           </ng-template>
         </div>
-        <div class="price">
-          <span class="amount part">P {{cartItem.displayedPrices.item.whole}}<small>{{cartItem.displayedPrices.item.sep}}{{cartItem.displayedPrices.item.fraction}}</small></span>
-          <!-- <span class="amount fiat">$ 1<small>.6413</small></span> -->
-        </div>
         <!-- Quantity: keep showing "1×" until we implement qty management -->
         <div class="qty">1 &times;</div>
+        <div class="price">
+          <span class="amount part">{{cartItem.displayedPrices.item.whole}}<small>{{cartItem.displayedPrices.item.sep}}{{cartItem.displayedPrices.item.fraction}}</small> PART</span>
+          <!-- <span class="amount fiat">$ 1<small>.6413</small></span> -->
+        </div>
         <div class="shipping">
-          <span *ngIf="cartItem.displayedPrices.shipping.whole !== ''; else noPrice" class="amount part">P {{cartItem.displayedPrices.shipping.whole}}<small>{{cartItem.displayedPrices.shipping.sep}}{{cartItem.displayedPrices.shipping.fraction}}</small></span>
+          <span *ngIf="cartItem.displayedPrices.shipping.whole !== ''; else noPrice" class="amount part">{{cartItem.displayedPrices.shipping.whole}}<small>{{cartItem.displayedPrices.shipping.sep}}{{cartItem.displayedPrices.shipping.fraction}}</small> PART</span>
           <!-- <span class="amount fiat">$ 0<small>.1413</small></span> -->
         </div>
-        <div class="total">
-          <span *ngIf="cartItem.displayedPrices.subtotal.whole !== ''; else noPrice" class="amount part">P {{cartItem.displayedPrices.subtotal.whole}}<small>{{cartItem.displayedPrices.subtotal.sep}}{{cartItem.displayedPrices.subtotal.fraction}}</small></span>
-          <!-- <span class="amount fiat">$ 2<small>.6413</small></span> -->
-        </div>
+        <!--div class="total">
+          <span *ngIf="cartItem.displayedPrices.subtotal.whole !== ''; else noPrice" class="amount part">{{cartItem.displayedPrices.subtotal.whole}}<small>{{cartItem.displayedPrices.subtotal.sep}}{{cartItem.displayedPrices.subtotal.fraction}}</small> PART</span>
+          <span class="amount fiat">$ 2<small>.6413</small></span>
+        </div-->
         <div class="remove">
           <button mat-button class="tiny icon-only" color="warn" matTooltip="Remove from Cart" (click)="removeCartItem(cartItem.id)">
             <mat-icon fontIcon="part-circle-remove"></mat-icon>
