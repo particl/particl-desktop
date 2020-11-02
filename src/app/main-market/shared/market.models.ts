@@ -454,8 +454,12 @@ export interface RespCategoryAdd {
 
 export interface RespTemplateSize {
   fits: boolean;
-  messageData: number;
+  identifier?: number;
+  maxSize: string;
+  messageVersion: IMAGE_SEND_TYPE;
+  size: number;
   spaceLeft: number;
+  childMessageSizes: RespTemplateSize[];
 }
 
 

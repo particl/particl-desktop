@@ -123,9 +123,21 @@ export class SellService {
 
 
   calculateTemplateFits(templateId: number): Observable<boolean> {
-    return this._rpc.call('template', ['size', templateId]).pipe(
+    const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
+
+    return this._rpc.call('template', ['size', templateId, usePaidImageMsg]).pipe(
       map((resp: RespTemplateSize) => {
-        return isBasicObjectType(resp) && !!resp.fits;
+        let dataFits = false;
+        if (isBasicObjectType(resp)) {
+          dataFits = !!resp.fits;
+
+          if (dataFits && Array.isArray(resp.childMessageSizes) && (resp.childMessageSizes.length > 0)) {
+            dataFits = resp.childMessageSizes.filter(
+              msize => isBasicObjectType(msize) && msize.fits
+            ).length === resp.childMessageSizes.length;
+          }
+        }
+        return dataFits;
       }),
       catchError(() => of(true))  /// unrelated issues, such as not having a category set, can result in errors being thrown
     );

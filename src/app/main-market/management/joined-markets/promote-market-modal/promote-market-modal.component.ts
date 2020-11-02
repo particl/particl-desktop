@@ -16,6 +16,12 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { GenericModalInfo } from '../joined-markets.models';
 
 
+enum TextContent {
+  ERROR_IMAGE_SIZE = 'Market image exceeds the allowed publishing size. Please change to using a paid SMSG for posting images.',
+  ERROR_ESTIMATING_FEE = 'Something went wrong estimating the fee'
+}
+
+
 function SufficientBalanceValidator(): ValidatorFn {
   return (control: FormGroup): ValidationErrors | null => {
     const fee = control.get('selectedFee');
@@ -34,6 +40,8 @@ function SufficientBalanceValidator(): ValidatorFn {
   styleUrls: ['./promote-market-modal.component.scss']
 })
 export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestroy {
+
+  errorMsg: string = '';
 
   currentIdentity: { name: string; image: string; } = {
     name: '',
@@ -109,7 +117,17 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
               }
             }
           }),
-          catchError(() => of(0))
+          catchError((err) => {
+            if (typeof err === 'string') {
+              if (err.includes('MPA_MARKET_IMAGE_ADD size')) {
+                this.errorMsg = TextContent.ERROR_IMAGE_SIZE;
+              }
+            }
+            if (!this.errorMsg) {
+              this.errorMsg = TextContent.ERROR_ESTIMATING_FEE;
+            }
+            return of(0);
+          })
         );
       }
     }
