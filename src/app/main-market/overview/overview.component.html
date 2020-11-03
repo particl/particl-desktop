@@ -3,7 +3,7 @@
   <mat-card class="balances-overview">
 
     <div class="item active-identity">
-      <div class="value">{{(currentIdentity | async).displayName}}</div>
+      <div class="value">{{ identityDisplayName }}</div>
       <div class="key">Active Market identity</div>
     </div>
 
@@ -35,9 +35,8 @@
 
     <div class="divider"></div>
 
-    <!-- FIXME @dev: implement this one still, pretty please :) -->
     <div class="item">
-      <div class="value">15<small>.5613</small></div>
+      <div class="value">{{balances.escrowLocked.whole}}<small>{{balances.escrowLocked.sep}}{{balances.escrowLocked.decimal}}</small></div>
       <div class="key">Locked in Escrows</div>
     </div>
 

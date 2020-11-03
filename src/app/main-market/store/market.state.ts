@@ -38,6 +38,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     usePaidMsgForImages: true,
     startupWaitTimeoutSeconds: 60,
     defaultListingCommentPageCount: 20,
+    daysToNotifyListingExpired: 7
   }
 };
 
@@ -368,6 +369,38 @@ export class MarketState {
     if (stateId.id === market.identityId) {
       const updatedId = JSON.parse(JSON.stringify(stateId));
       updatedId.markets.push(market);
+      ctx.patchState({identity: updatedId});
+    }
+  }
+
+
+  @Action(MarketActions.RemoveIdentityMarket)
+  RemoveMarket(ctx: StateContext<MarketStateModel>, { identityId, marketId }: MarketActions.RemoveIdentityMarket) {
+    if (!(+identityId > 0) || !(+marketId > 0)) {
+      return;
+    }
+
+    const stateIds = ctx.getState().identities;
+    const foundIdx = stateIds.findIndex(id => id.id === identityId);
+    if (foundIdx > -1) {
+      const updatedId: Identity = JSON.parse(JSON.stringify(stateIds[foundIdx]));
+      const mIdx = updatedId.markets.findIndex(m => m.id === marketId);
+      if (mIdx >= 0) {
+        updatedId.markets.splice(mIdx, 1);
+      }
+
+      ctx.setState(patch({
+        identities: updateItem<Identity>(id => id.id === identityId, updatedId)
+      }));
+    }
+
+    const stateId = ctx.getState().identity;
+    if (stateId.id === identityId) {
+      const updatedId = JSON.parse(JSON.stringify(stateId));
+      const mIdx = updatedId.markets.findIndex(m => m.id === marketId);
+      if (mIdx >= 0) {
+        updatedId.markets.splice(mIdx, 1);
+      }
       ctx.patchState({identity: updatedId});
     }
   }

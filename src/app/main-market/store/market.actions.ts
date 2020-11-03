@@ -36,14 +36,18 @@ export namespace MarketActions {
     constructor(public market: Market) {}
   }
 
+  export class RemoveIdentityMarket {
+    static readonly type: string = '[Market] Remove Identity Market';
+    constructor(public identityId: number, public marketId: number) {}
+  }
+
   export class SetSetting {
     static readonly type: string = '[Market] Save Market Setting';
     constructor(public key: string, public value: string | boolean | number) {}
   }
 
-  export class StartNotifications {
-    static readonly type: string = '[Market] Start Notifications';
-    constructor(public marketReceiveKeys: string[]) {}
-  }
+  // export class StartNotifications {
+  //   static readonly type: string = '[Market] Start Notifications';
+  // }
 
 }

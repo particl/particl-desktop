@@ -26,7 +26,8 @@ enum TextContent {
   FAILED_SAVE = 'An error occurred saving this value',
   ERROR_PORT_NUM = 'Invalid port number',
   ERROR_TIMEOUT = 'Invalid value (should be between 20 and 900)',
-  ERROR_POSITIVE_INT = 'Invalid value (should be greater than 0)'
+  ERROR_POSITIVE_INT = 'Invalid value (should be greater than 0)',
+  ERROR_LISTING_EXPIRY_NOTIFICATION = 'Invalid value'
 }
 
 interface MarketSetting extends Setting {
@@ -460,8 +461,22 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         waitForServiceStart: true
       } as MarketSetting);
 
-      groups.push(generalSettings);
+      generalSettings.settings.push({
+        id: 'profile.daysToNotifyListingExpired',
+        title: 'Num Days To Display Listing Expiry',
+        description: 'The number of days after a published listing has expired to indicate its expiry (min: 1, max: 31)',
+        isDisabled: false,
+        type: SettingType.NUMBER,
+        errorMsg: '',
+        limits: { min: 1, max: 31, step: 1 },
+        currentValue: marketSettings.daysToNotifyListingExpired,
+        validate: this.validateListingExpiryNotifications,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true
+      } as MarketSetting);
 
+      groups.push(generalSettings);
 
 
       const connectionDetails: MarketSettingGroup = {
@@ -580,6 +595,11 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   private validatePositiveInteger(value: any, setting: Setting): string | null {
     const num = +value;
     return !!value && (num > 0) ? null : TextContent.ERROR_POSITIVE_INT;
+  }
+
+  private validateListingExpiryNotifications(value: any, setting: Setting): string | null {
+    const num = +value;
+    return !!value && (num > 0) && (num < 32) ? null : TextContent.ERROR_LISTING_EXPIRY_NOTIFICATION;
   }
 
 

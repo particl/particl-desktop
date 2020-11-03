@@ -42,6 +42,7 @@ export interface MarketSettings {
   usePaidMsgForImages: boolean;
   startupWaitTimeoutSeconds: number;
   defaultListingCommentPageCount: number;
+  daysToNotifyListingExpired: number;
 }
 
 
@@ -63,31 +64,17 @@ export interface MarketStateModel {
 }
 
 
-export interface ListingsCommentsState {
-  title: string;
-  imageId: number;
-  readLast: number;
-  count: number;
-}
+// export interface ListingsCommentNotificationItem {
+//   title: string;
+//   imageId: number;
+//   marketHash: string;
+//   hasUnread: boolean;
+// }
 
 
-export interface OrdersNotificationState {
-  readLast: number;
-  buyCount: number;
-  sellCount: number;
-}
-
-
-export interface NotificationsStateModel {
-  orders: { [marketKey: string]: OrdersNotificationState };
-  comments:  {
-    [marketKey: string]: {
-      buy: {
-        [listingHash: string]: ListingsCommentsState
-      };
-      sell: {
-        [listingHash: string]: ListingsCommentsState
-      };
-    };
-  };
-}
+// export interface NotificationsStateModel {
+//   listingComments:  {
+//     buy: { [listingHash: string]: ListingsCommentNotificationItem }
+//     sell: { [listingHash: string]: ListingsCommentNotificationItem }
+//   };
+// }

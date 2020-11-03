@@ -1,13 +1,16 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, Observable, merge } from 'rxjs';
-import { takeUntil, tap, auditTime } from 'rxjs/operators';
-import { Store, Select } from '@ngxs/store';
+import { FormControl } from '@angular/forms';
+import { Subject, Observable, merge, iif, of, defer } from 'rxjs';
+import { takeUntil, tap, auditTime, switchMap, concatMap } from 'rxjs/operators';
+
+import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { WalletUTXOState, WalletInfoState } from 'app/main/store/main.state';
-import { Identity } from '../store/market.models';
-import { WalletUTXOStateModel, PublicUTXO, AnonUTXO, WalletInfoStateModel } from 'app/main/store/main.models';
+
+import { OverviewService } from './overview.service';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { WalletUTXOStateModel, PublicUTXO, AnonUTXO, WalletInfoStateModel } from 'app/main/store/main.models';
 
 
 type ComponentType = 'buy' | 'sell';
@@ -31,18 +34,19 @@ interface Balances {
   pendingAnon: {whole: string, sep: string, decimal: string, value: number};
   spendablePublic: {whole: string, sep: string, decimal: string};
   pendingPublic: {whole: string, sep: string, decimal: string, value: number};
+  escrowLocked: {whole: string, sep: string, decimal: string};
 }
 
 
 @Component({
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
+  providers: [OverviewService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverviewComponent implements OnInit, OnDestroy {
 
-  @Select(MarketState.currentIdentity) currentIdentity: Observable<Identity>;
-
+  identityDisplayName: string = '';
   isAnonFeeBalance: boolean;
 
   readonly listingsUrl: string;
@@ -54,20 +58,40 @@ export class OverviewComponent implements OnInit, OnDestroy {
     pendingAnon: {whole: '0', sep: '', decimal: '', value: 0},
     spendablePublic: {whole: '0', sep: '', decimal: ''},
     pendingPublic: {whole: '0', sep: '', decimal: '', value: 0},
+    escrowLocked: {whole: '0', sep: '', decimal: ''},
   };
 
 
   private destroy$: Subject<void> = new Subject();
+  private updateTriggerControl: FormControl = new FormControl();
+
+  private readonly resetData$: Observable<any> = of({}).pipe(
+    tap(() => {
+      this.balances.escrowLocked = {
+        whole: '0',
+        sep: '',
+        decimal: ''
+      };
+
+      this.buyerActions.forEach(act => {
+        act.count = 0;
+        act.active = false;
+      });
+      this.sellerActions.forEach(act => {
+        act.count = 0;
+        act.active = false;
+      });
+    })
+  );
 
 
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
     private _router: Router,
-    private _store: Store
+    private _store: Store,
+    private _overviewService: OverviewService
   ) {
-
-
 
     // Define the actionable items...
     const ACTIONABLES: ActionableItem[] = [
@@ -132,6 +156,21 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    const identity$ = this._store.select(MarketState.currentIdentity).pipe(
+      tap((identity) => {
+        this.identityDisplayName = identity.displayName;
+        if (identity.id > 0) {
+          this.updateTriggerControl.setValue(identity.id);
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
+
+    const updateActions$ = this.updateTriggerControl.valueChanges.pipe(
+      switchMap((identityId: number) => defer(() => this.updateActionDataValues(identityId))),
+      takeUntil(this.destroy$)
+    );
+
     const spendable$ = this._store.select(WalletUTXOState).pipe(
       tap((utxos: WalletUTXOStateModel) => {
         let anonSpendable: PartoshiAmount;
@@ -190,11 +229,13 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
 
     merge(
+      updateActions$,
       spendable$,
       pending$,
-      settingUpdate$
+      settingUpdate$,
+      identity$,
     ).pipe(
-      auditTime(200),
+      auditTime(500),
       takeUntil(this.destroy$)
     ).subscribe(
       // force change detection to run since we've updated something here
@@ -224,7 +265,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
   }
 
 
-  extractUTXOSpendable(utxos: PublicUTXO[] | AnonUTXO[]): PartoshiAmount {
+  private extractUTXOSpendable(utxos: PublicUTXO[] | AnonUTXO[]): PartoshiAmount {
     const tempBal = new PartoshiAmount(0);
 
     for (let ii = 0; ii < utxos.length; ++ii) {
@@ -240,6 +281,53 @@ export class OverviewComponent implements OnInit, OnDestroy {
     }
 
     return tempBal;
+  }
+
+
+  private updateActionDataValues(identityId: number): Observable<any> {
+    return defer(() => iif(
+      () => +identityId > 0,
+
+      // request all of the infos (and set actions as active)
+      of({}).pipe(
+        tap(() => this.buyerActions.forEach(act => act.active = true)),
+        tap(() => this.sellerActions.forEach(act => act.active = true)),
+        concatMap(() => this._overviewService.fetchDataCounts().pipe(
+          tap(dataCounts => {
+            if (dataCounts.orders) {
+              this.updateCount('buy', 'buy-orders-active', dataCounts.orders.buyActive);
+              this.updateCount('buy', 'buy-orders-urgent', dataCounts.orders.buyWaiting);
+              this.updateCount('sell', 'sell-orders-active', dataCounts.orders.sellActive);
+              this.updateCount('sell', 'sell-orders-urgent', dataCounts.orders.sellWaiting);
+
+              this.balances.escrowLocked.whole = dataCounts.orders.fundsInEscrow.particlStringInteger();
+              this.balances.escrowLocked.sep = dataCounts.orders.fundsInEscrow.particlStringSep();
+              this.balances.escrowLocked.decimal = dataCounts.orders.fundsInEscrow.particlStringFraction();
+            }
+
+            if (dataCounts.markets) {
+              this.updateCount('buy', 'buy-markets', dataCounts.markets.joinedMarkets);
+            }
+
+            if (dataCounts.listings) {
+              this.updateCount('sell', 'sell-listings-expired', dataCounts.listings.expiredListings);
+            }
+          }),
+        ))
+      ),
+
+      // reset the values to a default state since the identity is not realy known
+      this.resetData$
+    ));
+  }
+
+
+  private updateCount(category: 'buy' | 'sell', key: string, value: number): void {
+    const items = category === 'buy' ? this.buyerActions : this.sellerActions;
+    const item = items.find(i => i.key === key);
+    if (item) {
+      item.count = value;
+    }
   }
 
 }
