@@ -7,24 +7,11 @@ import { MarketState } from '../store/market.state';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { BidOrderService } from '../services/orders/orders.service';
-import { isBasicObjectType, getValueOrDefault, parseMarketResponseItem } from '../shared/utils';
+import { isBasicObjectType } from '../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { OrderCounts, AllCounts, ListingCounts } from './overview.models';
 import { OrderItem } from '../services/orders/orders.models';
 import { ORDER_ITEM_STATUS, RespListingItem } from '../shared/market.models';
-
-
-enum TextContent {
-  LABEL_REGION_ALL = 'All regions',
-  LABEL_REGION_WORLDWIDE = 'Worldwide / Global',
-  LABEL_REGION_NORTH_AMERICA = 'North Americas',
-  LABEL_REGION_SOUTH_AMERICA = 'Cerntral & Southern America',
-  LABEL_REGION_EUROPE = 'Europe',
-  LABEL_REGION_MIDDLE_EAST_AFRICA = 'Middle East & Africa',
-  LABEL_REGION_ASIA_PACIFIC = 'Asia Pacific',
-
-  OPEN_MARKET_NAME = 'Open Market'
-}
 
 
 @Injectable()
