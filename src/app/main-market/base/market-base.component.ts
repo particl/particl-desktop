@@ -33,6 +33,7 @@ interface IMenuItem {
   path: string;
   icon?: string;
   alwaysEnabled: boolean;
+  notificationValue?: any;
 }
 
 
@@ -53,13 +54,13 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   readonly mpVersion: string;
 
   readonly menu: IMenuItem[] = [
-    {text: 'Overview', path: 'overview', icon: 'part-overview', alwaysEnabled: false},
-    {text: 'Listings', path: 'listings', icon: 'part-shop', alwaysEnabled: false},
-    {text: 'Your Cart', path: 'cart', icon: 'part-cart-2', alwaysEnabled: false},
-    {text: 'Purchases', path: 'buy', icon: 'part-bag-buy', alwaysEnabled: false},
-    {text: 'Sell', path: 'sell', icon: 'part-stock', alwaysEnabled: false},
-    {text: 'Manage Markets', path: 'management', icon: 'part-bullet-list', alwaysEnabled: false},
-    {text: 'Market Settings', icon: 'part-tool', path: 'settings', alwaysEnabled: true}
+    {text: 'Overview', path: 'overview', icon: 'part-overview', alwaysEnabled: false, notificationValue: null},
+    {text: 'Listings', path: 'listings', icon: 'part-shop', alwaysEnabled: false, notificationValue: null},
+    {text: 'Your Cart', path: 'cart', icon: 'part-cart-2', alwaysEnabled: false, notificationValue: null},
+    {text: 'Purchases', path: 'buy', icon: 'part-bag-buy', alwaysEnabled: false, notificationValue: null},
+    {text: 'Sell', path: 'sell', icon: 'part-stock', alwaysEnabled: false, notificationValue: null},
+    {text: 'Manage Markets', path: 'management', icon: 'part-bullet-list', alwaysEnabled: false, notificationValue: null},
+    {text: 'Market Settings', icon: 'part-tool', path: 'settings', alwaysEnabled: true, notificationValue: null}
   ];
 
   private destroy$: Subject<void> = new Subject();

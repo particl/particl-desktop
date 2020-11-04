@@ -6,6 +6,7 @@ interface BuyTab {
   icon: string;
   title: string;
   templ: string;
+  notificationValue: any;
 }
 
 
@@ -17,9 +18,9 @@ interface BuyTab {
 export class BuyComponent implements OnInit {
 
   readonly tabs: BuyTab[] = [
-    { title: 'Buy Orders', icon: 'part-recipe', templ: 'orders'},
-    { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments'},
-    { title: 'Shipping profiles', icon: 'part-truck', templ: 'shipping-profiles'},
+    { title: 'Buy Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
+    { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments', notificationValue: null},
+    { title: 'Shipping profiles', icon: 'part-truck', templ: 'shipping-profiles', notificationValue: null},
   ];
 
 
