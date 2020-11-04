@@ -312,6 +312,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
                     setting.errorMsg = '';
                     group.errors = group.errors.filter(si => si !== settingIdx);
                     this.currentChanges[groupIdx] = this.currentChanges[groupIdx].filter(si => si !== settingIdx);
+                    setting.currentValue = setting.newValue;
                   }
                 }
               }
