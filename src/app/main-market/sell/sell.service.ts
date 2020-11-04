@@ -25,9 +25,6 @@ import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail
 @Injectable()
 export class SellService {
 
-
-  readonly IMAGE_MAX_SIZE: number;
-
   private readonly IMAGE_SCALING_FACTOR: number = 0.8;
   private readonly IMAGE_QUALITY_FACTOR: number = 1;
   private readonly IMAGE_ITERATIONS: number = 50;
@@ -38,10 +35,13 @@ export class SellService {
     private _store: Store,
     private _sharedService: DataService,
     private _regionService: RegionListService
-  ) {
+  ) {}
+
+
+  get IMAGE_MAX_SIZE(): number {
     const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
-    this.IMAGE_MAX_SIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
+    return marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
   }
 
 

@@ -34,7 +34,6 @@ export class MarketManagementService {
 
   readonly MAX_MARKET_NAME: number = 50;
   readonly MAX_MARKET_SUMMARY: number = 150;
-  readonly IMAGE_MAX_SIZE: number;
 
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
@@ -62,11 +61,17 @@ export class MarketManagementService {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
 
     this.marketDefaultImage = defaultConfig.imagePath;
-    this.IMAGE_MAX_SIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
 
     if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
       this.openMarketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
     }
+  }
+
+
+  get IMAGE_MAX_SIZE(): number {
+    const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    return marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
   }
 
 
