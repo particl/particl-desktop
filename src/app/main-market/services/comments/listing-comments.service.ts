@@ -120,7 +120,7 @@ export class ListingCommentsService {
     newItem.commentHash = getValueOrDefault(src.hash, 'string', newItem.commentHash);
     newItem.listingHash = getValueOrDefault(src.target, 'string', newItem.listingHash);
     newItem.marketAddress = getValueOrDefault(src.receiver, 'string', newItem.marketAddress);
-    newItem.created = getValueOrDefault(src.createdAt, 'number', newItem.created);
+    newItem.created = getValueOrDefault(src.generatedAt, 'number', newItem.created);
 
     newItem.sender.addressFull = getValueOrDefault(src.sender, 'string', newItem.sender.addressFull);
     newItem.sender.addressShort = newItem.sender.addressFull.slice(0, this.SENDER_SHORT_ADDRESS_LENGTH);

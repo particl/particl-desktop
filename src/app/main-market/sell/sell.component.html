@@ -5,8 +5,7 @@
       <ng-template mat-tab-label>
         <mat-icon [fontIcon]="tab.icon"></mat-icon>
         {{ tab.title }}
-        <!-- @TODO: show only Orders requiring attention, expired Lisings (if possible) and unseen Qs -->
-        <span class="notification"><!-- @@@TODO: add notification option --></span>
+        <span class="notification" *ngIf="tab.notificationValue !== null">{{ tab.notificationValue }}</span>
       </ng-template>
     </mat-tab>
   </mat-tab-group>

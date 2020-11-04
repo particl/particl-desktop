@@ -1,15 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, iif, defer, throwError } from 'rxjs';
-import { map, mapTo, catchError, concatMap, last } from 'rxjs/operators';
+import { map, mapTo, catchError, concatMap, last, tap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
+import { MarketActions } from '../store/market.actions';
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
-import { isBasicObjectType, getValueOrDefault, parseImagePath } from '../shared/utils';
+import { isBasicObjectType, getValueOrDefault, parseImagePath, parseMarketResponseItem } from '../shared/utils';
 import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet, IMAGE_SEND_TYPE } from '../shared/market.models';
-import { CategoryItem } from '../services/data/data.models';
+import { CategoryItem, Market } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
 import * as marketConfig from '../../../../modules/market/config.js';
@@ -33,7 +34,6 @@ export class MarketManagementService {
 
   readonly MAX_MARKET_NAME: number = 50;
   readonly MAX_MARKET_SUMMARY: number = 150;
-  readonly IMAGE_MAX_SIZE: number;
 
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
@@ -61,11 +61,17 @@ export class MarketManagementService {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
 
     this.marketDefaultImage = defaultConfig.imagePath;
-    this.IMAGE_MAX_SIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
 
     if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
       this.openMarketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
     }
+  }
+
+
+  get IMAGE_MAX_SIZE(): number {
+    const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+    const marketSettings = this._store.selectSnapshot(MarketState.settings);
+    return marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
   }
 
 
@@ -165,17 +171,47 @@ export class MarketManagementService {
   }
 
 
-  joinAvailableMarket(marketId: number): Observable<boolean> {
-    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
-    const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
-    return this._rpc.call('market', ['join', profileId, marketId, identityId]).pipe(
-      mapTo(true),
-    );
+  joinAvailableMarket(market: AvailableMarket): Observable<boolean> {
+    return defer(() => {
+
+      if (!isBasicObjectType(market)) {
+        throwError(new Error('INVALID_MARKET'));
+        return;
+      }
+
+      const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+      const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
+
+      return this._rpc.call('market', ['join', profileId, market.id, identityId]).pipe(
+        mapTo(true),
+        tap(isSuccess => {
+          if (isSuccess) {
+            const idMarket: Market = {
+              id: market.id,
+              identityId: identityId,
+              image: market.image,
+              name: market.name,
+              publishAddress: market.publishKey,
+              receiveAddress: market.receiveKey,
+              type: market.marketType
+            };
+
+            this._store.dispatch(new MarketActions.AddIdentityMarket(idMarket));
+          }
+        })
+      );
+    });
+
   }
 
 
   leaveMarket(marketId: number): Observable<void> {
-    return this._rpc.call('market', ['remove', marketId]);
+    return this._rpc.call('market', ['remove', marketId]).pipe(
+      tap(() => {
+        const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+        this._store.dispatch(new MarketActions.RemoveIdentityMarket(identityId, marketId));
+      })
+    );
   }
 
 
@@ -234,6 +270,15 @@ export class MarketManagementService {
       last(),
       map((market: RespMarketListMarketItem) => {
         const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
+
+        const idMarket = parseMarketResponseItem(market, marketUrl);
+        if ((idMarket.id > 0) && (idMarket.identityId > 0)) {
+          if (idMarket.image.length === 0) {
+            idMarket.image = this.marketDefaultImage;
+          }
+          this._store.dispatch(new MarketActions.AddIdentityMarket(idMarket));
+        }
+
         return this.buildJoinedMarket(market, marketUrl);
       })
     );

@@ -139,7 +139,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
     }
     const marketItem = this.marketsList[idx];
 
-    this._manageService.joinAvailableMarket(marketItem.id).pipe(
+    this._manageService.joinAvailableMarket(marketItem).pipe(
       tap((isSuccess) => {
         if (isSuccess) {
           this._snackbar.open(TextContent.JOIN_MARKET_SUCCESS);

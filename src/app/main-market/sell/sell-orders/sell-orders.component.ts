@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, of, merge, defer, iif } from 'rxjs';
@@ -81,6 +82,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
 
   constructor(
+    private _route: ActivatedRoute,
     private _store: Store,
     private _cdr: ChangeDetectorRef,
     private _socket: MarketSocketService,
@@ -90,6 +92,13 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     private _unlocker: WalletEncryptionService
   ) {
+
+    const query = this._route.snapshot.queryParams;
+    const toggleOrdersNeedingAttention = query['toggleOrdersNeedingAttention'];
+    if (toggleOrdersNeedingAttention) {
+      this.queryFilterAttention.setValue(!!(+toggleOrdersNeedingAttention));
+    }
+
     const madctStates = this._orderService.getOrderedStateList('MAD_CT');
 
     this.filterOptionsStatus = madctStates.map(
@@ -427,7 +436,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
     }
     return this._sharedService.loadMarkets(this.currentIdentity.id).pipe(
       map(markets => {
-        return markets.map(m => ({key: m.publishAddress, name: m.name}));
+        return markets.map(m => ({key: m.receiveAddress, name: m.name}));
       }),
       catchError(() => of([]))
     );

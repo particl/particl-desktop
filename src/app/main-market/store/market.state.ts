@@ -5,12 +5,13 @@ import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketActions } from './market.actions';
+import { patch, updateItem } from '@ngxs/store/operators';
 import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
 import { environment } from 'environments/environment';
-import { isBasicObjectType, getValueOrDefault } from '../shared/utils';
+import { isBasicObjectType, getValueOrDefault, parseMarketResponseItem } from '../shared/utils';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -37,11 +38,12 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     usePaidMsgForImages: true,
     startupWaitTimeoutSeconds: 60,
     defaultListingCommentPageCount: 20,
+    daysToNotifyListingExpired: 7
   }
 };
 
 
-const NULL_IDENTITY: Identity = { id: 0, name: '-', displayName: '-', address: '', icon: '', path: '', carts: [] };
+const NULL_IDENTITY: Identity = { id: 0, name: '-', displayName: '-', address: '', icon: '', path: '', carts: [], markets: [] };
 
 
 @State<MarketStateModel>({
@@ -237,7 +239,7 @@ export class MarketState {
         map((identityList: RespIdentityListItem[]) => {
           const ids: Identity[] = [];
           identityList.forEach((idItem: RespIdentityListItem) => {
-            const id = this.buildIdentityItem(idItem);
+            const id = this.buildIdentityItem(idItem, state.defaultConfig.url, state.defaultConfig.imagePath);
             if (id.id > 0) {
               ids.push(id);
             }
@@ -290,12 +292,14 @@ export class MarketState {
 
             // No valid current identity and no saved identity... get first identity from list
             const selected = identities.sort((a, b) => a.id - b.id)[0];
-            return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
-              concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(selected)))
-            );
-          } else {
-            return ctx.dispatch(new MarketActions.SetCurrentIdentity(NULL_IDENTITY));
+            if (selected) {
+              return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
+                concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(selected)))
+              );
+            }
           }
+
+          return ctx.dispatch(new MarketActions.SetCurrentIdentity(NULL_IDENTITY));
         })
       );
     }
@@ -318,8 +322,8 @@ export class MarketState {
   }
 
 
-  @Action(MarketActions.CreateMarketIdentity)
-  createMarketIdentity(ctx: StateContext<MarketStateModel>, { identityName }: MarketActions.CreateMarketIdentity) {
+  @Action(MarketActions.CreateIdentity)
+  createIdentity(ctx: StateContext<MarketStateModel>, { identityName }: MarketActions.CreateIdentity) {
 
     if (typeof identityName !== 'string' && !identityName) {
       return throwError(() => of('Invalid Identity Name'));
@@ -335,12 +339,70 @@ export class MarketState {
 
     return this._marketService.call('identity', ['add', profileId, identityName]).pipe(
       tap((identityResp: RespIdentityListItem) => {
-        const newId = this.buildIdentityItem(identityResp);
+        const newId = this.buildIdentityItem(identityResp, state.defaultConfig.url, state.defaultConfig.imagePath);
         if ((newId.id > 0) && (ctx.getState().profile.id === profileId)) {
           ctx.patchState({ identities: [...ctx.getState().identities, newId]});
         }
       })
     );
+  }
+
+
+  @Action(MarketActions.AddIdentityMarket)
+  AddMarket(ctx: StateContext<MarketStateModel>, { market }: MarketActions.AddIdentityMarket) {
+    if (!isBasicObjectType(market)) {
+      return;
+    }
+
+    const stateIds = ctx.getState().identities;
+    const foundIdx = stateIds.findIndex(id => id.id === market.identityId);
+    if (foundIdx > -1) {
+      const updatedId = JSON.parse(JSON.stringify(stateIds[foundIdx]));
+      updatedId.markets.push(market);
+
+      ctx.setState(patch({
+        identities: updateItem<Identity>(id => id.id === market.identityId, updatedId)
+      }));
+    }
+
+    const stateId = ctx.getState().identity;
+    if (stateId.id === market.identityId) {
+      const updatedId = JSON.parse(JSON.stringify(stateId));
+      updatedId.markets.push(market);
+      ctx.patchState({identity: updatedId});
+    }
+  }
+
+
+  @Action(MarketActions.RemoveIdentityMarket)
+  RemoveMarket(ctx: StateContext<MarketStateModel>, { identityId, marketId }: MarketActions.RemoveIdentityMarket) {
+    if (!(+identityId > 0) || !(+marketId > 0)) {
+      return;
+    }
+
+    const stateIds = ctx.getState().identities;
+    const foundIdx = stateIds.findIndex(id => id.id === identityId);
+    if (foundIdx > -1) {
+      const updatedId: Identity = JSON.parse(JSON.stringify(stateIds[foundIdx]));
+      const mIdx = updatedId.markets.findIndex(m => m.id === marketId);
+      if (mIdx >= 0) {
+        updatedId.markets.splice(mIdx, 1);
+      }
+
+      ctx.setState(patch({
+        identities: updateItem<Identity>(id => id.id === identityId, updatedId)
+      }));
+    }
+
+    const stateId = ctx.getState().identity;
+    if (stateId.id === identityId) {
+      const updatedId = JSON.parse(JSON.stringify(stateId));
+      const mIdx = updatedId.markets.findIndex(m => m.id === marketId);
+      if (mIdx >= 0) {
+        updatedId.markets.splice(mIdx, 1);
+      }
+      ctx.patchState({identity: updatedId});
+    }
   }
 
 
@@ -362,7 +424,9 @@ export class MarketState {
     if ( Object.keys(currentSettings).includes(key) && (typeof currentSettings[key] === typeof action.value) ) {
       if (this._settingsService.saveMarketSetting(key, action.value, profileID)) {
         currentSettings[key] = action.value;
-        ctx.patchState({settings: currentSettings});
+        ctx.setState(patch<MarketStateModel>({
+          settings: patch<MarketSettings>({ [key] : action.value })}
+        ));
       }
     }
   }
@@ -395,7 +459,7 @@ export class MarketState {
   }
 
 
-  private buildIdentityItem(src: RespIdentityListItem): Identity {
+  private buildIdentityItem(src: RespIdentityListItem, marketUrl: string, defaultImage: string): Identity {
     const newItem: Identity = {
       id: 0,
       name: '',
@@ -403,6 +467,7 @@ export class MarketState {
       icon: '',
       address: '',
       carts: [],
+      markets: [],
       path: ''
     };
 
@@ -429,6 +494,19 @@ export class MarketState {
       }
 
       newItem.id = +src.id > 0 ? +src.id : newItem.id;
+
+      if (Array.isArray(src.Markets)) {
+        src.Markets.forEach(market => {
+          const idMarket = parseMarketResponseItem(market, marketUrl);
+
+          if ((idMarket.id > 0) && (idMarket.identityId === newItem.id)) {
+            if (idMarket.image.length === 0) {
+              idMarket.image = defaultImage;
+            }
+            newItem.markets.push(idMarket);
+          }
+        });
+      }
     }
 
     return newItem;

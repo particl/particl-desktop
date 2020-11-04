@@ -6,6 +6,7 @@ interface BuyCheckoutTab {
   icon: string;
   title: string;
   templ: string;
+  notificationValue: any;
 }
 
 @Component({
@@ -15,8 +16,8 @@ interface BuyCheckoutTab {
 export class BuyCheckoutComponent implements OnInit {
 
   readonly tabs: BuyCheckoutTab[] = [
-    { title: 'Your Cart', icon: 'part-cart-2', templ: 'cart'},
-    { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites'},
+    { title: 'Your Cart', icon: 'part-cart-2', templ: 'cart', notificationValue: null},
+    { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites', notificationValue: null},
   ];
 
   private selectedTabIdx: number = 0;

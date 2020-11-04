@@ -1,3 +1,4 @@
+import { Market } from '../services/data/data.models';
 
 export enum StartedStatus {
   PENDING,
@@ -21,6 +22,7 @@ export interface Identity {
   address: string;
   icon: string;
   carts: CartDetail[];
+  markets: Market[];
 }
 
 
@@ -40,6 +42,7 @@ export interface MarketSettings {
   usePaidMsgForImages: boolean;
   startupWaitTimeoutSeconds: number;
   defaultListingCommentPageCount: number;
+  daysToNotifyListingExpired: number;
 }
 
 
@@ -59,3 +62,19 @@ export interface MarketStateModel {
   defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
 }
+
+
+// export interface ListingsCommentNotificationItem {
+//   title: string;
+//   imageId: number;
+//   marketHash: string;
+//   hasUnread: boolean;
+// }
+
+
+// export interface NotificationsStateModel {
+//   listingComments:  {
+//     buy: { [listingHash: string]: ListingsCommentNotificationItem }
+//     sell: { [listingHash: string]: ListingsCommentNotificationItem }
+//   };
+// }
