@@ -1,4 +1,4 @@
-import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
+import { State, StateToken, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { of, defer, iif, timer, throwError, merge } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
@@ -6,7 +6,7 @@ import { MarketSocketService } from '../services/market-rpc/market-socket.servic
 import { SettingsService } from 'app/core/services/settings.service';
 import { MarketStateActions, MarketUserActions } from './market.actions';
 import { patch, updateItem } from '@ngxs/store/operators';
-import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig } from './market.models';
+import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
@@ -39,6 +39,9 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     startupWaitTimeoutSeconds: 60,
     defaultListingCommentPageCount: 20,
     daysToNotifyListingExpired: 7
+  },
+  notifications: {
+    identityCartItemCount: 0
   }
 };
 
@@ -109,6 +112,19 @@ export class MarketState {
   @Selector()
   static availableCarts(state: MarketStateModel): CartDetail[] {
     return state.identity === null ? [] : state.identity.carts;
+  }
+
+
+  @Selector()
+  static getNotifications(state: MarketStateModel): MarketNotifications {
+    return state.notifications;
+  }
+
+
+  static notificationValue(key: string) {
+    return createSelector([MarketState.getNotifications], (state: MarketNotifications) => {
+      return state[key] || null;
+    });
   }
 
 
@@ -314,10 +330,29 @@ export class MarketState {
       //  before setting the active identity to that wallet. Look into a better way of doing this...
       if (globalSettings['activatedWallet'] === identity.name) {
         ctx.patchState({identity});
-        return;
+        return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
       }
     }
     ctx.patchState({identity: NULL_IDENTITY});
+    return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
+  }
+
+
+  @Action(MarketStateActions.SetIdentityCartCount)
+  setActiveIdentityCartCount(ctx: StateContext<MarketStateModel>) {
+    const identityCarts = ctx.getState().identity.carts;
+    if (identityCarts.length > 0) {
+      return this._marketService.call('cartitem', ['list', +identityCarts[0].id]).pipe(
+        catchError(() => of([])),
+        tap((cartItems) => {
+          ctx.setState(patch<MarketStateModel>({
+            notifications: patch<MarketNotifications>({
+              identityCartItemCount: Array.isArray(cartItems) ? cartItems.length : 0
+            })
+          }));
+        })
+      );
+    }
   }
 
 
@@ -374,7 +409,7 @@ export class MarketState {
 
 
   @Action(MarketUserActions.RemoveIdentityMarket)
-  RemoveMarket(ctx: StateContext<MarketStateModel>, { identityId, marketId }: MarketUserActions.RemoveIdentityMarket) {
+  removeMarket(ctx: StateContext<MarketStateModel>, { identityId, marketId }: MarketUserActions.RemoveIdentityMarket) {
     if (!(+identityId > 0) || !(+marketId > 0)) {
       return;
     }
@@ -427,6 +462,46 @@ export class MarketState {
           settings: patch<MarketSettings>({ [key] : action.value })}
         ));
       }
+    }
+  }
+
+
+  @Action(MarketUserActions.CartItemAdded)
+  cartAddItem(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartItemAdded) {
+    if (action.identityId === ctx.getState().identity.id ) {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: ctx.getState().notifications.identityCartItemCount + 1
+        })
+      }));
+    }
+  }
+
+
+  @Action(MarketUserActions.CartItemRemoved)
+  cartRemoveItem(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartItemRemoved) {
+    const identity = ctx.getState().identity;
+
+    if ((action.identityId === identity.id) && identity.carts[0] && (action.cartId === identity.carts[0].id) ) {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: Math.max(ctx.getState().notifications.identityCartItemCount - 1, 0)
+        })
+      }));
+    }
+  }
+
+
+  @Action(MarketUserActions.CartCleared)
+  cartRemoveAll(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartCleared) {
+    const identityId = ctx.getState().identity.id;
+
+    if (action.identityId === identityId) {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: 0
+        })
+      }));
     }
   }
 

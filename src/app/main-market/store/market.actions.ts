@@ -26,6 +26,11 @@ export namespace MarketStateActions {
     constructor(public identity: Identity) {}
   }
 
+  export class SetIdentityCartCount {
+    static readonly type: string = '[Market] Set Identity Cart Count';
+    constructor() {}
+  }
+
   // export class StartNotifications {
   //   static readonly type: string = '[Market] Start Notifications';
   // }
@@ -52,5 +57,20 @@ export namespace MarketUserActions {
   export class RemoveIdentityMarket {
     static readonly type: string = '[Market] Remove Identity Market';
     constructor(public identityId: number, public marketId: number) {}
+  }
+
+  export class CartItemAdded {
+    static readonly type: string = '[Market] Add Cart Item';
+    constructor(public identityId: number, public cartId: number) {}
+  }
+
+  export class CartItemRemoved {
+    static readonly type: string = '[Market] Remove Cart Item';
+    constructor(public identityId: number, public cartId: number) {}
+  }
+
+  export class CartCleared {
+    static readonly type: string = '[Market] Remove All Cart Items';
+    constructor(public identityId: number) {}
   }
 }

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, mapTo, catchError } from 'rxjs/operators';
+import { map, mapTo, catchError, tap } from 'rxjs/operators';
+
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
-import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
+import { MarketUserActions } from 'app/main-market/store/market.actions';
 
+import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
 import { RespFavoriteItem, RespCartItemAdd } from '../../shared/market.models';
 import { FavouritedListing } from './buy-favourites.models';
@@ -43,7 +45,10 @@ export class FavouritesService {
 
 
   addItemToCart(listingId: number, cartId: number): Observable<RespCartItemAdd> {
-    return this._rpc.call('cartitem', ['add', cartId, listingId]);
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return this._rpc.call('cartitem', ['add', cartId, listingId]).pipe(
+      tap(() => this._store.dispatch(new MarketUserActions.CartItemAdded(identityId, cartId)))
+    );
   }
 
 

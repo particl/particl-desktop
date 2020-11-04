@@ -54,6 +54,11 @@ export interface DefaultMarketConfig {
 }
 
 
+export interface MarketNotifications {
+  identityCartItemCount: number;
+}
+
+
 export interface MarketStateModel {
   started: StartedStatus;
   profile: Profile;
@@ -61,6 +66,7 @@ export interface MarketStateModel {
   identity: Identity;
   defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
+  notifications: MarketNotifications;
 }
 
 

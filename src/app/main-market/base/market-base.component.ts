@@ -80,15 +80,34 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this._store.select(MarketState.startedStatus).pipe(
+    const startedStatus$ = this._store.select(MarketState.startedStatus).pipe(
       tap((status) => this.startedStatus = status),
+      takeUntil(this.destroy$)
+    );
+
+    const indicators$ = merge(
+      this._store.select(MarketState.notificationValue('identityCartItemCount')).pipe(
+        tap((cartCountValue) => {
+          const cartMenu = this.menu.find(m => m.path === 'cart');
+          if (cartMenu) {
+            cartMenu.notificationValue = +cartCountValue > 0 ? +cartCountValue : null;
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+    );
+
+    merge(
+      startedStatus$,
+      indicators$
+    ).pipe(
       takeUntil(this.destroy$)
     ).subscribe();
 
 
     this.currentBalance = merge(
       this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
-      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$))
+      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
     ).pipe(
       startWith('0'),
       map(() => {
