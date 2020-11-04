@@ -424,7 +424,9 @@ export class MarketState {
     if ( Object.keys(currentSettings).includes(key) && (typeof currentSettings[key] === typeof action.value) ) {
       if (this._settingsService.saveMarketSetting(key, action.value, profileID)) {
         currentSettings[key] = action.value;
-        ctx.patchState({settings: currentSettings});
+        ctx.setState(patch<MarketStateModel>({
+          settings: patch<MarketSettings>({ [key] : action.value })}
+        ));
       }
     }
   }
