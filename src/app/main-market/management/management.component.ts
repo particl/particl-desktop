@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 
 interface MarketManageTab {
@@ -24,7 +25,18 @@ export class ManagementComponent {
   private selectedTabIdx: number = 0;
 
 
-  constructor() {}
+  constructor(
+    private _route: ActivatedRoute
+  ) {
+
+    const query = this._route.snapshot.queryParams;
+    const selectedTab = query['selectedManagementTab'];
+    const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedTab);
+    if (newTabIdx > -1) {
+      this.selectedTabIdx = newTabIdx;
+    }
+
+  }
 
 
   get selectedTempl(): string {

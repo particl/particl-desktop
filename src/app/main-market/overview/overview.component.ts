@@ -13,7 +13,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { WalletUTXOStateModel, PublicUTXO, AnonUTXO, WalletInfoStateModel } from 'app/main/store/main.models';
 
 
-type ComponentType = 'buy' | 'sell';
+type ComponentType = 'buy' | 'sell' | 'management';
 type ActionableCategory = 'buy' | 'sell';
 
 interface ActionableItem {
@@ -106,8 +106,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
         icon: 'part-chat-discussion', active: false, count: 0, component: 'buy', key: 'buy-questions', category: 'buy',
         url: '', urlParams: {selectedBuyTab: 'comments'} },
       { title: 'Joined Markets', text: 'Total number of Markets you\'ve joined',
-        icon: 'part-shop', active: false, count: 0, component: 'buy', key: 'buy-markets', category: 'buy',
-        url: '', urlParams: {selectedBuyTab: 'shipping-profiles'} },
+        icon: 'part-shop', active: false, count: 0, component: 'management', key: 'buy-markets', category: 'buy',
+        url: '', urlParams: {selectedManagementTab: 'joined'} },
 
       {
         title: 'Active Sell Orders', text: 'All Sell Orders currently in progress',
