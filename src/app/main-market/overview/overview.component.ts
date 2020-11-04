@@ -98,16 +98,16 @@ export class OverviewComponent implements OnInit, OnDestroy {
       {
         title: 'Active Buy Orders', text: 'All Buy Orders currently in progress',
         icon: 'part-recipe', active: false, count: 0, component: 'buy', key: 'buy-orders-active', category: 'buy',
-        url: '', urlParams: {} },
+        url: '', urlParams: {selectedBuyTab: 'orders'} },
       { title: 'Urgent Buy Orders', text: 'Updated Orders that need your attention',
         icon: 'part-recipe', active: false, count: 0, component: 'buy', key: 'buy-orders-urgent', category: 'buy',
-        url: '', urlParams: {} },
+        url: '', urlParams: {selectedBuyTab: 'orders', toggleOrdersNeedingAttention: '1'} },
       { title: 'New replies', text: 'Unread Sellers\' replies to your questions',
         icon: 'part-chat-discussion', active: false, count: 0, component: 'buy', key: 'buy-questions', category: 'buy',
-        url: '', urlParams: {} },
+        url: '', urlParams: {selectedBuyTab: 'comments'} },
       { title: 'Joined Markets', text: 'Total number of Markets you\'ve joined',
         icon: 'part-shop', active: false, count: 0, component: 'buy', key: 'buy-markets', category: 'buy',
-        url: '', urlParams: {} },
+        url: '', urlParams: {selectedBuyTab: 'shipping-profiles'} },
 
       {
         title: 'Active Sell Orders', text: 'All Sell Orders currently in progress',
@@ -116,7 +116,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       {
         title: 'Urgent Sell Orders', text: 'Updated Orders that need your attention',
         icon: 'part-recipe', active: true, count: 0, component: 'sell', key: 'sell-orders-urgent', category: 'sell',
-        url: '', urlParams: {selectedSellTab: 'orders'} },
+        url: '', urlParams: {selectedSellTab: 'orders', toggleOrdersNeedingAttention: '1'} },
       {
         title: 'New questions', text: 'Unread Buyers\' questions on your Listings',
         icon: 'part-chat', active: true, count: 0, component: 'sell', key: 'sell-questions', category: 'sell',
@@ -292,6 +292,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       of({}).pipe(
         tap(() => this.buyerActions.forEach(act => act.active = true)),
         tap(() => this.sellerActions.forEach(act => act.active = true)),
+        tap(() => this._cdr.detectChanges()),
         concatMap(() => this._overviewService.fetchDataCounts().pipe(
           tap(dataCounts => {
             if (dataCounts.orders) {
@@ -316,7 +317,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
         ))
       ),
 
-      // reset the values to a default state since the identity is not realy known
+      // reset the values to a default state since the identity is not really known
       this.resetData$
     ));
   }
