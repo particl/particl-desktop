@@ -3,7 +3,7 @@ import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
-import { MarketActions } from '../store/market.actions';
+import { MarketStateActions, MarketUserActions } from '../store/market.actions';
 import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
@@ -105,7 +105,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    this._store.dispatch(new MarketActions.StopMarketService());
+    this._store.dispatch(new MarketStateActions.StopMarketService());
   }
 
 
@@ -133,7 +133,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       concatMap((idName) => iif(
         () => (typeof idName === 'string') && (idName.length > 0),
         defer(() =>
-          this._store.dispatch(new MarketActions.CreateIdentity(idName)).pipe(
+          this._store.dispatch(new MarketUserActions.CreateIdentity(idName)).pipe(
             mapTo(true),
             catchError(() => of(false)),
             tap(success => {
@@ -156,7 +156,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.MARKET_LOADING}});
     this._store.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
-      concatMap(() => this._store.dispatch(new MarketActions.SetCurrentIdentity(identity))),
+      concatMap(() => this._store.dispatch(new MarketStateActions.SetCurrentIdentity(identity))),
       finalize(() => {
         this._dialog.closeAll();
       })

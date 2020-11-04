@@ -11,7 +11,7 @@ import { RegionListService } from '../services/region-list/region-list.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
 
-import { MarketActions } from '../store/market.actions';
+import { MarketStateActions, MarketUserActions } from '../store/market.actions';
 import { StartedStatus, MarketSettings, MarketStateModel } from '../store/market.models';
 import {
   PageInfo,
@@ -341,7 +341,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
 
   restartMarketplace() {
-    this._store.dispatch(new MarketActions.RestartMarketService());
+    this._store.dispatch(new MarketStateActions.RestartMarketService());
   }
 
 
@@ -380,7 +380,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       this.settingGroups.forEach(group => {
         group.settings.forEach((setting) => {
           if ( (setting.type !== SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
-            actions.push(new MarketActions.SetSetting(setting.id, setting.newValue));
+            actions.push(new MarketUserActions.SetSetting(setting.id, setting.newValue));
             if (setting.restartRequired) {
               restartRequired = true;
             }

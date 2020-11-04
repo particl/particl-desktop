@@ -5,7 +5,7 @@ import { takeUntil, tap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { MarketActions } from '../store/market.actions';
+import { MarketStateActions } from '../store/market.actions';
 import { StartedStatus } from '../store/market.models';
 
 
@@ -58,7 +58,7 @@ export class LoadingComponent implements OnInit, OnDestroy {
     );
 
     merge(
-      this._store.dispatch(new MarketActions.StartMarketService()),
+      this._store.dispatch(new MarketStateActions.StartMarketService()),
       started$
     ).subscribe();
   }
