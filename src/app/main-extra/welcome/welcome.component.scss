@@ -4,51 +4,68 @@ body {
   margin: 0 !important;
 }
 
-.welcome-container {
+.container {
   @extend %tfx;
-  background: url('../../../assets/splash-bg.jpg') no-repeat var(--bg-black);
-  background-position: calc(-1 * var(--multiwallet-width)) 100%;
-  background-size: 500px;
-  color: var(--bg);
-  text-align: center;
+  --container-paddingV: 4rem;
+  background: var(--bg);
   font-family: var(--font);
-  height: 100vh;
+  height: calc(100vh - 2 * var(--container-paddingV));
+  padding: var(--container-paddingV) 8vw;
   display: flex;
   flex-direction: column;
-  @include break(l) {
-    background-size: 600px;
-  }
-  @include break(xl) {
-    background-size: 700px;
+  .logo {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    background: var(--bg-black);
+    img {
+      width: 10vw;
+      display: block;
+      margin: 1.7vw 2vw;
+    }
   }
   .content {
-    margin: auto;
+    margin: auto 0;
+  }
+  .illustration {
+    position: fixed;
+    bottom: -100px;
+    right: -133px;
+    width: 50vw;
+    img {
+      width: 100%;
+      max-width: 100%;
+      pointer-events: none;
+    }
   }
 }
 
 .header-text {
-  margin-bottom: 76px;
+  flex: 1 0 50px;
+  margin-bottom: 17vh;
   // slide-from-top animation (from 0 opacity)
   animation: slide-from-top 0.6s 1;
   animation-delay: 0.4s;
   animation-fill-mode: forwards; // stay on the last "frame"
   opacity: 0;
-  img {
-    width: 10rem;
-    margin: 0 auto 1.4rem;
-  }
   h1 {
-    margin: 0 0 12px;
+    margin: 0 0 8px;
+    font-weight: 600;
+    font-size: 1.9rem;;
   }
   p {
     margin: 0;
-    color: hsla(var(--color-white-hsl), 0.6);
-    font-size: 15px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
   }
 }
 
 .app-grid {
+  --app-margin: 16px;
+  flex: 1 1 100%;
   display: flex;
+  margin: 0 calc(-1 * var(--app-margin));
   // slide-from-bottom animation (from 0 opacity)
   animation: slide-from-bottom 0.6s 1;
   animation-delay: 0.4s;
@@ -56,18 +73,17 @@ body {
   opacity: 0;
   .app {
     @extend %tfx;
+    @extend %mat-card;
     flex: 20%;
     max-width: 200px;
-    margin: 0 24px;
+    margin: auto var(--app-margin);
     padding: 26px;
     text-align: left;
     color: var(--text);
     text-decoration: none;
-    border-radius: var(--radius);
-    background: var(--color-white);
     &:hover,
     &:focus {
-      box-shadow: 0 0 0 8px hsla(var(--color-white-hsl), 0.1);
+      box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
     }
     .mat-icon {
       font-size: 22px;
@@ -89,6 +105,12 @@ body {
       color: var(--text-muted);
     }
   }
+}
+
+.version {
+  flex: 0 0 24px;
+  margin: 22vh 0 0;
+  color: hsla(var(--text-muted-hsl), 0.6);
 }
 
 @keyframes slide-from-top {

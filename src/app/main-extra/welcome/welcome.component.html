@@ -1,33 +1,46 @@
-<div class="welcome-container">
+<div class="container">
+
+  <div class="logo">
+    <img src="./assets/particl-logo.svg" alt="Particl Project">
+  </div>
+
   <div class="content">
 
     <div class="header-text">
-      <img src="./assets/particl-logo.svg" alt="Particl Project" class="logo">
-      <h1>Welcome to Particl Desktop</h1>
+      <h1>Welcome to Particl</h1>
       <p>Your gateway to a peer-to-peer, private applications of the future</p>
     </div>
-
+  
     <div class="app-grid">
-
+  
       <a class="app item" routerLink="/main/wallet">
         <mat-icon fontIcon="part-stake" class="icon"></mat-icon>
         <h2 class="name">Wallet</h2>
         <p class="desc">Send, receive and manage PART coins</p>
       </a>
-
+  
       <a class="app item" routerLink="/main/market">
         <mat-icon fontIcon="part-bag" class="icon"></mat-icon>
-        <h2 class="name">Market</h2>
+        <h2 class="name">Marketplace</h2>
         <p class="desc">Buy and sell on the most private marketplace</p>
       </a>
-
+  
       <!-- <a class="app item" routerLink="/main/exchange">
         <mat-icon fontIcon="part-swap" class="icon"></mat-icon>
         <h2 class="name">Swap</h2>
         <p class="desc">Swap your crypto to and from PART effortlessly</p>
       </a> -->
-
+  
     </div><!-- .app-grid -->
+  
+    <p class="version">
+      Particl Desktop 3.0
+    </p>
 
-  </div><!-- .content -->
-</div><!-- .welcome-container -->
+  </div>
+
+  <div class="illustration">
+    <img src="./assets/images/illustrations/particl-market_animated.svg" alt="">
+  </div>
+
+</div><!-- .container -->
