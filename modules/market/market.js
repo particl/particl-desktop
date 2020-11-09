@@ -5,7 +5,7 @@ const market = require('particl-marketplace');
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs').Observable;
 const bitcore = require('particl-bitcore-lib');
-// const importer = require('./importer/importer');
+const importer = require('./importer/importer');
 
 // @TODO: zaSmilingIdiot 2020-03-18 -> This entire process is a mess, and needs to be done over! It works for its current purpose, but is really brittle, crappy code!
 
@@ -19,6 +19,7 @@ let timeoutMonitor = null;
 
 exports.init = function() {
   exports.destroy();
+  importer.init();
   rxIpc.registerListener('start-market', function(appPort, zmqPort, timeout) {
     return Observable.create(observer => {
 
@@ -122,10 +123,11 @@ exports.init = function() {
 
 
 exports.destroy = function() {
-  stop();
+  importer.destroy();
   rxIpc.removeListeners('start-market');
   rxIpc.removeListeners('stop-market');
   rxIpc.removeListeners('market-keygen');
+  stop();
 }
 
 

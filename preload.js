@@ -61,6 +61,7 @@ window.ipc = new SafeIpcRenderer([
   'start-market',
   'stop-market',
   'market-keygen',
+  'market-importer',
 
   'zmq',
   'write-core-config',
@@ -69,11 +70,6 @@ window.ipc = new SafeIpcRenderer([
 
   'rx-ipc-check-reply',
   'rx-ipc-check-listener',
-
-  // 'importer-config',
-  // 'importer-load',
-  // 'importer-validate',
-  // 'importer-publish',
 
   // 'start-bot-framework',
   // 'stop-bot-framework'

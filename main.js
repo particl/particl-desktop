@@ -115,7 +115,8 @@ if (!instanceLock) {
           webviewTag: false,
           nodeIntegration: false,
           sandbox: true,
-          contextIsolation: false
+          contextIsolation: false,
+          nativeWindowOpen: true
         }
       });
 
