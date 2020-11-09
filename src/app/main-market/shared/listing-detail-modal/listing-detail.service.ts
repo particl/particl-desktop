@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, iif } from 'rxjs';
-import { map, mapTo, catchError, filter, concatMap } from 'rxjs/operators';
+import { map, mapTo, catchError, filter, concatMap, tap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
+import { MarketUserActions } from '../../store/market.actions';
 
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
@@ -90,7 +91,10 @@ export class ListingDetailService {
 
 
   addItemToCart(listingId: number, cartId: number): Observable<RespCartItemAdd> {
-    return this._rpc.call('cartitem', ['add', cartId, listingId]);
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return this._rpc.call('cartitem', ['add', cartId, listingId]).pipe(
+      tap(() => this._store.dispatch(new MarketUserActions.CartItemAdded(identityId, cartId)))
+    );
   }
 
 }

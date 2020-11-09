@@ -3,7 +3,7 @@ import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
-import { MarketActions } from '../store/market.actions';
+import { MarketStateActions, MarketUserActions } from '../store/market.actions';
 import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
@@ -80,15 +80,34 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this._store.select(MarketState.startedStatus).pipe(
+    const startedStatus$ = this._store.select(MarketState.startedStatus).pipe(
       tap((status) => this.startedStatus = status),
+      takeUntil(this.destroy$)
+    );
+
+    const indicators$ = merge(
+      this._store.select(MarketState.notificationValue('identityCartItemCount')).pipe(
+        tap((cartCountValue) => {
+          const cartMenu = this.menu.find(m => m.path === 'cart');
+          if (cartMenu) {
+            cartMenu.notificationValue = +cartCountValue > 0 ? +cartCountValue : null;
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+    );
+
+    merge(
+      startedStatus$,
+      indicators$
+    ).pipe(
       takeUntil(this.destroy$)
     ).subscribe();
 
 
     this.currentBalance = merge(
       this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
-      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$))
+      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
     ).pipe(
       startWith('0'),
       map(() => {
@@ -105,7 +124,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
-    this._store.dispatch(new MarketActions.StopMarketService());
+    this._store.dispatch(new MarketStateActions.StopMarketService());
   }
 
 
@@ -133,7 +152,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       concatMap((idName) => iif(
         () => (typeof idName === 'string') && (idName.length > 0),
         defer(() =>
-          this._store.dispatch(new MarketActions.CreateIdentity(idName)).pipe(
+          this._store.dispatch(new MarketUserActions.CreateIdentity(idName)).pipe(
             mapTo(true),
             catchError(() => of(false)),
             tap(success => {
@@ -156,7 +175,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.MARKET_LOADING}});
     this._store.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
-      concatMap(() => this._store.dispatch(new MarketActions.SetCurrentIdentity(identity))),
+      concatMap(() => this._store.dispatch(new MarketStateActions.SetCurrentIdentity(identity))),
       finalize(() => {
         this._dialog.closeAll();
       })

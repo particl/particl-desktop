@@ -1,12 +1,12 @@
-import { State, StateToken, Action, StateContext, Selector } from '@ngxs/store';
+import { State, StateToken, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { of, defer, iif, timer, throwError, merge } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
 import { SettingsService } from 'app/core/services/settings.service';
-import { MarketActions } from './market.actions';
+import { MarketStateActions, MarketUserActions } from './market.actions';
 import { patch, updateItem } from '@ngxs/store/operators';
-import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig } from './market.models';
+import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications } from './market.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { MainActions } from 'app/main/store/main.actions';
 import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
@@ -39,6 +39,9 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     startupWaitTimeoutSeconds: 60,
     defaultListingCommentPageCount: 20,
     daysToNotifyListingExpired: 7
+  },
+  notifications: {
+    identityCartItemCount: 0
   }
 };
 
@@ -112,6 +115,19 @@ export class MarketState {
   }
 
 
+  @Selector()
+  static getNotifications(state: MarketStateModel): MarketNotifications {
+    return state.notifications;
+  }
+
+
+  static notificationValue(key: string) {
+    return createSelector([MarketState.getNotifications], (state: MarketNotifications) => {
+      return state[key] || null;
+    });
+  }
+
+
   constructor(
     private _marketService: MarketRpcService,
     private _socketService: MarketSocketService,
@@ -119,7 +135,7 @@ export class MarketState {
   ) {}
 
 
-  @Action(MarketActions.StartMarketService)
+  @Action(MarketStateActions.StartMarketService)
   startMarketServices(ctx: StateContext<MarketStateModel>) {
     if ([StartedStatus.PENDING, StartedStatus.STARTED].includes(ctx.getState().started)) {
       return;
@@ -173,7 +189,7 @@ export class MarketState {
           () => isSuccess,
 
           defer(() => {
-            return ctx.dispatch(new MarketActions.LoadIdentities()).pipe(tap(() => ctx.patchState({started: StartedStatus.STARTED})));
+            return ctx.dispatch(new MarketStateActions.LoadIdentities()).pipe(tap(() => ctx.patchState({started: StartedStatus.STARTED})));
           })
       ))
     );
@@ -211,7 +227,7 @@ export class MarketState {
   }
 
 
-  @Action(MarketActions.StopMarketService)
+  @Action(MarketStateActions.StopMarketService)
   stopMarketServices(ctx: StateContext<MarketStateModel>) {
     this._socketService.stopSocketService();
     this._marketService.stopMarketService();
@@ -219,15 +235,15 @@ export class MarketState {
   }
 
 
-  @Action(MarketActions.RestartMarketService)
+  @Action(MarketStateActions.RestartMarketService)
   restartMarketServices(ctx: StateContext<MarketStateModel>) {
-    return ctx.dispatch(new MarketActions.StopMarketService()).pipe(
-      concatMap(() => timer(1500).pipe(tap(() => ctx.dispatch(new MarketActions.StartMarketService()))))
+    return ctx.dispatch(new MarketStateActions.StopMarketService()).pipe(
+      concatMap(() => timer(1500).pipe(tap(() => ctx.dispatch(new MarketStateActions.StartMarketService()))))
     );
   }
 
 
-  @Action(MarketActions.LoadIdentities)
+  @Action(MarketStateActions.LoadIdentities)
   loadIdentities(ctx: StateContext<MarketStateModel>) {
     const state = ctx.getState();
     if ((state.started === StartedStatus.STARTED) || (state.started === StartedStatus.PENDING)) {
@@ -271,7 +287,7 @@ export class MarketState {
               const saved = identities.find(id => id.id === savedID);
               if (saved !== undefined) {
                 return ctx.dispatch(new MainActions.ChangeWallet(saved.name)).pipe(
-                  concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(saved)))
+                  concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(saved)))
                 );
               }
             }
@@ -285,7 +301,7 @@ export class MarketState {
               const saved = identities.find(id => id.name === savedName);
               if (saved) {
                 return ctx.dispatch(new MainActions.ChangeWallet(saved.name)).pipe(
-                  concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(saved)))
+                  concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(saved)))
                 );
               }
             }
@@ -294,36 +310,54 @@ export class MarketState {
             const selected = identities.sort((a, b) => a.id - b.id)[0];
             if (selected) {
               return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
-                concatMap(() => ctx.dispatch(new MarketActions.SetCurrentIdentity(selected)))
+                concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected)))
               );
             }
           }
 
-          return ctx.dispatch(new MarketActions.SetCurrentIdentity(NULL_IDENTITY));
+          return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(NULL_IDENTITY));
         })
       );
     }
   }
 
 
-  @Action(MarketActions.SetCurrentIdentity)
-  setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketActions.SetCurrentIdentity) {
-
+  @Action(MarketStateActions.SetCurrentIdentity)
+  setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketStateActions.SetCurrentIdentity) {
     if (identity && (Number.isInteger(+identity.id))) {
       const globalSettings = this._settingsService.fetchGlobalSettings();
       // TODO: not a great way to do this... but we need to verify that the application state wallet is the current wallet
       //  before setting the active identity to that wallet. Look into a better way of doing this...
       if (globalSettings['activatedWallet'] === identity.name) {
         ctx.patchState({identity});
+        return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
       }
-    } else {
-      ctx.patchState({identity: NULL_IDENTITY});
+    }
+    ctx.patchState({identity: NULL_IDENTITY});
+    return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
+  }
+
+
+  @Action(MarketStateActions.SetIdentityCartCount)
+  setActiveIdentityCartCount(ctx: StateContext<MarketStateModel>) {
+    const identityCarts = ctx.getState().identity.carts;
+    if (identityCarts.length > 0) {
+      return this._marketService.call('cartitem', ['list', +identityCarts[0].id]).pipe(
+        catchError(() => of([])),
+        tap((cartItems) => {
+          ctx.setState(patch<MarketStateModel>({
+            notifications: patch<MarketNotifications>({
+              identityCartItemCount: Array.isArray(cartItems) ? cartItems.length : 0
+            })
+          }));
+        })
+      );
     }
   }
 
 
-  @Action(MarketActions.CreateIdentity)
-  createIdentity(ctx: StateContext<MarketStateModel>, { identityName }: MarketActions.CreateIdentity) {
+  @Action(MarketUserActions.CreateIdentity)
+  createIdentity(ctx: StateContext<MarketStateModel>, { identityName }: MarketUserActions.CreateIdentity) {
 
     if (typeof identityName !== 'string' && !identityName) {
       return throwError(() => of('Invalid Identity Name'));
@@ -348,8 +382,8 @@ export class MarketState {
   }
 
 
-  @Action(MarketActions.AddIdentityMarket)
-  AddMarket(ctx: StateContext<MarketStateModel>, { market }: MarketActions.AddIdentityMarket) {
+  @Action(MarketUserActions.AddIdentityMarket)
+  AddMarket(ctx: StateContext<MarketStateModel>, { market }: MarketUserActions.AddIdentityMarket) {
     if (!isBasicObjectType(market)) {
       return;
     }
@@ -374,8 +408,8 @@ export class MarketState {
   }
 
 
-  @Action(MarketActions.RemoveIdentityMarket)
-  RemoveMarket(ctx: StateContext<MarketStateModel>, { identityId, marketId }: MarketActions.RemoveIdentityMarket) {
+  @Action(MarketUserActions.RemoveIdentityMarket)
+  removeMarket(ctx: StateContext<MarketStateModel>, { identityId, marketId }: MarketUserActions.RemoveIdentityMarket) {
     if (!(+identityId > 0) || !(+marketId > 0)) {
       return;
     }
@@ -406,8 +440,8 @@ export class MarketState {
   }
 
 
-  @Action(MarketActions.SetSetting)
-  changeMarketSetting(ctx: StateContext<MarketStateModel>, action: MarketActions.SetSetting) {
+  @Action(MarketUserActions.SetSetting)
+  changeMarketSetting(ctx: StateContext<MarketStateModel>, action: MarketUserActions.SetSetting) {
     const currentState = ctx.getState();
     const currentSettings = JSON.parse(JSON.stringify(currentState.settings));
     let key = action.key;
@@ -428,6 +462,46 @@ export class MarketState {
           settings: patch<MarketSettings>({ [key] : action.value })}
         ));
       }
+    }
+  }
+
+
+  @Action(MarketUserActions.CartItemAdded)
+  cartAddItem(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartItemAdded) {
+    if (action.identityId === ctx.getState().identity.id ) {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: ctx.getState().notifications.identityCartItemCount + 1
+        })
+      }));
+    }
+  }
+
+
+  @Action(MarketUserActions.CartItemRemoved)
+  cartRemoveItem(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartItemRemoved) {
+    const identity = ctx.getState().identity;
+
+    if ((action.identityId === identity.id) && identity.carts[0] && (action.cartId === identity.carts[0].id) ) {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: Math.max(ctx.getState().notifications.identityCartItemCount - 1, 0)
+        })
+      }));
+    }
+  }
+
+
+  @Action(MarketUserActions.CartCleared)
+  cartRemoveAll(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartCleared) {
+    const identityId = ctx.getState().identity.id;
+
+    if (action.identityId === identityId) {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: 0
+        })
+      }));
     }
   }
 

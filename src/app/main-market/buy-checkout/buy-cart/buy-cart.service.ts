@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, iif, defer, concat, throwError } from 'rxjs';
-import { map, catchError, concatMap, mapTo, reduce } from 'rxjs/operators';
+import { map, catchError, concatMap, mapTo, reduce, tap } from 'rxjs/operators';
+
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
+import { MarketUserActions } from 'app/main-market/store/market.actions';
+
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 import { RegionListService } from 'app/main-market/services/region-list/region-list.service';
 import { DataService } from '../../services/data/data.service';
@@ -113,22 +116,34 @@ export class BuyCartService {
 
 
   removeCartItem(cartItemId: number): Observable<boolean> {
+    const identity = this._store.selectSnapshot(MarketState.currentIdentity);
     return this._rpc.call('cartitem', ['remove', cartItemId]).pipe(
       mapTo(true),
-      catchError(() => of(false))
+      catchError(() => of(false)),
+      tap((success) => {
+        if (success) {
+          this._store.dispatch(new MarketUserActions.CartItemRemoved(identity.id, identity.carts[0].id));
+        }
+      }),
     );
   }
 
 
   removeAllCurrentCartItems(): Observable<boolean> {
     const cart = this._store.selectSnapshot(MarketState.availableCarts)[0];
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
 
     if (!cart || !(+cart.id > 0)) {
       return of(false);
     }
     return this._rpc.call('cart', ['clear', cart.id]).pipe(
       mapTo(true),
-      catchError(() => of(false))
+      catchError(() => of(false)),
+      tap((success) => {
+        if (success) {
+          this._store.dispatch(new MarketUserActions.CartCleared(identityId));
+        }
+      }),
     );
   }
 

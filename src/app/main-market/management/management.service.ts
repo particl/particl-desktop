@@ -4,7 +4,7 @@ import { map, mapTo, catchError, concatMap, last, tap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { MarketActions } from '../store/market.actions';
+import { MarketUserActions } from '../store/market.actions';
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
@@ -196,7 +196,7 @@ export class MarketManagementService {
               type: market.marketType
             };
 
-            this._store.dispatch(new MarketActions.AddIdentityMarket(idMarket));
+            this._store.dispatch(new MarketUserActions.AddIdentityMarket(idMarket));
           }
         })
       );
@@ -209,7 +209,7 @@ export class MarketManagementService {
     return this._rpc.call('market', ['remove', marketId]).pipe(
       tap(() => {
         const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
-        this._store.dispatch(new MarketActions.RemoveIdentityMarket(identityId, marketId));
+        this._store.dispatch(new MarketUserActions.RemoveIdentityMarket(identityId, marketId));
       })
     );
   }
@@ -276,7 +276,7 @@ export class MarketManagementService {
           if (idMarket.image.length === 0) {
             idMarket.image = this.marketDefaultImage;
           }
-          this._store.dispatch(new MarketActions.AddIdentityMarket(idMarket));
+          this._store.dispatch(new MarketUserActions.AddIdentityMarket(idMarket));
         }
 
         return this.buildJoinedMarket(market, marketUrl);
