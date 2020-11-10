@@ -101,10 +101,10 @@ if (!instanceLock) {
 
       // Display a 'modal'-like window indicating that the application is shutting down
       closingWindow = new BrowserWindow({
-        width:     600,
-        minWidth:  600,
-        height:    400,
-        minHeight: 400,
+        width:     500,
+        minWidth:  500,
+        height:    320,
+        minHeight: 320,
         icon:      path.join(__dirname, 'resources/icon.png'),
 
         backgroundColor: '#222828',

@@ -520,6 +520,7 @@ mat-dialog-actions.mat-dialog-actions {
     .mat-drawer-inner-container {
       display: flex;
       flex-direction: row;
+      background: var(--bg);
     }
     .mat-divider {
       border-top: 1px solid hsl(192, 11%, 9%);
