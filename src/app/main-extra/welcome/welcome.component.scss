@@ -34,7 +34,7 @@ body {
     position: relative;
     z-index: 10;
     animation: expand-content 1.5s 1;
-    animation-delay: 2.3s;
+    animation-delay: 0.3s;
     animation-fill-mode: forwards; // stay on the last "frame"
   }
 }
@@ -75,7 +75,6 @@ section {
     flex-direction: column;
     justify-content: center;
     animation: fade-starting 0.5s 1;
-    animation-delay: 2s;
     animation-fill-mode: forwards; // stay on the last "frame"
     position: absolute;
     top: 50%;
@@ -109,7 +108,7 @@ section {
     width: 100%;
     margin: 0 calc(-1 * var(--app-margin));
     animation: fade-apps 0.6s 1;
-    animation-delay: 2.8s;
+    animation-delay: 0.8s;
     animation-fill-mode: forwards; // stay on the last "frame"
     position: absolute;
     top: 50%;

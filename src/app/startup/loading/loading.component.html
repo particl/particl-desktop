@@ -1,25 +1,36 @@
-<div class="splash-container">
+<div class="logo">
+  <img src="./assets/particl-logo.svg" alt="Particl Project">
+</div>
+
+<div class="container">
   <div class="content">
 
-    <img class="logo" src="assets/particl-logo.svg">
-
-    <blockquote class="quote">
-      <p>To hide the signal you must generate noise.</p>
-      <footer class="author">&mdash; Ido Kaiser</footer>
-    </blockquote>
-    
-  </div><!-- .content -->
-
-
-  <div class="loading-wrapper">
-
-    <div class="loader">
-      <span>&bull;</span><span>&bull;</span><span>&bull;</span>
+    <div class="header-text">
+      <h1>Welcome to Particl</h1>
+      <p>Embrace your digital sovereignty and thrive &ndash; the power is in your hands</p>
     </div>
+  
+    <section>
 
-    <p class="loading-status" *ngIf="loadingMessage">
-      {{loadingMessage | async}}
+      <div class="starting">
+        <mat-card>
+          <mat-spinner color="accent" class="small"></mat-spinner>
+          <div class="text">
+            <div class="title">Starting</div>
+            <div class="desc" *ngIf="loadingMessage">{{loadingMessage | async}}</div>
+          </div>
+        </mat-card>
+      </div><!-- .starting -->
+
+    </section>
+  
+    <p class="version">
+      Particl Desktop 3.0
     </p>
 
-  </div><!-- .loading-wrapper -->
-</div><!-- .splash-container -->
+  </div>
+</div><!-- .container -->
+
+<div class="illustration">
+  <img src="./assets/images/illustrations/particl-market_animated.svg" alt="">
+</div>
