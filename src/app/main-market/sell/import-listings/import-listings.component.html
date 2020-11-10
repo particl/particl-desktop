@@ -17,7 +17,7 @@
 
     <!-- ---------------------------------- 1. SELECT IMPORT ---------------------------------- -->
 
-    <mat-step [completed]="stepper.selectedIndex >= 0" [stepControl]="firstFormGroup">
+    <mat-step [completed]="stepper.selectedIndex >= 0">
       <ng-template matStepLabel>Select Import</ng-template>
       <app-page-intro>
         <ng-container page-title>Select Import</ng-container>
@@ -29,13 +29,13 @@
         </ng-container>
       </app-page-intro>
 
-      <form class="stepper-content select-import" [formGroup]="firstFormGroup">
+      <form class="stepper-content select-import">
 
         <div class="filter">
           <h2 class="section-title">Select import source</h2>
           <div class="radio-switcher">
-            <label *ngFor="let source of import_sources">
-              <input type="radio" name="option" [value]="source.value">
+            <label *ngFor="let source of importOptions">
+              <input type="radio" name="option" [value]="source.value" appDebounceClick [debounceTime]="500" (debounceClick)="setImportSauce(source.value)">
               <div class="switcher-option">
                 <mat-icon [fontIcon]="source.icon"></mat-icon>
                 <span class="name">{{ source.title }}</span>
@@ -44,104 +44,13 @@
           </div><!-- .radio-switcher -->
         </div><!-- .filter-->
 
-        <!-- a) IMPORT FROM CSV -->
         <div class="import-config with-filter">
-          <h2 class="section-title">Import from CSV file</h2>
 
-          <mat-card class="import-card">
-            <div class="text">
-              <p>
-                CSV (comma separated values) file is an universal way of importing your Products &ndash; you can download our <a href="./assets/templates/csv_template.csv" download>CSV example template</a> as a starting point
-              </p>
-              <details>
-                <summary>CSV column definitions</summary>
-                <div class="details">
-                  <p>
-                    These columns should be defined in your CSV import file &ndash; if any columns will be missing, you would have to fill them in in the next step manually.
-                  </p>
-                  <ul>
-                    <li><strong>title</strong>: Product's title (Listing name)</li>
-                    <li><strong>short_description</strong>: short sentence highlighting Product's key features</li>
-                    <li><strong>long_description</strong>: general description of the Product</li>
-                    <li><strong>base_price</strong>: price per Product (priced in PART)</li>
-                    <li><strong>category</strong>: Product's category matching available Open Marketplace categories</li>
-                    <li><strong>images</strong>: URLs to images of the Product (multiple images separated by comma and space)</li>
-                    <li><strong>domestic_shipping_price</strong>: price (in PART) for shipping the Product inside your country (specified later)</li>
-                    <li><strong>international_shipping_price</strong>: price for shipping the Product worldwide (outside your country)</li>
-                  </ul>
-                </div>
-              </details>
-            </div><!-- .text -->
-            <mat-divider></mat-divider>
-            <label class="--larger">
-              <h3 class="label">Select CSV import file</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text" placeholder="Select your .csv file" formControlName="firstCtrl" />
-              </mat-form-field>
-            </label>
-            <label class="--larger">
-              <h3 class="label">CSV separator</h3>
-              <p class="help-text">
-                Character used to separate values (usually comma or semicolon)
-              </p>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text" placeholder="CSV delimiter" formControlName="firstCtrl" />
-              </mat-form-field>
-            </label>
-            <p class="message --warning">Some import error occured, oops</p>
-          </mat-card>
+          <ng-container *ngIf="selectedImportControl.value === null">
+            Hey, nothing to be selected here... use the option on the left to import something
+          </ng-container>
 
-          <div class="action-buttons" fxLayoutAlign="end center">
-            <button mat-raised-button color="primary" matStepperNext>
-              <mat-icon fontIcon="part-next-single"></mat-icon>
-              Process CSV import
-            </button>
-          </div>
-        </div><!-- .import-config -->
-
-        <!-- b) IMPORT FROM WOOCOMMERCE -->
-        <div class="import-config with-filter">
-          <h2 class="section-title">Import from WooCommerce</h2>
-
-          <mat-card class="import-card">
-            <div class="text">
-              <p>
-                WooCommerce is a popular e-commerce solution for WordPress &ndash; easily import your WooCommerce Products here
-              </p>
-              <details>
-                <summary>How to get WooCommerce export file?</summary>
-                <div class="details">
-                  <p>
-                    In WooCommerce admin, go to Products then All Products, click <strong>Export</strong> next to page's title. Leave pre-filled settings and click <strong>Generate CSV</strong>
-                  </p>
-                </div>
-              </details>
-            </div><!-- .text -->
-            <mat-divider></mat-divider>
-            <label class="--larger">
-              <h3 class="label">Select WooCommerce export file</h3>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="text" placeholder="Select WooCommerce .csv file" formControlName="firstCtrl" />
-              </mat-form-field>
-            </label>
-            <label class="--larger">
-              <h3 class="label">PART/fiat currency conversion</h3>
-              <p class="help-text">
-                Set manual conversion rate &ndash; if you're selling for USD on your shop and PART/USD price is $5, enter "5"
-              </p>
-              <mat-form-field appearance="fill" class="--plain --larger">
-                <input matInput type="number" min="0" placeholder="Choose static PART rate" formControlName="firstCtrl" />
-              </mat-form-field>
-            </label>
-            <p class="message --warning">Some import error occured, oops</p>
-          </mat-card>
-
-          <div class="action-buttons" fxLayoutAlign="end center">
-            <button mat-raised-button color="primary" matStepperNext>
-              <mat-icon fontIcon="part-next-single"></mat-icon>
-              Process WooCommerce import
-            </button>
-          </div>
+          <ng-template importer></ng-template>
         </div><!-- .import-config -->
 
       </form><!-- .select-import.stepper-content -->
@@ -163,7 +72,7 @@
         </ng-container>
       </app-page-intro>
 
-      <form class="stepper-content review-import-data" [formGroup]="secondFormGroup">
+      <form class="stepper-content review-import-data">
         <h2 class="section-title">2<!--{{listings.length}}--> Products found for import</h2>
 
         <mat-accordion><!-- *ngIf="listings.length > 0" -->

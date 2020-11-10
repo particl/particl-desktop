@@ -104,7 +104,11 @@ class CSVParser extends BaseParser {
           subs.error(err);
         })
         .pipe(_csv(parserConfig))
-        .on('data', (data) => results.push(data))
+        .on('data', (obj) => {
+          if (Object.keys(obj).length > 0) {
+            results.push(obj);
+          }
+        })
         .on('end', () => {
           subs.next(results);
           subs.complete();

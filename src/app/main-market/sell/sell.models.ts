@@ -7,7 +7,6 @@ import {
   ESCROW_RELEASE_TYPE,
   SALES_TYPE,
   IMAGE_PROTOCOL,
-  IMAGE_ENCODING,
 } from '../shared/market.models';
 
 
