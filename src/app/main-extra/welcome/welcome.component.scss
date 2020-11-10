@@ -4,6 +4,19 @@ body {
   margin: 0 !important;
 }
 
+.logo {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background: var(--bg-black);
+  img {
+    width: 7vw;
+    display: block;
+    margin: 1.5vw 1.8vw;
+  }
+}
+
 .container {
   @extend %tfx;
   --container-paddingV: 4rem;
@@ -13,37 +26,31 @@ body {
   padding: var(--container-paddingV) 8vw;
   display: flex;
   flex-direction: column;
-  .logo {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    background: var(--bg-black);
-    img {
-      width: 10vw;
-      display: block;
-      margin: 1.7vw 2vw;
-    }
-  }
   .content {
+    @extend %tfx;
     margin: auto 0;
+    flex: 0 0 550px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
   }
-  .illustration {
-    position: fixed;
-    bottom: -100px;
-    right: -133px;
-    width: 50vw;
-    img {
-      width: 100%;
-      max-width: 100%;
-      pointer-events: none;
-    }
+}
+
+.illustration {
+  position: fixed;
+  bottom: -100px;
+  right: -133px;
+  width: 47vw;
+  img {
+    width: 100%;
+    max-width: 100%;
+    pointer-events: none;
   }
 }
 
 .header-text {
-  flex: 1 0 50px;
-  margin-bottom: 17vh;
+  flex: 0 1 50px;
   // slide-from-top animation (from 0 opacity)
   animation: slide-from-top 0.6s 1;
   animation-delay: 0.4s;
@@ -61,55 +68,84 @@ body {
   }
 }
 
-.app-grid {
-  --app-margin: 16px;
-  flex: 1 1 100%;
-  display: flex;
-  margin: 0 calc(-1 * var(--app-margin));
-  // slide-from-bottom animation (from 0 opacity)
-  animation: slide-from-bottom 0.6s 1;
-  animation-delay: 0.4s;
-  animation-fill-mode: forwards; // stay on the last "frame"
-  opacity: 0;
-  .app {
-    @extend %tfx;
-    @extend %mat-card;
-    flex: 20%;
-    max-width: 200px;
-    margin: auto var(--app-margin);
-    padding: 26px;
-    text-align: left;
-    color: var(--text);
-    text-decoration: none;
-    &:hover,
-    &:focus {
-      box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+section {
+  &.starting {
+    flex: 1 1 100%;
+    width: 25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .mat-card {
+      padding: 26px 32px;
     }
-    .mat-icon {
-      font-size: 22px;
-      &.part-stake {
-        color: var(--color-primary);
+    .mat-spinner {
+      float: left;
+    }
+    .text {
+      display: inline-block;
+      padding: 0 1.2rem;
+      margin-top: -0.05rem;
+      .title {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 2px;
       }
-      &.part-bag {
-        color: var(--color-secondary);
-      }
-      &.part-swap {
-        color: var(--color-tertiary);
+      .desc {
+        color: var(--text-muted);
       }
     }
-    .name {
-      margin: 14px 0 8px;
+  } // .loading
+  &.apps {
+    --app-margin: 16px;
+    display: flex;
+    flex: 1 1 100%;
+    margin: 0 calc(-1 * var(--app-margin));
+    // slide-from-bottom animation (from 0 opacity)
+    animation: slide-from-bottom 0.6s 1;
+    animation-delay: 0.4s;
+    animation-fill-mode: forwards; // stay on the last "frame"
+    opacity: 0;
+    .app {
+      @extend %tfx;
+      @extend %mat-card;
+      flex: 20%;
+      max-width: 220px;
+      margin: auto var(--app-margin);
+      padding: 26px;
+      text-align: left;
+      color: var(--text);
+      text-decoration: none;
+      &:hover,
+      &:focus {
+        box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+      }
+      .mat-icon {
+        font-size: 22px;
+        &.part-stake {
+          color: var(--color-primary);
+        }
+        &.part-bag {
+          color: var(--color-secondary);
+        }
+        &.part-swap {
+          color: var(--color-tertiary);
+        }
+      }
+      .name {
+        margin: 14px 0 8px;
+      }
+      .desc {
+        margin: 0;
+        color: var(--text-muted);
+      }
     }
-    .desc {
-      margin: 0;
-      color: var(--text-muted);
-    }
-  }
+  } // .apps
 }
 
+
 .version {
-  flex: 0 0 24px;
-  margin: 22vh 0 0;
+  flex: 0 1 24px;
+  margin: 0;
   color: hsla(var(--text-muted-hsl), 0.6);
 }
 
@@ -130,5 +166,24 @@ body {
   }
   100% {
     opacity: 1;
+  }
+}
+
+
+
+
+
+// ################ REMOVE ##################
+
+.container {
+  .content {
+    flex: 0 0 300px;
+  }
+  section.apps { display: none; }
+  section.starting { display: flex; }
+  &.loaded {
+    .content { flex: 0 0 550px; }
+    section.starting { display: none; }
+    section.apps { display: flex; }
   }
 }

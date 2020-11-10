@@ -1,18 +1,17 @@
+<div class="logo">
+  <img src="./assets/particl-logo.svg" alt="Particl Project">
+</div>
+
 <div class="container">
-
-  <div class="logo">
-    <img src="./assets/particl-logo.svg" alt="Particl Project">
-  </div>
-
   <div class="content">
 
     <div class="header-text">
       <h1>Welcome to Particl</h1>
-      <p>Your gateway to a peer-to-peer, private applications of the future</p>
+      <p>Embrace your digital sovereignty and thrive &ndash; the power is in your hands</p>
     </div>
   
-    <div class="app-grid">
-  
+    <section class="apps">
+    
       <a class="app item" routerLink="/main/wallet">
         <mat-icon fontIcon="part-stake" class="icon"></mat-icon>
         <h2 class="name">Wallet</h2>
@@ -25,22 +24,31 @@
         <p class="desc">Buy and sell on the most private marketplace</p>
       </a>
   
-      <!-- <a class="app item" routerLink="/main/exchange">
+      <!--a class="app item" routerLink="/main/exchange">
         <mat-icon fontIcon="part-swap" class="icon"></mat-icon>
         <h2 class="name">Swap</h2>
         <p class="desc">Swap your crypto to and from PART effortlessly</p>
-      </a> -->
-  
-    </div><!-- .app-grid -->
+      </a-->
+    
+    </section><!-- .apps -->
+
+    <section class="starting">
+      <mat-card>
+        <mat-spinner color="accent" class="small"></mat-spinner>
+        <div class="text">
+          <div class="title">Starting</div>
+          <div class="desc">Verifying network connection&hellip;</div>
+        </div>
+      </mat-card>
+    </section>
   
     <p class="version">
       Particl Desktop 3.0
     </p>
 
   </div>
-
-  <div class="illustration">
-    <img src="./assets/images/illustrations/particl-market_animated.svg" alt="">
-  </div>
-
 </div><!-- .container -->
+
+<div class="illustration">
+  <img src="./assets/images/illustrations/particl-market_animated.svg" alt="">
+</div>
