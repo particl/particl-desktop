@@ -1,9 +1,10 @@
 import { Component, OnInit, ComponentFactoryResolver, ViewChild, Type, OnDestroy, ComponentRef, ViewContainerRef, ElementRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatStepper, MatDialog } from '@angular/material';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { defer, Observable, Subject, of, merge } from 'rxjs';
-import { switchMap, takeUntil, map, tap } from 'rxjs/operators';
+import { defer, Observable, Subject, of, merge, concat } from 'rxjs';
+import { switchMap, takeUntil, map, tap, catchError, finalize } from 'rxjs/operators';
 
 import { RegionListService } from 'app/main-market/services/region-list/region-list.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
@@ -13,6 +14,7 @@ import { ImporterComponent } from './import-components/importer.component';
 import { CsvImporterComponent } from './import-components/csv-importer/csv-importer.component';
 // import { WooCommerceImporterComponent } from './import-components/woocommerce-importer/woocommerce-importer.component';
 import { TemplateFormDetails } from '../sell.models';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
 
 interface ImportOption {
@@ -25,6 +27,7 @@ interface ImportOption {
 
 enum TextContent {
   PROCESSING_TEMPLATE_IMPORT = 'Importing and saving the selected templates',
+  SUCCESSFUL_IMPORT = 'Successfully imported all selected products'
 }
 
 
@@ -44,6 +47,7 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
   isBusy: boolean = false;
   countItemsParsed: number = 0;
   countSelectedForImport: number = 0;
+  hasProcessError: boolean = false;
 
   private destroy$: Subject<void> = new Subject();
   private counter$: Subject<void> = new Subject();
@@ -58,7 +62,10 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _componentFactoryResolver: ComponentFactoryResolver,
+    private _router: Router,
+    private _route: ActivatedRoute,
     private _dialog: MatDialog,
+    private _snackbar: SnackbarService,
     private _regionService: RegionListService
   ) {
     const regionsMap = this._regionService.getCountryList().map(c => ({id: c.iso, name: c.name}));
@@ -110,15 +117,45 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
 
 
   processImports() {
-    // if (!this.canProcessProducts || this.isBusy) {
-    //   return;
-    // }
+    if (!this.canProcessProducts || this.isBusy) {
+      return;
+    }
 
-    // this._dialog.open(ProcessingModalComponent, {
-    //   disableClose: true,
-    //   data: { message: TextContent.PROCESSING_TEMPLATE_IMPORT }
-    // });
+    this.isBusy = true;
 
+    this._dialog.open(ProcessingModalComponent, {
+      disableClose: true,
+      data: { message: TextContent.PROCESSING_TEMPLATE_IMPORT }
+    });
+
+    const processing = [];
+    let allSuccessful = true;
+    for (const comp of this.productTemplateComponents) {
+      processing.push(
+        comp.instance.getTemplateCreationObservable().pipe(
+          catchError(() => of(false)),
+          tap(isSuccess => {
+            if (!isSuccess && allSuccessful) {
+              allSuccessful = false;
+            }
+          })
+        )
+      );
+    }
+
+    concat(...processing).pipe(
+      finalize(() => {
+        this.isBusy = false;
+        this._dialog.closeAll();
+        if (allSuccessful) {
+          this._snackbar.open(TextContent.SUCCESSFUL_IMPORT);
+          this._router.navigate(['../'], {relativeTo: this._route, queryParams: {selectedSellTab: 'templates'}});
+        } else {
+          this.hasProcessError = true;
+        }
+      }),
+      takeUntil(this.destroy$)
+    );
 
   }
 
@@ -168,8 +205,15 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
       this.productTemplateComponents.push(component);
     }
 
-    merge(...listeners$).pipe(takeUntil(this.counter$)).subscribe(
-      (val: number) => this.countSelectedForImport += val
+    merge(...listeners$).pipe(
+      takeUntil(this.counter$)
+    ).subscribe(
+      (val: number) => {
+        this.countSelectedForImport += val;
+        if (this.hasProcessError) {
+          this.hasProcessError = false;
+        }
+      }
     );
 
     this.isRenderingTemplates = false;

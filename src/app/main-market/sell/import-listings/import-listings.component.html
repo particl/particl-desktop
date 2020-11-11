@@ -78,9 +78,8 @@
           <ng-template #productTemplateList></ng-template>
         </mat-accordion>
 
-        <p class="alert --boxed --warning" *ngIf="false">
-          <!-- @FIXME: replace text by meaningful error message ;) -->
-          <span>Ooops, some errors occured &ndash; missing fields or something, please correct them before Saving</span>
+        <p class="alert --boxed --warning" *ngIf="hasProcessError">
+          <span>Failed to import all selected products &ndash; an error occurred on one or more selected products and these were not imported</span>
         </p>
 
         <div class="action-buttons" fxLayoutAlign="space-between center">

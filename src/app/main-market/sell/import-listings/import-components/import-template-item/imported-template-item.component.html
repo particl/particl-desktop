@@ -8,14 +8,23 @@
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{template.title}}</div>
       </div>
-      <div class="status-wrap" fxFlex="0 0 240px">
-        <div class="status {{isFormValidControl.value ? 'published' : 'expired'}}">
-          <span class="dot"></span>{{isFormValidControl.value ? 'Ready' : 'Has Errors'}}
+      <ng-container *ngIf="displayControls">
+        <div class="status-wrap" fxFlex="0 0 240px">
+          <ng-container *ngIf="hasProcessingError; else displayParseIndicator">
+            <div class="status expired">
+              <span class="dot"></span>Error during import and save
+            </div>
+          </ng-container>
+          <ng-template #displayParseIndicator>
+            <div class="status {{isFormValidControl.value ? 'published' : 'expired'}}">
+              <span class="dot"></span>{{isFormValidControl.value ? 'Ready' : 'Has Errors'}}
+            </div>
+          </ng-template>
         </div>
-      </div>
-      <div class="publish-toggle" fxFlex>
-        <mat-checkbox (click)="$event.stopPropagation()" color="primary" [formControl]="importControl">Import</mat-checkbox>
-      </div>
+        <div class="publish-toggle" fxFlex>
+          <mat-checkbox (click)="$event.stopPropagation()" color="primary" [formControl]="importControl">Import</mat-checkbox>
+        </div>
+      </ng-container>
     </div>
   </mat-expansion-panel-header>
   <div class="detail">
