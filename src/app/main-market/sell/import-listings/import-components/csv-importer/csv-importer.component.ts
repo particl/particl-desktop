@@ -82,6 +82,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
     of({}).pipe(
       exhaustMap(() => defer(() => {
         this.isProcessing = true;
+        this.csvInputForm.disable();
         const values = this.csvInputForm.value;
 
         const options: CsvImportOptions = {
@@ -97,7 +98,10 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
           values.source,
           options
         ).pipe(
-          finalize(() => this.isProcessing = false),
+          finalize(() => {
+            this.isProcessing = false;
+            this.csvInputForm.enable();
+          }),
           map(results => {
             const details: TemplateFormDetails[]  = [];
 

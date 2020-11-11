@@ -296,16 +296,16 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   private setFormValues(templ: TemplateFormDetails): void {
     this.imagesPending.setValue([]);
 
-    this.templateForm.controls['title'].setValue(templ.title);
-    this.templateForm.controls['summary'].setValue(templ.summary);
-    this.templateForm.controls['description'].setValue(templ.description);
+    this.templateForm.controls['title'].setValue(templ.title, {emitEvent: false});
+    this.templateForm.controls['summary'].setValue(templ.summary, {emitEvent: false});
+    this.templateForm.controls['description'].setValue(templ.description, {emitEvent: false});
 
-    this.templateForm.controls['basePrice'].setValue(templ.priceBase);
-    this.templateForm.controls['priceShipLocal'].setValue(templ.priceShipLocal);
-    this.templateForm.controls['priceShipIntl'].setValue(templ.priceShipIntl);
+    this.templateForm.controls['basePrice'].setValue(templ.priceBase, {emitEvent: false});
+    this.templateForm.controls['priceShipLocal'].setValue(templ.priceShipLocal, {emitEvent: false});
+    this.templateForm.controls['priceShipIntl'].setValue(templ.priceShipIntl, {emitEvent: false});
 
-    this.templateForm.controls['shippingOrigin'].setValue(templ.shippingOrigin);
-    this.templateForm.controls['shippingDestinations'].setValue(templ.shippingDestinations);
+    this.templateForm.controls['shippingOrigin'].setValue(templ.shippingOrigin, {emitEvent: false});
+    this.templateForm.controls['shippingDestinations'].setValue(templ.shippingDestinations, {emitEvent: false});
     this.selectorShipOrigin.resetSelection(templ.shippingOrigin);
     this.selectorShipDestinations.resetSelection(templ.shippingDestinations);
 
@@ -323,7 +323,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     if (templ.market.selectedMarketId && (templ.market.selectedMarketId !== this.templateForm.controls['selectedMarket'].value)) {
-      this.templateForm.controls['selectedMarket'].setValue(templ.market.selectedMarketId);
+      this.templateForm.controls['selectedMarket'].setValue(templ.market.selectedMarketId, {emitEvent: false});
     }
     if (!templ.market.canEdit) {
       this.templateForm.controls['selectedMarket'].disable();

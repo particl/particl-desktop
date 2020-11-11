@@ -1,6 +1,6 @@
 <div class="container-block without-tab-bar">
 
-  <mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg --stepper-above-page-title" #stepper>
+  <mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg --stepper-above-page-title" #stepper (selectionChange)="stepperChangedSelection($event)">
     <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
     <ng-template matStepperIcon="edit">
       <custom-icon>
@@ -17,7 +17,7 @@
 
     <!-- ---------------------------------- 1. SELECT IMPORT ---------------------------------- -->
 
-    <mat-step [completed]="stepper.selectedIndex >= 0">
+    <mat-step [completed]="stepper.selectedIndex > 0">
       <ng-template matStepLabel>Select Import</ng-template>
       <app-page-intro>
         <ng-container page-title>Select Import</ng-container>
@@ -60,7 +60,7 @@
 
     <!-- ---------------------------------- 2. REVIEW IMPORT DATA ---------------------------------- -->
 
-    <mat-step [completed]="stepper.selectedIndex >= 1">
+    <mat-step [completed]="stepper.selectedIndex > 1">
       <ng-template matStepLabel>Review Import Data</ng-template>
       <app-page-intro>
         <ng-container page-title>Review Import Data</ng-container>
@@ -73,65 +73,12 @@
       </app-page-intro>
 
       <form class="stepper-content review-import-data">
-        <h2 class="section-title">2<!--{{listings.length}}--> Products found for import</h2>
-
-        <mat-accordion><!-- *ngIf="listings.length > 0" -->
-          <!-- @FIXME: why this doesn't panel have the expand animation? -->
-          <mat-expansion-panel class="imported-template list-item no-padding">
-            <mat-expansion-panel-header class="header">
-              <div class="header-wrapper">
-                <div class="photo">
-                  <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
-                </div>
-                <div class="meta" fxFlex="1 1 100%">
-                  <div class="name">Imported Template title</div>
-                </div>
-                <div class="status-wrap" fxFlex="0 0 240px"><!-- *ngFor="let status of getStatus(listing?.status)" -->
-                  <!-- @TODO: `.expired` for errors (missing fields), `.published` for non-problematic: -->
-                  <div class="status expired">
-                    <!-- @TODO: in case of no errors, show "ready" instead -->
-                    <span class="dot"></span>2 missing fields
-                  </div>
-                </div>
-                <div class="publish-toggle" fxFlex>
-                  <!-- @TODO: if errors, uncheck & disable Publish checkbox -->
-                  <mat-checkbox disabled (click)="$event.stopPropagation()" color="primary">Import</mat-checkbox>
-                </div>
-              </div>
-            </mat-expansion-panel-header>
-            <div class="detail">
-              -- Add new Template component here --
-            </div>
-          </mat-expansion-panel><!-- .imported-template -->
-          <!-- @FIXME: why this doesn't panel have the expand animation? -->
-          <mat-expansion-panel class="imported-template list-item no-padding">
-            <mat-expansion-panel-header class="header">
-              <div class="header-wrapper">
-                <div class="photo">
-                  <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
-                </div>
-                <div class="meta" fxFlex="1 1 100%">
-                  <div class="name">Another Imported Template</div>
-                </div>
-                <div class="status-wrap" fxFlex="0 0 240px"><!-- *ngFor="let status of getStatus(listing?.status)" -->
-                  <!-- @TODO: `.expired` for errors (missing fields), `.published` for non-problematic: -->
-                  <div class="status published">
-                    <!-- @TODO: in case of no errors, show "ready" instead -->
-                    <span class="dot"></span>ready
-                  </div>
-                </div>
-                <div class="publish-toggle" fxFlex>
-                  <mat-checkbox checked="checked" (click)="$event.stopPropagation()" color="primary">Import</mat-checkbox>
-                </div>
-              </div>
-            </mat-expansion-panel-header>
-            <div class="detail">
-              -- Add new Template component here --
-            </div>
-          </mat-expansion-panel><!-- .imported-template -->
+        <h2 class="section-title">{{countItemsParsed}} Product(s) found for import</h2>
+        <mat-accordion>
+          <ng-template #productTemplateList></ng-template>
         </mat-accordion>
 
-        <p class="alert --boxed --warning">
+        <p class="alert --boxed --warning" *ngIf="false">
           <!-- @FIXME: replace text by meaningful error message ;) -->
           <span>Ooops, some errors occured &ndash; missing fields or something, please correct them before Saving</span>
         </p>
@@ -141,8 +88,7 @@
             <mat-icon fontIcon="part-previous-single"></mat-icon>
             Back
           </button>
-          <!-- @TODO: enable if at least 1 template is marked for importing -->
-          <button mat-raised-button color="primary" matStepperNext>
+          <button mat-raised-button color="primary" [disabled]="!canProcessProducts || isBusy" appDebounceClick (debounceClick)="processImports()">
             <mat-icon fontIcon="part-next-single"></mat-icon>
             Import &amp; Save
           </button>
