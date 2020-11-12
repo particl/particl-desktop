@@ -1,0 +1,41 @@
+<h2 class="section-title">Import from WooCommerce</h2>
+
+<mat-card class="import-card">
+  <div class="text">
+    <p>
+      WooCommerce is a popular e-commerce solution for WordPress &ndash; easily import your WooCommerce Products here
+    </p>
+    <details>
+      <summary>How to get WooCommerce export file?</summary>
+      <div class="details">
+        <p>
+          In WooCommerce admin, go to Products then All Products, click <strong>Export</strong> next to page's title. Leave pre-filled settings and click <strong>Generate CSV</strong>
+        </p>
+      </div>
+    </details>
+  </div><!-- .text -->
+  <mat-divider></mat-divider>
+  <label class="--larger">
+    <h3 class="label">Select WooCommerce export file</h3>
+    <mat-form-field appearance="fill" class="--plain --larger">
+      <input matInput type="text" placeholder="Select WooCommerce .csv file" />
+    </mat-form-field>
+  </label>
+  <label class="--larger">
+    <h3 class="label">PART/fiat currency conversion</h3>
+    <p class="help-text">
+      Set manual conversion rate &ndash; if you're selling for USD on your shop and PART/USD price is $5, enter "5"
+    </p>
+    <mat-form-field appearance="fill" class="--plain --larger">
+      <input matInput type="number" min="0" placeholder="Choose static PART rate" />
+    </mat-form-field>
+  </label>
+  <p class="message --warning">Some import error occured, oops</p>
+</mat-card>
+
+<div class="action-buttons" fxLayoutAlign="end center">
+  <button mat-raised-button color="primary" matStepperNext>
+    <mat-icon fontIcon="part-next-single"></mat-icon>
+    Process WooCommerce import
+  </button>
+</div>

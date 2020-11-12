@@ -11,7 +11,6 @@ import { SellComponent } from './sell.component';
 import { SellTemplatesComponent } from './sell-templates/sell-templates.component';
 import { SellListingsComponent } from './sell-listings/sell-listings.component';
 import { NewListingComponent } from './new-listing/new-listing.component';
-import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { SellTemplateFormComponent } from './sell-template-form/sell-template-form.component';
 import { PublishTemplateModalComponent } from './modals/publish-template-modal/publish-template-modal.component';
 import { DeleteTemplateModalComponent } from './modals/delete-template-modal/delete-template-modal.component';
@@ -26,6 +25,12 @@ import { OrderShippedModalComponent } from './modals/order-shipped-modal/order-s
 import { CancelBidModalComponent } from './modals/cancel-bid-modal/cancel-bid-modal.component';
 
 import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
+
+import { ImportListingsComponent } from './import-listings/import-listings.component';
+import { ImporterDirective } from './import-listings/import.directive';
+import { CsvImporterComponent } from './import-listings/import-components/csv-importer/csv-importer.component';
+import { ImportTemplateItemComponent } from './import-listings/import-components/import-template-item/imported-template-item.component';
+// import { WooCommerceImporterComponent } from './import-listings/import-components/woocommerce-importer/woocommerce-importer.component';
 
 
 const routes: Routes = [
@@ -52,6 +57,10 @@ const routes: Routes = [
     SellTemplateFormComponent,
     NewListingComponent,
     ImportListingsComponent,
+    ImporterDirective,
+    ImportTemplateItemComponent,
+    CsvImporterComponent,
+    // WooCommerceImporterComponent,
     PublishTemplateModalComponent,
     DeleteTemplateModalComponent,
     CloneTemplateModalComponent,
@@ -79,6 +88,10 @@ const routes: Routes = [
     CancelBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
+
+    ImportTemplateItemComponent,
+    CsvImporterComponent,
+    // WooCommerceImporterComponent,
   ],
   providers: [
     SellService

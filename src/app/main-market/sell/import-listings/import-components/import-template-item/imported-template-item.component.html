@@ -1,0 +1,40 @@
+<!-- @FIXME: why this doesn't panel have the expand animation? -->
+<mat-expansion-panel class="imported-template list-item no-padding">
+  <mat-expansion-panel-header class="header">
+    <div class="header-wrapper">
+      <div class="photo">
+        <img src="./assets/images/placeholder_4-3.jpg"><!--img src="{{ listing?.imageCollection?.featuredImage?.medium}}"-->
+      </div>
+      <div class="meta" fxFlex="1 1 100%">
+        <div class="name">{{template.title}}</div>
+      </div>
+      <ng-container *ngIf="displayControls">
+        <div class="status-wrap" fxFlex="0 0 240px">
+          <ng-container *ngIf="hasProcessingError; else displayParseIndicator">
+            <div class="status expired">
+              <span class="dot"></span>Error during import and save
+            </div>
+          </ng-container>
+          <ng-template #displayParseIndicator>
+            <div class="status {{isFormValidControl.value ? 'published' : 'expired'}}">
+              <span class="dot"></span>{{isFormValidControl.value ? 'Ready' : 'Has Errors'}}
+            </div>
+          </ng-template>
+        </div>
+        <div class="publish-toggle" fxFlex>
+          <mat-checkbox (click)="$event.stopPropagation()" color="primary" [formControl]="importControl">Import</mat-checkbox>
+        </div>
+      </ng-container>
+    </div>
+  </mat-expansion-panel-header>
+  <div class="detail">
+    <market-sell-template-form
+    [listingTemplate]="null"
+    [regions$]="regions$"
+    [markets$]="markets$"
+    [categories$]="categories$"
+    (isValid)="isFormValidControl.setValue($event)"
+    (onImageImportError)="actionImageAddError()"
+  ></market-sell-template-form>
+  </div>
+</mat-expansion-panel>
