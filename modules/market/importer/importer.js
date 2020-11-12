@@ -5,6 +5,7 @@ const rxjsOps = require('rxjs/operators');
 const _csv = require('csv-parser');
 const _fs = require('fs');
 const _iconv = require('iconv-lite');
+const _autoDetectDecoderStream = require('autodetect-decoder-stream');
 
 
 const destroy$ = new rxjs.Subject();
@@ -92,14 +93,14 @@ class CSVParser extends BaseParser {
       const rStream = _fs.createReadStream(source);
 
       return new rxjs.Observable(subs => {
-        const sourceEncoding = this.parseArgs.sourceEncoding || 'utf8';
+        const fallbackDefaultEncoding = this.parseArgs.sourceEncoding || 'utf8';
         const parserConfig = this.omitKey(this.parseArgs, 'sourceEncoding');
         const results = [];
 
         rStream.on('error', (err) => {
           subs.error(err);
         })
-        .pipe(_iconv.decodeStream(sourceEncoding))
+        .pipe(new _autoDetectDecoderStream({defaultEncoding: fallbackDefaultEncoding, stripBOM: true}))
         .on('error', (err) => {
           subs.error(err);
         })
