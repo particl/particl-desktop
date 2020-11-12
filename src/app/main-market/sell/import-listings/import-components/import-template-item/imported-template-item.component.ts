@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, of, Subject, merge } from 'rxjs';
+import { Observable, of, Subject, merge, defer, empty } from 'rxjs';
 import { takeUntil, tap, distinctUntilChanged, mapTo, catchError } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -99,69 +99,72 @@ export class ImportTemplateItemComponent implements OnInit, AfterViewInit, OnDes
 
 
   getTemplateCreationObservable(): Observable<boolean> {
-    if (!this.isFormValidControl.value || !this.importControl.value) {
-      return of();  // basically, returning empty() that completes immediately
-    }
+    return defer(() => {
+      if (!this.isFormValidControl.value || !this.importControl.value) {
+        return empty();  // basically, completes immediately
+      }
 
-    const formValues = this.templateForm.getFormValues();
+      const formValues = this.templateForm.getFormValues();
 
-    const parsedBasePrice = getValueOrDefault(formValues['basePrice'], 'string', '');
-    const parsedShipLocalPrice = getValueOrDefault(formValues['priceShipLocal'], 'string', '');
-    const parsedShpIntlPrice = getValueOrDefault(formValues['priceShipIntl'], 'string', '');
+      const parsedBasePrice = getValueOrDefault(formValues['basePrice'], 'string', '');
+      const parsedShipLocalPrice = getValueOrDefault(formValues['priceShipLocal'], 'string', '');
+      const parsedShpIntlPrice = getValueOrDefault(formValues['priceShipIntl'], 'string', '');
 
-    const parsedValues = {
-      title: getValueOrDefault(formValues['title'], 'string', ''),
-      summary: getValueOrDefault(formValues['summary'], 'string', ''),
-      description: getValueOrDefault(formValues['description'], 'string', ''),
-      basePrice: +parsedBasePrice > 0 ? parsedBasePrice : '0',
-      domesticShippingPrice: +parsedShipLocalPrice > 0 ? parsedShipLocalPrice : '0',
-      foreignShippingPrice: +parsedShpIntlPrice > 0 ? parsedShpIntlPrice : '0',
-      images: Array.isArray(formValues['pendingImages']) ?
-          formValues['pendingImages'].map((image: string) => {
-            const imgData: TemplateRequestImageItem = {type: 'REQUEST', data: image};
-            return imgData;
-          }) :
-          [],
-      shippingFrom: getValueOrDefault(formValues['shippingOrigin'], 'string', ''),
-      shippingTo: Array.isArray(formValues['shippingDestinations']) ? (formValues['shippingDestinations'] as string[]) : [],
-      selectedMarketId: +formValues['selectedMarket'] > 0 ? +formValues['selectedMarket'] : 0,
-      selectedCategoryId: +formValues['selectedCategory'] > 0 ? +formValues['selectedCategory'] : 0,
-    };
+      const parsedValues = {
+        title: getValueOrDefault(formValues['title'], 'string', ''),
+        summary: getValueOrDefault(formValues['summary'], 'string', ''),
+        description: getValueOrDefault(formValues['description'], 'string', ''),
+        basePrice: +parsedBasePrice > 0 ? parsedBasePrice : '0',
+        domesticShippingPrice: +parsedShipLocalPrice > 0 ? parsedShipLocalPrice : '0',
+        foreignShippingPrice: +parsedShpIntlPrice > 0 ? parsedShpIntlPrice : '0',
+        images: Array.isArray(formValues['pendingImages']) ?
+            formValues['pendingImages'].map((image: string) => {
+              const imgData: TemplateRequestImageItem = {type: 'REQUEST', data: image};
+              return imgData;
+            }) :
+            [],
+        shippingFrom: getValueOrDefault(formValues['shippingOrigin'], 'string', ''),
+        shippingTo: Array.isArray(formValues['shippingDestinations']) ? (formValues['shippingDestinations'] as string[]) : [],
+        selectedMarketId: +formValues['selectedMarket'] > 0 ? +formValues['selectedMarket'] : 0,
+        selectedCategoryId: +formValues['selectedCategory'] > 0 ? +formValues['selectedCategory'] : 0,
+      };
 
-    const newTemplateData: CreateTemplateRequest = {
-      title: parsedValues.title,
-      summary: parsedValues.summary,
-      description: parsedValues.description,
-      images: parsedValues.images,
-      priceBase: (new PartoshiAmount(+parsedValues.basePrice)).partoshis(),
-      priceShippingLocal: (new PartoshiAmount(+parsedValues.domesticShippingPrice)).partoshis(),
-      priceShippingIntl: (new PartoshiAmount(+parsedValues.foreignShippingPrice)).partoshis(),
-      shippingFrom: parsedValues.shippingFrom,
-      shippingTo: parsedValues.shippingTo,
-      escrowType: 'MAD_CT',
-      escrowReleaseType: ESCROW_RELEASE_TYPE.ANON,
-      escrowBuyerRatio: 100,
-      escrowSellerRatio: 100,
-      salesType: 'SALE',
-      currency: 'PART',
-      marketId: parsedValues.selectedMarketId,
-      categoryId: parsedValues.selectedCategoryId
-    };
+      const newTemplateData: CreateTemplateRequest = {
+        title: parsedValues.title,
+        summary: parsedValues.summary,
+        description: parsedValues.description,
+        images: parsedValues.images,
+        priceBase: (new PartoshiAmount(+parsedValues.basePrice)).partoshis(),
+        priceShippingLocal: (new PartoshiAmount(+parsedValues.domesticShippingPrice)).partoshis(),
+        priceShippingIntl: (new PartoshiAmount(+parsedValues.foreignShippingPrice)).partoshis(),
+        shippingFrom: parsedValues.shippingFrom,
+        shippingTo: parsedValues.shippingTo,
+        escrowType: 'MAD_CT',
+        escrowReleaseType: ESCROW_RELEASE_TYPE.ANON,
+        escrowBuyerRatio: 100,
+        escrowSellerRatio: 100,
+        salesType: 'SALE',
+        currency: 'PART',
+        marketId: parsedValues.selectedMarketId,
+        categoryId: parsedValues.selectedCategoryId
+      };
 
-    return this._sellService.createNewTemplate(newTemplateData).pipe(
-      mapTo(true),
-      catchError(() => of(false)),
-      tap(isSuccessful => {
-        if (isSuccessful) {
-          this.destroy$.next();
-          this.importControl.setValue(false, {emitEvent: false});
-          this.importControl.disable();
-          this.displayControls = false;
-        } else {
-          this.hasProcessingError = true;
-        }
-      })
-    );
+      return this._sellService.createNewTemplate(newTemplateData).pipe(
+        mapTo(true),
+        catchError(() => of(false)),
+        tap(isSuccessful => {
+          if (isSuccessful) {
+            this.destroy$.next();
+            this.importControl.setValue(false, {emitEvent: false});
+            this.importControl.disable();
+            this.displayControls = false;
+          } else {
+            this.hasProcessingError = true;
+            this.importControl.setValue(false);
+          }
+        })
+      );
+    });
 
   }
 

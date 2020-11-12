@@ -152,10 +152,11 @@ export class ImportListingsComponent implements OnInit, OnDestroy {
           this._router.navigate(['../'], {relativeTo: this._route, queryParams: {selectedSellTab: 'templates'}});
         } else {
           this.hasProcessError = true;
+          this.countSelectedForImport = this.productTemplateComponents.length;
         }
       }),
       takeUntil(this.destroy$)
-    );
+    ).subscribe();
 
   }
 
