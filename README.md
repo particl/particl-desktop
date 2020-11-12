@@ -1,7 +1,7 @@
-![Platform:Windows](https://img.shields.io/badge/platform-Windows-lightgrey)
-![Platform:macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Platform:Linux](https://img.shields.io/badge/platform-Linux-lightgrey)
-![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us)
+[![Platform:Windows](https://img.shields.io/badge/platform-Windows-lightgrey)](https://github.com/particl/particl-desktop/releases/latest)
+[![Platform:macOS](https://img.shields.io/badge/platform-macOS-lightgrey)](https://github.com/particl/particl-desktop/releases/latest)
+[![Platform:Linux](https://img.shields.io/badge/platform-Linux-lightgrey)](https://github.com/particl/particl-desktop/releases/latest)
+[![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us)](http://twitter.com/particlproject)
 
 # Particl Desktop
 
@@ -55,7 +55,7 @@ Join our open developers chat [#particl-dev:matrix.org](https://app.element.io/#
 Keep in mind that the development currently happens on a private fork of this repo. 
 
 #### Community Chat 
-Join our multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) ![Discord](https://img.shields.io/discord/391967609660112925) with [Discord](https://discord.com).
+Join our multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
 
 ### Requirements
 
