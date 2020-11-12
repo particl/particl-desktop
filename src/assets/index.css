@@ -1,98 +1,7 @@
 :root {
-  --color-primary: hsl(152, 62%, 55%);
-  --color-primary-hsl: 152, 62%, 55%;
-
-  --color-secondary: hsl(201, 83%, 47%);
-  --color-secondary-hsl: 201, 83%, 47%;
-
-  --color-tertiary: hsl(250, 39%, 47%);
-  --color-tertiary-hsl: 250, 39%, 47%;
-
-  --color-success: var(--color-primary);
-  --color-success-hsl: var(--color-primary-hsl);
-
-  --color-alert: hsl(358, 68%, 50%);
-  --color-alert-hsl: 358, 68%, 50%;
-
-  --color-warning: hsl(41, 100%, 47%);
-  --color-warning-hsl: 41, 100%, 47%;
-
-  --color-warning-alt: hsl(24, 82%, 49%);
-  --color-warning-alt-hsl: 24, 82%, 49%;
-
-  --color-info: var(--color-secondary);
-  --color-info-hsl: var(--color-secondary-hsl);
-
   --color-white: hsl(0, 0%, 100%);
-  --color-white-hsl: 0, 0%, 100%;
-
-  --text: hsl(192, 7%, 15%);
-  --text-hsl: 192, 7%, 15%;
-
-  --text-muted: hsl(206, 6%, 46%);
-  --text-muted-hsl: 206, 6%, 46%;
-
   --bg: hsl(0, 0%, 98%);
-  --bg-hsl: 0, 0%, 98%;
-
-  --bg-hover: hsl(0, 0%, 96%);
-  --bg-hover-hsl: 0, 0%, 96%;
-
-  --bg-muted: hsl(0, 0%, 86%);
-  --bg-muted-hsl: 0, 0%, 86%;
-
-  --bg-black: var(--text);
-  --bg-black-hsl: var(--text-hsl);
-
-  --bg-sidebar: hsl(192, 7%, 15%);
-  --bg-sidebar-hsl: 192, 7%, 15%;
-  --bg-sidebar-lighter: hsl(192, 7%, 20%);
-  --bg-sidebar-lighter-hsl: 192, 7%, 20%;
-  --bg-sidebar-darker: hsl(192, 7%, 10%);
-  --bg-sidebar-darker-hsl: 192, 7%, 10%;
-
-  --bg-appbar: hsl(192, 7%, 10%);
-  --bg-appbar-hsl: 192, 7%, 10%;
-
-  --color-alert-to-gradient: hsl(16, 75%, 50%);
-  --color-info-to-gradient: hsl(215, 83%, 47%);
-
-  --color-confirms-0-pct: var(--color-alert);
-  --color-confirms-0-pct-hsl: var(--color-alert-hsl);
-  --color-confirms-33-pct: hsl(16, 75%, 50%);
-  --color-confirms-33-pct-hsl: 16, 75%, 50%;
-  --color-confirms-66-pct: hsl(30, 87%, 49%);
-  --color-confirms-66-pct-hsl: 30, 87%, 49%;
-  --color-confirms-100-pct: var(--color-warning);
-  --color-confirms-100-pct-hsl: var(--color-warning-hsl);
-  --color-txtype-staked: var(--color-warning);
-  --color-txtype-orphan: hsla(var(--text-muted-hsl), 0.6);
-  --color-txtype-sent: var(--color-alert);
-  --color-txtype-received: var(--color-primary);
-  --color-txtype-listing-fee: var(--color-secondary);
-  --color-tx-negative-amount: var(--color-alert);
-  --color-tx-negative-decimals: hsla(var(--color-alert-hsl), 0.8);
-
-  /* ---------- LAYOUT & UI ---------- */
-
-  --font: 'Inter_UI', sans-serif;
-  --font-mono: 'Office_Code_Pro', monospace;
-
-  --radius: 4px;
-  --card-spacing: 5px;
-
-  --header-main-height: 64px;
-  --tab-bar-height: 48px;
-  --control-bar-height: 55px;
-
-  --multiwallet-width: 4.4vw;
-  --sidebar-width: 220px;
-  --filter-width: 230px;
-  --scrollbar-width: 6px;
-
-  --paddingV: 35px;
-  --paddingH: 35px;
-  --padding: 35px;
+  --bg-black: hsl(192, 7%, 15%);
 }
 
 @font-face {
@@ -102,7 +11,7 @@
   src: url('./fonts/Inter-UI-Regular.woff2') format('woff2');
 }
 
-body {
+body.index {
   margin: 0 !important;
   min-height: 100vh;
   background: var(--bg);
@@ -111,6 +20,7 @@ body {
 
 body.closing {
   margin: 0 !important;
+  font-family: "Inter_UI";
   background: url("splash-bg.jpg") no-repeat bottom left var(--bg-black);
   background-size: 290px;
   color: var(--color-white);
@@ -118,6 +28,7 @@ body.closing {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 }
 
 body.closing .content {

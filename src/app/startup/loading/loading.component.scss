@@ -4,7 +4,9 @@ body {
   margin: 0 !important;
 }
 
-.logo {
+// Note: root styles here need the `splash-` prefix, since they're "spilling over" to other elements with the same name in components launched after them
+
+.splash-logo {
   position: fixed;
   top: 0;
   right: 0;
@@ -17,7 +19,7 @@ body {
   }
 }
 
-.container {
+.splash-container {
   --container-paddingV: 4rem;
   background: var(--bg);
   font-family: var(--font);
@@ -34,9 +36,66 @@ body {
     position: relative;
     z-index: 10;
   }
-}
 
-.illustration {
+  .header-text {
+    flex: 0 1 50px;
+    h1 {
+      margin: 0 0 8px;
+      font-weight: 600;
+      font-size: 1.9rem;;
+    }
+    p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+  }
+  
+  section {
+    flex: 1 1 100%;
+    display: flex;
+    position: relative;
+    .starting {
+      width: 25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      .mat-card {
+        padding: 26px 32px;
+      }
+      .mat-spinner {
+        float: left;
+      }
+      .text {
+        display: inline-block;
+        padding: 0 1.2rem;
+        margin-top: -0.05rem;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .desc {
+        color: var(--text-muted);
+      }
+    } // .loading
+  }
+  
+  
+  .version {
+    flex: 0 1 24px;
+    margin: 0;
+    color: hsla(var(--text-muted-hsl), 0.6);
+  }
+
+} // .splash-container
+
+.splash-illustration {
   position: fixed;
   bottom: -100px;
   right: -133px;
@@ -46,60 +105,4 @@ body {
     max-width: 100%;
     pointer-events: none;
   }
-}
-
-.header-text {
-  flex: 0 1 50px;
-  h1 {
-    margin: 0 0 8px;
-    font-weight: 600;
-    font-size: 1.9rem;;
-  }
-  p {
-    margin: 0;
-    color: var(--text-muted);
-    font-size: 1.05rem;
-  }
-}
-
-section {
-  flex: 1 1 100%;
-  display: flex;
-  position: relative;
-  .starting {
-    width: 25rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    .mat-card {
-      padding: 26px 32px;
-    }
-    .mat-spinner {
-      float: left;
-    }
-    .text {
-      display: inline-block;
-      padding: 0 1.2rem;
-      margin-top: -0.05rem;
-      .title {
-        font-size: 20px;
-        font-weight: 500;
-        margin-bottom: 2px;
-      }
-      .desc {
-        color: var(--text-muted);
-      }
-    }
-  } // .loading
-}
-
-
-.version {
-  flex: 0 1 24px;
-  margin: 0;
-  color: hsla(var(--text-muted-hsl), 0.6);
 }
