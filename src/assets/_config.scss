@@ -148,10 +148,18 @@ $break-xhd: 2200px;
   --control-bar-height: 55px; // control bar height (filters etc., e.g. in Market)
 
   // FIXME @Allien - rename!
-  --multiwallet-width: 56px; // width of app switcher bar
+  --multiwallet-width: 56px; // 56px; width of app switcher bar
   --sidebar-width: 220px; // main sidebar menu width
   --filter-width: 230px; // sidebar in content area (filter/sort, search)
   --scrollbar-width: 6px; // 'duh
+  @include break(l) {
+    --multiwallet-width: 64px;
+  }
+  @include break(xl) {
+  }
+  @include break(hd) {
+    --multiwallet-width: 72px;
+  }
 
   --paddingV: 35px; // default vertical padding
   --paddingH: 35px; // default horizontal padding

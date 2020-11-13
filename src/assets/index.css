@@ -1,42 +1,43 @@
-body {
-  background: #222828;
+:root {
+  --color-white: hsl(0, 0%, 100%);
+  --bg: hsl(0, 0%, 98%);
+  --bg-black: hsl(192, 7%, 15%);
 }
 
-.intro.section {
-  background: #222828;
-  color: white;
+@font-face {
+  font-family: 'Inter_UI';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/Inter-UI-Regular.woff2') format('woff2');
+}
+
+body.index {
+  margin: 0 !important;
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: "Inter_UI";
+}
+
+body.closing {
+  margin: 0 !important;
+  font-family: "Inter_UI";
+  background: url("splash-bg.jpg") no-repeat bottom left var(--bg-black);
+  background-size: 290px;
+  color: var(--color-white);
   text-align: center;
-  font-family: "Inter_UI", sans-serif;
   display: flex;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.intro > .content {
+body.closing .content {
   margin: auto;
-  width: 100%;
-  max-width: 600px;
 }
-
-.intro > .content > .logo {
-  width: 240px;
-  height: auto;
-  margin: 20px 0 40px;
+body.closing .content .logo {
+  margin-bottom: 2rem;
 }
-
-.intro > .content > .quote {
-  font-size: 17px;
-}
-
-.intro > .content > .quote > .author {
-  font-size: 13px;
-  color: #7E8790;
-}
-
-.loading {
-  width: 100%;
-  max-width: 100px;
+body.closing .content p {
+  font-size: 15px;
+  margin: 0;
 }

@@ -171,17 +171,24 @@ mat-tooltip-component .mat-tooltip {
 // ------ 1.7. SPINNERS ------ //
 
 .mat-progress-spinner {
-  &.tiny {
-    --spinner-size: 16px;
+  --spinner-size: 100px; // default
+  --stroke-width: 10%; // default
+  width: var(--spinner-size) !important;
+  height: var(--spinner-size) !important;
+  & > svg {
     width: var(--spinner-size) !important;
     height: var(--spinner-size) !important;
-    & > svg {
-      width: var(--spinner-size) !important;
-      height: var(--spinner-size) !important;
-      & > circle {
-        stroke-width: 15% !important;
-      }
+    & > circle {
+      stroke-width: var(--stroke-width) !important;
     }
+  }
+  &.tiny {
+    --spinner-size: 16px;
+    --stroke-width: 15%;
+  }
+  &.small {
+    --spinner-size: 42px;
+    --stroke-width: 10%;
   }
 }
 
@@ -513,6 +520,7 @@ mat-dialog-actions.mat-dialog-actions {
     .mat-drawer-inner-container {
       display: flex;
       flex-direction: row;
+      background: var(--bg);
     }
     .mat-divider {
       border-top: 1px solid hsl(192, 11%, 9%);

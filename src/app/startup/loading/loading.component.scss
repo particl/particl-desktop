@@ -4,92 +4,105 @@ body {
   margin: 0 !important;
 }
 
+// Note: root styles here need the `splash-` prefix, since they're "spilling over" to other elements with the same name in components launched after them
+
+.splash-logo {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background: var(--bg-black);
+  img {
+    width: 7vw;
+    display: block;
+    margin: 1.5vw 1.8vw;
+  }
+}
+
 .splash-container {
-  @extend %tfx;
-  background: url('../../../assets/splash-bg.jpg') no-repeat bottom left var(--bg-black);
-  background-size: 500px;
-  color: var(--bg);
-  text-align: center;
+  --container-paddingV: 4rem;
+  background: var(--bg);
   font-family: var(--font);
-  height: 100vh;
+  height: calc(100vh - 2 * var(--container-paddingV));
+  padding: var(--container-paddingV) calc(8vw + var(--multiwallet-width));
   display: flex;
   flex-direction: column;
-  @include break(l) {
-    background-size: 600px;
-  }
-  @include break(xl) {
-    background-size: 700px;
-  }
   .content {
-    margin: auto;
-  }
-  .logo {
     @extend %tfx;
-    width: 270px;
-    height: auto;
-    margin-bottom: 4rem;
-    @include break(l) {
-      width: 310px;
-      margin-bottom: 5rem;
-    }
-    @include break(xl) {
-      width: 350px;
-      margin-bottom: 8rem;
-    }
+    margin: auto 0;
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
   }
-  .quote {
-    font-size: 18px;
-    margin: 0;
-    .author {
-      font-size: 15px;
+
+  .header-text {
+    flex: 0 1 50px;
+    h1 {
+      margin: 0 0 8px;
+      font-weight: 600;
+      font-size: 1.9rem;;
+    }
+    p {
+      margin: 0;
       color: var(--text-muted);
+      font-size: 1.05rem;
     }
   }
-}
+  
+  section {
+    flex: 1 1 100%;
+    display: flex;
+    position: relative;
+    .starting {
+      width: 25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      .mat-card {
+        padding: 26px 32px;
+      }
+      .mat-spinner {
+        float: left;
+      }
+      .text {
+        display: inline-block;
+        padding: 0 1.2rem;
+        margin-top: -0.05rem;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .desc {
+        color: var(--text-muted);
+      }
+    } // .loading
+  }
+  
+  
+  .version {
+    flex: 0 1 24px;
+    margin: 0;
+    color: hsla(var(--text-muted-hsl), 0.6);
+  }
 
-.loading-wrapper {
-  position: absolute;
-  width: 100vw;
-  bottom: 1.5rem;
-  // pulsing dots animations
-  .loader {
-    color: var(--color-secondary);
-    font-size: 40px;
-    font-family: var(--font-mono);
-    span {
-      display: inline-block;
-      margin: 0 8px;
-      animation: pulse 0.6s alternate infinite ease-in-out;
-      transform-origin: bottom;
-      &:nth-child(2n+1) {
-        animation-delay: 0.15s;
-      }
-      &:nth-child(2n+2) {
-        animation-delay: 0.3s;
-      }
-      &:nth-child(2n+3) {
-        animation-delay: 0.45s;
-      }
-    }
-  }
-  // status message
-  .loading-status {
-    @extend %tfx;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--text-muted);
-    @include break(l) {
-      font-size: 13px;
-    }
-    @include break(xl) {
-      font-size: 14px;
-    }
-  }
-}
+} // .splash-container
 
-@keyframes pulse {
-  to {
-    color: var(--color-tertiary);
-    font-size: 24px;
+.splash-illustration {
+  position: fixed;
+  bottom: -100px;
+  right: -133px;
+  width: 47vw;
+  img {
+    width: 100%;
+    max-width: 100%;
+    pointer-events: none;
   }
 }

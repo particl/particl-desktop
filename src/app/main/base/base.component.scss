@@ -5,7 +5,10 @@
 
   // App bar
   multiwallet-sidebar {
+    transform: translateX(calc(-1 * var(--multiwallet-width)));
     animation: slide-in 0.6s 1; // make it slide-in on launch
+    animation-delay: 1s;
+    animation-fill-mode: forwards; // stay on the last "frame"
   }
 
 }
