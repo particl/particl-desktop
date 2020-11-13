@@ -12,31 +12,6 @@
   --filter-width: 300px;
 }
 
-.import-card {
-  margin-bottom: 24px;
-  padding: 0;
-  .text {
-    padding: 4px 24px;
-    a {
-      color: var(--color-secondary);
-      &:hover,
-      &:focus {
-        text-decoration: none;
-      }
-    }
-  }
-  label {
-    display: block;
-    .help-text {
-      margin: 16px 0 0;
-      padding: 0 24px;
-    }
-  }
-  .message {
-    margin: 0;
-  }
-}
-
 
 // ------ 2) REVIEW IMPORT DATA ------ //
 
