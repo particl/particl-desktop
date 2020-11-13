@@ -1,3 +1,7 @@
+[![Platform:Windows](https://img.shields.io/badge/platform-Windows-lightgrey)](https://github.com/particl/particl-desktop/releases/latest)
+[![Platform:macOS](https://img.shields.io/badge/platform-macOS-lightgrey)](https://github.com/particl/particl-desktop/releases/latest)
+[![Platform:Linux](https://img.shields.io/badge/platform-Linux-lightgrey)](https://github.com/particl/particl-desktop/releases/latest)
+
 # Particl Desktop
 
 ![Particl Desktop 3.0 Preview](.github-readme/particl-desktop-3.0-preview.gif)
@@ -43,9 +47,19 @@ This repository is the user interface that works in combination with our [`parti
 [![Code Climate](https://codeclimate.com/github/particl/particl-desktop/badges/gpa.svg)](https://codeclimate.com/github/particl/particl-desktop)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/particl-desktop.svg)](https://greenkeeper.io/)
 
-Join us in [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) on [Element](https://element.io) (formerly Riot) for more info and/or assistance.
+#### Developers Chat
+
+Join our open developers chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) with [Element](https://element.io) (formerly Riot) for more info and/or assistance.
 
 Keep in mind that the development currently happens on a private fork of this repo. 
+
+#### Community Chat 
+Join our multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
+
+#### Socialmedia
+
+[![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
+[![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/particl?style=social)](http://reddit.com/r/particl)
 
 ### Requirements
 
