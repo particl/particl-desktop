@@ -47,7 +47,17 @@
         <div class="import-config with-filter">
 
           <ng-container *ngIf="selectedImportControl.value === null">
-            Hey, nothing to be selected here... use the option on the left to import something
+            <div class="no-results --smaller">
+              <img class="illustration" src="./assets/app-market/illustrations/no-import-source.svg" alt="No Import selected">
+              <div class="text">
+                <p>
+                  No Import source selected
+                </p>
+                <p class="help-text">
+                  Please select your Import source on the left first to begin
+                </p>
+              </div>
+            </div><!-- .no-results -->
           </ng-container>
 
           <ng-template importer></ng-template>
