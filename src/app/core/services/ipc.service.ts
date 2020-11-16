@@ -24,7 +24,7 @@ export class IpcService {
     }
 
     // Respond to checks if a listener is registered
-    window.ipc.on('rx-ipc-check-listener', (event, channel) => {
+    window.electron.ipc.on('rx-ipc-check-listener', (event, channel) => {
       const replyChannel = 'rx-ipc-check-reply:' + channel;
       if (this.listeners[channel]) {
         event.sender.send(replyChannel, true);
@@ -35,9 +35,9 @@ export class IpcService {
   }
 
   checkRemoteListener(channel: string, receiver: Receiver) {
-    const target = receiver == null ? window.ipc : receiver;
+    const target = receiver == null ? window.electron.ipc : receiver;
     return new Promise((resolve, reject) => {
-      window.ipc.once('rx-ipc-check-reply:' + channel, (event, result) => {
+      window.electron.ipc.once('rx-ipc-check-reply:' + channel, (event, result) => {
         if (result) {
           resolve(result);
         } else {
@@ -49,7 +49,7 @@ export class IpcService {
   }
 
   public cleanUp() {
-    window.ipc.removeAllListeners('rx-ipc-check-listener');
+    window.electron.ipc.removeAllListeners('rx-ipc-check-listener');
     Object.keys(this.listeners).forEach((channel) => {
       this.removeListeners(channel);
     });
@@ -57,7 +57,7 @@ export class IpcService {
 
   registerListener(channel: string, observableFactory: ObservableFactoryFunction) {
     this.listeners[channel] = true;
-    window.ipc.on(channel, function openChannel(event: ListenerEvent, subChannel: string, ...args: any[]) {
+    window.electron.ipc.on(channel, function openChannel(event: ListenerEvent, subChannel: string, ...args: any[]) {
         // Save the listener function so it can be removed
         const replyTo = event.sender;
         const observable = observableFactory(...args);
@@ -76,7 +76,7 @@ export class IpcService {
   }
 
   removeListeners(channel: string) {
-    window.ipc.removeAllListeners(channel);
+    window.electron.ipc.removeAllListeners(channel);
     delete this.listeners[channel];
   }
 
@@ -84,7 +84,7 @@ export class IpcService {
     const self = this;
     const subChannel = channel + ':' + this.listenerCount;
     this.listenerCount++;
-    const target = receiver == null ? window.ipc : receiver;
+    const target = receiver == null ? window.electron.ipc : receiver;
 
     target.send(channel, subChannel, ...args);
     return new Observable((observer) => {
@@ -92,7 +92,7 @@ export class IpcService {
         .catch(() => {
           // observer.error('Invalid channel: ' + channel);
         });
-      window.ipc.on(subChannel, function listener(event: Event, type: string, data: Object) {
+      window.electron.ipc.on(subChannel, function listener(event: Event, type: string, data: Object) {
         self.zone.run(() => {
           switch (type) {
             case 'n':
@@ -107,7 +107,7 @@ export class IpcService {
           // Cleanup
           return () => {
             // TODO: Why is this not being called & when should it be?
-            window.ipc.removeListener(subChannel, listener);
+            window.electron.ipc.removeListener(subChannel, listener);
           };
         });
       });

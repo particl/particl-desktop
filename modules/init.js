@@ -11,7 +11,7 @@ const _auth         = require('./webrequest/http-auth');
 const notification  = require('./notification/notification');
 const closeGui      = require('./close-gui/close-gui');
 const market        = require('./market/market');
-const bot           = require('./bot/bot');
+// const bot           = require('./bot/bot');
 const systemDialogs = require('./dialogs/dialogs');
 const zmq           = require('./zmq/zmq');
 
@@ -148,7 +148,7 @@ exports.startGUI = function (mainWindow) {
   notification.init();
   closeGui.init();
   market.init();
-  bot.init();
+  // bot.init();
   daemonConfig.setupComms();
 
   systemDialogs.init(mainWindow);
@@ -166,7 +166,7 @@ exports.stopGUI = function() {
   notification.destroy();
   closeGui.destroy();
 
-  bot.destroy();
+  // bot.destroy();
   market.destroy();
   daemonConfig.destroyComms();
   systemDialogs.destroy();

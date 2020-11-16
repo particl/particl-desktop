@@ -1,7 +1,7 @@
 // This file is loaded whenever a javascript context is created. It runs in a
 // private scope that can access a subset of electron renderer APIs. We must be
 // careful to not leak any objects into the global scope!
-const { ipcRenderer } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 const flatten = (obj) => Object.keys(obj)
   .reduce((acc, key) => {
@@ -50,7 +50,11 @@ class SafeIpcRenderer {
   }
 }
 
-window.ipc = new SafeIpcRenderer([
+
+// NB! This is no longer the best way of doing this.The correct way is to expose the actual API call that you want to explicitly make and expose them via context bridge,
+//  ie: expose the call to 'startSystem() with relevant params, rather than exposing ipcRenderer, even if ipcRenderer limits channel access...
+// @TODO: lets get this fixed properly... its left as is for now as there's no damage done, but really needs to be re-considered
+const exposedIpc = new SafeIpcRenderer([
   'start-system',
   'zmq-connect',
 
@@ -75,4 +79,7 @@ window.ipc = new SafeIpcRenderer([
   // 'stop-bot-framework'
 ]);
 
-window.electron = true;
+contextBridge.exposeInMainWorld('electron', {
+  electron: true,
+  ipc: exposedIpc
+});
