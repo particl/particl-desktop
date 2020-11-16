@@ -156,6 +156,7 @@ $break-xhd: 2200px;
     --multiwallet-width: 64px;
   }
   @include break(xl) {
+    --multiwallet-width: 72px;
   }
   @include break(hd) {
     --multiwallet-width: 72px;
