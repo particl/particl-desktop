@@ -8923,9 +8923,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@./particl-marketplace-0.3.0-50.tgz:
-  version "0.3.0-50"
-  resolved "./particl-marketplace-0.3.0-50.tgz#230d54efe03f07db931e9a72dbd6387137dfd30a"
+particl-marketplace@./particl-marketplace-0.3.0-54.tgz:
+  version "0.3.0-54"
+  resolved "./particl-marketplace-0.3.0-54.tgz#3a2d5fab217505216425e27bd464d606dc073c25"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -8968,7 +8968,7 @@ particl-marketplace@./particl-marketplace-0.3.0-50.tgz:
     multer "^1.4.1"
     omp-lib "^0.1.150"
     particl-bitcore-lib "^0.16.0"
-    particl-zmq "./particld-zmq-1.0.2-test2.tgz"
+    particl-zmq "^1.0.5"
     path "^0.12.7"
     piexifjs "^1.0.3"
     pluralize "^5.0.0"
@@ -8992,12 +8992,14 @@ particl-marketplace@./particl-marketplace-0.3.0-50.tgz:
     typescript "2.4.2"
     web-request "^1.0.7"
     winston "^2.4.4"
+    zeromq "6.0.0-beta.6"
   optionalDependencies:
     fsevents "^2.1.3"
 
-particl-zmq@./particld-zmq-1.0.2-test2.tgz:
-  version "1.0.2-test2"
-  resolved "./particld-zmq-1.0.2-test2.tgz#18d0a751e58f68e785613171afc58fdf5c7fbd5d"
+particl-zmq@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/particl-zmq/-/particl-zmq-1.0.5.tgz#8d9b388c15f296d1ab9d320c47b371b057c5d55e"
+  integrity sha512-ge4Edr2YSGlnY9vBe4MI7qVkAmYPVPjuyxRCjMbbL2VCg5LAWIgTqhkNMfgx5VjCgt3X7TEAEUYfmT5Ak2XwkA==
   dependencies:
     debug "^4.1.0"
     eventemitter2 "^5.0.1"
@@ -12650,7 +12652,7 @@ yn@^2.0.0:
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
   integrity sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 
-zeromq@^6.0.0-beta.6:
+zeromq@6.0.0-beta.6, zeromq@^6.0.0-beta.6:
   version "6.0.0-beta.6"
   resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-6.0.0-beta.6.tgz#2b8934cafce735ea9007fd3074ec8aca9bf11204"
   integrity sha512-wLf6M7pBHijl+BRltUL2VoDpgbQcOZetiX8UzycHL8CcYFxYnRrpoG5fi3UX3+Umavz1lk4/dGaQez8qiDgr/Q==
