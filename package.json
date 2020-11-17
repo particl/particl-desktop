@@ -47,7 +47,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-    "electronVersion": "10.1.5",
+    "electronVersion": "8.5.3",
     "appId": "io.particl.desktop.testnet",
     "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
@@ -196,8 +196,8 @@
     "ngx-material-file-input": "^2.0.0",
     "node-unzip-2": "^0.2.1",
     "particl-bitcore-lib": "^0.16.0",
-    "particl-marketplace": "./particl-marketplace-0.3.0-46.tgz",
-    "particl-zmq": "^1.0.4",
+    "particl-marketplace": "./particl-marketplace-0.3.0-50.tgz",
+    "particl-zmq": "./particld-zmq-1.0.2-test2.tgz",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
     "tslib": "1.9.3",
@@ -226,7 +226,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^5.0.1",
     "coveralls": "^3.0.0",
-    "electron": "10.1.5",
+    "electron": "8.5.3",
     "electron-builder": "^22.9.1",
     "electron-notarize": "^1.0.0",
     "htmlhint": "^0.10.1",
