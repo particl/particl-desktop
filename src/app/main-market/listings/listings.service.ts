@@ -39,7 +39,7 @@ export class ListingsService {
 
   getListenerComments(): Observable<SocketMessages_v03.CommentAdded> {
     return this._socket.getSocketMessageListener('MPA_COMMENT_ADD').pipe(
-      filter((msg) => msg && (typeof msg.commentType === 'string') && (msg.commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS'))
+      filter((msg) => msg && (typeof msg.category === 'string') && (msg.category === 'LISTINGITEM_QUESTION_AND_ANSWERS'))
     );
   }
 

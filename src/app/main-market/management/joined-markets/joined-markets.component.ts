@@ -154,8 +154,8 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
         (msg.category === 'MARKET_VOTE') &&
         (typeof msg.target === 'string') &&
         (msg.target.length > 0) &&
-        (typeof msg.hash === 'string') &&
-        (msg.hash.length > 0)
+        (typeof msg.objectHash === 'string') &&
+        (msg.objectHash.length > 0)
       ),
       tap((msg) => {
         const found = this.marketsList.find(m => m.receiveAddress === msg.target);

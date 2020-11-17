@@ -47,7 +47,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "build": {
-    "electronVersion": "5.0.4",
+    "electronVersion": "11.0.0",
     "appId": "io.particl.desktop.testnet",
     "productName": "Particl Desktop Testnet",
     "npmRebuild": true,
@@ -64,7 +64,7 @@
       "resources/**",
       "!node_modules/electron/**/*",
       "!node_modules/**/sqlite3*.node",
-      "node_modules/**/electron-v5.0-*/*.node"
+      "node_modules/**/electron-v*/*.node"
     ],
     "mac": {
       "artifactName": "${name}-${version}-${os}.${ext}",
@@ -170,7 +170,8 @@
     "asarUnpack": [
       "node_modules/sqlite3/**/*",
       "node_modules/particl-marketplace/**/*",
-      "node_modules/zeromq/**/*"
+      "node_modules/zeromq/**/*",
+      "node_modules/event-loop-stats/**/*"
     ]
   },
   "dependencies": {
@@ -195,9 +196,8 @@
     "ngx-material-file-input": "^2.0.0",
     "node-unzip-2": "^0.2.1",
     "particl-bitcore-lib": "^0.16.0",
-    "particl-bot-manager": "^0.0.15",
-    "particl-marketplace": "./particl-marketplace-0.3.0-46.tgz",
-    "particl-zmq": "^1.0.4",
+    "particl-marketplace": "./particl-marketplace-0.3.0-54.tgz",
+    "particl-zmq": "^1.0.5",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
     "tslib": "1.9.3",
@@ -226,9 +226,9 @@
     "checksum": "^0.1.1",
     "codelyzer": "^5.0.1",
     "coveralls": "^3.0.0",
-    "electron": "5.0.4",
-    "electron-builder": "^22.6.0",
-    "electron-notarize": "^0.3.0",
+    "electron": "11.0.0",
+    "electron-builder": "^22.9.1",
+    "electron-notarize": "^1.0.0",
     "htmlhint": "^0.10.1",
     "iso3166-2-db": "^2.2.1",
     "jasmine-core": "^3.3.0",

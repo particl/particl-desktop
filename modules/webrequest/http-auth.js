@@ -7,7 +7,7 @@ let OPTIONS = {};
 
 // Modify the user agent for all requests to the following urls.
 const filter = {
-    urls: ['*']
+    urls: ['*://*/*']
 }
 
 let whitelist = new Map();
@@ -21,7 +21,7 @@ exports.init = function (_options) {
     }
     initialized = true;
 
-    loadBotAuthentication();
+    // loadBotAuthentication();
     loadGithub();
     loadMarketAuthentication();
 
@@ -102,15 +102,15 @@ function loadMarketAuthentication() {
     whitelist.set(key, value);
 }
 
-function loadBotAuthentication() {
-    let key = "localhost:*";
-    let value = {
-        name: "bot",
-        auth: "test:test"
-    }
+// function loadBotAuthentication() {
+//     let key = "localhost:*";
+//     let value = {
+//         name: "bot",
+//         auth: "test:test"
+//     }
 
-    whitelist.set(key, value);
-}
+//     whitelist.set(key, value);
+// }
 
 function loadWalletAuthentication() {
     let key = (OPTIONS.rpcbind || 'localhost') + ":" + OPTIONS.port;

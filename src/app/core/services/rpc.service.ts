@@ -8,12 +8,6 @@ import { map, catchError} from 'rxjs/operators';
 import { ConnectionDetails } from 'app/core/store/app.models';
 
 
-declare global {
-  interface Window {
-    electron: boolean;
-  }
-}
-
 /**
  * The RPC service that maintains a single connection to the particld daemon.
  *

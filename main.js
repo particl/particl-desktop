@@ -7,6 +7,10 @@ const url           = require('url');
 const platform      = require('os').platform();
 
 
+// @TODO: possibly move this to some external verification module
+const APP_PERMISSIONS = ['notifications'];
+
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -59,6 +63,20 @@ if (!instanceLock) {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   app.on('ready', () => {
+
+    /**
+     * Prevent untrusted/unused permissions from automatically being allowed
+     * See https://www.electronjs.org/docs/tutorial/security#4-handle-session-permission-requests-from-remote-content
+     */
+    electron.session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+      if (APP_PERMISSIONS.includes(permission)) {
+        // Approves the permissions request
+        return callback(true);
+      }
+
+      return callback(false);
+    });
+
 
     log.info('initialization complete');
     log.debug('argv', process.argv);
@@ -116,7 +134,9 @@ if (!instanceLock) {
           nodeIntegration: false,
           sandbox: true,
           contextIsolation: false,
-          nativeWindowOpen: true
+          nativeWindowOpen: true,
+          webSecurity: true,
+          enableRemoteModule: false
         }
       });
 
@@ -165,6 +185,30 @@ if (!instanceLock) {
   app.on('quit', () => {
     log.info('Exiting!');
   });
+
+
+  /**
+   * This shouldn't technically be necessary to implement, but this takes measure to preventing webviews created in the DOM after the page has loaded DO NOT
+   *  get the opportunity to obtain node integration (electron gives them their own )
+   *   See https://www.electronjs.org/docs/tutorial/security#11-verify-webview-options-before-creation
+   */
+  app.on('web-contents-created', (event, contents) => {
+    contents.on('will-attach-webview', (event, webPreferences, params) => {
+      // Strip away preload scripts if unused or verify their location is legitimate
+      delete webPreferences.preload;
+      delete webPreferences.preloadURL;
+
+      // Disable Node.js integration
+      webPreferences.nodeIntegration = false;
+      webPreferences.sandbox = true;
+
+      // Verify URL being loaded
+      if (!params.src.startsWith('http://localhost') || !params.src.startsWith('http://127.0.0')) {
+        event.preventDefault();
+      }
+    })
+  })
+
 
   /*
   ** initiates the Main Window
@@ -220,7 +264,10 @@ if (!instanceLock) {
         webviewTag: false,
         nodeIntegration: false,
         sandbox: true,
-        contextIsolation: false,
+        contextIsolation: true,
+        nativeWindowOpen: true,
+        webSecurity: true,
+        enableRemoteModule: false,
         preload: path.join(__dirname, 'preload.js')
       },
     });
@@ -249,10 +296,10 @@ if (!instanceLock) {
     }
 
     // handle external URIs
-    mainWindow.webContents.on('new-window', (event, url) => {
-      event.preventDefault();
-      electron.shell.openExternal(url);
-    });
+    // mainWindow.webContents.on('new-window', (event, url) => {
+    //   event.preventDefault();
+    //   electron.shell.openExternal(url);
+    // });
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {
