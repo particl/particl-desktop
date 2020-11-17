@@ -1,45 +1,45 @@
 
 export namespace SocketMessages_v03 {
   export interface AddListing {
-    id: number;
-    hash: string;
-    seller: string;
+    objectId: number;
+    objectHash: string;
+    from: string;  // seller
     market: string;
   }
 
 
   export interface ProposalAdded {
     category: 'PUBLIC_VOTE' | 'ITEM_VOTE' | 'MARKET_VOTE';
-    hash: string;
+    objectHash: string;
     target: string | null;		// listingItem.hash if ProposalCategory.ITEM_VOTE
     market: string;
   }
 
 
   export interface CommentAdded {
-    id: number;
-    hash: string;
+    objectId: number;
+    objectHash: string;
     target: string;     // if commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS' then listingItem.hash
-    sender: string;     // sender's address
-    receiver: string;   // if commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS' then market.receiveAddress
-    commentType: 'LISTINGITEM_QUESTION_AND_ANSWERS' | 'PROPOSAL_QUESTION_AND_ANSWERS' | 'MARKETPLACE_COMMENT' | 'PRIVATE_MESSAGE';
-    parent?: {
-      id: number;
-      hash: string;
-    };
+    from: string;     // sender's address
+    to: string;   // if commentType === 'LISTINGITEM_QUESTION_AND_ANSWERS' then market.receiveAddress
+    category: 'LISTINGITEM_QUESTION_AND_ANSWERS' | 'PROPOSAL_QUESTION_AND_ANSWERS' | 'MARKETPLACE_COMMENT' | 'PRIVATE_MESSAGE';
+    parentObjectId?: number;
+    parentObjectHash?: string;
   }
 
 
   export interface BidReceived {
-    id: number;
-    hash: string;
+    objectId: number;
+    objectHash: string;
     market: string;  // market receive address
+    from: string;  // sender
+    target: string;  // listing item hash
+    to: string;  // seller
   }
 
   export interface MarketAdded {
-    id: number;
-    hash: string;
-    name: string;
+    objectId: number;
+    objectHash: string;
   }
 }
 

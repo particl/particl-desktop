@@ -343,8 +343,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
           query$.push(
             this._detailsService.getListenerFlaggedItem(this.details.hash).pipe(
               tap((flagMsg) => {
-                if (isBasicObjectType(flagMsg) && (typeof flagMsg.hash === 'string')) {
-                  this.flagProposalControl.setValue(flagMsg.hash);
+                if (isBasicObjectType(flagMsg) && (typeof flagMsg.objectHash === 'string')) {
+                  this.flagProposalControl.setValue(flagMsg.objectHash);
                 }
               })
             )
