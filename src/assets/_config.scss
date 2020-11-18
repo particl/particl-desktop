@@ -159,16 +159,21 @@ $break-xhd: 2200px;
     --multiwallet-width: 72px;
   }
   @include break(hd) {
-    --multiwallet-width: 72px;
+    --multiwallet-width: 76px;
   }
 
   --paddingV: 35px; // default vertical padding
-  --paddingH: 35px; // default horizontal padding
-  --padding: 35px; // all-in padding
+  --paddingH: 40px; // default horizontal padding
+  --padding: 35px 40px; // all-in padding
   @include break(l) {
     --paddingV: 40px;
     --paddingH: 50px;
     --padding: 40px 50px;
+  }
+  @include break(xl) {
+    --paddingV: 55px;
+    --paddingH: 70px;
+    --padding: 55px 70px;
   }
 }
 
@@ -222,6 +227,12 @@ $break-xhd: 2200px;
   color: var(--text-muted);
   font-size: 12.5px;
   line-height: 1.5;
+  @include break(l) {
+    font-size: 13px;
+  }
+  @include break(hd) {
+    font-size: 14.5px;
+  }
 }
 
 %text-ellipsis {

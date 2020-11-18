@@ -822,6 +822,14 @@ h1 {
     font-size: 16px;
     margin: 46px 0 18px;
   }
+  @include break(xl) {
+    font-size: 17px;
+    margin: 52px 0 20px;
+  }
+  @include break(hd) {
+    font-size: 18px;
+    margin: 58px 0 22px;
+  }
 }
 
 // Bolder, all-caps "H3" headers, usually inside boxes/cards
@@ -830,8 +838,14 @@ h1 {
   font-weight: 500;
   font-size: 13px;
   margin-top: 0;
+  @include break(xl) {
+    font-size: 15px;
+  }
   &.--larger {
     font-size: 15px;
+    @include break(xl) {
+      font-size: 16px;
+    }
   }
 }
 
@@ -844,6 +858,12 @@ h1 {
   @include break(l) {
     font-size: 18px;
     margin-top: 36px;
+  }
+  @include break(xl) {
+    font-size: 20px;
+  }
+  @include break(hd) {
+    font-size: 22px;
   }
 }
 

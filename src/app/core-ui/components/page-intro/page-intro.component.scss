@@ -13,7 +13,13 @@
       margin-top: 0;
     }
     h1 {
-      font-size: 1.55em;
+      font-size: 20px;
+      @include break(l) {
+        font-size: 24px;
+      }
+      @include break(xl) {
+        font-size: 26px;
+      }
     }
     & > .content {
       display: none;
@@ -35,13 +41,12 @@
   // page heading (always visible)
   h1 {
     margin: 0;
-    // @Allien: no longer used?
-    /*
-    .tag {
-      padding: 2px 6px;
-      font-size: 50%;
+    @include break(l) {
+      font-size: 29px;
     }
-    */
+    @include break(xl) {
+      font-size: 33px;
+    }
   }
 
   // content with help text (toggle-able)
@@ -57,6 +62,13 @@
       @include break(l) {
         font-size: 14.5px;
         line-height: 1.6;
+      }
+      @include break(xl) {
+        font-size: 15px;
+        line-height: 1.7;
+      }
+      @include break(hd) {
+        font-size: 16px;
       }
     }
     .alert {

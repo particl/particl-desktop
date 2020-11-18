@@ -165,6 +165,13 @@ mat-tooltip-component .mat-tooltip {
   &.multi-line {
     white-space: pre-line;
   }
+  @include break(l) {
+    font-size: 12.5px;
+  }
+  @include break(xl) {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
 }
 
 
