@@ -12,6 +12,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-add-details-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { NotificationsService } from './notifications.service';
 import { StartedStatus, Identity, MarketSettings } from '../store/market.models';
 import { WalletInfoStateModel, WalletUTXOStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
@@ -39,7 +40,8 @@ interface IMenuItem {
 
 @Component({
   templateUrl: './market-base.component.html',
-  styleUrls: ['./market-base.component.scss']
+  styleUrls: ['./market-base.component.scss'],
+  providers: [NotificationsService]
 })
 export class MarketBaseComponent implements OnInit, OnDestroy {
 
@@ -72,7 +74,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   constructor(
     private _store: Store,
     private _snackbar: SnackbarService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _notifications: NotificationsService,
   ) {
     this.mpVersion = environment.marketVersion || '';
   }
@@ -91,6 +94,26 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
           const cartMenu = this.menu.find(m => m.path === 'cart');
           if (cartMenu) {
             cartMenu.notificationValue = +cartCountValue > 0 ? +cartCountValue : null;
+          }
+        }),
+        takeUntil(this.destroy$)
+      ),
+
+      this._store.select(MarketState.orderCountNotification('buy')).pipe(
+        tap((value) => {
+          const buyMenu = this.menu.find(m => m.path === 'buy');
+          if (buyMenu) {
+            buyMenu.notificationValue = +value > 0 ? +value : null;
+          }
+        }),
+        takeUntil(this.destroy$)
+      ),
+
+      this._store.select(MarketState.orderCountNotification('sell')).pipe(
+        tap((value) => {
+          const sellMenu = this.menu.find(m => m.path === 'sell');
+          if (sellMenu) {
+            sellMenu.notificationValue = +value > 0 ? +value : null;
           }
         }),
         takeUntil(this.destroy$)

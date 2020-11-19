@@ -56,6 +56,8 @@ export interface DefaultMarketConfig {
 
 export interface MarketNotifications {
   identityCartItemCount: number;
+  buyOrdersPendingAction: string[];
+  sellOrdersPendingAction: string[];
 }
 
 
@@ -68,19 +70,3 @@ export interface MarketStateModel {
   settings: MarketSettings;
   notifications: MarketNotifications;
 }
-
-
-// export interface ListingsCommentNotificationItem {
-//   title: string;
-//   imageId: number;
-//   marketHash: string;
-//   hasUnread: boolean;
-// }
-
-
-// export interface NotificationsStateModel {
-//   listingComments:  {
-//     buy: { [listingHash: string]: ListingsCommentNotificationItem }
-//     sell: { [listingHash: string]: ListingsCommentNotificationItem }
-//   };
-// }

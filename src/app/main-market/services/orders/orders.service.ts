@@ -24,8 +24,10 @@ import {
   BuyFlowActionStore,
   ActionTransitionParams,
   BuyflowStateDetails,
-  StateStatusClass
+  StateStatusClass,
+  messageListeners
 } from './orders.models';
+import { MarketUserActions } from 'app/main-market/store/market.actions';
 
 
 enum TextContent {
@@ -178,9 +180,9 @@ export class BidOrderService implements IBuyflowController {
     let listeners: string[] = [];
 
     if (userType === 'SELLER') {
-      listeners = ['MPA_BID_03', 'MPA_CANCEL_03', 'MPA_LOCK_03', 'MPA_RELEASE'];
+      listeners = messageListeners.sellerAll;
     } else if (userType === 'BUYER') {
-      listeners = ['MPA_REJECT_03', 'MPA_CANCEL_03', 'MPA_ACCEPT_03', 'MPA_COMPLETE', 'MPA_SHIP'];
+      listeners = messageListeners.buyerAll;
     }
 
     return listeners;
@@ -245,11 +247,17 @@ export class BidOrderService implements IBuyflowController {
       concatMap((isSuccessful: boolean) => iif(
         () => isSuccessful,
 
-        // Fake a 'order get' request, since that doesn't exist: search for orders with increased criteria to narrow the result set,
-        //  and then find the correct one...
-        defer(() => this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
-          map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
-        )),
+        defer(() => {
+          // let the store know that the order has been processed
+          this._store.dispatch(new MarketUserActions.OrderItemActioned(asUser, orderItem.orderHash));
+
+          // Perform the equivalent of an 'order get' request, since that doesn't exist:
+          //  search for orders with increased criteria to narrow the result set,
+          //  and then find the correct one...
+          return this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
+            map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
+          );
+        }),
 
         // wasn't updated, so return the existing orderItem
         defer(() => of(orderItem))
