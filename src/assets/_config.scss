@@ -154,12 +154,20 @@ $break-xhd: 2200px;
   --scrollbar-width: 6px; // 'duh
   @include break(l) {
     --multiwallet-width: 64px;
+    --sidebar-width: 240px;
+    --filter-width: 240px;
   }
   @include break(xl) {
     --multiwallet-width: 72px;
+    --sidebar-width: 250px;
+    --filter-width: 260px;
+    --scrollbar-width: 7px;
   }
   @include break(hd) {
     --multiwallet-width: 76px;
+    --sidebar-width: 260px;
+    --filter-width: 290px;
+    --scrollbar-width: 8px;
   }
 
   --paddingV: 35px; // default vertical padding
