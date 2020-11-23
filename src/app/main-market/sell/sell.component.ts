@@ -1,7 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, merge } from 'rxjs';
 import { map, tap, takeUntil } from 'rxjs/operators';
+
+import { Store } from '@ngxs/store';
+import { MarketState } from '../store/market.state';
 
 
 interface SellTab {
@@ -23,7 +26,7 @@ export class SellComponent implements OnInit, OnDestroy {
     { title: 'Sell Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
     { title: 'Sell Listings', icon: 'part-bag', templ: 'listings', notificationValue: null},
     { title: 'Inventory & Products', icon: 'part-stock', templ: 'templates', notificationValue: null},
-    { title: 'Questions', icon: 'part-chat-discussion', templ: 'questions', notificationValue: null},
+    // { title: 'Questions', icon: 'part-chat-discussion', templ: 'questions', notificationValue: null},
   ];
 
 
@@ -33,23 +36,37 @@ export class SellComponent implements OnInit, OnDestroy {
 
   constructor(
     private _route: ActivatedRoute,
-    private _cdr: ChangeDetectorRef
+    private _cdr: ChangeDetectorRef,
+    private _store: Store
   ) { }
 
 
   ngOnInit() {
-    this._route.queryParams.pipe(
-      map(params => params['selectedSellTab']),
-      tap((selectedSellTab: string | undefined) => {
-        if (selectedSellTab) {
-          const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
-          if (newTabIdx > -1) {
-            this.selectedTabIdx = newTabIdx;
+    merge(
+      this._route.queryParams.pipe(
+        map(params => params['selectedSellTab']),
+        tap((selectedSellTab: string | undefined) => {
+          if (selectedSellTab) {
+            const newTabIdx = this.tabs.findIndex(tab => tab.templ === selectedSellTab);
+            if (newTabIdx > -1) {
+              this.selectedTabIdx = newTabIdx;
+            }
+            this._cdr.detectChanges();
           }
-          this._cdr.detectChanges();
-        }
-      }),
-      takeUntil(this.destroy$)
+        }),
+        takeUntil(this.destroy$)
+      ),
+
+      this._store.select(MarketState.orderCountNotification('sell')).pipe(
+        tap((value) => {
+          const ordersTab = this.tabs.find(t => t.templ === 'orders');
+          if (ordersTab) {
+            ordersTab.notificationValue = +value > 0 ? +value : null;
+            this._cdr.detectChanges();
+          }
+        }),
+        takeUntil(this.destroy$)
+      ),
     ).subscribe();
   }
 
