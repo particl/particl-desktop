@@ -61,6 +61,7 @@ export class BuyComponent implements OnInit, OnDestroy {
           const ordersTab = this.tabs.find(t => t.templ === 'orders');
           if (ordersTab) {
             ordersTab.notificationValue = +value > 0 ? +value : null;
+            this._cdr.detectChanges();
           }
         }),
         takeUntil(this.destroy$)

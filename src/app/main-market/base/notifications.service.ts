@@ -13,7 +13,7 @@ import { isBasicObjectType } from '../shared/utils';
 import { SocketMessages_v03 } from '../shared/market-socket.models';
 import { StartedStatus } from '../store/market.models';
 import { OrderUserType, messageListeners as orderMessageListeners } from '../services/orders/orders.models';
-import { RespOrderSearchItem } from '../shared/market.models';
+import { RespOrderSearchItem, ORDER_ITEM_STATUS } from '../shared/market.models';
 
 
 @Injectable()
@@ -139,8 +139,25 @@ export class NotificationsService implements OnDestroy {
             return [];
           }
 
+          const actionableOrderStatuses: string[] = userType === 'BUYER'
+          ? [
+            ORDER_ITEM_STATUS.ACCEPTED,
+            ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+            ORDER_ITEM_STATUS.SHIPPED
+          ]
+          : [
+            ORDER_ITEM_STATUS.CREATED,
+            ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+            ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+          ];
+
           return orderItems.filter(
-            o => isBasicObjectType(o) && (typeof o.hash === 'string') && (o.hash.length > 0)
+            o => isBasicObjectType(o) &&
+            (typeof o.hash === 'string') &&
+            (o.hash.length > 0) &&
+            Array.isArray(o.OrderItems) &&
+            (o.OrderItems.length > 0) &&
+            actionableOrderStatuses.includes(o.OrderItems[0].status)
           ).map(
             o => o.hash
           );

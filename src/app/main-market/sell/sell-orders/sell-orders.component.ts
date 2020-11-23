@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, of, merge, defer, iif } from 'rxjs';
 import {
-  takeUntil, tap, map, switchMap, catchError, startWith, debounceTime,
+  takeUntil, tap, switchMap, catchError, startWith, debounceTime,
   distinctUntilChanged, filter, auditTime, concatMap, finalize
 } from 'rxjs/operators';
 
@@ -157,7 +157,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
         this._cdr.detectChanges();
 
       }),
-      switchMap(() => this.fetchOrders().pipe(
+      switchMap(() => defer(() => this.fetchOrders().pipe(
         tap(orders => {
           const isInit = this.ordersList.length === 0;
 
@@ -200,7 +200,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
           this.renderOrdersControl.setValue(null);
           this._cdr.detectChanges();
         }),
-      )),
+      ))),
       takeUntil(this.destroy$)
     );
 
@@ -259,11 +259,11 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
 
     merge(
-      identityChange$,
       marketLoader$,
       orderLoader$,
       updateDisplay$,
       filterChange$,
+      identityChange$,
       incomingUpdate$
     ).subscribe();
   }
@@ -432,14 +432,9 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
   private fetchMarkets(): Observable<{ key: string; name: string; }[]> {
     if (!this.currentIdentity || !(+this.currentIdentity.id > 0)) {
-      return of([]);
+      return of([] as { key: string; name: string; }[]);
     }
-    return this._sharedService.loadMarkets(this.currentIdentity.id).pipe(
-      map(markets => {
-        return markets.map(m => ({key: m.receiveAddress, name: m.name}));
-      }),
-      catchError(() => of([]))
-    );
+    return of(this.currentIdentity.markets.map(m => ({key: m.receiveAddress, name: m.name})));
   }
 
 
