@@ -13,7 +13,7 @@ import { isBasicObjectType } from '../shared/utils';
 import { SocketMessages_v03 } from '../shared/market-socket.models';
 import { StartedStatus } from '../store/market.models';
 import { OrderUserType, messageListeners as orderMessageListeners } from '../services/orders/orders.models';
-import { RespOrderSearchItem, ORDER_ITEM_STATUS } from '../shared/market.models';
+import { RespOrderSearchItem, ORDER_ITEM_STATUS, BID_DATA_KEY } from '../shared/market.models';
 
 
 @Injectable()
@@ -78,7 +78,7 @@ export class NotificationsService implements OnDestroy {
     const identity = this._store.selectSnapshot(MarketState.currentIdentity);
 
     return concat(...(['BUYER', 'SELLER'].map(userType =>
-      this.fetchActiveOrders(userType as any, identity.address).pipe(
+      this.fetchActiveOrders(userType as any, identity.address, identity.markets.map(m => m.receiveAddress)).pipe(
         catchError(() => of([] as string[])),
         filter(orders => orders.length > 0),
         tap(orders => this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(identity.id, userType as any, orders)))
@@ -126,7 +126,7 @@ export class NotificationsService implements OnDestroy {
   }
 
 
-  private fetchActiveOrders(userType: OrderUserType, identityAddress: string): Observable<string[]> {
+  private fetchActiveOrders(userType: OrderUserType, identityAddress: string, marketAddresses: string[]): Observable<string[]> {
     return defer(() => {
       const userQuery = [
         userType === 'BUYER' ? identityAddress : null,
@@ -151,14 +151,22 @@ export class NotificationsService implements OnDestroy {
             ORDER_ITEM_STATUS.ESCROW_COMPLETED,
           ];
 
-          return orderItems.filter(
-            o => isBasicObjectType(o) &&
-            (typeof o.hash === 'string') &&
-            (o.hash.length > 0) &&
-            Array.isArray(o.OrderItems) &&
-            (o.OrderItems.length > 0) &&
-            actionableOrderStatuses.includes(o.OrderItems[0].status)
-          ).map(
+          return orderItems.filter(o => {
+            const isValidItem = isBasicObjectType(o) &&
+                                (typeof o.hash === 'string') && (o.hash.length > 0) &&
+                                Array.isArray(o.OrderItems) && (o.OrderItems.length > 0) &&
+                                isBasicObjectType(o.OrderItems[0].Bid) &&
+                                Array.isArray(o.OrderItems[0].Bid.BidDatas) && (o.OrderItems[0].Bid.BidDatas.length > 0);
+
+            if (isValidItem) {
+              const marketKeyItem = o.OrderItems[0].Bid.BidDatas.find(bd => bd.key === BID_DATA_KEY.MARKET_KEY);
+              if (marketKeyItem) {
+                return  actionableOrderStatuses.includes(o.OrderItems[0].status) &&
+                        marketAddresses.includes(marketKeyItem.value);
+              }
+            }
+            return false;
+          }).map(
             o => o.hash
           );
         }),
