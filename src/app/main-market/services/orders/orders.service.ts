@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, of, iif, defer } from 'rxjs';
-import { map, concatMap } from 'rxjs/operators';
+import { Observable, throwError, of, iif, defer, concat } from 'rxjs';
+import { map, concatMap, tap, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -248,14 +248,18 @@ export class BidOrderService implements IBuyflowController {
         () => isSuccessful,
 
         defer(() => {
-          // let the store know that the order has been processed
-          this._store.dispatch(new MarketUserActions.OrderItemActioned(asUser, orderItem.orderHash));
+          return concat(
+            // let the store know that the order has been processed
+            this._store.dispatch(new MarketUserActions.OrderItemActioned(asUser, orderItem.latestBidHash)).pipe(
+              catchError((err) => of(null))
+            ),
 
-          // Perform the equivalent of an 'order get' request, since that doesn't exist:
-          //  search for orders with increased criteria to narrow the result set,
-          //  and then find the correct one...
-          return this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
-            map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
+            // Perform the equivalent of an 'order get' request, since that doesn't exist:
+            //  search for orders with increased criteria to narrow the result set,
+            //  and then find the correct one...
+            this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
+              map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
+            )
           );
         }),
 
@@ -353,6 +357,7 @@ export class BidOrderService implements IBuyflowController {
       orderHash: '',
       orderHashShort: '',
       baseBidId: 0,
+      latestBidHash: '',
       marketKey: '',
       created: 0,
       updated: 0
@@ -371,6 +376,7 @@ export class BidOrderService implements IBuyflowController {
     const orderItem = src.OrderItems[0];
     newOrder.orderItemId = +orderItem.id > 0 ? +orderItem.id : newOrder.orderItemId;
     newOrder.orderHash = getValueOrDefault(src.hash, 'string', newOrder.orderHash);
+    newOrder.latestBidHash = getValueOrDefault(src.OrderItems[0].Bid.hash, 'string', newOrder.latestBidHash);
     newOrder.orderHashShort = newOrder.orderHash.slice(0, 6);
     newOrder.baseBidId = +orderItem.Bid.id > 0 ? +orderItem.Bid.id : newOrder.orderItemId;
     newOrder.created = +src.createdAt > 0 ? +src.createdAt : newOrder.created;
@@ -437,13 +443,27 @@ export class BidOrderService implements IBuyflowController {
 
     if (Array.isArray(src.OrderItems[0].Bid.ChildBids) && src.OrderItems[0].Bid.ChildBids.length > 0 ) {
 
+      let latestGenerated = 0;
+      let latestBidHash = '';
       // find the child bid with the highest quantity of bid datas
       let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
+
       src.OrderItems[0].Bid.ChildBids.forEach(childBid => {
-        if (isBasicObjectType(childBid) && Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
-          foundBidDatas = childBid.BidDatas;
+        if (isBasicObjectType(childBid)) {
+          if (Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
+            foundBidDatas = childBid.BidDatas;
+          }
+          // extract the latest bid (in order to get to its hash later)
+          if ((+childBid.generatedAt > latestGenerated) && (typeof childBid.hash === 'string') && (childBid.hash.length > 0)) {
+            latestGenerated = +childBid.generatedAt;
+            latestBidHash = childBid.hash;
+          }
         }
       });
+
+      if (latestBidHash.length > 0) {
+        newOrder.latestBidHash = latestBidHash;
+      }
 
       // we always have 2 at least, since ORDER_HASH and MARKET_KEY are always present. Additional items means extra info available
       if (foundBidDatas.length > 2) {

@@ -94,7 +94,7 @@ export class NotificationsService implements OnDestroy {
     const identityMarkets = currentIdentity.markets.map(m => m.receiveAddress);
 
     const buyListener$ = merge(
-      ...orderMessageListeners.buyerActionable.map(li =>
+      ...orderMessageListeners.buyerAlerts.map(li =>
         this._socket.getSocketMessageListener(li as any).pipe(takeUntil(this.stopListeners$))
       )
     ).pipe(
@@ -104,26 +104,25 @@ export class NotificationsService implements OnDestroy {
           m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
         ).map(m => m.objectHash);
       }),
-      filter((orderHashes: string[]) => orderHashes.length > 0),
-      tap((orderHashes: string[]) =>
-        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', orderHashes))
+      filter((bidHashes: string[]) => bidHashes.length > 0),
+      tap((bidHashes: string[]) =>
+        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', bidHashes))
       ),
       takeUntil(this.stopListeners$)
     );
     const sellListener$ = merge(
-      ...orderMessageListeners.sellerActionable.map(li =>
+      ...orderMessageListeners.sellerAllerts.map(li =>
         this._socket.getSocketMessageListener(li as any).pipe(takeUntil(this.stopListeners$))
       )
     ).pipe(
       bufferTime(2000),
       map((items: SocketMessages_v03.BidReceived[]) => {
-        return items.filter(
-          m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
+        return items.filter(item => (typeof item.market === 'string') && identityMarkets.includes(item.market)
         ).map(m => m.objectHash);
       }),
-      filter((orderHashes: string[]) => orderHashes.length > 0),
-      tap((orderHashes: string[]) =>
-        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', orderHashes))
+      filter((bidHashes: string[]) => bidHashes.length > 0),
+      tap((bidHashes: string[]) =>
+        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', bidHashes))
       ),
       takeUntil(this.stopListeners$)
     );
@@ -151,7 +150,6 @@ export class NotificationsService implements OnDestroy {
           const actionableOrderStatuses: string[] = userType === 'BUYER'
           ? [
             ORDER_ITEM_STATUS.ACCEPTED,
-            ORDER_ITEM_STATUS.ESCROW_COMPLETED,
             ORDER_ITEM_STATUS.SHIPPED
           ]
           : [
@@ -175,9 +173,18 @@ export class NotificationsService implements OnDestroy {
               }
             }
             return false;
-          }).map(
-            o => o.hash
-          );
+          }).map(o => {
+            if (Array.isArray(o.OrderItems[0].Bid.ChildBids)) {
+              const sortedChildBids = o.OrderItems[0].Bid.ChildBids.sort((a, b) =>
+                (isBasicObjectType(b) && +b.generatedAt || 0) - (isBasicObjectType(a) && +a.generatedAt || 0)
+              );
+
+              if ((sortedChildBids.length > 0) && (typeof sortedChildBids[0].hash === 'string') && (sortedChildBids[0].hash.length > 0)) {
+                return sortedChildBids[0].hash;
+              }
+            }
+            return o.OrderItems[0].Bid.hash || '';
+          });
         }),
       );
     });

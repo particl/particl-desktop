@@ -249,7 +249,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
     if (listeners$.length > 0) {
       incomingUpdate$ = merge(...listeners$).pipe(
         filter(msg => isBasicObjectType(msg) && (typeof this.filterOptionsMarkets[msg.market] === 'string')),
-        auditTime(10_000), // After first message arrives, wait x number of seconds (for more possible arriving messages), before continuing
+        auditTime(3_000), // After first message arrives, wait x number of seconds (for more possible arriving messages), before continuing
         tap(() => {
           this.loadOrdersControl.setValue(false);
         }),
