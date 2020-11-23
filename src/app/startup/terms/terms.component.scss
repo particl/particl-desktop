@@ -68,6 +68,9 @@ $installer-header-height: 96px;
       left: calc(var(--multiwallet-width) + var(--sidebar-width));
       right: 0;
       z-index: 100;
+      @include break(xl) {
+        font-size: 16px;
+      }
     }
   }
 }

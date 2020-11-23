@@ -5,7 +5,7 @@
 // expansion panel widget
 .coldstaking {
   --content-paddingH: 18px;
-  margin-bottom: 30px;
+  margin-bottom: var(--paddingV);
   .header { // toggle header
     padding: 0 var(--content-paddingH) 0 0;
     min-height: 64px;

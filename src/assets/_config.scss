@@ -142,6 +142,9 @@ $break-xhd: 2200px;
 
   --radius: 4px; // default border radius
   --card-spacing: 5px; // space between card-like elements (TXs, addresses etc.)
+  @include break(xl) {
+    --card-spacing: 7px;
+  }
 
   --header-main-height: 64px; // app header with status bar
   --tab-bar-height: 48px; // tab height in pages

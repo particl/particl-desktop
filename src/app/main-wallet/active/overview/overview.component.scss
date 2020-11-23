@@ -6,7 +6,7 @@
   display: flex;
   .content {
     flex: 1 1 100%;
-    margin-right: 40px;
+    margin-right: var(--paddingH);
   }
   
   .sidebar {
