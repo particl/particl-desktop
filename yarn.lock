@@ -3895,11 +3895,6 @@ dotenv-expand@^5.1.0:
   resolved "https://registry.yarnpkg.com/dotenv-expand/-/dotenv-expand-5.1.0.tgz#3fbaf020bfd794884072ea26b1e9791d45a629f0"
   integrity sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==
 
-dotenv@^6.0.0:
-  version "6.2.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-6.2.0.tgz#941c0410535d942c8becf28d3f357dbd9d476064"
-  integrity sha512-HygQCKUBSFl8wKQZBSemMywRWcEDNidvNbjGVyZu3nbZ8qq9ubiPoGLMdRDpfSrpkkm9BXYFkpKxxFX38o/76w==
-
 dotenv@^8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
@@ -5573,18 +5568,7 @@ handle-thing@^2.0.0:
   resolved "https://registry.yarnpkg.com/handle-thing/-/handle-thing-2.0.1.tgz#857f79ce359580c340d43081cc648970d0bb234e"
   integrity sha512-9Qn4yBxelxoh2Ow62nP+Ka/kMnOXRi8BXnRaUwezLNhqelnN49xKz4F/dPP8OYLxLxq6JDtZb2i9XznUQbNPTg==
 
-handlebars@4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.1.2.tgz#b6b37c1ced0306b221e094fc7aca3ec23b131b67"
-  integrity sha512-nvfrjqvt9xQ8Z/w0ijewdD/vvWDTOweBUm96NTr66Wfvo1mJenBLwcYmPs3TIBP5ruzYGD7Hx/DaM9RmhroGPw==
-  dependencies:
-    neo-async "^2.6.0"
-    optimist "^0.6.1"
-    source-map "^0.6.1"
-  optionalDependencies:
-    uglify-js "^3.1.4"
-
-handlebars@^4.7.6:
+handlebars@^4.5.3, handlebars@^4.7.6:
   version "4.7.6"
   resolved "https://registry.yarnpkg.com/handlebars/-/handlebars-4.7.6.tgz#d4c05c1baf90e9945f77aa68a7a219aa4a7df74e"
   integrity sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
@@ -6880,10 +6864,10 @@ jpeg-js@^0.2.0:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.2.0.tgz#53e448ec9d263e683266467e9442d2c5a2ef5482"
   integrity sha1-U+RI7J0mPmgyZkZ+lELSxaLvVII=
 
-jpeg-js@^0.3.6:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.3.7.tgz#471a89d06011640592d314158608690172b1028d"
-  integrity sha512-9IXdWudL61npZjvLuVe/ktHiA41iE8qFyLB+4VDTblEsWBzeg8WQTlktdUK4CdncUqtUgUg0bbOmTE2bKBKaBQ==
+jpeg-js@^0.4.0:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.2.tgz#8b345b1ae4abde64c2da2fe67ea216a114ac279d"
+  integrity sha512-+az2gi/hvex7eLTMTlbRLOhH6P6WFdk2ITI8HJsaH2VqYO0I594zXSYEP+tf4FW+8Cy68ScDXoAsQdyQanv3sw==
 
 js-base64@^2.1.8:
   version "2.5.2"
@@ -7455,7 +7439,7 @@ lodash@=4.17.11:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
 
-lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.0, lodash@~4.17.11, lodash@~4.17.12:
+lodash@^4.0.0, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.5, lodash@^4.3.0, lodash@^4.6.0, lodash@~4.17.11, lodash@~4.17.12:
   version "4.17.15"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
@@ -7464,6 +7448,11 @@ lodash@^4.17.11:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
+
+lodash@^4.17.20:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 log-driver@^1.2.7:
   version "1.2.7"
@@ -8923,9 +8912,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@./particl-marketplace-0.3.0-54.tgz:
-  version "0.3.0-54"
-  resolved "./particl-marketplace-0.3.0-54.tgz#3a2d5fab217505216425e27bd464d606dc073c25"
+particl-marketplace@./particl-marketplace-0.3.0-55.tgz:
+  version "0.3.0-55"
+  resolved "./particl-marketplace-0.3.0-55.tgz#b5e6758d7ee3989f5cf68207b11e0139d5eb53e6"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -8941,14 +8930,14 @@ particl-marketplace@./particl-marketplace-0.3.0-54.tgz:
     deep-extend "^0.5.1"
     del "^3.0.0"
     diff "3.5.0"
-    dotenv "^6.0.0"
+    dotenv "^8.2.0"
     express "^4.16.2"
     express-status-monitor "^1.1.4"
     faker "^4.1.0"
     figlet "^1.2.0"
     fstream "^1.0.12"
     glob "^7.1.2"
-    handlebars "4.1.2"
+    handlebars "^4.5.3"
     helmet "^3.6.1"
     hoek "^4.2.1"
     inquirer "^3.2.0"
@@ -8957,10 +8946,10 @@ particl-marketplace@./particl-marketplace-0.3.0-54.tgz:
     iso3166-2-db "^2.2.1"
     jayson "^2.0.5"
     jimp "^0.2.28"
-    jpeg-js "^0.3.6"
+    jpeg-js "^0.4.0"
     jsonwebtoken "^8.3.0"
     knex "^0.12.9"
-    lodash "^4.17.4"
+    lodash "^4.17.20"
     lokijs "^1.5.3"
     mathjs "^7.3.0"
     merge "1.2.1"
@@ -8992,7 +8981,7 @@ particl-marketplace@./particl-marketplace-0.3.0-54.tgz:
     typescript "2.4.2"
     web-request "^1.0.7"
     winston "^2.4.4"
-    zeromq "6.0.0-beta.6"
+    zeromq "^6.0.0-beta.6"
   optionalDependencies:
     fsevents "^2.1.3"
 
@@ -12652,7 +12641,7 @@ yn@^2.0.0:
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
   integrity sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 
-zeromq@6.0.0-beta.6, zeromq@^6.0.0-beta.6:
+zeromq@^6.0.0-beta.6:
   version "6.0.0-beta.6"
   resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-6.0.0-beta.6.tgz#2b8934cafce735ea9007fd3074ec8aca9bf11204"
   integrity sha512-wLf6M7pBHijl+BRltUL2VoDpgbQcOZetiX8UzycHL8CcYFxYnRrpoG5fi3UX3+Umavz1lk4/dGaQez8qiDgr/Q==
