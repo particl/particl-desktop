@@ -53,16 +53,26 @@ Customizations and modifiers for default Material components
 // ------ 1.1. BUTTONS ------ //
 
 button,
-.mat-button,
-.mat-raised-button {
+button.mat-button,
+button.mat-raised-button {
   font-family: var(--font) !important;
   font-weight: 600;
+  @include break(l) {
+    font-size: 15px;
+    line-height: 42px;
+    padding: 0 20px;
+  }
+  @include break(xl) {
+    font-size: 16px;
+    line-height: 48px;
+    padding: 0 24px;
+  }
   .mat-icon {
     margin-right: 5px;
     position: relative;
     top: -1px;
   }
-  &.large { // smaller buttons
+  &.large { // large buttons
     min-width: auto;
     line-height: 42px;
     padding: 0 24px;
@@ -682,6 +692,10 @@ label {
   &.--larger {
     & > .label {
       padding: 21px 24px 0;
+      @include break(xl) {
+        padding: 28px 35px 0;
+        margin: 0 0 -0.9em 0;
+      }
     }
     & > .label-desc {
       padding: 0 24px;
@@ -729,6 +743,10 @@ label {
     &:not(button) {
       color: var(--text-muted); // mute text's color
     }
+    @include break(xl) {
+      position: relative;
+      top: -1px;
+    }
     &.mat-icon {
       font-size: 16px; // 1.25em
       color: var(--text-muted);
@@ -766,6 +784,9 @@ label {
     }
     .mat-form-field-subscript-wrapper {
       top: 15px; // move it above the field
+      @include break(xl) {
+        top: 23px;
+      }
       .mat-hint {
         right: 14px;
       }
@@ -804,11 +825,20 @@ label {
     &.--larger,
     &.--largest {
       font-size: 15px;
+      @include break(xl) {
+        font-size: 16px;
+      }
       .mat-form-field-flex {
         padding: 0 24px;
+        @include break(xl) {
+          padding: 0 35px;
+        }
       }
       .mat-input-element {
         padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        @include break(xl) {
+          padding: calc(1.7 * var(--field-boxed-paddingV)) 0;
+        }
       }
       .mat-hint {
         bottom: 52px;

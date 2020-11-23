@@ -231,6 +231,9 @@ $break-xhd: 2200px;
   text-transform: uppercase;
   font-weight: 500;
   font-size: 13px;
+  @include break(xl) {
+    font-size: 15px;
+  }
 }
 
 %help-text,
@@ -311,6 +314,9 @@ $break-xhd: 2200px;
 // Transition effects
 %tfx {
   transition: all 0.17s;
+  @media (prefers-reduced-motion) {
+    transition: none;
+  }
 }
 
 %hide {
