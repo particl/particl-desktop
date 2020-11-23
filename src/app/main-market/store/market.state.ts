@@ -551,13 +551,13 @@ export class MarketState {
     if (orderType === 'BUYER') {
       return ctx.setState(patch<MarketStateModel>({
         notifications: patch<MarketNotifications>({
-          buyOrdersPendingAction: removeItem<string>(hash => hash === orderHash)
+          buyOrdersPendingAction: ctx.getState().notifications.buyOrdersPendingAction.filter(hash => hash !== orderHash)
         })
       }));
     } else if (orderType === 'SELLER') {
       return ctx.setState(patch<MarketStateModel>({
         notifications: patch<MarketNotifications>({
-          sellOrdersPendingAction: removeItem<string>(hash => hash === orderHash)
+          sellOrdersPendingAction: ctx.getState().notifications.sellOrdersPendingAction.filter(hash => hash !== orderHash)
         })
       }));
     }

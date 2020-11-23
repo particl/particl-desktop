@@ -62,6 +62,7 @@ export class NotificationsService implements OnDestroy {
   private clearNotifications(): Observable<void> {
     return concat(
       this._store.dispatch(new MarketUserActions.OrderItemsCleared())
+      // perform any notification reset activity here (eg: when identity changes, and notification count needs to be reset)
     );
   }
 
@@ -70,6 +71,7 @@ export class NotificationsService implements OnDestroy {
     return merge(
       this.initOrderNotifications(),
       this.startOrderNotificationListeners(),
+      // Add notification listeners here
     ).pipe(map(() => null));
   }
 
@@ -91,38 +93,45 @@ export class NotificationsService implements OnDestroy {
     const currentIdentity = this._store.selectSnapshot(MarketState.currentIdentity);
     const identityMarkets = currentIdentity.markets.map(m => m.receiveAddress);
 
-    return merge(
+    const buyListener$ = merge(
       ...orderMessageListeners.buyerActionable.map(li =>
-        this._socket.getSocketMessageListener(li as any).pipe(
-          bufferTime(2000),
-          map((items: SocketMessages_v03.BidReceived[]) => {
-            return items.filter(
-              m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
-            ).map(m => m.objectHash);
-          }),
-          filter((orderHashes: string[]) => orderHashes.length > 0),
-          tap((orderHashes: string[]) =>
-            this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', orderHashes))
-          ),
-          takeUntil(this.stopListeners$)
-        )
+        this._socket.getSocketMessageListener(li as any).pipe(takeUntil(this.stopListeners$))
+      )
+    ).pipe(
+      bufferTime(2000),
+      map((items: SocketMessages_v03.BidReceived[]) => {
+        return items.filter(
+          m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
+        ).map(m => m.objectHash);
+      }),
+      filter((orderHashes: string[]) => orderHashes.length > 0),
+      tap((orderHashes: string[]) =>
+        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', orderHashes))
       ),
-      ...orderMessageListeners.sellerActionable.map(li =>
-        this._socket.getSocketMessageListener(li as any).pipe(
-          bufferTime(2000),
-          map((items: SocketMessages_v03.BidReceived[]) => {
-            return items.filter(
-              m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
-            ).map(m => m.objectHash);
-          }),
-          filter((orderHashes: string[]) => orderHashes.length > 0),
-          tap((orderHashes: string[]) =>
-            this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', orderHashes))
-          ),
-          takeUntil(this.stopListeners$)
-        )
-      ),
+      takeUntil(this.stopListeners$)
     );
+    const sellListener$ = merge(
+      ...orderMessageListeners.sellerActionable.map(li =>
+        this._socket.getSocketMessageListener(li as any).pipe(takeUntil(this.stopListeners$))
+      )
+    ).pipe(
+      bufferTime(2000),
+      map((items: SocketMessages_v03.BidReceived[]) => {
+        return items.filter(
+          m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
+        ).map(m => m.objectHash);
+      }),
+      filter((orderHashes: string[]) => orderHashes.length > 0),
+      tap((orderHashes: string[]) =>
+        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', orderHashes))
+      ),
+      takeUntil(this.stopListeners$)
+    );
+
+    return merge(
+      buyListener$,
+      sellListener$
+    ).pipe(takeUntil(this.stopListeners$));
   }
 
 

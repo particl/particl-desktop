@@ -850,17 +850,17 @@ export class BidOrderService implements IBuyflowController {
         },
         transition: this.actionOrderShip.bind(this)
       },
-      {
-        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
-        toState: null,
-        user: 'BUYER',
-        actionType: 'PLACEHOLDER_LABEL',
-        details: {
-          label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: TextContent.PLACEHOLDER_SHIPPING_PENDING_TOOLTIP,
-          colour: 'primary', icon: 'part-date'
-        },
-        transition: this.actionInvalid.bind(this)
-      },
+      // {
+      //   fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+      //   toState: null,
+      //   user: 'BUYER',
+      //   actionType: 'PLACEHOLDER_LABEL',
+      //   details: {
+      //     label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: TextContent.PLACEHOLDER_SHIPPING_PENDING_TOOLTIP,
+      //     colour: 'primary', icon: 'part-date'
+      //   },
+      //   transition: this.actionInvalid.bind(this)
+      // },
       {
         fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
         toState: ORDER_ITEM_STATUS.COMPLETE,
