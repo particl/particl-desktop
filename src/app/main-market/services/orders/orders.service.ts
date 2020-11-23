@@ -244,28 +244,36 @@ export class BidOrderService implements IBuyflowController {
     }
 
     return actionable.transition(orderItem, otherParams || {}).pipe(
-      concatMap((isSuccessful: boolean) => iif(
-        () => isSuccessful,
+      concatMap((isSuccessful: boolean) => {
+        const notifyBidHash = orderItem.latestBidHash;
+        return iif(
+          () => isSuccessful,
 
-        defer(() => {
-          return concat(
-            // let the store know that the order has been processed
-            this._store.dispatch(new MarketUserActions.OrderItemActioned(asUser, orderItem.latestBidHash)).pipe(
-              catchError((err) => of(null))
-            ),
+          defer(() => {
+            return concat(
 
-            // Perform the equivalent of an 'order get' request, since that doesn't exist:
-            //  search for orders with increased criteria to narrow the result set,
-            //  and then find the correct one...
-            this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
-              map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
-            )
-          );
-        }),
+              // Perform the equivalent of an 'order get' request, since that doesn't exist:
+              //  search for orders with increased criteria to narrow the result set,
+              //  and then find the correct one...
+              this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
+                map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem),
+                tap(updatedOrderItem => {
+                  const updatedBuyflow = updatedOrderItem.currentState.state.buyflow;
+                  const updatedCurrentState = updatedOrderItem.currentState.state.stateId;
+                  const updatedBuyflowState = this.getStateDetails(updatedBuyflow, updatedCurrentState, asUser);
+                  if (updatedBuyflowState.actions.PRIMARY.length === 0) {
+                    // let the store know that the order has been processed
+                    this._store.dispatch(new MarketUserActions.OrderItemActioned(asUser, notifyBidHash));
+                  }
+                })
+              )
+            );
+          }),
 
-        // wasn't updated, so return the existing orderItem
-        defer(() => of(orderItem))
-      ))
+          // wasn't updated, so return the existing orderItem
+          defer(() => of(orderItem))
+        );
+      })
     );
   }
 
