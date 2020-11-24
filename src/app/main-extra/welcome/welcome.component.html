@@ -9,7 +9,7 @@
       <h1>Welcome to Particl</h1>
       <p>Embrace your digital sovereignty and thrive &ndash; the power is in your hands</p>
     </div>
-  
+
     <section>
 
       <div class="apps">
@@ -19,19 +19,19 @@
           <h2 class="name">Wallet</h2>
           <p class="desc">Send, receive and manage PART coins</p>
         </a>
-        
+
         <a class="app item" routerLink="/main/market">
           <mat-icon fontIcon="part-bag" class="icon"></mat-icon>
           <h2 class="name">Marketplace</h2>
           <p class="desc">Buy and sell on the most private marketplace</p>
         </a>
-        
+
         <!--a class="app item" routerLink="/main/exchange">
           <mat-icon fontIcon="part-swap" class="icon"></mat-icon>
           <h2 class="name">Swap</h2>
           <p class="desc">Swap your crypto to and from PART effortlessly</p>
         </a-->
-        
+
       </div><!-- .apps -->
 
       <div class="starting">
@@ -39,16 +39,15 @@
           <mat-spinner color="accent" class="small"></mat-spinner>
           <div class="text">
             <div class="title">Starting</div>
-            <div class="desc">Verifying network connection&hellip;</div>
+            <div class="desc">Application ready&hellip;</div>
           </div>
         </mat-card>
       </div><!-- .starting -->
 
     </section>
-  
-    <!-- @TODO: implement version current version info (only for PD) -->
+
     <p class="version">
-      Particl Desktop 3.0
+      Particl Desktop {{ clientVersion }}
     </p>
 
   </div>
