@@ -8912,9 +8912,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@./particl-marketplace-0.3.0-55.tgz:
-  version "0.3.0-55"
-  resolved "./particl-marketplace-0.3.0-55.tgz#b5e6758d7ee3989f5cf68207b11e0139d5eb53e6"
+particl-marketplace@./particl-marketplace-0.3.0-57.tgz:
+  version "0.3.0-57"
+  resolved "./particl-marketplace-0.3.0-57.tgz#af03580aecdf0fe9ea4cb7726774c996a399d1fa"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"

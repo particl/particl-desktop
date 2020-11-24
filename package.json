@@ -196,7 +196,7 @@
     "ngx-material-file-input": "^2.0.0",
     "node-unzip-2": "^0.2.1",
     "particl-bitcore-lib": "^0.16.0",
-    "particl-marketplace": "./particl-marketplace-0.3.0-55.tgz",
+    "particl-marketplace": "./particl-marketplace-0.3.0-57.tgz",
     "particl-zmq": "^1.0.5",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
