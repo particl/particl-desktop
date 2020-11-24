@@ -54,9 +54,11 @@ Customizations and modifiers for default Material components
 
 button,
 button.mat-button,
-button.mat-raised-button {
+button.mat-raised-button,
+a.mat-button,
+a.mat-raised-button {
   font-family: var(--font) !important;
-  font-weight: 600;
+  font-weight: 500;
   @include break(l) {
     font-size: 15px;
     line-height: 42px;
@@ -240,6 +242,15 @@ mat-tab-group.mat-tab-group {
   .mat-tab-label {
     font-family: var(--font);
     font-weight: 500;
+    height: var(--tab-bar-height);
+    min-width: 140px;
+    @include break(l) {
+      padding: 0 32px;
+      font-size: 15px;
+    }
+    @include break(hd) {
+      font-size: 16px;
+    }
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
       .mat-icon {
@@ -428,6 +439,7 @@ mat-expansion-panel.mat-expansion-panel {
       z-index: 10;
       color: var(--bg-muted) !important;
       min-width: 36px;
+      line-height: 36px;
       padding: 0;
       border-radius: 50%;
       overflow: hidden;
@@ -452,6 +464,14 @@ mat-dialog-title,
   font-size: 18px;
   margin-bottom: 18px;
   padding-right: 50px;
+  @include break(l) {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  @include break(xl) {
+    font-size: 22px;
+    margin-bottom: 22px;
+  }
   &.text-center {
     padding: 0;
   }
@@ -704,10 +724,10 @@ label {
   }
 }
 .mat-form-field[appearance="fill"] {
-  --field-boxed-paddingV: 16px;
   display: block;
+  font-size: var(--formfield-font-size);
   .mat-form-field-flex {
-    padding: 0 16px;
+    padding: 0 var(--formfield-paddingH);
     background: var(--color-white);
     align-items: center;
   }
@@ -818,7 +838,7 @@ label {
 
   &.mat-form-field-type-mat-input {
     .mat-input-element {
-      padding: var(--field-boxed-paddingV) 0;
+      padding: var(--formfield-paddingV) 0;
       margin: 0;
     }
     // Send: Larger padding around input
@@ -835,9 +855,9 @@ label {
         }
       }
       .mat-input-element {
-        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        padding: calc(1.4 * var(--formfield-paddingV)) 0;
         @include break(xl) {
-          padding: calc(1.7 * var(--field-boxed-paddingV)) 0;
+          padding: calc(1.7 * var(--formfield-paddingV)) 0;
         }
       }
       .mat-hint {
@@ -855,7 +875,7 @@ label {
 
   &.mat-form-field-type-mat-select {
     .mat-form-field-infix {
-      padding: var(--field-boxed-paddingV) 0;
+      padding: var(--formfield-paddingV) 0;
     }
     .mat-form-field-wrapper {
       .mat-select-arrow-wrapper {
@@ -866,7 +886,7 @@ label {
     &.--larger {
       font-size: 15px;
       .mat-form-field-infix {
-        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        padding: calc(1.4 * var(--formfield-paddingV)) 0;
         .mat-select-value {
           position: relative;
           top: 1px;
@@ -875,7 +895,7 @@ label {
     }
     &.--smaller {
       .mat-form-field-infix {
-        padding: calc(0.7 * var(--field-boxed-paddingV)) 0;
+        padding: calc(0.7 * var(--formfield-paddingV)) 0;
         min-width: 120px;
         width: auto;
       }
@@ -884,7 +904,7 @@ label {
     // Boxed, standalone variant
     &.--boxed {
       .mat-form-field-infix {
-        padding: var(--field-boxed-paddingV) 0;
+        padding: var(--formfield-paddingV) 0;
       }
       .mat-select-value {
         font-weight: 500;
@@ -908,8 +928,8 @@ label {
       padding: 0 2px 4px 16px; // lower padding, so that scrollbar is on the edge
       .mat-input-element {
         padding-top: 0;
-        padding-right: var(--field-boxed-paddingV);
-        width: calc(100% - var(--field-boxed-paddingV));
+        padding-right: var(--formfield-paddingV);
+        width: calc(100% - var(--formfield-paddingV));
       }
     }
     &.--larger {
@@ -997,7 +1017,7 @@ mat-option.mat-option {
   line-height: var(--height);
   height: var(--height);
   .mat-option-text {
-    font-size: 13px;
+    font-size: var(--formfield-font-size);
   }
   &.mat-selected {
     color: var(--text) !important;

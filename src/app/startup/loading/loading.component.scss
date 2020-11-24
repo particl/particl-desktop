@@ -24,7 +24,7 @@ body {
   background: var(--bg);
   font-family: var(--font);
   height: calc(100vh - 2 * var(--container-paddingV));
-  padding: var(--container-paddingV) calc(8vw + var(--multiwallet-width));
+  padding: var(--container-paddingV) calc(8vw + var(--appbar-width));
   display: flex;
   flex-direction: column;
   .content {

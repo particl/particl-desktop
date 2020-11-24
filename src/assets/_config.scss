@@ -139,40 +139,39 @@ $break-xhd: 2200px;
 
   --font: 'Inter_UI', sans-serif; // default sans-serif font
   --font-mono: 'Office_Code_Pro', monospace; // default monospace font
-
+  
+  // General layout  
   --radius: 4px; // default border radius
   --card-spacing: 5px; // space between card-like elements (TXs, addresses etc.)
-  @include break(xl) {
-    --card-spacing: 7px;
-  }
-
   --header-main-height: 64px; // app header with status bar
   --tab-bar-height: 48px; // tab height in pages
   --control-bar-height: 55px; // control bar height (filters etc., e.g. in Market)
-
-  // FIXME @Allien - rename!
-  --multiwallet-width: 56px; // 56px; width of app switcher bar
+  --appbar-width: 56px; // 56px; width of app switcher bar
   --sidebar-width: 220px; // main sidebar menu width
   --filter-width: 230px; // sidebar in content area (filter/sort, search)
   --scrollbar-width: 6px; // 'duh
   @include break(l) {
-    --multiwallet-width: 64px;
-    --sidebar-width: 240px;
+    --tab-bar-height: 54px;
+    --appbar-width: 64px;
+    --sidebar-width: 250px;
     --filter-width: 240px;
   }
   @include break(xl) {
-    --multiwallet-width: 72px;
+    --card-spacing: 7px;
+    --appbar-width: 72px;
     --sidebar-width: 250px;
-    --filter-width: 260px;
+    --filter-width: 280px;
     --scrollbar-width: 7px;
   }
   @include break(hd) {
-    --multiwallet-width: 76px;
+    --tab-bar-height: 60px;
+    --appbar-width: 76px;
     --sidebar-width: 260px;
-    --filter-width: 290px;
+    --filter-width: 300px;
     --scrollbar-width: 8px;
   }
 
+  // Paddings
   --paddingV: 35px; // default vertical padding
   --paddingH: 40px; // default horizontal padding
   --padding: 35px 40px; // all-in padding
@@ -183,8 +182,18 @@ $break-xhd: 2200px;
   }
   @include break(xl) {
     --paddingV: 55px;
-    --paddingH: 70px;
-    --padding: 55px 70px;
+    --paddingH: 60px;
+    --padding: 55px 60px;
+  }
+
+  // Forms
+  --formfield-paddingV: 16px;
+  --formfield-paddingH: 16px;
+  --formfield-font-size: 13px;
+  @include break(xl) {
+    --formfield-paddingV: 18px;
+    --formfield-paddingH: 24px;
+    --formfield-font-size: 15px;
   }
 }
 

@@ -163,10 +163,14 @@ body {
 
     // radio buttons
     .radio-group {
-      --radio-paddingH: 16px;
+      --radio-spacing: 6px;
       width: 100%;
-      padding: 8px 0;
+      padding: var(--radio-spacing) 0;
       display: block;
+      font-size: var(--formfield-font-size);
+      @include break(xl) {
+        --radio-spacing: 8px;
+      }
       .filter-option {
         @extend %tfx;
         width: 100%;
@@ -186,8 +190,8 @@ body {
         }
         .mat-radio-label {
           position: relative;
-          padding: 6px var(--radio-paddingH);
-          width: calc(100% - calc(2 * var(--radio-paddingH)));
+          padding: var(--radio-spacing) var(--formfield-paddingH);
+          width: calc(100% - calc(2 * var(--formfield-paddingH)));
         }
       }
       .amount {
@@ -197,7 +201,7 @@ body {
         background: hsla(var(--bg-muted-hsl), 0.4);
         border-radius: var(--radius);
         position: absolute;
-        right: var(--radio-paddingH);
+        right: var(--formfield-paddingH);
         top: 7px;
         display: inline-block;
         padding: 1px 6px;
@@ -490,7 +494,7 @@ body {
   position: fixed;
   z-index: 10;
   top: var(--header-main-height);
-  left: calc(var(--multiwallet-width) + var(--sidebar-width));
+  left: calc(var(--appbar-width) + var(--sidebar-width));
   right: var(--scrollbar-width);
   bottom: 0;
   display: flex;
@@ -530,7 +534,7 @@ body {
   .mat-progress-bar {
     position: fixed;
     bottom: 0;
-    left: calc(var(--multiwallet-width) + var(--sidebar-width));
+    left: calc(var(--appbar-width) + var(--sidebar-width));
     right: var(--scrollbar-width);
     width: auto;
     height: 6px;
@@ -889,6 +893,9 @@ h1 {
 
 p {
   line-height: 1.5;
+  @include break(hd) {
+    line-height: 1.65;
+  }
   // Highlighted 'lead' paragraphs
   &.lead {
     font-size: 15px;
@@ -926,9 +933,12 @@ kbd {
 
 // Help descriptions
 .widget-help {
-  @extend %lighter;
-  font-size: 93%;
+  color: var(--text-muted);
+  font-size: 13px;
   margin-bottom: 25px;
+  @include break(hd) {
+    font-size: 13.5px;
+  }
 }
 
 
