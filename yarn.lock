@@ -3994,10 +3994,10 @@ electron-to-chromium@^1.3.378, electron-to-chromium@^1.3.413:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.438.tgz#56051a9b148842fec813b113e8070ae892a85920"
   integrity sha512-QKMcpfA/fCOnqFHsZvKr2haQQb3eXkDI17zT+4hHxJJThyN5nShcG6q1VR8vRiE/2GCJM+0p3PzinYknkdsBYg==
 
-electron@11.0.0:
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-11.0.0.tgz#e4966d358832e47189069444799e3b72224e37d9"
-  integrity sha512-bbT6vmc04I0+cuG5e26+2rAOQYLH90Exf11a+NpGCSMTXsSjSpSZdjWGffWRIowOJzSwcSk8EHdCKdeet1rz9A==
+electron@10.1.6:
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-10.1.6.tgz#1b74838fc5f8263dcf198dc16bd6a88b095a59bb"
+  integrity sha512-Wyiq5Fy64KAa51i72m+5zayYKSm9O5lnittUdaElAn3PAzGl3yDifYO2QsXR7k/iKxWVSROOPzf43mXYytL67Q==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -8082,11 +8082,6 @@ ngx-infinite-scroll@^8.0.0:
   dependencies:
     "@scarf/scarf" "0.1.5"
     opencollective-postinstall "^2.0.2"
-
-ngx-material-file-input@^2.0.0:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/ngx-material-file-input/-/ngx-material-file-input-2.1.1.tgz#8f3dffc9bfcc1e2e07a00c9cf168d901ecb0cd30"
-  integrity sha512-FbaIjiJnL6BZtZYWLvMSn9aSaM62AZaJegloTUphmLz5jopXPzE5W+3aC+dsf9h1IIqHSCLcyv0w+qH0ypBhMA==
 
 ngx-window-token@^2.0.0:
   version "2.0.1"
