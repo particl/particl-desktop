@@ -696,29 +696,28 @@ label {
   cursor: text;
   .label {
     @extend %box-title;
-    padding: 16px 0 1px;
+    padding: var(--formfield-paddingV) 0 1px;
     margin: 0 0 -0.6em 0;
     position: relative;
     z-index: 2; // make sure label is on top (e.g. when character counter is present)
   }
   .label-desc {
     color: var(--text-muted);
-    margin: 14px 0 0;
-    padding: 0 16px;
+    margin: var(--formfield-paddingV) 0 0;
+    padding: 0 var(--formfield-paddingH);
   }
   & > .label {
-    padding: 15px 16px 0;
+    padding: var(--formfield-paddingV) var(--formfield-paddingH) 0;
   }
   &.--larger {
     & > .label {
-      padding: 21px 24px 0;
+      padding: calc(var(--formfield-large-multi) * var(--formfield-paddingV)) calc(var(--formfield-large-multi) * var(--formfield-paddingH)) 0;
       @include break(xl) {
-        padding: 28px 35px 0;
         margin: 0 0 -0.9em 0;
       }
     }
     & > .label-desc {
-      padding: 0 24px;
+      padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
       margin: 10px 0 0;
     }
   }
@@ -796,11 +795,13 @@ label {
   }
 
   &.--larger {
+    /*
     .label { // manually added labels, e.g. on Send page
       padding: 22px 0 0;
     }
+    */
     .mat-form-field-flex {
-      padding: 0 24px;
+      padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
     }
     .mat-form-field-subscript-wrapper {
       top: 15px; // move it above the field
@@ -814,7 +815,7 @@ label {
   }
   &.--smaller {
     .mat-form-field-flex {
-      padding: 0 12px;
+      padding: 0 calc(var(--formfield-small-multi) * var(--formfield-paddingH));
     }
   }
   
@@ -844,21 +845,12 @@ label {
     // Send: Larger padding around input
     &.--larger,
     &.--largest {
-      font-size: 15px;
-      @include break(xl) {
-        font-size: 16px;
-      }
+      font-size: var(--formfield-font-size-large);
       .mat-form-field-flex {
-        padding: 0 24px;
-        @include break(xl) {
-          padding: 0 35px;
-        }
+        padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
       }
       .mat-input-element {
-        padding: calc(1.4 * var(--formfield-paddingV)) 0;
-        @include break(xl) {
-          padding: calc(1.7 * var(--formfield-paddingV)) 0;
-        }
+        padding: calc(var(--formfield-large-multi) * var(--formfield-paddingV)) 0;
       }
       .mat-hint {
         bottom: 52px;

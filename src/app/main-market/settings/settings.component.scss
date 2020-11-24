@@ -4,7 +4,14 @@
 @import '../../main-extra/global-settings/global-settings.component.scss';
 
 .container-block {
+  --settings-sidebar-width: 270px;
   min-height: calc(100vh - var(--header-main-height) - 2 * var(--paddingV)); // fill 100% of remaining vertical space
+  @include break(l) {
+    --settings-sidebar-width: 300px;
+  }
+  @include break(xl) {
+    --settings-sidebar-width: 350px;
+  }
 }
 
 .alert {

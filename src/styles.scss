@@ -246,6 +246,10 @@ body {
           background: hsla(var(--color-secondary-hsl), 0.05);
           padding: 8px;
           margin: 0 4px 0 0;
+          @include break(xl) {
+            padding: 10px;
+            margin: 2px 2px 2px 4px;
+          }
           &.part-alert {
             background: hsla(var(--color-alert-hsl), 0.05);
           }
@@ -260,6 +264,9 @@ body {
       font-size: 14px;
       line-height: 40px;
       font-weight: 500;
+      @include break(xl) {
+        font-size: 15px;
+      }
       .mat-icon {
         @extend %lightest;
         @extend %tfx;
@@ -268,6 +275,9 @@ body {
         padding: 0;
         margin: 8px 12px 8px 8px;
         border-radius: 50%;
+        @include break(xl) {
+          margin: 12px 12px 12px 14px;
+        }
       }
       &:hover {
         .mat-icon {

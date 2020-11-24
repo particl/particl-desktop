@@ -15,9 +15,9 @@
 
 <ng-template #content>
 
-  <div class="container" fxLayout="row" fxLayoutGap="30px">
+  <div class="container">
 
-    <div class="sidebar" fxFlex="270px">
+    <div class="sidebar">
 
       <div class="radio-switcher">
         <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
@@ -32,7 +32,7 @@
     </div><!-- .sidebar -->
 
 
-    <div class="row" fxFlex="100%">
+    <div class="content row">
       <div class="third">
         <ng-container *ngIf="currentGroup.settings.length > 0">
           <h2 class="section-title"> {{ currentGroup.name }} </h2>
