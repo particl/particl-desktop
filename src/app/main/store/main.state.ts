@@ -66,8 +66,8 @@ const DEFAULT_UTXOS_STATE: WalletUTXOStateModel = {
 
 
 const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
-  notifications_payment_received: true,
-  notifications_staking_reward: true,
+  notifications_payment_received: false,
+  notifications_staking_reward: false,
   anon_utxo_split: 3
 };
 
