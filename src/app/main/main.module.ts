@@ -18,6 +18,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MainRpcService } from './services/main-rpc/main-rpc.service';
 import { WalletInfoService } from './services/wallet-info/wallet-info.service';
 import { WalletEncryptionService } from './services/wallet-encryption/wallet-encryption.service';
+import { NotificationsService } from './services/notifications/notifications.service';
 import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/encrypt-wallet-modal.component';
 import { BlockSyncModalComponent } from './components/block-sync-indicator/block-sync-modal/block-sync-modal.component';
 
@@ -44,7 +45,8 @@ import { BlockSyncModalComponent } from './components/block-sync-indicator/block
     SnackbarService,
     MainRpcService,
     WalletInfoService,
-    WalletEncryptionService
+    WalletEncryptionService,
+    NotificationsService
   ],
   entryComponents: [
     ApplicationRestartModalComponent,
