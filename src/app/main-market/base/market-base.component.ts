@@ -78,6 +78,9 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     private _notifications: NotificationsService,
   ) {
     this.mpVersion = environment.marketVersion || '';
+    // _notifications is included in base so as to ensure its init'ed correctly when the market base is created, and then destroyed when
+    //  the market is destroyed
+    const notifyService = this._notifications;
   }
 
 

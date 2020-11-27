@@ -6,6 +6,7 @@ import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { MarketUserActions } from '../store/market.actions';
 
+import { NotificationsService as AppNotifyService } from 'app/main/services/notifications/notifications.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
 
@@ -14,6 +15,13 @@ import { SocketMessages_v03 } from '../shared/market-socket.models';
 import { StartedStatus } from '../store/market.models';
 import { OrderUserType, messageListeners as orderMessageListeners } from '../services/orders/orders.models';
 import { RespOrderSearchItem, ORDER_ITEM_STATUS, BID_DATA_KEY } from '../shared/market.models';
+
+
+enum TextContent {
+  NOTIFICATION_TITLE = 'Particl Marketplace',
+  BUY_ORDER_DESCRIPTION = 'A Purchased Item has been updated and requires your attention',
+  SELL_ORDER_DESCRIPTION = 'An item sold has been updated and requires your attention',
+}
 
 
 @Injectable()
@@ -26,12 +34,14 @@ export class NotificationsService implements OnDestroy {
   constructor(
     private _rpc: MarketRpcService,
     private _store: Store,
-    private _socket: MarketSocketService
+    private _socket: MarketSocketService,
+    private _appNotify: AppNotifyService
   ) {
-    combineLatest(
+
+    combineLatest([
       this._store.select(MarketState.startedStatus).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$))
-    ).pipe(
+    ]).pipe(
       tap(() => this.stopListeners$.next()),
       switchMap(results => {
         const isStarted = results[0] === StartedStatus.STARTED;
@@ -105,9 +115,10 @@ export class NotificationsService implements OnDestroy {
         ).map(m => m.objectHash);
       }),
       filter((bidHashes: string[]) => bidHashes.length > 0),
-      tap((bidHashes: string[]) =>
-        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', bidHashes))
-      ),
+      tap((bidHashes: string[]) => {
+        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', bidHashes));
+        this._appNotify.notify(TextContent.NOTIFICATION_TITLE, TextContent.BUY_ORDER_DESCRIPTION);
+      }),
       takeUntil(this.stopListeners$)
     );
     const sellListener$ = merge(
@@ -121,9 +132,10 @@ export class NotificationsService implements OnDestroy {
         ).map(m => m.objectHash);
       }),
       filter((bidHashes: string[]) => bidHashes.length > 0),
-      tap((bidHashes: string[]) =>
-        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', bidHashes))
-      ),
+      tap((bidHashes: string[]) => {
+        this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', bidHashes));
+        this._appNotify.notify(TextContent.NOTIFICATION_TITLE, TextContent.SELL_ORDER_DESCRIPTION);
+      }),
       takeUntil(this.stopListeners$)
     );
 
