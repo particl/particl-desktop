@@ -58,7 +58,7 @@ const exposedIpc = new SafeIpcRenderer([
   'start-system',
   'zmq-connect',
 
-  'notification',
+  'notifications',
   'daemon',
   'close-gui',
 
