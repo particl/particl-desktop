@@ -1,0 +1,309 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+// ------------------------ CART ------------------------ //
+
+.--cart-layout { // "fake" table-like layout, but with flexbox and mat-cards
+  --cart-item-size: 90px;
+  @include break(l) {
+    --cart-item-size: 100px;
+  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-muted);
+  & > .photo {
+    flex: 0 0 var(--cart-item-size);
+    margin-right: 24px;
+  }
+  & > .title {
+    flex: 1 1 100%;
+  }
+  & > .price {
+    flex: 0 0 140px;
+    text-align: right;
+    @include break(l) {
+      flex: 0 0 170px;
+    }
+    @include break(xl) {
+      flex: 0 0 200px;
+    }
+  }
+  & > .qty {
+    flex: 0 0 50px;
+    text-align: right;
+    @include break(l) {
+      flex: 0 0 55px;
+    }
+    @include break(xl) {
+      flex: 0 0 65px;
+    }
+  }
+  & > .shipping {
+    flex: 0 0 140px;
+    text-align: right;
+    @include break(l) {
+      flex: 0 0 170px;
+    }
+    @include break(xl) {
+      flex: 0 0 200px;
+    }
+  }
+  /*
+  & > .total {
+    flex: 0 0 140px;
+    text-align: right;
+    @include break(l) {
+      flex: 0 0 170px;
+    }
+    @include break(xl) {
+      flex: 0 0 200px;
+    }
+  }
+  */
+  & > .remove {
+    flex: 0 0 60px;
+    @include break(l) {
+      flex: 0 0 65px;
+    }
+    @include break(xl) {
+      flex: 0 0 70px;
+    }
+  }
+}
+
+.cart-header { // headers for cart "columns"
+  text-transform: uppercase;
+  font-size: 11px;
+  margin: 0 0 8px;
+  @include break(l) {
+    font-size: 12px;
+    margin: 0 0 10px;
+  }
+  @include break(xl) {
+    font-size: 13px;
+    margin: 0 0 12px;
+  }
+}
+
+// 1 item in cart
+.cart-item {
+  margin-bottom: var(--card-spacing);
+  padding: 0;
+  border-radius: 0;
+  .photo {
+    height: var(--cart-item-size);
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    img {
+      @extend %image-center-cover;
+    }
+    .overlay {
+      @extend %tfx;
+      opacity: 0;
+      background: hsla(var(--bg-black-hsl), 0.3);
+      line-height: var(--cart-item-size);
+      text-align: center;
+      color: var(--color-white);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      .mat-icon {
+        line-height: inherit;
+        text-shadow: 0 0 5px hsla(var(--text-hsl), 0.3);
+      }
+    }
+    &:hover {
+      .overlay {
+        opacity: 1;
+      }
+    }
+  }
+  .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    .name {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      //display: inline-block;
+      @include break(xl) {
+        font-size: 16.5px;
+      }
+    }
+    .meta { // market & category info
+      white-space: nowrap;
+      display: inline-block;
+      margin-top: 6px;
+      .market {
+        display: inline-block;
+        border: 1px solid hsla(var(--text-muted-hsl), 0.8);
+        padding: 1px 6px;
+        border-radius: var(--radius);
+        margin-right: 10px;
+        font-size: 0.85em;
+      }
+    }
+    .info { // warning/error messages
+      margin-top: 4px;
+      .mat-icon {
+        position: absolute;
+        top: 5px;
+        left: 8px;
+        display: inline-block;
+        font-size: 13px;
+      }
+      .message { // generic errors
+        padding: 3px 8px 3px 27px;
+        border-radius: var(--radius);
+        display: inline-block;
+        margin-top: 4px;
+        position: relative;
+        &.--error {
+          background: hsla(var(--color-alert-hsl), 0.1);
+          color: var(--color-alert);
+        }
+        &.--info {
+          background: hsla(var(--color-info-hsl), 0.1);
+          color: var(--color-info);
+        }
+      }
+    }
+  }
+  .amount { // all the prices (item, shipping, total)
+    @extend %enable-select;
+    display: block;
+    //font-family: var(--font-mono);
+    &.part {
+      color: var(--text);
+    }
+    @include break(l) {
+      font-size: 15px;
+    }
+  }
+  .total {
+    font-weight: 500;
+  }
+  .remove {
+    text-align: center;
+    .mat-icon {
+      top: 0;
+    }
+  }
+} // << .cart-item
+
+// placeholder "(?) N/A" when shipping country is not selected
+.no-price {
+  color: var(--text-muted);
+  .mat-icon {
+    font-size: 13px;
+    position: relative;
+    top: 2px;
+    margin-right: 1px;
+    color: hsla(var(--text-muted-hsl), 0.6);
+  }
+}
+
+.shipping-pricing {
+  margin-top: var(--paddingV);
+}
+
+section {
+  .section-header {
+    margin: 0 0 24px;
+    h2 {
+      font-size: 1.55em;
+      font-weight: 500;
+      margin: 16px 0 0;
+    }
+  }
+
+  &.cart {
+    .action-buttons {
+      margin-top: 18px;
+    }
+  }
+
+  // ---------------------- SHIPPING ---------------------- //
+
+  &.shipping {
+    flex: 1 1 55%;
+    margin-right: var(--paddingH);
+    .shipping-profile {
+      margin-bottom: var(--card-spacing);
+    }
+    .save-profile {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: hsla(var(--bg-hsl), 0.5);
+      .mat-checkbox {
+        flex: 1 1 40%;
+        padding-left: 24px;
+      }
+      label {
+        flex: 1 1 60%;
+      }
+    }
+  }
+
+
+  // ----------------------- PRICING ---------------------- //
+
+  &.pricing {
+    --pricing-paddingH: 24px;
+    flex: 1 1 45%;
+    .mat-card {
+      padding: 14px var(--pricing-paddingH) 18px;
+    }
+    table.prices { // extends default table.pricing styles in `styles.scss [3.8.]`
+      margin: 0 calc(-1 * var(--pricing-paddingH)) 8px;
+      width: calc(100% + calc(2 * var(--pricing-paddingH)));
+      max-width: none;
+      @include break(l) {
+        font-size: 14.5px;
+      }
+      @include break(l) {
+        font-size: 15px;
+      }
+      tr {
+        & > * {
+          padding: 4px 0 3px;
+          &:first-child {
+            padding-left: var(--pricing-paddingH);
+          }
+          &:last-child {
+            padding-right: var(--pricing-paddingH);
+          }
+        }
+        &.subtotal,
+        &.total {
+          color: var(--text);
+          font-weight: 500;
+        }
+      }
+    }
+    .mat-divider {
+      position: static;
+      margin: 8px calc(-1 * var(--pricing-paddingH)) 18px;
+      width: calc(100% + calc(2 * var(--pricing-paddingH)));
+    }
+  }
+
+
+  // ----------------------- SUBMIT ORDER ---------------------- //
+
+  &.submit-order {
+    margin-top: 48px;
+    @include break(l) {
+      margin-top: 70px;
+    }
+  }
+
+} // << section
+
+

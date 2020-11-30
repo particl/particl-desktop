@@ -1,0 +1,204 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.history-list {
+  &.mat-expanded {
+    margin: 8px -8px; // expand sideways and visually separate from other items when expanded
+  }
+}
+
+.mat-expansion-panel-header {
+  --size: 50px;
+  min-height: var(--size) !important;
+  max-height: var(--size) !important;
+
+  // TX date/time
+  .date {
+    color: var(--text-muted);
+  }
+
+  // confirmations
+  .confirmations {
+    // color: var(--text-muted);
+    .confirmation-tag {
+      border-radius: var(--radius);
+      font-size: 12px;
+      display: inline-block;
+      padding: 5px 10px;
+    }
+    .confirmations { // icon
+      margin-right: 3px;
+      font-size: 12px;
+      position: relative;
+      top: 1px;
+    }
+    &.confirm-none { // unconfirmed TXs
+      color: var(--color-confirms-0-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-0-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-1 { // 1-4 confirmations
+      color: var(--color-confirms-33-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-33-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-2 { // 5-8 conf.
+      color: var(--color-confirms-66-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-66-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-3 { // 9-12 conf.
+      color: var(--color-confirms-100-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-100-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-ok {
+      color: hsla(var(--text-muted-hsl), 0.8);
+    }
+  }
+
+  // TX icon
+  .type {
+    .mat-icon {
+      font-size: 14px;
+      position: relative;
+      top: 2px;
+      // narration icon
+      &.narration {
+        margin: 0 0 0 6px;
+        font-size: 12px;
+        color: hsla(var(--text-muted-hsl), 0.8) !important;
+        padding: 3px;
+        top: 1px;
+      }
+    }
+    .tx-type {
+      .name {
+        font-weight: 500;
+        margin-left: 12px;
+        text-transform: none;
+      }
+      &.staked {
+        .mat-icon {
+          color: var(--color-txtype-staked);
+        }
+      }
+      &.orphan {
+        .mat-icon {
+          color: var(--color-txtype-orphan);
+        }
+      }
+      &.sent {
+        .mat-icon {
+          color: var(--color-txtype-sent);
+        }
+      }
+      &.received {
+        .mat-icon {
+          color: var(--color-txtype-received);
+        }
+      }
+      &.listing-fee {
+        .mat-icon {
+          color: var(--color-txtype-listing-fee);
+        }
+      }
+    }
+  }
+
+  // TX amount
+  .tx-value {
+    text-align: right;
+    font-family: var(--font-mono);
+    display: block;
+    .amount {
+      .big {
+        font-weight: 500;
+      }
+      .point,
+      .small {
+        color: var(--text-muted);
+      }
+      .currency {
+        margin-left: 4px;
+      }
+    }
+    .negative {
+      color: var(--tx-negative-amount);
+      .point,
+      .small {
+        color: var(--tx-negative-decimals);
+      }
+    }
+    .mat-icon { // icon hiding private TX's value when wallet is locked
+      color: var(--text-muted);
+      font-size: 14px;
+      position: relative;
+      top: 1px;
+    }
+  }
+}
+
+
+.tx-description {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 18px 24px;
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px dashed var(--bg-muted);
+}
+
+.tx-details {
+  padding: 20px 24px;
+}
+
+// detail item of TX info
+.tx-detail-item {
+  padding: 3px 0;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-family: var(--font);
+  // shared across inputs
+  .input {
+    border: 0;
+    outline: 0;
+    padding: 0 5px;
+    &.narration {
+      padding: 0;
+      background: none;
+      color: var(--text);
+    }
+  }
+  // to/from address
+  .to-from-address {
+    width: 100%;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: hsla(var(--text-hsl), 0.9);
+    background: transparent;
+    box-shadow: 0 0 0 1px hsla(var(--bg-muted-hsl), 1);
+    border-radius: 4px;
+    padding: 3px 7px;
+    cursor: text;
+  }
+  // explorer link
+  .tx-detail-link {
+    width: 100%;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    &:hover {
+      color: var(--color-secondary);
+    }
+  }
+  .value { // fee & total TX value
+    margin-left: 6px;
+  }
+}

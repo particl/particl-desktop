@@ -1,0 +1,126 @@
+<div class="listing-detail-modal">
+
+  <h2 class="section-title">{{ sectionHeaderLabel }}</h2>
+  <button mat-button [disabled]="!hasNewCommentsPending" appDebounceClick (debounceClick)="refreshCommentList()" class="small">
+    <mat-icon fontIcon="part-refresh"></mat-icon>
+    Refresh list
+  </button>
+
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+    <ng-template #labelUserSeller>
+      <mat-icon fontIcon="part-circle-user"></mat-icon>
+      <span class="id-short">Seller</span>
+      <span class="id-full">Seller</span>
+    </ng-template>
+
+
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
+
+        <div class="answer item" [class.seller]="node.isSeller">
+          <p>
+            {{node.commentText}}
+          </p>
+          <div class="meta">
+            <span class="user">
+              <ng-container *ngIf="!node.isSeller; else labelUserSeller">
+                <mat-icon fontIcon="part-person"></mat-icon>
+                <span class="id-short">{{node.sender.addressShort}}</span>
+                <span class="id-full">{{node.sender.addressFull}}</span>
+              </ng-container>
+            </span>
+            <span class="time-date">{{ node.created | date:'medium'}}</span>
+          </div>
+        </div><!-- .answer -->
+    </mat-tree-node>
+
+
+    <!-- This is the tree node template for parent (expandable) nodes -->
+
+    <mat-nested-tree-node *matTreeNodeDef="let node; when: isParent">
+
+      <mat-expansion-panel class="question-answer list-item no-padding">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper">
+            <div class="question item" [ngClass]="{ 'seller': node.isSeller }" fxFlex="1 1 100%">
+              <p class="text">
+                {{ node.commentText }}
+              </p>
+              <div class="meta">
+                <span class="user">
+                  <ng-container *ngIf="!node.isSeller; else labelUserSeller">
+                    <mat-icon fontIcon="part-person"></mat-icon>
+                    <span class="id-short">{{node.sender.addressShort}}</span>
+                    <span class="id-full">{{node.sender.addressFull}}</span>
+                  </ng-container>
+                </span>
+                <span class="time-date">{{ node.created | date:'medium'}}</span>
+              </div>
+            </div>
+            <div class="status-wrap" fxFlex="0 0 100px">
+              <div class="status" matTooltip="Messages in thread" matTooltipPosition="before">
+                <mat-icon fontIcon="part-chat"></mat-icon>
+                {{node.children.length}}
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+        <div class="detail">
+          <ng-container matTreeNodeOutlet></ng-container>
+
+          <label class="reply-form" *ngIf="!(+node.parentCommentId > 0) && (node.commentHash.length > 0)">
+            <!-- coloring based on user's side (primary for buyers, accent for sellers) - if you don't want the condition here, we can keep "accent" -->
+            <mat-form-field appearance="fill" class="post-reply --plain --larger" color="accent">
+              <mat-icon matPrefix fontIcon="part-language"></mat-icon>
+              <input matInput type="text" [disabled]="isBusy" placeholder="Reply to this thread…" #replyThreadComment>
+              <button matSuffix mat-button class="small" matTooltip="Reply" color="accent" matTooltipPosition="before" appDebounceClick (debounceClick)="addComment(replyThreadComment, node.commentHash)" [disabled]="isBusy || !!!replyThreadComment.value">
+                <mat-icon fontIcon="part-arrow-right"></mat-icon>
+              </button>
+            </mat-form-field>
+          </label>
+
+        </div>
+
+      </mat-expansion-panel>
+
+    </mat-nested-tree-node>
+  </mat-tree>
+
+
+  <div *ngIf="hasMoreComments">
+    <button mat-button [disabled]="isBusy" appDebounceClick (debounceClick)="loadMoreComments()">+ Load More...</button>
+  </div>
+
+
+  <div class="no-results --smaller --horizontal" *ngIf="this.dataSource.data.length === 0">
+    <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No comments made yet">
+    <div class="text">
+      <p>
+        No Q&A on this Product yet
+      </p>
+      <p class="help-text">
+        Are you missing details from the Product's description or do you have some question for the Seller? Ask your questions below:
+      </p>
+    </div>
+  </div><!-- .no-results -->
+
+
+  <div class="">
+    <mat-progress-bar mode="indeterminate" *ngIf="isLoadingComments" color="accent"></mat-progress-bar>
+  </div><!-- .loading-bar -->
+
+
+  <h2 class="section-title">Add your comment</h2>
+  <label class="item reply-form new-question">
+    <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
+    <mat-form-field appearance="fill" class="post-reply --boxed --larger" color="primary">
+      <mat-icon matPrefix fontIcon="part-language"></mat-icon>
+      <input matInput type="text" placeholder="Ask a question…" #newThreadComment [disabled]="isBusy">
+      <button matSuffix mat-button class="small" matTooltip="Reply" color="primary" matTooltipPosition="before" appDebounceClick (debounceClick)="addComment(newThreadComment, null)" [disabled]="isBusy || !!!newThreadComment.value">
+        <mat-icon fontIcon="part-arrow-right"></mat-icon>
+      </button>
+    </mat-form-field>
+  </label>
+
+</div>

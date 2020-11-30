@@ -1,0 +1,170 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ UI ------ //
+
+.section-title { // 'Pay from/to, Convert' etc.
+  margin-top: 32px;
+  &:first-of-type {
+    margin-top: 0;
+  }
+}
+
+.subtitle { // subtitles (eg. 'privacy level' in anon
+  @extend %box-title;
+  margin: 20px 0 16px;
+  small {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: inherit;
+  }
+}
+
+.balance { // balance selection radio buttons
+  @extend %tfx;
+  padding: 8px 24px;
+  margin: 0 -24px !important;
+  font-family: var(--font);
+  &:hover {
+    background: var(--bg-hover);
+  }
+  &.mat-radio-checked { // selected balance
+    .name {
+      font-weight: 700;
+    }
+    .desc {
+      font-weight: 400;
+      .amount {
+        color: var(--color-primary);
+        font-weight: 600;
+      }
+    }
+    &.mat-accent {
+      .desc {
+        .amount {
+          color: var(--color-secondary); // color-code private TXs by secondary (blue) color
+        }
+      }
+    }
+  }
+  .name { // balance type
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 2px;
+    padding-left: 4px;
+  }
+  .desc { // available balance
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 4px;
+    .amount {
+      @extend %tfx;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-left: 5px;
+    }
+    .help-icon { // explanation of '1e-8' at blind balances (after sending all blind)
+      margin-left: 3px;
+      font-size: 14px;
+      color: var(--color-info);
+      line-height: 0;
+      position: relative;
+      top: 2px;
+    }
+  }
+}
+
+
+// ------ LAYOUT ------ //
+
+.from-box { // 'pay from..'
+  .sticky {
+    position: sticky;
+    top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV));
+  }
+  mat-card {
+    padding: 14px 24px;
+    .buttons {
+      margin: -18px 0 0;
+    }
+  }
+  .advanced { // advanced Anon options
+    background: hsla(var(--bg-hsl), 0.4);
+    border-top: 1px dashed var(--bg-muted);
+    margin: 8px -24px -24px;
+    padding: 1px 24px;
+  }
+}
+
+.privacy-level { // slider in Anon TXs
+  margin: 0 0 20px;
+  .privacy-label {
+    font-weight: 500;
+    cursor: pointer;
+    &.high {
+      text-align: center;
+    }
+    &.highest {
+      text-align: right;
+    }
+  }
+  .mat-slider {
+    width: 100%;
+    padding: 0;
+    margin: -4px 0 2px;
+  }
+  .widget-help {
+    margin: 0 8px 6px 0;
+  }
+}
+
+.pay-to { // whole 'pay to' card
+  padding: 0;
+  .subtitle {
+    @extend %box-title;
+    padding: 22px 24px 0;
+    margin: 0 0 -0.9em;
+    position: relative;
+    z-index: 2;
+  }
+  .address { // receiver's address input
+    input {
+      font-family: var(--font-mono); // when address entered, display in monospace
+      &::placeholder {
+        font-family: var(--font); // display placeholder in sans-serif
+      }
+    }
+    .mat-button {
+      margin: 0 -8px 0 8px;
+      padding: 8px;
+      .mat-icon {
+        margin: 0;
+      }
+    }
+  }
+}
+
+mat-card.to-balance-type { // 'convert to..'
+  padding: 14px 24px;
+}
+
+
+.send-amount {
+  padding: 0;
+  .amount-to-send {
+    font-size: 16px;
+    font-family: var(--font-mono) !important;
+    font-weight: 500;
+    margin: 0;
+    span {
+      &[matPrefix] {
+        font-weight: 400;
+      }
+    }
+  }
+  .actions {
+    text-align: right;
+    margin: 0;
+  }
+}

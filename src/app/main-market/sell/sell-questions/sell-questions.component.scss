@@ -1,0 +1,34 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
+
+.question-item {
+  // header / toggle
+  .header-wrapper {
+    .meta {
+      .origin-market {
+        margin-right: 10px;
+        border: 1px solid hsla(var(--text-muted-hsl), 0.6);
+        padding: 1px 6px;
+        border-radius: var(--radius);
+      }
+    }
+  }
+  .status { // number of replies in thread
+    padding-top: 6px;
+    padding-bottom: 6px;
+    .mat-icon {
+      font-size: 14px;
+      position: relative;
+      top: 2px;
+      margin-right: 3px;
+      color: var(--text-muted);
+    }
+  }
+
+  // detail / content
+  .detail {
+    padding: 20px 24px 16px;
+    background: hsla(var(--bg-hsl), 0.7);
+    border-top: 1px dashed var(--bg-muted);
+  }
+}

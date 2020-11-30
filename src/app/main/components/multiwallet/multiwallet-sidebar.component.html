@@ -1,0 +1,51 @@
+<!-- Small sidebar for Multiwallet, Settings etc. -->
+<div class="mini-sidebar-menu">
+  <div class="app-bar">
+
+    <button mat-button class="wallet app" routerLinkActive="--active" routerLink="wallet">
+      <mat-icon fontIcon="part-stake"></mat-icon>
+      <div class="title">Wallet</div>
+    </button>
+
+    <button mat-button class="market app" routerLinkActive="--active" routerLink="market">
+      <mat-icon fontIcon="part-bag"></mat-icon>
+      <div class="title">Market</div>
+    </button>
+
+    <!-- <button mat-button class="exchange app" routerLinkActive="--active" routerLink="exchange">
+      <mat-icon fontIcon="part-swap"></mat-icon>
+      <div class="title">Swap</div>
+    </button> -->
+
+    <!--button mat-button class="chat app" routerLinkActive="--active" routerLink="chat">
+      <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+      <div class="title">Chat</div>
+    </button-->
+
+  </div><!-- .app-bar -->
+
+
+  <div class="buttons">
+
+    <a mat-button class="help-support" routerLinkActive="active" routerLink="extra/help" matTooltip="Help & Support" matTooltipPosition="after">
+      <mat-icon fontIcon="part-circle-question"></mat-icon>
+    </a>
+
+    <!-- <a mat-button class="bot-management" routerLinkActive="active" routerLink="extra/bot-management" matTooltip="Bot Management" matTooltipPosition="after">
+      <mat-icon fontIcon="part-bot-1"></mat-icon>
+    </a> -->
+
+    <a mat-button class="settings" routerLinkActive="active" routerLink="extra/settings" matTooltip="Particl Desktop Settings" matTooltipPosition="after">
+      <mat-icon fontIcon="part-cog"></mat-icon>
+    </a>
+
+    <a mat-button class="console" matTooltip="Open Console" matTooltipPosition="after" (click)="openConsoleWindow()" (keyup.enter)="openConsoleWindow()" [disabled]="(walletName | async) === null">
+      <mat-icon fontIcon="part-console-window"></mat-icon>
+    </a>
+
+    <a mat-button class="report-bug" href="https://github.com/particl/particl-desktop/issues" target="_blank" matTooltip="Report bug" matTooltipPosition="after">
+      <mat-icon fontIcon="part-bug"></mat-icon>
+    </a>
+
+  </div><!-- .buttons -->
+</div><!-- .mini-sidebar-menu -->

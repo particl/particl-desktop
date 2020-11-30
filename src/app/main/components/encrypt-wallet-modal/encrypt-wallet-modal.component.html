@@ -1,0 +1,123 @@
+<mat-dialog-title *ngIf="!hasPassword">Encrypt your wallet</mat-dialog-title>
+<mat-dialog-title *ngIf="hasPassword">Confirm your password</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<ng-container *ngTemplateOutlet="hasPassword ? confirm : newpass"></ng-container>
+
+
+<ng-template #newpass>
+  <mat-dialog-content>
+
+    <div class="row">
+
+      <div class="image">
+        <img class="illustration" src="./assets/app-wallet/illustrations/encrypt-wallet.svg" alt="Encrypt wallet">
+      </div>
+
+      <div class="text">
+        <p class="lead">
+          Please choose a password to encrypt your wallet
+        </p>
+        <p class="help-text">
+          Wallet encryption protects you from unauthorized access to your coins (e.g. if someone steals your computer).
+          It affects only this Particl wallet on your current device.
+        </p>
+      </div>
+
+    </div><!-- .row -->
+
+
+    <div class="modal-highlight">
+      <p class="message --warning">
+        Do not forget this password or you will be unable to access your coins!
+      </p>
+      <mat-form-field class="password-field --boxed --larger" appearance="fill" color="warn">
+        <input matInput name="password" id="password"
+                [type]="showPass ? 'text' : 'password'"
+                [appFocusTimeout]="true"
+                [(ngModel)]="password"
+                placeholder="Choose password for wallet encryption" />
+        <button mat-button matSuffix class="small"
+                (click)="showPass = !showPass"
+                [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
+                [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+          <mat-icon [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+        </button>
+      </mat-form-field>
+    </div><!-- .modal-highlight -->
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button color="warn" mat-raised-button appDebounceClick (debounceClick)="encrypt()" [disabled]="(password.length === 0) || isProcessing">
+      <mat-icon fontIcon="part-lock-open"></mat-icon>
+      Confirm password
+    </button>
+  </mat-dialog-actions>
+
+</ng-template><!-- #newpass -->
+
+
+
+<ng-template #confirm>
+  <mat-dialog-content>
+
+    <div class="row">
+
+      <div class="image">
+        <img class="illustration" src="./assets/app-wallet/illustrations/confirm-encryption.svg" alt="Confirm your password">
+      </div>
+
+      <div class="text">
+        <p class="lead">
+          Please enter your chosen password again
+        </p>
+        <p class="help-text">
+          Once confirmed, you will need this password every time for spending from this wallet. In case you would forgot this password, you will need to restore this wallet again with your Recovery Phrase.
+        </p>
+      </div>
+
+    </div><!-- .row -->
+
+
+    <div class="modal-highlight">
+      <p class="message --warning">
+        Do not forget this password or you will be unable to access your coins!
+      </p>
+      <mat-form-field class="password-field --boxed --larger" appearance="fill" color="warn">
+        <input matInput name="confirmation" id="confirmation"
+               [type]="showPass ? 'text' : 'password'"
+               [appFocusTimeout]="true"
+               [(ngModel)]="confirmation"
+               placeholder="Confirm your password" />
+        <button mat-button matSuffix class="small"
+               (click)="showPass = !showPass"
+               [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPass"
+               [matTooltip]="showPass ? 'Hide password' : 'Show password'" matTooltipPosition="after">
+          <mat-icon [fontIcon]="showPass ? 'part-anon' : 'part-public'"></mat-icon>
+        </button>
+      </mat-form-field>
+    </div><!-- .modal-highlight -->
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button color="warn" mat-raised-button appDebounceClick (debounceClick)="confirmPass()" [disabled]="(confirmation.length === 0) || isProcessing">
+      <mat-icon fontIcon="part-lock-open"></mat-icon>
+      Confirm &amp; Encrypt wallet
+    </button>
+  </mat-dialog-actions>
+
+</ng-template><!-- #confirm -->

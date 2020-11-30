@@ -1,0 +1,90 @@
+<mat-dialog-title>Clone Product</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="--muted">
+
+  <header>
+
+    <div *ngIf="availableMarkets.length > 0">
+      <p class="lead">
+        Clone your Product to publish it on another Market
+      </p>
+      <p class="help-text">
+        This will take your Product as-is and prepare it for publishing on a different Market
+      </p>
+    </div>
+
+    <div *ngIf="availableMarkets.length == 0">
+      <p class="lead">
+        Duplicate this Product to create another Product?
+      </p>
+      <p class="help-text">
+        This only duplicates the Product and does not duplicate any corresponding market-related information
+      </p>
+    </div>
+
+  </header>
+
+
+  <h2 class="section-title">Product to clone</h2>
+
+  <mat-card class="product">
+    <div class="image">
+      <img [src]="productImage">
+    </div>
+    <h3 class="name">{{ productTitle }}</h3>
+  </mat-card>
+
+
+  <!-- Cloning Product to another Market -->
+  <ng-container *ngIf="availableMarkets.length > 0">
+
+    <h2 class="section-title">Clone to&hellip;</h2>
+
+    <mat-card class="select-market no-padding">
+      <label class="--larger">
+        <h3 class="label">Select Market</h3>
+        <mat-form-field class="--plain --larger" appearance="fill">
+          <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+          <mat-select placeholder="Select Market" [formControl]="selectedMarket">
+            <mat-option [value]="0" class="--larger"></mat-option>
+            <mat-option *ngFor="let market of availableMarkets" [value]="market.id" class="--larger">
+              {{ market.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </label>
+      <label class="--larger">
+        <h3 class="label">Select a category</h3>
+        <tree-select
+          [data$]="categories$"
+          [singleSelection]="true"
+          [isParentNodesSelectable]="false"
+          placeholderLabel="Select a category"
+          prefixIcon="part-filter"
+          [labelStyles]="['--larger']"
+          (onClosed)="selectedCategory.setValue($event[0] || 0)">
+        </tree-select>
+      </label>
+    </mat-card><!-- .select-preset -->
+
+  </ng-container>
+
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" [disabled]="availableMarkets.length > 0 ? (!(+selectedMarket.value > 0) || !(+selectedCategory.value > 0)) : false" (click)="confirmClone()">
+    <mat-icon fontIcon="part-copy"></mat-icon>
+    Clone Product
+  </button>
+</mat-dialog-actions>

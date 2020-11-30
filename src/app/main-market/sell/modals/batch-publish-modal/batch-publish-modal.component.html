@@ -1,0 +1,179 @@
+<ng-container [formGroup]="batchPublishForm">
+  <mat-dialog-title>
+
+    <div fxLayout fxLayoutAlign="space-between center">
+      Batch Publish Listings
+      <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity which will publish the Listing" matTooltipPosition="before">
+        <div class="avatar">{{ currentIdentity.image }}</div>
+        <div class="text">
+          <div class="identity-name">{{ currentIdentity.name }}</div>
+          <div class="available-balance">Publishing balance: {{ currentBalance }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="publish-options row" fxLayout fxLayoutAlign="space-between center">
+
+      <section class="select-market" fxFlex="25">
+        <label class="--larger">
+          <h3 class="label">Publish to</h3>
+          <mat-form-field class="--plain --larger" appearance="fill">
+            <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+            <mat-select placeholder="Select Market" formControlName="selectedMarket">
+              <mat-option *ngFor="let market of availableMarkets" [value]="market.id" class="--larger">
+                {{ market.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+      </section><!-- .select-market -->
+
+      <section class="duration" fxFlex="50">
+        <div class="row" fxLayout fxLayoutAlign="flex-start flex-end">
+          <label class="--larger">
+            <h3 class="label">Publish duration</h3>
+            <mat-form-field class="--plain --larger" appearance="fill">
+              <mat-icon matPrefix fontIcon="part-date"></mat-icon>
+              <mat-select placeholder="Select duration" formControlName="selectedDuration">
+                <mat-option *ngFor="let duration of publishDurations" [value]="duration.value" class="--larger">
+                  {{ duration.title }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </label>
+          <!--div class="estimate-fee">
+            <button mat-button>
+              <mat-icon fontIcon="part-stake"></mat-icon>
+              Calc. fee
+            </button>
+            <div class="estimated-fee">
+              Publishing fee:<br>
+              <span class="fee">2.513541 PART</span>
+            </div>
+          </div--><!-- .estimate-fee -->
+        </div><!-- .row -->
+      </section><!-- .duration -->
+
+      <section class="select-preset" fxFlex="25">
+        <label class="--larger">
+          <h3 class="label">Select&hellip;</h3>
+          <mat-form-field class="--plain --larger" appearance="fill">
+            <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
+            <mat-select placeholder="Select Products" formControlName="presetControl">
+              <mat-option *ngFor="let preset of productPresets" [value]="preset.value" class="--larger">
+                {{ preset.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+      </section><!-- .select-preset -->
+
+    </div><!-- .row -->
+
+  </mat-dialog-title>
+
+  <button mat-button color="warn" class="modal-close" tabindex="-1" (click)="actionCloseModal()" [disabled]="isProcessingControl.value">
+    <mat-icon fontIcon="part-cross"></mat-icon>
+  </button>
+
+  <mat-dialog-content class="--muted">
+
+    <p class="introduction help-text">
+      Batch Publish will process your Products and publish them to a selected Market. You won’t have an option to customize Listing’s description, pricing etc.<br>
+      If you want to adjust your Listings per chosen Markets, don’t Batch Publish and instead Publish them one by one.
+    </p>
+
+    <section class="available-products" formArrayName="availableProducts">
+
+      <ng-container *ngIf="+batchPublishForm.get('selectedMarket').value > 0">
+        <ng-container *ngFor="let product of formAvailableProducts.controls; index as formProductIdx">
+          <mat-card *appVar="availableProducts[formProductIdx] as productInfo" [formArrayName]="formProductIdx" class="product">
+            <div class="photo">
+              <img [src]="productInfo.image">
+            </div>
+            <div class="meta">
+              <div class="title">{{ productInfo.name }}</div>
+              <div class="publish-status" *ngIf="isSelectedForPublish(formProductIdx)">
+                <ng-container *ngIf="product.errors && product.hasError('productCategorySelected')">
+                  <mat-icon fontIcon="part-circle-info"></mat-icon>
+                  Please select category before publishing
+                </ng-container>
+                <ng-container *ngIf="product.dirty && product.valid && isProcessingControl.value">
+                  <mat-icon fontIcon="part-cog" class="loading-progress"></mat-icon>
+                  Publishing in progress
+                </ng-container>
+                <ng-container *ngIf="product.dirty && product.valid && !isProcessingControl.value">
+                  <mat-icon fontIcon="part-check"></mat-icon>
+                  Ready for publishing
+                </ng-container>
+                <ng-container *ngIf="!product.dirty && publishingInfo.failedProducts.includes(formProductIdx)">
+                  <mat-icon fontIcon="part-alert"></mat-icon>
+                  Publishing failed, please try again
+                </ng-container>
+              </div>
+              <div class="publish-status" *ngIf="!isSelectedForPublish(formProductIdx)">
+                <ng-container *ngIf="publishingInfo.successProducts.includes(formProductIdx)">
+                  <mat-icon fontIcon="part-circle-check"></mat-icon>
+                  Successfully published
+                </ng-container>
+              </div>
+            </div>
+            <ng-container>
+              <div class="category-select" matTooltip="Select category" matTooltipPosition="before">
+                <tree-select
+                  #categorySelector
+                  [data$]="categories$"
+                  [singleSelection]="true"
+                  [isParentNodesSelectable]="false"
+                  placeholderLabel="Select a category"
+                  prefixIcon="part-filter"
+                  (onClosed)="setProductCategory(formProductIdx, $event[0])">
+                </tree-select>
+              </div>
+              <div class="publish-checkbox">
+                <mat-checkbox [formControlName]="0">Publish</mat-checkbox>
+              </div>
+            </ng-container>
+          </mat-card>
+        </ng-container>
+      </ng-container>
+
+      <div class="no-results --horizontal --smaller" *ngIf="!(+batchPublishForm.get('selectedMarket').value > 0)">
+        <img class="illustration" src="./assets/app-market/illustrations/batch-publish.svg" alt="Select Market first">
+        <div class="text">
+          <p>
+            Select Market for Publishing
+          </p>
+          <p class="help-text">
+            Please select a Market where you want to Publish your Products first
+          </p>
+        </div>
+      </div><!-- .no-results -->
+
+    </section><!-- .available-products -->
+
+  </mat-dialog-content>
+</ng-container>
+
+
+<mat-dialog-actions>
+
+  <mat-progress-bar *ngIf="isProcessingControl.value" mode="determinate" [value]="publishingInfo.progressPercent" color="accent" class="publish-progress"></mat-progress-bar>
+
+  <div class="row">
+    <div class="right">
+      <button mat-button color="basic" (click)="actionCloseModal()" [disabled]="isProcessingControl.value">
+        <mat-icon fontIcon="part-cross"></mat-icon>
+        Cancel &amp; close
+      </button>
+    </div>
+    <div class="left">
+      <button mat-raised-button color="primary" [disabled]="isProcessingControl.value || batchPublishForm.invalid" (click)="actionBatchPublish()">
+        <mat-icon fontIcon="part-check"></mat-icon>
+        <ng-container *ngIf="isProcessingControl.value; else buttonTextDoPublish">Publishing selected Products&hellip;</ng-container>
+        <ng-template #buttonTextDoPublish>Publish selected Products</ng-template>
+      </button>
+    </div>
+  </div><!-- .row -->
+
+</mat-dialog-actions>

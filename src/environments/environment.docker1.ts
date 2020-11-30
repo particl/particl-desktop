@@ -1,11 +1,12 @@
-declare const require: any;
+import * as app from '../../package.json';
 
 export const environment = {
   production: false,
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
-  name: require('../../package.json').name,
-  version: require('../../package.json').version,
-  preRelease: require('../../package.json').preRelease,
+  name: app.name,
+  version: app.version,
+  preRelease: app.preRelease,
+  walletVersion: app.appVersions.wallet,
   envName: 'docker1',
   particlHost: 'localhost',
   particlPort: 52935,

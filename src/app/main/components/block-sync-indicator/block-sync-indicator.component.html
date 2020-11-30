@@ -1,0 +1,15 @@
+
+<div class="sync-progress-wrapper"
+     *ngIf="isSyncing"
+     (click)="openSyncingModal()"
+     matTooltip="Click for detailed sync progress"
+     matTooltipPosition="after">
+  <div class="sync-progress">
+
+    <p class="sync-info">
+      <mat-spinner class="syncing-spinner tiny" color="accent"></mat-spinner>
+      <span class="highlight">Syncing</span>, please wait
+    </p>
+
+  </div>
+</div>

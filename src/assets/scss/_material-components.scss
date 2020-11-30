@@ -26,6 +26,10 @@ Customizations and modifiers for default Material components
       2.6. Modals
       2.7. Scrollbars
       2.8. Sidenav (main menu)
+      2.9. Menus (contextual)
+      2.10. Divider
+      2.11. Toolbars
+      2.12. Tree browser
 
     3. Forms
       3.1. Inputs
@@ -51,12 +55,19 @@ Customizations and modifiers for default Material components
 button,
 .mat-button,
 .mat-raised-button {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   font-weight: 600;
   .mat-icon {
     margin-right: 5px;
     position: relative;
     top: -1px;
+  }
+  &.large { // smaller buttons
+    min-width: auto;
+    line-height: 42px;
+    padding: 0 24px;
+    font-size: 15px;
+    font-weight: 500;
   }
   &.small { // smaller buttons
     min-width: auto;
@@ -65,73 +76,76 @@ button,
     font-size: 12px;
     font-weight: 500;
   }
+  &.tiny {
+    min-width: auto;
+    font-size: 12px;
+    line-height: 28px;
+    padding: 0 8px;
+  }
   &.full-width {
     width: 100%;
   }
+  &.icon-only {
+    .mat-icon {
+      margin: 0;
+    }
+  }
   &.not-round {
     border-radius: 0;
+  }
+  &.--no-ripple {
+    .mat-button-ripple,
+    .mat-button-focus-overlay {
+      display: none;
+    }
   }
 }
 
 
 // ------ 1.2. ICONS ------ //
 
-.mat-icon {
+mat-icon.mat-icon {
   width: auto !important;
   height: auto !important;
   font-size: 16px;
+  &.material-icons {
+    font-family: "part" !important; // overwrite Material icons by ours by default
+    font-weight: 400 !important;
+    line-height: 1;
+  }
 }
 
 
 // ------ 1.3. PROGRESS BARS ------ //
-
+/*
 .mat-progress-bar {
-  // sidebar/sync: dark buffer background for progress bar
-  &.dark-buffer {
-    .mat-progress-bar-buffer {
-      background: lighten($bg-black, 15%);
-    }
-  }
 }
-
+*/
 
 // ------ 1.4. SLIDERS (RANGE) ------ //
 
 .mat-slider-thumb-label-text {
   font-weight: 700 !important;
-  font-family: $font !important;
+  font-family: var(--font) !important;
 }
 
 
 // ------ 1.5. PAGINATOR ------ //
 
 .mat-paginator {
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  min-height: 56px;
-  padding: 0 8px;
-  border-bottom: 1px solid $bg-shadow;
-  font-family: $font;
+  justify-content: space-between;
+  background: none !important;
+  font-family: var(--font) !important;
   .mat-icon-button {
     @extend %tfx;
     &:hover {
-      background-color: $color;
-      border-radius: 50%;
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $color-white;
-      }
+      color: var(--text);
     }
     &[disabled] {
-      .mat-paginator-increment,
-      .mat-paginator-decrement {
-        border-color: $bg-shadow;
-      }
-      &:hover {
-        background-color: transparent;
-      }
+      @extend %lighter;
     }
   }
 }
@@ -140,22 +154,41 @@ button,
 // ------ 1.6. TOOLTIPS ------ //
 
 mat-tooltip-component .mat-tooltip {
-  font-family: $font;
-  font-size: 11px;
-  background: rgba($bg-black, 0.75);
-  padding: 5px 8px;
+  font-family: var(--font);
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  background: hsla(var(--bg-black-hsl), 0.775);
+  padding: 5px 10px;
+  // Multi-line tooltip
+  // -- usage: <div matTooltip="First line &#13; Second line" matTooltipClass="multi-line">
+  &.multi-line {
+    white-space: pre-line;
+  }
 }
 
 
+// ------ 1.7. SPINNERS ------ //
+
 .mat-progress-spinner {
-  &.tiny {
-    $spinner-size: 16px;
-    width: $spinner-size !important;
-    height: $spinner-size !important;
-    & > svg {
-      width: $spinner-size !important;
-      height: $spinner-size !important;
+  --spinner-size: 100px; // default
+  --stroke-width: 10%; // default
+  width: var(--spinner-size) !important;
+  height: var(--spinner-size) !important;
+  & > svg {
+    width: var(--spinner-size) !important;
+    height: var(--spinner-size) !important;
+    & > circle {
+      stroke-width: var(--stroke-width) !important;
     }
+  }
+  &.tiny {
+    --spinner-size: 16px;
+    --stroke-width: 15%;
+  }
+  &.small {
+    --spinner-size: 42px;
+    --stroke-width: 10%;
   }
 }
 
@@ -166,28 +199,37 @@ mat-tooltip-component .mat-tooltip {
 // ------ 2.1. CARDS ------ //
 
 mat-card.mat-card {
-  font-family: $font;
-  box-shadow: 0 1px 0 $bg-shadow, 0 1px 10px -4px rgba($text, 0.3) !important;
+  font-family: var(--font);
+  box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
   padding: 24px;
+  .mat-card-header {
+    .mat-card-header-text {
+      margin: 0;
+    }
+  }
   &.not-rounded {
     border-radius: 0;
+  }
+  &.no-padding {
+    padding: 0;
   }
 }
 
 
 // ------ 2.2. TABS ------ //
 
-.mat-tab-group {
+mat-tab-group.mat-tab-group {
+  font-family: var(--font);
   .mat-tab-label {
-    font-family: $font;
+    font-family: var(--font);
     font-weight: 500;
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
       .mat-icon {
         opacity: 0.9;
       }
-      .tag {
-        background-color: $color;
+      .notification {
+        background-color: var(--color-primary);
       }
     }
     .mat-icon {
@@ -197,39 +239,57 @@ mat-card.mat-card {
       opacity: 0.5;
     }
   }
-  .tag { // notification tags in tabs - e.g. Orders [3]
-    @extend %tag;
-    background-color: darken($bg-shadow, 15%);
+  .notification { // notification tags in tabs - e.g. Orders [3]
+    @extend %notification;
+    background-color: hsla(var(--text-muted-hsl), 0.5);
+    margin-left: 0.4rem;
+    color: var(--color-white);
   }
 }
 
 
 // ------ 2.3. EXPANSION PANELS ------ //
 
-.mat-expansion-panel {
-  @extend mat-card.mat-card;
-  margin-bottom: 9px !important;
+mat-expansion-panel.mat-expansion-panel {
+  @extend %mat-card;
+  margin: 0 0 4px;
   overflow: hidden;
   padding: 0;
-  .mat-expansion-panel-header {
-    font-family: $font;
+  border-radius: 0;
+  & > .mat-expansion-panel-header {
+    font-family: var(--font);
     font-size: 100%;
     &:hover {
       background: inherit !important; // disable darker bg on hover by default
     }
     .mat-expansion-panel-header-title {
       text-transform: uppercase;
-      font-family: $font;
+      font-family: var(--font);
+    }
+    & > .mat-expansion-indicator {
+      @extend %tfx;
+      position: relative;
+      top: -3px;
     }
   }
-  .mat-expansion-indicator {
-    @extend %tfx;
-    position: relative;
-    top: -3px;
+  .mat-expansion-panel-content {
+    font: inherit !important;
+    font-family: var(--font);
   }
   &.mat-expanded { // while expanded..
+    & > .mat-expansion-panel-header {
+      & > .mat-expansion-indicator {
+        top: 3px;
+      }
+    }
+  }
+  // sidebar/instance switcher
+  &.instance-switcher {
     .mat-expansion-indicator {
-      top: 3px;
+      right: 16px;
+    }
+    &.mat-expanded {
+      background: hsla(var(--bg-sidebar-darker-hsl), 0.4) !important;
     }
   }
   // sidebar/menu: no padding for panel's content (used in the sidebar)
@@ -242,13 +302,12 @@ mat-card.mat-card {
   &.arrow-colored {
     .mat-expansion-indicator::after {
       @extend %tfx;
-      color: $text-muted;
+      color: var(--text-muted);
     }
     // when expanded..
     &.mat-expanded {
-      //background: darken($bg-black, 2%); // darken 'submenu' background to more visually separate from the rest
       .mat-expansion-indicator::after {
-        color: $color;
+        color: var(--color-primary);
       }
     }
   }
@@ -258,12 +317,13 @@ mat-card.mat-card {
 // ------ 2.4. STEPPER ------ //
 
 .mat-stepper-horizontal {
-  font-family: $font;
+  font-family: var(--font) !important;
   .mat-step-label {
     min-width: auto;
+    font-size: 15px;
   }
   .mat-step-label-selected {
-    font-weight: 700;
+    font-weight: 500;
   }
   .mat-step-icon {
     .mat-icon {
@@ -274,6 +334,18 @@ mat-card.mat-card {
   &.no-bg {
     background: none !important;
   }
+  // sell > import listings (custom layout)
+  &.--stepper-above-page-title {
+    .mat-horizontal-stepper-header-container {
+      margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
+      padding: 0 calc(var(--paddingH) - 24px);
+      border-bottom: 1px dashed var(--bg-muted);
+    }
+    .mat-horizontal-content-container {
+      padding: var(--paddingV) 0 0;
+      overflow: visible;
+    }
+  }
 }
 
 
@@ -282,6 +354,7 @@ mat-card.mat-card {
 .mat-list {
   mat-list-item.mat-list-item {
     padding: 0;
+    font-family: var(--font);
   }
   // sidebar/menu: smaller vertical padding of child lists
   &.sidebar-item-group {
@@ -301,7 +374,7 @@ mat-card.mat-card {
       .mat-list-item-content {
         padding: 6px 26px 6px 36px !important;
         font-size: 13px;
-        color: $text-muted;
+        color: var(--text-muted);
       }
     }
   }
@@ -325,97 +398,84 @@ mat-card.mat-card {
 
 // ------ 2.6. MODALS ------ //
 
-.cdk-overlay-container {
+.cdk-overlay-container { // needs high specificity to override default Mat styling
   .mat-dialog-container {
     position: relative;
     max-width: 1000px;
-
-    // Dialogs (small)
-    .dialog-content {
-      margin: 15px -24px;
-    }
-    [mat-dialog-title] { // dialog title
-      font-family: $font;
-      font-weight: 500;
-      font-size: 20px;
-      margin-bottom: 15px;
-      padding-right: 50px;
-      &.text-center {
-        padding: 0;
-      }
-    }
-
-    mat-dialog-content {
-      line-height: 1.5;
-      .mat-progress-spinner { // loading spinners
-        width: 100px;
-        height: 100px;
-        padding: 0 !important;
-        position: absolute;
-        left: calc((100% - 100px) / 2);
-        top: calc((100% - 100px) / 2);
-        z-index: 10;
-        background: rgba($color-white, 0.9);
-        box-shadow: 0 0 70px darken($bg-hover, 7%);
-        border-radius: 50%;
-        svg {
-          width: 70px !important;
-          height: 70px !important;
-          transform-origin: 50px 35px;
-        }
-      }
-    }
-
-    .small-close-button {
+    padding: 18px 24px 24px 24px;
+    .modal-close { // new modal close button (use with `mat-button color="warn"`
+      @extend %tfx;
       position: absolute;
-      right: 10px; // align with modal's content padding
-      top: 22px;
+      right: 16px; // align with modal's content padding
+      top: 11px;
       z-index: 10;
-      background: transparent;
-      color: $text-muted;
-      min-width: 50px;
+      color: var(--bg-muted) !important;
+      min-width: 36px;
       padding: 0;
-      border: 0;
-      outline: none;
-      cursor: pointer;
+      border-radius: 50%;
+      overflow: hidden;
       .mat-icon {
-        color: rgba($color-alert, 0.5);
-        border-radius: 50%;
-        font-size: 22px;
+        font-size: 16px;
         line-height: 1.4;
         margin: 0;
       }
-      &:hover {
-        .mat-icon {
-          color: $color-alert;
-        }
-      }
-    }
-    .close-button {
-      position: absolute;
-      right: 0;
-      top: 0;
-      z-index: 10;
-      padding: 25px 38px;
-      background: transparent;
-      color: $text-muted;
-      min-width: 50px;
-      outline: none;
-      cursor: pointer;
-      .mat-icon {
-        color: rgba($color-alert, 0.5);
-        border-radius: 50%;
-        font-size: 24px;
-        line-height: 1.4;
-        margin: 0;
-      }
-      &:hover {
-        .mat-icon {
-          color: $color-alert;
-        }
+      &:hover,
+      &:focus {
+        color: var(--color-alert) !important;
       }
     }
   }
+}
+
+mat-dialog-title,
+.mat-dialog-title {
+  display: block;
+  font-family: var(--font) !important;
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 18px;
+  padding-right: 50px;
+  &.text-center {
+    padding: 0;
+  }
+}
+
+mat-dialog-content.mat-dialog-content {
+  line-height: 1.5;
+  margin: 0 -24px;
+  &.--muted {
+    background: var(--bg);
+    border-top: 1px solid var(--bg-muted);
+    border-bottom: 1px solid var(--bg-muted);
+  }
+  // TODO @Allien: is the spinner here needed anymore? (in Sync modal only?)
+  .mat-progress-spinner { // loading spinners
+    width: 100px;
+    height: 100px;
+    padding: 0 !important;
+    position: absolute;
+    left: calc((100% - 100px) / 2);
+    top: calc((100% - 100px) / 2);
+    z-index: 10;
+    background: hsla(var(--color-white-hsl), 0.9);
+    box-shadow: 0 0 70px var(--bg-muted);
+    border-radius: 50%;
+    svg {
+      width: 70px !important;
+      height: 70px !important;
+      transform-origin: 50px 35px;
+    }
+  }
+}
+
+mat-dialog-actions.mat-dialog-actions {
+  //border-top: 1px solid var(--bg-muted);
+  margin: 0 -24px -24px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: auto; // fix default (?) styling
 }
 
 
@@ -432,39 +492,158 @@ mat-card.mat-card {
 */
 
 ::-webkit-scrollbar-track {
-  background: lighten($bg-shadow, 3%);
+  background: var(--bg);
 }
 
 ::-webkit-scrollbar,
 ::-webkit-scrollbar-thumb {
-  width: $scrollbar-width;
-  height: $scrollbar-width;
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
 }
 
 ::-webkit-scrollbar-thumb {
-  @extend %tfx;
-  background: darken($bg-shadow, 15%);
-  border-radius: $radius;
+  background: hsla(var(--bg-black-hsl), 0.3);
   &:hover {
-    background: darken($bg-shadow, 20%);
+    background: hsla(var(--bg-black-hsl), 0.35);
   }
 }
 .mat-drawer-container {
-  background: $bg;
-}
-// scroll on by default, so the content doesn't jump on larger pages
-.mat-drawer-content {
-  overflow-y: scroll !important;
+  background: var(--bg);
 }
 
 
 // ------ 2.8. SIDENAV ------ //
 
 .mat-sidenav {
+  border: 0 !important;
   &.sidebar { // app's sidebar, dark main menu
     .mat-drawer-inner-container {
       display: flex;
       flex-direction: row;
+      background: var(--bg);
+    }
+    .mat-divider {
+      border-top: 1px solid hsl(192, 11%, 9%);
+      border-bottom: 1px solid hsl(0, 0%, 20%);
+    }
+  }
+}
+
+.mat-sidenav-container {
+  &.always-scroll { // show scrollbar always, so content doesn't jump when it expands outside of viewport
+    .mat-drawer-content {
+      overflow-y: scroll;
+    }
+  }
+}
+
+
+// ------ 2.9. MENUS (CONTEXTUAL) ------ //
+
+.mat-menu-panel {
+  .heading { // heading for contextual menus (explaining the options)
+    padding: 8px 16px;
+    .title {
+      margin: 0;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 100%;
+    }
+    .help-text {
+      margin: 6px 0 4px;
+    }
+  }
+  .mat-menu-item {
+    &.mat-menu-item-submenu-trigger { // option with submenu
+      font-weight: 500;
+    }
+    .right { // align items to right (prices etc.)
+      float: right;
+    }
+    .muted {
+      color: var(--text-muted);
+    }
+  }
+  &.--smaller { // smaller line height for menu items
+    .mat-menu-item {
+      height: 36px;
+      line-height: 36px;
+      span {
+        font-size: 13px;
+        font-weight: 500;
+      }
+    }
+  }
+  &.--with-images { // menu options with images (e.g. Logos in Market selector)
+    .image {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+      border-radius: 50%;
+      margin: 0 7px 0 -3px;
+    }
+  }
+}
+
+
+// ------ 2.10. DIVIDER ------ //
+
+.mat-divider {
+  &.thicker {
+    --thickness: 2px;
+    &.mat-divider-horizontal {
+      border-top-width: var(--thickness);
+    }
+    &.mat-divider-vertical {
+      border-right-width: var(--thickness);
+    }
+  }
+  &.dashed {
+    &.mat-divider-horizontal {
+      border-top-style: dashed;
+    }
+    &.mat-divider-vertical {
+      border-right-style: dashed;
+    }
+  }
+  &.lighter {
+    opacity: 0.67;
+  }
+}
+
+
+// ------ 2.11. TOOLBAR ------ //
+
+mat-toolbar.mat-toolbar {
+  font-family: var(--font);
+}
+
+
+// ------ 2.12. TREE BROWSER ------ //
+
+tree-select {
+  .mat-input-element {
+    cursor: pointer;
+    text-overflow: ellipsis;
+  }
+}
+
+mat-tree.mat-tree {
+  font-family: var(--font);
+  .mat-checkbox-checked {
+    color: var(--color-secondary);
+    font-weight: 500;
+  }
+  .mat-checkbox-indeterminate { // some children checked, some not
+    color: var(--text);
+  }
+  // Market > Category/country filters: items clickable on their full width
+  &.--full-width-labels {
+    .mat-checkbox-layout {
+      display: block;
+    }
+    .mat-checkbox-inner-container {
+      margin-right: 4px;
     }
   }
 }
@@ -475,10 +654,243 @@ mat-card.mat-card {
     3. FORMS
 \* ------------------------------- */
 
+// New customized "filled" inputs/selects etc.
+label {
+  cursor: text;
+  .label {
+    @extend %box-title;
+    padding: 16px 0 1px;
+    margin: 0 0 -0.6em 0;
+    position: relative;
+    z-index: 2; // make sure label is on top (e.g. when character counter is present)
+  }
+  .label-desc {
+    color: var(--text-muted);
+    margin: 14px 0 0;
+    padding: 0 16px;
+  }
+  & > .label {
+    padding: 15px 16px 0;
+  }
+  &.--larger {
+    & > .label {
+      padding: 21px 24px 0;
+    }
+    & > .label-desc {
+      padding: 0 24px;
+      margin: 10px 0 0;
+    }
+  }
+}
+.mat-form-field[appearance="fill"] {
+  --field-boxed-paddingV: 16px;
+  display: block;
+  .mat-form-field-flex {
+    padding: 0 16px;
+    background: var(--color-white);
+    align-items: center;
+  }
+  .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+    padding-bottom: 0;
+    .mat-form-field-underline {
+      bottom: 0;
+    }
+  }
+  .mat-form-field-infix {
+    padding: 0;
+    border-top: 0;
+  }
+  .mat-form-field-subscript-wrapper {
+    overflow: visible;
+    top: 12px; // move it above the field
+    .mat-hint {
+      position: relative;
+      top: 0;
+      right: 6px;
+      bottom: auto;
+    }
+  }
+  &.mat-form-field-disabled {
+    .mat-form-field-flex {
+      background: var(--color-white);
+      color: var(--text-muted);
+    }
+  }
+  // Prefixes & suffixes
+  [matPrefix],
+  [matSuffix] {
+    &:not(button) {
+      color: var(--text-muted); // mute text's color
+    }
+    &.mat-icon {
+      font-size: 16px; // 1.25em
+      color: var(--text-muted);
+      position: relative;
+      top: -1px; // -0.1em
+    }
+  }
+  [matPrefix] {
+    margin-right: 8px;
+  }
+  [matSuffix] {
+    margin-left: 8px;
+  }
+  button[matSuffix],
+  button[matPrefix] { // show/hide password button (taken from Encrypt wallet .--larger field)
+    padding: 8px;
+    .mat-icon {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+  button[matPrefix] {
+    margin-left: -8px;
+  }
+  button[matSuffix] {
+    margin-right: -8px;
+  }
+
+  &.--larger {
+    .label { // manually added labels, e.g. on Send page
+      padding: 22px 0 0;
+    }
+    .mat-form-field-flex {
+      padding: 0 24px;
+    }
+    .mat-form-field-subscript-wrapper {
+      top: 15px; // move it above the field
+      .mat-hint {
+        right: 14px;
+      }
+    }
+  }
+  &.--smaller {
+    .mat-form-field-flex {
+      padding: 0 12px;
+    }
+  }
+  
+  // Boxed, standalone variant (common)
+  &.--boxed {
+    box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
+    border-radius: var(--radius) var(--radius) 0 0;
+    margin-bottom: 16px;
+  }
+
+  // Plain variant, used inside of MatCards
+  &.--plain {
+    margin-bottom: 0;
+    border-radius: 0;
+    .mat-form-field-flex {
+      background: transparent;
+    }
+  }
+
+  // --- INPUTS ---
+
+  &.mat-form-field-type-mat-input {
+    .mat-input-element {
+      padding: var(--field-boxed-paddingV) 0;
+      margin: 0;
+    }
+    // Send: Larger padding around input
+    &.--larger,
+    &.--largest {
+      font-size: 15px;
+      .mat-form-field-flex {
+        padding: 0 24px;
+      }
+      .mat-input-element {
+        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+      }
+      .mat-hint {
+        bottom: 52px;
+        right: 14px;
+      }
+    }
+    &.--largest {
+      font-size: 18px;
+    }
+  } // << INPUTS
+
+
+  // --- SELECTS ---
+
+  &.mat-form-field-type-mat-select {
+    .mat-form-field-infix {
+      padding: var(--field-boxed-paddingV) 0;
+    }
+    .mat-form-field-wrapper {
+      .mat-select-arrow-wrapper {
+        transform: none;
+      }
+    }
+
+    &.--larger {
+      font-size: 15px;
+      .mat-form-field-infix {
+        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        .mat-select-value {
+          position: relative;
+          top: 1px;
+        }
+      }
+    }
+    &.--smaller {
+      .mat-form-field-infix {
+        padding: calc(0.7 * var(--field-boxed-paddingV)) 0;
+        min-width: 120px;
+        width: auto;
+      }
+    }
+
+    // Boxed, standalone variant
+    &.--boxed {
+      .mat-form-field-infix {
+        padding: var(--field-boxed-paddingV) 0;
+      }
+      .mat-select-value {
+        font-weight: 500;
+      }
+      .mat-form-field-wrapper { // remove unnecessary paddings and fix positions for aux stuff
+        .mat-form-field-subscript-wrapper {
+          top: 100%;
+        }
+      }
+    }
+  } // << SELECTS
+
+
+  // --- TEXTAREAS ---
+
+  &.textarea { // TODO: any better way to select a Textarea?
+    .label {
+      margin: 0 0 12px; // push textarea lower, so it doesn't overlap with the .label
+    }
+    .mat-form-field-flex {
+      padding: 0 2px 4px 16px; // lower padding, so that scrollbar is on the edge
+      .mat-input-element {
+        padding-top: 0;
+        padding-right: var(--field-boxed-paddingV);
+        width: calc(100% - var(--field-boxed-paddingV));
+      }
+    }
+    &.--larger {
+      .mat-form-field-flex {
+        padding: 0 6px 10px 24px;
+      }
+    }
+  }
+  // << TEXTAREAS
+
+
+
+}
+
 // ------ 3.1. INPUTS ------ //
 
 .mat-form-field {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   line-height: normal;
   .mat-form-field-label {
     overflow: visible; // fix cropped labels
@@ -524,12 +936,12 @@ input {
   }
   // visual verification
   &.verify-sucess {
-    color: darken($color, 7%) !important;
+    color: var(--color-primary) !important;
   }
   &.verify-error,
   &.verify-error::placeholder {
-    color: darken($color-alert, 5%);
-    border-color: $color-alert;
+    color: var(--color-alert);
+    border-color: var(--color-alert);
   }
 }
 
@@ -537,26 +949,36 @@ input {
 // ------ 3.3. SELECTS ------ //
 
 .mat-select {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   .mat-select-trigger {
     height: 1.2em; // fix overflow:hidden for our custom font
   }
 }
 mat-option.mat-option {
-  $height: 36px;
-  font-family: $font !important;
-  line-height: $height;
-  height: $height;
+  --height: 36px;
+  font-family: var(--font) !important;
+  line-height: var(--height);
+  height: var(--height);
   .mat-option-text {
     font-size: 13px;
   }
+  &.mat-selected {
+    color: var(--text) !important;
+    font-weight: 500;
+  }
+  &.--larger {
+    .mat-option-text {
+      font-size: 15px;
+    }
+  }
 }
 .mat-select-panel {
-  background: $color-white;
+  background: var(--color-white);
 }
 
+// TODO @Allien: remove/replace
 .underlining-select {
-  border-bottom: 0.2px solid rgba(0, 0, 0, 0.507);
+  border-bottom: 0.2px solid hsla(var(--text-hsl), 0.6);
   line-height: 1.6em;
 }
 
@@ -571,9 +993,12 @@ mat-option.mat-option {
 // ------ 3.5. RADIOS ------ //
 
 .mat-radio-button {
-  font-family: $font;
+  font-family: var(--font) !important;
   &.mat-radio-checked {
     font-weight: 500;
+  }
+  &.larger {
+    font-size: 115%;
   }
 }
 
@@ -587,9 +1012,12 @@ mat-option.mat-option {
 }
 
 .mat-radio-group {
-  font-family: $font;
+  font-family: var(--font);
   // send: full-width clickable radios
   &.block-radio {
+    .mat-radio-button {
+      display: block;
+    }
     .mat-radio-button .mat-radio-label,
     .mat-radio-button .mat-radio-label-content {
       width: 100%;
@@ -601,7 +1029,7 @@ mat-option.mat-option {
 // ------ 3.6. CHECKBOXES ------ //
 
 .mat-checkbox {
-  font-family: $font !important;
+  font-family: var(--font) !important;
   &.align-top { // settings: don't center checkbox vertically
     .mat-checkbox-inner-container {
       margin: 0 12px 0 0;
@@ -615,23 +1043,47 @@ mat-option.mat-option {
   }
 }
 
-
-// ------ 3.7. TOGGLE BUTTONS ------ //
-
-mat-button-toggle {
-  &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
-    &.mat-button-toggle-appearance-standard {
-      background: transparent;
-      border: 0;
-      color: $text-muted;
-      .mat-button-toggle-label-content {
-        line-height: 36px;
+.checkbox-group { // Material doesn't have this natively, so we bring out own
+  &.full-width {
+    .mat-checkbox-layout {
+      display: block;
+    }
+  }
+  &.with-hover {
+    .mat-checkbox:hover {
+      .mat-checkbox-layout {
+        background: var(--bg-hover);
       }
     }
   }
-  &.icon-only {
-    .mat-icon {
-      margin: 0;
+  &.padded {
+    .mat-checkbox-layout {
+      padding: 3px 24px;
+    }
+  }
+}
+
+
+// ------ 3.7. TOGGLE BUTTONS ------ //
+
+.mat-button-toggle {
+  &.mat-button-toggle-appearance-standard {
+    &.mat-button-toggle-standalone {
+      &.filter-button { // modified appearance to basic mat-buttons (used in Reported listing only filter)
+        background: transparent;
+        border: 0;
+        .mat-button-toggle-label-content {
+          line-height: 36px;
+        }
+        &:hover,
+        &:focus {
+          background: hsla(var(--text-hsl), .04);
+        }
+        &.mat-button-toggle-checked {
+          background: hsla(var(--color-info-hsl), 0.1);
+          color: var(--color-info);
+        }
+      }
     }
   }
 }
@@ -651,6 +1103,9 @@ lightbox#lightbox-lightbox {
   max-height: 100vh;
   border-radius: 0;
   gallery {
-    background: rgba(darken($bg-black, 5%), 0.95);
+    background: hsla(var(--bg-sidebar-darker-hsl), 0.95);
+    .g-counter {
+      border-radius: var(--radius);
+    }
   }
 }

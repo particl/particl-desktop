@@ -1,0 +1,62 @@
+<mat-dialog-title>
+  Coin selection
+
+  <div class="selection-overview">
+    <div class="item type">
+      <div class="key">UTXO type</div>
+      <div class="value">{{ labelUtxoType }}</div>
+    </div>
+    <div class="item selected">
+      <div class="key">Selected UTXOs</div>
+      <div class="value">{{ selectedCount }}</div>
+    </div>
+    <div class="item amount">
+      <div class="key">Selected Amount</div>
+      <div class="value">{{ selectedTotal }} PART</div>
+    </div>
+  </div><!-- .selection-overview -->
+
+</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="--muted">
+
+  <table class="available-utxos" matSort (matSortChange)="sortData($event)" cellspacing="0">
+    <tr>
+      <th class="checkbox"></th>
+      <th mat-sort-header="amount" class="amount">Amount</th>
+      <th mat-sort-header="label" class="label">Label</th>
+      <th mat-sort-header="address" class="address">Address</th>
+    </tr>
+
+    <tr *ngFor="let utxo of availableUTXOs; index as utxoIdx">
+      <td class="checkbox"><mat-checkbox [checked]="utxo.selected" (change)="toggleUtxo(utxoIdx, $event)"></mat-checkbox></td>
+      <td class="amount">{{utxo.amount}}</td>
+      <td class="label">{{utxo.label}}</td>
+      <td class="address"><a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{utxo?.address || ''}}" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a></td>
+    </tr>
+  </table>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <div class="right">
+    <button mat-button (click)="actionDeselectAll()" [disabled]="selectedCount === 0">
+      <mat-icon fontIcon="part-select"></mat-icon>
+      Deselect all
+    </button>
+    <button mat-raised-button color="primary" (click)="actionMakeSelection()">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Spend selected coins
+    </button>
+  </div>
+</mat-dialog-actions>

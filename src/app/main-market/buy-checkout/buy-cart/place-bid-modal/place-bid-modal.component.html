@@ -1,0 +1,122 @@
+<mat-dialog-title>Review &amp; Submit Order</mat-dialog-title>
+<button mat-button color="warn" class="modal-close" mat-dialog-close>
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="--muted">
+  <p class="lead">
+    Please review and submit your following Order
+  </p>
+
+
+  <section class="cart-items">
+    <h2 class="section-title">
+      You're buying
+    </h2>
+    <mat-card>
+
+      <ng-container *ngFor="let item of this.summary.items">
+        <div class="item">
+          <div class="photo">
+            <img [src]="item.itemImg">
+          </div>
+          <div class="title">
+            {{ item.itemName }}
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </ng-container>
+
+    </mat-card>
+  </section><!-- .cart-items -->
+
+  <section class="shipping">
+    <h2 class="section-title">
+      Shipping details
+    </h2>
+    <mat-card>
+      <div class="shipping-address">
+        <p class="name">{{ summary.shippingDetails.name }}</p>
+        <p *ngFor="let addressLine of summary.shippingDetails.address">{{ addressLine }}</p>
+      </div>
+    </mat-card>
+  </section>
+
+  <section class="pricing-info">
+    <h2 class="section-title">
+      Order price
+    </h2>
+    <mat-card>
+      <table class="prices">
+        <tfoot>
+          <tr>
+            <th></th>
+            <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+            <!-- fiat `th` can be commented out; I was just preparing grounds :) | TODO: replace with user selected fiat countervalue currency (when implemented) -->
+            <!-- <th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span></th> -->
+          </tr>
+        </tfoot>
+        <tbody>
+          <tr class="items">
+            <th>Items' price</th>
+            <td class="amount part">{{ summary.pricingSummary.items.whole }}<small>{{ summary.pricingSummary.items.sep }}{{ summary.pricingSummary.items.fraction }}</small></td>
+            <!-- <td class="amount fiat">1153<small>.2151</small></td> -->
+          </tr>
+          <tr class="shipping">
+            <th>Shipping to {{summary.shippingDetails.destinationCountryCode}}</th>
+            <td class="amount part">{{ summary.pricingSummary.shipping.whole }}<small>{{ summary.pricingSummary.shipping.sep }}{{ summary.pricingSummary.shipping.fraction }}</small></td>
+            <!-- <td class="amount fiat">2510<small>.4926</small></td> -->
+          </tr>
+          <tr class="subtotal">
+            <th>Total price</th>
+            <td class="amount part">{{ summary.pricingSummary.subtotal.whole }}<small>{{ summary.pricingSummary.subtotal.sep }}{{ summary.pricingSummary.subtotal.fraction }}</small></td>
+            <!-- <td class="amount fiat">3663<small>.7077</small></td> -->
+          </tr>
+          <tr class="escrow">
+            <th>Refundable Escrow</th>
+            <td class="amount part">{{ summary.pricingSummary.escrow.whole }}<small>{{ summary.pricingSummary.escrow.sep }}{{ summary.pricingSummary.escrow.fraction }}</small></td>
+            <!-- <td class="amount fiat">3663<small>.7077</small></td> -->
+          </tr>
+          <tr class="total">
+            <th>Total for Order</th>
+            <td class="amount part">{{ summary.pricingSummary.orderTotal.whole }}<small>{{ summary.pricingSummary.orderTotal.sep }}{{ summary.pricingSummary.orderTotal.fraction }}</small></td>
+            <!-- <td class="amount fiat">7327<small>.4154</small></td> -->
+          </tr>
+        </tbody>
+      </table>
+    </mat-card>
+  </section><!-- .pricing-info -->
+
+
+  <p *ngIf="errors.invalidData" class="alert --boxed --warning">
+    <span>Inexplicably, there appears to be some Listing data missing</span>
+  </p>
+  <p *ngIf="errors.insufficientFunds" class="alert --boxed --warning">
+    <span>You appear to have insufficient spendable (Anon) balance to complete this order <small>Convert more of your coins to Anon balance (in Wallet &gt; Send/Convert) to continue</small></span>
+  </p>
+  <p *ngIf="errors.insufficientUtxos" class="alert --boxed --info">
+    <span>You don't have enough unspent Anon outputs, it's likely that one or more items will not be bought <small>To continue, convert more of your coins to Anon balance (in Wallet &gt; Send/Convert) or split your UTXOs with Coin Control (advanced)</small></span>
+  </p>
+
+  <!-- Note: mat-action-buttons removed and all this moved to the bottom, so users have to scroll and check everything before submitting -->
+  <div class="no-results --smaller --no-bg">
+    <img class="illustration" src="./assets/app-market/illustrations/place-bid.svg" alt="Confirm your Order">
+    <p class="title">
+      Looks good?
+    </p>
+    <p class="help-text">
+      After confirming the placement of this order, it will be sent to the Seller(s) &ndash; they will accept or reject your bids. The total amount will be reserved in your wallet.
+    </p>
+    <p class="help-text">
+      Once the seller(s) accept and escrow is established will the funds be spent from your wallet.
+    </p>
+    <p>
+      <button mat-raised-button class="large" color="primary" [disabled]="errors.invalidData || errors.insufficientFunds" (click)="confirmCheckout()">
+        <mat-icon fontIcon="part-check"></mat-icon>
+        Confirm Order &amp; Submit
+      </button>
+    </p>
+  </div><!-- .no-results -->
+
+</mat-dialog-content>

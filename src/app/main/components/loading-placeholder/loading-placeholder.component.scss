@@ -1,0 +1,26 @@
+@import './src/assets/_config'; // import shared colors etc.
+// + shared styles in `styles.scss` (section 3.3.)
+
+// animated placeholder before items load
+.loading-placeholder {
+  &.transactions {
+    .item {
+      height: 50px;
+      .date {
+        width: 88%;
+      }
+      .icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 12px;
+        border-radius: 50%;
+      }
+      .type {
+        width: 30%;
+      }
+      .value {
+        text-align: right;
+      }
+    }
+  }
+}

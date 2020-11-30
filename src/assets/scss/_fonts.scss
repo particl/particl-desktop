@@ -8,31 +8,47 @@
   font-family: 'Inter_UI';
   font-style: normal;
   font-weight: 400;
-  src: url('assets/fonts/Inter-UI-Regular.woff2') format('woff2'), url('assets/fonts/Inter-UI-Regular.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Regular.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter_UI';
   font-style: italic;
   font-weight: 400;
-  src: url('assets/fonts/Inter-UI-Italic.woff2') format('woff2'), url('assets/fonts/Inter-UI-Italic.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Italic.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter_UI';
   font-style: normal;
   font-weight: 500;
-  src: url('assets/fonts/Inter-UI-Medium.woff2') format('woff2'), url('assets/fonts/Inter-UI-Medium.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Medium.woff2') format('woff2');
 }
 @font-face {
   font-family: 'Inter_UI';
   font-style: normal;
   font-weight: 700;
-  src: url('assets/fonts/Inter-UI-Bold.woff2') format('woff2'), url('assets/fonts/Inter-UI-Bold.woff') format('woff');
+  src: url('assets/fonts/Inter-UI-Bold.woff2') format('woff2');
+}
+
+
+// ------ MONOSPACE FONT ------ //
+
+@font-face {
+  font-family: 'Office_Code_Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/OfficeCodePro-Regular.woff2') format('woff2');
 }
 @font-face {
-  font-family: 'Inter_UI';
+  font-family: 'Office_Code_Pro';
   font-style: normal;
-  font-weight: 900;
-  src: url('assets/fonts/Inter-UI-Black.woff2') format('woff2'), url('assets/fonts/Inter-UI-Black.woff') format('woff');
+  font-weight: 500;
+  src: url('assets/fonts/OfficeCodePro-Medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Office_Code_Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: url('assets/fonts/OfficeCodePro-Bold.woff2') format('woff2');
 }
 
 
@@ -40,7 +56,7 @@
 
 @font-face {
   font-family: 'part';
-  src: url('assets/fonts/part.woff2') format('woff2'), url('assets/fonts/part.woff') format('woff');
+  src: url('assets/fonts/part-v2.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -64,19 +80,19 @@
 }
 
 .part-airplane::before {
-  content: '\ea03';
-}
-
-.part-alert::before {
   content: '\ea02';
 }
 
+.part-alert::before {
+  content: '\ea03';
+}
+
 .part-anon::before {
-  content: '\ea05';
+  content: '\ea04';
 }
 
 .part-archive::before {
-  content: '\ea04';
+  content: '\ea05';
 }
 
 .part-arrow-down::before {
@@ -84,11 +100,11 @@
 }
 
 .part-arrow-left::before {
-  content: '\ea08';
+  content: '\ea07';
 }
 
 .part-arrow-right::before {
-  content: '\ea07';
+  content: '\ea08';
 }
 
 .part-arrow-up::before {
@@ -119,462 +135,570 @@
   content: '\ea0f';
 }
 
-.part-bug::before {
+.part-bot-1::before {
   content: '\ea10';
 }
 
-.part-cart::before {
+.part-bot-2::before {
   content: '\ea11';
 }
 
-.part-chat-discussion::before {
+.part-bug::before {
   content: '\ea12';
 }
 
-.part-chat::before {
+.part-bullet-list::before {
   content: '\ea13';
 }
 
-.part-check-in-a-box::before {
+.part-cards::before {
   content: '\ea14';
 }
 
-.part-check::before {
+.part-cart-2-add::before {
   content: '\ea15';
 }
 
-.part-circle-alert::before {
+.part-cart-2::before {
   content: '\ea16';
 }
 
-.part-circle-check::before {
+.part-cart-add::before {
   content: '\ea17';
 }
 
-.part-circle-info-2::before {
+.part-cart-minus::before {
   content: '\ea18';
 }
 
-.part-circle-info::before {
+.part-cart-plus::before {
   content: '\ea19';
 }
 
-.part-circle-minus::before {
+.part-cart-return::before {
   content: '\ea1a';
 }
 
-.part-circle-plus::before {
+.part-cart-speed::before {
   content: '\ea1b';
 }
 
-.part-circle-question::before {
+.part-cart::before {
   content: '\ea1c';
 }
 
-.part-circle-remove::before {
+.part-chart::before {
   content: '\ea1d';
 }
 
-.part-circle-user-2::before {
+.part-chat-discussion::before {
   content: '\ea1e';
 }
 
-.part-circle-user::before {
+.part-chat::before {
   content: '\ea1f';
 }
 
-.part-clear-all::before {
+.part-check-2::before {
   content: '\ea20';
 }
 
-.part-cog::before {
+.part-check::before {
   content: '\ea21';
 }
 
-.part-console-window::before {
+.part-circle-alert::before {
   content: '\ea22';
 }
 
-.part-console::before {
+.part-circle-check::before {
   content: '\ea23';
 }
 
-.part-copy::before {
-  content: '\ea24';
-}
-
-.part-cross::before {
+.part-circle-info::before {
   content: '\ea25';
 }
 
-.part-cryptocurrency-bitcoin::before {
+.part-circle-minus::before {
   content: '\ea26';
 }
 
-.part-cryptocurrency-particl::before {
+.part-circle-plus::before {
   content: '\ea27';
 }
 
-.part-currency-dollar::before {
+.part-circle-question::before {
   content: '\ea28';
 }
 
-.part-currency-euro::before {
+.part-circle-remove::before {
   content: '\ea29';
 }
 
-.part-currency-pound::before {
-  content: '\ea2a';
-}
-
-.part-currency-yen::before {
+.part-circle-user::before {
   content: '\ea2b';
 }
 
-.part-dapps::before {
+.part-clear-all::before {
   content: '\ea2c';
 }
 
-.part-date::before {
+.part-cog::before {
   content: '\ea2d';
 }
 
-.part-discord::before {
+.part-console-window::before {
   content: '\ea2e';
 }
 
-.part-display::before {
-  content: '\ea30';
-}
-
-.part-document::before {
+.part-console::before {
   content: '\ea2f';
 }
 
-.part-error::before {
+.part-copy::before {
+  content: '\ea30';
+}
+
+.part-cross::before {
   content: '\ea31';
 }
 
-.part-facebook::before {
+.part-cryptocurrency-bitcoin::before {
   content: '\ea32';
 }
 
-.part-filter-2::before {
+.part-cryptocurrency-particl::before {
   content: '\ea33';
 }
 
-.part-filter::before {
+.part-currency-dollar::before {
   content: '\ea34';
 }
 
-.part-flag::before {
+.part-currency-euro::before {
   content: '\ea35';
 }
 
-.part-flash::before {
+.part-currency-pound::before {
   content: '\ea36';
 }
 
-.part-github::before {
+.part-currency-yen::before {
   content: '\ea37';
 }
 
-.part-globe::before {
+.part-dapps::before {
   content: '\ea38';
 }
 
-.part-google::before {
+.part-date::before {
   content: '\ea39';
 }
 
-.part-hamburger::before {
+.part-discord::before {
   content: '\ea3a';
 }
 
-.part-handshake::before {
+.part-display::before {
   content: '\ea3b';
 }
 
-.part-heart-outline-add::before {
+.part-document::before {
   content: '\ea3c';
 }
 
-.part-heart-outline-remove::before {
+.part-error::before {
   content: '\ea3d';
 }
 
-.part-heart-outline::before {
+.part-facebook::before {
   content: '\ea3e';
 }
 
-.part-heart::before {
+.part-filter-2::before {
   content: '\ea3f';
 }
 
-.part-image-upload::before {
-  content: '\ea40';
-}
-
-.part-info::before {
+.part-filter-3::before {
   content: '\ea41';
 }
 
-.part-label::before {
+.part-filter::before {
+  content: '\ea40';
+}
+
+.part-flag::before {
   content: '\ea42';
 }
 
-.part-lightbulb::before {
+.part-flash::before {
   content: '\ea43';
 }
 
-.part-lightning::before {
+.part-github::before {
   content: '\ea44';
 }
 
-.part-listings::before {
+.part-globe::before {
   content: '\ea45';
 }
 
-.part-lock-open::before {
+.part-google::before {
   content: '\ea46';
 }
 
-.part-lock::before {
+.part-hamburger-chaos-list::before {
   content: '\ea47';
 }
 
-.part-mastodon::before {
+.part-hamburger::before {
   content: '\ea48';
 }
 
-.part-medium::before {
+.part-handshake::before {
   content: '\ea49';
 }
 
-.part-minus::before {
+.part-heart-outline-add::before {
   content: '\ea4a';
 }
 
-.part-next-double::before {
+.part-heart-outline-remove::before {
   content: '\ea4b';
 }
 
-.part-next-single::before {
+.part-heart-outline::before {
   content: '\ea4c';
 }
 
-.part-nodes::before {
+.part-heart::before {
   content: '\ea4d';
 }
 
-.part-notification-bell::before {
+.part-hierarchy::before {
   content: '\ea4e';
 }
 
-.part-notification-speaker::before {
+.part-image-add::before {
   content: '\ea4f';
 }
 
-.part-overview::before {
+.part-image-delete::before {
   content: '\ea50';
 }
 
-.part-past::before {
+.part-image-upload::before {
   content: '\ea51';
 }
 
-.part-pen-1::before {
+.part-img::before {
   content: '\ea52';
 }
 
-.part-pen-2::before {
+.part-label::before {
   content: '\ea53';
 }
 
-.part-people::before {
+.part-language::before {
   content: '\ea54';
 }
 
-.part-person-add::before {
+.part-lightbulb::before {
   content: '\ea55';
 }
 
-.part-person-check::before {
+.part-lightning::before {
   content: '\ea56';
 }
 
-.part-person-edit::before {
+.part-listings::before {
   content: '\ea57';
 }
 
-.part-person-heart::before {
+.part-lock-open::before {
   content: '\ea58';
 }
 
-.part-person-remove::before {
+.part-lock::before {
   content: '\ea59';
 }
 
-.part-person::before {
+.part-mastodon::before {
   content: '\ea5a';
 }
 
-.part-plus::before {
+.part-medium::before {
   content: '\ea5b';
 }
 
-.part-preferences::before {
+.part-minus::before {
   content: '\ea5c';
 }
 
-.part-previous-double::before {
+.part-more-horizontal::before {
   content: '\ea5d';
 }
 
-.part-previous-single::before {
+.part-more-vertical::before {
   content: '\ea5e';
 }
 
-.part-print::before {
+.part-next-double::before {
   content: '\ea5f';
 }
 
-.part-proposals::before {
+.part-next-single::before {
   content: '\ea60';
 }
 
-.part-public::before {
+.part-nodes::before {
   content: '\ea61';
 }
 
-.part-qr::before {
+.part-notification-bell::before {
   content: '\ea62';
 }
 
-.part-receive::before {
+.part-notification-speaker::before {
   content: '\ea63';
 }
 
-.part-reddit::before {
+.part-overview::before {
   content: '\ea64';
 }
 
-.part-refresh::before {
+.part-past::before {
   content: '\ea65';
 }
 
-.part-riot::before {
+.part-pen-1::before {
   content: '\ea66';
 }
 
-.part-rocket::before {
+.part-pen-2::before {
   content: '\ea67';
 }
 
-.part-search::before {
+.part-people::before {
   content: '\ea68';
 }
 
-.part-select::before {
+.part-person-add::before {
   content: '\ea69';
 }
 
-.part-send::before {
+.part-person-check::before {
   content: '\ea6a';
 }
 
-.part-ship::before {
+.part-person-edit::before {
   content: '\ea6b';
 }
 
-.part-small-cross::before {
+.part-person-heart::before {
   content: '\ea6c';
 }
 
-.part-small-minus::before {
+.part-person-remove::before {
   content: '\ea6d';
 }
 
-.part-small-plus::before {
+.part-person::before {
   content: '\ea6e';
 }
 
-.part-smiley::before {
+.part-plus::before {
   content: '\ea6f';
 }
 
-.part-snowflake::before {
+.part-preferences::before {
   content: '\ea70';
 }
 
-.part-stake::before {
+.part-previous-double::before {
   content: '\ea71';
 }
 
-.part-support-help::before {
+.part-previous-single::before {
   content: '\ea72';
 }
 
-.part-swap::before {
+.part-print::before {
   content: '\ea73';
 }
 
-.part-telegram::before {
+.part-proposals::before {
   content: '\ea74';
 }
 
-.part-thumb-down::before {
+.part-public::before {
   content: '\ea75';
 }
 
-.part-thumb-up::before {
+.part-qr::before {
   content: '\ea76';
 }
 
-.part-tool::before {
+.part-receive::before {
   content: '\ea77';
 }
 
-.part-transfer::before {
+.part-recipe::before {
   content: '\ea78';
 }
 
-.part-triangle-down::before {
+.part-reddit::before {
   content: '\ea79';
 }
 
-.part-triangle-left::before {
+.part-refresh::before {
   content: '\ea7a';
 }
 
-.part-triangle-right::before {
+.part-riot::before {
   content: '\ea7b';
 }
 
-.part-triangle-up::before {
+.part-rocket::before {
   content: '\ea7c';
 }
 
-.part-truck::before {
+.part-search::before {
   content: '\ea7d';
 }
 
-.part-twitter::before {
+.part-select::before {
   content: '\ea7e';
 }
 
-.part-wikipedia::before {
+.part-send::before {
   content: '\ea7f';
 }
 
-.part-youtube::before {
+.part-ship::before {
   content: '\ea80';
 }
 
-.part-zoom-in::before {
+.part-shop::before {
   content: '\ea81';
 }
 
-.part-zoom-out::before {
+.part-small-cross::before {
   content: '\ea82';
+}
+
+.part-small-minus::before {
+  content: '\ea83';
+}
+
+.part-small-plus::before {
+  content: '\ea84';
+}
+
+.part-smiley::before {
+  content: '\ea85';
+}
+
+.part-snowflake::before {
+  content: '\ea86';
+}
+
+.part-stake::before {
+  content: '\ea87';
+}
+
+.part-star-empty::before {
+  content: '\ea88';
+}
+
+.part-star-half::before {
+  content: '\ea89';
+}
+
+.part-star::before {
+  content: '\ea8a';
+}
+
+.part-stock::before {
+  content: '\ea8b';
+}
+
+.part-support-help::before {
+  content: '\ea8c';
+}
+
+.part-swap::before {
+  content: '\ea8d';
+}
+
+.part-telegram::before {
+  content: '\ea8e';
+}
+
+.part-thumb-down::before {
+  content: '\ea8f';
+}
+
+.part-thumb-up::before {
+  content: '\ea90';
+}
+
+.part-tool::before {
+  content: '\ea91';
+}
+
+.part-transfer::before {
+  content: '\ea92';
+}
+
+.part-triangle-down::before {
+  content: '\ea93';
+}
+
+.part-triangle-left::before {
+  content: '\ea94';
+}
+
+.part-triangle-right::before {
+  content: '\ea95';
+}
+
+.part-triangle-up::before {
+  content: '\ea96';
+}
+
+.part-truck::before {
+  content: '\ea97';
+}
+
+.part-twitter::before {
+  content: '\ea98';
+}
+
+.part-update::before {
+  content: '\ea99';
+}
+
+.part-verified::before {
+  content: '\ea9a';
+}
+
+.part-vote::before {
+  content: '\ea9b';
+}
+
+.part-wikipedia::before {
+  content: '\ea9c';
+}
+
+.part-youtube::before {
+  content: '\ea9d';
+}
+
+.part-zoom-in::before {
+  content: '\ea9e';
+}
+
+.part-zoom-out::before {
+  content: '\ea9f';
 }

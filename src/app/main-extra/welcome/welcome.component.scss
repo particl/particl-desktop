@@ -1,0 +1,200 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+body {
+  margin: 0 !important;
+}
+
+// Note: root styles here need the `splash-` prefix, since they're "spilling over" to other elements with the same name in components launched after them
+
+.splash-logo {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  background: var(--bg-black);
+  img {
+    width: 7vw;
+    display: block;
+    margin: 1.5vw 1.8vw;
+  }
+}
+
+.splash-container {
+  --container-paddingV: 4rem;
+  background: var(--bg);
+  font-family: var(--font);
+  height: calc(100vh - 2 * var(--container-paddingV));
+  padding: var(--container-paddingV) 8vw;
+  display: flex;
+  flex-direction: column;
+  .content {
+    @extend %tfx;
+    margin: auto 0;
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+    animation: expand-content 1.5s 1;
+    animation-delay: 0.3s;
+    animation-fill-mode: forwards; // stay on the last "frame"
+  }
+
+  .header-text {
+    flex: 0 1 50px;
+    h1 {
+      margin: 0 0 8px;
+      font-weight: 600;
+      font-size: 1.9rem;;
+    }
+    p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+  }
+  
+  section {
+    flex: 1 1 100%;
+    display: flex;
+    position: relative;
+
+    .starting {
+      width: 25rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: fade-starting 0.5s 1;
+      animation-fill-mode: forwards; // stay on the last "frame"
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      .mat-card {
+        padding: 26px 32px;
+      }
+      .mat-spinner {
+        float: left;
+      }
+      .text {
+        display: inline-block;
+        padding: 0 1.2rem;
+        margin-top: -0.05rem;
+      }
+      .title {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .desc {
+        color: var(--text-muted);
+      }
+    } // .loading
+
+    .apps {
+      --app-margin: 16px;
+      --app-padding: 26px;
+      --app-height: 160px;
+      display: flex;
+      width: 100%;
+      margin: 0 calc(-1 * var(--app-margin));
+      animation: fade-apps 0.6s 1;
+      animation-delay: 0.8s;
+      animation-fill-mode: forwards; // stay on the last "frame"
+      position: absolute;
+      top: 50%;
+      left: -50px;
+      z-index: 10;
+      top: calc(50% - (var(--app-height) / 2));
+      opacity: 0;
+      .app {
+        @extend %tfx;
+        @extend %mat-card;
+        flex: 20%;
+        box-sizing: border-box;
+        max-width: 280px;
+        height: var(--app-height);
+        margin: auto var(--app-margin);
+        padding: var(--app-padding);
+        text-align: left;
+        color: var(--text);
+        text-decoration: none;
+        &:hover,
+        &:focus {
+          box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+        }
+        .mat-icon {
+          font-size: 22px;
+          &.part-stake {
+            color: var(--color-primary);
+          }
+          &.part-bag {
+            color: var(--color-secondary);
+          }
+          &.part-swap {
+            color: var(--color-tertiary);
+          }
+        }
+        .name {
+          margin: 14px 0 8px;
+        }
+        .desc {
+          margin: 0;
+          color: var(--text-muted);
+        }
+      }
+    } // .apps
+  }
+  
+  
+  .version {
+    flex: 0 1 24px;
+    margin: 0;
+    color: hsla(var(--text-muted-hsl), 0.6);
+  }
+
+} // .splash-container
+
+.splash-illustration {
+  position: fixed;
+  bottom: -100px;
+  right: -133px;
+  width: 47vw;
+  img {
+    width: 100%;
+    max-width: 100%;
+    pointer-events: none;
+  }
+}
+
+
+@keyframes fade-starting {
+  0% {
+    opacity: 1;
+    left: 0;
+  }
+  100% {
+    opacity: 0;
+    left: 70px;
+  }
+}
+
+@keyframes fade-apps {
+  0% {
+    opacity: 0;
+    left: -50px;
+  }
+  100% {
+    opacity: 1;
+    left: 0;
+  }
+}
+
+@keyframes expand-content {
+  0% {
+    flex: 0 0 300px;
+  }
+  100% {
+    flex: 0 0 550px;
+  }
+}

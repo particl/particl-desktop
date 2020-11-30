@@ -1,0 +1,91 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// Category tree overlay (styled from Autocomplete)
+.mat-tree {
+  max-height: 550px;
+  width: 340px;
+  overflow: auto;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+  position: relative;
+  margin: 0 0 0 -40px; // align with parent's input text
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+
+// ----- MULTI SELECT ----- //
+
+.multi-select {
+  .mat-checkbox {
+    flex: 1 1 100%;
+    line-height: var(--node-line-height);
+  }
+}
+
+// ----- SINGLE SELECT ----- //
+
+.single-select {
+  .mat-tree-node {
+    cursor: pointer;
+  }
+  .checklist-leaf-node {
+    flex: 1 1 100%; // expand to full width
+    padding-left: 16px;
+    &.single-selected {
+      font-weight: 500;
+      color: var(--color-secondary);
+      background: hsla(var(--color-secondary-hsl), 0.075);
+    }
+  }
+}
+
+
+// option line (incl. checkboxes, arrows)
+.mat-tree-node {
+  @extend %tfx;
+  --node-line-height: 2.4;
+  font-size: 13px;
+  min-height: auto;
+  line-height: var(--node-line-height);
+  color: hsla(var(--text-hsl), 0.8);
+  &:hover,
+  &:focus {
+    background: var(--bg-hover);
+    color: var(--text);
+  }
+
+  // ----- 1st LEVEL ----- //
+
+  &.category {
+    &[aria-expanded='true'] { // expanded category
+      .arrow {
+        color: hsla(var(--text-muted-hsl), 0.75);
+      }
+    }
+    .arrow { // arrows
+      color: hsla(var(--text-muted-hsl), 0.5);
+      &:hover,
+      &:focus {
+        color: var(--text-muted);
+        background: none;
+      }
+      .mat-icon {
+        margin: 0;
+      }
+    }
+  }
+  
+  // ----- 2nd LEVEL ----- //
+
+  &.subcategory {
+    min-height: 0;
+    .mat-checkbox {
+      font-size: 13px;
+      padding-left: 16px;
+    }
+  }
+
+} // << .mat-tree-node
+

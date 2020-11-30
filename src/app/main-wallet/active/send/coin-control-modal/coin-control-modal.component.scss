@@ -1,0 +1,79 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.selection-overview {
+  display: flex;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 12px 0 0;
+  .item {
+    flex: 20%;
+    &.type,
+    &.selected {
+      flex: 10%;
+    }
+    &.fee {
+      flex: 15%;
+    }
+    .value {
+      color: var(--text);
+      font-weight: 500;
+      font-size: 15px;
+      margin-top: 3px;
+    }
+  }
+}
+
+
+.mat-dialog-content {
+  width: 60rem;
+  padding: 5px 0;
+}
+
+.available-utxos {
+  display: block;
+  width: 100%;
+  padding: 5px 0;
+  color: hsla(var(--text-hsl), 0.7);
+  .mat-sort-header-container {
+    align-items: center; // center sorting arrows
+  }
+  tr {
+    display: flex;
+  }
+  th {
+    padding: 0 0 5px 2px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  td {
+    line-height: 2;
+  }
+  .checkbox {
+    flex: 3%;
+    padding-left: 24px;
+  }
+  .amount {
+    flex: 15%;
+  }
+  .label {
+    flex: 30%;
+  }
+  .address {
+    flex: 35%;
+    a {
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      text-decoration: none;
+      &:hover,
+      &:focus {
+        color: var(--text);
+      }
+    }
+  }
+  .date {
+    flex: 10%;
+    padding: 0 24px 0 12px;
+  }
+}

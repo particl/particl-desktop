@@ -1,61 +1,43 @@
-/*
-$font: "Inter_UI", sans-serif;
+:root {
+  --color-white: hsl(0, 0%, 100%);
+  --bg: hsl(0, 0%, 98%);
+  --bg-black: hsl(192, 7%, 15%);
+}
 
-// main colors
-$color: #02E8B0; // primary green-ish color
-$color-success: #4f8a10;
-$color-alert: #ec4b50;
-$color-warning: #f1cc00; // yellow-ish
-$color-info: #108cda; // blue-ish (e.g. status cold staking icon)
+@font-face {
+  font-family: 'Inter_UI';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./fonts/Inter-UI-Regular.woff2') format('woff2');
+}
 
-// text colors
-$text: #232728; // default text color
-$text-muted: #7E8790; // grey (for section titles, descriptions etc.)
+body.index {
+  margin: 0 !important;
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: "Inter_UI";
+}
 
-// bg/element colors
-$bg: #fafafa; // light grey bg color
-$bg-black: #222828; // sidebar
-$bg-shadow: #dcdcdc; // lines, box shadows etc.
-
-// UI
-$radius: 4px; // default border-radius
-*/
-
-.intro.section {
-  background: #222828;
-  color: white;
+body.closing {
+  margin: 0 !important;
+  font-family: "Inter_UI";
+  background: url("splash-bg.jpg") no-repeat bottom left var(--bg-black);
+  background-size: 290px;
+  color: var(--color-white);
   text-align: center;
-  font-family: "Inter_UI", sans-serif;
   display: flex;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.intro > .content {
+body.closing .content {
   margin: auto;
-  width: 100%;
-  max-width: 600px;
 }
-
-.intro > .content > .logo {
-  width: 240px;
-  height: auto;
-  margin: 20px 0 40px;
+body.closing .content .logo {
+  margin-bottom: 2rem;
 }
-
-.intro > .content > .quote {
-  font-size: 17px;
-}
-
-.intro > .content > .quote > .author {
-  font-size: 13px;
-  color: #7E8790;
-}
-
-.loading {
-  width: 100%;
-  max-width: 100px;
+body.closing .content p {
+  font-size: 15px;
+  margin: 0;
 }

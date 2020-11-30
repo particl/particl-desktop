@@ -1,13 +1,15 @@
-declare const require: any;
+import * as app from '../../package.json';
+import * as MP from '../../node_modules/particl-marketplace/package.json';
 
 export const environment = {
   production: true,
-  name: require('../../package.json').name,
-  version: require('../../package.json').version,
-  preRelease: require('../../package.json').preRelease,
+  name: app.name,
+  version: app.version,
+  preRelease: app.preRelease,
   releasesUrl: 'https://api.github.com/repos/particl/particl-desktop/releases/latest',
   envName: 'prod',
-  marketVersion: require('../../node_modules/particl-marketplace/package.json').version,
+  marketVersion: MP.version,
+  walletVersion: app.appVersions.wallet,
   particlHost: 'localhost',
   particlPort: 51735,
   marketHost: 'localhost',

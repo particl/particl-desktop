@@ -1,0 +1,271 @@
+<form [formGroup]="templateForm">
+  <div class="row" fxLayout="row" fxLayoutGap="30px">
+
+    <div class="left column" fxFlex="50">
+
+      <h2 class="section-title">Product details</h2>
+      <mat-card class="details no-padding">
+
+        <label>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <h3 class="label">Product name</h3>
+            <input matInput #title placeholder="Short and descriptive" formControlName="title">
+            <mat-hint align="end">{{ title.value.length }}/{{MAX_TITLE}}</mat-hint>
+          </mat-form-field>
+        </label>
+
+        <label>
+          <mat-form-field appearance="fill" class="textarea --plain --larger">
+            <h3 class="label">Summary</h3>
+            <textarea matInput #summary rows="3" placeholder="Short Product summary" formControlName="summary"></textarea>
+            <mat-hint align="end">{{ summary.value.length }}/{{MAX_SHORT_DESCRIPTION}}</mat-hint>
+          </mat-form-field>
+        </label>
+
+        <label>
+          <mat-form-field appearance="fill" class="textarea --plain --larger">
+            <h3 class="label">Full description</h3>
+            <textarea matInput #description rows="12" placeholder="In-depth description of your Product" formControlName="description"></textarea>
+            <mat-hint align="end">{{ description.value?.length }}/{{MAX_LONG_DESCRIPTION}}</mat-hint>
+          </mat-form-field>
+        </label>
+
+      </mat-card><!-- .details -->
+
+    </div><!-- .left -->
+
+
+    <div class="right column" fxFlex="50">
+
+      <h2 class="section-title">Product gallery</h2>
+      <mat-card class="photos">
+        <div class="drag-n-drop" #dropArea>
+          <input class="file-input" type="file" accept="image/*" multiple="true" #fileInputSelector>
+          <button mat-button color="primary" (click)="addImage()">
+            <mat-icon fontIcon="part-select"></mat-icon>
+            Upload photos
+          </button>
+          <p>or drag'n'drop here</p>
+        </div>
+        <p class="help-text">
+          Upload high quality photos of your Product with good lighting and ideally with white background only. Square format (1:1) works best, with max size of: {{imageSizeLabel}}.
+        </p>
+        <div class="gallery">
+
+          <div *ngFor="let image of images.value" class="photo-wrapper">
+            <img src="{{ image.url }}">
+            <div class="icons">
+              <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removeExistingImage(image.id)">
+              </mat-icon>
+              <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
+              </mat-icon-->
+            </div>
+          </div>
+
+          <div *ngFor="let picture of imagesPending.value ; index as i" class="photo-wrapper">
+            <img src="{{ picture }}">
+            <div class="icons">
+              <mat-icon class="delete" fontIcon="part-cross" matTooltip="Remove image" (click)="removePendingImage(i)">
+              </mat-icon>
+              <!--mat-icon class="featured" fontIcon="part-check" matTooltip="Set as featured" (click)="featurePicture(i)">
+              </mat-icon-->
+            </div>
+          </div>
+
+        </div><!-- .gallery -->
+      </mat-card><!-- .photos -->
+
+
+      <h2 class="section-title">Pricing <!--&amp; Quantity--></h2>
+      <mat-card class="pricing no-padding">
+
+        <div class="row"><!-- fxLayout fxLayoutAlign="stretch end" -->
+          <div class="half"><!-- fxFlex="49%" -->
+            <label class="--larger">
+              <h3 class="label">Product price</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>PART</span>
+                <input matInput type="text" formControlName="basePrice" placeholder="price per 1 item">
+              </mat-form-field>
+            </label>
+          </div>
+          <!--div class="asymp" fxFlex="2%">
+            <span>&asymp;</span>
+          </div>
+          <div class="half" fxFlex="49%">
+            <label class="--larger">
+              <h3 class="label">&nbsp;</h3>
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>USD</span>
+                <input matInput type="number" min="0.00000001" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="price per 1 item">
+              </mat-form-field>
+            </label>
+          </div-->
+        </div>
+
+        <!-- <label class="--larger">
+          <h3 class="label">Quantity</h3>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <span matPrefix>Items in stock:</span>
+            <input matInput type="number" placeholder="How many are you selling" min="1">
+          </mat-form-field>
+        </label> -->
+
+      </mat-card><!-- .pricing -->
+
+    </div><!-- .right -->
+  </div><!-- .row (product details) -->
+
+
+  <div class="row" fxLayout="row" fxLayoutGap="30px">
+
+    <div class="left column" fxFlex="50">
+      <h2 class="section-title">Shipping from</h2>
+      <mat-card class="shipping no-padding">
+
+        <label class="--larger">
+          <h3 class="label">Shipping from</h3>
+          <p class="label-desc">From which country will you be shipping your product</p>
+          <tree-select
+            #shippingOriginSelector
+            *ngIf="(regions$ | async).length > 0"
+            [data$]="regions$"
+            [singleSelection]="true"
+            [initialSelection]="[shippingOrigin.value]"
+            placeholderLabel="Shipping from (your country)"
+            prefixIcon="part-globe"
+            [labelStyles]="['--larger']"
+            matTooltip="The region from which the item will be shipped" matTooltipPosition="below"
+            (onClosed)="shippingOrigin.setValue($event[0] || '')">
+          </tree-select>
+        </label>
+
+        <mat-divider></mat-divider>
+
+        <label class="--larger">
+          <h3 class="label">Local shipping</h3>
+          <p class="label-desc">Shipping price when sending the item inside your country</p>
+        </label>
+        <div class="row"><!-- fxLayout fxLayoutAlign="stretch end" -->
+          <div class="half"><!-- fxFlex="49%" -->
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <span matPrefix>PART</span>
+              <input matInput type="text" formControlName="priceShipLocal" placeholder="Local shipping price">
+            </mat-form-field>
+          </div>
+          <!--div class="asymp" fxFlex="2%">
+            <span>&asymp;</span>
+          </div>
+          <div class="half" fxFlex="49%">
+            <label class="--larger">
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>USD</span>
+                <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number">
+              </mat-form-field>
+            </label>
+          </div-->
+        </div>
+
+      </mat-card>
+    </div><!-- .left -->
+
+    <div class="right column" fxFlex="50">
+      <h2 class="section-title">Shipping to</h2>
+      <mat-card class="shipping no-padding">
+
+        <label class="--larger">
+          <h3 class="label">Shipping destinations (optional)</h3>
+          <p class="label-desc">Choose available countries for shipping (leave empty for all)</p>
+          <tree-select
+            #shippingDestinationSelector
+            *ngIf="(regions$ | async).length > 0"
+            [data$]="regions$"
+            [singleSelection]="false"
+            [initialSelection]="shippingDestinations.value"
+            placeholderLabel="Shipping everywhere"
+            prefixIcon="part-airplane"
+            [labelStyles]="['--larger']"
+            matTooltip="The region(s) to which the item can be shipped" matTooltipPosition="below"
+            (onClosed)="shippingDestinations.setValue($event)">
+          </tree-select>
+        </label>
+
+        <mat-divider></mat-divider>
+
+        <label class="--larger">
+          <h3 class="label">International shipping</h3>
+          <p class="label-desc">Shipping price for sending the item worldwide</p>
+        </label>
+        <div class="row"><!-- fxLayout fxLayoutAlign="stretch end" -->
+          <div class="half"><!-- fxFlex="49%" -->
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <span matPrefix>PART</span>
+              <input matInput type="text" formControlName="priceShipIntl" placeholder="Intl shipping price">
+            </mat-form-field>
+          </div>
+          <!--div class="asymp" fxFlex="2%">
+            <span>&asymp;</span>
+          </div>
+          <div class="half" fxFlex="49%">
+            <label class="--larger">
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <span matPrefix>USD</span>
+              <input matInput min="0" (paste)="numericValidator($event)" (keypress)="numericValidator($event)" placeholder="shipping price" type="number">
+              </mat-form-field>
+            </label>
+          </div-->
+        </div>
+
+      </mat-card>
+    </div><!-- .right -->
+
+  </div><!-- .row (shipping) -->
+
+  <h2 class="section-title">Publishing settings <small>(optional)</small></h2>
+
+  <mat-expansion-panel class="publishing-settings no-padding">
+    <mat-expansion-panel-header class="header">
+      <mat-icon fontIcon="part-shop" color="accent"></mat-icon>
+      <div class="title">
+        <h3>Publish right away?</h3>
+        <p class="help-text">Fill in Market options to publish your Product right now (or you can save your Product for later)</p>
+      </div>
+    </mat-expansion-panel-header>
+    <div class="publish-options" fxLayout fxLayoutAlign="space-between center">
+
+      <section class="select-market" fxFlex="27">
+        <label class="--larger">
+          <h3 class="label">Publish to</h3>
+          <mat-form-field class="--plain --larger" appearance="fill">
+            <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+            <mat-select placeholder="Select Market" formControlName="selectedMarket">
+              <mat-option [value]="0" class="--larger"></mat-option>
+              <mat-option *ngFor="let market of (markets$ | async)" [value]="market.id" class="--larger">
+                {{ market.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+      </section><!-- .select-market -->
+
+      <section class="select-preset" fxFlex="27">
+        <label class="--larger" *ngIf="(categories$ | async).length > 0">
+          <h3 class="label">Product category</h3>
+          <tree-select
+            #categorySelector
+            [data$]="categories$"
+            [singleSelection]="true"
+            [initialSelection]="selectedCategory.value"
+            [isParentNodesSelectable]="false"
+            placeholderLabel="Select a category"
+            prefixIcon="part-filter"
+            [labelStyles]="['--larger']"
+            (onClosed)="selectedCategory.setValue($event[0] || '')">
+          </tree-select>
+        </label>
+      </section><!-- .select-preset -->
+
+    </div><!-- .publish-options -->
+  </mat-expansion-panel>
+
+</form>

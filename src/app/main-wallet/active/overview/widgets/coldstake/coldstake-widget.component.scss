@@ -1,0 +1,88 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../shared/shared.scss';
+
+
+// expansion panel widget
+.coldstaking {
+  --content-paddingH: 18px;
+  margin-bottom: 30px;
+  .header { // toggle header
+    padding: 0 var(--content-paddingH) 0 0;
+    min-height: 64px;
+    max-height: 64px;
+    .text {
+      padding: 10px 0;
+    }
+    .title {
+      @extend %box-title;
+      margin-bottom: 2px;
+      .progress {
+        color: var(--text-muted);
+        font-weight: 400;
+      }
+    }
+    .status {
+      color: var(--text-muted);
+    }
+  }
+  .dot { // status indicator
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--bg);
+    margin: 14px 8px 0 var(--content-paddingH);
+  }
+  &.--inactive { // not activated
+    .dot {
+      background: hsla(var(--text-muted-hsl), 0.4);
+    }
+  }
+  &.--active {
+    .dot {
+      background: var(--color-primary);
+    }
+  }
+  &.--paused { // set up, wallet locked
+    .dot {
+      background: var(--color-info);
+      position: relative;
+      &::before { // pulsating notification "dot"
+        content: '';
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        border: 1px solid hsla(var(--color-info-hsl), 0.7);
+        position: absolute;
+        animation: infinite pulse 1.5s;
+      }
+    }
+  }
+  .content { // toggle content
+    padding: 0 var(--content-paddingH) 18px;
+    border-top: 1px dashed var(--bg-muted);
+    .progress-bar {
+      height: 5px;
+      width: calc(100% + 2 * var(--content-paddingH));
+      margin: -1px calc(-1 * var(--content-paddingH)) 0;
+    }
+    .buttons {
+      .mat-button,
+      .mat-raised-button {
+        margin-top: 6px;
+        min-width: auto;
+      }
+    }
+  }
+}
+
+// pulsating "dot" animation
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}

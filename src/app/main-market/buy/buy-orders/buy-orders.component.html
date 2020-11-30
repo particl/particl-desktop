@@ -1,0 +1,347 @@
+<app-page-intro childPageAlias="Buy Orders">
+  <ng-container page-title>Buy Orders</ng-container>
+  <ng-container page-content>
+    Manage your orders which you're buying from Sellers.
+  </ng-container>
+  <ng-container page-info *ngIf="identityIsEncrypted">
+    <span>As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!</span>
+  </ng-container>
+  <ng-container page-help>
+    Each step of the buying process needs to be confirmed in this page (i.e. marking an order as "Shipped").
+  </ng-container>
+</app-page-intro>
+
+
+<!-- Orders > Filter -->
+<div class="filter">
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="querySearch"
+          placeholder="Search Orders" (keyup.escape)="querySearch.setValue('')">
+    <button *ngIf="querySearch.value.length > 0" matSuffix mat-button class="small" (click)="querySearch.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="querySearch.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+  <h2 class="section-title">
+    Filter
+  </h2>
+
+  <mat-card class="filter-card">
+    <div class="checkbox highlight">
+      <mat-checkbox color="primary" [formControl]="queryFilterAttention">Orders requiring action</mat-checkbox>
+    </div>
+    <div class="checkbox">
+      <mat-checkbox color="primary" [formControl]="queryFilterComplete">Show inactive &amp; archived</mat-checkbox>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="Filter by Market" [formControl]="queryFilterMarket">
+        <mat-option value="">All Markets</mat-option>
+        <mat-option *ngFor="let market of filterOptionsMarkets | keyvalue" [value]="market.key">
+          {{ market.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-radio-group class="radio-group block-radio" [formControl]="queryFilterStatus">
+      <mat-radio-button class="filter-option" *ngFor="let statusFilter of filterOptionsStatus" [value]="statusFilter.value" color="accent" [class.empty]="statusFilter.count === 0">
+        {{ statusFilter.title }}
+        <span class="amount">{{ statusFilter.count }}</span>
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+<!-- Orders > list -->
+<div class="orders section with-filter">
+
+  <ng-container *ngIf="filteredOrderIdxs.length > 0; else noOrdersVisible">
+    <ng-container *ngFor="let orderIdx of filteredOrderIdxs; trackBy: trackByOrderIdxFn">
+
+      <mat-expansion-panel class="order list-item no-padding" *appVar="ordersList[orderIdx] as orderItem">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper">
+            <div class="photo">
+              <img [src]="orderItem.listing.image">
+            </div>
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="name">
+                {{orderItem.listing.title}}
+                <!-- TODO: replace with buy quantity when implemented -->
+                <span class="qty">&times;1</span>
+              </div>
+              <div class="hash id">{{orderItem.orderId}}</div>
+              <div class="hash" [style.backgroundColor]="'#' + orderItem.orderHashShort">{{orderItem.orderHashShort}}</div>
+              <div class="origin-market">
+                {{ filterOptionsMarkets[orderItem.marketKey] || '' }}
+              </div>
+            </div>
+            <div class="status-wrap" fxFlex="0 0 140px">
+              <div class="buy order status" [ngClass]="orderItem.currentState.state.statusClass">
+                <span class="dot"></span>{{ orderItem.currentState.state.filterLabel || orderItem.currentState.state.label }}
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+
+        <div class="status-info">
+          <div class="text">
+            <h2 class="item-title">Order #{{orderItem.orderId}}</h2>
+            <p>{{ orderItem.currentState.state.stateInfo.buyer }}</p>
+          </div>
+          <p class="item-info">
+            ID: {{orderItem.orderHash}}<br>
+            Updated: {{ orderItem.updated | date:'medium' }}<br>
+            Created: {{ orderItem.created | date:'medium' }}
+          </p>
+        </div><!-- .status-info -->
+
+        <div class="progress-graph" fxLayout>
+          <ng-container *ngIf="+happyBuyflow[orderItem.currentState.state.stateId] >= 0; else errorBuyFlow">
+            <div  *ngFor="let step of happyBuyflow.steps; index as stepIdx"
+                  class="step"
+                  [class.done]="+happyBuyflow[orderItem.currentState.state.stateId] > stepIdx"
+                  [class.active]="+happyBuyflow[orderItem.currentState.state.stateId] === stepIdx"
+                  [class.upcoming]="+happyBuyflow[orderItem.currentState.state.stateId] < stepIdx"
+                  fxFlex>
+              <div class="value">{{ step.title }}</div>
+              <div class="dot"></div>
+            </div>
+          </ng-container>
+
+          <ng-template #errorBuyFlow>
+            <div class="step rejected" fxFlex>
+              <div class="value">Bidding</div>
+              <div class="dot"></div>
+            </div>
+            <div class="step rejected" fxFlex>
+              <div class="value">Cancelled</div>
+              <div class="dot"></div>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="detail">
+
+          <div class="highlights" *ngIf="orderItem.extraDetails !== undefined">
+            <table>
+              <tr *ngIf="orderItem.extraDetails.escrowMemo.length > 0">
+                <th>Seller's escrow notes</th>
+                <td><em>{{ orderItem.extraDetails.escrowMemo }}</em></td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.shippingMemo.length > 0">
+                <th>Seller's shipping notes</th>
+                <td><em>{{ orderItem.extraDetails.shippingMemo }}</em></td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.releaseMemo.length > 0">
+                <th>Buyer's review</th>
+                <td><em>{{ orderItem.extraDetails.releaseMemo }}</em></td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.escrowTxn.length > 0">
+                <th>Escrow TXID</th>
+                <td>
+                  <div class="txid">
+                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="{{orderItem.extraDetails.escrowTxn}}">Open in Block Explorer</a>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.releaseTxn.length > 0">
+                <th>Release TXID</th>
+                <td>
+                  <div class="txid">
+                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="{{orderItem.extraDetails.releaseTxn}}">Open in Block Explorer</a>
+                  </div>
+                </td>
+              </tr>
+              <tr *ngIf="orderItem.extraDetails.rejectionReason.length > 0">
+                <th>Rejected for</th>
+                <td>{{ orderItem.extraDetails.rejectionReason }}</td>
+              </tr>
+            </table>
+          </div><!-- .highlights -->
+
+          <div class="item-details" fxLayout fxLayoutGap="30px">
+
+            <div class="buyer-info" fxFlex="auto">
+              <h3 class="item-subtitle">Shipping details</h3>
+              <p class="shipping-info">
+                {{orderItem.shippingDetails.name}}<small>&ndash; Name</small><br>
+                {{orderItem.shippingDetails.addressLine1}}<small>&ndash; Street</small><br>
+                <ng-container *ngIf="orderItem.shippingDetails.addressLine2.length > 0">{{orderItem.shippingDetails.addressLine2}}<small>&ndash; Street</small><br></ng-container>
+                {{orderItem.shippingDetails.city}}<small>&ndash; City</small><br>
+                {{orderItem.shippingDetails.state}}<small>&ndash; State</small><br>
+                {{orderItem.shippingDetails.code}}<small>&ndash; ZIP</small><br>
+                {{orderItem.shippingDetails.country}}<small>&ndash; Country</small>
+              </p>
+
+              <p class="contact-info">
+                <span *ngIf="orderItem.contactDetails.email.length > 0">
+                  {{orderItem.contactDetails.email }}
+                </span>
+                <br>
+                <span *ngIf="orderItem.contactDetails.phone.length > 0">
+                  {{orderItem.contactDetails.phone }}
+                </span>
+              </p>
+            </div><!-- .buyer-info -->
+
+            <div class="pricing-info" fxFlex="auto">
+              <h3 class="item-subtitle">Pricing</h3>
+              <table class="prices">
+                <tfoot>
+                  <tr>
+                    <th></th>
+                    <th><span matTooltip="Particl" matTooltipPosition="below">PART</span></th>
+                    <!--th><span matTooltip="US Dollar" matTooltipPosition="below">USD</span> // TODO: replace with user selected fiat countervalue currency (when implemented) </th-->
+                  </tr>
+                </tfoot>
+                <tbody>
+                  <!-- TODO: all amounts will be rounded and forced to 4 decimals again (the former split to whole numbers and decimals is not needed) -->
+                  <tr>
+                    <th>Price (&times;1 item)<!-- TODO: when implemented, replace with buy quantity --></th>
+                    <td class="amount part">{{orderItem.pricing.basePrice.whole}}<small>{{orderItem.pricing.basePrice.sep}}{{orderItem.pricing.basePrice.fraction}}</small></td>
+                    <!--td class="amount fiat">3<small>.4100</small></td-->
+                  </tr>
+                  <tr>
+                    <th>Shipping</th>
+                    <td class="amount part">{{orderItem.pricing.shippingPrice.whole}}<small>{{orderItem.pricing.shippingPrice.sep}}{{orderItem.pricing.shippingPrice.fraction}}</small></td>
+                    <!--td class="amount fiat">0<small>.8400</small></td-->
+                  </tr>
+                  <tr class="total">
+                    <th>Total price</th>
+                    <td class="total amount part">{{orderItem.pricing.subTotal.whole}}<small>{{orderItem.pricing.subTotal.sep}}{{orderItem.pricing.subTotal.fraction}}</small></td>
+                    <!--td class="total amount fiat">8<small>.5000</small></td-->
+                  </tr>
+                  <tr class="escrow">
+                    <th>Escrow payment</th>
+                    <td class="escrow amount part">{{orderItem.pricing.totalRequired.whole}}<small>{{orderItem.pricing.totalRequired.sep}}{{orderItem.pricing.totalRequired.fraction}}</small></td>
+                    <!--td class="escrow amount fiat">4<small>.2500</small></td-->
+                  </tr>
+                </tbody>
+              </table>
+              <p *ngIf="(orderItem.extraDetails !== undefined) && +happyBuyflow[orderItem.currentState.state.stateId] >= 0">
+                <ng-container *ngIf="(orderItem.extraDetails.escrowTxn.length === 0)">
+                  Escrow has not been made yet.
+                </ng-container>
+                <ng-container *ngIf="(orderItem.extraDetails.escrowTxn.length > 0) && (orderItem.extraDetails.releaseTxn.length === 0)">
+                  Escrow payment will be automatically returned after confirming that the Order has been received.
+                </ng-container>
+                <ng-container *ngIf="orderItem.extraDetails.releaseTxn.length > 0">
+                  Order is complete: no further actions are necessary
+                </ng-container>
+              </p>
+            </div><!-- .info -->
+
+          </div><!-- .item-details -->
+        </div><!-- .detail -->
+
+        <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+          <div class="left">
+            <button *ngFor="let actionable of orderItem.currentState.actions.ALTERNATIVE"
+                    mat-button [color]="actionable.details.colour"
+                    [matTooltip]="actionable.details.tooltip"
+                    appDebounceClick
+                    (debounceClick)="executeAction(orderItem, actionable.toState)"
+                    class="small">
+              <mat-icon fontSet="partIcon" [fontIcon]="actionable.details.icon"></mat-icon>
+              {{ actionable.details.label }}
+            </button>
+            <button mat-button matTooltip="Preview listing" class="small" appDebounceClick (debounceClick)="openListingDetailModal(orderItem.listing.id)">
+              <mat-icon fontIcon="part-zoom-in"></mat-icon>
+              View Listing
+            </button>
+          </div>
+          <div class="right">
+            <button *ngFor="let actionable of orderItem.currentState.actions.PRIMARY"
+                    mat-raised-button [color]="actionable.details.colour" [matTooltip]="actionable.details.tooltip"
+                    appDebounceClick
+                    (debounceClick)="executeAction(orderItem, actionable.toState)">
+              <mat-icon fontSet="partIcon" [fontIcon]="actionable.details.icon"></mat-icon>
+              {{ actionable.details.label }}
+            </button>
+
+            <button *ngFor="let actionable of orderItem.currentState.actions.PLACEHOLDER_LABEL"
+                    mat-raised-button [color]="actionable.details.colour" [matTooltip]="actionable.details.tooltip"
+                    [disabled]="true">
+              <mat-icon fontSet="partIcon" [fontIcon]="actionable.details.icon"></mat-icon>
+              {{ actionable.details.label }}
+            </button>
+
+          </div>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+    </ng-container>
+  </ng-container>
+
+
+  <!-- define the template, so we can reuse it -->
+  <ng-template #loadingPlaceholder>
+    <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="photo placeholder --lighter"></div>
+      <div fxFlex="1 0 175px">
+        <div class="name placeholder"></div>
+        <div class="meta placeholder"></div>
+      </div>
+      <div fxFlex="1 0 155px" fxLayout fxLayoutAlign="flex-end center">
+        <span class="status placeholder --lighter"></span>
+        <span class="arrow placeholder --lighter"></span>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #noOrdersVisible>
+
+    <!-- show loading-placeholder when items are initially loading -->
+    <div class="loading-placeholder market orders" *ngIf="(ordersList.length === 0) && isLoading">
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    </div>
+
+    <div class="no-results" *ngIf="(ordersList.length === 0) && !isLoading">
+      <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders Available">
+      <p>
+        You don't have any market Orders yet
+      </p>
+      <p class="help-text">
+        Visit the Marketplace and start buying or selling today!
+      </p>
+    </div>
+
+    <!-- when searching/filtering: -->
+    <div class="no-results" *ngIf="(ordersList.length > 0) && !isLoading">
+      <img class="illustration" src="./assets/app-market/illustrations/no-orders.svg" alt="No Orders found">
+      <p>
+        No Orders found
+      </p>
+      <p class="help-text">
+        You don't have any Orders matching your search/filter
+      </p>
+    </div>
+  </ng-template>
+</div><!-- .orders.list -->
+
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

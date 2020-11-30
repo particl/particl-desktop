@@ -1,0 +1,73 @@
+<mat-dialog-title>Promote Market</mat-dialog-title>
+
+
+<mat-dialog-content class="--muted">
+
+  <h3 class="item-subtitle">Promote {{ marketName }}</h3>
+
+  <p>
+    Markets are not listed in the Market browser by default. You can promote your Market to publish it to Market browser for a few days and onboard more potential Buyers.
+  </p>
+
+  <p class="help-text">
+    This fee goes back to the stakers on Particl network for their support.
+  </p>
+
+
+  <h3 class="item-subtitle">Promoting via Identity</h3>
+
+  <mat-card class="identity item-card" matTooltip="Your active Identity&#13;which will promote the Market" matTooltipPosition="after" matTooltipClass="multi-line">
+    <div class="image avatar">
+      {{ currentIdentity.image }}
+    </div>
+    <div class="text">
+      <div class="identity-name">{{ currentIdentity.name }}</div>
+      <div class="available-balance">Publishing balance: {{ currentBalanceControl.value }}</div>
+    </div>
+  </mat-card>
+
+
+  <h3 class="item-subtitle">Days to promote</h3>
+
+  <mat-card class="promo-duration item-card no-padding" fxLayout>
+    <div class="alert --boxed --warning full-width" *ngIf="errorMsg.length > 0; else durationSelector">
+      <span>
+        {{errorMsg}}
+      </span>
+    </div>
+    <ng-template #durationSelector>
+      <mat-form-field class="promo-duration --plain --larger full-width" appearance="fill" fxFlex="40">
+        <mat-icon matPrefix fontIcon="part-date"></mat-icon>
+        <mat-select [formControl]="selectedDurationControl" placeholder="Select duration">
+          <mat-option class="--larger" *ngFor="let option of optionsPublishDurations" [value]="option.value">{{option.title}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <table class="full-width" fxFlex="60">
+        <tr>
+          <th>Promo duration</th>
+          <td>{{ selectedDurationControl.value }} days</td>
+        </tr>
+        <tr>
+          <th>Total promo fee</th>
+          <td>{{ selectedFeeControl.value }} PART</td>
+        </tr>
+      </table>
+    </ng-template>
+  </mat-card>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()" [disabled]="publishForm.invalid">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Promote Market
+  </button>
+
+</mat-dialog-actions>

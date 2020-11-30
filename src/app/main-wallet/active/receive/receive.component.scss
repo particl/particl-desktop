@@ -1,0 +1,39 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ LAYOUT ------ //
+
+.tab-bar {
+  position: static;
+}
+
+.container-flex {
+  --padding-bottom: calc(var(--paddingV) + 45px);
+  padding: var(--padding);
+  height: calc(100vh - var(--header-main-height) - var(--tab-bar-height) - var(--paddingV) - var(--padding-bottom) - 1px);
+  position: relative;
+}
+
+// fresh unused receive address
+mat-card.receive-address {
+  width: 745px;
+  margin: auto;
+  padding: 24px 0 0;
+  .address-details {
+    padding: 0 24px;
+  }
+
+  // address' action buttons
+  .buttons {
+    width: 100%;
+    margin: 24px 0 0;
+    padding: 14px;
+    border-top: 1px dashed var(--bg-muted);
+    .right {
+      text-align: right;
+      button {
+        margin-left: 8px;
+      }
+    }
+  }
+
+}

@@ -1,0 +1,112 @@
+<div class="container-block without-tab-bar">
+
+  <mat-horizontal-stepper [@.disabled]="true" [linear]="true" class="no-bg --stepper-above-page-title" #stepper (selectionChange)="stepperChangedSelection($event)">
+    <!-- Overwrite default Stepper icons: https://material.angular.io/components/stepper/overview#overriding-icons -->
+    <ng-template matStepperIcon="edit">
+      <custom-icon>
+        <mat-icon fontIcon="part-check"></mat-icon>
+      </custom-icon>
+    </ng-template>
+    <ng-template matStepperIcon="done">
+      <custom-icon>
+        <mat-icon fontIcon="part-pen-1"></mat-icon>
+      </custom-icon>
+    </ng-template>
+
+
+
+    <!-- ---------------------------------- 1. SELECT IMPORT ---------------------------------- -->
+
+    <mat-step [completed]="stepper.selectedIndex > 0">
+      <ng-template matStepLabel>Select Import</ng-template>
+      <app-page-intro>
+        <ng-container page-title>Select Import</ng-container>
+        <ng-container page-content>
+          Already selling elsewhere? Do you want to import dozens of Products at once? We've got you covered!<br>
+          Choose your preferred Product import method below, specify import settings and continue to the next step
+        </ng-container>
+        <ng-container page-help>
+        </ng-container>
+      </app-page-intro>
+
+      <form class="stepper-content select-import">
+
+        <div class="filter">
+          <h2 class="section-title">Select import source</h2>
+          <div class="radio-switcher">
+            <label *ngFor="let source of importOptions">
+              <input type="radio" name="option" [value]="source.value" appDebounceClick [debounceTime]="500" (debounceClick)="setImportSauce(source.value)">
+              <div class="switcher-option">
+                <mat-icon [fontIcon]="source.icon"></mat-icon>
+                <span class="name">{{ source.title }}</span>
+              </div>
+            </label>
+          </div><!-- .radio-switcher -->
+        </div><!-- .filter-->
+
+        <div class="import-config with-filter">
+
+          <ng-container *ngIf="selectedImportControl.value === null">
+            <div class="no-results --smaller">
+              <img class="illustration" src="./assets/app-market/illustrations/no-import-source.svg" alt="No Import selected">
+              <div class="text">
+                <p>
+                  No Import source selected
+                </p>
+                <p class="help-text">
+                  Please select your Import source on the left first to begin
+                </p>
+              </div>
+            </div><!-- .no-results -->
+          </ng-container>
+
+          <ng-template importer></ng-template>
+        </div><!-- .import-config -->
+
+      </form><!-- .select-import.stepper-content -->
+    </mat-step>
+
+
+
+    <!-- ---------------------------------- 2. REVIEW IMPORT DATA ---------------------------------- -->
+
+    <mat-step [completed]="stepper.selectedIndex > 1">
+      <ng-template matStepLabel>Review Import Data</ng-template>
+      <app-page-intro>
+        <ng-container page-title>Review Import Data</ng-container>
+        <ng-container page-content>
+          Here are the data processed from your Import &ndash; fill in the missing fields (if any) and update the rest to your liking<br>
+          When satisfied, check which Products you want to Import and save them into Product templates
+        </ng-container>
+        <ng-container page-help>
+        </ng-container>
+      </app-page-intro>
+
+      <form class="stepper-content review-import-data">
+        <h2 class="section-title">{{countItemsParsed}} Product(s) found for import</h2>
+        <mat-accordion>
+          <ng-template #productTemplateList></ng-template>
+        </mat-accordion>
+
+        <p class="alert --boxed --warning" *ngIf="hasProcessError">
+          <span>Failed to import all selected products &ndash; an error occurred on one or more selected products and these were not imported</span>
+        </p>
+
+        <div class="action-buttons" fxLayoutAlign="space-between center">
+          <button mat-button matStepperPrevious>
+            <mat-icon fontIcon="part-previous-single"></mat-icon>
+            Back
+          </button>
+          <button mat-raised-button color="primary" [disabled]="!canProcessProducts || isBusy" appDebounceClick (debounceClick)="processImports()">
+            <mat-icon fontIcon="part-next-single"></mat-icon>
+            Import &amp; Save
+          </button>
+        </div>
+
+      </form><!-- .review-import-data.stepper-content -->
+    </mat-step>
+
+
+
+  </mat-horizontal-stepper>
+</div><!-- .container-block -->

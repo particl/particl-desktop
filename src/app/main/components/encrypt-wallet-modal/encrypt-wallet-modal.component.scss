@@ -1,0 +1,25 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+// ------ LAYOUT ------ //
+
+.mat-dialog-content {
+  width: 37rem;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.image {
+  margin-right: 30px;
+  img {
+    width: 12rem;
+  }
+}
+
+.modal-highlight {
+  margin-bottom: 0;
+}

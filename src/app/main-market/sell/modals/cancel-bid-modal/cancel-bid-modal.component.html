@@ -1,0 +1,36 @@
+<mat-dialog-title>Cancel bid</mat-dialog-title>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/reject-cancel-bid.svg" alt="Cancel bid">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Are you sure you want to cancel this bid?
+      </p>
+      <p class="help-text">
+        Changed your mind and don't want to bid on this item anymore? Cancelling the bid will unlock any locked funds associated with this bid.
+      </p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" appDebounceClick (debounceClick)="doAction()">
+    <mat-icon fontIcon="part-circle-remove"></mat-icon>
+    Yes, cancel bid
+  </button>
+</mat-dialog-actions>

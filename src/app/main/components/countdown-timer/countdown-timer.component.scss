@@ -1,0 +1,27 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// "Wallet will lock in..." countdown
+.countdown {
+  display: inline-block;
+  padding: 5px 7px 4px;
+  margin-left: 10px;
+  background: var(--text);
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  color: var(--bg);
+  font-size: 11px;
+  line-height: 1;
+  position: relative;
+  top: -4px;
+  &::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border: 5px solid var(--text);
+    border-color: transparent var(--text) transparent transparent;
+    position: absolute;
+    left: -10px;
+    top: 5px;
+  }
+}

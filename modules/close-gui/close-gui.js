@@ -3,7 +3,7 @@ const app      = require('electron').app;
 const rxIpc = require('rx-ipc-electron/lib/main').default;
 const log = require('electron-log');
 
-const Observable = require('rxjs/Observable').Observable;
+const Observable = require('rxjs').Observable;
 
 /*
     Register and IPC listener and execute notification.

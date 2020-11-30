@@ -1,0 +1,77 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.mat-dialog-content {
+  padding: var(--padding);
+  width: 40rem;
+}
+
+// ------ UI ------ //
+
+.market-image {
+  .desc {
+    margin-left: 32px;
+  }
+  .image { // shared for .drag-n-drop and .photo-wrapper (ie. before and after upload)
+    border-radius: var(--radius);
+    overflow: hidden;
+    height: 130px;
+  }
+  // when no image is uploaded..
+  .drag-n-drop {
+    border: 2px dashed var(--bg-muted);
+    background: var(--bg);
+    padding: 32px 4px 25px;
+    text-align: center;
+    p {
+      margin: 6px 0 0;
+      color: var(--text-muted);
+    }
+    .hide-file {
+      @extend %hide;
+    }
+  }
+  // when image already uploaded..
+  .photo-wrapper {
+    position: relative;
+    &:hover {
+      .icons {
+        opacity: 1;
+      }
+    }
+    img {
+      @extend %image-center-cover;
+    }
+    .icons {
+      @extend %tfx;
+      opacity: 0;
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg);
+      border-radius: var(--radius);
+      box-shadow: 0 1px 5px hsla(var(--bg-black-hsl), 0.4);
+    }
+  }
+}
+
+// ------ LAYOUT ------ //
+
+form.market-form { // form = stepper content (centered)
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.market-details {
+  .market-image {
+    padding: 24px 28px;
+    .desc {
+      padding-top: 8px;
+      p,
+      ul {
+        color: var(--text-muted);
+      }
+    }
+  }
+}

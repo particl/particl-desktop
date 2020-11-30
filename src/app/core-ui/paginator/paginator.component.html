@@ -1,3 +1,24 @@
+<div class="left">
+
+  <button mat-icon-button type="button" class="mat-paginator-navigation-previous"
+    (click)="firstPage()"
+    [disabled]="!hasPreviousPage()">
+    <mat-icon fontIcon="part-previous-double"></mat-icon>
+  </button>
+
+  <button mat-icon-button type="button" class="mat-paginator-navigation-previous"
+    (click)="previousPage()"
+    [disabled]="!hasPreviousPage()">
+    <mat-icon fontIcon="part-previous-single"></mat-icon>
+  </button>
+
+</div><!-- .left -->
+
+
+<div class="mat-paginator-range-label">
+  {{getRangeLabel(pageIndex, pageSize, length)}}
+</div>
+
 <div class="mat-paginator-page-size">
   <div class="mat-paginator-page-size-label">
     {{intl.itemsPerpageLabel}}
@@ -11,37 +32,23 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  &ensp;per page
   <div *ngIf="pageSizeOptions.length <= 1">{{pageSize}}</div>
 </div>
 
-<div class="mat-paginator-range-label">
-  {{getRangeLabel(pageIndex, pageSize, length)}}
-</div>
 
-<button mat-icon-button type="button" class="mat-paginator-navigation-previous"
-  (click)="firstPage()"
-  [matTooltip]="intl.firstPageLable"
-  [matTooltipPosition]="'above'" [disabled]="!hasPreviousPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-double"></mat-icon>
-</button>
+<div class="right">
 
-<button mat-icon-button type="button" class="mat-paginator-navigation-previous"
-  (click)="previousPage()"
-  [matTooltip]="intl.previousPageLabel"
-  [matTooltipPosition]="'above'" [disabled]="!hasPreviousPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-previous-single"></mat-icon>
-</button>
+  <button mat-icon-button type="button" class="mat-paginator-navigation-next"
+    (click)="nextPage()"
+    [disabled]="!hasNextPage()">
+    <mat-icon fontIcon="part-next-single"></mat-icon>
+  </button>
 
-<button mat-icon-button type="button" class="mat-paginator-navigation-next"
-  (click)="nextPage()"
-  [matTooltip]="intl.nextPageLabel" [matTooltipPosition]="'above'"
-  [disabled]="!hasNextPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-single"></mat-icon>
-</button>
+  <button mat-icon-button type="button" class="mat-paginator-navigation-next"
+    (click)="lastPage()"
+    [disabled]="!hasNextPage()">
+    <mat-icon fontIcon="part-next-double"></mat-icon>
+  </button>
 
-<button mat-icon-button type="button" class="mat-paginator-navigation-next"
-  (click)="lastPage()"
-  [matTooltip]="intl.lastPageLable" [matTooltipPosition]="'above'"
-  [disabled]="!hasNextPage()">
-  <mat-icon class="icon" fontSet="partIcon" fontIcon="part-next-double"></mat-icon>
-</button>
+</div><!-- .right -->

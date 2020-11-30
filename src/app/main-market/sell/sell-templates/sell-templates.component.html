@@ -1,0 +1,261 @@
+<app-page-intro childPageAlias="Sell Templates">
+  <ng-container page-title>Your Inventory &amp; Products</ng-container>
+  <ng-container page-content>
+    This is your dashboard for selling your Products on the marketplace and manage their Listings.<br>
+    To sell, you will need to create a Product template first, which you can later publish as a Listing to any connected Market.
+  </ng-container>
+  <ng-container page-help>
+  </ng-container>
+</app-page-intro>
+
+<!-- Listings > Filter -->
+<div class="filter">
+
+  <div class="buttons">
+    <div class="button-group" fxLayout fxLayoutGap="2px" fxLayoutAlign="space-between flex-start">
+      <button mat-raised-button color="primary" routerLink="new-listing" class="full-width" fxFlex="50">
+        <mat-icon fontIcon="part-circle-plus"></mat-icon>
+        New
+      </button>
+      <button mat-raised-button color="primary" routerLink="import-listings" class="full-width" fxFlex="50">
+        <mat-icon fontIcon="part-image-upload"></mat-icon>
+        Import
+      </button>
+    </div><!-- .row -->
+    <button mat-raised-button color="accent" class="full-width" (click)="openBatchPublishModal()">
+      <mat-icon fontIcon="part-check-2"></mat-icon>
+      Batch (Re)publish&hellip;
+    </button>
+  </div><!-- .buttons -->
+
+  <h2 class="section-title">
+    Search &amp; sort
+  </h2>
+
+  <mat-card class="filter-card">
+
+    <mat-form-field class="--plain" appearance="fill">
+      <input matInput type="text" placeholder="Search products" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
+      <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="!searchQuery.value.length" matSuffix fontIcon="part-search"></mat-icon>
+    </mat-form-field>
+
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="Sort products" [formControl]="sortOrder">
+        <mat-option *ngFor="let sorting of sortCriteria" [value]="sorting.value">
+          {{ sorting.title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </mat-card><!-- .filter-card -->
+
+  <!-- Hide filter if filtering by Listing isn't active - when we'll add more filtering options, remove this condition: -->
+  <h2 class="section-title" *ngIf="+filterBaseTemplateId.value > 0">
+    Filter
+  </h2>
+
+  <!-- Hide filter if filtering by Listing isn't active - when we'll add more filtering options, remove this condition: -->
+  <mat-card class="filter-card" *ngIf="+filterBaseTemplateId.value > 0">
+    <!--mat-radio-group class="radio-group block-radio" [formControl]="filterStatus">
+      <mat-radio-button class="filter-option" *ngFor="let status of filterStatusCriteria" [value]="status.value" color="accent">
+        {{ status.title }}
+      </mat-radio-button>
+    </mat-radio-group-->
+    <!-- Clear Product/Template filter -->
+    <button mat-button class="small clear-specific-filter" color="warn" (click)="this.filterBaseTemplateId.setValue(0)" *ngIf="+filterBaseTemplateId.value > 0">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Clear filtering by Listing
+    </button>
+  </mat-card>
+
+</div><!-- .filter -->
+
+
+<!-- Listings > list -->
+<div class="listings section with-filter">
+
+  <ng-container *ngIf="displayedProductIdxs.length > 0; else noTemplates">
+    <ng-container *ngFor="let templIdx of displayedProductIdxs; trackBy: trackByTemplateIdxFn">
+      <mat-expansion-panel class="product list-item no-padding" *appVar="allProducts[templIdx] as product">
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper">
+            <div class="photo">
+              <img [src]="product.images[0]">
+            </div>
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="name">{{ product.title }}</div>
+              <span class="help-text">{{ product.summary }}</span>
+            </div>
+            <div class="status-wrap" fxFlex="0 0 140px">
+              <div class="status --rounded" matTooltip="Live / total Listings" matTooltipPosition="before">
+                <span class="dot"></span>
+                <span class="active">{{ product.displayDetails.activeMarketCount }}</span><span class="total">/{{ product.markets.length }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+        <div class="detail">
+          <div class="row" fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-start">
+            <div class="product-details" fxFlex="37">
+              <h3 class="item-subtitle">Gallery</h3>
+              <div class="gallery">
+                <div class="image" *ngFor="let img of product.images">
+                  <img [src]="img">
+                </div>
+              </div>
+            </div><!-- .product-details -->
+            <div class="inventory-stats" fxFlex="18">
+              <h3 class="item-subtitle">Inventory</h3>
+              <table class="inventory">
+                <!-- @TODO: until we have quantities, keep the infinity symbol -->
+                <tr><th>&infin;</th><td>In stock</td></tr>
+                <tr><th>{{ product.displayDetails.totalListings }}</th><td>Listings</td></tr>
+                <!-- <tr><th>{{ templ.marketTemplates.countOrdersActive }}</th><td>In Orders</td></tr> -->
+                <!-- <tr><th>{{ templ.marketTemplates.countOrdersComplete }}</th><td>Sold</td></tr> -->
+              </table>
+            </div><!-- .inventory-stats -->
+            <div class="pricing" fxFlex="45">
+              <h3 class="item-subtitle">Pricing</h3>
+              <table class="prices">
+                <tr>
+                  <th>Product</th><td>{{product.priceBase.whole}}<small>{{ product.priceBase.sep }}{{ product.priceBase.fraction }}</small> PART <span class="fiat">(&asymp; 51<small>.00</small> EUR)</span></td>
+                </tr>
+                <tr>
+                  <th>Shipping</th>
+                  <td>
+                    Local ({{product.sourceLocation}}) &ndash; {{ product.priceShippingLocal.whole }}<small>{{ product.priceShippingLocal.sep }}{{ product.priceShippingLocal.fraction }}</small> PART <span class="fiat">(&asymp; 2<small>.50</small> EUR)</span><br>
+                    Worldwide &ndash; {{ product.priceShippingIntl.whole }}<small>{{ product.priceShippingIntl.sep }}{{ product.priceShippingIntl.fraction }}</small> PART <span class="fiat">(&asymp; 5<small>.46</small> EUR)</span>
+                  </td>
+                </tr>
+              </table>
+            </div><!-- .pricing -->
+          </div><!-- .row -->
+        </div><!-- .detail -->
+        <section class="market-templates-list" *ngIf="product.markets.length > 0">
+          <table class="market-templates">
+            <tr>
+              <th>Status</th>
+              <th>Published on</th>
+              <th class="category">Category</th>
+              <th class="price">Price</th>
+              <th class="actions">Actions</th>
+            </tr>
+            <ng-container *ngFor="let marketTempl of product.markets">
+              <tr *ngIf="activeIdentityMarkets.includes(marketTempl.marketKey)">
+                <td>
+                  <span class="status {{ marketTempl.status }} --plain" matTooltip="Listing {{marketTempl.status}}" matTooltipPosition="before">
+                    <span class="dot"></span>
+                  </span>
+                  <span class="template-name">{{ marketTempl.title }}</span>
+                </td>
+                <td>{{ (profileMarkets[marketTempl.marketKey] && profileMarkets[marketTempl.marketKey].name) || '' }}</td>
+                <td class="category">{{ marketTempl.categoryName }}</td>
+                <td class="price">{{ marketTempl.priceBase.whole }}{{ marketTempl.priceBase.sep }}{{ marketTempl.priceBase.fraction }} PART</td>
+                <td class="actions">
+                  <button mat-button class="tiny icon-only" matTooltip="Edit" routerLink="new-listing" [queryParams]="{templateID: marketTempl.id}">
+                    <mat-icon fontIcon="part-pen-1"></mat-icon>
+                  </button>
+                  <button *ngIf="product.displayDetails.availableMarkets.length > 0" mat-button class="tiny icon-only" matTooltip="Clone To Market" (click)="actionCloneProduct(product.id, marketTempl.id)">
+                    <mat-icon fontIcon="part-copy"></mat-icon>
+                  </button>
+                  <button mat-button class="tiny icon-only" matTooltip="Preview as a listing" (click)="openPreviewListingModal(marketTempl.id)">
+                    <mat-icon fontIcon="part-zoom-in"></mat-icon>
+                  </button>
+                  <button [disabled]="marketTempl.categoryName.length === 0" mat-button class="tiny icon-only" matTooltip="Publish" (click)="openPublishExistingMarketModal(product.id, marketTempl.id)">
+                    <mat-icon fontIcon="part-rocket"></mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </table>
+        </section><!-- .market-templates-list -->
+        <mat-action-row class="action-buttons">
+          <div class="left">
+            <button *ngIf="product.markets.length === 0" mat-button class="small" matTooltip="Delete Product" color="warn" (click)="actionDeleteProduct(product.id)">
+              <mat-icon fontIcon="part-cross"></mat-icon>
+              Delete
+            </button>
+            <button mat-button class="small icon-only" matTooltip="Clone Product" (click)="actionCloneProduct(product.id)">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
+            <button mat-button class="small" matTooltip="Update Product" routerLink="new-listing" [queryParams]="{templateID: product.id}">
+              <mat-icon fontIcon="part-pen-1"></mat-icon>
+              Edit
+            </button>
+            <button *ngIf="product.displayDetails.totalListings > 0" mat-button class="small" matTooltip="Show current Listings of this Product" [routerLink]="['./']" [queryParams]="{selectedSellTab: 'listings', SellListingsBaseTemplateID: product.id}">
+              <mat-icon fontIcon="part-zoom-in"></mat-icon>
+              Show Listings
+            </button>
+          </div>
+          <div class="right">
+            <button [disabled]="product.displayDetails.availableMarkets.length === 0" mat-raised-button color="primary" (click)="actionPublishProductToMarket(product.id)" matTooltip="Clone for publishing&#13;on another Market" matTooltipPosition="before" matTooltipClass="multi-line">
+              <mat-icon fontIcon="part-rocket"></mat-icon>
+              Clone Product to Market
+            </button>
+          </div>
+        </mat-action-row>
+      </mat-expansion-panel><!-- .product -->
+    </ng-container>
+  </ng-container>
+
+
+  <!-- define the template, so we can reuse it -->
+  <ng-template #loadingPlaceholder>
+    <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="photo placeholder --lighter"></div>
+      <div fxFlex="1 0 400px">
+        <div class="name placeholder"></div>
+        <div class="meta placeholder --lighter"></div>
+      </div>
+      <div fxFlex="0 0 125px" fxLayout fxLayoutAlign="flex-end center">
+        <span class="status placeholder --lighter"></span>
+        <span class="arrow placeholder --lighter"></span>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #noTemplates>
+
+    <!-- show loading-placeholder when items are initially loading -->
+    <div class="loading-placeholder market templates" *ngIf="(allProducts.length === 0) && isLoading">
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+    </div>
+
+    <!-- no listings at all -->
+    <div class="no-results" *ngIf="(allProducts.length === 0) && !isLoading">
+      <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Products">
+      <p>
+        You don't have any Products yet
+      </p>
+      <p class="help-text">
+        Start selling by clicking on either "Add new Product" or "Import Products" button
+      </p>
+    </div><!-- .no-results -->
+
+    <!-- no listings matching search -->
+    <div class="no-results" *ngIf="allProducts.length > 0">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No Products found">
+      <p>
+        No matching Products found
+      </p>
+      <p class="help-text">
+        You don't have any Products matching your search
+      </p>
+    </div><!-- .no-results -->
+  </ng-template>
+</div><!-- .listings-list -->
+
+
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

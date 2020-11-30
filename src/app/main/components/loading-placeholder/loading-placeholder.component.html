@@ -1,0 +1,26 @@
+<!-- define the template, so we can reuse it -->
+<ng-template #loadingPlaceholder>
+  <div class="item" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+    <div fxFlex="0 0 145px">
+      <span class="date placeholder"></span>
+    </div>
+    <div fxFlex="1 0 175px" fxLayout fxLayoutAlign="start center">
+      <span class="icon placeholder"></span>
+      <span class="type placeholder"></span>
+    </div>
+    <div class="text-right" fxFlex="1 0 155px">
+      <span class="value placeholder"></span>
+    </div>
+  </div>
+</ng-template>
+
+<!-- apply the template -->
+<div class="loading-placeholder transactions">
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+  <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+</div>

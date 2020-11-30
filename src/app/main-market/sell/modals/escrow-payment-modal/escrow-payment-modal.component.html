@@ -1,0 +1,66 @@
+<mat-dialog-title>Fund escrow</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close><!-- tabindex="-1" -->
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+
+  <p class="message --warning" *ngIf="!(isTestnet | async)">
+    <strong>Warning:</strong> you are about to spend real PART coins on an ongoing development version of Particl Marketplace &ndash; things might break!
+  </p>
+
+  <!-- Bid confirmation-->
+  <div class="tx-confirmation">
+    <div class="tx-info">
+      <!-- if public -->
+      <div class="public">
+        <mat-icon class="icon public" fontIcon="part-stock"></mat-icon>
+        <div class="title">You're selling</div>
+        <p class="help-text">
+          Buyer locked the payment in Escrow &ndash; fund your part of the Escrow and proceed to packaging and shipping of the Order
+        </p>
+      </div>
+    </div>
+
+    <div class="tx-amount">
+      <span class="big">{{itemPricing.whole}}</span><span class="point">{{itemPricing.sep}}</span><span class="small">{{itemPricing.fraction}}</span>&ensp;
+      <span class="currency">PART</span>
+      <!-- TODO: until fiat estimations are implemented, hide them -->
+      <div class="fiat">&asymp; 3.42 USD</div>
+    </div>
+
+    <mat-icon class="arrow-icon" fontIcon="part-arrow-down"></mat-icon>
+
+    <div class="receiver-info">
+      <div class="escrow-label">Escrow for</div>
+      <div class="label"><span class="qty">1&times;</span>{{ listingTitle }}</div>
+      <p class="order-info">Order #{{ orderHash }} </p>
+    </div>
+
+  </div><!-- .tx-confirmation -->
+
+  <div class="order-note">
+    <p>
+      <b>Pre-shipping note for the Buyer</b> (optional)
+    </p>
+    <mat-form-field class="full-width --boxed" appearance="fill" color="accent">
+      <mat-icon matPrefix fontIcon="part-recipe"></mat-icon>
+      <input [formControl]="escrowMemo" matInput type="text" placeholder="Additional pre-shipping notes for the buyer">
+    </mat-form-field>
+  </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()">
+    <mat-icon fontIcon="part-check"></mat-icon>
+    Confirm &amp; Fund
+  </button>
+</mat-dialog-actions>

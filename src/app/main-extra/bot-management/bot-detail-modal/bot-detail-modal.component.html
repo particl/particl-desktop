@@ -1,0 +1,99 @@
+<mat-dialog-title>Bot details</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+  <div class="row">
+
+    <div class="image">
+      <img src="{{ bot.image }}" class="img">
+    </div><!-- .image -->
+    
+    <div class="info">
+      <h2 class="name">{{ bot.title }}</h2>
+      <div class="meta">
+        <div class="status {{ bot.status }}"><span></span>{{ bot.status }}</div>
+        <div class="type">{{ bot.type }}</div>
+      </div>
+      <p class="desc">
+        {{ bot.description }}
+      </p>
+
+      <div class="details">
+        <h3 class="item-subtitle">Details</h3>
+        <table>
+          <!-- @TODO: if value missing, hide the whole <tr> -->
+          <tr>
+            <th class="title">
+              <mat-icon fontIcon="part-globe"></mat-icon>
+              Homepage
+            </th>
+            <td class="value">
+              <a href="{{ bot.homepage }}" target="_blank" matTooltip="Link opens in new browser tab" matTooltipPosition="after">{{ bot.homepage }}</a>
+            </td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontIcon="part-qr"></mat-icon>
+              Address
+            </th>
+            <td class="value"><div class="address">{{ bot.address }}</div></td>
+          </tr>
+        </table>
+      </div><!-- .details -->
+
+      <div class="author">
+        <h3 class="item-subtitle">Author</h3>
+        <table>
+          <tr>
+            <th class="title">
+              <mat-icon fontIcon="part-circle-user"></mat-icon>
+              Name/nick
+            </th>
+            <td class="value">{{ bot.author.name }}</td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontIcon="part-pen-2"></mat-icon>
+              E-mail
+            </th>
+            <td class="value enable-select">{{ bot.author.email }}</td>
+          </tr>
+          <tr>
+            <th class="title">
+              <mat-icon fontIcon="part-language"></mat-icon>
+              Chat
+            </th>
+            <td class="value enable-select">{{ bot.author.chat }}</td>
+          </tr>
+        </table>
+      </div><!-- .author -->
+
+    </div><!-- .info -->
+
+  </div><!-- .row -->
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <div class="right">
+    <button mat-raised-button *ngIf="!bot.enabled" color="primary">
+      <mat-icon fontIcon="part-plus"></mat-icon>
+      Enable Bot
+    </button>
+    <button mat-raised-button *ngIf="bot.enabled" color="warn">
+      <mat-icon fontIcon="part-minus"></mat-icon>
+      Disable Bot
+    </button>
+  </div>
+
+</mat-dialog-actions>
