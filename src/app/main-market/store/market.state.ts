@@ -319,7 +319,7 @@ export class MarketState {
             }
 
             // No valid current identity and no saved identity... get first identity from list
-            const selected = identities.sort((a, b) => a.id - b.id)[0];
+            const selected = JSON.parse(JSON.stringify(identities)).sort((a: Identity, b: Identity) => a.id - b.id)[0];
             if (selected) {
               return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
                 concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected)))
