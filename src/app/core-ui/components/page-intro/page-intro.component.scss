@@ -72,8 +72,11 @@
       }
     }
     .alert {
-      margin-top: 16px;
+      margin-top: 24px;
       color: var(--text);
+      @include break(xl) {
+        margin-top: 30px;
+      }
       &:empty {
         display: none;
       }

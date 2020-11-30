@@ -608,7 +608,16 @@ body {
   border: 1px dashed var(--bg-muted);
   background: hsla(var(--color-white-hsl), 0.45);
   @include break(l) {
-    padding: 220px 0;
+    font-size: 20px;
+    padding: 150px var(--paddingH);
+  }
+  @include break(xl) {
+    font-size: 22px;
+    padding: 170px var(--paddingH);
+    border-width: 2px;
+  }
+  @include break(hd) {
+    font-size: 24px;
   }
   .illustration {
     display: block;
@@ -616,8 +625,15 @@ body {
     margin: 0 auto 2rem;
     pointer-events: none;
     @include break(l) {
-      max-width: 15rem;
+      max-width: 11rem;
       margin: 0 auto 3rem;
+    }
+    @include break(xl) {
+      max-width: 13rem;
+    }
+    @include break(hd) {
+      max-width: 15rem;
+      margin: 0 auto 3.5rem;
     }
   }
   p {
@@ -625,7 +641,6 @@ body {
     margin-top: 0;
     &.help-text {
       color: hsla(var(--text-muted-hsl), 0.7) !important;
-      font-size: 13px;
       text-transform: none;
       margin: 0 auto;
       max-width: 30rem;
@@ -649,7 +664,13 @@ body {
   &.--smaller {
     padding: 50px var(--paddingH);
     @include break(l) {
-      padding: 75px 0;
+      padding: 75px var(--paddingH);
+    }
+    @include break(xl) {
+      padding: 100px var(--paddingH);
+    }
+    @include break(hd) {
+      padding: 140px var(--paddingH);
     }
   }
   &.--horizontal { // more compact, horizontal layout (text besides illustration) - in Listing > Q/A
@@ -962,6 +983,9 @@ div.alert {
   margin: 24px 0;
   display: flex;
   align-items: stretch;
+  @include break(xl) {
+    font-size: 15px;
+  }
   &::before {
     flex: 0 0 56px;
     font-family: 'part';
@@ -969,11 +993,19 @@ div.alert {
     color: var(--color-white);
     font-size: 16px;
     line-height: 52px;
+    @include break(xl) {
+      flex: 0 0 64px;
+      font-size: 18px;
+      line-height: 64px;
+    }
   }
   span {
     flex: 1 1 100%;
     padding: 16px 18px;
     align-self: center;
+    @include break(xl) {
+      padding: 22px 30px;
+    }
   }
   small { // help descriptions for alerts (e.g. for solutions to fixing the problem)
     display: block;
