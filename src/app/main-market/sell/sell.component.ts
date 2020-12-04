@@ -23,8 +23,8 @@ interface SellTab {
 export class SellComponent implements OnInit, OnDestroy {
 
   readonly tabs: SellTab[] = [
-    { title: 'Sell Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
-    { title: 'Sell Listings', icon: 'part-bag', templ: 'listings', notificationValue: null},
+    { title: 'Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
+    { title: 'Listings', icon: 'part-bag', templ: 'listings', notificationValue: null},
     { title: 'Inventory & Products', icon: 'part-stock', templ: 'templates', notificationValue: null},
     // { title: 'Questions', icon: 'part-chat-discussion', templ: 'questions', notificationValue: null},
   ];

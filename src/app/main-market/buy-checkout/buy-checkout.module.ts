@@ -11,7 +11,7 @@ import { PlaceBidModalComponent } from './buy-cart/place-bid-modal/place-bid-mod
 
 
 const routes: Routes = [
-  { path: '', component: BuyCheckoutComponent, data: { title: 'Your Cart'} }
+  { path: '', component: BuyCheckoutComponent, data: { title: 'Cart'} }
 ];
 
 
