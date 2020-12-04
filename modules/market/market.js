@@ -89,7 +89,7 @@ exports.init = function() {
   });
 
   rxIpc.registerListener('stop-market', function() {
-    return Observable.create(observer => {
+    return new Observable(observer => {
       stop();
       observer.complete();
     });
@@ -97,7 +97,7 @@ exports.init = function() {
 
 
   rxIpc.registerListener('market-keygen', function(keyTypeRequired /* 'PRIVATE' | 'PUBLIC' */, fromKey /* string */ ) {
-    return Observable.create(observer => {
+    return new Observable(observer => {
       if ((typeof keyTypeRequired !== 'string') || !['PUBLIC'].includes(keyTypeRequired) || (typeof fromKey !== 'string')) {
         observer.error('MP_KEYGEN_INVALID_PARAMS');
       } else {

@@ -23,7 +23,7 @@ const initializeIpcChannels = (mainWindowRef) => {
   destroyIpcChannels();
 
   rxIpc.registerListener(IPC_CHANNEL_DIALOG, (options) => {
-    return Observable.create(observer => {
+    return new Observable(observer => {
       let retValue;
 
       if (isObject(options) &&

@@ -13,8 +13,9 @@ const CHANNEL_NAME = 'notifications';
 const currentPathItems = __dirname.split(path.sep);
 const basePath = currentPathItems.slice(0, currentPathItems.length - 2).join(path.sep);
 const ICON = path.join(basePath, options.dev ? 'src' : 'dist', 'assets', 'icons', 'notification.png');
+
 /*
-    Register and IPC listener and execute notification.
+    Register an IPC listener and execute notification.
 */
 exports.init = function () {
     if (process.platform === 'win32') {
@@ -44,7 +45,6 @@ exports.init = function () {
     });
 }
 
-// todo: test
 exports.destroy = function() {
     rxIpc.removeListeners(CHANNEL_NAME);
 }
