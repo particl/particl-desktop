@@ -136,29 +136,30 @@ mat-card.listing {
       left: 0;
     }
   }
-  .mat-card-header {
+  mat-card-header {
     display: block;
     height: 77px;
     padding-top: var(--card-padding);
     cursor: pointer;
-    .mat-card-title,
-    .mat-card-subtitle {
+    mat-card-title,
+    mat-card-subtitle {
       line-height: 1.35;
       margin: 0 0 8px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      word-break: break-all;
     }
-    .mat-card-title {
+    mat-card-title {
       font-size: 15px;
     }
-    .mat-card-subtitle {
+    mat-card-subtitle {
       font-size: 11.5px;
       color: var(--text-muted);
     }
   }
-  .mat-card-actions {
+  mat-card-actions {
     margin-bottom: calc(-1 * var(--card-padding));
     .mat-button {
       margin: 0;

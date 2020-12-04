@@ -102,11 +102,21 @@ button.modal-close {
     font-size: 22px;
     line-height: 1.4;
     margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all;
   }
   .short-desc {
     color: var(--text-muted);
     font-size: 0.9rem;
-    margin: 0;
+    margin: 0 0 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all;
   }
   .expires-soon {
     font-weight: 500;
