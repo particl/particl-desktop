@@ -36,15 +36,34 @@ const initializeIpcChannels = (mainWindowRef) => {
           dialogOptions = options.modalOptions;
         }
 
-        try {
-          retValue = fn(mainWindowRef, dialogOptions);
-          observer.next(retValue);
-        } catch (_err) {
-          observer.error(_err);
+        if (options.modalType.toLowerCase().includes('sync')) {
+          try {
+            const retValue = fn(mainWindowRef, dialogOptions);
+            observer.next(retValue);
+          } catch (_err) {
+            observer.error(_err);
+          }
+          observer.complete();
+        } else {
+          fn(mainWindowRef, dialogOptions).then(retValue => {
+            if (
+              (Object.prototype.toString.call(retValue) === '[object Object]') &&
+              !retValue.cancelled &&
+              Array.isArray(retValue.filePaths) &&
+              (retValue.filePaths.length > 0)
+            ) {
+                observer.next(retValue.filePaths);
+            } else {
+              observer.next(null);
+            }
+          }).catch(
+            _err => observer.error(_err)
+          ).then(
+            () => observer.complete()
+          );
         }
 
       }
-      observer.complete();
     });
   });
 }
