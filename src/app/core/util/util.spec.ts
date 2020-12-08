@@ -1,12 +1,12 @@
 import {
-  AddressHelper, PartoshiAmount, DateFormatter, isPrerelease, isMainnetRelease, dataURItoBlob
+  AddressHelper, PartoshiAmount, DateFormatter, isPrerelease
 } from './utils';
 
 describe('AddressHelper', () => {
 
   const addressHelper = new AddressHelper();
-  const testAddressPub = 'pXvYNzP4UoW5UD2C27PzbFQ4ztG2W4Xakx';
-  const testAddressPriv = 'TetcFKJJHKD2zWxAmUz9VcsMogHUzntnEmTwLi3beFvVeQwLFtQGp5LywNQvZGs7GFxsD6zJUDxP84DGjng9ygyqn3zya4Emgyes86';
+  const testAddressPub = 'pXvYNzP4UoW5UD2C27PzbFQ4ztG2W4Xakx' as 'public';
+  const testAddressPriv = 'TetcFKJJHKD2zWxAmUz9VcsMogHUzntnEmTwLi3beFvVeQwLFtQGp5LywNQvZGs7GFxsD6zJUDxP84DGjng9ygyqn3zya4Emgyes86' as 'private';
 
   it('should validate a testnet address correctly', () => {
     expect(addressHelper.testAddress(testAddressPub, 'public')).toBe(true);
@@ -23,12 +23,12 @@ describe('AddressHelper', () => {
 
     expect(addressHelper.getAddressType(testAddressPub)).toEqual('public');
     expect(addressHelper.getAddressType(testAddressPriv)).toEqual('private');
-    expect(addressHelper.getAddressType('1234567890')).toEqual('');
-    expect(addressHelper.getAddressType('')).toEqual('');
+    expect(addressHelper.getAddressType('1234567890' as 'public')).toEqual('');
+    expect(addressHelper.getAddressType('' as 'public')).toEqual('');
   });
 
   it('should validate a mainnet address correctly', () => {
-    const mainAddress = 'PtF9rU2qR9JYBPvE3irVmeZn1YTsi3A9w9';
+    const mainAddress = 'PtF9rU2qR9JYBPvE3irVmeZn1YTsi3A9w9' as 'public';
     expect(addressHelper.testAddress(mainAddress, 'public')).toBe(true);
     expect(addressHelper.testAddress(mainAddress, 'private')).toBe(false);
     expect(addressHelper.testAddress(mainAddress)).toBe(true);

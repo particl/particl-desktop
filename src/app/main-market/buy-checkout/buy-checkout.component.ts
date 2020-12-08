@@ -20,7 +20,7 @@ interface BuyCheckoutTab {
 export class BuyCheckoutComponent implements OnInit, OnDestroy {
 
   readonly tabs: BuyCheckoutTab[] = [
-    { title: 'Your Cart', icon: 'part-cart-2', templ: 'cart', notificationValue: null},
+    { title: 'Cart', icon: 'part-cart-2', templ: 'cart', notificationValue: null},
     { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites', notificationValue: null},
   ];
 

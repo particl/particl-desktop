@@ -97,7 +97,7 @@
     <img class="illustration" src="./assets/app-market/illustrations/no-questions.svg" alt="No comments made yet">
     <div class="text">
       <p>
-        No Q&A on this Product yet
+        No Comments or Reviews on this Product yet
       </p>
       <p class="help-text">
         Are you missing details from the Product's description or do you have some question for the Seller? Ask your questions below:
@@ -116,7 +116,7 @@
     <!-- coloring based on user's side (primary for buyers, accent for sellers) -->
     <mat-form-field appearance="fill" class="post-reply --boxed --larger" color="primary">
       <mat-icon matPrefix fontIcon="part-language"></mat-icon>
-      <input matInput type="text" placeholder="Ask a question…" #newThreadComment [disabled]="isBusy">
+      <input matInput type="text" placeholder="Add a comment…" #newThreadComment [disabled]="isBusy">
       <button matSuffix mat-button class="small" matTooltip="Reply" color="primary" matTooltipPosition="before" appDebounceClick (debounceClick)="addComment(newThreadComment, null)" [disabled]="isBusy || !!!newThreadComment.value">
         <mat-icon fontIcon="part-arrow-right"></mat-icon>
       </button>
