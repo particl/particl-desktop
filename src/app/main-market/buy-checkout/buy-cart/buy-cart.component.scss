@@ -215,10 +215,8 @@
 section {
   .section-header {
     margin: 0 0 24px;
-    h2 {
-      font-size: 1.55em;
-      font-weight: 500;
-      margin: 16px 0 0;
+    .item-subtitle {
+      margin-top: 0;
     }
   }
 

@@ -95,6 +95,7 @@ body {
   z-index: 100;
   height: calc(var(--tab-bar-height) + 1px);
   background: hsla(var(--bg-hsl), 0.87);
+  backdrop-filter: blur(5px);
 }
 
 // sticky control bars (eg. on Listings page)
@@ -867,21 +868,21 @@ h1 {
   font-weight: normal;
   color: var(--text-muted);
   text-transform: uppercase;
-  margin: 32px 0 16px;
+  margin: var(--paddingV) 0 16px;
   &:first-of-type {
     margin-top: 0;
   }
   @include break(l) {
     font-size: 16px;
-    margin: 46px 0 18px;
+    margin-bottom: 18px;
   }
   @include break(xl) {
     font-size: 17px;
-    margin: 52px 0 20px;
+    margin-bottom: 20px;
   }
   @include break(hd) {
     font-size: 18px;
-    margin: 58px 0 22px;
+    margin-bottom: 22px;
   }
 }
 
@@ -924,12 +925,12 @@ h1 {
 
 p {
   line-height: 1.5;
-  @include break(hd) {
-    line-height: 1.65;
-  }
   // Highlighted 'lead' paragraphs
   &.lead {
     font-size: 15px;
+    @include break(hd) {
+      font-size: 16.5px;
+    }
   }
   &.text-muted {
     color: var(--text-muted);

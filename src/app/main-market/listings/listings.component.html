@@ -16,7 +16,7 @@
     <div class="filter">
 
       <!-- search unified with those from Address Book and Sell > Listings -->
-      <mat-form-field class="--boxed" appearance="fill">
+      <mat-form-field class="search --boxed" appearance="fill">
         <input matInput type="text" class="header-input" placeholder="Search Listings…" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
         <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
           <mat-icon fontIcon="part-clear-all"></mat-icon>

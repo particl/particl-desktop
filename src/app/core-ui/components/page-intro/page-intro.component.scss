@@ -44,9 +44,6 @@
     @include break(l) {
       font-size: 29px;
     }
-    @include break(xl) {
-      font-size: 33px;
-    }
   }
 
   // content with help text (toggle-able)
@@ -66,9 +63,6 @@
       @include break(xl) {
         font-size: 15px;
         line-height: 1.7;
-      }
-      @include break(hd) {
-        font-size: 16px;
       }
     }
     .alert {
