@@ -66,6 +66,7 @@ const exposedIpc = new SafeIpcRenderer([
   'stop-market',
   'market-keygen',
   'market-importer',
+  'market-export-example-csv',
 
   'zmq',
   'write-core-config',

@@ -223,14 +223,18 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
 
   private formatWalletDisplayName(originalName: string, char: string): string {
-    let dispName = originalName;
-    if (originalName.includes(char)) {
-      let dispNameParts = originalName.split(char);
-      if (dispNameParts.length > 2) {
-        dispNameParts = [dispNameParts[dispNameParts.length - 2 ], dispNameParts[dispNameParts.length - 1 ]];
-      }
-      dispName = dispNameParts.join(char);
-    }
-    return dispName;
+    // let dispName = originalName;
+    // if (originalName.includes(char)) {
+    //   let dispNameParts = originalName.split(char);
+    //   if (dispNameParts.length > 2) {
+    //     dispNameParts = [dispNameParts[dispNameParts.length - 2 ], dispNameParts[dispNameParts.length - 1 ]];
+    //   }
+    //   dispName = dispNameParts.join(char);
+    // }
+    // return dispName;
+
+    const nameParts = originalName.split(char);
+    return nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0] || originalName;
+
   }
 }

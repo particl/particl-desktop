@@ -29,9 +29,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   templateForm: FormGroup;
   imagesPending: FormControl = new FormControl([]);
 
-  readonly MAX_TITLE: number = 50;
-  readonly MAX_SHORT_DESCRIPTION: number = 200;
-  readonly MAX_LONG_DESCRIPTION: number = 8000;
+  readonly MAX_TITLE: number = 100;
+  readonly MAX_SHORT_DESCRIPTION: number = 300;
+  readonly MAX_LONG_DESCRIPTION: number = 7500;
   readonly MAX_IMAGE_SIZE: number;
   readonly imageSizeLabel: string;
 

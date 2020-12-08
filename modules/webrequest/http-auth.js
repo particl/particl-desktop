@@ -136,13 +136,17 @@ function loadDev() {
 }
 
 function loadGithub() {
-    let key = "api.github.com:80";
-    let value = {
-        name: "github update service",
+    const services = {
+      'api.github.com:80' : 'github update service',
+      'github.com:80' : 'github',
+      'github.githubassets.com:80': 'gtihub assets'
+    };
+    for (const key of Object.keys(services)) {
+      whitelist.set(key, {
+        name: services[key],
         auth: false
+      });
     }
-
-    whitelist.set(key, value);
 }
 
 function isPlainObject(obj) {

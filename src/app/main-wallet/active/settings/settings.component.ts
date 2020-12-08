@@ -304,38 +304,38 @@ export class WalletSettingsComponent implements OnInit {
 
     const walletSettings: WalletSettingsStateModel = this._store.selectSnapshot(WalletSettingsState);
 
-    const notificationsWallet = {
-      name: 'System notifications',
-      icon: 'part-notification-bell',
-      settings: [],
-      errors: []
-    } as SettingGroup;
+    // const notificationsWallet = {
+    //   name: 'System notifications',
+    //   icon: 'part-notification-bell',
+    //   settings: [],
+    //   errors: []
+    // } as SettingGroup;
 
-    notificationsWallet.settings.push({
-      id: 'notifications_payment_received',
-      title: 'Payment Received',
-      description: 'Display a system notification message when a wallet payment has been received',
-      isDisabled: true,
-      type: SettingType.BOOLEAN,
-      errorMsg: '',
-      currentValue: walletSettings.notifications_payment_received,
-      tags: [],
-      restartRequired: false,
-    } as Setting);
+    // notificationsWallet.settings.push({
+    //   id: 'notifications_payment_received',
+    //   title: 'Payment Received',
+    //   description: 'Display a system notification message when a wallet payment has been received',
+    //   isDisabled: true,
+    //   type: SettingType.BOOLEAN,
+    //   errorMsg: '',
+    //   currentValue: walletSettings.notifications_payment_received,
+    //   tags: [],
+    //   restartRequired: false,
+    // } as Setting);
 
-    notificationsWallet.settings.push({
-      id: 'notifications_staking_reward',
-      title: 'Staking Rewards',
-      description: 'Display a system notification message when a stake has been found on this wallet',
-      isDisabled: true,
-      type: SettingType.BOOLEAN,
-      errorMsg: '',
-      currentValue: walletSettings.notifications_staking_reward,
-      tags: [],
-      restartRequired: false
-    } as Setting);
+    // notificationsWallet.settings.push({
+    //   id: 'notifications_staking_reward',
+    //   title: 'Staking Rewards',
+    //   description: 'Display a system notification message when a stake has been found on this wallet',
+    //   isDisabled: true,
+    //   type: SettingType.BOOLEAN,
+    //   errorMsg: '',
+    //   currentValue: walletSettings.notifications_staking_reward,
+    //   tags: [],
+    //   restartRequired: false
+    // } as Setting);
 
-    this.settingGroups.push(notificationsWallet);
+    // this.settingGroups.push(notificationsWallet);
 
 
     const walletActions = {

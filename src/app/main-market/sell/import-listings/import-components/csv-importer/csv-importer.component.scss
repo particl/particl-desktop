@@ -7,6 +7,7 @@
     padding: 6px 24px;
     a {
       color: var(--color-secondary);
+      cursor: pointer;
       &:hover,
       &:focus {
         text-decoration: none;

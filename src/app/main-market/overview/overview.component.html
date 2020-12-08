@@ -29,7 +29,7 @@
       </div>
       <div class="key">
         <mat-icon fontIcon="part-anon" matTooltip="Anon balance" matTooltipPosition="before"></mat-icon>
-        <ng-container *ngIf="isAnonFeeBalance; else privateSpendOnly">Spendable balance and Fees</ng-container><ng-template #privateSpendOnly>Spendable balance</ng-template>
+        <ng-container *ngIf="isAnonFeeBalance; else privateSpendOnly">Spendable Balance and Fees</ng-container><ng-template #privateSpendOnly>Spendable Balance</ng-template>
       </div>
     </div>
 
@@ -66,7 +66,7 @@
 
     <mat-card *ngFor="let actionable of buyerActions;trackBy:trackByActionableIndex" [class.active]="actionable.active" class="buyer item" (click)="navigateTo(actionable)">
       <div class="icon">
-        <div class="badge">{{actionable.count}}</div>
+        <div class="badge" *ngIf="actionable.count > 0">{{actionable.count}}</div>
         <mat-icon [fontIcon]="actionable.icon"></mat-icon>
       </div>
       <div class="title">
@@ -88,7 +88,7 @@
 
     <mat-card *ngFor="let actionable of sellerActions;trackBy:trackByActionableIndex" [class.active]="actionable.active" class="seller item" (click)="navigateTo(actionable)">
       <div class="icon">
-        <div class="badge">{{actionable.count}}</div>
+        <div class="badge" *ngIf="actionable.count > 0">{{actionable.count}}</div>
         <mat-icon [fontIcon]="actionable.icon"></mat-icon>
       </div>
       <div class="title">

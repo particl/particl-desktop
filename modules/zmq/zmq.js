@@ -9,7 +9,7 @@ const _services    = require('./services');
 /* Constants */
 const ZMQ_CHANNEL = 'zmq';
 const ZMQ_START_CHANNEL = 'zmq-connect';
-const SPY_ON_ZMQ = true;
+const SPY_ON_ZMQ = false;
 
 /* references */
 let mainReference = null;
