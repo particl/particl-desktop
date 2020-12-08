@@ -1,3 +1,4 @@
+const { app } = require('electron');
 const log = require('electron-log');
 const config = require('../daemon/daemonConfig');
 const cookie = require('../rpc/cookie');
@@ -6,6 +7,8 @@ const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs').Observable;
 const bitcore = require('particl-bitcore-lib');
 const importer = require('./importer/importer');
+const _fs = require('fs');
+const _path = require('path');
 
 // @TODO: zaSmilingIdiot 2020-03-18 -> This entire process is a mess, and needs to be done over! It works for its current purpose, but is really brittle, crappy code!
 
@@ -119,6 +122,33 @@ exports.init = function() {
       }
     });
   });
+
+
+  rxIpc.registerListener('market-export-example-csv', function(targetPath /* string */) {
+    const basePath = app.getAppPath();
+    const SOURCE_CSV_PATH = _path.join(basePath, 'resources', 'templates', 'csv_template.csv');
+
+    return new Observable(observer => {
+      if ((typeof targetPath !== 'string') || (targetPath.length < 3) || !_fs.existsSync(SOURCE_CSV_PATH)) {
+        observer.error('MP_COPY_ERROR');
+        observer.complete();
+      } else {
+        try {
+          _fs.copyFile(SOURCE_CSV_PATH, targetPath, _fs.constants.COPYFILE_EXCL, (err) => {
+            if (err) {
+              observer.error(err);
+            } else {
+              observer.next(true);
+            }
+            observer.complete();
+          });
+        } catch (err1) {
+          observer.error('MP_COPY_ERROR');
+          observer.complete();
+        }
+      }
+    });
+  })
 }
 
 
@@ -127,6 +157,7 @@ exports.destroy = function() {
   rxIpc.removeListeners('start-market');
   rxIpc.removeListeners('stop-market');
   rxIpc.removeListeners('market-keygen');
+  rxIpc.removeListeners('market-export-example-csv');
   stop();
 }
 

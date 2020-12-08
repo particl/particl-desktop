@@ -46,16 +46,18 @@ const initializeIpcChannels = (mainWindowRef) => {
           observer.complete();
         } else {
           fn(mainWindowRef, dialogOptions).then(retValue => {
+            let val = null;
             if (
               (Object.prototype.toString.call(retValue) === '[object Object]') &&
-              !retValue.cancelled &&
-              Array.isArray(retValue.filePaths) &&
-              (retValue.filePaths.length > 0)
+              !retValue.cancelled
             ) {
-                observer.next(retValue.filePaths);
-            } else {
-              observer.next(null);
+              if (Array.isArray(retValue.filePaths) && (retValue.filePaths.length > 0)) {
+                val = retValue.filePaths;
+              } else if ((typeof retValue.filePath === 'string') && (retValue.filePath.length > 0)) {
+                val = retValue.filePath;
+              }
             }
+            observer.next(val);
           }).catch(
             _err => observer.error(_err)
           ).then(
