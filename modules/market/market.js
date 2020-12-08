@@ -55,8 +55,8 @@ exports.init = function() {
 
         // @TODO: zaSmilingIdiot 2020-03-20 -> Replace this with a more applicable string.
         //  The problem is that the 'App is ready' string is output before the app is actually ready,
-        //    and technically, the 'bootstrap(), DONE!' string is a debug() loglevel output.
-        if ((isStarted === null) && data.toString().includes('bootstrap(), DONE')) {
+        //    and technically, the 'bootstrap(), done.' string is a debug() loglevel output.
+        if ((isStarted === null) && data.toString().includes('bootstrap(), done')) {
           isStarted = true;
           resetTimeoutCheck();
           observer.next(true);

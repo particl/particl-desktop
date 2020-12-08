@@ -217,9 +217,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    // @TODO: Implement the escrow locked balance lookup
-    // @TODO: Implement the badge count queries for each item
-
     const settingUpdate$ = this._store.select(MarketState.settings).pipe(
       tap(marketSettings => {
         this.isAnonFeeBalance = marketSettings.useAnonBalanceForFees;
@@ -288,10 +285,10 @@ export class OverviewComponent implements OnInit, OnDestroy {
     return defer(() => iif(
       () => +identityId > 0,
 
-      // request all of the infos (and set actions as active)
+      // request all of the infos (and set actions as active, except comment related ones for now)
       of({}).pipe(
-        tap(() => this.buyerActions.forEach(act => act.active = true)),
-        tap(() => this.sellerActions.forEach(act => act.active = true)),
+        tap(() => this.buyerActions.forEach(act => act.active = act.key !== 'buy-questions')),
+        tap(() => this.sellerActions.forEach(act => act.active = act.key !== 'sell-questions')),
         tap(() => this._cdr.detectChanges()),
         concatMap(() => this._overviewService.fetchDataCounts().pipe(
           tap(dataCounts => {

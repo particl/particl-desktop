@@ -1,17 +1,20 @@
-import { State, StateToken, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { of, defer, iif, timer, throwError, merge } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
+
+import { State, StateToken, Action, StateContext, Selector, createSelector } from '@ngxs/store';
+import { patch, updateItem, removeItem, iif as nxgsIif } from '@ngxs/store/operators';
+import { MainActions } from 'app/main/store/main.actions';
+import { MarketStateActions, MarketUserActions } from './market.actions';
+
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
 import { SettingsService } from 'app/core/services/settings.service';
-import { MarketStateActions, MarketUserActions } from './market.actions';
-import { patch, updateItem } from '@ngxs/store/operators';
-import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications } from './market.models';
-import { genericPollingRetryStrategy } from 'app/core/util/utils';
-import { MainActions } from 'app/main/store/main.actions';
-import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
+
 import { environment } from 'environments/environment';
+import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault, parseMarketResponseItem } from '../shared/utils';
+import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
+import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications } from './market.models';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -41,7 +44,9 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     daysToNotifyListingExpired: 7
   },
   notifications: {
-    identityCartItemCount: 0
+    identityCartItemCount: 0,
+    buyOrdersPendingAction: [],
+    sellOrdersPendingAction: [],
   }
 };
 
@@ -124,6 +129,13 @@ export class MarketState {
   static notificationValue(key: string) {
     return createSelector([MarketState.getNotifications], (state: MarketNotifications) => {
       return state[key] || null;
+    });
+  }
+
+
+  static orderCountNotification(key: 'buy' | 'sell') {
+    return createSelector([MarketState.getNotifications], (state: MarketNotifications): number => {
+      return key === 'buy' ? state.buyOrdersPendingAction.length : (key === 'sell' ? state.sellOrdersPendingAction.length : null);
     });
   }
 
@@ -307,7 +319,7 @@ export class MarketState {
             }
 
             // No valid current identity and no saved identity... get first identity from list
-            const selected = identities.sort((a, b) => a.id - b.id)[0];
+            const selected = JSON.parse(JSON.stringify(identities)).sort((a: Identity, b: Identity) => a.id - b.id)[0];
             if (selected) {
               return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
                 concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected)))
@@ -322,7 +334,7 @@ export class MarketState {
   }
 
 
-  @Action(MarketStateActions.SetCurrentIdentity)
+  @Action(MarketStateActions.SetCurrentIdentity, {cancelUncompleted: true})
   setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketStateActions.SetCurrentIdentity) {
     if (identity && (Number.isInteger(+identity.id))) {
       const globalSettings = this._settingsService.fetchGlobalSettings();
@@ -338,7 +350,7 @@ export class MarketState {
   }
 
 
-  @Action(MarketStateActions.SetIdentityCartCount)
+  @Action(MarketStateActions.SetIdentityCartCount, {cancelUncompleted: true})
   setActiveIdentityCartCount(ctx: StateContext<MarketStateModel>) {
     const identityCarts = ctx.getState().identity.carts;
     if (identityCarts.length > 0) {
@@ -352,6 +364,12 @@ export class MarketState {
           }));
         })
       );
+    } else {
+      ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          identityCartItemCount: 0
+        })
+      }));
     }
   }
 
@@ -503,6 +521,57 @@ export class MarketState {
         })
       }));
     }
+  }
+
+
+  @Action(MarketUserActions.AddOrdersPendingAction, {cancelUncompleted: true})
+  addIdentityPendingOrders(
+    ctx: StateContext<MarketStateModel>, { identityId, orderType, orderHashes }: MarketUserActions.AddOrdersPendingAction
+  ) {
+
+    if (!orderType || !orderHashes || !orderHashes.length) {
+      return;
+    }
+
+    const itemKey = orderType === 'BUYER' ? 'buyOrdersPendingAction' : 'sellOrdersPendingAction';
+    ctx.setState(patch<MarketStateModel>({
+      notifications: patch<MarketNotifications>({
+        // ensure uniqueness of order hashes in case duplicates are added (possible if adding from different sources)
+        [itemKey]: nxgsIif(
+          ctx.getState().identity.id === identityId,
+          [...(new Set([...ctx.getState().notifications[itemKey], ...orderHashes]))]
+        )
+      })
+    }));
+  }
+
+
+  @Action(MarketUserActions.OrderItemActioned)
+  orderItemActioned(ctx: StateContext<MarketStateModel>, { orderType, orderHash }: MarketUserActions.OrderItemActioned) {
+    if (orderType === 'BUYER') {
+      return ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          buyOrdersPendingAction: removeItem<string>(hash => hash === orderHash)
+        })
+      }));
+    } else if (orderType === 'SELLER') {
+      return ctx.setState(patch<MarketStateModel>({
+        notifications: patch<MarketNotifications>({
+          sellOrdersPendingAction: removeItem<string>(hash => hash === orderHash)
+        })
+      }));
+    }
+  }
+
+
+  @Action(MarketUserActions.OrderItemsCleared)
+  orderItemsRemoveAll(ctx: StateContext<MarketStateModel>) {
+    return ctx.setState(patch<MarketStateModel>({
+      notifications: patch<MarketNotifications>({
+        sellOrdersPendingAction: [],
+        buyOrdersPendingAction: []
+      })
+    }));
   }
 
 

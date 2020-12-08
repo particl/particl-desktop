@@ -2,6 +2,14 @@ import { Observable } from 'rxjs';
 import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE, BID_DATA_KEY } from '../../shared/market.models';
 
 
+export const messageListeners = {
+  sellerAll: ['MPA_BID_03', 'MPA_CANCEL_03', 'MPA_LOCK_03', 'MPA_RELEASE'],
+  sellerAllerts: ['MPA_BID_03', 'MPA_LOCK_03'],
+  buyerAll: ['MPA_REJECT_03', 'MPA_CANCEL_03', 'MPA_ACCEPT_03', 'MPA_COMPLETE', 'MPA_SHIP'],
+  buyerAlerts: ['MPA_ACCEPT_03', 'MPA_SHIP'],
+};
+
+
 export interface GenericOrderModalInputs {
   orderItem: OrderItem;
 }
@@ -19,6 +27,7 @@ export interface OrderItem {
   orderHash: string;
   orderHashShort: string;
   baseBidId: number;
+  latestBidHash: string;
   marketKey: string;
   created: number;
   updated: number;

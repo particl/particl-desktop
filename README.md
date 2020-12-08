@@ -45,13 +45,15 @@ This repository is the user interface that works in combination with our [`parti
 
 Join us in [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) on [Element](https://element.io) (formerly Riot) for more info and/or assistance.
 
-Keep in mind that the development currently happens on a private fork of this repo. 
+Keep in mind that the development currently happens on a private fork of this repo.
 
 ### Requirements
 
-* [Node.js®](https://nodejs.org/) v10
+* [Node.js®](https://nodejs.org/) v12
 * [git](https://git-scm.com/)
 * [yarn](https://yarnpkg.com/en/)
+
+NOTE: For Windows developers, take note when installing `windows-build-tools` as a part of the setup of NodeJS to remember to add the `--vs2015` flag as well
 
 ### Installation
 

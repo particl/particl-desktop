@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, of, iif, defer } from 'rxjs';
-import { map, concatMap } from 'rxjs/operators';
+import { Observable, throwError, of, iif, defer, concat } from 'rxjs';
+import { map, concatMap, tap, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -24,8 +24,10 @@ import {
   BuyFlowActionStore,
   ActionTransitionParams,
   BuyflowStateDetails,
-  StateStatusClass
+  StateStatusClass,
+  messageListeners
 } from './orders.models';
+import { MarketUserActions } from 'app/main-market/store/market.actions';
 
 
 enum TextContent {
@@ -178,9 +180,9 @@ export class BidOrderService implements IBuyflowController {
     let listeners: string[] = [];
 
     if (userType === 'SELLER') {
-      listeners = ['MPA_BID_03', 'MPA_CANCEL_03', 'MPA_LOCK_03', 'MPA_RELEASE'];
+      listeners = messageListeners.sellerAll;
     } else if (userType === 'BUYER') {
-      listeners = ['MPA_REJECT_03', 'MPA_CANCEL_03', 'MPA_ACCEPT_03', 'MPA_COMPLETE', 'MPA_SHIP'];
+      listeners = messageListeners.buyerAll;
     }
 
     return listeners;
@@ -242,18 +244,36 @@ export class BidOrderService implements IBuyflowController {
     }
 
     return actionable.transition(orderItem, otherParams || {}).pipe(
-      concatMap((isSuccessful: boolean) => iif(
-        () => isSuccessful,
+      concatMap((isSuccessful: boolean) => {
+        const notifyBidHash = orderItem.latestBidHash;
+        return iif(
+          () => isSuccessful,
 
-        // Fake a 'order get' request, since that doesn't exist: search for orders with increased criteria to narrow the result set,
-        //  and then find the correct one...
-        defer(() => this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
-          map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem)
-        )),
+          defer(() => {
+            return concat(
 
-        // wasn't updated, so return the existing orderItem
-        defer(() => of(orderItem))
-      ))
+              // Perform the equivalent of an 'order get' request, since that doesn't exist:
+              //  search for orders with increased criteria to narrow the result set,
+              //  and then find the correct one...
+              this.fetchBids(asUser, 'updated_at', actionable.toState as ORDER_ITEM_STATUS, orderItem.listing.id).pipe(
+                map((items: OrderItem[]) => items.find(oi => oi.orderId === orderItem.orderId) || orderItem),
+                tap(updatedOrderItem => {
+                  const updatedBuyflow = updatedOrderItem.currentState.state.buyflow;
+                  const updatedCurrentState = updatedOrderItem.currentState.state.stateId;
+                  const updatedBuyflowState = this.getStateDetails(updatedBuyflow, updatedCurrentState, asUser);
+                  if (updatedBuyflowState.actions.PRIMARY.length === 0) {
+                    // let the store know that the order has been processed
+                    this._store.dispatch(new MarketUserActions.OrderItemActioned(asUser, notifyBidHash));
+                  }
+                })
+              )
+            );
+          }),
+
+          // wasn't updated, so return the existing orderItem
+          defer(() => of(orderItem))
+        );
+      })
     );
   }
 
@@ -345,6 +365,7 @@ export class BidOrderService implements IBuyflowController {
       orderHash: '',
       orderHashShort: '',
       baseBidId: 0,
+      latestBidHash: '',
       marketKey: '',
       created: 0,
       updated: 0
@@ -363,6 +384,7 @@ export class BidOrderService implements IBuyflowController {
     const orderItem = src.OrderItems[0];
     newOrder.orderItemId = +orderItem.id > 0 ? +orderItem.id : newOrder.orderItemId;
     newOrder.orderHash = getValueOrDefault(src.hash, 'string', newOrder.orderHash);
+    newOrder.latestBidHash = getValueOrDefault(src.OrderItems[0].Bid.hash, 'string', newOrder.latestBidHash);
     newOrder.orderHashShort = newOrder.orderHash.slice(0, 6);
     newOrder.baseBidId = +orderItem.Bid.id > 0 ? +orderItem.Bid.id : newOrder.orderItemId;
     newOrder.created = +src.createdAt > 0 ? +src.createdAt : newOrder.created;
@@ -429,13 +451,27 @@ export class BidOrderService implements IBuyflowController {
 
     if (Array.isArray(src.OrderItems[0].Bid.ChildBids) && src.OrderItems[0].Bid.ChildBids.length > 0 ) {
 
+      let latestGenerated = 0;
+      let latestBidHash = '';
       // find the child bid with the highest quantity of bid datas
       let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
+
       src.OrderItems[0].Bid.ChildBids.forEach(childBid => {
-        if (isBasicObjectType(childBid) && Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
-          foundBidDatas = childBid.BidDatas;
+        if (isBasicObjectType(childBid)) {
+          if (Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
+            foundBidDatas = childBid.BidDatas;
+          }
+          // extract the latest bid (in order to get to its hash later)
+          if ((+childBid.generatedAt > latestGenerated) && (typeof childBid.hash === 'string') && (childBid.hash.length > 0)) {
+            latestGenerated = +childBid.generatedAt;
+            latestBidHash = childBid.hash;
+          }
         }
       });
+
+      if (latestBidHash.length > 0) {
+        newOrder.latestBidHash = latestBidHash;
+      }
 
       // we always have 2 at least, since ORDER_HASH and MARKET_KEY are always present. Additional items means extra info available
       if (foundBidDatas.length > 2) {
@@ -842,17 +878,17 @@ export class BidOrderService implements IBuyflowController {
         },
         transition: this.actionOrderShip.bind(this)
       },
-      {
-        fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
-        toState: null,
-        user: 'BUYER',
-        actionType: 'PLACEHOLDER_LABEL',
-        details: {
-          label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: TextContent.PLACEHOLDER_SHIPPING_PENDING_TOOLTIP,
-          colour: 'primary', icon: 'part-date'
-        },
-        transition: this.actionInvalid.bind(this)
-      },
+      // {
+      //   fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+      //   toState: null,
+      //   user: 'BUYER',
+      //   actionType: 'PLACEHOLDER_LABEL',
+      //   details: {
+      //     label: TextContent.PLACEHOLDER_WAITING_FOR_SELLER, tooltip: TextContent.PLACEHOLDER_SHIPPING_PENDING_TOOLTIP,
+      //     colour: 'primary', icon: 'part-date'
+      //   },
+      //   transition: this.actionInvalid.bind(this)
+      // },
       {
         fromState: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
         toState: ORDER_ITEM_STATUS.COMPLETE,

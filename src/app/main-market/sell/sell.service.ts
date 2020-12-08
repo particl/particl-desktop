@@ -596,10 +596,16 @@ export class SellService {
 
 
   private cloneTemplate(templateId: number, marketId?: number): Observable<RespListingTemplate> {
-    const params = ['clone', templateId];
-    if (+marketId > 0) {
-      params.push(+marketId);
-    }
+    const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
+    const params = [
+      'clone',
+      templateId,
+      (+marketId > 0 ? +marketId : null),
+      (usePaidImageMsg ? IMAGE_SEND_TYPE.PAID : IMAGE_SEND_TYPE.FREE),
+      this.IMAGE_SCALING_FACTOR,
+      this.IMAGE_QUALITY_FACTOR,
+      this.IMAGE_ITERATIONS
+    ];
     return this._rpc.call('template', params);
   }
 

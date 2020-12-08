@@ -5,6 +5,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
+import { environment } from 'environments/environment';
 import { termsObj } from 'app/startup/terms/terms-txt';
 
 @Component({
@@ -13,11 +14,13 @@ import { termsObj } from 'app/startup/terms/terms-txt';
   styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent implements OnInit, OnDestroy {
-  log: any = Log.create('loading.component');
+
+  public readonly clientVersion: string = environment.version;
 
   loadingMessage: Observable <string>;
 
   private unsubscribe$: Subject<void> = new Subject();
+  private log: any = Log.create('loading.component');
 
   constructor(
     private _store: Store,
