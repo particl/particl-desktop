@@ -13,7 +13,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { WalletUTXOStateModel, PublicUTXO, AnonUTXO, WalletInfoStateModel } from 'app/main/store/main.models';
 
 
-type ComponentType = 'buy' | 'sell' | 'management';
+type ComponentType = 'buy' | 'sell' | 'management' | 'listings';
 type ActionableCategory = 'buy' | 'sell';
 
 interface ActionableItem {
@@ -95,6 +95,9 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
     // Define the actionable items...
     const ACTIONABLES: ActionableItem[] = [
+      { title: 'Browse Items', text: 'Find items for sale',
+        icon: 'part-shop', active: false, count: 0, component: 'listings', key: 'buy-listings', category: 'buy',
+        url: '', urlParams: {} },
       {
         title: 'Active Buy Orders', text: 'All Buy Orders currently in progress',
         icon: 'part-recipe', active: false, count: 0, component: 'buy', key: 'buy-orders-active', category: 'buy',
@@ -102,28 +105,32 @@ export class OverviewComponent implements OnInit, OnDestroy {
       { title: 'Urgent Buy Orders', text: 'Updated Orders that need your attention',
         icon: 'part-recipe', active: false, count: 0, component: 'buy', key: 'buy-orders-urgent', category: 'buy',
         url: '', urlParams: {selectedBuyTab: 'orders', toggleOrdersNeedingAttention: '1'} },
-      { title: 'New replies', text: 'Unread Sellers\' replies to your questions',
-        icon: 'part-chat-discussion', active: false, count: 0, component: 'buy', key: 'buy-questions', category: 'buy',
-        url: '', urlParams: {selectedBuyTab: 'comments'} },
+      // { title: 'New replies', text: 'Unread Sellers\' replies to your questions',
+      //   icon: 'part-chat-discussion', active: false, count: 0, component: 'buy', key: 'buy-questions', category: 'buy',
+      //   url: '', urlParams: {selectedBuyTab: 'comments'} },
       { title: 'Joined Markets', text: 'Total number of Markets you\'ve joined',
         icon: 'part-shop', active: false, count: 0, component: 'management', key: 'buy-markets', category: 'buy',
         url: '', urlParams: {selectedManagementTab: 'joined'} },
 
       {
+        title: 'Inventory & Products', text: 'Create products for sale',
+        icon: 'part-stock', active: false, count: 0, component: 'sell', key: 'sell-products', category: 'sell',
+        url: '',  urlParams: {selectedSellTab: 'templates'} },
+      {
         title: 'Active Sell Orders', text: 'All Sell Orders currently in progress',
-        icon: 'part-recipe', active: true, count: 0, component: 'sell', key: 'sell-orders-active', category: 'sell',
+        icon: 'part-recipe', active: false, count: 0, component: 'sell', key: 'sell-orders-active', category: 'sell',
         url: '', urlParams: {selectedSellTab: 'orders'} },
       {
         title: 'Urgent Sell Orders', text: 'Updated Orders that need your attention',
-        icon: 'part-recipe', active: true, count: 0, component: 'sell', key: 'sell-orders-urgent', category: 'sell',
+        icon: 'part-recipe', active: false, count: 0, component: 'sell', key: 'sell-orders-urgent', category: 'sell',
         url: '', urlParams: {selectedSellTab: 'orders', toggleOrdersNeedingAttention: '1'} },
-      {
-        title: 'New questions', text: 'Unread Buyers\' questions on your Listings',
-        icon: 'part-chat', active: true, count: 0, component: 'sell', key: 'sell-questions', category: 'sell',
-        url: '',  urlParams: {selectedSellTab: 'questions'} },
+      // {
+      //   title: 'New questions', text: 'Unread Buyers\' questions on your Listings',
+      //   icon: 'part-chat', active: false, count: 0, component: 'sell', key: 'sell-questions', category: 'sell',
+      //   url: '',  urlParams: {selectedSellTab: 'questions'} },
       {
         title: 'Expired Listings', text: 'Listings needing to be re-listed on the Market',
-        icon: 'part-stock', active: true, count: 0, component: 'sell', key: 'sell-listings-expired', category: 'sell',
+        icon: 'part-stock', active: false, count: 0, component: 'sell', key: 'sell-listings-expired', category: 'sell',
         url: '', urlParams: {selectedSellTab: 'listings'} },
     ];
 

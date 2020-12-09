@@ -1,8 +1,8 @@
 import { Component, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ImporterComponent } from '../importer.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { of, defer, Subject } from 'rxjs';
-import { exhaustMap, takeUntil, finalize, map } from 'rxjs/operators';
+import { of, defer, Subject, iif } from 'rxjs';
+import { exhaustMap, takeUntil, finalize, map, take, concatMap } from 'rxjs/operators';
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -21,6 +21,8 @@ interface CsvImportOptions {
 enum TextContent {
   CSV_IMPORT_ERROR = 'An error occurred during csv file parsing',
   CSV_PARSED_NO_RESULTS = 'No product rows found',
+  CSV_EXAMPLE_EXPORTED_SUCCESS = 'Successfully copied example file',
+  CSV_EXAMPLE_EXPORTED_ERROR = 'Error copying example file'
 }
 
 
@@ -71,6 +73,42 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  actionCopyExample() {
+    if (this.isProcessing) {
+      return;
+    }
+    this.isProcessing = true;
+
+    const options = {
+      modalType: 'SaveDialog',
+      modalOptions: {
+        title: 'Save example csv import file',
+        defaultPath : 'import_template.csv',
+        buttonLabel : 'Save',
+
+        properties: ['createDirectory', 'showOverwriteConfirmation'],
+
+        filters : [
+          {name: 'csv', extensions: ['csv', ]},
+          {name: 'All Files', extensions: ['*']}
+        ]
+      }
+    };
+
+    this._ipc.runCommand('open-system-dialog', null, options).pipe(
+      finalize(() => this.isProcessing = false),
+      take(1),
+      concatMap(path => iif(
+        () => (typeof path === 'string') && (path.length > 0),
+        defer(() => this._ipc.runCommand('market-export-example-csv', null, path))
+      ))
+    ).subscribe(
+      () => this._snackbar.open(TextContent.CSV_EXAMPLE_EXPORTED_SUCCESS),
+      () => this._snackbar.open(TextContent.CSV_EXAMPLE_EXPORTED_ERROR)
+    );
   }
 
 

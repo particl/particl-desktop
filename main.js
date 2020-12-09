@@ -253,7 +253,7 @@ if (!instanceLock) {
       minWidth:  1270,
       height:    675,
       minHeight: 675,
-      icon:      path.join(__dirname, 'resources/icon.png'),
+      icon:      path.join(__dirname, 'resources', 'icon.png'),
 
       frame: true,
       darkTheme: true,
@@ -283,7 +283,7 @@ if (!instanceLock) {
     } else {
       mainWindow.loadURL(url.format({
         protocol: 'file:',
-        pathname: path.join(__dirname, 'dist/index.html'),
+        pathname: path.join(__dirname, 'dist', 'index.html'),
         slashes: true
       }));
     }

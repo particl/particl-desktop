@@ -171,7 +171,8 @@
       "node_modules/sqlite3/**/*",
       "node_modules/particl-marketplace/**/*",
       "node_modules/zeromq/**/*",
-      "node_modules/event-loop-stats/**/*"
+      "node_modules/event-loop-stats/**/*",
+      "resources/templates/*"
     ]
   },
   "dependencies": {

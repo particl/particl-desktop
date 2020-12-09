@@ -23,7 +23,7 @@ const initializeIpcChannels = (mainWindowRef) => {
   destroyIpcChannels();
 
   rxIpc.registerListener(IPC_CHANNEL_DIALOG, (options) => {
-    return Observable.create(observer => {
+    return new Observable(observer => {
       let retValue;
 
       if (isObject(options) &&
@@ -36,15 +36,36 @@ const initializeIpcChannels = (mainWindowRef) => {
           dialogOptions = options.modalOptions;
         }
 
-        try {
-          retValue = fn(mainWindowRef, dialogOptions);
-          observer.next(retValue);
-        } catch (_err) {
-          observer.error(_err);
+        if (options.modalType.toLowerCase().includes('sync')) {
+          try {
+            const retValue = fn(mainWindowRef, dialogOptions);
+            observer.next(retValue);
+          } catch (_err) {
+            observer.error(_err);
+          }
+          observer.complete();
+        } else {
+          fn(mainWindowRef, dialogOptions).then(retValue => {
+            let val = null;
+            if (
+              (Object.prototype.toString.call(retValue) === '[object Object]') &&
+              !retValue.cancelled
+            ) {
+              if (Array.isArray(retValue.filePaths) && (retValue.filePaths.length > 0)) {
+                val = retValue.filePaths;
+              } else if ((typeof retValue.filePath === 'string') && (retValue.filePath.length > 0)) {
+                val = retValue.filePath;
+              }
+            }
+            observer.next(val);
+          }).catch(
+            _err => observer.error(_err)
+          ).then(
+            () => observer.complete()
+          );
         }
 
       }
-      observer.complete();
     });
   });
 }
