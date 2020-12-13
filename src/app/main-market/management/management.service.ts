@@ -20,7 +20,7 @@ enum TextContent {
   LABEL_REGION_ALL = 'All regions',
   LABEL_REGION_WORLDWIDE = 'Worldwide / Global',
   LABEL_REGION_NORTH_AMERICA = 'North Americas',
-  LABEL_REGION_SOUTH_AMERICA = 'Cerntral & Southern America',
+  LABEL_REGION_SOUTH_AMERICA = 'Central & Southern America',
   LABEL_REGION_EUROPE = 'Europe',
   LABEL_REGION_MIDDLE_EAST_AFRICA = 'Middle East & Africa',
   LABEL_REGION_ASIA_PACIFIC = 'Asia Pacific',
