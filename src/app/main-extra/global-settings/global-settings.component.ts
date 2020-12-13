@@ -79,6 +79,10 @@ export class GlobalSettingsComponent implements OnInit {
     return this.settingGroups[this._currentGroupIdx];
   }
 
+  get currentGroupIdx(): number {
+    return this._currentGroupIdx;
+  }
+
 
   trackBySettingGroupFn(idx: number, item: SettingGroup) {
     return idx;

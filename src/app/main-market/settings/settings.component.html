@@ -45,7 +45,7 @@
 
       <div class="radio-switcher">
         <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
-          <input type="radio" name="option" (change)="changeSelectedGroup(groupIdx)">
+          <input type="radio" name="option" (change)="changeSelectedGroup(groupIdx)" [checked]="groupIdx === currentGroupIdx">
           <div class="switcher-option" *ngIf="group.settings.length > 0" [class.--with-error]="group.errors.length">
             <mat-icon [fontIcon]="group.icon"></mat-icon>
             <span class="name">{{ group.name }}</span>
