@@ -30,10 +30,10 @@
         </div>
 
         <!-- Confirmations -->
-        <div fxFlex="0 0 70px" *ngIf="(txn.confirmations <= 12)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations)">
+        <div fxFlex="0 0 70px" *ngIf="(txn.confirmations <= txn.requiredConfirmations)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations, txn.requiredConfirmations)">
           <div class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
             <mat-icon fontIcon="part-date" class="confirmations"></mat-icon>
-            {{ txn.confirmations }}/12
+            {{ txn.confirmations }}/{{txn.requiredConfirmations}}
           </div>
         </div>
 
