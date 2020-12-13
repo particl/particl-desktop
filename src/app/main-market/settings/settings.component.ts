@@ -490,10 +490,10 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       connectionDetails.settings.push({
         id: 'port',
         title: 'Market Connection Port',
-        description: 'Change the port that the Market application starts on (default: 3000)',
+        description: 'Change the port that the Market application starts on (default: 45492)',
         isDisabled: false,
         type: SettingType.STRING,
-        limits: {placeholder: 'Default: 3000' },
+        limits: {placeholder: 'Default: 45492' },
         errorMsg: '',
         currentValue: marketSettings.port,
         tags: [],

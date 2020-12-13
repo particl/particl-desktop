@@ -13,7 +13,7 @@ export const environment = {
   particlHost: 'localhost',
   particlPort: 51735,
   marketHost: 'localhost',
-  marketPort: 3000,
+  marketPort: 45492,
   botHost: 'localhost',
   botPort: 3001,
   isTesting: false
