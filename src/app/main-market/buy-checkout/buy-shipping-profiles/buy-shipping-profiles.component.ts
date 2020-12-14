@@ -7,7 +7,7 @@ import { takeUntil, tap, finalize, switchMap, debounceTime, distinctUntilChanged
 import { BuyShippingProfilesService } from './buy-shipping-profiles.service';
 import { EditShippingProfileModalComponent, EditedActionResponse, EditedAddressAction } from './edit-shipping-profile-modal/edit-shipping-profile-modal.component';
 import { ShippingAddress } from '../../shared/shipping-profile-address-form/shipping-profile-address.models';
-import { isBasicObjectType } from 'app/main-market/shared/utils';
+import { isBasicObjectType } from '../../shared/utils';
 
 
 @Component({

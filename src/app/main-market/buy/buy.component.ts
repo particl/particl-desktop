@@ -23,9 +23,8 @@ interface BuyTab {
 export class BuyComponent implements OnInit, OnDestroy {
 
   readonly tabs: BuyTab[] = [
-    { title: 'Buy Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
+    { title: 'Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
     // { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments', notificationValue: null},
-    { title: 'Shipping profiles', icon: 'part-truck', templ: 'shipping-profiles', notificationValue: null},
   ];
 
 

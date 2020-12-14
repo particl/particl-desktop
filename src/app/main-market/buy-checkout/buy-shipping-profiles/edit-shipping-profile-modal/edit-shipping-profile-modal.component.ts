@@ -7,9 +7,9 @@ import { map, tap, mapTo, catchError, startWith } from 'rxjs/operators';
 
 import { BuyShippingProfilesService } from '../buy-shipping-profiles.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { ShippingProfileAddressFormComponent } from 'app/main-market/shared/shipping-profile-address-form/shipping-profile-address-form.component';
+import { ShippingProfileAddressFormComponent } from '../../../shared/shipping-profile-address-form/shipping-profile-address-form.component';
 import { isBasicObjectType } from '../../../shared/utils';
-import { ShippingAddress } from 'app/main-market/shared/shipping-profile-address-form/shipping-profile-address.models';
+import { ShippingAddress } from '../../../shared/shipping-profile-address-form/shipping-profile-address.models';
 
 
 enum TextContent {
