@@ -305,7 +305,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
               return this._detailsService.fetchVotingAction(this.selectedMarketId, this.details.governance.proposalHash).pipe(
                 tap((voteData) => {
 
-                  if ( !isBasicObjectType(voteData) || !isBasicObjectType(voteData.votedProposalOption) ) {
+                  if ( !isBasicObjectType(voteData)) {
                     return;
                   }
 
@@ -323,7 +323,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
                     });
                   }
 
-                  if (+voteData.votedProposalOption.optionId >= 0) {
+                  if (isBasicObjectType(voteData.votedProposalOption) && +voteData.votedProposalOption.optionId >= 0) {
                     this.details.governance.voteCast = voteData.votedProposalOption.optionId;
                   }
                 }),
@@ -346,7 +346,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
                 if (isBasicObjectType(flagMsg) && (typeof flagMsg.objectHash === 'string')) {
                   this.flagProposalControl.setValue(flagMsg.objectHash);
                 }
-              })
+              }),
+              takeUntil(this.destroy$)
             )
           );
         }
