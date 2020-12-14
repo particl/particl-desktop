@@ -40,8 +40,8 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
 
   optionsFilterMarketType: FilterOption[] = [
     { label: 'All markets',       value: '' },
-    { label: 'Community Markets', value: '0' },
-    { label: 'Storefronts',       value: '1' }
+    { label: 'Community Markets', value: 'MARKETPLACE' },
+    { label: 'Storefronts',       value: 'STOREFRONT' }
   ];
 
   optionsFilterMarketRegion: FilterOption[];
@@ -210,7 +210,6 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
       const filterType: string = this.filterTypeControl.value;
 
       const doTypeFilter = filterType.length > 0;
-      const isStorefront = +filterType > 0;
 
       const idxList: number[] = [];
 
@@ -218,7 +217,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
         const addItem =
             market.name.toLocaleLowerCase().includes(searchString) &&
             (filterRegion ? filterRegion === market.region.value : true) &&
-            (doTypeFilter ? isStorefront === (market.publishKey === null) : true);
+            (doTypeFilter ? filterType === market.marketType : true);
 
         if (addItem) {
           idxList.push(marketIdx);
