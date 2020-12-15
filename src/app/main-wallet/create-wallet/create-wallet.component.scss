@@ -9,6 +9,9 @@
   .step {
     margin-bottom: 16px;
     position: relative;
+    @include break(l) {
+      margin-bottom: 20px;
+    }
     .dot {
       display: inline-block;
       border: 3px solid hsla(var(--bg-hsl), 0.15);
@@ -24,6 +27,9 @@
       font-size: 13px;
       margin-left: 18px;
       color: var(--text-muted);
+      @include break(l) {
+        font-size: 15px;
+      }
     }
     &:not(.last):after { // lines connecting numbers
       content: '';
@@ -35,6 +41,9 @@
       bottom: -18px;
       left: 6px;
       z-index: 1;
+      @include break(l) {
+        bottom: -22px;
+      }
     }
     &.active { // active steps
       .dot {

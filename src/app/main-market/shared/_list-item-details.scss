@@ -25,6 +25,7 @@
   border-radius: var(--radius);
   .header {
     min-height: var(--list-item-size) !important;
+    height: var(--list-item-size) !important;
     max-height: var(--list-item-size) !important;
     padding: 0 24px 0 0;
   }
