@@ -53,16 +53,28 @@ Customizations and modifiers for default Material components
 // ------ 1.1. BUTTONS ------ //
 
 button,
-.mat-button,
-.mat-raised-button {
+button.mat-button,
+button.mat-raised-button,
+a.mat-button,
+a.mat-raised-button {
   font-family: var(--font) !important;
-  font-weight: 600;
+  font-weight: 500;
+  @include break(l) {
+    font-size: 15px;
+    line-height: 42px;
+    padding: 0 20px;
+  }
+  @include break(xl) {
+    font-size: 16px;
+    line-height: 48px;
+    padding: 0 24px;
+  }
   .mat-icon {
     margin-right: 5px;
     position: relative;
     top: -1px;
   }
-  &.large { // smaller buttons
+  &.large { // large buttons
     min-width: auto;
     line-height: 42px;
     padding: 0 24px;
@@ -165,6 +177,13 @@ mat-tooltip-component .mat-tooltip {
   &.multi-line {
     white-space: pre-line;
   }
+  @include break(l) {
+    font-size: 12.5px;
+  }
+  @include break(xl) {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
 }
 
 
@@ -223,6 +242,15 @@ mat-tab-group.mat-tab-group {
   .mat-tab-label {
     font-family: var(--font);
     font-weight: 500;
+    height: var(--tab-bar-height);
+    min-width: 140px;
+    @include break(l) {
+      padding: 0 32px;
+      font-size: 15px;
+    }
+    @include break(hd) {
+      font-size: 16px;
+    }
     &.mat-tab-label-active { // keep active tabs black (not grey)
       opacity: 1;
       .mat-icon {
@@ -252,7 +280,7 @@ mat-tab-group.mat-tab-group {
 
 mat-expansion-panel.mat-expansion-panel {
   @extend %mat-card;
-  margin: 0 0 4px;
+  margin: 0 0 var(--card-spacing);
   overflow: hidden;
   padding: 0;
   border-radius: 0;
@@ -399,6 +427,9 @@ mat-expansion-panel.mat-expansion-panel {
 // ------ 2.6. MODALS ------ //
 
 .cdk-overlay-container { // needs high specificity to override default Mat styling
+  .cdk-overlay-backdrop {
+    backdrop-filter: blur(5px);
+  }
   .mat-dialog-container {
     position: relative;
     max-width: 1000px;
@@ -411,6 +442,7 @@ mat-expansion-panel.mat-expansion-panel {
       z-index: 10;
       color: var(--bg-muted) !important;
       min-width: 36px;
+      line-height: 36px;
       padding: 0;
       border-radius: 50%;
       overflow: hidden;
@@ -435,6 +467,14 @@ mat-dialog-title,
   font-size: 18px;
   margin-bottom: 18px;
   padding-right: 50px;
+  @include break(l) {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  @include break(xl) {
+    font-size: 22px;
+    margin-bottom: 22px;
+  }
   &.text-center {
     padding: 0;
   }
@@ -659,34 +699,37 @@ label {
   cursor: text;
   .label {
     @extend %box-title;
-    padding: 16px 0 1px;
+    padding: var(--formfield-paddingV) 0 1px;
     margin: 0 0 -0.6em 0;
     position: relative;
     z-index: 2; // make sure label is on top (e.g. when character counter is present)
   }
   .label-desc {
     color: var(--text-muted);
-    margin: 14px 0 0;
-    padding: 0 16px;
+    margin: var(--formfield-paddingV) 0 0;
+    padding: 0 var(--formfield-paddingH);
   }
   & > .label {
-    padding: 15px 16px 0;
+    padding: var(--formfield-paddingV) var(--formfield-paddingH) 0;
   }
   &.--larger {
     & > .label {
-      padding: 21px 24px 0;
+      padding: calc(var(--formfield-large-multi) * var(--formfield-paddingV)) calc(var(--formfield-large-multi) * var(--formfield-paddingH)) 0;
+      @include break(xl) {
+        //margin: 0 0 -0.9em 0;
+      }
     }
     & > .label-desc {
-      padding: 0 24px;
+      padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
       margin: 10px 0 0;
     }
   }
 }
 .mat-form-field[appearance="fill"] {
-  --field-boxed-paddingV: 16px;
   display: block;
+  font-size: var(--formfield-font-size);
   .mat-form-field-flex {
-    padding: 0 16px;
+    padding: 0 var(--formfield-paddingH);
     background: var(--color-white);
     align-items: center;
   }
@@ -722,6 +765,10 @@ label {
     &:not(button) {
       color: var(--text-muted); // mute text's color
     }
+    @include break(xl) {
+      position: relative;
+      top: -1px;
+    }
     &.mat-icon {
       font-size: 16px; // 1.25em
       color: var(--text-muted);
@@ -751,14 +798,19 @@ label {
   }
 
   &.--larger {
+    /*
     .label { // manually added labels, e.g. on Send page
       padding: 22px 0 0;
     }
+    */
     .mat-form-field-flex {
-      padding: 0 24px;
+      padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
     }
     .mat-form-field-subscript-wrapper {
       top: 15px; // move it above the field
+      @include break(xl) {
+        top: 23px;
+      }
       .mat-hint {
         right: 14px;
       }
@@ -766,7 +818,7 @@ label {
   }
   &.--smaller {
     .mat-form-field-flex {
-      padding: 0 12px;
+      padding: 0 calc(var(--formfield-small-multi) * var(--formfield-paddingH));
     }
   }
   
@@ -790,18 +842,18 @@ label {
 
   &.mat-form-field-type-mat-input {
     .mat-input-element {
-      padding: var(--field-boxed-paddingV) 0;
+      padding: var(--formfield-paddingV) 0;
       margin: 0;
     }
     // Send: Larger padding around input
     &.--larger,
     &.--largest {
-      font-size: 15px;
+      font-size: var(--formfield-font-size-large);
       .mat-form-field-flex {
-        padding: 0 24px;
+        padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
       }
       .mat-input-element {
-        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        padding: calc(var(--formfield-large-multi) * var(--formfield-paddingV)) 0;
       }
       .mat-hint {
         bottom: 52px;
@@ -818,7 +870,7 @@ label {
 
   &.mat-form-field-type-mat-select {
     .mat-form-field-infix {
-      padding: var(--field-boxed-paddingV) 0;
+      padding: var(--formfield-paddingV) 0;
     }
     .mat-form-field-wrapper {
       .mat-select-arrow-wrapper {
@@ -829,7 +881,7 @@ label {
     &.--larger {
       font-size: 15px;
       .mat-form-field-infix {
-        padding: calc(1.4 * var(--field-boxed-paddingV)) 0;
+        padding: calc(1.4 * var(--formfield-paddingV)) 0;
         .mat-select-value {
           position: relative;
           top: 1px;
@@ -838,7 +890,7 @@ label {
     }
     &.--smaller {
       .mat-form-field-infix {
-        padding: calc(0.7 * var(--field-boxed-paddingV)) 0;
+        padding: calc(0.7 * var(--formfield-paddingV)) 0;
         min-width: 120px;
         width: auto;
       }
@@ -847,7 +899,7 @@ label {
     // Boxed, standalone variant
     &.--boxed {
       .mat-form-field-infix {
-        padding: var(--field-boxed-paddingV) 0;
+        padding: var(--formfield-paddingV) 0;
       }
       .mat-select-value {
         font-weight: 500;
@@ -871,13 +923,13 @@ label {
       padding: 0 2px 4px 16px; // lower padding, so that scrollbar is on the edge
       .mat-input-element {
         padding-top: 0;
-        padding-right: var(--field-boxed-paddingV);
-        width: calc(100% - var(--field-boxed-paddingV));
+        padding-right: var(--formfield-paddingV);
+        width: calc(100% - var(--formfield-paddingV));
       }
     }
     &.--larger {
       .mat-form-field-flex {
-        padding: 0 6px 10px 24px;
+        padding: 0 6px 10px calc(var(--formfield-large-multi) * var(--formfield-paddingH));
       }
     }
   }
@@ -960,7 +1012,7 @@ mat-option.mat-option {
   line-height: var(--height);
   height: var(--height);
   .mat-option-text {
-    font-size: 13px;
+    font-size: var(--formfield-font-size);
   }
   &.mat-selected {
     color: var(--text) !important;

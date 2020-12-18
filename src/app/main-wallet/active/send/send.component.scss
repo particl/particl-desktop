@@ -2,13 +2,6 @@
 
 // ------ UI ------ //
 
-.section-title { // 'Pay from/to, Convert' etc.
-  margin-top: 32px;
-  &:first-of-type {
-    margin-top: 0;
-  }
-}
-
 .subtitle { // subtitles (eg. 'privacy level' in anon
   @extend %box-title;
   margin: 20px 0 16px;
@@ -79,6 +72,14 @@
 // ------ LAYOUT ------ //
 
 .from-box { // 'pay from..'
+  margin-right: var(--paddingH);
+  flex: 0 0 320px;
+  @include break(l) {
+    flex: 0 0 350px;
+  }
+  @include break(xl) {
+    flex: 0 0 400px;
+  }
   .sticky {
     position: sticky;
     top: calc(var(--header-main-height) + var(--tab-bar-height) + var(--paddingV));
@@ -117,6 +118,10 @@
   .widget-help {
     margin: 0 8px 6px 0;
   }
+}
+
+.to-box {
+  flex: 1 1 100%;
 }
 
 .pay-to { // whole 'pay to' card

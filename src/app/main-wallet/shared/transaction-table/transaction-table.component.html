@@ -22,15 +22,15 @@
   <mat-expansion-panel class="history-list no-padding" [expanded]="txn.txid === expandedTxId">
 
     <mat-expansion-panel-header (click)="showTransactionDetail(txn)">
-      <mat-panel-title class="tx-overview" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+      <mat-panel-title class="tx-overview">
 
         <!-- Date -->
-        <div fxFlex="0 0 145px" class="date">
+        <div class="date">
           {{ txn.formattedTime }}
         </div>
 
         <!-- Confirmations -->
-        <div fxFlex="0 0 70px" *ngIf="(txn.confirmations <= 12)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations)">
+        <div *ngIf="(txn.confirmations <= 12)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations)">
           <div class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
             <mat-icon fontIcon="part-date" class="confirmations"></mat-icon>
             {{ txn.confirmations }}/12
@@ -38,7 +38,7 @@
         </div>
 
         <!-- Category icon -->
-        <div fxFlex="1 0 175px" class="type">
+        <div class="type">
 
             <ng-container *ngIf="txn.addressType === TypeOfAddress.MULTISIG">
               <span class="tx-type sent">
@@ -104,7 +104,7 @@
         </div>
 
         <!-- Amount -->
-        <div fxFlex="1 0 135px" class="tx-value">
+        <div class="tx-value">
 
           <span class="amount" *ngIf="!txn.requires_unlock"
                 [ngClass]="{'positive': (+txn.amount) > 0, 'negative': (+txn.amount) < 0 }">

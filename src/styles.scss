@@ -95,6 +95,7 @@ body {
   z-index: 100;
   height: calc(var(--tab-bar-height) + 1px);
   background: hsla(var(--bg-hsl), 0.87);
+  backdrop-filter: blur(5px);
 }
 
 // sticky control bars (eg. on Listings page)
@@ -163,10 +164,14 @@ body {
 
     // radio buttons
     .radio-group {
-      --radio-paddingH: 16px;
+      --radio-spacing: 6px;
       width: 100%;
-      padding: 8px 0;
+      padding: var(--radio-spacing) 0;
       display: block;
+      font-size: var(--formfield-font-size);
+      @include break(xl) {
+        --radio-spacing: 8px;
+      }
       .filter-option {
         @extend %tfx;
         width: 100%;
@@ -186,8 +191,8 @@ body {
         }
         .mat-radio-label {
           position: relative;
-          padding: 6px var(--radio-paddingH);
-          width: calc(100% - calc(2 * var(--radio-paddingH)));
+          padding: var(--radio-spacing) var(--formfield-paddingH);
+          width: calc(100% - calc(2 * var(--formfield-paddingH)));
         }
       }
       .amount {
@@ -197,7 +202,7 @@ body {
         background: hsla(var(--bg-muted-hsl), 0.4);
         border-radius: var(--radius);
         position: absolute;
-        right: var(--radio-paddingH);
+        right: var(--formfield-paddingH);
         top: 7px;
         display: inline-block;
         padding: 1px 6px;
@@ -242,6 +247,10 @@ body {
           background: hsla(var(--color-secondary-hsl), 0.05);
           padding: 8px;
           margin: 0 4px 0 0;
+          @include break(xl) {
+            padding: 10px;
+            margin: 2px 2px 2px 4px;
+          }
           &.part-alert {
             background: hsla(var(--color-alert-hsl), 0.05);
           }
@@ -256,6 +265,9 @@ body {
       font-size: 14px;
       line-height: 40px;
       font-weight: 500;
+      @include break(xl) {
+        font-size: 15px;
+      }
       .mat-icon {
         @extend %lightest;
         @extend %tfx;
@@ -264,6 +276,9 @@ body {
         padding: 0;
         margin: 8px 12px 8px 8px;
         border-radius: 50%;
+        @include break(xl) {
+          margin: 12px 12px 12px 14px;
+        }
       }
       &:hover {
         .mat-icon {
@@ -336,6 +351,12 @@ body {
     width: 100%;
     padding: 10px 22px 10px 13px;
     font-size: 13px;
+    @include break(l) {
+      padding: 12px 22px 12px 13px;
+    }
+    @include break(xl) {
+      padding: 14px 22px 14px 13px;
+    }
     &:hover,
     &:focus {
       background: hsla(var(--bg-sidebar-darker-hsl), 0.8) !important;
@@ -396,6 +417,12 @@ body {
     display: flex;
     flex-direction: row;
     align-items: center;
+    @include break(l) {
+      padding: 14px 24px;
+    }
+    @include break(xl) {
+      padding: 15px 26px;
+    }
     &.active {
       .mat-icon { // highlight active menu item
         color: var(--color-primary) !important;
@@ -417,6 +444,12 @@ body {
       font-size: 11.5px;
       font-weight: 500;
       color: var(--color-white);
+      @include break(l) {
+        font-size: 12.5px;
+      }
+      @include break(l) {
+        font-size: 13px;
+      }
     }
     .notification { // order notifications
       @extend %notification;
@@ -472,7 +505,7 @@ body {
   position: fixed;
   z-index: 10;
   top: var(--header-main-height);
-  left: calc(var(--multiwallet-width) + var(--sidebar-width));
+  left: calc(var(--appbar-width) + var(--sidebar-width));
   right: var(--scrollbar-width);
   bottom: 0;
   display: flex;
@@ -512,7 +545,7 @@ body {
   .mat-progress-bar {
     position: fixed;
     bottom: 0;
-    left: calc(var(--multiwallet-width) + var(--sidebar-width));
+    left: calc(var(--appbar-width) + var(--sidebar-width));
     right: var(--scrollbar-width);
     width: auto;
     height: 6px;
@@ -576,7 +609,16 @@ body {
   border: 1px dashed var(--bg-muted);
   background: hsla(var(--color-white-hsl), 0.45);
   @include break(l) {
-    padding: 220px 0;
+    font-size: 20px;
+    padding: 150px var(--paddingH);
+  }
+  @include break(xl) {
+    font-size: 22px;
+    padding: 170px var(--paddingH);
+    border-width: 2px;
+  }
+  @include break(hd) {
+    font-size: 24px;
   }
   .illustration {
     display: block;
@@ -584,8 +626,15 @@ body {
     margin: 0 auto 2rem;
     pointer-events: none;
     @include break(l) {
-      max-width: 15rem;
+      max-width: 11rem;
       margin: 0 auto 3rem;
+    }
+    @include break(xl) {
+      max-width: 13rem;
+    }
+    @include break(hd) {
+      max-width: 15rem;
+      margin: 0 auto 3.5rem;
     }
   }
   p {
@@ -593,7 +642,6 @@ body {
     margin-top: 0;
     &.help-text {
       color: hsla(var(--text-muted-hsl), 0.7) !important;
-      font-size: 13px;
       text-transform: none;
       margin: 0 auto;
       max-width: 30rem;
@@ -617,7 +665,13 @@ body {
   &.--smaller {
     padding: 50px var(--paddingH);
     @include break(l) {
-      padding: 75px 0;
+      padding: 75px var(--paddingH);
+    }
+    @include break(xl) {
+      padding: 100px var(--paddingH);
+    }
+    @include break(hd) {
+      padding: 140px var(--paddingH);
     }
   }
   &.--horizontal { // more compact, horizontal layout (text besides illustration) - in Listing > Q/A
@@ -814,13 +868,21 @@ h1 {
   font-weight: normal;
   color: var(--text-muted);
   text-transform: uppercase;
-  margin: 32px 0 16px;
+  margin: var(--paddingV) 0 16px;
   &:first-of-type {
     margin-top: 0;
   }
   @include break(l) {
     font-size: 16px;
-    margin: 46px 0 18px;
+    margin-bottom: 18px;
+  }
+  @include break(xl) {
+    font-size: 17px;
+    margin-bottom: 20px;
+  }
+  @include break(hd) {
+    font-size: 18px;
+    margin-bottom: 22px;
   }
 }
 
@@ -830,8 +892,14 @@ h1 {
   font-weight: 500;
   font-size: 13px;
   margin-top: 0;
+  @include break(xl) {
+    font-size: 15px;
+  }
   &.--larger {
     font-size: 15px;
+    @include break(xl) {
+      font-size: 16px;
+    }
   }
 }
 
@@ -845,6 +913,12 @@ h1 {
     font-size: 18px;
     margin-top: 36px;
   }
+  @include break(xl) {
+    font-size: 20px;
+  }
+  @include break(hd) {
+    font-size: 22px;
+  }
 }
 
 // ------ 4.2. PARAGRAPH STYLES ------ //
@@ -854,6 +928,9 @@ p {
   // Highlighted 'lead' paragraphs
   &.lead {
     font-size: 15px;
+    @include break(hd) {
+      font-size: 16.5px;
+    }
   }
   &.text-muted {
     color: var(--text-muted);
@@ -888,9 +965,12 @@ kbd {
 
 // Help descriptions
 .widget-help {
-  @extend %lighter;
-  font-size: 93%;
+  color: var(--text-muted);
+  font-size: 13px;
   margin-bottom: 25px;
+  @include break(hd) {
+    font-size: 13.5px;
+  }
 }
 
 
@@ -904,6 +984,9 @@ div.alert {
   margin: 24px 0;
   display: flex;
   align-items: stretch;
+  @include break(xl) {
+    font-size: 15px;
+  }
   &::before {
     flex: 0 0 56px;
     font-family: 'part';
@@ -911,11 +994,19 @@ div.alert {
     color: var(--color-white);
     font-size: 16px;
     line-height: 52px;
+    @include break(xl) {
+      flex: 0 0 64px;
+      font-size: 18px;
+      line-height: 64px;
+    }
   }
   span {
     flex: 1 1 100%;
     padding: 16px 18px;
     align-self: center;
+    @include break(xl) {
+      padding: 22px 30px;
+    }
   }
   small { // help descriptions for alerts (e.g. for solutions to fixing the problem)
     display: block;
@@ -1158,6 +1249,9 @@ p.info {
   font-size: 11.5px;
   line-height: 1.6;
   color: var(--text-muted);
+  @include break(xl) {
+    font-size: 12.5px;
+  }
   .version {
     @extend %tfx;
     color: hsla(var(--color-white-hsl), 0.5);

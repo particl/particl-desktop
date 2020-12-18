@@ -6,7 +6,7 @@
   flex-direction: column;
   background: var(--bg-sidebar-darker);
   height: 100vh;
-  width: var(--multiwallet-width);
+  width: var(--appbar-width);
   color: var(--color-white);
 
   // app selection
@@ -26,9 +26,22 @@
     text-align: center;
     line-height: 1.3;
     border-radius: 0;
+    @include break(xl) {
+      padding: 16px 0;
+    }
     .title {
       font-size: 11px;
       margin-top: 4px;
+      @include break(l) {
+        font-size: 12px;
+        margin-top: 5px;
+      }
+      @include break(xl) {
+        font-size: 13px;
+      }
+      @include break(hd) {
+        margin-top: 6px;
+      }
     }
     &:hover {
       @extend %reset;
@@ -47,9 +60,12 @@
   .buttons {
     flex: 0 1 1px;
     padding: 10px;
+    @include break(xl) {
+      padding: 16px 10px;
+    }
     .mat-button {
       @extend %tfx;
-      width: 34px;
+      width: 100%;
       min-width: 0;
       margin: 3px 0;
       padding: 0;
@@ -81,5 +97,8 @@
 .mat-raised-button {
   .mat-icon {
     margin: 0;
+    @include break(xl) {
+      font-size: 18px;
+    }
   }
 }

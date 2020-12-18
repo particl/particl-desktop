@@ -28,19 +28,37 @@
 
 .mat-dialog-content {
   width: 60rem;
-  padding: 5px 0;
+  padding: 5px 0 0;
 }
 
 .available-utxos {
   display: block;
   width: 100%;
-  padding: 5px 0;
+  padding: 5px 0 0;
   color: hsla(var(--text-hsl), 0.7);
   .mat-sort-header-container {
     align-items: center; // center sorting arrows
   }
   tr {
     display: flex;
+    &.utxo {
+      border-top: 1px solid var(--bg-muted);
+      &.selected {
+        font-weight: 500;
+        color: var(--color-secondary);
+        background: hsla(var(--color-secondary-hsl), 0.075);
+        a {
+          color: var(--color-secondary);
+        }
+      }
+      &:hover {
+        background: hsla(var(--color-secondary-hsl), 0.05);
+        color: var(--color-secondary);
+        a {
+          color: var(--color-secondary);
+        }
+      }
+    }
   }
   th {
     padding: 0 0 5px 2px;
@@ -48,17 +66,18 @@
     color: var(--text);
   }
   td {
-    line-height: 2;
+    line-height: 40px; // match checkbox's ripple height (otherwise vertical scroll is triggered)
+    padding: 0;
   }
   .checkbox {
-    flex: 3%;
+    flex: 1%;
     padding-left: 24px;
   }
   .amount {
     flex: 15%;
   }
   .label {
-    flex: 30%;
+    flex: 32%;
   }
   .address {
     flex: 35%;
@@ -66,10 +85,6 @@
       font-family: var(--font-mono);
       color: var(--text-muted);
       text-decoration: none;
-      &:hover,
-      &:focus {
-        color: var(--text);
-      }
     }
   }
   .date {

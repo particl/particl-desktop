@@ -24,7 +24,7 @@ body {
   background: var(--bg);
   font-family: var(--font);
   height: calc(100vh - 2 * var(--container-paddingV));
-  padding: var(--container-paddingV) calc(8vw + var(--multiwallet-width));
+  padding: var(--container-paddingV) calc(8vw + var(--appbar-width));
   display: flex;
   flex-direction: column;
   .content {
@@ -42,12 +42,18 @@ body {
     h1 {
       margin: 0 0 8px;
       font-weight: 600;
-      font-size: 1.9rem;;
+      font-size: 1.9rem;
+      @include break(xl) {
+        font-size: 2.3rem;
+      }
     }
     p {
       margin: 0;
       color: var(--text-muted);
       font-size: 1.05rem;
+      @include break(xl) {
+        font-size: 1.15rem;
+      }
     }
   }
   
