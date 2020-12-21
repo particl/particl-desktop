@@ -1000,7 +1000,7 @@ div.alert {
       line-height: 64px;
     }
   }
-  span {
+  & > span { // direct descendants only or it will eff up buttons inside as well
     flex: 1 1 100%;
     padding: 16px 18px;
     align-self: center;

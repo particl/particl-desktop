@@ -180,9 +180,13 @@
             If you launched the Marketplace recently, Listings might not load yet.<br>
             Please wait a few minutes and then:
           </p>
-          <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)">
+          <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)" matTooltip="Check for new incoming Listings">
             <mat-icon fontIcon="part-refresh"></mat-icon>
             Refresh Listings
+          </button>
+          <button mat-button color="warn" (click)="getRichEvenQuicker()" matTooltip="Rescan ALL LISTINGS on Particl – this takes a lot of time – don't press more than once!">
+            <mat-icon fontIcon="part-search"></mat-icon>
+            Rescan Listings
           </button>
         </ng-container>
 
