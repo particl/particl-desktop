@@ -184,7 +184,7 @@
             <mat-icon fontIcon="part-refresh"></mat-icon>
             Refresh Listings
           </button>
-          <button mat-button color="warn" (click)="getRichEvenQuicker()" matTooltip="Rescan ALL LISTINGS on Particl – this takes a lot of time – don't press more than once!">
+          <button *ngIf="(marketSettings | async)?.marketsLastAdded > 0" mat-button color="warn" appDebounceClick (debounceClick)="forceSmsgRescan()" [disabled]="isRescanningListings" matTooltip="Rescan ALL LISTINGS on Particl – this takes a lot of time">
             <mat-icon fontIcon="part-search"></mat-icon>
             Rescan Listings
           </button>

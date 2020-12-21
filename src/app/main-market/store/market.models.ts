@@ -43,6 +43,7 @@ export interface MarketSettings {
   startupWaitTimeoutSeconds: number;
   defaultListingCommentPageCount: number;
   daysToNotifyListingExpired: number;
+  marketsLastAdded: number;
 }
 
 

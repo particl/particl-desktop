@@ -2,7 +2,11 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, merge, Observable, defer } from 'rxjs';
-import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime } from 'rxjs/operators';
+import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime, finalize } from 'rxjs/operators';
+
+import { Select } from '@ngxs/store';
+import { MarketState } from '../../store/market.state';
+import { MarketSettings } from '../../store/market.models';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
@@ -36,6 +40,8 @@ interface FilterOption {
 })
 export class MarketBrowserComponent implements OnInit, OnDestroy {
 
+  @Select(MarketState.settings) marketSettings: Observable<MarketSettings>;
+
   marketTypeOptions: typeof MarketType = MarketType;
 
   optionsFilterMarketType: FilterOption[] = [
@@ -53,6 +59,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   displayedMarkets: number[] = [];
   marketsList: AvailableMarket[] = [];
+  isRescanning: boolean = false;
 
 
   private destroy$: Subject<void> = new Subject();
@@ -172,6 +179,19 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
         this._snackbar.open(msg, 'warn');
       }
     );
+  }
+
+
+  forceSmsgRescan() {
+    this.isRescanning = true;
+    this._cdr.detectChanges();
+    this._manageService.forceSmsgRescan().pipe(
+      finalize(() => {
+        this.isRescanning = false;
+        this._cdr.detectChanges();
+      }),
+      tap(() => this._cdr.detectChanges()),
+    ).subscribe();
   }
 
 

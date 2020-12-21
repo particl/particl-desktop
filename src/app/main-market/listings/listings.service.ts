@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { map, mapTo, catchError, filter, tap } from 'rxjs/operators';
+import { map, mapTo, catchError, filter, tap, concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 import { MarketUserActions } from '../store/market.actions';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
 
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
@@ -21,6 +22,7 @@ export class ListingsService {
 
   constructor(
     private _rpc: MarketRpcService,
+    private _daemonRpc: MainRpcService,
     private _socket: MarketSocketService,
     private _store: Store
   ) {}
@@ -115,6 +117,13 @@ export class ListingsService {
     const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
     return this._rpc.call('cartitem', ['add', cartId, listingId]).pipe(
       tap(() => this._store.dispatch(new MarketUserActions.CartItemAdded(identityId, cartId)))
+    );
+  }
+
+
+  forceSmsgRescan(): Observable<any> {
+    return this._daemonRpc.call('smsgscanbuckets').pipe(
+      concatMap(() => this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', 0)))
     );
   }
 

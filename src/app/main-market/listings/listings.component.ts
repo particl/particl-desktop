@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, iif, merge, of, defer, timer } from 'rxjs';
-import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError, filter, mapTo } from 'rxjs/operators';
+import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError, filter, mapTo, finalize } from 'rxjs/operators';
 import { xor } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -20,7 +20,7 @@ import { TreeSelectComponent } from '../shared/shared.module';
 import { isBasicObjectType } from '../shared/utils';
 import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { ListingOverviewItem } from './listings.models';
-import { CartDetail } from '../store/market.models';
+import { CartDetail, MarketSettings } from '../store/market.models';
 
 
 enum TextContent {
@@ -44,6 +44,7 @@ enum TextContent {
 export class ListingsComponent implements OnInit, OnDestroy {
 
   @Select(MarketState.availableCarts) availableCarts: Observable<CartDetail[]>;
+  @Select(MarketState.settings) marketSettings: Observable<MarketSettings>;
 
   activeMarket: Market;
   selectedMarketControl: FormControl = new FormControl(0);
@@ -53,6 +54,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
   isLoadingListings: boolean = true;
+  isRescanningListings: boolean = false;
 
   // filter/search control mechanisms
   searchQuery: FormControl = new FormControl('');
@@ -361,6 +363,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   clearSearchFilters(): void {
     this.resetFilters();
+  }
+
+
+  forceSmsgRescan() {
+    this.isRescanningListings = true;
+    this._cdr.detectChanges();
+    this._listingService.forceSmsgRescan().pipe(
+      finalize(() => {
+        this.isRescanningListings = false;
+        this._cdr.detectChanges();
+      })
+    ).subscribe();
   }
 
 
