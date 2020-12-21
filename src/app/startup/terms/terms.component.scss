@@ -32,7 +32,7 @@ $installer-header-height: 96px;
     top: 0;
     bottom: 0;
     left: 0;
-    width: var(--multiwallet-width);
+    width: var(--appbar-width);
     background: var(--bg-sidebar-darker);
   }
   & > .sidebar {
@@ -40,7 +40,7 @@ $installer-header-height: 96px;
     position: fixed;
     top: 0;
     bottom: 0;
-    left: var(--multiwallet-width);
+    left: var(--appbar-width);
     background: var(--bg-sidebar);
     color: var(--bg);
     .logo {
@@ -54,7 +54,7 @@ $installer-header-height: 96px;
   }
   & > .content {
     background: var(--bg);
-    margin-left: calc(var(--multiwallet-width) + var(--sidebar-width));
+    margin-left: calc(var(--appbar-width) + var(--sidebar-width));
     .header-main {
       border-bottom: 1px solid var(--bg-muted);
       background: var(--color-white);
@@ -65,9 +65,12 @@ $installer-header-height: 96px;
       text-transform: uppercase;
       position: fixed;
       top: 0;
-      left: calc(var(--multiwallet-width) + var(--sidebar-width));
+      left: calc(var(--appbar-width) + var(--sidebar-width));
       right: 0;
       z-index: 100;
+      @include break(xl) {
+        font-size: 16px;
+      }
     }
   }
 }

@@ -5,7 +5,7 @@
 
   // App bar
   multiwallet-sidebar {
-    transform: translateX(calc(-1 * var(--multiwallet-width)));
+    transform: translateX(calc(-1 * var(--appbar-width)));
     animation: slide-in 0.6s 1; // make it slide-in on launch
     animation-delay: 1s;
     animation-fill-mode: forwards; // stay on the last "frame"
@@ -15,7 +15,7 @@
 
 @keyframes slide-in {
   0% {
-    transform: translateX(calc(-1 * var(--multiwallet-width)));
+    transform: translateX(calc(-1 * var(--appbar-width)));
   }
   100% {
     transform: translateX(0);

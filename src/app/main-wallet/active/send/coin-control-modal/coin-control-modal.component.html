@@ -33,7 +33,7 @@
       <th mat-sort-header="address" class="address">Address</th>
     </tr>
 
-    <tr *ngFor="let utxo of availableUTXOs; index as utxoIdx">
+    <tr *ngFor="let utxo of availableUTXOs; index as utxoIdx" class="utxo" [ngClass]="{'selected': utxo.selected}">
       <td class="checkbox"><mat-checkbox [checked]="utxo.selected" (change)="toggleUtxo(utxoIdx, $event)"></mat-checkbox></td>
       <td class="amount">{{utxo.amount}}</td>
       <td class="label">{{utxo.label}}</td>

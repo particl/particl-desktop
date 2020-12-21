@@ -51,6 +51,12 @@
     .versions {
       margin: 0 0 14px;
       padding: 14px 24px 0;
+      @include break(l) {
+        padding: 16px 26px 0;
+      }
+      @include break(xl) {
+        padding: 18px 28px 0;
+      }
     }
   }
 

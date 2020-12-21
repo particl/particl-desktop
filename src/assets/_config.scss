@@ -139,35 +139,69 @@ $break-xhd: 2200px;
 
   --font: 'Inter_UI', sans-serif; // default sans-serif font
   --font-mono: 'Office_Code_Pro', monospace; // default monospace font
-
+  
+  // General layout  
   --radius: 4px; // default border radius
   --card-spacing: 5px; // space between card-like elements (TXs, addresses etc.)
-
   --header-main-height: 64px; // app header with status bar
   --tab-bar-height: 48px; // tab height in pages
   --control-bar-height: 55px; // control bar height (filters etc., e.g. in Market)
-
-  // FIXME @Allien - rename!
-  --multiwallet-width: 56px; // 56px; width of app switcher bar
+  --appbar-width: 56px; // 56px; width of app switcher bar
   --sidebar-width: 220px; // main sidebar menu width
   --filter-width: 230px; // sidebar in content area (filter/sort, search)
   --scrollbar-width: 6px; // 'duh
   @include break(l) {
-    --multiwallet-width: 64px;
+    --tab-bar-height: 54px;
+    --appbar-width: 64px;
+    --sidebar-width: 250px;
+    --filter-width: 240px;
   }
   @include break(xl) {
+    --card-spacing: 7px;
+    --appbar-width: 72px;
+    --sidebar-width: 250px;
+    --filter-width: 280px;
+    --scrollbar-width: 7px;
   }
   @include break(hd) {
-    --multiwallet-width: 72px;
+    --tab-bar-height: 60px;
+    --appbar-width: 76px;
+    --sidebar-width: 260px;
+    --filter-width: 300px;
+    --scrollbar-width: 8px;
   }
 
+  // Paddings
   --paddingV: 35px; // default vertical padding
-  --paddingH: 35px; // default horizontal padding
-  --padding: 35px; // all-in padding
+  --paddingH: 40px; // default horizontal padding
+  --padding: 35px 40px; // all-in padding
   @include break(l) {
     --paddingV: 40px;
     --paddingH: 50px;
     --padding: 40px 50px;
+  }
+  @include break(xl) {
+    --paddingV: 55px;
+    --paddingH: 60px;
+    --padding: 55px 60px;
+  }
+
+  // Forms
+  --formfield-paddingV: 16px; // default form field vertical padding
+  --formfield-paddingH: 16px; // default horizontal padding
+  --formfield-font-size: 13px; // default font size
+  --formfield-font-size-large: 15px; // larger fonts
+  --formfield-large-multi: 1.3; // large padding multiplier
+  --formfield-small-multi: 0.75; // small padding multiplier
+  @include break(l) {
+    --formfield-paddingV: 18px;
+    --formfield-paddingH: 20px;
+  }
+  @include break(xl) {
+    --formfield-paddingV: 20px;
+    --formfield-paddingH: 24px;
+    --formfield-font-size: 15px;
+    --formfield-font-size-large: 16px;
   }
 }
 
@@ -214,6 +248,9 @@ $break-xhd: 2200px;
   text-transform: uppercase;
   font-weight: 500;
   font-size: 13px;
+  @include break(xl) {
+    font-size: 15px;
+  }
 }
 
 %help-text,
@@ -221,6 +258,12 @@ $break-xhd: 2200px;
   color: var(--text-muted);
   font-size: 12.5px;
   line-height: 1.5;
+  @include break(l) {
+    font-size: 13px;
+  }
+  @include break(hd) {
+    font-size: 14.5px;
+  }
 }
 
 %text-ellipsis {
@@ -288,6 +331,9 @@ $break-xhd: 2200px;
 // Transition effects
 %tfx {
   transition: all 0.17s;
+  @media (prefers-reduced-motion) {
+    transition: none;
+  }
 }
 
 %hide {

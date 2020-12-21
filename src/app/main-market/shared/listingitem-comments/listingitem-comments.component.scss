@@ -18,6 +18,9 @@
   @include break(xl) {
     font-size: 15px;
   }
+  .header {
+    height: min-content;
+  }
   .question {
     padding: 16px 0 16px 24px;
     @include break(xl) {

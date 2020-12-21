@@ -10,20 +10,47 @@
   --size: 50px;
   min-height: var(--size) !important;
   max-height: var(--size) !important;
+  @include break(xl) {
+    --size: 60px;
+  }
+  .mat-expansion-panel-header-title {
+    @include break(xl) {
+      font-size: 15px;
+    }
+  }
+
+  .tx-overview {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & > * {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
 
   // TX date/time
   .date {
     color: var(--text-muted);
+    flex: 0 0 145px;
+    @include break(xl) {
+      flex: 0 0 175px;
+    }
   }
 
   // confirmations
   .confirmations {
-    // color: var(--text-muted);
+    flex: 0 0 70px;
     .confirmation-tag {
       border-radius: var(--radius);
       font-size: 12px;
       display: inline-block;
       padding: 5px 10px;
+      @include break(xl) {
+        font-size: 13px;
+      }
     }
     .confirmations { // icon
       margin-right: 3px;
@@ -62,10 +89,14 @@
 
   // TX icon
   .type {
+    flex: 1 0 175px;
     .mat-icon {
       font-size: 14px;
       position: relative;
       top: 2px;
+      @include break(xl) {
+        font-size: 16px;
+      }
       // narration icon
       &.narration {
         margin: 0 0 0 6px;
@@ -73,6 +104,9 @@
         color: hsla(var(--text-muted-hsl), 0.8) !important;
         padding: 3px;
         top: 1px;
+        @include break(xl) {
+          font-size: 14px;
+        }
       }
     }
     .tx-type {
@@ -111,6 +145,7 @@
 
   // TX amount
   .tx-value {
+    flex: 1 0 135px;
     text-align: right;
     font-family: var(--font-mono);
     display: block;
@@ -149,6 +184,11 @@
   padding: 18px 24px;
   border-top: 1px solid var(--bg-muted);
   border-bottom: 1px dashed var(--bg-muted);
+  @include break(xl) {
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 24px 35px;
+  }
 }
 
 .tx-details {

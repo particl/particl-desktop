@@ -17,9 +17,9 @@
 <div class="container-block with-tab-bar">
   <ng-container *ngTemplateOutlet="currentTabType === 'send' ? sendHeader : transferHeader"></ng-container>
 
-  <div fxLayout="row" fxLayoutGap="35px">
+  <div fxLayout="row">
 
-    <div class="from-box" fxFlex="0 0 320px">
+    <div class="from-box">
       <div class="sticky">
         <h2 class="section-title">Pay from</h2>
         <mat-card>
@@ -122,7 +122,7 @@
     </div>
 
 
-    <div class="to-box" fxFlex="1 1 100%">
+    <div class="to-box">
       <form name="walletSendForm" [formGroup]="targetForm">
 
         <ng-container *ngIf="currentTabType === 'transfer'">
@@ -156,16 +156,16 @@
               </mat-form-field>
             </label>
 
-            <label>
+            <label class="--larger">
+              <h3 class="label">Receiver's name</h3>
               <mat-form-field appearance="fill" class="address-label --plain --larger">
-                <h3 class="label">Receiver's name</h3>
                 <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
               </mat-form-field>
             </label>
 
-            <label>
+            <label class="--larger">
+              <h3 class="label">Narration</h3>
               <mat-form-field appearance="fill" class="narration --plain --larger">
-                <h3 class="label">Narration</h3>
                 <input matInput type="text" formControlName="narration" maxlength="24"
                   [placeholder]="sourceType.value === 'part'
                   ? 'Send a short public message with the payment (optional)'
@@ -181,9 +181,9 @@
         <!-- Send amount & buttons -->
         <h2 class="section-title">Amount & confirmation</h2>
         <div class="send-amount" fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="start center">
-          <mat-form-field fxFlex="0 0 235px" appearance="fill" class="amount-to-send --boxed">
+          <mat-form-field fxFlex="0 0 245px" appearance="fill" class="amount-to-send --larger --boxed">
             <!-- Send amount -->
-            <span matPrefix>PART&nbsp;</span>
+            <span matPrefix>PART</span>
             <input matInput type="text" formControlName="amount" placeholder="0.00"
                   [class.verify-sucess]="amount.valid"
                   [class.verify-error]="amount.invalid">
