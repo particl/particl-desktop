@@ -122,7 +122,7 @@ export class NotificationsService implements OnDestroy {
       takeUntil(this.stopListeners$)
     );
     const sellListener$ = merge(
-      ...orderMessageListeners.sellerAllerts.map(li =>
+      ...orderMessageListeners.sellerAlerts.map(li =>
         this._socket.getSocketMessageListener(li as any).pipe(takeUntil(this.stopListeners$))
       )
     ).pipe(
@@ -139,9 +139,31 @@ export class NotificationsService implements OnDestroy {
       takeUntil(this.stopListeners$)
     );
 
+    const cancelListener$ = merge(
+      this._socket.getSocketMessageListener('MPA_CANCEL_03').pipe(takeUntil(this.stopListeners$)),
+      this._socket.getSocketMessageListener('MPA_REJECT_03').pipe(takeUntil(this.stopListeners$))
+    ).pipe(
+      bufferTime(2000),
+      map((items: SocketMessages_v03.BidReceived[]) => {
+        return items.filter(item => (typeof item.market === 'string') && identityMarkets.includes(item.market)
+        ).map(m => m.objectHash);
+      }),
+      filter((bidHashes: string[]) => bidHashes.length > 0),
+      tap((bidHashes: string[]) => {
+        for (const hash of bidHashes) {
+          this._store.dispatch([
+            new MarketUserActions.OrderItemActioned('SELLER', hash),
+            new MarketUserActions.OrderItemActioned('BUYER', hash),
+          ]);
+        }
+      }),
+      takeUntil(this.stopListeners$)
+    );
+
     return merge(
       buyListener$,
-      sellListener$
+      sellListener$,
+      cancelListener$
     ).pipe(takeUntil(this.stopListeners$));
   }
 
