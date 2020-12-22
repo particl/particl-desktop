@@ -151,10 +151,10 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = combineLatest(
+    const balanceChange$ = combineLatest([
       this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
-    ).pipe(
+    ]).pipe(
       map((values) => {
         const utxosSet: WalletUTXOStateModel = values[0];
         const settings = values[1];
@@ -241,7 +241,11 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
           () => isProcessing,
 
           defer(() => this._unlocker.unlock({timeout: countProducts * 10}).pipe(
-            concatMap((isUnlocked) => iif(() => isUnlocked, defer(() => this.publishProducts())))
+            concatMap((isUnlocked) => iif(
+              () => isUnlocked,
+              defer(() => this.publishProducts()),
+              defer(() => this.isProcessingControl.setValue(false))
+            ))
           ))
         );
       }),
