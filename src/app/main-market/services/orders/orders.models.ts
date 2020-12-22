@@ -4,7 +4,7 @@ import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE, BID_DATA_KEY } from '../../s
 
 export const messageListeners = {
   sellerAll: ['MPA_BID_03', 'MPA_CANCEL_03', 'MPA_LOCK_03', 'MPA_RELEASE'],
-  sellerAllerts: ['MPA_BID_03', 'MPA_LOCK_03'],
+  sellerAlerts: ['MPA_BID_03', 'MPA_LOCK_03'],
   buyerAll: ['MPA_REJECT_03', 'MPA_CANCEL_03', 'MPA_ACCEPT_03', 'MPA_COMPLETE', 'MPA_SHIP'],
   buyerAlerts: ['MPA_ACCEPT_03', 'MPA_SHIP'],
 };

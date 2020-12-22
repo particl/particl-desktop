@@ -93,7 +93,7 @@
               </div>
               <div class="meta" fxFlex="1 1 100%">
                 <div class="name">{{ listing.title }}</div>
-                <span class="published-markets">{{ marketList[listing.marketKey] || '' }}</span>
+                <span class="published-markets">{{ marketList[listing.marketKey] || listing.marketKey }}</span>
                 <!--span class="category">{{ listing.categoryName }}</span-->
               </div>
               <div class="status-wrap" fxFlex="0 0 140px">
@@ -124,7 +124,7 @@
             <div class="description" fxFlex="55%">
               <h3 class="item-subtitle">Published on</h3>
               <ul class="listing-info">
-                <li>{{ marketList[listing.marketKey] || '' }}</li>
+                <li>{{ marketList[listing.marketKey] || listing.marketKey }}</li>
               </ul>
             </div><!-- .description -->
             <div class="pricing-info" fxFlex="45%">

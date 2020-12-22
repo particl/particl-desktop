@@ -41,7 +41,8 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     usePaidMsgForImages: true,
     startupWaitTimeoutSeconds: 60,
     defaultListingCommentPageCount: 20,
-    daysToNotifyListingExpired: 7
+    daysToNotifyListingExpired: 7,
+    marketsLastAdded: 0,
   },
   notifications: {
     identityCartItemCount: 0,

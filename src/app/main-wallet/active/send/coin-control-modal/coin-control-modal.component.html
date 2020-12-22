@@ -50,6 +50,10 @@
     Cancel
   </button>
   <div class="right">
+    <button mat-button (click)="actionSelectAll()" [disabled]="selectedCount === availableUTXOs.length">
+      <mat-icon fontIcon="part-select"></mat-icon>
+      Select all
+    </button>
     <button mat-button (click)="actionDeselectAll()" [disabled]="selectedCount === 0">
       <mat-icon fontIcon="part-select"></mat-icon>
       Deselect all

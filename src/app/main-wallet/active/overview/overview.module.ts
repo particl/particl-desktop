@@ -14,7 +14,7 @@ import { WalletSharedModule } from '../../shared/wallet-shared.module';
 
 
 const routes: Routes = [
-  { path: '', component: OverviewComponent, data: { title: 'Overview'} }
+  { path: '', component: OverviewComponent, data: { title: 'Wallet Overview'} }
 ];
 
 

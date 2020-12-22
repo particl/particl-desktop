@@ -278,6 +278,11 @@ export class SendComponent implements OnInit, OnDestroy {
   }
 
 
+  get hasCoinControlSelected(): boolean {
+    return ((this.selectedSourceSelector() || {} as any).coinInputs || []).length > 0;
+  }
+
+
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();

@@ -21,8 +21,7 @@ exports.init = function (_options) {
     }
     initialized = true;
 
-    // loadBotAuthentication();
-    loadGithub();
+    loadDefault();
     loadMarketAuthentication();
 
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
@@ -67,8 +66,14 @@ exports.setAuthConfig = function(_options) {
 
 function isWhitelisted(url) {
     let isValid = whitelist.has(url);
-    if (!isValid && url.split(':')[0] === 'localhost') {
-      isValid = whitelist.has('localhost:*') && ['market', 'bot'].indexOf(whitelist.get('localhost:*').name) !== -1;
+    if (!isValid) {
+      if (url.split(':')[0] === 'localhost') {
+        isValid = whitelist.has('localhost:*') && ['market', 'bot'].indexOf(whitelist.get('localhost:*').name) !== -1;
+      } else if (url.split(':')[0] && url.split(':')[0].split('.').length > 1) {
+        const domainParts = url.split('.');
+        const rootDomain = `*.${domainParts[domainParts.length - 2]}.${domainParts[domainParts.length - 1]}`; // last segment should include port
+        isValid = whitelist.has(rootDomain);
+      }
     }
     return isValid;
 }
@@ -88,6 +93,107 @@ function getAuthentication(url) {
     if (isPlainObject(entry) && ['market', 'bot'].indexOf(entry.name) !== -1) {
       return entry.auth;
     }
+  } else if (url.split(':')[0] && url.split(':')[0].split('.').length > 1) {
+    const domainParts = url.split('.');
+    const rootDomain = `*.${domainParts[domainParts.length - 2]}.${domainParts[domainParts.length - 1]}`; // last segment should include port
+    if (whitelist.has(rootDomain)) {
+      entry = whitelist.get(rootDomain);
+      if (isPlainObject(entry)) {
+        return entry.auth;
+      }
+    }
+  }
+}
+
+
+function loadDefault() {
+  const services = {
+    'Github API': {
+      url: 'api.github.com'
+    },
+    'Github Web': {
+      url: 'github.com'
+    },
+    'Github Assets': {
+      url: 'github.githubassets.com'
+    },
+    'Github User Content': {
+      url: '*.githubusercontent.com'
+    },
+    'Testnet Block Explorer': {
+      url: 'explorer-testnet.particl.io'
+    },
+    'Mainnet Block Explorer': {
+      url: 'explorer.particl.io'
+    },
+    'Particl Community' : {
+      url: 'particl.community'
+    },
+    'Particl Crowd-Funding': {
+      url: 'ccs.particl.io'
+    },
+    'Particl Wiki': {
+      url: 'particl.wiki'
+    },
+    'Particl Website': {
+      url: 'particl.io'
+    },
+    'Particl Website 1': {
+      url: '*.particl.cz'
+    },
+    'Particl News': {
+      url: 'particl.news'
+    },
+    'Discord Web': {
+      url: '*.discordapp.com'
+    },
+    'Discord': {
+      url: 'discord.com'
+    },
+    'Element (Formerly Riot)': {
+      url: 'app.element.io'
+    },
+    'Telegram Web': {
+      url: 't.me'
+    },
+    'Twitter': {
+      url: 'twitter.com'
+    },
+    'Facebook': {
+      url: 'www.facebook.com'
+    },
+    'Reddit': {
+      url: '*.reddit.com'
+    },
+    'Reddit Statc Content': {
+      url: 'www.redditstatic.com'
+    },
+    'Reddit Media': {
+      url: '*.redditmedia.com'
+    },
+    'Reddit Dynamic Content': {
+      url: '*.redd.it'
+    },
+    'Mastodon': {
+      url: 'fosstodon.org'
+    },
+    'Youtube': {
+      url: 'www.youtube.com'
+    },
+    'BitCoinTalk': {
+      url: 'bitcointalk.org'
+    },
+
+  };
+  for (const service of Object.keys(services)) {
+    const serviceDetails = services[service];
+    if ((typeof serviceDetails.url === 'string') && (serviceDetails.url.length > 1) && (serviceDetails.url.includes('.'))) {
+      const path = `${serviceDetails.url}:${+serviceDetails.port > 0 ? +serviceDetails.port : 80}`;
+      whitelist.set(path, {
+        name: service,
+        auth: (typeof serviceDetails.auth) === 'string' && (serviceDetails.auth.length > 0) ? serviceDetails.auth : false
+      });
+    }
   }
 }
 
@@ -102,15 +208,6 @@ function loadMarketAuthentication() {
     whitelist.set(key, value);
 }
 
-// function loadBotAuthentication() {
-//     let key = "localhost:*";
-//     let value = {
-//         name: "bot",
-//         auth: "test:test"
-//     }
-
-//     whitelist.set(key, value);
-// }
 
 function loadWalletAuthentication() {
     let key = (OPTIONS.rpcbind || 'localhost') + ":" + OPTIONS.port;
@@ -133,20 +230,6 @@ function loadDev() {
 
     whitelist.set(key, value);
   }
-}
-
-function loadGithub() {
-    const services = {
-      'api.github.com:80' : 'github update service',
-      'github.com:80' : 'github',
-      'github.githubassets.com:80': 'gtihub assets'
-    };
-    for (const key of Object.keys(services)) {
-      whitelist.set(key, {
-        name: services[key],
-        auth: false
-      });
-    }
 }
 
 function isPlainObject(obj) {

@@ -220,6 +220,12 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
   }
 
 
+  actionSelectAll() {
+    this.availableUTXOs.forEach(u => u.selected = true);
+    this.updateTotals();
+  }
+
+
   actionMakeSelection(): void {
     const selection = this.availableUTXOs.filter(u => u.selected).map(u => {
       const selected: UTXOSelectedItem & { amount: number} = {

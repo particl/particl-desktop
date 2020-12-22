@@ -18,7 +18,8 @@ import { GenericModalInfo } from '../joined-markets.models';
 
 enum TextContent {
   ERROR_IMAGE_SIZE = 'Market image exceeds the allowed publishing size. Please change to using a paid SMSG for posting images.',
-  ERROR_ESTIMATING_FEE = 'Something went wrong estimating the fee'
+  ERROR_ESTIMATING_FEE = 'Something went wrong estimating the fee',
+  ERROR_ESTIMATING_FEE_FUNDS = 'Insufficient funds to promote this market'
 }
 
 
@@ -121,6 +122,8 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
             if (typeof err === 'string') {
               if (err.includes('MPA_MARKET_IMAGE_ADD size')) {
                 this.errorMsg = TextContent.ERROR_IMAGE_SIZE;
+              } else if (err.includes('Insufficient funds')) {
+                this.errorMsg = TextContent.ERROR_ESTIMATING_FEE_FUNDS;
               }
             }
             if (!this.errorMsg) {

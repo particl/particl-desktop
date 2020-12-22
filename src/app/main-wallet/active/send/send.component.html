@@ -28,7 +28,6 @@
                             fxLayout="column" fxLayoutGap="10px">
             <mat-radio-button class="balance" *ngFor="let option of selectorOptions" [value]="option.value" [color]="option.color" fxFlex>
               <div class="name">{{ option.name }}</div>
-              <!-- @TODO: in case of manual Coin control, swap "Available balance" with "Selected balance" -->
               <div class="desc">
                 <ng-container *ngIf="option.coinInputs.length > 0">
                   Selected Balance:
@@ -60,7 +59,7 @@
               <mat-icon fontIcon="{{ (showAdvanced) ? 'part-triangle-down': 'part-triangle-right' }}"></mat-icon>
               Advanced options
             </button>
-            <button mat-button (click)="openCoinControlModal()" class="small coin-control" matTooltip="Select TX inputs manually" matTooltipPosition="below">
+            <button mat-button (click)="openCoinControlModal()" class="small" [class.coin-control]="hasCoinControlSelected" matTooltip="Select TX inputs manually" matTooltipPosition="below">
               <mat-icon fontIcon="part-stake"></mat-icon>
               Coin control
             </button>

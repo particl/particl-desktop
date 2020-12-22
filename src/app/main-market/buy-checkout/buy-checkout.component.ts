@@ -22,6 +22,7 @@ export class BuyCheckoutComponent implements OnInit, OnDestroy {
   readonly tabs: BuyCheckoutTab[] = [
     { title: 'Cart', icon: 'part-cart-2', templ: 'cart', notificationValue: null},
     { title: 'Favourites', icon: 'part-heart-outline', templ: 'favourites', notificationValue: null},
+    { title: 'Shipping profiles', icon: 'part-truck', templ: 'shipping-profiles', notificationValue: null},
   ];
 
 
