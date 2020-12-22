@@ -2,7 +2,11 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, merge, Observable, defer } from 'rxjs';
-import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime } from 'rxjs/operators';
+import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime, finalize } from 'rxjs/operators';
+
+import { Select } from '@ngxs/store';
+import { MarketState } from '../../store/market.state';
+import { MarketSettings } from '../../store/market.models';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
@@ -36,12 +40,14 @@ interface FilterOption {
 })
 export class MarketBrowserComponent implements OnInit, OnDestroy {
 
+  @Select(MarketState.settings) marketSettings: Observable<MarketSettings>;
+
   marketTypeOptions: typeof MarketType = MarketType;
 
   optionsFilterMarketType: FilterOption[] = [
     { label: 'All markets',       value: '' },
-    { label: 'Community Markets', value: '0' },
-    { label: 'Storefronts',       value: '1' }
+    { label: 'Community Markets', value: 'MARKETPLACE' },
+    { label: 'Storefronts',       value: 'STOREFRONT' }
   ];
 
   optionsFilterMarketRegion: FilterOption[];
@@ -53,6 +59,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   isLoading: boolean = true;
   displayedMarkets: number[] = [];
   marketsList: AvailableMarket[] = [];
+  isRescanning: boolean = false;
 
 
   private destroy$: Subject<void> = new Subject();
@@ -175,6 +182,19 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   }
 
 
+  forceSmsgRescan() {
+    this.isRescanning = true;
+    this._cdr.detectChanges();
+    this._manageService.forceSmsgRescan().pipe(
+      finalize(() => {
+        this.isRescanning = false;
+        this._cdr.detectChanges();
+      }),
+      tap(() => this._cdr.detectChanges()),
+    ).subscribe();
+  }
+
+
   openMarketJoinModal() {
     this._dialog.open(JoinWithDetailsModalComponent);
   }
@@ -210,7 +230,6 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
       const filterType: string = this.filterTypeControl.value;
 
       const doTypeFilter = filterType.length > 0;
-      const isStorefront = +filterType > 0;
 
       const idxList: number[] = [];
 
@@ -218,7 +237,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
         const addItem =
             market.name.toLocaleLowerCase().includes(searchString) &&
             (filterRegion ? filterRegion === market.region.value : true) &&
-            (doTypeFilter ? isStorefront === (market.publishKey === null) : true);
+            (doTypeFilter ? filterType === market.marketType : true);
 
         if (addItem) {
           idxList.push(marketIdx);

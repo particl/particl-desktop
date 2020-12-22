@@ -106,9 +106,9 @@
                   <mat-icon fontIcon="part-check"></mat-icon>
                   Ready for publishing
                 </ng-container>
-                <ng-container *ngIf="!product.dirty && publishingInfo.failedProducts.includes(formProductIdx)">
+                <ng-container *ngIf="!product.dirty && specificErrorMessages.has(formProductIdx)">
                   <mat-icon fontIcon="part-alert"></mat-icon>
-                  Publishing failed, please try again
+                  {{ specificErrorMessages.get(formProductIdx) }}
                 </ng-container>
               </div>
               <div class="publish-status" *ngIf="!isSelectedForPublish(formProductIdx)">

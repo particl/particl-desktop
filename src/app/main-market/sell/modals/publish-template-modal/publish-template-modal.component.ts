@@ -124,10 +124,10 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = combineLatest(
+    const balanceChange$ = combineLatest([
       this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
-    ).pipe(
+    ]).pipe(
       map((values) => {
         const utxosSet: WalletUTXOStateModel = values[0];
         const settings = values[1];

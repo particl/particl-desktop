@@ -83,6 +83,7 @@ export class FilteredTransaction {
   readonly confirmations: number;
   readonly addressType: AddressType;
   readonly transferType: TxTransferType;
+  readonly requiredConfirmations: number;
 
   readonly isListingFee: boolean;
 
@@ -93,6 +94,7 @@ export class FilteredTransaction {
     /* transactions */
     this.txid = json.txid;
     this.category = json.category;
+    this.requiredConfirmations = 12;
 
     const partoshiAmount = new PartoshiAmount(Math.abs(+json.amount));
     this.amount = +json.amount;
@@ -107,7 +109,8 @@ export class FilteredTransaction {
 
     this.isListingFee = this.category === 'internal_transfer' && this.outputs.length === 0;
 
-
+    this.address = '';
+    this.addressType = AddressType.NORMAL;
     if (json.outputs && json.outputs.length) {
       const output = json.outputs[0];
 
@@ -116,8 +119,6 @@ export class FilteredTransaction {
 
         if (output.address && output.address.startsWith('r')) {
           this.addressType = AddressType.MULTISIG;
-        } else {
-          this.addressType = AddressType.NORMAL;
         }
 
       } else {
@@ -163,6 +164,10 @@ export class FilteredTransaction {
         default:
           this.transferType = TxTransferType.SPLIT;
       }
+    }
+
+    if ((this.transferType === TxTransferType.NONE) && (this.addressType === AddressType.NORMAL)) {
+      this.requiredConfirmations = 1;
     }
 
     this.amountWhole = (

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of, iif, defer, concat } from 'rxjs';
-import { map, concatMap, tap, catchError } from 'rxjs/operators';
+import { map, concatMap, tap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';

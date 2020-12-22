@@ -45,12 +45,18 @@ body {
     h1 {
       margin: 0 0 8px;
       font-weight: 600;
-      font-size: 1.9rem;;
+      font-size: 1.9rem;
+      @include break(xl) {
+        font-size: 2.3rem;
+      }
     }
     p {
       margin: 0;
       color: var(--text-muted);
       font-size: 1.05rem;
+      @include break(xl) {
+        font-size: 1.15rem;
+      }
     }
   }
   
@@ -95,6 +101,10 @@ body {
       --app-margin: 16px;
       --app-padding: 26px;
       --app-height: 160px;
+      @include break(xl) {
+        --app-padding: 35px;
+        --app-height: 190px;
+      }
       display: flex;
       width: 100%;
       margin: 0 calc(-1 * var(--app-margin));
@@ -119,12 +129,18 @@ body {
         text-align: left;
         color: var(--text);
         text-decoration: none;
+        @include break(xl) {
+          max-width: 310px;
+        }
         &:hover,
         &:focus {
           box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
         }
         .mat-icon {
           font-size: 22px;
+          @include break(xl) {
+            font-size: 26px;
+          }
           &.part-stake {
             color: var(--color-primary);
           }
@@ -137,10 +153,17 @@ body {
         }
         .name {
           margin: 14px 0 8px;
+          @include break(xl) {
+            margin: 16px 0 10px;
+            font-size: 22px;
+          }
         }
         .desc {
           margin: 0;
           color: var(--text-muted);
+          @include break(xl) {
+            font-size: 15px;
+          }
         }
       }
     } // .apps

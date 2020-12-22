@@ -14,13 +14,14 @@ import { CategoryItem, Market } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 
 import * as marketConfig from '../../../../modules/market/config.js';
+import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 
 
 enum TextContent {
   LABEL_REGION_ALL = 'All regions',
   LABEL_REGION_WORLDWIDE = 'Worldwide / Global',
   LABEL_REGION_NORTH_AMERICA = 'North Americas',
-  LABEL_REGION_SOUTH_AMERICA = 'Cerntral & Southern America',
+  LABEL_REGION_SOUTH_AMERICA = 'Central & Southern America',
   LABEL_REGION_EUROPE = 'Europe',
   LABEL_REGION_MIDDLE_EAST_AFRICA = 'Middle East & Africa',
   LABEL_REGION_ASIA_PACIFIC = 'Asia Pacific',
@@ -46,6 +47,7 @@ export class MarketManagementService {
 
   constructor(
     private _rpc: MarketRpcService,
+    private _daemonRpc: MainRpcService,
     private _store: Store,
     private _ipc: IpcService,
   ) {
@@ -184,7 +186,7 @@ export class MarketManagementService {
 
       return this._rpc.call('market', ['join', profileId, market.id, identityId]).pipe(
         mapTo(true),
-        tap(isSuccess => {
+        concatMap(isSuccess => {
           if (isSuccess) {
             const idMarket: Market = {
               id: market.id,
@@ -195,9 +197,12 @@ export class MarketManagementService {
               receiveAddress: market.receiveKey,
               type: market.marketType
             };
-
-            this._store.dispatch(new MarketUserActions.AddIdentityMarket(idMarket));
+            return this._store.dispatch([
+              new MarketUserActions.AddIdentityMarket(idMarket),
+              new MarketUserActions.SetSetting('profile.marketsLastAdded', Date.now()),
+            ]).pipe(mapTo(isSuccess));
           }
+          return of(isSuccess);
         })
       );
     });
@@ -220,13 +225,15 @@ export class MarketManagementService {
     const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
     const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
 
+    const receiveKey = getValueOrDefault(details.receiveKey, 'string', '').length > 0 ? details.receiveKey : null;
+    const publishKey = getValueOrDefault(details.publishKey, 'string', '').length > 0 ? details.publishKey : null;
     const params = [
       'add',
       profileId,
       details.name,
       details.marketType,
-      getValueOrDefault(details.receiveKey, 'string', '').length > 0 ? details.receiveKey : null,
-      getValueOrDefault(details.publishKey, 'string', '').length > 0 ? details.publishKey : null,
+      receiveKey,
+      publishKey,
       identityId
     ];
 
@@ -280,6 +287,12 @@ export class MarketManagementService {
         }
 
         return this.buildJoinedMarket(market, marketUrl);
+      }),
+      concatMap(response => {
+        if (receiveKey || publishKey) {
+          return this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', Date.now())).pipe(mapTo(response));
+        }
+        return of(response);
       })
     );
   }
@@ -410,6 +423,13 @@ export class MarketManagementService {
 
   calculatePublicKeyFromPrivate(privateKey: string): Observable<string> {
     return this._ipc.runCommand('market-keygen', null, 'PUBLIC', privateKey);
+  }
+
+
+  forceSmsgRescan(): Observable<any> {
+    return this._daemonRpc.call('smsgscanbuckets').pipe(
+      concatMap(() => this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', 0)))
+    );
   }
 
 

@@ -11,11 +11,26 @@ hr.divider {
 // ------ LAYOUT ------ //
 
 .container-block {
+  --settings-sidebar-width: 300px;
   min-height: calc(100vh - 2 * var(--paddingV)); // fill 100% of remaining vertical space
   display: flex;
   flex-direction: column;
+  @include break(l) {
+    --settings-sidebar-width: 340px;
+  }
+  @include break(xl) {
+    --settings-sidebar-width: 380px;
+  }
   .container {
     flex: 1 1 100%; // fill most of the space and push action buttons to bottom
+    display: flex;
+    & > .sidebar {
+      flex: 0 0 var(--settings-sidebar-width);
+      margin-right: var(--paddingH);
+    }
+    & > .content {
+      flex: 1 1 100%;
+    }
   }
 }
 
@@ -48,8 +63,14 @@ hr.divider {
 
 .item {
   @extend %tfx;
-  --item-paddingH: 24px;
-  --item-paddingV: 22px;
+  --item-paddingV: 18px;
+  --item-paddingH: calc(var(--formfield-large-multi) * var(--formfield-paddingH)); // align nicely with large inputs
+  @include break(l) {
+    --item-paddingV: 22px;
+  }
+  @include break(xl) {
+    --item-paddingV: 24px;
+  }
   &.--with-error {
     background: hsla(var(--color-alert-hsl), 0.015);
   }
@@ -76,6 +97,9 @@ hr.divider {
   text-transform: none;
   line-height: 1.5;
   margin: 0 0 3px;
+  @include break(xl) {
+    font-size: 16px;
+  }
 }
 
 .desc { // help text for ^

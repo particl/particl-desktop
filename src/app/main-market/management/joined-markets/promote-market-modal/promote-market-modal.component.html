@@ -30,7 +30,7 @@
   <h3 class="item-subtitle">Days to promote</h3>
 
   <mat-card class="promo-duration item-card no-padding" fxLayout>
-    <div class="alert --boxed --warning full-width" *ngIf="errorMsg.length > 0; else durationSelector">
+    <div class="alert --boxed --warning full-width" *ngIf="errorMsg.length > 0; else durationSelector" fxFlex="100">
       <span>
         {{errorMsg}}
       </span>

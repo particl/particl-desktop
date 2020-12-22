@@ -16,7 +16,7 @@
     <div class="filter">
 
       <!-- search unified with those from Address Book and Sell > Listings -->
-      <mat-form-field class="--boxed" appearance="fill">
+      <mat-form-field class="search --boxed" appearance="fill">
         <input matInput type="text" class="header-input" placeholder="Search Listings…" [formControl]="searchQuery" (keyup.escape)="searchQuery.setValue('')">
         <button *ngIf="searchQuery.value.length > 0" matSuffix mat-button class="small" (click)="searchQuery.setValue('')" matTooltip="Clear" matTooltipPosition="after">
           <mat-icon fontIcon="part-clear-all"></mat-icon>
@@ -180,9 +180,13 @@
             If you launched the Marketplace recently, Listings might not load yet.<br>
             Please wait a few minutes and then:
           </p>
-          <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)">
+          <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)" matTooltip="Check for new incoming Listings">
             <mat-icon fontIcon="part-refresh"></mat-icon>
             Refresh Listings
+          </button>
+          <button *ngIf="(marketSettings | async)?.marketsLastAdded > 0" mat-button color="warn" appDebounceClick (debounceClick)="forceSmsgRescan()" [disabled]="isRescanningListings" matTooltip="Rescan ALL LISTINGS on Particl – this takes a lot of time">
+            <mat-icon fontIcon="part-search"></mat-icon>
+            Rescan Listings
           </button>
         </ng-container>
 
@@ -203,7 +207,7 @@
           This is the end
         </p>
         <p class="help-text">
-          You've reached the end of the current Marketplace supply<br>
+          You’ve browsed through all of this market’s listed items<br>
           (or all of the Listings haven't loaded yet)
         </p>
       </div><!-- .no-results -->

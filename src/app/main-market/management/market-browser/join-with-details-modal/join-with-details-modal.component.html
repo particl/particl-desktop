@@ -13,12 +13,18 @@
         Market details
       </h2>
 
+      <div class="market">
+        <div class="details">
+          <p class="desc">You’re about to join a market or storefront. To better organize your markets, you have the ability to enter your own information (name, description, etc) so as to easily identify this market in the future.</p>
+        </div>
+      </div>
+
       <mat-card class="market-details no-padding">
 
         <label>
           <mat-form-field class="--larger --plain" appearance="fill">
             <h3 class="label">Market name</h3>
-            <input matInput #name placeholder="Choose a name for your Market" formControlName="name">
+            <input matInput #name placeholder="Choose an easily identifiable name for this Market" formControlName="name">
             <mat-hint align="end">{{ name.value.length }}/{{ MAX_NAME }}</mat-hint>
           </mat-form-field>
         </label>
@@ -26,7 +32,7 @@
         <label>
           <mat-form-field class="--larger --plain" appearance="fill">
             <h3 class="label">Market description</h3>
-            <textarea matInput rows="4" #description formControlName="summary" placeholder="Describe your Market in short, so that users will know what they'll find there"></textarea>
+            <textarea matInput rows="4" #description formControlName="summary" placeholder="Describe this Market in short (to easily remember what this market is about)"></textarea>
             <mat-hint align="end">{{ description.value.length }}/{{ MAX_SUMMARY }}</mat-hint>
           </mat-form-field>
         </label>

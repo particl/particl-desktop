@@ -8,7 +8,10 @@
     top: calc(var(--header-main-height) + var(--paddingV) + 1px);
     align-self: flex-start; // needed for position:sticky
     height: auto;
-    margin-right: 35px;
+    margin-right: var(--paddingH);
+    .search {
+      margin-bottom: var(--paddingV);
+    }
   }
 }
 
@@ -86,17 +89,28 @@
   --grid-gutter: 3%;
   @include break(l) {
     --grid-columns: 4;
+    --grid-gutter: 2.25%;
   }
-  @include break-from(1700px) {
+  @include break-from(1750px) {
     --grid-columns: 5;
     --grid-gutter: 1.75%;
   }
   @include break-from(2000px) {
     --grid-columns: 6;
   }
-  @include break-from(2300px) {
+  @include break-from(2350px) {
     --grid-columns: 7;
-    --grid-gutter: 2%;
+  }
+  @include break-from(2700px) {
+    --grid-columns: 8;
+    --grid-gutter: 1.25%;
+  }
+  @include break-from(3000px) {
+    --grid-columns: 9;
+  }
+  @include break-from(3500px) {
+    --grid-columns: 10;
+    --grid-gutter: 1%;
   }
 }
 

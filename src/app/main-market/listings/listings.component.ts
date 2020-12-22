@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, iif, merge, of, defer, timer } from 'rxjs';
-import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap, catchError, filter, mapTo } from 'rxjs/operators';
+import { Observable, Subject, iif, merge, of, defer, timer, from } from 'rxjs';
+import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, take, switchMap,
+  catchError, filter, mapTo, finalize, concatAll, last } from 'rxjs/operators';
 import { xor } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -20,7 +21,7 @@ import { TreeSelectComponent } from '../shared/shared.module';
 import { isBasicObjectType } from '../shared/utils';
 import { Market, CategoryItem, Country } from '../services/data/data.models';
 import { ListingOverviewItem } from './listings.models';
-import { CartDetail } from '../store/market.models';
+import { CartDetail, MarketSettings } from '../store/market.models';
 
 
 enum TextContent {
@@ -44,6 +45,7 @@ enum TextContent {
 export class ListingsComponent implements OnInit, OnDestroy {
 
   @Select(MarketState.availableCarts) availableCarts: Observable<CartDetail[]>;
+  @Select(MarketState.settings) marketSettings: Observable<MarketSettings>;
 
   activeMarket: Market;
   selectedMarketControl: FormControl = new FormControl(0);
@@ -53,6 +55,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
   isLoadingListings: boolean = true;
+  isRescanningListings: boolean = false;
 
   // filter/search control mechanisms
   searchQuery: FormControl = new FormControl('');
@@ -76,6 +79,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private timerExpire$: Subject<void> = new Subject();
   private categorySource$: Subject<CategoryItem[]> = new Subject();
+  private listingExpirations: number[];
 
   private PAGE_COUNT: number = 80;
   private expiryValue: number = 0;
@@ -263,6 +267,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     ).pipe(
       tap(() => {
         this.listings = [];
+        this.listingExpirations = [];
       }),
       takeUntil(this.destroy$)
     );
@@ -276,7 +281,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       tap(() => {
         this.isLoadingListings = true;
 
-        // check for whether we're filtering/seaching
+        // check for whether we're filtering/searching
         let isSearching = false;
         const defaults = this.getDefaultFilterValues();
         const fields = Object.keys(defaults);
@@ -307,13 +312,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this._cdr.detectChanges();
       }),
 
-      switchMap(() => this.fetchMarketListings(this.PAGE_COUNT).pipe(
-
-        catchError(() => {
-          this._snackbar.open(TextContent.FAILED_LOAD_LISTINGS, 'err');
-          return of(false);
-        }),
-
+      switchMap(() => this.fetchMarketListings().pipe(
         tap(() => {
           this.isLoadingListings = false;
           this._cdr.detectChanges();  // force view update again here
@@ -361,6 +360,18 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
   clearSearchFilters(): void {
     this.resetFilters();
+  }
+
+
+  forceSmsgRescan() {
+    this.isRescanningListings = true;
+    this._cdr.detectChanges();
+    this._listingService.forceSmsgRescan().pipe(
+      finalize(() => {
+        this.isRescanningListings = false;
+        this._cdr.detectChanges();
+      })
+    ).subscribe();
   }
 
 
@@ -526,72 +537,131 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  private fetchMarketListings(numItems: number): Observable<boolean> {
-    if (!this.activeMarket || !this.activeMarket.receiveAddress) {
-      return of(false);
-    }
-    const itemCount = this.listings.length;
-    return this._listingService.searchListingItems(
-      (this.activeMarket && this.activeMarket.receiveAddress) || '',
-      Math.floor(itemCount / numItems),
-      numItems,
-      this.searchQuery.value,
-      this.filterCategory.value,
-      this.filterSeller.value,
-      this.filterSourceRegion.value[0],
-      this.filterTargetRegion.value[0],
-      this.filterFlagged.value
-    ).pipe(
-      map(items => {
-        this.atEndOfListings = (items.length > 0) && (items.length < numItems);
-        // stop the expiration checking timer: safety measure
-        //  (it is stopped properly later, but just to prevent any unnecessary side effects of delayed processing,
-        //  we force any running timer to stop here as well).
-        this.timerExpire$.next();
+  private fetchMarketListings(): Observable<boolean> {
+    return defer(() => {
+      if (!this.activeMarket || !this.activeMarket.receiveAddress) {
+        return of(false);
+      }
 
-        // Remove duplicated listings: this may happen if earlier listings expired
-        //   - in which case the MP search queries may ignore them from the resultset returned, thus causing some overlap
-        const found = [];
-        for (let ii = 0; ii < items.length; ii++) {
-          const item = items[ii];
+      const currentCount = this.listings.length;
+      const now = Date.now();
+      const expiredCount = this.listingExpirations.filter(le => le <= now).length;
+      const validCount = currentCount - expiredCount;
+      const pageNum = Math.floor(validCount / this.PAGE_COUNT);
+      const loadExtraPage = !Number.isInteger(validCount / this.PAGE_COUNT);
 
-          for (let jj = 0; jj < Math.min(this.PAGE_COUNT, itemCount); jj++) {
-            const existing = this.listings[this.listings.length - 1 - jj];
-            if (existing.id === item.id) {
-              found.push(item.id);
+      // stop the expiration checking timer: safety measure
+      //  (it is stopped properly later, but just to prevent any unnecessary side effects of delayed processing,
+      //  we force any running timer to stop here as well).
+      this.timerExpire$.next();
+
+      const queries: Observable<any>[] = [];
+
+      queries.push(
+        defer(() => this._listingService.searchListingItems(
+          (this.activeMarket && this.activeMarket.receiveAddress) || '',
+          pageNum,
+          this.PAGE_COUNT,
+          this.searchQuery.value,
+          this.filterCategory.value,
+          this.filterSeller.value,
+          this.filterSourceRegion.value[0],
+          this.filterTargetRegion.value[0],
+          this.filterFlagged.value
+        ).pipe(
+          map(items => {
+            if (loadExtraPage) {
+              // Remove duplicated listings: this may happen if earlier listings expired
+              //   - in which case the MP search queries may ignore them from the resultset returned, thus causing some overlap
+              const found = [];
+              for (let ii = 0; ii < items.length; ii++) {
+                const item = items[ii];
+
+                for (let jj = 0; jj < this.PAGE_COUNT; jj++) {
+                  const existing = this.listings[this.listings.length - 1 - jj];
+                  if (existing.id === item.id) {
+                    found.push(item.id);
+                    break;
+                  }
+                }
+              }
+
+              return items.filter(i => !found.includes(i.id));
             }
+            return items;
+          }),
+          tap(items => {
+            this.listings.push(...items);
+            this.listingExpirations.push(...items.map(i => +i.expiry || 0));
+          })
+        )
+      ));
+
+      if (loadExtraPage) {
+        queries.push(
+          defer(() => this._listingService.searchListingItems(
+            (this.activeMarket && this.activeMarket.receiveAddress) || '',
+            pageNum + 1,
+            this.PAGE_COUNT,
+            this.searchQuery.value,
+            this.filterCategory.value,
+            this.filterSeller.value,
+            this.filterSourceRegion.value[0],
+            this.filterTargetRegion.value[0],
+            this.filterFlagged.value
+          ).pipe(
+            tap(items => {
+              this.listings.push(...items);
+              this.listingExpirations.push(...items.map(i => +i.expiry || 0));
+            })
+          )
+        ));
+      }
+
+      // do the check to determine if there are more listings available
+      queries.push(
+        defer(() => this._listingService.searchListingItems(
+          (this.activeMarket && this.activeMarket.receiveAddress) || '',
+          this.listings.length,
+          1,
+          this.searchQuery.value,
+          this.filterCategory.value,
+          this.filterSeller.value,
+          this.filterSourceRegion.value[0],
+          this.filterTargetRegion.value[0],
+          this.filterFlagged.value
+        ).pipe(
+          tap(items => {
+            this.atEndOfListings = (this.listings.length > 0) && (items.length === 0);
+          })
+        ))
+      );
+
+      return from(queries).pipe(
+        concatAll(),
+        last(),
+        tap(() => {
+          // Update the expiration timer checking value if necessary
+          const leastTime = this.listings.filter(
+            i => i.extras.canAddToCart && (i.expiry > 0)
+          ).sort(
+            (a, b) => a.expiry - b.expiry
+          )[0];
+
+          if (leastTime && ((leastTime.expiry < this.expiryValue) || (this.expiryValue === 0))) {
+            this.expiryValue = leastTime.expiry;
           }
-        }
 
-        if (found.length > 0) {
-          items = items.filter(item => !found.includes(item.id));
-        }
+          this.startExpirationTimer();
+        }),
+        mapTo(true),
+        catchError(() => {
+          this._snackbar.open(TextContent.FAILED_LOAD_LISTINGS, 'err');
+          return of(false);
+        })
+      );
 
-        this.listings.push(...items);
-
-        // Update the expiration timer checking value if necessary
-        const leastTime = items.filter(
-          i => i.extras.canAddToCart && (i.expiry > 0)
-        ).sort(
-          (a, b) => a.expiry - b.expiry
-        )[0];
-
-        if (leastTime && ((leastTime.expiry < this.expiryValue) || (this.expiryValue === 0))) {
-          this.expiryValue = leastTime.expiry;
-        }
-
-        // (re)start the expiration checking timer
-        this.startExpirationTimer();
-
-        return found.length;
-      }),
-
-      concatMap(loadMore => iif(
-        () => (loadMore > 0) && (numItems > 5) && (loadMore > (numItems / 5)),
-        defer(() => this.fetchMarketListings(loadMore)),
-        defer(() => of(true))
-      ))
-    );
+    });
   }
 
 

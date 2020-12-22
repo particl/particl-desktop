@@ -8907,10 +8907,10 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.3.1.tgz#86e3060d7e57d061e0c5bc148d919ebf962db51e"
-  integrity sha512-j2EYcC0f7jrofa5s3l9yy/u4XrjEoStNHRWr5MTdv5eAm33x9GjfVPvomT7MSpp8klXL/pRDcYeHnOommPwSiQ==
+particl-marketplace@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/particl-marketplace/-/particl-marketplace-0.3.2.tgz#f669bbf9b3bf2babfa9a1a4914cb5968f4d104d7"
+  integrity sha512-xDfEWCPXjX6Mx2LCdmnfFrSMEpzlUry71w2Z/BYHHtacwWIlyuCGAkkqcxmaCUEAs6uFlQil5PX21VmwycxVaQ==
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"

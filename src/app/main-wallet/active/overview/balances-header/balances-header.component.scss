@@ -37,6 +37,9 @@
   & > .big {
     font-size: 22px;
     @include break(l) {
+      font-size: 24px;
+    }
+    @include break(xl) {
       font-size: 26px;
     }
   }
@@ -45,6 +48,9 @@
     font-family: var(--font-mono);
     color: var(--text-muted);
     @include break(l) {
+      font-size: 13px;
+    }
+    @include break(xl) {
       font-size: 15px;
     }
   }

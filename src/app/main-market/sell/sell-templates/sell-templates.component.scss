@@ -17,9 +17,6 @@
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        @include break(l) {
-          -webkit-line-clamp: 2;
-        }
       }
     }
     .status {
@@ -180,5 +177,6 @@
   }
   .action-buttons {
     justify-content: space-between;
+    align-items: center;
   }
 }

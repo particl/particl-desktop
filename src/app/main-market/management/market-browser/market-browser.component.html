@@ -69,6 +69,20 @@
 
   <!-- Management > Market list -->
   <div class="markets section with-filter">
+
+    <div class="alert --boxed --info --sticky-bottom" *ngIf="(marketSettings | async)?.marketsLastAdded > 0">
+      <span>
+        After you've joined <u>all</u> desired Markets, scan for their Listings
+        <small>Scanning for Listings takes some time &ndash; try to avoid scanning after connecting to each Market individually</small>
+      </span>
+      <div class="action-button">
+        <button class="button" mat-raised-button color="accent" appDebounceClick (debounceClick)="forceSmsgRescan()" [disabled]="isRescanning">
+          <mat-icon fontIcon="part-search"></mat-icon>
+          Scan for Listings
+        </button>
+      </div>
+    </div>
+
     <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
       <mat-accordion>
 
