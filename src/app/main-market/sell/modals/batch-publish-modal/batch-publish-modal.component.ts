@@ -45,6 +45,13 @@ export interface BatchPublishModalInputs {
 }
 
 
+enum TextContent {
+  PUBLISH_ERROR_GENERIC = 'Publishing failed, please try again',
+  PUBLISH_ERROR_INVALID_TEMPLATE = 'Publishing error: Invalid product template',
+  PUBLISH_ERROR_BLACKLISTED_MARKET = 'Publishing error: Market blacklisted',
+}
+
+
 @Component({
   templateUrl: './batch-publish-modal.component.html',
   styleUrls: ['./batch-publish-modal.component.scss']
@@ -70,12 +77,13 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
   currentBalance: number = 0;
 
-  publishingInfo: {successProducts: number[], failedProducts: number[], progressPercent: number} = {
+  publishingInfo: {successProducts: number[], progressPercent: number} = {
     successProducts: [],
-    failedProducts: [],
+    // failedProducts: [],
     progressPercent: 0
   };
 
+  readonly specificErrorMessages: Map<number, string> = new Map();
   readonly batchPublishForm: FormGroup;
   readonly isProcessingControl: FormControl = new FormControl(false);
 
@@ -220,7 +228,8 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
           this.batchPublishForm.disable();
           this.publishingInfo.progressPercent = 0;
           this.publishingInfo.successProducts = [];
-          this.publishingInfo.failedProducts = [];
+          // this.publishingInfo.failedProducts = [];
+          this.specificErrorMessages.clear();
         } else {
           this.batchPublishForm.enable();
         }
@@ -366,9 +375,17 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
           // Uncheck the product from being selected
           (this.formAvailableProducts.controls[productIndex] as FormArray).at(0).setValue(false);
         }
-      ).catch(() => {
+      ).catch((err) => {
+        let errMsg = TextContent.PUBLISH_ERROR_GENERIC;
+        if (typeof err === 'string') {
+          switch (true) {
+            case err.startsWith('Invalid '): errMsg = TextContent.PUBLISH_ERROR_INVALID_TEMPLATE; break;
+            case err.includes('Blacklisted recipient'): errMsg = TextContent.PUBLISH_ERROR_BLACKLISTED_MARKET; break;
+          }
+        }
         // Let the template "know" that the publish failed for this product
-        this.publishingInfo.failedProducts.push(productIndex);
+        this.specificErrorMessages.set(productIndex, errMsg);
+        // this.publishingInfo.failedProducts.push(productIndex);
       }).then(() => {
         // Cleanup the form control for this product
         this.formAvailableProducts.controls[productIndex].markAsPristine({onlySelf: true});
