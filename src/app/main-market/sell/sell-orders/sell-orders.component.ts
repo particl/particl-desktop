@@ -36,7 +36,8 @@ enum TextContent {
   LOADING_ERROR = 'Failed to load orders correctly',
   FILTER_LABEL_ALL_ORDERS = 'All Items',
   ORDER_UPDATE_ERROR = 'Order update failed',
-  ACTIONING_ORDER = 'Processing the selected item'
+  ERROR_INSUFFICIENT_FUNDS = 'Insufficient funds to process order',
+  ACTIONING_ORDER = 'Processing the selected item',
 }
 
 interface BuyflowStep {
@@ -411,7 +412,15 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
           }
         }
       },
-      (err) => this._snackbar.open(TextContent.ORDER_UPDATE_ERROR, 'err')
+      (err) => {
+        let errMsg = TextContent.ORDER_UPDATE_ERROR;
+        if (typeof err === 'string') {
+          if (err.includes('Insufficient') && err.includes('funds')) {
+            errMsg = TextContent.ERROR_INSUFFICIENT_FUNDS;
+          }
+        }
+        this._snackbar.open(errMsg, 'err');
+      }
     );
   }
 
