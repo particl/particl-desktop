@@ -24,7 +24,7 @@ exports.init = function() {
   exports.destroy();
   importer.init();
   rxIpc.registerListener('start-market', function(appPort, zmqPort, timeout) {
-    return Observable.create(observer => {
+    return new Observable(observer => {
 
       const startWaitDuration = (+timeout < DEFAULT_TIMEOUT ? DEFAULT_TIMEOUT : +timeout) * 1000;
 
@@ -47,8 +47,9 @@ exports.init = function() {
         log.info('market process ended.');
         if ((isStarted === null) && !observer.closed) {
           // market process is shutdown before obtaining the "ready" signal
-          observer.next(false);
-          observer.complete();
+          observer.unsubscribe();
+          // observer.next(false);
+          // observer.complete();
         }
         resetTimeoutCheck();
       });
@@ -208,8 +209,6 @@ function start(appPort, zmqPort) {
   }
 
   child = market.start(marketOptions);
-
-  // importer.init();
 }
 
 
@@ -221,8 +220,6 @@ function stop() {
     isStarted = null;
 
     resetTimeoutCheck();
-
-    // importer.destroy();
   }
 }
 
