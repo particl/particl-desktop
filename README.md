@@ -51,7 +51,7 @@ Buy and sell goods and services without leaving a trace. Payments shall become a
 ### Chats
 
 * **For developers** The developers chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) with [Element](https://element.io) (formerly Riot) for more info and/or assistance.
-* **For cummunity** Join the multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
+* **For community** Join the multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/particl?style=social)](http://reddit.com/r/particl)
