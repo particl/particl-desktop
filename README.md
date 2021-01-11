@@ -16,12 +16,10 @@
 **Table of Contents**
 
 * [About](#about)
-* [Contribute](#contribute)
-   * [Requirements](#requirements)
-   * [Installation](#installation)
-   * [Development](#development)
-   * [Packaging](#packaging)
+* [Participate](#Participate)
+* [Development](#development)
 * [Troubleshooting](#troubleshooting)
+* [Bug Bounties](#bug-bounties)
 * [Licence](#licence)
 
 ## About
@@ -42,7 +40,7 @@ Blazing fast, with multiple privacy-states, send and receive the PART cryptocurr
 * **The [Particl Marketplace](https://particl.io/marketplace)** 
 Buy and sell goods and services without leaving a trace. Payments shall become available in multiple currencies but always settle in PART. No bank account is required. Transform today's e-commerce into a free, secure, and trustworthy place, yielding fair market conditions. 
 
-## Contribute
+## Participate
 
 [![Snyk](https://snyk.io/test/github/particl/particl-desktop/badge.svg)](https://snyk.io/test/github/particl/particl-desktop)
 [![Build Status](https://travis-ci.org/particl/particl-desktop.svg?branch=master)](https://travis-ci.org/particl/particl-desktop)
@@ -61,10 +59,6 @@ Join our multilingual, open community chat [https://discord.me/particl](https://
 [![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/particl?style=social)](http://reddit.com/r/particl)
 
-### Requirements
-
-[Node.js®](https://nodejs.org/) v10, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
-
 ### Installation
 
 For the average user, binaries are available ready for download and installation.
@@ -75,7 +69,13 @@ Currently, we have an open testnet phase for the upcoming V3 release. Feel free 
 
 [Testnet Download](https://github.com/particl/particl-desktop/releases/)
 
-#### Developers
+## Development
+
+### Requirements
+
+[Node.js®](https://nodejs.org/) v10, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
+
+### Development install
 
 Clone the repo & fetch dependencies:
 
@@ -84,8 +84,6 @@ git clone https://github.com/particl/particl-desktop
 cd particl-desktop
 yarn install
 ```
-
-### Development
 
 > Note: most recent development happens on `dev` branch. Keep in mind that the development currently happens on a private fork of this repo. This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
 
@@ -149,7 +147,7 @@ Delete marketplace `database` folder and restart app:
 
 See our [Particl Wiki](https://particl.wiki/) for most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
 
-### Bug bounties
+## Bug bounties
 
 Particl is a security and privacy oriented project. As such, a permanent bug bounty program is put in place in order to encourage the responsible disclosure of any bug or vulnerability contained within the Particl code and reward those who find them.
 
