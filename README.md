@@ -25,19 +25,22 @@
 * [Licence](#licence)
 
 ## About
+The [Particl Project](https://particl.news/about/) is committed to providing everybody with privacy, security, and freedom in the digital age.
 
-> Particl is an open source project that aims to restore the balance of privacy on the internet
+**Particl Desktop** is our feature-rich flagship client. It's currently hosting the Particl Marketplace application and an easy to use cryptocurrency wallet for PART coin. It is the recommended application for our users.
 
-Particl Desktop is our feature-rich flagship client, recommended for most users for interacting with Particl network.
+Technically spoken, Particl's decentralized platform delivers the following to put you into control:
 
-We provide a decentralized privacy platform with a suite of tools to enhance your online privacy:
-
-* **An anonymous cryptocurrency** – send and receive the PART cryptocurrency without revealing the transaction history
-* **End-to-end encrypted messaging** – communicate in a secure and decentralized manner without revealing your IP address
-* **A private marketplace** – buy and sell goods without leaving a trace
-
-This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
-
+* **A peer to peer network** 
+All services are p2p. No central authority or central server is between you and the people you interact with. It's a direct connection.
+* **An encrypted data exchange protocol** 
+Communicate in a secure and decentralized manner without revealing your data or location.
+* **A programmable blockchain with privacy features** 
+Based on Bitcoin's latest code and carefully enhanced with bullet-proof privacy features from the industry leading technologies–which you may know from [`Monero Project`](https://github.com/monero-project/monero).
+* **The privacy coin PART** 
+Blazing fast, with multiple privacy-states, send and receive the PART cryptocurrency without revealing your financial data to anyone. Additionally, it's delivering incomparable automation, interoperability, and privacy to the Particl Marketplace.
+* **The [Particl Marketplace](https://particl.io/marketplace)** 
+Buy and sell goods and services without leaving a trace. Payments shall become available in multiple currencies but always settle in PART. No bank account is required. Transform today's e-commerce into a free, secure, and trustworthy place, yielding fair market conditions. 
 
 ## Contribute
 
@@ -47,27 +50,32 @@ This repository is the user interface that works in combination with our [`parti
 [![Code Climate](https://codeclimate.com/github/particl/particl-desktop/badges/gpa.svg)](https://codeclimate.com/github/particl/particl-desktop)
 [![Greenkeeper badge](https://badges.greenkeeper.io/particl/particl-desktop.svg)](https://greenkeeper.io/)
 
-#### Developers Chat
+#### Developers
 
 Join our open developers chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) with [Element](https://element.io) (formerly Riot) for more info and/or assistance.
 
-Keep in mind that the development currently happens on a private fork of this repo. 
+#### Community 
 
-#### Community Chat 
 Join our multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
-
-#### Socialmedia
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/particl?style=social)](http://reddit.com/r/particl)
 
 ### Requirements
 
-* [Node.js®](https://nodejs.org/) v10
-* [git](https://git-scm.com/)
-* [yarn](https://yarnpkg.com/en/)
+[Node.js®](https://nodejs.org/) v10, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
 
 ### Installation
+
+For the average user, binaries are available ready for download and installation.
+
+[Download](https://github.com/particl/particl-desktop/releases/latest) 
+
+Currently, we have an open testnet phase for the upcoming V3 release. Feel free to test the new version, and we happily look forward to your feedback.
+
+[Testnet Download](https://github.com/particl/particl-desktop/releases/)
+
+#### Developers
 
 Clone the repo & fetch dependencies:
 
@@ -79,7 +87,7 @@ yarn install
 
 ### Development
 
-> Note: most recent development happens on `dev` branch
+> Note: most recent development happens on `dev` branch. Keep in mind that the development currently happens on a private fork of this repo. This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
 
 In project's folder:
 
@@ -141,6 +149,11 @@ Delete marketplace `database` folder and restart app:
 
 See our [Particl Wiki](https://particl.wiki/) for most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
 
+### Bug bounties
+
+Particl is a security and privacy oriented project. As such, a permanent bug bounty program is put in place in order to encourage the responsible disclosure of any bug or vulnerability contained within the Particl code and reward those who find them.
+
+[Particl Bug Bounty Program](https://particl.io/bug-bounties/)
 
 ## Licence
 
