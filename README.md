@@ -25,16 +25,16 @@
 ## About
 The [Particl Project](https://particl.news/about/) is committed to providing everybody with privacy, security, and freedom in the digital age.
 
-**Particl Desktop** is our feature-rich flagship client. It's currently hosting the Particl Marketplace application and an easy to use cryptocurrency wallet for PART coin. It is the recommended application for our users.
+**Particl Desktop** is a multi-purpose Desktop Application capable of hosting multiple functionalities at once and delivering a streamlined user-experience when interacting with Particl's services and applications. It utilizes the Particl Blockchain and the SMSG protocol, hosts Particl Coin related wallets, gives users access to the *Particl Marketplace* as well as the encrypted chat application. Additionally, Particl Desktop supports a bot-framework to integrate interactions with 3rd party services within a user-friendly interface. Particl Desktop is generally referred to as Particl’s flagship application.
 
-Technically spoken, Particl's decentralized platform delivers the following to put you into control:
+Technically spoken, with Particl Desktop you get access to a decentralized platform delivering the following to you:
 
-* **A peer to peer network** 
-All services are p2p. No central authority or central server is between you and the people you interact with. It's a direct connection.
-* **An encrypted data exchange protocol** 
-Communicate in a secure and decentralized manner without revealing your data or location.
-* **A programmable blockchain with privacy features** 
-Based on Bitcoin's latest code and carefully enhanced with bullet-proof privacy features from the industry leading technologies–which you may know from [`Monero Project`](https://github.com/monero-project/monero).
+* **The Particl Network** 
+All services are peer to peer (p2p). No central authority or central server is between you and the people you interact with. It's a direct connection.
+   * **An encrypted data exchange protocol** 
+Particl SecureMessaging (SMSG protocol) which is utilized as a decentralized storage network (DSN) to transfer data between nodes in a privacy-preserving manner. Particl SecureMessaging enables a privacy-proof environment for e-commerce with Particl Marketplace and communications between users without bloating the Blockchain and leaving permanent records.
+   * **A programmable blockchain with privacy features** 
+The Particl Blockchain is a decentralized and immutable ledger, based on bitcoin technology but carefully enhanced by the Particl Developers with industry-leading privacy technology. The Particl Blockchain secures and testifies payments, the exchange of value in a decentralized way without the need for any banking system.
 * **The privacy coin PART** 
 Blazing fast, with multiple privacy-states, send and receive the PART cryptocurrency without revealing your financial data to anyone. Additionally, it's delivering incomparable automation, interoperability, and privacy to the Particl Marketplace.
 * **The [Particl Marketplace](https://particl.io/marketplace)** 
