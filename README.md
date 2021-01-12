@@ -56,7 +56,7 @@ Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl
 
 ### Installation
 
-For the average user, binaries can be downloaded and installed. It is the easiest way to get started.
+For non-developers curious to explore a new world of commerce, binaries can be downloaded and installed. It is the easiest way to get started.
 
 [Download](https://github.com/particl/particl-desktop/releases/latest) 
 
