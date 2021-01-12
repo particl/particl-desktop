@@ -25,9 +25,11 @@
 ## About
 The [Particl Project](https://particl.news/about/) is committed to providing everybody with privacy, security, and freedom in the digital age.
 
-**Particl Desktop** is a multi-purpose Desktop Application capable of hosting multiple functionalities at once and delivering a streamlined user-experience when interacting with Particl's services and applications. It utilizes the Particl Blockchain and the SMSG protocol, hosts Particl Coin related wallets, gives users access to the *Particl Marketplace* as well as the encrypted chat application. Additionally, Particl Desktop supports a bot-framework to integrate interactions with 3rd party services within a user-friendly interface. Particl Desktop is generally referred to as Particl’s flagship application.
+**Particl Desktop** is a standalone, multi-purpose Desktop Application capable of hosting multiple functionalities at once and delivering a streamlined user-experience when interacting with Particl's services and applications. 
 
-Technically spoken, with Particl Desktop you get access to a decentralized platform delivering the following to you:
+It utilizes the Particl Blockchain and the SMSG protocol, hosts Particl Coin related wallets, gives users access to the Particl Marketplace as well as the encrypted chat application. Additionally, Particl Desktop supports a bot-framework to integrate interactions with 3rd party services within a user-friendly interface. Particl Desktop is generally referred to as Particl’s flagship application.
+
+Technically spoken, with **Particl Desktop** you get access to a decentralized platform delivering the following to you:
 
 * **The Particl Network** 
 All services are peer to peer (p2p). No central authority or central server is between you and the people you interact with. It's a direct connection.
