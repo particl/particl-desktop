@@ -29,7 +29,7 @@ The [Particl Project](https://particl.news/about/) is committed to providing eve
 
 Particl Desktop provides easy access to the Particl Blockchain and the SMSG protocol, hosts Particl coin (PART) related wallets, gives users access to the Particl Marketplace and the encrypted chat application. Additionally, Particl Desktop supports a bot framework to optionally integrate interactions with third-party services within a user-friendly interface. Particl Desktop generally refers to Particl’s flagship application.
 
-On a technical level, with **Particl Desktop**, you get access to a decentralized platform delivering the following to you:
+With **Particl Desktop**, you get access to a decentralized platform delivering the following to you:
 
 * **The Particl Network** 
 All services are peer to peer (p2p). No central authority or central server stands between you and the people you interact with. It's a direct connection.
