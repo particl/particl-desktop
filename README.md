@@ -34,7 +34,7 @@ With **Particl Desktop**, you get access to a decentralized platform delivering 
 * **The Particl Network** 
 All services are peer to peer (p2p). No central authority or central server stands between you and the people you interact with. It's a direct connection.
    * **An encrypted data exchange protocol** 
-Particl SecureMessaging (SMSG protocol) is a decentralized storage network (DSN) to store and transfer data between nodes in a privacy-preserving manner. It enables a private and secure environment for e-commerce and communications between users. SMSG powers the Particl Marketplace without bloating the blockchain with excessive data and without leaving any permanent record.
+SecureMessaging (SMSG protocol) is a decentralized storage network (DSN) to store and transfer data between nodes in a privacy-preserving manner. It enables a private and secure environment for e-commerce and communications between users. SMSG powers the Particl Marketplace without bloating the blockchain with excessive data and without leaving any permanent record.
    * **A programmable blockchain with advanced privacy features** 
 The Particl Blockchain is a decentralized, immutable, and censorship-proof ledger. It is based on bitcoin technology and has been carefully enhanced by the Particl team to provide a more robust level of privacy through industry-leading privacy technologies. The Particl Blockchain processes and validates payments between two users without requiring any third-party such as a bank or a payment processor.
 * **The privacy coin PART** 
