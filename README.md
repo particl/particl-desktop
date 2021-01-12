@@ -20,27 +20,27 @@
 * [Development](#development)
 * [Troubleshooting](#troubleshooting)
 * [Bug Bounties](#bug-bounties)
-* [Licence](#licence)
+* [License](#license)
 
 ## About
-The [Particl Project](https://particl.news/about/) is committed to providing everybody with privacy, security, and freedom in the digital age.
+The [Particl Project](https://particl.news/about/) is committed to providing everyone with privacy, security, resistance to censorship, and freedom in this digital age.
 
-**Particl Desktop** is a standalone, multi-purpose Desktop Application capable of hosting multiple functionalities at once and delivering a streamlined user-experience when interacting with Particl's services and applications. 
+**Particl Desktop** is a standalone, multi-purpose desktop application capable of hosting multiple functionalities at once and delivering a streamlined user-experience when interacting with Particl's services and applications. 
 
-It utilizes the Particl Blockchain and the SMSG protocol, hosts Particl Coin related wallets, gives users access to the Particl Marketplace as well as the encrypted chat application. Additionally, Particl Desktop supports a bot-framework to integrate interactions with 3rd party services within a user-friendly interface. Particl Desktop is generally referred to as Particl’s flagship application.
+Particl Desktop provides easy access to the Particl Blockchain and the SMSG protocol, hosts Particl coin (PART) related wallets, gives users access to the Particl Marketplace and the encrypted chat application. Additionally, Particl Desktop supports a bot framework to optionally integrate interactions with third-party services within a user-friendly interface. Particl Desktop generally refers to Particl’s flagship application.
 
-Technically spoken, with **Particl Desktop** you get access to a decentralized platform delivering the following to you:
+On a technical level, with **Particl Desktop**, you get access to a decentralized platform delivering the following to you:
 
 * **The Particl Network** 
-All services are peer to peer (p2p). No central authority or central server is between you and the people you interact with. It's a direct connection.
+All services are peer to peer (p2p). No central authority or central server stands between you and the people you interact with. It's a direct connection.
    * **An encrypted data exchange protocol** 
-Particl SecureMessaging (SMSG protocol) which is utilized as a decentralized storage network (DSN) to transfer data between nodes in a privacy-preserving manner. Particl SecureMessaging enables a privacy-proof environment for e-commerce with Particl Marketplace and communications between users without bloating the Blockchain and leaving permanent records.
-   * **A programmable blockchain with privacy features** 
-The Particl Blockchain is a decentralized and immutable ledger, based on bitcoin technology but carefully enhanced by the Particl Developers with industry-leading privacy technology. The Particl Blockchain secures and testifies payments, the exchange of value in a decentralized way without the need for any banking system.
+Particl SecureMessaging (SMSG protocol) is a decentralized storage network (DSN) to store and transfer data between nodes in a privacy-preserving manner. It enables a private and secure environment for e-commerce and communications between users. SMSG powers the Particl Marketplace without bloating the blockchain with excessive data and without leaving any permanent record.
+   * **A programmable blockchain with advanced privacy features** 
+The Particl Blockchain is a decentralized, immutable, and censorship-proof ledger. It is based on bitcoin technology and has been carefully enhanced by the Particl team to provide a more robust level of privacy through industry-leading privacy technologies. The Particl Blockchain processes and validates payments between two users without requiring any third-party such as a bank or a payment processor.
 * **The privacy coin PART** 
-Blazing fast, with multiple privacy-states, send and receive the PART cryptocurrency without revealing your financial data to anyone. Additionally, it's delivering incomparable automation, interoperability, and privacy to the Particl Marketplace.
+PART is a blazing fast and highly flexible cryptocurrency with multiple privacy states. It lets you send and receive payments without revealing your financial data to anyone. The PART coin provides automation, interoperability, complete resistance to censorship, and privacy to the Particl Marketplace.
 * **The [Particl Marketplace](https://particl.io/marketplace)** 
-Buy and sell goods and services without leaving a trace. Payments shall become available in multiple currencies but always settle in PART. No bank account is required. Transform today's e-commerce into a free, secure, and trustworthy place, yielding fair market conditions. 
+The Particl Marketplace is a decentralized and privacy-oriented marketplace that lets you buy and sell goods and services on the web without leaving any digital footprint behind. Payments between two users can be initiated using multiple currencies but always settle in PART. No bank account, documentation, email, phone number, or any other identification type is required. It transforms today's e-commerce into a free, secure, and trustworthy place where the market conditions are fair and equal to all.
 
 Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl Marketplace](https://github.com/particl/particl-market) 
 
@@ -48,7 +48,7 @@ Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl
 
 ### Chats
 
-* **For developers** The developers chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) with [Element](https://element.io) (formerly Riot) for more info and/or assistance.
+* **For developers** The developers chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) using [Element](https://element.io) (formerly Riot).
 * **For community** Join the multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
@@ -56,11 +56,11 @@ Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl
 
 ### Installation
 
-For the average user, binaries are available ready for download and installation.
+For the average user, binaries can be downloaded and installed. It is the easiest way to get started.
 
 [Download](https://github.com/particl/particl-desktop/releases/latest) 
 
-Currently, there is an open testnet phase for the upcoming V3 release. Feel free to test the new version, and we happily look forward to your feedback.
+There currently is an open testnet phase for the upcoming "Particl V3" release. Feel free to test the new version; we happily look forward to your feedback.
 
 [V3 Testnet Download](https://github.com/particl/particl-desktop/releases/)
 
@@ -78,7 +78,7 @@ Currently, there is an open testnet phase for the upcoming V3 release. Feel free
 
 ### Development install
 
-Clone the repo & fetch dependencies:
+Clone the repo & fetch the dependencies:
 
 ```bash
 git clone https://github.com/particl/particl-desktop
@@ -86,12 +86,12 @@ cd particl-desktop
 yarn install
 ```
 
-> Note: most recent development happens on `dev` branch. Keep in mind that the development currently happens on a private fork of this repo. This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
+> Note: The most recent development happens on the `dev` branch. Keep in mind that the development currently happens on a private fork of this repo. This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
 
-In project's folder:
+In the project's folder:
 
 1. Run `ng serve` to start the dev server and keep it running
-1. In another terminal window, run `yarn run start:electron:dev -testnet --devtools` to start Particl Desktop on testnet (daemon will be updated and launched automatically)
+1. In another terminal window, run `yarn run start:electron:dev -testnet --devtools` to start Particl Desktop on testnet (the daemon will be updated and launched automatically)
    * `-testnet` – for running on testnet (omit for running the client on mainnet)
    * `-reindex` – reindexes the blockchain (in case you're stuck)
    * `--devtools` – automatically opens Developer Tools on client launch
@@ -136,7 +136,7 @@ yarn run start:electron:dev -testnet --devtools -reindex
 
 #### Marketplace fails to load
 
-Delete marketplace `database` folder and restart app:
+Delete the marketplace testnet `database` folder and restart the app:
 
 | OS      | path                                                       |
 |---------|------------------------------------------------------------|
@@ -146,7 +146,7 @@ Delete marketplace `database` folder and restart app:
 
 ### Other issues
 
-See our [Particl Wiki](https://particl.wiki/) for most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
+See our [Particl Wiki](https://particl.wiki/) for the most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
 
 ## Bug bounties
 
@@ -154,6 +154,6 @@ Particl is a security and privacy oriented project. As such, a permanent bug bou
 
 [Particl Bug Bounty Program](https://particl.io/bug-bounties/)
 
-## Licence
+## License
 
-Particl Desktop is released under [GNU General Public License v2.0](LICENCE).
+Particl Desktop is released under [GNU General Public License v2.0](LICENSE).
