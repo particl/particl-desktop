@@ -40,6 +40,8 @@ Blazing fast, with multiple privacy-states, send and receive the PART cryptocurr
 * **The [Particl Marketplace](https://particl.io/marketplace)** 
 Buy and sell goods and services without leaving a trace. Payments shall become available in multiple currencies but always settle in PART. No bank account is required. Transform today's e-commerce into a free, secure, and trustworthy place, yielding fair market conditions. 
 
+Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl Marketplace](https://github.com/particl/particl-market) 
+
 ## Participate
 
 ### Chats
@@ -56,9 +58,9 @@ For the average user, binaries are available ready for download and installation
 
 [Download](https://github.com/particl/particl-desktop/releases/latest) 
 
-Currently, we have an open testnet phase for the upcoming V3 release. Feel free to test the new version, and we happily look forward to your feedback.
+Currently, there is an open testnet phase for the upcoming V3 release. Feel free to test the new version, and we happily look forward to your feedback.
 
-[Testnet Download](https://github.com/particl/particl-desktop/releases/)
+[V3 Testnet Download](https://github.com/particl/particl-desktop/releases/)
 
 ## Development
 
