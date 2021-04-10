@@ -99,7 +99,7 @@ var getAssetDetails = function (asset, hashes, version) {
       commands: {
         sanity: {
           args: ["-version"],
-          output: ["Particl Core Daemon", version]
+          output: ["Particl Core version", version]
         }
       }
     }
