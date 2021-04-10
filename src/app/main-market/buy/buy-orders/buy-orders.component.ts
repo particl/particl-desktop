@@ -55,7 +55,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
 
   querySearch: FormControl = new FormControl('');
   queryFilterAttention: FormControl = new FormControl(false);
-  queryFilterComplete: FormControl = new FormControl(false);
+  queryFilterComplete: FormControl = new FormControl(true);
   queryFilterMarket: FormControl = new FormControl('');
   queryFilterStatus: FormControl = new FormControl('');
 
@@ -283,7 +283,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
   clearAllFilters(): void {
     this.querySearch.setValue('', {emitEvent: false});
     this.queryFilterAttention.setValue(false, {emitEvent: false});
-    this.queryFilterComplete.setValue(false, {emitEvent: false});
+    this.queryFilterComplete.setValue(true, {emitEvent: false});
     this.queryFilterMarket.setValue('', {emitEvent: false});
     this.queryFilterStatus.setValue('', {emitEvent: false});
 
