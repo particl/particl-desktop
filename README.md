@@ -74,9 +74,11 @@ There currently is an open testnet phase for the upcoming "Particl V3" release. 
 
 ### Requirements
 
-[Node.js®](https://nodejs.org/) v10, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
+[Node.js®](https://nodejs.org/) v12, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
 
 ### Development install
+
+NB!! Requires access to the private fork of this repo in order to obtain the latest build changes.
 
 Clone the repo & fetch the dependencies:
 
