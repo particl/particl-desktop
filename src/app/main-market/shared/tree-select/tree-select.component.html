@@ -22,7 +22,12 @@
       <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding class="subcategory">
         <ng-container *ngIf="node.isVisible">
           <!--button mat-button class="arrow tiny --no-ripple" disabled></button--><!-- For spacing of a leaf node -->
+          <mat-checkbox *ngIf="displaySingleSelectionCheckbox" class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)"
+            (change)="leafItemSelectionToggle(node)">
+            {{node.item}}
+          </mat-checkbox>
           <span
+            *ngIf="!displaySingleSelectionCheckbox"
             class="checklist-leaf-node"
             [class.single-selected]="checklistSelection.isSelected(node)"
             (click)="leafItemSelectionToggle(node)">
