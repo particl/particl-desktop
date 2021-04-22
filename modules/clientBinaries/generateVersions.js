@@ -159,7 +159,7 @@ got(`${releasesURL}`).then(response => {
     console.log('looking for tag=', tag)
     versions.forEach(version => {
       // select folders that match the current version
-      if (version.name.includes(tag)) {
+      if (version.name.includes(tag) && !version.name.includes('alpha')) {
         // extract matching folder's platform
         var platformIndex = version.name.indexOf("-");
         var platform = version.name.substring(platformIndex + 1).replace('-unsigned', '');
