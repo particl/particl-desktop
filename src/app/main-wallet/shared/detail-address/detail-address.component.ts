@@ -111,6 +111,7 @@ export class DetailAddressComponent implements OnChanges {
       if (this.newLabel === '') {
         this.newLabel = TextContent.DEFAULT_EMPTY_LABEL;
       }
+      this.isEditing = !this.isEditing;
       return;
     }
 
