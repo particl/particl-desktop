@@ -111,7 +111,8 @@ export class MarketManagementService {
               },
               receiveKey: '',
               publishKey: '',
-              marketType: MarketType.STOREFRONT
+              marketType: MarketType.STOREFRONT,
+              expires: 0,
             };
             if (
               !(+market.profileId > 0) &&
@@ -129,6 +130,8 @@ export class MarketManagementService {
               newMarketItem.receiveKey = getValueOrDefault(market.receiveKey, 'string', newMarketItem.receiveKey);
               newMarketItem.publishKey = getValueOrDefault(market.publishKey, 'string', newMarketItem.publishKey);
               newMarketItem.marketType = getValueOrDefault(market.type, 'string', newMarketItem.marketType);
+              const exp = +getValueOrDefault(market.expiredAt, 'number', newMarketItem.expires);
+              newMarketItem.expires = exp > 0 ? exp : newMarketItem.expires;
 
               if (isBasicObjectType(market.Image)) {
                 if (

@@ -11,12 +11,12 @@
 
     <div class="item">
       <div class="value">
-        <mat-spinner *ngIf="balances.pendingPublic.value > 0" class="tiny" matTooltip="+{{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}} pending" matTooltipPosition="before" color="primary"></mat-spinner>
-        {{balances.spendablePublic.whole}}<small>{{balances.spendablePublic.sep}}{{balances.spendablePublic.decimal}}</small>
+        <mat-spinner *ngIf="balances.pendingAnon.value > 0" class="tiny" matTooltip="+{{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}} pending" matTooltipPosition="before" color="accent"></mat-spinner>
+        {{balances.spendableAnon.whole}}<small>{{balances.spendableAnon.sep}}{{balances.spendableAnon.decimal}}</small>
       </div>
       <div class="key">
-        <mat-icon fontIcon="part-public" matTooltip="Public balance" matTooltipPosition="before"></mat-icon>
-        <ng-container *ngIf="isAnonFeeBalance; else publicFees">Voting balance</ng-container><ng-template #publicFees>Fees and Voting Balance</ng-template>
+        <mat-icon fontIcon="part-anon" matTooltip="Anon balance" matTooltipPosition="before"></mat-icon>
+        <ng-container *ngIf="isAnonFeeBalance; else privateSpendOnly">Spendable Balance and Fees</ng-container><ng-template #privateSpendOnly>Spendable Balance</ng-template>
       </div>
     </div>
 
@@ -24,12 +24,12 @@
 
     <div class="item">
       <div class="value">
-        <mat-spinner *ngIf="balances.pendingAnon.value > 0" class="tiny" matTooltip="+{{balances.pendingAnon.whole}}{{balances.pendingAnon.sep}}{{balances.pendingAnon.decimal}} pending" matTooltipPosition="before" color="accent"></mat-spinner>
-        {{balances.spendableAnon.whole}}<small>{{balances.spendableAnon.sep}}{{balances.spendableAnon.decimal}}</small>
+        <mat-spinner *ngIf="balances.pendingPublic.value > 0" class="tiny" matTooltip="+{{balances.pendingPublic.whole}}{{balances.pendingPublic.sep}}{{balances.pendingPublic.decimal}} pending" matTooltipPosition="before" color="primary"></mat-spinner>
+        {{balances.spendablePublic.whole}}<small>{{balances.spendablePublic.sep}}{{balances.spendablePublic.decimal}}</small>
       </div>
       <div class="key">
-        <mat-icon fontIcon="part-anon" matTooltip="Anon balance" matTooltipPosition="before"></mat-icon>
-        <ng-container *ngIf="isAnonFeeBalance; else privateSpendOnly">Spendable Balance and Fees</ng-container><ng-template #privateSpendOnly>Spendable Balance</ng-template>
+        <mat-icon fontIcon="part-public" matTooltip="Public balance" matTooltipPosition="before"></mat-icon>
+        <ng-container *ngIf="isAnonFeeBalance; else publicFees">Voting balance</ng-container><ng-template #publicFees>Fees and Voting Balance</ng-template>
       </div>
     </div>
 

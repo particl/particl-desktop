@@ -2,13 +2,14 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, OnDestroy } fr
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Observable, Subject, merge} from 'rxjs';
-import { takeUntil, tap, finalize } from 'rxjs/operators';
+import { Observable, Subject, merge, iif, defer} from 'rxjs';
+import { takeUntil, tap, finalize, concatMap } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
 import { MarketTypeValidator } from './create-market.validators';
@@ -58,7 +59,8 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private _snackbar: SnackbarService,
     private _manageService: MarketManagementService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _unlocker: WalletEncryptionService,
   ) {
     this.marketForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_NAME)]),
@@ -171,7 +173,11 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
 
-    this._manageService.createMarket(createRequest).pipe(
+    this._unlocker.unlock({timeout: 20}).pipe(
+      concatMap((unlocked) => iif(
+        () => unlocked,
+        defer(() => this._manageService.createMarket(createRequest))
+      )),
       finalize(() => this._dialog.closeAll())
     ).subscribe(
       (market) => {

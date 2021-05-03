@@ -22,13 +22,20 @@
               <div class="value">Switch Identity</div>
             </div>
           </a>
-          <a *ngIf="(marketSettings | async).canModifyIdentities" class="item" tabindex="0" appDebounceClick (debounceClick)="openCreateIdentityModal()">
+          <a *ngIf="(marketSettings | async).canModifyIdentities; else identityCreationDisabled" class="item" tabindex="0" appDebounceClick (debounceClick)="openCreateIdentityModal()">
             <div class="icon">+</div>
             <div class="text">
               <div class="name"><em>New Market identity</em></div>
               <div class="value">Click to create&hellip;</div>
             </div>
           </a>
+          <ng-template #identityCreationDisabled>
+            <a class="item disabled">
+              <div class="text">
+                <span class="name"><em>(identity creation disabled)</em></span>
+              </div>
+            </a>
+          </ng-template>
         </div>
       </ng-template>
 

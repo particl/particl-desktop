@@ -470,7 +470,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       generalSettings.settings.push({
         id: 'profile.daysToNotifyListingExpired',
         title: 'Num Days To Display Listing Expiry',
-        description: 'The number of days after a published listing has expired to indicate its expiry (min: 1, max: 31)',
+        description: 'Once your own published listing has expired, after how many days do you still want to be notified of its expiry (min: 1, max: 31)',
         isDisabled: false,
         type: SettingType.NUMBER,
         errorMsg: '',

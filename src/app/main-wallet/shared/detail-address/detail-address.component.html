@@ -37,6 +37,7 @@
           [disabled]="!isEditing"
           [(ngModel)]="newLabel"
           (keyup.enter)="updateLabel()">
+        <mat-hint class="small" align="start" *ngIf="isEditing"> <small>Use the green icon (or press <kbd>Enter</kbd>) to save label changes</small> </mat-hint>
       </mat-form-field>
 
       <button mat-button class="small" *ngIf="isEditing" (click)="updateLabel()" color="primary" matTooltip="Save label [Enter]" matTooltipPosition="after">

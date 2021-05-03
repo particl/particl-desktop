@@ -174,7 +174,10 @@
           </div>
           <!-- TX ID (detail) -->
           <div class="tx-detail-item" fxFlex>
-            <span fxFlex="0 0 80px">TXID:</span>
+            <span fxFlex="0 0 50px">TXID:</span>
+            <button fxFlex="0 0 30px" mat-button class="tiny icon-only" matTooltip="Copy txid" ngxClipboard [cbContent]="txn.txid" (click)="copyToClipBoard()">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+            </button>
             <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link"
                 href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{txn.txid}}"
                 target="_blank" matTooltip="Show on Block Explorer">

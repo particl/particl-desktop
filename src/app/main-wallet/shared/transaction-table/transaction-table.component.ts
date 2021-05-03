@@ -17,7 +17,8 @@ import * as zmqOptions from '../../../../../modules/zmq/services.js';
 
 
 enum TextContent {
-  FETCH_ERROR = 'An error occurred while fetching the transactions'
+  FETCH_ERROR = 'An error occurred while fetching the transactions',
+  TXID_COPIED = 'TX ID copied to the cliboard',
 }
 
 
@@ -181,6 +182,11 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
 
   public txTrackByFn(idx: number, item: FilteredTransaction) {
     return item.txid;
+  }
+
+
+  copyToClipBoard(): void {
+    this._snackbar.open(TextContent.TXID_COPIED);
   }
 
 

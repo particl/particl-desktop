@@ -1,13 +1,15 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import {  finalize } from 'rxjs/operators';
+import {  concatMap, finalize } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { MarketManagementService } from '../../management.service';
 import { CreateMarketRequest } from '../../management.models';
 import { MarketType } from '../../../shared/market.models';
 import { AddressHelper } from 'app/core/util/utils';
+import { defer, iif } from 'rxjs';
 
 
 enum TextContent {
@@ -40,6 +42,7 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
 
   constructor(
     private _dialogRef: MatDialogRef<JoinWithDetailsModalComponent>,
+    private _unlocker: WalletEncryptionService,
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
   ) {
@@ -132,7 +135,11 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
       createRequest.marketType = MarketType.STOREFRONT_ADMIN;
     }
 
-    this._manageService.createMarket(createRequest).pipe(
+    this._unlocker.unlock({timeout: 20}).pipe(
+      concatMap((unlocked) => iif(
+        () => unlocked,
+        defer(() => this._manageService.createMarket(createRequest))
+      )),
       finalize(() => this.marketForm.enable())
     ).subscribe(
       (market) => {
