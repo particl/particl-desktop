@@ -81,6 +81,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private renderFilteredControl: FormControl = new FormControl();
+  private requestedOpenCategoryModal: number = 0;
 
   constructor(
     private _cdr: ChangeDetectorRef,
@@ -110,6 +111,11 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
     const parentUrl = `/${target.join('/')}`;
     this.listingsPagePath = `${parentUrl}/listings`;
+
+    const marketCategoryModal = this._route.snapshot.queryParamMap.get('openCategoryModalFor');
+    if (+marketCategoryModal > 0) {
+      this.requestedOpenCategoryModal = +marketCategoryModal;
+    }
   }
 
 
@@ -287,13 +293,9 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
     const market = this.marketsList[idx];
 
-    const data: GenericModalInfo = {
-      market
-    };
-    this._dialog.open(
-      CategoryEditorModalComponent,
-      { data }
-    );
+    if (market) {
+      this.openCategoryModalEditorForMarket(market);
+    }
   }
 
 
@@ -412,6 +414,15 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.marketsList = markets;
           this.renderFilteredControl.setValue(null);
+
+          if ((this.marketsList.length > 0) && (this.requestedOpenCategoryModal > 0)) {
+            const market = this.marketsList.find(m => m.id === this.requestedOpenCategoryModal);
+            this.requestedOpenCategoryModal = 0;
+
+            if (market && (market.marketType === MarketType.STOREFRONT_ADMIN)) {
+              this.openCategoryModalEditorForMarket(market);
+            }
+          }
         })
       ))
     );
@@ -439,5 +450,16 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
       return of(idxList);
     });
+  }
+
+
+  private openCategoryModalEditorForMarket(market: DisplayableJoinedMarket): void {
+    const data: GenericModalInfo = {
+      market
+    };
+    this._dialog.open(
+      CategoryEditorModalComponent,
+      { data }
+    );
   }
 }
