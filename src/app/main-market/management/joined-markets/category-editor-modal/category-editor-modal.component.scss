@@ -1,4 +1,13 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
+
+mat-dialog-title {
+  .small {
+    font-size: 0.6em;
+    padding-top: 0.8em;
+    padding-left: 6px;
+    font-weight: normal;
+  }
+}
 
 .mat-dialog-content {
   padding: 24px;

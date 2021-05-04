@@ -36,6 +36,8 @@ export class CategoryEditorModalComponent implements OnInit, OnDestroy {
   readonly MAX_DEPTH: number = 4;
   readonly BASE_LEVEL: number = 0;
 
+  readonly marketName: string = '';
+
   private marketId: number = 0;
   private rootCategoryId: number = 0;
   private destroy$: Subject<void> = new Subject();
@@ -53,6 +55,7 @@ export class CategoryEditorModalComponent implements OnInit, OnDestroy {
 
     if ( isBasicObjectType(this.data) && isBasicObjectType(this.data.market) ) {
       this.marketId = +this.data.market.id > 0 ? +this.data.market.id : this.marketId;
+      this.marketName = typeof this.data.market.name === 'string' ? this.data.market.name : this.marketName;
     }
 
     const treeFlattener: MatTreeFlattener<CategoryNode, CategoryFlatNode> = new MatTreeFlattener(
