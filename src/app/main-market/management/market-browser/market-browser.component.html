@@ -97,7 +97,7 @@
                 <div class="info" fxFlex="1 1 100%">
                   <h3 class="box-title --larger">
                     <span class="name">{{ marketItem.name }}</span>
-                    </h3>
+                  </h3>
                   <div class="desc">
                     <span class="market-type tag">
                       <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
@@ -111,6 +111,10 @@
               <!-- @TODO: DESIGNER: is it possible to have something at the end here for showing when the promoted market expires? Would use the value: {{marketItem.expires | date: 'yyyy-MM-dd HH:mm'}}  -->
             </mat-expansion-panel-header>
             <div class="details">
+              <h3 class="item-subtitle">Market ID</h3>
+              <div class="desc">
+                <span class="public key">{{ marketItem.receiveKey }}</span>
+              </div>
               <h3 class="item-subtitle">Market summary</h3>
               <p class="desc">
                 {{ marketItem.summary }}
