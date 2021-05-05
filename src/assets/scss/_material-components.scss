@@ -428,7 +428,8 @@ mat-expansion-panel.mat-expansion-panel {
 
 .cdk-overlay-container { // needs high specificity to override default Mat styling
   .cdk-overlay-backdrop {
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(2px);
+    background: rgba(0, 0, 0, 0.25)
   }
   .mat-dialog-container {
     position: relative;
