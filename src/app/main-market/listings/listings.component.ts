@@ -10,10 +10,10 @@ import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { ListingsService } from './listings.service';
-import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
 import { TreeSelectComponent } from '../shared/shared.module';

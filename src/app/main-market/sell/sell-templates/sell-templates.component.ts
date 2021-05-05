@@ -61,7 +61,9 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   displayedProductIdxs: number[] = [];
   allProducts: DisplayableProductItem[] = [];
 
-  profileMarkets: {[key: string]: {id: number, name: string; identityId: number, image: string} } = {};
+  profileMarkets: {
+    [key: string]: {id: number, name: string; identityId: number, image: string, type: MarketType}
+  } = {};
   activeIdentityMarkets: string[] = [];
 
   readonly sortCriteria: {title: string; value: string}[] = [
@@ -119,7 +121,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
                 name: market.name,
                 id: market.id,
                 identityId: market.identityId,
-                image: market.image
+                image: market.image,
+                type: market.type
               };
             }
           });
@@ -339,7 +342,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       markets: Object.keys(this.profileMarkets).map(mkey => ({
         id: this.profileMarkets[mkey].id,
         name: this.profileMarkets[mkey].name,
-        key: mkey
+        key: mkey,
+        marketType: this.profileMarkets[mkey].type
       })),
       products: this.allProducts.map(p => ({
         id: p.id,
@@ -506,9 +510,14 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       return of (0);
     }
 
-    let title = foundProduct.title;
+    const modalData: CloneTemplateModalInput = {
+      templateTitle: '',
+      templateImage: undefined,
+      markets: []
+    };
+
+    modalData.templateTitle = foundProduct.title;
     let templateImage = foundProduct.images[0];
-    const availableMarkets = [];
     const cloningToMarket = (+marketTemplateId > 0) || (getValueOrDefault(cloneToMarket, 'boolean', false));
 
     if (cloningToMarket) {
@@ -523,21 +532,16 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
           return of(0);
         }
 
-        title = foundmarketTempl.title;
+        modalData.templateTitle = foundmarketTempl.title;
         templateImage = foundmarketTempl.image;
       }
 
       foundProduct.displayDetails.availableMarkets.filter(
         mkey => this.profileMarkets[mkey]
       ).map(
-        mkey => ({id: this.profileMarkets[mkey].id, name: this.profileMarkets[mkey].name})
-      ).forEach(m => availableMarkets.push(m));
+        mkey => ({id: this.profileMarkets[mkey].id, name: this.profileMarkets[mkey].name, marketType: this.profileMarkets[mkey].type})
+      ).forEach(m => modalData.markets.push(m));
     }
-
-    const modalData: CloneTemplateModalInput = {
-      templateTitle: title,
-      markets: availableMarkets
-    };
 
     if (templateImage.length) {
       modalData.templateImage = templateImage;

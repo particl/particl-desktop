@@ -14,9 +14,10 @@ import { DataService } from '../../../services/data/data.service';
 import { SellService } from '../../sell.service';
 import { TreeSelectComponent } from '../../../shared/shared.module';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { isBasicObjectType } from 'app/main-market/shared/utils';
+import { isBasicObjectType } from '../../../shared/utils';
 import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { PublishDurations, BatchPublishProductItem } from '../../sell.models';
+import { MarketType } from '../../../shared/market.models';
 
 
 function productCategorySelectedValidator(): ValidatorFn {
@@ -40,7 +41,7 @@ function minProductsSelectedValidator(): ValidatorFn {
 
 
 export interface BatchPublishModalInputs {
-  markets: {id: number; name: string, key: string}[];
+  markets: {id: number; name: string, key: string, marketType: MarketType}[];
   products: BatchPublishProductItem[];
 }
 
@@ -58,7 +59,7 @@ enum TextContent {
 })
 export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
-  readonly availableMarkets: Array<{id: number; name: string, key: string}> = [];
+  readonly availableMarkets: Array<{id: number; name: string, key: string, marketType: MarketType}> = [];
   readonly availableProducts: BatchPublishProductItem[] = [];
   readonly categories$: Observable<{id: number, name: string}[]>;
 
@@ -179,6 +180,17 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
             presetControl.enable();
           }
         }
+      }),
+
+      map((marketId: any) => {
+        // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category serach
+        let searchedMId: number = undefined;
+        const market = this.availableMarkets.find(m => m.id === +marketId);
+
+        if ((market !== undefined) && (market.marketType !== MarketType.MARKETPLACE)) {
+          searchedMId = +marketId;
+        }
+        return searchedMId;
       }),
 
       // fetch categories for the selected market
