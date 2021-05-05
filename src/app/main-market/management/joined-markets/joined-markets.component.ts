@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, merge, defer, of, iif, throwError } from 'rxjs';
@@ -86,6 +86,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _clipboard: ClipboardService,
     private _store: Store,
     private _socket: MarketSocketService,
@@ -115,6 +116,8 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
     const marketCategoryModal = this._route.snapshot.queryParamMap.get('openCategoryModalFor');
     if (+marketCategoryModal > 0) {
       this.requestedOpenCategoryModal = +marketCategoryModal;
+      // RESET THE QUERY PARAM TO A FALSEY VALUE: naviagtion to other tabs or whatever and back again now do not cause this queryParam value to be re-evaluated
+      this._router.navigate([], { queryParams: { ...this._route.snapshot.queryParams, openCategoryModalFor: 0 }, replaceUrl: true })
     }
   }
 
