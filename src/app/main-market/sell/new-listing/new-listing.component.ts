@@ -63,7 +63,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private categoryList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
-  private marketsList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
+  private marketsList$: BehaviorSubject<{id: number; name: string, marketType: MarketType}[]> = new BehaviorSubject([]);
   private savedTempl: Template = null;
   private profileMarkets: Market[] = [];
   private isFormValid: boolean = false;
@@ -138,7 +138,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
         }
 
         this.marketsList$.next(
-          availableMarkets.map(m => ({id: m.id, name: m.name}))
+          availableMarkets.map(m => ({id: m.id, name: m.name, marketType: m.type}))
         );
       }),
       takeUntil(this.destroy$)
@@ -606,11 +606,22 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
 
   private setCategoriesForMarket(marketId: number): Observable<CategoryItem[]> {
-    return this._sharedService.loadCategories(marketId).pipe(
-      map(categories => Array.isArray(categories.categories) ? categories.categories : []),
-      catchError(() => of([])),
-      tap(categories => this.categoryList$.next(categories)),
-    );
+    return defer(() => {
+
+      // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category serach
+      let searchedMId: number = undefined;
+      const market = this.marketsList$.value.find(m => m.id === marketId);
+
+      if ((market !== undefined) && (market.marketType !== MarketType.MARKETPLACE)) {
+        searchedMId = marketId;
+      }
+
+      return this._sharedService.loadCategories(searchedMId).pipe(
+        map(categories => Array.isArray(categories.categories) ? categories.categories : []),
+        catchError(() => of([])),
+        tap(categories => this.categoryList$.next(categories)),
+      );
+    });
   }
 
 
