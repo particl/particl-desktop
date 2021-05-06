@@ -163,8 +163,9 @@
                 <button mat-button [color]="marketItem.isFlagged ? 'warn' : 'basic'" class="small icon-only" [matTooltip]="marketItem.isFlagged ? 'Cast a vote to keep or remove this market' : 'Report inappropriate market'" appDebounceClick (debounceClick)="actionOpenGovernanceModal(marketItem.id)">
                   <mat-icon fontIcon="part-flag"></mat-icon>
                 </button>
-                <button mat-button color="basic" class="small icon-only" matTooltip="Promote in Market browser" appDebounceClick (debounceClick)="actionOpenPromoteMarketModal(marketIdx)">
-                  <mat-icon fontIcon="part-notification-speaker"></mat-icon>
+                <button mat-button color="basic" [routerLink]="listingsPagePath" [queryParams]="{SelectedMarketId: marketItem.id}" class="small">
+                  <mat-icon fontIcon="part-bag"></mat-icon>
+                  Browse
                 </button>
               </div>
               <div class="right">
@@ -172,9 +173,9 @@
                   <mat-icon fontIcon="part-pen-1"></mat-icon>
                   Edit Categories
                 </button>
-                <button mat-raised-button color="primary" [routerLink]="listingsPagePath" [queryParams]="{SelectedMarketId: marketItem.id}">
-                  <mat-icon fontIcon="part-bag"></mat-icon>
-                  Browse Market
+                <button mat-raised-button color="primary" matTooltip="Publish to Market browser" appDebounceClick (debounceClick)="actionOpenPromoteMarketModal(marketIdx)">
+                  <mat-icon fontIcon="part-notification-speaker"></mat-icon>
+                  Promote Market
                 </button>
               </div>
             </mat-action-row>
