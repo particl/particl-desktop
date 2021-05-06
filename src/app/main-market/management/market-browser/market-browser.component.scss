@@ -10,6 +10,23 @@ div.alert {
   }
 }
 
+.market {
+  .details {
+    .desc {
+      &.meta {
+        margin-top: 28px;
+        text-align: right;
+        strong {
+          display: block;
+          margin-bottom: 4px;
+          font-weight: 500;
+          color: var(--text);
+        }
+      }
+    }
+  }
+}
+
 .mat-divider {
   margin: 24px calc(-1 * var(--paddingH));
 }
