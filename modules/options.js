@@ -38,7 +38,14 @@ exports.parse = function() {
   const args = process.argv.slice(0);
 
   args.map((arg, index) => {
-    let nDashes = arg.lastIndexOf('-') + 1;
+    let nDashes = 0;
+    for (let i = 0; i < arg.length; i++) {
+      if (arg.charAt(i) == '-') {
+          nDashes++;
+      } else {
+          break;
+      }
+    }
     const argIndex = process.argv.indexOf(arg);
     arg = arg.substr(nDashes);
 
@@ -49,6 +56,13 @@ exports.parse = function() {
       if (verboseLevel) {
         options['verbose'] = verboseLevel;
         return ;
+      }
+      if (arg.includes('=')) {
+        arg = arg.split('=');
+        if (arg[0] == 'customdaemon') {
+            options[arg[0]] = arg[1];
+            return ;
+        }
       }
     } else if (nDashes === 1) { /* single-dash: core argument */
 
