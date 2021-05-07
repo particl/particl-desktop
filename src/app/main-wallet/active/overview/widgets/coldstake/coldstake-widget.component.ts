@@ -73,7 +73,7 @@ export class ColdstakeWidgetComponent implements OnDestroy {
       ]).pipe(
         tap((values: [boolean, boolean]) => {
           this.coldStakePercent = +values[0];
-          this.isZappable = +values[0] < 100 ? +values[1] > 0 : false
+          this.isZappable = +values[0] < 100 ? +values[1] > 0 : false;
         }),
         takeUntil(this.destroy$)
       )

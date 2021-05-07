@@ -144,7 +144,8 @@ export class NewListingComponent implements OnInit, OnDestroy {
       map((values: [Identity, Template]) => values[1]),
 
       concatMap((templ) => iif(
-        // Hacky, yucky check (but works for now) to only reset the template form details if this is the first time we've entered this function call
+        // Hacky, yucky check (but works for now):
+        // Resets the template form details if this is the first time we've entered this function call
         () => this.saveButtonText === '',
 
         defer(() => {

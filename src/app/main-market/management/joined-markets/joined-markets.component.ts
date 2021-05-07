@@ -116,8 +116,9 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
     const marketCategoryModal = this._route.snapshot.queryParamMap.get('openCategoryModalFor');
     if (+marketCategoryModal > 0) {
       this.requestedOpenCategoryModal = +marketCategoryModal;
-      // RESET THE QUERY PARAM TO A FALSEY VALUE: naviagtion to other tabs or whatever and back again now do not cause this queryParam value to be re-evaluated
-      this._router.navigate([], { queryParams: { ...this._route.snapshot.queryParams, openCategoryModalFor: 0 }, replaceUrl: true })
+      // RESET THE QUERY PARAM TO A FALSEY VALUE:
+      // navigation to other tabs or whatever and back again now do not cause this queryParam value to be re-evaluated
+      this._router.navigate([], { queryParams: { ...this._route.snapshot.queryParams, openCategoryModalFor: 0 }, replaceUrl: true });
     }
   }
 
