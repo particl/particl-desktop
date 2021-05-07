@@ -103,23 +103,38 @@
                       <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
                       <ng-template #marketTypeStorefront>Storefront</ng-template>
                     </span>
-                    <span class="market-region">{{ marketItem.region.label }}</span>
+                    <span class="market-region">
+                      <mat-icon fontIcon="part-globe"></mat-icon>
+                      {{ marketItem.region.label }}
+                    </span>
                   </div>
                 </div><!-- .meta -->
               </div>
-
-              <!-- @TODO: DESIGNER: is it possible to have something at the end here for showing when the promoted market expires? Would use the value: {{marketItem.expires | date: 'yyyy-MM-dd HH:mm'}}  -->
             </mat-expansion-panel-header>
+            
             <div class="details">
-              <h3 class="item-subtitle">Market ID</h3>
-              <div class="desc">
-                <span class="public key">{{ marketItem.receiveKey }}</span>
+              <div class="row" fxLayout fxLayoutGap="30px">
+                <div fxFlex="1 1 100%">
+                  <h3 class="item-subtitle">Market summary</h3>
+                  <p class="desc">
+                    {{ marketItem.summary }}
+                  </p>
+                </div>
+                <p class="desc meta" fxFlex="0 0 160px">
+                  <strong>Promoted until</strong>
+                  {{ marketItem.expires | date: 'yyyy-MM-dd HH:mm' }}
+                </p>
               </div>
-              <h3 class="item-subtitle">Market summary</h3>
-              <p class="desc">
-                {{ marketItem.summary }}
-              </p>
-            </div>
+              <mat-divider></mat-divider>
+              <div class="keys">
+                <h3 class="box-title">Market ID</h3>
+                <p class="help-text">
+                  <strong>Key required to join this Market.</strong> You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
+                </p>
+                <div class="public key">{{ marketItem.receiveKey }}</div>
+              </div><!-- .keys -->
+            </div><!-- .details -->
+
             <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
               <div class="left">
               </div>
@@ -130,8 +145,8 @@
                 </button>
               </div>
             </mat-action-row>
-          </mat-expansion-panel><!-- .market -->
 
+          </mat-expansion-panel><!-- .market -->
         </ng-container>
 
       </mat-accordion>

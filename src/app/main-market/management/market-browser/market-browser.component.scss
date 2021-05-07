@@ -10,18 +10,37 @@ div.alert {
   }
 }
 
-.key {
-  @extend %enable-select;
-  font-family: var(--font-mono);
-  font-weight: 500;
-  text-align: center;
-  word-break: break-all;
-  background: var(--bg);
-  padding: 8px 14px;
-  border-radius: 4px;
-  user-select: all;
-  &.public {
-    color: var(--color-info);
-    background: hsla(var(--color-info-hsl), 0.05);
+.market {
+  .details {
+    .desc {
+      &.meta {
+        margin-top: 28px;
+        text-align: right;
+        strong {
+          display: block;
+          margin-bottom: 4px;
+          font-weight: 500;
+          color: var(--text);
+        }
+      }
+    }
+  }
+}
+
+.mat-divider {
+  margin: 24px calc(-1 * var(--paddingH));
+}
+
+.keys {
+  .box-title {
+    margin: 24px 0 6px;
+  }
+  strong {
+    font-weight: 500;
+  }
+  .key {
+    &:empty {
+      display: none;
+    }
   }
 }
