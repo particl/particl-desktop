@@ -4,7 +4,7 @@ import { Log } from 'ng2-logger';
 import { Select, Store } from '@ngxs/store';
 import { WalletStakingState, WalletInfoState } from 'app/main/store/main.state';
 import { WalletDetailActions } from 'app/main/store/main.actions';
-import { Observable, Subject, iif, defer } from 'rxjs';
+import { Observable, Subject, iif, defer, combineLatest, merge } from 'rxjs';
 import { takeUntil, concatMap, take, tap, finalize } from 'rxjs/operators';
 
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -46,6 +46,7 @@ export class ColdstakeWidgetComponent implements OnDestroy {
   isUnlocked: boolean = false;
   isProcessing: boolean = false;
   coldStakePercent: number = 0;
+  isZappable: boolean = false;
 
   private destroy$: Subject<void> = new Subject();
   private log: any = Log.create('coldstake-widget.component');
@@ -58,21 +59,26 @@ export class ColdstakeWidgetComponent implements OnDestroy {
     private _snackbar: SnackbarService,
     private _dialog: MatDialog
   ) {
-    this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (value: string) => {
-        this.isUnlocked = ['Unlocked', 'Unlocked, staking only', 'Unencrypted'].includes(value);
-      }
-    );
 
-    this._store.select(WalletStakingState.getValue('percent_in_coldstakeable_script')).pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (value: number) => {
-        this.coldStakePercent = value;
-      }
-    );
+    merge(
+
+      this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
+        tap((value: string) => this.isUnlocked = ['Unlocked', 'Unlocked, staking only', 'Unencrypted'].includes(value)),
+        takeUntil(this.destroy$)
+      ),
+
+      combineLatest([
+        this._store.select(WalletStakingState.getValue('percent_in_coldstakeable_script')).pipe(takeUntil(this.destroy$)),
+        this._store.select(WalletStakingState.getValue('coin_in_stakeable_script')).pipe(takeUntil(this.destroy$)),
+      ]).pipe(
+        tap((values: [boolean, boolean]) => {
+          this.coldStakePercent = +values[0];
+          this.isZappable = +values[0] < 100 ? +values[1] > 0 : false
+        }),
+        takeUntil(this.destroy$)
+      )
+
+    ).subscribe();
   }
 
 

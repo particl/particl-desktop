@@ -260,7 +260,11 @@ export class ColdstakeService {
     );
 
     return of(actualValues).pipe(
-      concatMap((utxo) => forkJoin(...utxo.map(sendtypeto))),
+      concatMap((utxo) => iif(
+        () => utxo.length === 0,
+        defer(() => of([])),
+        defer(() => forkJoin(utxo.map(sendtypeto)))
+      )),
       map((results: Array<{fee?: number, error?: boolean}>) => {
         let count = 0;
         let errors = 0;
