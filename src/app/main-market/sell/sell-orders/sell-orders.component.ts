@@ -172,9 +172,9 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
           orders.forEach(newOrder => {
             // update filter counts
-            const optionAll = this.filterOptionsStatus.find(s => s.value === '');
-            if (optionAll) {
-              optionAll.count++;
+            const optionTotal = this.filterOptionsStatus.find(s => s.value === '');
+            if (optionTotal) {
+              optionTotal.count++;
             }
 
             const optionStatus = this.filterOptionsStatus.find(s => s.value === newOrder.currentState.state.stateId);
@@ -237,7 +237,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
      *    (is not a component provided service but a market module one),
      *    leaving no way to reliably determine when to unsubscribe from the created (and subscribed) socket listener observables.
      *    The alternative would be to create a store of socket listeners with a tracker of subcribers
-     *    and then ask the subscribers to unregister themselves, but thats beating aound the bush for no real benefit.
+     *    and then ask the subscribers to unregister themselves, but that's beating aound the bush for no real benefit.
      *    Until an alternative solution presents itself, the socket listeners are registered in the component.
      */
 

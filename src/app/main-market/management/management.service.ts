@@ -335,7 +335,7 @@ export class MarketManagementService {
 
 
   fetchMarketGovernanceDetails(marketId: number): Observable<MarketGovernanceInfo> {
-    // we're not retriving image data, so no need for marketUrl info (which is primarily used for the image processing)
+    // we're not retrieving image data, so no need for marketUrl info (which is primarily used for the image processing)
     return this._rpc.call('market', ['get', marketId, false]).pipe(
       map((resp: RespMarketListMarketItem) => {
         const newItem: MarketGovernanceInfo = {

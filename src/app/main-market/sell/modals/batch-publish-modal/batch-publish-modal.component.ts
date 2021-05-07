@@ -183,7 +183,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       }),
 
       map((marketId: any) => {
-        // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category serach
+        // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category search
         let searchedMId: number = undefined;
         const market = this.availableMarkets.find(m => m.id === +marketId);
 
@@ -202,7 +202,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       // load the categories into the tree-select for each selector
       tap(categories => this.categoryList$.next(categories)),
 
-      // reset each tree-select (and the equivalent form control value) to any existing market category selcetion
+      // reset each tree-select (and the equivalent form control value) to any existing market category selection
       tap(() => {
         const marketId = this.batchPublishForm.get('selectedMarket').value;
         const refs = this.categorySelectorChildren.toArray();

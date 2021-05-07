@@ -74,7 +74,7 @@ export class MarketState {
      * 2. If using ngxsOnInit(), remember that it is called only the first time the state is added to the global store!
      *    - So despite the market module potentially being "loaded" multuple times, this function will only execute on the 1st market load.
      *    - for clean separation, we should be bootstrapping this market module as another whole app inside the main application...
-     *      We'll get to such a goal eventually... or at least thats the current foward direction.
+     *      We'll get to such a goal eventually... or at least that's the current forward direction.
      */
 
   @Selector()

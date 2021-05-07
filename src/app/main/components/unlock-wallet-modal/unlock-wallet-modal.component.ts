@@ -47,7 +47,7 @@ export class UnlockwalletModalComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     // timeout required to avoid the dreaded 'ExpressionChangedAfterItHasBeenCheckedError'
-    // Implemented to avoid FOUC and mat-expansion-panel temproarily opened and suddenly closed, on render..
+    // Implemented to avoid FOUC and mat-expansion-panel temporarily being opened and then suddenly closed, on render..
     //    see Angular Material issue: https://github.com/angular/components/issues/13870
     setTimeout(() => this.disableAnimation = false);
   }

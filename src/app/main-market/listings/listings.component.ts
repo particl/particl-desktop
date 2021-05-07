@@ -50,7 +50,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   activeMarket: Market;
   selectedMarketControl: FormControl = new FormControl(0);
 
-  // flags controlling whats displayed when
+  // flags controlling what's displayed when
   hasNewListings: boolean = false;
   atEndOfListings: boolean = false;
   isSearching: boolean = false;

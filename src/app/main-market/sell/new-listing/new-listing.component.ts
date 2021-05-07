@@ -616,7 +616,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
   private setCategoriesForMarket(marketId: number): Observable<CategoryItem[]> {
     return defer(() => {
 
-      // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category serach
+      // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category search
       let searchedMId: number = undefined;
       const market = this.marketsList$.value.find(m => m.id === marketId);
 

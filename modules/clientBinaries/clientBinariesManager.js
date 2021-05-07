@@ -53,7 +53,7 @@ class Manager extends EventEmitter {
   /**
    * Construct a new instance.
    *
-   * @param {Object} [config] The configuraton to use. If ommitted then the
+   * @param {Object} [config] The configuration to use. If omitted then the
    * default configuration (`DefaultConfig`) will be used.
    */
   constructor (config) {

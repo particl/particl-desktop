@@ -162,7 +162,7 @@ exports.startGUI = function (mainWindow) {
 
 
 exports.stopGUI = function() {
-  daemonManager.shutdown(); // stops downloads from occuring when the GUI closes.
+  daemonManager.shutdown(); // stops downloads from occurring when the GUI closes.
   notification.destroy();
   closeGui.destroy();
 

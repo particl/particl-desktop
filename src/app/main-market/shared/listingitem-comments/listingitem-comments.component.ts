@@ -193,7 +193,7 @@ export class ListingItemCommentsComponent implements OnInit, OnDestroy {
              * */
             newComment.parentCommentId = updatedComment.children.length > 0 ? updatedComment.children[0].parentCommentId : 1;
             updatedComment.children.push(newComment);
-            // Splice and insert clone. Forces an update in the display (updating the children array value doesnt update the object's hash)
+            // Splice and insert clone. Forces an update in the display (updating the children array value doesn't update the object's hash)
             existingComments.splice(foundParentIdx, 1, updatedComment);
             this.dataSource.data = existingComments;
           }

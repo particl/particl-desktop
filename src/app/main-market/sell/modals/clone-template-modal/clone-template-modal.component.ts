@@ -82,7 +82,7 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
           this.selectedCategory.setValue(0);
         }),
         map((marketId: number) => {
-          // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category serach
+          // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category search
           let searchedMId: number = undefined;
           const market = this.availableMarkets.find(m => m.id === +marketId);
 

@@ -197,7 +197,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
     const filterRequest$ = this._txservice.getFilteredTransactions(this._filters);
 
     if (!this.showPagination) {
-      // Ony fetch the requested number of items
+      // Only fetch the requested number of items
       return filterRequest$;
     }
 

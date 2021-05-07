@@ -57,7 +57,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // @TODO: zaSMilingIdiot (2020-02-13) -> This implementation is not the best way to tbe doing this, but it works for now.
+    // @TODO: zaSmilingIdiot (2020-02-13) -> This implementation is not the best way to be doing this, but it works for now.
     //    Should probably be updated when more time is available...
 
     this.isVisible.valueChanges.pipe(

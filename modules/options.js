@@ -5,7 +5,7 @@ let _options = {};
 /*
 ** compose options from arguments
 **
-** exemple:
+** example:
 ** --dev -testnet -reindex -rpcuser=user -rpcpassword=pass
 ** strips --dev out of argv (double dash is not a particld argument) and returns
 ** {
