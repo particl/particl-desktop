@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { Subject, of, forkJoin, merge, Observable, combineLatest, iif, defer, timer } from 'rxjs';
@@ -107,7 +107,6 @@ export class BuyCartComponent implements OnInit, OnDestroy {
     private _unlocker: WalletEncryptionService,
     private _cdr: ChangeDetectorRef,
     private _router: Router,
-    private _route: ActivatedRoute
   ) { }
 
 
@@ -148,7 +147,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
 
     // <-- PROCESS CHECKOUT VALIDITY -->
 
-    const addressValidity$: Observable<boolean> = combineLatest(
+    const addressValidity$: Observable<boolean> = combineLatest([
       this.isAddressValid.valueChanges.pipe(
         distinctUntilChanged(),
         takeUntil(this.destroy$)
@@ -165,17 +164,17 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         map(() => this.addressTitleField.valid),
         takeUntil(this.destroy$)
       )
-    ).pipe(
+      ]).pipe(
       map(([formValid, shouldSaveForm, titleValid]: [boolean, boolean, boolean]) => formValid && (shouldSaveForm ? titleValid : true)),
       takeUntil(this.destroy$)
     );
 
 
-    const checkoutChecker$ = combineLatest(
+    const checkoutChecker$ = combineLatest([
       addressValidity$.pipe(startWith(false), distinctUntilChanged(), takeUntil(this.destroy$)),
       this.hasCartErrors.valueChanges.pipe(startWith(true), takeUntil(this.destroy$))
-    ).pipe(
-      map(([addressValid, cartValid]: [boolean, boolean]) => addressValid && !cartValid),
+    ]).pipe(
+      map(([addressValid, cartInvalid]: [boolean, boolean]) => addressValid && !cartInvalid),
       tap(isValid => {
         this.canCheckoutForm.setValue(isValid);
         this._cdr.detectChanges();
