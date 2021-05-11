@@ -156,7 +156,7 @@
                 <th>Escrow TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="{{orderItem.extraDetails.escrowTxn}}">Open in Block Explorer</a>
+                    <a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="{{orderItem.extraDetails.escrowTxn}}">Open in Block Explorer</a>
                   </div>
                 </td>
               </tr>
@@ -164,7 +164,7 @@
                 <th>Release TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="{{orderItem.extraDetails.releaseTxn}}">Open in Block Explorer</a>
+                    <a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="{{orderItem.extraDetails.releaseTxn}}">Open in Block Explorer</a>
                   </div>
                 </td>
               </tr>
