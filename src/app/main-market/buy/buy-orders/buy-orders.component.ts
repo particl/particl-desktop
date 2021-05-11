@@ -8,9 +8,10 @@ import {
   distinctUntilChanged, filter, auditTime, concatMap, finalize
 } from 'rxjs/operators';
 
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { WalletInfoState } from 'app/main/store/main.state';
+import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -49,6 +50,8 @@ interface BuyflowStep {
   styleUrls: ['./buy-orders.component.scss']
 })
 export class BuyOrdersComponent implements OnInit, OnDestroy {
+
+  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
 
   identityIsEncrypted: boolean = false;
   isLoading: boolean = true;

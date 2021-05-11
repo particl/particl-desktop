@@ -102,7 +102,7 @@ exports.call = function(method, params, callback) {
   });
 
   request.setTimeout(timeout, error => {
-    return request.abort();
+    return request.destroy();
   });
 
   request.write(postData);
