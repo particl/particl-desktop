@@ -245,7 +245,7 @@ export class BidOrderService implements IBuyflowController {
 
     return actionable.transition(orderItem, otherParams || {}).pipe(
       concatMap((isSuccessful: boolean) => {
-        const notifyBidHash = orderItem.latestBidHash;
+        const notifyBidHash = orderItem.orderHash;
         return iif(
           () => isSuccessful,
 
