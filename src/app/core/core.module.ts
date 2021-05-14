@@ -1,3 +1,4 @@
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -6,6 +7,7 @@ import { IpcService } from './services/ipc.service';
 import { ConnectionService } from './services/connection.service';
 import { CloseGuiService } from './services/close-gui.service';
 import { PollingService } from './services/polling.service';
+import { MotdService } from './services/motd.service';
 
 
 @NgModule({
@@ -21,7 +23,8 @@ import { PollingService } from './services/polling.service';
     RpcService,
     IpcService,
     CloseGuiService,
-    PollingService
+    PollingService,
+    MotdService,
   ]
 })
 

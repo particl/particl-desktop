@@ -2,8 +2,10 @@ import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
 import { Observable, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+
+import { MotdService, MessageQuote } from 'app/core/services/motd.service';
 
 import { environment } from 'environments/environment';
 import { termsObj } from 'app/startup/terms/terms-txt';
@@ -18,16 +20,23 @@ export class LoadingComponent implements OnInit, OnDestroy {
   public readonly clientVersion: string = environment.version;
 
   loadingMessage: Observable <string>;
+  motd: MessageQuote = {author: '', text: ''};
 
   private unsubscribe$: Subject<void> = new Subject();
   private log: any = Log.create('loading.component');
 
   constructor(
     private _store: Store,
-    private _router: Router
+    private _router: Router,
+    private _motdService: MotdService,
   ) {
     this.log.i('loading component initialized');
     this.loadingMessage = this._store.select(state => state.global.loadingMessage);
+
+    this._motdService.motd.pipe(
+      tap((motd) => this.motd = motd),
+      takeUntil(this.unsubscribe$)
+    ).subscribe();
   }
 
   ngOnInit() {
