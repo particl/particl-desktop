@@ -22,6 +22,7 @@ import { NotificationsService } from './services/notifications/notifications.ser
 import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/encrypt-wallet-modal.component';
 import { BlockSyncModalComponent } from './components/block-sync-indicator/block-sync-modal/block-sync-modal.component';
 
+
 @NgModule({
   declarations: [
     BaseComponent,
@@ -46,7 +47,7 @@ import { BlockSyncModalComponent } from './components/block-sync-indicator/block
     MainRpcService,
     WalletInfoService,
     WalletEncryptionService,
-    NotificationsService
+    NotificationsService,
   ],
   entryComponents: [
     ApplicationRestartModalComponent,

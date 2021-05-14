@@ -12,7 +12,6 @@ export class IpcService {
 
   listeners: { [id: string]: boolean } = {};
 
-  private log: any = Log.create('ipc.service');
   /* Listeners on the renderer */
   private listenerCount: number = 0;
 
