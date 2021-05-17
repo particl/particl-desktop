@@ -112,7 +112,7 @@ export class NotificationsService implements OnDestroy {
       map((items: SocketMessages_v03.BidReceived[]) => {
         return items.filter(
           m => (typeof m.market === 'string') && identityMarkets.includes(m.market)
-        ).map(m => m.objectHash);
+        ).map(m => m.orderHash);
       }),
       filter((bidHashes: string[]) => bidHashes.length > 0),
       tap((bidHashes: string[]) => {
@@ -121,6 +121,7 @@ export class NotificationsService implements OnDestroy {
       }),
       takeUntil(this.stopListeners$)
     );
+
     const sellListener$ = merge(
       ...orderMessageListeners.sellerAlerts.map(li =>
         this._socket.getSocketMessageListener(li as any).pipe(takeUntil(this.stopListeners$))
@@ -129,7 +130,7 @@ export class NotificationsService implements OnDestroy {
       bufferTime(2000),
       map((items: SocketMessages_v03.BidReceived[]) => {
         return items.filter(item => (typeof item.market === 'string') && identityMarkets.includes(item.market)
-        ).map(m => m.objectHash);
+        ).map(m => m.orderHash);
       }),
       filter((bidHashes: string[]) => bidHashes.length > 0),
       tap((bidHashes: string[]) => {
@@ -141,12 +142,13 @@ export class NotificationsService implements OnDestroy {
 
     const cancelListener$ = merge(
       this._socket.getSocketMessageListener('MPA_CANCEL_03').pipe(takeUntil(this.stopListeners$)),
-      this._socket.getSocketMessageListener('MPA_REJECT_03').pipe(takeUntil(this.stopListeners$))
+      this._socket.getSocketMessageListener('MPA_REJECT_03').pipe(takeUntil(this.stopListeners$)),
+      this._socket.getSocketMessageListener('MPA_RELEASE').pipe(takeUntil(this.stopListeners$))
     ).pipe(
       bufferTime(2000),
       map((items: SocketMessages_v03.BidReceived[]) => {
-        return items.filter(item => (typeof item.market === 'string') && identityMarkets.includes(item.market)
-        ).map(m => m.objectHash);
+        return items.filter(item => (typeof item.market === 'string') && identityMarkets.includes(item.market) && (typeof item.orderHash === 'string')
+        ).map(m => m.orderHash);
       }),
       filter((bidHashes: string[]) => bidHashes.length > 0),
       tap((bidHashes: string[]) => {
@@ -208,16 +210,8 @@ export class NotificationsService implements OnDestroy {
             }
             return false;
           }).map(o => {
-            if (Array.isArray(o.OrderItems[0].Bid.ChildBids)) {
-              const sortedChildBids = o.OrderItems[0].Bid.ChildBids.sort((a, b) =>
-                (isBasicObjectType(b) && +b.generatedAt || 0) - (isBasicObjectType(a) && +a.generatedAt || 0)
-              );
-
-              if ((sortedChildBids.length > 0) && (typeof sortedChildBids[0].hash === 'string') && (sortedChildBids[0].hash.length > 0)) {
-                return sortedChildBids[0].hash;
-              }
-            }
-            return o.OrderItems[0].Bid.hash || '';
+            const orderHashObj = o.OrderItems[0].Bid.BidDatas.find(bd => bd.key === BID_DATA_KEY.ORDER_HASH);
+            return orderHashObj && (typeof orderHashObj.value === 'string') ? orderHashObj.value : '';
           });
         }),
       );

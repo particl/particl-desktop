@@ -190,7 +190,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
               const existingOrderIdx = this.ordersList.findIndex(o => o.orderId === newOrder.orderId);
 
               if (existingOrderIdx === -1) {
-                this.ordersList.push(newOrder);
+                this.ordersList.unshift(newOrder);
               } else if (
                 (this.ordersList[existingOrderIdx].currentState.state.stateId !== newOrder.currentState.state.stateId) &&
                 (this.ordersList[existingOrderIdx].orderId === newOrder.orderId)

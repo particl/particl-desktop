@@ -39,7 +39,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     canModifyIdentities: false,
     useAnonBalanceForFees: false,
     usePaidMsgForImages: true,
-    startupWaitTimeoutSeconds: 60,
+    startupWaitTimeoutSeconds: 120,
     defaultListingCommentPageCount: 20,
     daysToNotifyListingExpired: 7,
     marketsLastAdded: 0,
