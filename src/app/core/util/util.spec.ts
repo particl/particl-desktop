@@ -70,20 +70,6 @@ describe('Util Functions', () => {
     expect(isPrerelease('2.0.0-testnet')).toBe(false);
     expect(isPrerelease('random-string')).toBe(false);
   });
-
-  it('should return the correct mainnet release status', () => {
-    expect(isMainnetRelease('application-testnet-1')).toBe(false);
-    expect(isMainnetRelease('application-test')).toBe(true);
-    expect(isMainnetRelease('application-alpha-testnet1')).toBe(false);
-    expect(isMainnetRelease('application')).toBe(true);
-    expect(isMainnetRelease('random-string')).toBe(true);
-  });
-
-  it('should return the correct blob data from a string input', () => {
-    const result = dataURItoBlob('test, test');
-    expect(result.size).toBe(3);
-    expect(result.type).toBe('image/jpeg');
-  });
 });
 
 

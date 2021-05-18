@@ -30,6 +30,7 @@ export class TreeSelectComponent implements OnInit, OnDestroy {
 
   @Input() data$: Observable<InputItem[]> = of([]);
   @Input() singleSelection: boolean = false;
+  @Input() displaySingleSelectionCheckbox: boolean = false;
   @Input() isParentNodesSelectable: boolean = true;
   @Input() placeholderLabel: string = '';
   @Input() prefixIcon: string = '';

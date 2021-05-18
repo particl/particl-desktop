@@ -8,9 +8,10 @@ import {
   distinctUntilChanged, filter, auditTime, concatMap, finalize
 } from 'rxjs/operators';
 
-import { Store } from '@ngxs/store';
+import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { WalletInfoState } from 'app/main/store/main.state';
+import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -50,12 +51,14 @@ interface BuyflowStep {
 })
 export class BuyOrdersComponent implements OnInit, OnDestroy {
 
+  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
+
   identityIsEncrypted: boolean = false;
   isLoading: boolean = true;
 
   querySearch: FormControl = new FormControl('');
   queryFilterAttention: FormControl = new FormControl(false);
-  queryFilterComplete: FormControl = new FormControl(false);
+  queryFilterComplete: FormControl = new FormControl(true);
   queryFilterMarket: FormControl = new FormControl('');
   queryFilterStatus: FormControl = new FormControl('');
 
@@ -169,9 +172,9 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
 
           orders.forEach(newOrder => {
             // update filter counts
-            const optionAll = this.filterOptionsStatus.find(s => s.value === '');
-            if (optionAll) {
-              optionAll.count++;
+            const optionTotal = this.filterOptionsStatus.find(s => s.value === '');
+            if (optionTotal) {
+              optionTotal.count++;
             }
 
             const optionStatus = this.filterOptionsStatus.find(s => s.value === newOrder.currentState.state.stateId);
@@ -234,7 +237,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
      *    (is not a component provided service but a market module one),
      *    leaving no way to reliably determine when to unsubscribe from the created (and subscribed) socket listener observables.
      *    The alternative would be to create a store of socket listeners with a tracker of subcribers
-     *    and then ask the subscribers to unregister themselves, but thats beating aound the bush for no real benefit.
+     *    and then ask the subscribers to unregister themselves, but that's beating around the bush for no real benefit.
      *    Until an alternative solution presents itself, the socket listeners are registered in the component.
      */
 
@@ -283,7 +286,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
   clearAllFilters(): void {
     this.querySearch.setValue('', {emitEvent: false});
     this.queryFilterAttention.setValue(false, {emitEvent: false});
-    this.queryFilterComplete.setValue(false, {emitEvent: false});
+    this.queryFilterComplete.setValue(true, {emitEvent: false});
     this.queryFilterMarket.setValue('', {emitEvent: false});
     this.queryFilterStatus.setValue('', {emitEvent: false});
 

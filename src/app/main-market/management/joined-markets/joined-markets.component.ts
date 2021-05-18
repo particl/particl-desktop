@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, merge, defer, of, iif, throwError } from 'rxjs';
@@ -81,10 +81,12 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private renderFilteredControl: FormControl = new FormControl();
+  private requestedOpenCategoryModal: number = 0;
 
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _clipboard: ClipboardService,
     private _store: Store,
     private _socket: MarketSocketService,
@@ -110,6 +112,14 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
     const parentUrl = `/${target.join('/')}`;
     this.listingsPagePath = `${parentUrl}/listings`;
+
+    const marketCategoryModal = this._route.snapshot.queryParamMap.get('openCategoryModalFor');
+    if (+marketCategoryModal > 0) {
+      this.requestedOpenCategoryModal = +marketCategoryModal;
+      // RESET THE QUERY PARAM TO A FALSEY VALUE:
+      // navigation to other tabs or whatever and back again now do not cause this queryParam value to be re-evaluated
+      this._router.navigate([], { queryParams: { ...this._route.snapshot.queryParams, openCategoryModalFor: 0 }, replaceUrl: true });
+    }
   }
 
 
@@ -287,13 +297,9 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
     const market = this.marketsList[idx];
 
-    const data: GenericModalInfo = {
-      market
-    };
-    this._dialog.open(
-      CategoryEditorModalComponent,
-      { data }
-    );
+    if (market) {
+      this.openCategoryModalEditorForMarket(market);
+    }
   }
 
 
@@ -412,6 +418,15 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.marketsList = markets;
           this.renderFilteredControl.setValue(null);
+
+          if ((this.marketsList.length > 0) && (this.requestedOpenCategoryModal > 0)) {
+            const market = this.marketsList.find(m => m.id === this.requestedOpenCategoryModal);
+            this.requestedOpenCategoryModal = 0;
+
+            if (market && (market.marketType === MarketType.STOREFRONT_ADMIN)) {
+              this.openCategoryModalEditorForMarket(market);
+            }
+          }
         })
       ))
     );
@@ -439,5 +454,16 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
 
       return of(idxList);
     });
+  }
+
+
+  private openCategoryModalEditorForMarket(market: DisplayableJoinedMarket): void {
+    const data: GenericModalInfo = {
+      market
+    };
+    this._dialog.open(
+      CategoryEditorModalComponent,
+      { data }
+    );
   }
 }

@@ -55,6 +55,7 @@ const DEFAULT_WALLET_STATE: WalletInfoStateModel = {
 const DEFAULT_STAKING_INFO_STATE: WalletStakingStateModel = {
   cold_staking_enabled: false,
   percent_in_coldstakeable_script: 0,
+  coin_in_stakeable_script: 0,
 };
 
 
@@ -216,6 +217,10 @@ export class WalletStakingState {
 
         if (typeof result.enabled === typeof currentState.cold_staking_enabled) {
           updatedValues['cold_staking_enabled'] = result.enabled;
+        }
+
+        if (typeof result.coin_in_coldstakeable_script === typeof currentState.coin_in_stakeable_script) {
+          updatedValues['coin_in_stakeable_script'] = result.coin_in_stakeable_script;
         }
 
         if (typeof result.percent_in_coldstakeable_script === typeof currentState.percent_in_coldstakeable_script) {

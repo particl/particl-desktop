@@ -46,7 +46,7 @@
             matTooltip="Fast-forward to 100%"
             (click)="zap()"
             [disabled]="isProcessing"
-            *ngIf="coldStakePercent < 100">
+            *ngIf="isZappable">
             <mat-icon fontIcon="part-lightning"></mat-icon>
             Zap
           </button>
@@ -92,7 +92,7 @@
             matTooltip="Fast-forward to 100%"
             (click)="zap()"
             [disabled]="isProcessing"
-            *ngIf="coldStakePercent < 100">
+            *ngIf="isZappable">
             <mat-icon fontIcon="part-lightning"></mat-icon>
             Zap
           </button>

@@ -1,18 +1,19 @@
-@import './src/assets/_config'; // import shared colors etc.
-@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
-
+@import "./src/assets/_config"; // import shared colors etc.
+@import "./src/app/main-market/shared/list-item-details"; // shared styling for list items
 
 .section-title {
-  &:first-of-type { // make the first title inline-block, so Refresh button can stick to its side
+  &:first-of-type {
+    // make the first title inline-block, so Refresh button can stick to its side
     display: inline-block;
   }
-  & + .mat-button { // refresh button
+  & + .mat-button {
+    // refresh button
     margin-left: 4px;
   }
 }
 
 .question-answer {
-  --list-item-size: min-content; // scale dynamicly based on content's size
+  --list-item-size: min-content; // scale dynamically based on content's size
   font-size: 13px;
   line-height: 1.65;
   @include break(xl) {
@@ -32,7 +33,8 @@
       margin: 0 !important;
     }
   }
-  .status { // number of replies in thread
+  .status {
+    // number of replies in thread
     padding-top: 4px;
     padding-bottom: 4px;
     .mat-icon {
@@ -54,7 +56,8 @@
   }
 }
 
-.item { // message in a thread (both Q's and A's)
+.item {
+  // message in a thread (both Q's and A's)
   p {
     font-size: 13px;
   }
@@ -134,7 +137,8 @@
   @include break(xl) {
     margin: 32px -24px -32px;
   }
-  &.new-question { // in Listing detail modal
+  &.new-question {
+    // in Listing detail modal
     margin: 0;
     border: 0;
   }

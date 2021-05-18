@@ -6,17 +6,18 @@ import { Observable, Subject, BehaviorSubject, of } from 'rxjs';
 import { tap, takeUntil, switchMap, map, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { MarketState } from 'app/main-market/store/market.state';
+import { MarketState } from '../../../store/market.state';
 
-import { DataService } from 'app/main-market/services/data/data.service';
-import { isBasicObjectType } from 'app/main-market/shared/utils';
-import { CategoryItem } from 'app/main-market/services/data/data.models';
+import { DataService } from '../../../services/data/data.service';
+import { isBasicObjectType } from '../../../shared/utils';
+import { CategoryItem } from '../../../services/data/data.models';
+import { MarketType } from './../../../shared/market.models';
 
 
 export interface CloneTemplateModalInput {
   templateTitle: string;
   templateImage?: string;
-  markets: {name: string; id: number}[];
+  markets: {name: string; id: number, marketType: MarketType}[];
 }
 
 
@@ -28,7 +29,7 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
 
   readonly productTitle: string = '';
   readonly productImage: string = '';
-  readonly availableMarkets: {name: string; id: number}[] = [];
+  readonly availableMarkets: {name: string; id: number, marketType: MarketType}[] = [];
   readonly categories$: Observable<CategoryItem[]>;
 
   selectedMarket: FormControl = new FormControl(0);
@@ -50,7 +51,7 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
       if (Array.isArray(this.data.markets)) {
         this.data.markets.forEach(m => {
           if (isBasicObjectType(m) && (+m.id > 0) && (typeof m.name === 'string')) {
-            this.availableMarkets.push({id: m.id, name: m.name});
+            this.availableMarkets.push({id: m.id, name: m.name, marketType: m.marketType});
           }
         });
       }
@@ -79,6 +80,16 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
         tap(() => {
           this.categoryList$.next([]);
           this.selectedCategory.setValue(0);
+        }),
+        map((marketId: number) => {
+          // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category search
+          let searchedMId: number = undefined;
+          const market = this.availableMarkets.find(m => m.id === +marketId);
+
+          if ((market !== undefined) && (market.marketType !== MarketType.MARKETPLACE)) {
+            searchedMId = +marketId;
+          }
+          return searchedMId;
         }),
         switchMap((marketId) => this._sharedService.loadCategories(marketId).pipe(
           map(categories => Array.isArray(categories.categories) ? categories.categories : []),

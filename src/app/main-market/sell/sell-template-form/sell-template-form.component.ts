@@ -111,7 +111,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       // The debounceTime here is necessary to give the tree-select some time to load before attempting to reset the actual value.
       //  This is a bullshit way to do this and ends up in a potential race condition... fortunately mitigated somewhat by
       //  having the category tree-select component only display when there are category items. This definitely has its own issues though..
-      //  but can be fixed later when there is less time contraints.
+      //  but can be fixed later when there is less time constraints.
       debounceTime(250),
       tap((catId) => {
         this.selectedCategory.setValue(catId);

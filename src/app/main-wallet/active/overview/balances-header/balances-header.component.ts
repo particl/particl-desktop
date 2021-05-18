@@ -64,7 +64,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    combineLatest(info$, utxo$).pipe(
+    combineLatest([info$, utxo$]).pipe(
       takeUntil(this.destroy$)
     ).subscribe(
       (result) => {

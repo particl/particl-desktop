@@ -51,7 +51,7 @@ export class Setting {
   currentValue: any;              // The current saved value for this setting. Ignored for SettingType.BUTTON
   newValue: any;                  // The new, unsaved value that the user wants. Otherwise contains the same value as the current value.
   tags: string[];                 // A list of tags to display for the setting. Typically draws attention to additional, useful info.
-  restartRequired: boolean;       // Indicates whether a restart of a particular service or the applicaiton as a whole is required.
+  restartRequired: boolean;       // Indicates whether a restart of a particular service or the application as a whole is required.
   validate?: ValidationFunction;  // Optional validation function that is executed when the user changes the value.
                                   //  The validation function gets a copy of the new value.
                                   //  Executed when the page save function is called to ensure the changed 'newvalue' is actually valid.

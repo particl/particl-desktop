@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-// cant use iso3166-2-db/i18n/dispute/UN/en due to sandbox limitations
+// can't use iso3166-2-db/i18n/dispute/UN/en due to sandbox limitations
 import { getDataSet, reduce } from 'iso3166-2-db';
 import { Country } from './country.model';
 

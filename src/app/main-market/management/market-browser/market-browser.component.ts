@@ -188,9 +188,15 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
     this._manageService.forceSmsgRescan().pipe(
       finalize(() => {
         this.isRescanning = false;
-        this._cdr.detectChanges();
+        if (!this.destroy$.closed) {
+          this._cdr.detectChanges();
+        }
       }),
-      tap(() => this._cdr.detectChanges()),
+      tap(() => {
+        if (!this.destroy$.closed) {
+          this._cdr.detectChanges();
+        }
+      }),
     ).subscribe();
   }
 

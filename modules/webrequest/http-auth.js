@@ -114,74 +114,8 @@ function loadDefault() {
     'Github Web': {
       url: 'github.com'
     },
-    'Github Assets': {
-      url: 'github.githubassets.com'
-    },
     'Github User Content': {
       url: '*.githubusercontent.com'
-    },
-    'Testnet Block Explorer': {
-      url: 'explorer-testnet.particl.io'
-    },
-    'Mainnet Block Explorer': {
-      url: 'explorer.particl.io'
-    },
-    'Particl Community' : {
-      url: 'particl.community'
-    },
-    'Particl Crowd-Funding': {
-      url: 'ccs.particl.io'
-    },
-    'Particl Wiki': {
-      url: 'particl.wiki'
-    },
-    'Particl Website': {
-      url: 'particl.io'
-    },
-    'Particl Website 1': {
-      url: '*.particl.cz'
-    },
-    'Particl News': {
-      url: 'particl.news'
-    },
-    'Discord Web': {
-      url: '*.discordapp.com'
-    },
-    'Discord': {
-      url: 'discord.com'
-    },
-    'Element (Formerly Riot)': {
-      url: 'app.element.io'
-    },
-    'Telegram Web': {
-      url: 't.me'
-    },
-    'Twitter': {
-      url: 'twitter.com'
-    },
-    'Facebook': {
-      url: 'www.facebook.com'
-    },
-    'Reddit': {
-      url: '*.reddit.com'
-    },
-    'Reddit Statc Content': {
-      url: 'www.redditstatic.com'
-    },
-    'Reddit Media': {
-      url: '*.redditmedia.com'
-    },
-    'Reddit Dynamic Content': {
-      url: '*.redd.it'
-    },
-    'Mastodon': {
-      url: 'fosstodon.org'
-    },
-    'Youtube': {
-      url: 'www.youtube.com'
-    },
-    'BitCoinTalk': {
-      url: 'bitcointalk.org'
     },
 
   };

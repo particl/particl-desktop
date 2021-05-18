@@ -1,14 +1,15 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
-import { Observable, Subject, merge} from 'rxjs';
-import { takeUntil, tap, finalize } from 'rxjs/operators';
+import { Observable, Subject, merge, iif, defer} from 'rxjs';
+import { takeUntil, tap, finalize, concatMap } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
 import { MarketState } from 'app/main-market/store/market.state';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
 import { MarketTypeValidator } from './create-market.validators';
@@ -58,8 +59,16 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
     private _router: Router,
     private _snackbar: SnackbarService,
     private _manageService: MarketManagementService,
-    private _dialog: MatDialog
+    private _dialog: MatDialog,
+    private _unlocker: WalletEncryptionService,
   ) {
+
+    this.optionsMarketRegions = this._manageService.getMarketRegions();
+    this.MAX_NAME = this._manageService.MAX_MARKET_NAME;
+    this.MAX_SUMMARY = this._manageService.MAX_MARKET_SUMMARY;
+    this.MAX_IMAGE_SIZE = this._manageService.IMAGE_MAX_SIZE;
+    this.imageSizeLabel = `${Math.round(Math.fround(this.MAX_IMAGE_SIZE / 1024))} KB`;
+
     this.marketForm = new FormGroup({
       name: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_NAME)]),
       summary: new FormControl('', [Validators.maxLength(this.MAX_SUMMARY)]),
@@ -67,12 +76,6 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
       marketType: new FormControl('', [Validators.required, MarketTypeValidator()]),
       region: new FormControl('')
     });
-
-    this.optionsMarketRegions = this._manageService.getMarketRegions();
-    this.MAX_NAME = this._manageService.MAX_MARKET_NAME;
-    this.MAX_SUMMARY = this._manageService.MAX_MARKET_SUMMARY;
-    this.MAX_IMAGE_SIZE = this._manageService.IMAGE_MAX_SIZE;
-    this.imageSizeLabel = `${Math.round(Math.fround(this.MAX_IMAGE_SIZE / 1024))} KB`;
 
     const foundRegion = this.optionsMarketRegions.find(mr => mr.value === this.marketForm.get('region').value);
     if (foundRegion) {
@@ -171,12 +174,20 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
       };
     }
 
-    this._manageService.createMarket(createRequest).pipe(
+    this._unlocker.unlock({timeout: 20}).pipe(
+      concatMap((unlocked) => iif(
+        () => unlocked,
+        defer(() => this._manageService.createMarket(createRequest))
+      )),
       finalize(() => this._dialog.closeAll())
     ).subscribe(
       (market) => {
         this._snackbar.open(TextContent.SUCCESS_MARKET_ADD);
-        this._router.navigate(['../'], {relativeTo: this._route});
+        const queryParams: Params = {};
+        if (market.marketType === MarketType.STOREFRONT_ADMIN) {
+           queryParams.openCategoryModalFor = market.id;
+        }
+        this._router.navigate(['../'], {relativeTo: this._route, queryParams});
       },
       (err) => {
         this._snackbar.open(TextContent.ERROR_MARKET_ADD, 'warn');

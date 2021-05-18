@@ -5,20 +5,20 @@
 <p align="center">
    <a href="https://github.com/particl/particl-desktop/releases"><img src=".github-readme/button-download.png" alt="Download Wallet"></a>
    <a href="https://particl.io"><img src=".github-readme/button-website.png" alt="Official website"></a>
-   <a href="https://particl.news"><img src=".github-readme/button-news.png" alt="Lastest news"></a>
+   <a href="https://particl.news"><img src=".github-readme/button-news.png" alt="Latest news"></a>
    <a href="https://particl.wiki"><img src=".github-readme/button-wiki.png" alt="Project wiki"></a>
 </p>
 
 **Table of Contents**
 
-* [About](#about)
-* [Contribute](#contribute)
-   * [Requirements](#requirements)
-   * [Installation](#installation)
-   * [Development](#development)
-   * [Packaging](#packaging)
-* [Troubleshooting](#troubleshooting)
-* [Licence](#licence)
+- [About](#about)
+- [Contribute](#contribute)
+  - [Requirements](#requirements)
+  - [Installation](#installation)
+  - [Development](#development)
+  - [Packaging](#packaging)
+- [Troubleshooting](#troubleshooting)
+- [Licence](#licence)
 
 ## About
 
@@ -28,12 +28,11 @@ Particl Desktop is our feature-rich flagship client, recommended for most users 
 
 We provide a decentralized privacy platform with a suite of tools to enhance your online privacy:
 
-* **An anonymous cryptocurrency** – send and receive the PART cryptocurrency without revealing the transaction history
-* **End-to-end encrypted messaging** – communicate in a secure and decentralized manner without revealing your IP address
-* **A private marketplace** – buy and sell goods without leaving a trace
+- **An anonymous cryptocurrency** – send and receive the PART cryptocurrency without revealing the transaction history
+- **End-to-end encrypted messaging** – communicate in a secure and decentralized manner without revealing your IP address
+- **A private marketplace** – buy and sell goods without leaving a trace
 
 This repository is the user interface that works in combination with our [`particl-core`](https://github.com/particl/particl-core).
-
 
 ## Contribute
 
@@ -49,9 +48,9 @@ Keep in mind that the development currently happens on a private fork of this re
 
 ### Requirements
 
-* [Node.js®](https://nodejs.org/) v12
-* [git](https://git-scm.com/)
-* [yarn](https://yarnpkg.com/en/)
+- [Node.js®](https://nodejs.org/) v12
+- [git](https://git-scm.com/)
+- [yarn](https://yarnpkg.com/en/)
 
 NOTE: For Windows developers, take note when installing `windows-build-tools` as a part of the setup of NodeJS to remember to add the `--vs2015` flag as well
 
@@ -73,9 +72,9 @@ In project's folder:
 
 1. Run `ng serve` to start the dev server and keep it running
 1. In another terminal window, run `yarn run start:electron:dev -testnet --devtools` to start Particl Desktop on testnet (daemon will be updated and launched automatically)
-   * `-testnet` – for running on testnet (omit for running the client on mainnet)
-   * `-reindex` – reindexes the blockchain (in case you're stuck)
-   * `--devtools` – automatically opens Developer Tools on client launch
+   - `-testnet` – for running on testnet (omit for running the client on mainnet)
+   - `-reindex` – reindexes the blockchain (in case you're stuck)
+   - `--devtools` – automatically opens Developer Tools on client launch
 
 #### Interact with particl-core daemon
 
@@ -98,10 +97,9 @@ sudo apt-get install g++-multilib
 
 #### Packaging commands
 
-* `yarn run package:win` – Windows
-* `yarn run package:mac` – macOS
-* `yarn run package:linux` – Linux
-
+- `yarn run package:win` – Windows
+- `yarn run package:mac` – macOS
+- `yarn run package:linux` – Linux
 
 ## Troubleshooting
 
@@ -120,7 +118,7 @@ yarn run start:electron:dev -testnet --devtools -reindex
 Delete marketplace `database` folder and restart app:
 
 | OS      | path                                                       |
-|---------|------------------------------------------------------------|
+| ------- | ---------------------------------------------------------- |
 | Linux   | `~/.particl-market/testnet/03/`                            |
 | Windows | `%APPDATA%/Particl Market/testnet/03/`                     |
 | macOS   | `~/Library/Application Support/particl-market/testnet/03/` |
@@ -128,7 +126,6 @@ Delete marketplace `database` folder and restart app:
 ### Other issues
 
 See our [Particl Wiki](https://particl.wiki/) for most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
-
 
 ## Licence
 

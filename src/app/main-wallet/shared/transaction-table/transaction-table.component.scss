@@ -180,6 +180,7 @@
 
 .tx-description {
   font-size: 13px;
+  line-height: 1.55;
   color: var(--text-muted);
   padding: 18px 24px;
   border-top: 1px solid var(--bg-muted);
@@ -191,54 +192,38 @@
   }
 }
 
-.tx-details {
-  padding: 20px 24px;
-}
-
 // detail item of TX info
-.tx-detail-item {
-  padding: 3px 0;
-  color: var(--text-muted);
-  font-size: 13px;
-  font-family: var(--font);
-  // shared across inputs
-  .input {
-    border: 0;
-    outline: 0;
-    padding: 0 5px;
-    &.narration {
-      padding: 0;
-      background: none;
-      color: var(--text);
-    }
+table.tx-details {
+  --border-spacing: 5px;
+  border-spacing: var(--border-spacing);
+  padding: calc(20px - var(--border-spacing)) calc(24px - var(--border-spacing));
+  width: 100%;
+  @include break(xl) {
+    --border-spacing: 7px;
+    padding: calc(24px - var(--border-spacing)) calc(35px - var(--border-spacing));
   }
-  // to/from address
-  .to-from-address {
-    width: 100%;
-    font-size: 13px;
-    font-family: var(--font-mono);
-    font-weight: 500;
-    color: hsla(var(--text-hsl), 0.9);
-    background: transparent;
-    box-shadow: 0 0 0 1px hsla(var(--bg-muted-hsl), 1);
-    border-radius: 4px;
-    padding: 3px 7px;
-    cursor: text;
-  }
-  // explorer link
-  .tx-detail-link {
-    width: 100%;
+  .tx-detail-item {
+    padding: 3px 0;
     color: var(--text-muted);
-    font-family: var(--font-mono);
-    text-decoration: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    &:hover {
-      color: var(--color-secondary);
+    font-family: var(--font);
+    th {
+      text-align: left;
+      font-weight: 500;
+      width: 145px;
     }
-  }
-  .value { // fee & total TX value
-    margin-left: 6px;
+    // shared across inputs
+    .input {
+      border: 0;
+      outline: 0;
+      background: none;
+      padding: 0;
+      width: 100%;
+      font-family: var(--font-mono);
+      cursor: text;
+      text-overflow: ellipsis;
+    }
+    .value {
+      font-family: var(--font-mono);
+    }
   }
 }

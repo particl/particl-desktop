@@ -1,9 +1,9 @@
-@import './src/assets/_config'; // import shared colors etc.
-
+@import "./src/assets/_config"; // import shared colors etc.
 
 // ------ Address details ------ //
 
-.address-details { // content block (type, label, string)
+.address-details {
+  // content block (type, label, string)
   margin-left: 30px;
 }
 
@@ -23,8 +23,16 @@
   text-transform: none;
   margin: 0;
   padding-right: 40px;
+  padding-bottom: 1em;
   text-overflow: initial;
   overflow: visible;
+  .label-input {
+    mat-hint {
+      color: var(--color-warning);
+      font-size: 0.9em;
+      margin-bottom: 3px;
+    }
+  }
   .label {
     display: inline-block;
     height: 23px;
@@ -32,7 +40,8 @@
     &:disabled {
       color: hsla(var(--text-hsl), 0.85);
     }
-    &.no-label { // unlabeled address
+    &.no-label {
+      // unlabeled address
       font-style: italic;
     }
   }
@@ -62,5 +71,5 @@
 
 .widget-help {
   margin-bottom: 0;
+  padding-top: 0.9em;
 }
- 

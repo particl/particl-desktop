@@ -163,7 +163,7 @@ mat-card.listing {
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      word-break: break-all;
+      word-break: break-word;
     }
     mat-card-title {
       font-size: 15px;

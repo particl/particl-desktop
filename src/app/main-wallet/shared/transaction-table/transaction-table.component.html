@@ -163,54 +163,60 @@
         </span>
       </div>
 
-      <div class="tx-details" fxLayout="row wrap">
-
-        <div fxFlex="1 1 calc(100% - 260px)" fxLayout="column">
-          <!-- To/from (detail) -->
-          <!-- TODO: show for all EXCEPT for 'listing_fee' -->
-          <div class="tx-detail-item" fxFlex>
-            <span fxFlex="0 0 80px">To/from:</span>
-            <input disabled fxFlex="1 1 calc(100% - 80px)" value="{{ txn.address }}" class="to-from-address input">
-          </div>
-          <!-- TX ID (detail) -->
-          <div class="tx-detail-item" fxFlex>
-            <span fxFlex="0 0 80px">TXID:</span>
-            <a fxFlex="1 1 calc(100% - 80px)" class="tx-detail-link"
-                href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{txn.txid}}"
-                target="_blank" matTooltip="Show on Block Explorer">
-              {{txn.txid}}</a>
-          </div>
-        </div>
-
-        <div fxFlex="0 0 260px" fxLayout="column">
-          <!-- TX fee (detail) -->
-          <div class="tx-detail-item text-right" fxFlex>
-            <span>Fee:</span>
-            <span class="value">{{txn.fee}} PART</span>
-          </div>
-          <!-- Net amount (detail) -->
-          <div class="tx-detail-item text-right" fxFlex>
+      <table class="tx-details">
+        <tr class="tx-detail-item" *ngIf="txn.narration.length > 0">
+          <th>Narration</th>
+          <td>
+            <input disabled value="{{txn.narration}}" class="narration input">
+          </td>
+        </tr>
+        <tr class="tx-detail-item">
+          <th>To/from</th>
+          <td>
+            <input disabled value="{{ txn.address }}" class="to-from-address input">
+          </td>
+        </tr>
+        <tr class="tx-detail-item">
+          <th>TX ID</th>
+          <td>
+            <input disabled value="{{ txn.txid }}" class="txid input">
+          </td>
+        </tr>
+        <tr class="tx-detail-item">
+          <th>TX fee</th>
+          <td>
+            <span class="value enable-select">{{txn.fee}} PART</span>
+          </td>
+        </tr>
+        <tr class="tx-detail-item">
+          <th>
             <ng-container *ngIf="txn.category === 'internal_transfer' && !txn.isListingFee; else totalamount">
-              <span >Transferred amount:</span>
+              Transferred amount
             </ng-container>
             <ng-template #totalamount>
-              <span>Total amount:</span>
+              Total amount
             </ng-template>
-
-            <span class="value">{{ txn.netAmount}} PART</span>
-
-          </div>
-        </div>
-
-        <!-- Narration -->
-        <div class="tx-detail-item" fxFlex="1 1 100%" *ngIf="txn.narration.length > 0">
-          <span fxFlex="0 0 80px">Narration:</span>
-          <input disabled fxFlex="1 1 calc(100% - 80px)" value="{{txn.narration}}" class="narration input">
-        </div>
-
-      </div><!-- .tx-details -->
+          </th>
+          <td>
+            <span class="value enable-select">{{ txn.netAmount}} PART</span>
+          </td>
+        </tr>
+      </table><!-- .tx-details -->
 
     </div><!-- .history_cointainer -->
+
+    <mat-action-row>
+      <button mat-button color="basic" class="small" ngxClipboard [cbContent]="txn.txid" (click)="copyToClipBoard()">
+        <mat-icon fontIcon="part-copy"></mat-icon>
+        Copy TX ID
+      </button>
+      <a mat-button color="primary" class="small" href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{txn.txid}}"
+      target="_blank">
+        <mat-icon fontIcon="part-zoom-in"></mat-icon>
+        Open TX in Explorer
+      </a>
+    </mat-action-row>
+
   </mat-expansion-panel>
 </ng-container>
 

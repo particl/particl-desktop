@@ -31,6 +31,7 @@ export namespace SocketMessages_v03 {
   export interface BidReceived {
     objectId: number;
     objectHash: string;
+    orderHash: string;  // hash of the order placed
     market: string;  // market receive address
     from: string;  // sender
     target: string;  // listing item hash

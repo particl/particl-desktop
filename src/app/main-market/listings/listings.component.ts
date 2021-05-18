@@ -10,10 +10,10 @@ import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { ListingsService } from './listings.service';
-import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
 import { TreeSelectComponent } from '../shared/shared.module';
@@ -50,7 +50,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   activeMarket: Market;
   selectedMarketControl: FormControl = new FormControl(0);
 
-  // flags controlling whats displayed when
+  // flags controlling what's displayed when
   hasNewListings: boolean = false;
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
@@ -369,7 +369,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this._listingService.forceSmsgRescan().pipe(
       finalize(() => {
         this.isRescanningListings = false;
-        this._cdr.detectChanges();
+        if (!this.destroy$.closed) {
+          this._cdr.detectChanges();
+        }
       })
     ).subscribe();
   }

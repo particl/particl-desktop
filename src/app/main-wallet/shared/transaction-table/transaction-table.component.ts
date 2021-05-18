@@ -17,7 +17,8 @@ import * as zmqOptions from '../../../../../modules/zmq/services.js';
 
 
 enum TextContent {
-  FETCH_ERROR = 'An error occurred while fetching the transactions'
+  FETCH_ERROR = 'An error occurred while fetching the transactions',
+  TXID_COPIED = 'TX ID copied to the cliboard',
 }
 
 
@@ -184,6 +185,11 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   }
 
 
+  copyToClipBoard(): void {
+    this._snackbar.open(TextContent.TXID_COPIED);
+  }
+
+
   private fetchTransactionInfo(): Observable<FilteredTransaction[]> {
     this._filters.count = this.TxCountPerPage;
     this._filters.skip = this.pageCount * this._filters.count;
@@ -191,7 +197,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
     const filterRequest$ = this._txservice.getFilteredTransactions(this._filters);
 
     if (!this.showPagination) {
-      // Ony fetch the requested number of items
+      // Only fetch the requested number of items
       return filterRequest$;
     }
 

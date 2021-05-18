@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 body {
   margin: 0 !important;
@@ -59,7 +59,7 @@ body {
       }
     }
   }
-  
+
   section {
     flex: 1 1 100%;
     display: flex;
@@ -134,7 +134,8 @@ body {
         }
         &:hover,
         &:focus {
-          box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+          box-shadow: 0 1px 0 var(--bg-muted),
+            0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
         }
         .mat-icon {
           font-size: 22px;
@@ -168,14 +169,12 @@ body {
       }
     } // .apps
   }
-  
-  
+
   .version {
     flex: 0 1 24px;
     margin: 0;
     color: hsla(var(--text-muted-hsl), 0.6);
   }
-
 } // .splash-container
 
 .splash-illustration {
@@ -190,6 +189,14 @@ body {
   }
 }
 
+.quote {
+  font-size: 18px;
+  margin: 0;
+  .author {
+    font-size: 15px;
+    color: var(--text-muted);
+  }
+}
 
 @keyframes fade-starting {
   0% {

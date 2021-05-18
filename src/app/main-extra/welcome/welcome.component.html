@@ -7,7 +7,7 @@
 
     <div class="header-text">
       <h1>Welcome to Particl</h1>
-      <p>Embrace your digital sovereignty and thrive &ndash; the power is in your hands</p>
+      <p>Embrace your digital sovereignty and thrive on a fair level playing field.</p>
     </div>
 
     <section>
@@ -49,6 +49,11 @@
     <p class="version">
       Particl Desktop {{ clientVersion }}
     </p>
+
+    <blockquote class="quote" *ngIf="(motd.text.length > 0)">
+      <p>{{ motd.text }}</p>
+      <footer *ngIf="(motd.author.length > 0)" class="author">&mdash; {{ motd.author }}</footer>
+    </blockquote>
 
   </div>
 </div><!-- .container -->

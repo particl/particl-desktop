@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subject, BehaviorSubject, concat, merge, iif, defer } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject, merge, iif, defer, combineLatest } from 'rxjs';
 import { map, catchError, takeUntil, tap, concatMap, mapTo, take } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -18,9 +18,11 @@ import { SellTemplateFormComponent } from '../sell-template-form/sell-template-f
 import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../modals/publish-template-modal/publish-template-modal.component';
 import { getValueOrDefault, isBasicObjectType } from 'app/main-market/shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
+
 import { Template, TemplateFormDetails, CreateTemplateRequest, TemplateRequestImageItem, UpdateTemplateRequest } from '../sell.models';
 import { Market, CategoryItem } from '../../services/data/data.models';
 import { ESCROW_RELEASE_TYPE, MarketType } from '../../shared/market.models';
+import { Identity } from './../../store/market.models';
 
 
 enum TextContent {
@@ -63,7 +65,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private categoryList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
-  private marketsList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
+  private marketsList$: BehaviorSubject<{id: number; name: string, marketType: MarketType}[]> = new BehaviorSubject([]);
   private savedTempl: Template = null;
   private profileMarkets: Market[] = [];
   private isFormValid: boolean = false;
@@ -92,43 +94,40 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    // Load all markets for the current profile
-    const marketLoader$ = this._sharedService.loadMarkets().pipe(
-      catchError(() => of([] as Market[])),
-      tap((markets) => {
-        this.profileMarkets = markets;
-      })
-    );
-
-    // Load and process any requested template
     const reqTemplateId = +this._route.snapshot.queryParamMap.get('templateID');
-    const templLoader$ = this.fetchTemplateDetails(reqTemplateId).pipe(
-      catchError(() => {
-        this.errorMessage.setValue(TextContent.ERROR_EXISTING_TEMPLATE_FETCH);
-        return of(null as Template);
-      }),
-      tap(templ => this.resetTemplateDetails(templ)),
-      concatMap(() => this.verifyTemplateFits())
-    );
 
-    // Ensure that the markets are loaded first, since the template processing requires the market list
-    const init$ = marketLoader$.pipe(
-      concatMap(() => templLoader$)
-    );
+    const listener$ = combineLatest([
+      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
 
-    // Watch the identity - if it changes, load up the new markets associated with that identity and filter out existing market templates
-    //    also filtering out markets which cannot be published to
-    const identityMarkets$ = this._store.select(MarketState.currentIdentity).pipe(
-      tap((currentId) => {
-        let availableMarkets = this.profileMarkets.filter(m => m.identityId === currentId.id);
-        if (this.savedTempl) {
-          if (this.savedTempl.type === 'BASE') {
+      this._sharedService.loadMarkets().pipe(
+        catchError(() => of([] as Market[])),
+        tap((markets) => {
+          this.profileMarkets = markets;
+        }),
+        concatMap(() => this.fetchTemplateDetails(reqTemplateId).pipe(
+          catchError(() => {
+            this.errorMessage.setValue(TextContent.ERROR_EXISTING_TEMPLATE_FETCH);
+            return of(null as Template);
+          })
+        ))
+      )
+
+    ]).pipe(
+      tap((values: [Identity, Template]) => {
+
+        const currentId = values[0];
+        const template = values[1];
+
+        // Extract markets used/needed by the (incoming) template
+        let availableMarkets = currentId.markets;
+        if (template) {
+          if (template.type === 'BASE') {
             availableMarkets = availableMarkets.filter(m =>
-              !this.savedTempl.baseTemplate.marketHashes.includes(m.receiveAddress) &&
+              !template.baseTemplate.marketHashes.includes(m.receiveAddress) &&
               (m.type === MarketType.MARKETPLACE || m.type === MarketType.STOREFRONT_ADMIN)
             );
-          } else if (this.savedTempl.type === 'MARKET') {
-            availableMarkets = this.profileMarkets.filter(m => m.receiveAddress === this.savedTempl.marketDetails.marketKey);
+          } else if (template.type === 'MARKET') {
+            availableMarkets = this.profileMarkets.filter(m => m.receiveAddress === template.marketDetails.marketKey);
           }
         } else {
           // null template, so basically a base template
@@ -138,9 +137,25 @@ export class NewListingComponent implements OnInit, OnDestroy {
         }
 
         this.marketsList$.next(
-          availableMarkets.map(m => ({id: m.id, name: m.name}))
+          availableMarkets.map(m => ({id: m.id, name: m.name, marketType: m.type}))
         );
       }),
+
+      map((values: [Identity, Template]) => values[1]),
+
+      concatMap((templ) => iif(
+        // Hacky, yucky check (but works for now):
+        // Resets the template form details if this is the first time we've entered this function call
+        () => this.saveButtonText === '',
+
+        defer(() => {
+          this.resetTemplateDetails(templ);
+          return this.verifyTemplateFits();
+        }),
+
+        defer(() => of(true))
+      )),
+
       takeUntil(this.destroy$)
     );
 
@@ -171,15 +186,9 @@ export class NewListingComponent implements OnInit, OnDestroy {
     );
 
     merge(
+      listener$,
       processingForm$,
       errors$
-    ).subscribe();
-
-    concat(
-      init$,            // this completes (it has to do so)
-      identityMarkets$, // this starts after the previous completes, but doesn't complete until component is destroyed
-    ).pipe(
-      takeUntil(this.destroy$)
     ).subscribe();
 
   }
@@ -606,11 +615,22 @@ export class NewListingComponent implements OnInit, OnDestroy {
 
 
   private setCategoriesForMarket(marketId: number): Observable<CategoryItem[]> {
-    return this._sharedService.loadCategories(marketId).pipe(
-      map(categories => Array.isArray(categories.categories) ? categories.categories : []),
-      catchError(() => of([])),
-      tap(categories => this.categoryList$.next(categories)),
-    );
+    return defer(() => {
+
+      // To get the complete list of MARKETPLACE market categories we should NOT pass in a market id to the category search
+      let searchedMId: number = undefined;
+      const market = this.marketsList$.value.find(m => m.id === marketId);
+
+      if ((market !== undefined) && (market.marketType !== MarketType.MARKETPLACE)) {
+        searchedMId = marketId;
+      }
+
+      return this._sharedService.loadCategories(searchedMId).pipe(
+        map(categories => Array.isArray(categories.categories) ? categories.categories : []),
+        catchError(() => of([])),
+        tap(categories => this.categoryList$.next(categories)),
+      );
+    });
   }
 
 

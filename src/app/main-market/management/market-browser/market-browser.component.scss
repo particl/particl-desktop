@@ -1,6 +1,5 @@
-@import './src/assets/_config'; // import shared colors etc.
-@import './src/app/main-market/shared/market-list-item'; // shared market item (in lists)
-
+@import "./src/assets/_config"; // import shared colors etc.
+@import "./src/app/main-market/shared/market-list-item"; // shared market item (in lists)
 
 // alert for "scan for listings" in newly connected markets
 div.alert {
@@ -8,5 +7,40 @@ div.alert {
     position: sticky;
     bottom: 0;
     margin-bottom: 0 !important;
+  }
+}
+
+.market {
+  .details {
+    .desc {
+      &.meta {
+        margin-top: 28px;
+        text-align: right;
+        strong {
+          display: block;
+          margin-bottom: 4px;
+          font-weight: 500;
+          color: var(--text);
+        }
+      }
+    }
+  }
+}
+
+.mat-divider {
+  margin: 24px calc(-1 * var(--paddingH));
+}
+
+.keys {
+  .box-title {
+    margin: 24px 0 6px;
+  }
+  strong {
+    font-weight: 500;
+  }
+  .key {
+    &:empty {
+      display: none;
+    }
   }
 }

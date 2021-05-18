@@ -8,6 +8,33 @@ const platform      = require('os').platform();
 
 
 // @TODO: possibly move this to some external verification module
+const ALLOWED_EXTERNAL_URLS = [
+  'https://explorer.particl.io',
+  'https://explorer-testnet.particl.io',
+
+  // particl related domains
+  'https://particl.io',
+  'https://particl.academy',
+  'https://particl.news',
+  'https://particl.community',
+  'https://particl.wiki',
+  'https://ccs.particl.io',
+
+  // social media links - url path included to prevent any accidental bypass
+  'https://discordapp.com/invite/2tVJaZ9',
+  'https://app.element.io/#/group/+particl:matrix.org',
+  'https://t.me/particlproject',
+  'https://twitter.com/particlProject',
+  'https://www.facebook.com/ParticlProject',
+  'https://www.reddit.com/r/Particl',
+  'https://fosstodon.org/@particl',
+  'https://www.youtube.com/c/Particl',
+  'https://bitcointalk.org/index.php?topic=1835782.0',
+
+  'https://github.com/particl',
+];
+
+// @TODO: possibly move this to some external verification module
 const APP_PERMISSIONS = ['notifications'];
 
 
@@ -295,11 +322,49 @@ if (!instanceLock) {
       mainWindow.webContents.openDevTools();
     }
 
-    // handle external URIs
-    // mainWindow.webContents.on('new-window', (event, url) => {
-    //   event.preventDefault();
-    //   electron.shell.openExternal(url);
-    // });
+
+    // handle external URIs;
+    // NOTE: this is called AFTER the window object has already been opened by `window.open()`
+    mainWindow.webContents.on('new-window', (event, requestUrl) => {
+      event.preventDefault();
+
+      let matchesAllowedURL = false;
+      for (const allowedUrl of ALLOWED_EXTERNAL_URLS) {
+        if (requestUrl.startsWith(allowedUrl)) {
+          matchesAllowedURL = true;
+          break;
+        }
+      }
+
+      if (matchesAllowedURL) {
+        electron.shell.openExternal(requestUrl);
+        return;
+      }
+
+      const errorUrl = url.format({
+        protocol: 'file:',
+        pathname: path.join(__dirname, `${options.dev ? 'src' : 'dist'}`, 'assets', 'modals', 'errorExternalUrlOpen.html'),
+        slashes: true
+      });
+
+      const errorWin = new BrowserWindow({
+        width:     500,
+        minWidth:  500,
+        height:    320,
+        minHeight: 320,
+        icon:      path.join(__dirname, 'resources/icon.png'),
+
+        backgroundColor: '#222828',
+        frame: true,
+        darkTheme: true,
+        show: false,
+        webPreferences: options.webPreferences
+      });
+      errorWin.once('ready-to-show', () => errorWin.show());
+      errorWin.loadURL(errorUrl);
+
+      event.newGuest = errorWin;
+    });
 
     // Emitted when the window is closed.
     mainWindow.on('closed', function () {

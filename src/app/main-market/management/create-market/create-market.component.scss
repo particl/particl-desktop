@@ -60,6 +60,16 @@ form.market-form { // form = stepper content (centered)
   margin: 0 auto;
 }
 
+mat-card.new-market-considerations {
+  p, li {
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+  li {
+    margin-bottom: 6px;
+  }
+}
+
 .market-details {
   .market-image {
     padding: 24px 28px;

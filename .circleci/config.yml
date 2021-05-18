@@ -1,42 +1,45 @@
 version: 2.1
 jobs:
-    build:
-      working_directory: ~/particl-desktop
-      docker:
-          - image: circleci/node:10.15.3-browsers
-      steps:
-          - checkout
-          - restore_cache:
-              key: dependencies-v1-{{ checksum "yarn.lock" }}
-          - run:
-              name: Install Dependencies
-              command: yarn install --frozen-lockfile
-          - save_cache:
-              key: dependencies-v1-{{ checksum "yarn.lock" }}
-              paths:
-                  - ./yarn.lock
-                  - ./node_modules
-                  - $HOME/.npm/_prebuilds
-                  - $HOME/.cache/electron
-                  - $HOME/.cache/electron-builder
+  build:
+    working_directory: ~/particl-desktop
+    docker:
+      - image: circleci/node:12.19.1-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependencies-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          key: dependencies-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ./yarn.lock
+            - ./node_modules
+            - $HOME/.npm/_prebuilds
+            - $HOME/.cache/electron
+            - $HOME/.cache/electron-builder
+      - run: sudo apt-get update && sudo apt-get install python3-pip && sudo pip3 install codespell
+      - run:
+          name: CodeSpell Checking
+          command: codespell --version && codespell -S=node_modules,dist,packages,.git,./src/assets,*mock-data,*terms-txt.ts,*yarn.lock,*package.json -L=datas,sortings,Ether,iif
+          no_output_timeout: 2m
+      # - run:
+      #     name: Lint Codebase
+      #     command: yarn lint
+      #     no_output_timeout: 2m
+      - run:
+          name: Test Codabase
+          command: yarn travis:test
+          no_output_timeout: 4m
 
-          - run:
-                name: Lint Codebase
-                command: yarn lint
-                no_output_timeout: 2m
+      # - store_artifacts:
+      #       path: coverage
 
-          - run:
-                name: Test Codabase
-                command: yarn travis:test
-                no_output_timeout: 2m
-
-          # - store_artifacts:
-          #       path: coverage
-
-          - run:
-                name: Build Creation
-                command: |
-                    export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
-                    export TRUE_COMMIT=$(echo $TRUE_COMMIT_MESSAGES | awk '{print $1}')
-                    if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly-circle.sh; fi;
-                    echo 'All done!'
+      - run:
+          name: Build Creation
+          command: |
+            export TRUE_COMMIT_MESSAGES=$(git log --oneline -2 | grep "+build")
+            export TRUE_COMMIT=$(echo $TRUE_COMMIT_MESSAGES | awk '{print $1}')
+            if [[ $TRUE_COMMIT_MESSAGES == *"+build"* ]]; then ./nightly-circle.sh; fi;
+            echo 'All done!'

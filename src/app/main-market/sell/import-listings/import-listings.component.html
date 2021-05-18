@@ -42,6 +42,16 @@
               </div>
             </label>
           </div><!-- .radio-switcher -->
+
+          <mat-divider></mat-divider>
+
+          <div class="buttons">
+            <button mat-button class="full-width" color="warn" [routerLink]="['../']" [queryParams]="{selectedSellTab: 'templates'}" >
+              <mat-icon fontIcon="part-previous-single"></mat-icon>
+              To Products &amp; Listings
+            </button>
+
+          </div><!-- .buttons -->
         </div><!-- .filter-->
 
         <div class="import-config with-filter">

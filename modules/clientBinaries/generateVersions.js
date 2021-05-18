@@ -16,7 +16,7 @@ var getHash = function (platform, name, hashes) {
 
   if (sha256) {
     sha256 = sha256[0].trim().split(" ")[0];
-    console.log("plaform: " + platform + " name: " + name + " hash=", sha256)
+    console.log("platform: " + platform + " name: " + name + " hash=", sha256)
   } else {
     sha256 = undefined;
   }
@@ -99,7 +99,7 @@ var getAssetDetails = function (asset, hashes, version) {
       commands: {
         sanity: {
           args: ["-version"],
-          output: ["Particl Core Daemon", version]
+          output: ["Particl Core version", version]
         }
       }
     }

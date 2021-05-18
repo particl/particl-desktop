@@ -338,7 +338,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
         value = null;
       } else if ( (token.includes('{') && token.includes('}')) || (token.includes('[') && token.includes(']')) ) {
         try {
-          const z = JSON.parse(token);
+          const z = JSON.parse(token.replace(/\\"/g, '"'));
           if (isPlainObject(z) || isArray(z)) {
             value = z;
           }

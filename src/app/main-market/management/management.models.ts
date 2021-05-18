@@ -20,6 +20,7 @@ export interface AvailableMarket {
   receiveKey: string;
   publishKey: string;
   marketType: MarketType;
+  expires: number;
 }
 
 

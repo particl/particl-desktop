@@ -434,7 +434,7 @@ export class SellService {
      * Well, once upon a time there was a magical little database.
      * Anybody happening past the little database, and making the right calling sound, would receive a plan for a great wonder,
      * that would make the caller riches beyond their wildest dreams.
-     * Unfortunately, the riches were dependant on exactly where the great wonder was built. Luckily, the plan included
+     * Unfortunately, the riches were dependent on exactly where the great wonder was built. Luckily, the plan included
      * the location details as well. Or so it seemed...
      * However, when asking the magical little database to help in creating such a wonder from this magical plan, it wanted the
      * potential builder to be an elightened one, and so expected that the location for this wonder of humanity was provided in a different

@@ -22,7 +22,7 @@ export namespace MainActions {
   export class RefreshWalletInfo {
     /**
      * Request an update of the base wallet model data only:
-     *  specifically for determining updates to the wallet intialization, encryption statuses, for example.
+     *  specifically for determining updates to the wallet initialization, encryption statuses, for example.
      */
     static readonly type: string = '[Main] Refresh Wallet Info Only';
   }

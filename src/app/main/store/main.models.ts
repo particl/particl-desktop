@@ -29,6 +29,7 @@ export interface WalletSettingsStateModel {
 export interface WalletStakingStateModel {
   cold_staking_enabled: boolean;
   percent_in_coldstakeable_script: number;
+  coin_in_stakeable_script: number;
 }
 
 

@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 body {
   margin: 0 !important;
@@ -56,7 +56,7 @@ body {
       }
     }
   }
-  
+
   section {
     flex: 1 1 100%;
     display: flex;
@@ -91,14 +91,12 @@ body {
       }
     } // .loading
   }
-  
-  
+
   .version {
     flex: 0 1 24px;
     margin: 0;
     color: hsla(var(--text-muted-hsl), 0.6);
   }
-
 } // .splash-container
 
 .splash-illustration {
@@ -110,5 +108,14 @@ body {
     width: 100%;
     max-width: 100%;
     pointer-events: none;
+  }
+}
+
+.quote {
+  font-size: 18px;
+  margin: 0;
+  .author {
+    font-size: 15px;
+    color: var(--text-muted);
   }
 }

@@ -34,9 +34,10 @@ export class CategoryEditorModalComponent implements OnInit, OnDestroy {
   // This is the category nesting level (supported by the lookup to retrieve categories) less 1
   //  Reason for one less than supported is because the supported amount includes the root category, which cannot actually be modified
   readonly MAX_DEPTH: number = 4;
+  readonly BASE_LEVEL: number = 0;
 
+  readonly marketName: string = '';
 
-  private readonly BASE_LEVEL: number = 0;
   private marketId: number = 0;
   private rootCategoryId: number = 0;
   private destroy$: Subject<void> = new Subject();
@@ -54,6 +55,7 @@ export class CategoryEditorModalComponent implements OnInit, OnDestroy {
 
     if ( isBasicObjectType(this.data) && isBasicObjectType(this.data.market) ) {
       this.marketId = +this.data.market.id > 0 ? +this.data.market.id : this.marketId;
+      this.marketName = typeof this.data.market.name === 'string' ? this.data.market.name : this.marketName;
     }
 
     const treeFlattener: MatTreeFlattener<CategoryNode, CategoryFlatNode> = new MatTreeFlattener(

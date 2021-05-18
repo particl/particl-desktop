@@ -363,6 +363,10 @@ body {
       color: hsla(var(--bg-muted-hsl), 0.7);
       outline: none;
     }
+    &.disabled { // disabled items
+      opacity: 0.4;
+      pointer-events: none;
+    }
     .icon {
       background: hsla(var(--text-muted-hsl), 0.3);
       flex: 0 0 var(--icon-size);

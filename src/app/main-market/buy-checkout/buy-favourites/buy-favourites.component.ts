@@ -139,12 +139,7 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
           return;
         }
 
-        const pos = this.favDisplayIdxs.findIndex(favIdx => favIdx === idx);
-        if ((pos > -1) && (this.favDisplayIdxs[pos] === idx)) {
-          this.favDisplayIdxs.splice(pos, 1);
-        }
-        this.favouriteList.splice(idx, 1);
-        this.updateDisplayControl.setValue(null);
+        this.removeRenderedFavourite(idx);
       }
     );
   }
@@ -189,7 +184,7 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
 
             if ((foundListingIdx > -1) && (this.favouriteList[foundListingIdx].listingId === id)) {
               if (!(+favId > 0)) {
-                this.removeFromFav(foundListingIdx);
+                this.removeRenderedFavourite(foundListingIdx);
               } else {
                 this.favouriteList[foundListingIdx].favouriteId = favId;
                 this._cdr.detectChanges();
@@ -320,5 +315,15 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
     }
 
     return of(favsList);
+  }
+
+
+  private removeRenderedFavourite(itemIdx: number): void {
+    const pos = this.favDisplayIdxs.findIndex(favIdx => favIdx === itemIdx);
+      if ((pos > -1) && (this.favDisplayIdxs[pos] === itemIdx)) {
+        this.favDisplayIdxs.splice(pos, 1);
+      }
+      this.favouriteList.splice(itemIdx, 1);
+      this.updateDisplayControl.setValue(null);
   }
 }
