@@ -369,7 +369,9 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this._listingService.forceSmsgRescan().pipe(
       finalize(() => {
         this.isRescanningListings = false;
-        this._cdr.detectChanges();
+        if (!this.destroy$.closed) {
+          this._cdr.detectChanges();
+        }
       })
     ).subscribe();
   }
