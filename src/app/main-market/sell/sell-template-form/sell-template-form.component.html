@@ -221,51 +221,53 @@
 
   </div><!-- .row (shipping) -->
 
-  <h2 class="section-title">Publishing settings <small>(optional)</small></h2>
+  <ng-container *ngIf="(markets$ | async).length > 0">
+    <h2 class="section-title">Publishing settings <small>(optional)</small></h2>
 
-  <mat-expansion-panel class="publishing-settings no-padding">
-    <mat-expansion-panel-header class="header">
-      <mat-icon fontIcon="part-shop" color="accent"></mat-icon>
-      <div class="title">
-        <h3>Publish right away?</h3>
-        <p class="help-text">Fill in Market options to publish your Product right now (or you can save your Product for later)</p>
-      </div>
-    </mat-expansion-panel-header>
-    <div class="publish-options" fxLayout fxLayoutAlign="space-between center">
+    <mat-expansion-panel class="publishing-settings no-padding">
+      <mat-expansion-panel-header class="header">
+        <mat-icon fontIcon="part-shop" color="accent"></mat-icon>
+        <div class="title">
+          <h3>Publish right away?</h3>
+          <p class="help-text">Fill in Market options to publish your Product right now (or you can save your Product for later)</p>
+        </div>
+      </mat-expansion-panel-header>
+      <div class="publish-options" fxLayout fxLayoutAlign="space-between center">
 
-      <section class="select-market" fxFlex="27">
-        <label class="--larger">
-          <h3 class="label">Publish to</h3>
-          <mat-form-field class="--plain --larger" appearance="fill">
-            <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
-            <mat-select placeholder="Select Market" formControlName="selectedMarket">
-              <mat-option [value]="0" class="--larger"></mat-option>
-              <mat-option *ngFor="let market of (markets$ | async)" [value]="market.id" class="--larger">
-                {{ market.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </label>
-      </section><!-- .select-market -->
+        <section class="select-market" fxFlex="27">
+          <label class="--larger">
+            <h3 class="label">Publish to</h3>
+            <mat-form-field class="--plain --larger" appearance="fill">
+              <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+              <mat-select placeholder="Select Market" formControlName="selectedMarket">
+                <mat-option [value]="0" class="--larger"></mat-option>
+                <mat-option *ngFor="let market of (markets$ | async)" [value]="market.id" class="--larger">
+                  {{ market.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </label>
+        </section><!-- .select-market -->
 
-      <section class="select-preset" fxFlex="27">
-        <label class="--larger" *ngIf="(categories$ | async).length > 0">
-          <h3 class="label">Product category</h3>
-          <tree-select
-            #categorySelector
-            [data$]="categories$"
-            [singleSelection]="true"
-            [initialSelection]="selectedCategory.value"
-            [isParentNodesSelectable]="false"
-            placeholderLabel="Select a category"
-            prefixIcon="part-filter"
-            [labelStyles]="['--larger']"
-            (onClosed)="selectedCategory.setValue($event[0] || '')">
-          </tree-select>
-        </label>
-      </section><!-- .select-preset -->
+        <section class="select-preset" fxFlex="27">
+          <label class="--larger" *ngIf="(categories$ | async).length > 0">
+            <h3 class="label">Product category</h3>
+            <tree-select
+              #categorySelector
+              [data$]="categories$"
+              [singleSelection]="true"
+              [initialSelection]="selectedCategory.value"
+              [isParentNodesSelectable]="false"
+              placeholderLabel="Select a category"
+              prefixIcon="part-filter"
+              [labelStyles]="['--larger']"
+              (onClosed)="selectedCategory.setValue($event[0] || '')">
+            </tree-select>
+          </label>
+        </section><!-- .select-preset -->
 
-    </div><!-- .publish-options -->
-  </mat-expansion-panel>
+      </div><!-- .publish-options -->
+    </mat-expansion-panel>
+  </ng-container>
 
 </form>
