@@ -1,5 +1,18 @@
-import { RespGeneralImageItem, IMAGE_VERSION, RespMarketListMarketItem, RespIdentityMarketItem } from './market.models';
+import { RespGeneralImageItem, IMAGE_VERSION, RespIdentityMarketItem } from './market.models';
 import { Market } from '../services/data/data.models';
+import * as marketConfig from '../../../../modules/market/config.js';
+
+
+enum TextContent {
+  OPEN_MARKET_NAME = 'Open Market'
+}
+
+
+const DefaulOpenMarketAddresses: string[] = [];
+
+if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
+  DefaulOpenMarketAddresses.push(...Object.keys(marketConfig.addressesOpenMarketplace));
+}
 
 
 export function getValueOrDefault<T>(value: T, type: 'string' | 'number' | 'boolean', defaultValue: T): T {
@@ -33,7 +46,7 @@ export function parseImagePath(image: RespGeneralImageItem, version: IMAGE_VERSI
 }
 
 
-export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: string): Market {
+export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: string, defaultImage: string): Market {
   const resp: Market = {
     id: 0,
     name: '',
@@ -49,14 +62,20 @@ export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: 
   }
 
   resp.id = +src.id > 0 ? +src.id : resp.id;
-  resp.name = getValueOrDefault(src.name, 'string', resp.name);
   resp.type = getValueOrDefault(src.type, 'string', resp.type);
   resp.receiveAddress = getValueOrDefault(src.receiveAddress, 'string', resp.receiveAddress);
   resp.publishAddress = getValueOrDefault(src.publishAddress, 'string', resp.publishAddress);
+  resp.name = DefaulOpenMarketAddresses.includes(resp.receiveAddress) ?
+    TextContent.OPEN_MARKET_NAME :
+    getValueOrDefault(src.name, 'string', resp.name);
   resp.identityId = +src.identityId > 0 ? +src.identityId : resp.identityId;
 
   if (+src.imageId > 0) {
    resp.image = buildImagePath(marketUrl, +src.imageId, 'ORIGINAL');
+  }
+
+  if (resp.image.length === 0) {
+    resp.image = defaultImage;
   }
 
   return resp;
