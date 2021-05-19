@@ -641,12 +641,9 @@ export class MarketState {
 
       if (Array.isArray(src.Markets)) {
         src.Markets.forEach(market => {
-          const idMarket = parseMarketResponseItem(market, marketUrl);
+          const idMarket = parseMarketResponseItem(market, marketUrl, defaultImage);
 
           if ((idMarket.id > 0) && (idMarket.identityId === newItem.id)) {
-            if (idMarket.image.length === 0) {
-              idMarket.image = defaultImage;
-            }
             newItem.markets.push(idMarket);
           }
         });

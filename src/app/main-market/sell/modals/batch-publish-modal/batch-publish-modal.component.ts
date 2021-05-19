@@ -41,7 +41,7 @@ function minProductsSelectedValidator(): ValidatorFn {
 
 
 export interface BatchPublishModalInputs {
-  markets: {id: number; name: string, key: string, marketType: MarketType}[];
+  markets: {id: number; name: string, key: string, marketType: MarketType, image: string}[];
   products: BatchPublishProductItem[];
 }
 
@@ -59,7 +59,7 @@ enum TextContent {
 })
 export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
-  readonly availableMarkets: Array<{id: number; name: string, key: string, marketType: MarketType}> = [];
+  readonly availableMarkets: Array<{id: number; name: string, key: string, marketType: MarketType, image: string}> = [];
   readonly availableProducts: BatchPublishProductItem[] = [];
   readonly categories$: Observable<{id: number, name: string}[]>;
 

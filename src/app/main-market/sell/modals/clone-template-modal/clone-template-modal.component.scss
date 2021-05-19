@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 .mat-dialog-content {
   width: 30rem;
@@ -36,5 +36,18 @@ header {
     font-size: 16px;
     font-weight: 500;
     margin: 0;
+  }
+}
+
+.mat-option {
+  img.image {
+    // photos in Market switcher
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
   }
 }

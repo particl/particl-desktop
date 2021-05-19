@@ -18,7 +18,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
 
   @Input() listingTemplate: TemplateFormDetails;
   @Input() regions$: Observable<{id: string, name: string}[]> = of([]);
-  @Input() markets$: Observable<{id: number, name: string}[]> = of([]);
+  @Input() markets$: Observable<{id: number, name: string, image: string}[]> = of([]);
   @Input() categories$: Observable<{id: number, name: string}[]> = of([]);
   @Output() isValid: EventEmitter<boolean> = new EventEmitter();
   @Output() onChangeMarketId: EventEmitter<number> = new EventEmitter();

@@ -60,7 +60,6 @@ export class MarketManagementService {
     this.marketRegionsMap.set(MARKET_REGION.ASIA_PACIFIC, TextContent.LABEL_REGION_ASIA_PACIFIC);
 
     const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
-    const marketSettings = this._store.selectSnapshot(MarketState.settings);
 
     this.marketDefaultImage = defaultConfig.imagePath;
 
@@ -281,11 +280,8 @@ export class MarketManagementService {
       map((market: RespMarketListMarketItem) => {
         const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
 
-        const idMarket = parseMarketResponseItem(market, marketUrl);
+        const idMarket = parseMarketResponseItem(market, marketUrl, this.marketDefaultImage);
         if ((idMarket.id > 0) && (idMarket.identityId > 0)) {
-          if (idMarket.image.length === 0) {
-            idMarket.image = this.marketDefaultImage;
-          }
           this._store.dispatch(new MarketUserActions.AddIdentityMarket(idMarket));
         }
 

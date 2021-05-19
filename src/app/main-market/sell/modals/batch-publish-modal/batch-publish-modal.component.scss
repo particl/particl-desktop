@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 mat-dialog-title {
   margin: -8px 0 15px;
@@ -35,6 +35,19 @@ mat-dialog-title {
   padding: calc(var(--paddingV) - 8px) var(--paddingH);
   .introduction {
     margin-top: 0;
+  }
+}
+
+.mat-option {
+  img.image {
+    // photos in Market switcher
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
   }
 }
 
@@ -117,7 +130,6 @@ mat-dialog-title {
       margin: 0 24px 0 20px;
     }
   }
-
 } // .available-products
 
 @keyframes loading-rotate {
@@ -126,11 +138,10 @@ mat-dialog-title {
   }
 }
 
-
-
 .mat-dialog-actions {
   display: block;
-  .publish-progress { // mat-progress-bar
+  .publish-progress {
+    // mat-progress-bar
     --actions-paddingH: 16px;
     margin: -12px calc(-1 * var(--actions-paddingH)) 13px;
     width: calc(100% + 2 * var(--actions-paddingH));

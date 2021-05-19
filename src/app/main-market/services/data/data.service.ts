@@ -7,8 +7,6 @@ import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../market-rpc/market-rpc.service';
 import { RegionListService } from '../region-list/region-list.service';
 
-import * as marketConfig from '../../../../../modules/market/config.js';
-
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath, parseMarketResponseItem } from '../../shared/utils';
 import { RespCategoryList, RespMarketListMarketItem, RespListingItem } from '../../shared/market.models';
@@ -16,15 +14,9 @@ import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-det
 import { CategoryItem, Market } from './data.models';
 
 
-enum TextContent {
-  OPEN_MARKET_NAME = 'Open Market'
-}
-
-
 @Injectable()
 export class DataService {
 
-  private openMarketAddresses: string[];
   private defaultMarketImage: string;
 
   constructor(
@@ -32,10 +24,6 @@ export class DataService {
     private _store: Store,
     private _regionService: RegionListService,
   ) {
-    if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
-      this.openMarketAddresses = Object.keys(marketConfig.addressesOpenMarketplace);
-    }
-
     this.defaultMarketImage = this._store.selectSnapshot(MarketState.defaultConfig).imagePath;
   }
 
@@ -59,14 +47,8 @@ export class DataService {
       map((marketsReq: RespMarketListMarketItem[]) => {
         const filteredMarkets: Market[] = [];
         for (const market of marketsReq) {
-          const newMarketItem = parseMarketResponseItem(market, marketUrl);
+          const newMarketItem = parseMarketResponseItem(market, marketUrl, this.defaultMarketImage);
           if ( (newMarketItem.id > 0) && (!identityId || (newMarketItem.identityId === identityId)) ) {
-            if (newMarketItem.image.length === 0) {
-              newMarketItem.image = this.defaultMarketImage;
-            }
-            if (this.openMarketAddresses.includes(newMarketItem.receiveAddress)) {
-              newMarketItem.name = TextContent.OPEN_MARKET_NAME;
-            }
             filteredMarkets.push(newMarketItem);
           }
         }

@@ -137,7 +137,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
         }
 
         this.marketsList$.next(
-          availableMarkets.map(m => ({id: m.id, name: m.name, marketType: m.type}))
+          availableMarkets.map(m => ({id: m.id, name: m.name, marketType: m.type, image: m.image}))
         );
       }),
 
