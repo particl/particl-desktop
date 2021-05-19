@@ -242,6 +242,7 @@
               <mat-select placeholder="Select Market" formControlName="selectedMarket">
                 <mat-option [value]="0" class="--larger"></mat-option>
                 <mat-option *ngFor="let market of (markets$ | async)" [value]="market.id" class="--larger">
+                  <img class="image" width="25" height="25" [src]="market.image">
                   {{ market.name }}
                 </mat-option>
               </mat-select>

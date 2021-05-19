@@ -21,6 +21,7 @@
             <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
             <mat-select placeholder="Select Market" formControlName="selectedMarket">
               <mat-option *ngFor="let market of availableMarkets" [value]="market.id" class="--larger">
+                <img *ngIf="market.image?.length > 0" class="image" width="25" height="25" [src]="market.image">
                 {{ market.name }}
               </mat-option>
             </mat-select>

@@ -1,9 +1,8 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 .row {
   margin-bottom: var(--paddingV);
 }
-
 
 // ------ GALLERY ------ //
 
@@ -38,7 +37,9 @@
       --photos-per-row: 5;
     }
     --margins-per-row: var(--photos-per-row) * var(--photo-margin) * 2;
-    --photo-width: calc((100% - var(--margins-per-row)) / var(--photos-per-row));
+    --photo-width: calc(
+      (100% - var(--margins-per-row)) / var(--photos-per-row)
+    );
     width: var(--photo-width);
     position: relative;
     margin: var(--photo-margin);
@@ -84,7 +85,6 @@
   }
 } // << .photos
 
-
 .publish-to {
   .scrollable {
     margin: 18px -24px;
@@ -109,7 +109,6 @@
   }
 }
 
-
 // ------ PRICING ------ //
 
 // "≈" in pricing (PART ≈ fiat)
@@ -119,7 +118,6 @@
   font-size: 16px;
   color: var(--text-muted);
 }
-
 
 // ------ PUBLISH OPTIONS ------ //
 
@@ -139,7 +137,8 @@
       }
     }
   }
-  .publish-options { // expanded content
+  .publish-options {
+    // expanded content
     background: hsla(var(--bg-hsl), 0.5);
     border-top: 1px dashed var(--bg-muted);
     .estimate-fee {
@@ -156,5 +155,18 @@
         color: var(--text);
       }
     }
+  }
+}
+
+.mat-option {
+  img.image {
+    // photos in Market switcher
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
   }
 }
