@@ -330,7 +330,11 @@ export class BuyCartService {
       }
 
       if (isBasicObjectType(from.ListingItem.ItemInformation.ItemCategory)) {
-        newCartItem.category = getValueOrDefault(from.ListingItem.ItemInformation.ItemCategory.description, 'string', newCartItem.category);
+        let category = getValueOrDefault(from.ListingItem.ItemInformation.ItemCategory.description, 'string', newCartItem.category);
+        if (category.startsWith('ROOT / ')) {
+          category = category.replace('ROOT / ', '');
+        }
+        newCartItem.category = category;
       }
     }
 
