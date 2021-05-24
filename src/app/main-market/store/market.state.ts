@@ -24,7 +24,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   started: StartedStatus.STOPPED,
   profile: null,
   identities: [],
-  identity: null,
+  identity: 0,
   defaultConfig: {
     imagePath: './assets/images/placeholder_4-3.jpg',
     url: `http://${environment.marketHost}:${environment.marketPort || 80}/`,
@@ -85,7 +85,7 @@ export class MarketState {
 
   @Selector()
   static currentIdentity(state: MarketStateModel): Identity {
-    return state.identity !== null ? state.identity : JSON.parse(JSON.stringify(NULL_IDENTITY));
+    return +state.identity ? state.identities.find(id => id.id === +state.identity) || JSON.parse(JSON.stringify(NULL_IDENTITY)) : JSON.parse(JSON.stringify(NULL_IDENTITY));
   }
 
 
@@ -98,8 +98,8 @@ export class MarketState {
 
   @Selector()
   static filteredIdentitiesList(state: MarketStateModel): Identity[] {
-    if (state.identity === null) { return state.identities; }
-    return state.identities.filter(id => id.id !== state.identity.id);
+    if (state.identity === 0) { return state.identities; }
+    return state.identities.filter(id => id.id !== state.identity);
   }
 
 
@@ -117,7 +117,7 @@ export class MarketState {
 
   @Selector()
   static availableCarts(state: MarketStateModel): CartDetail[] {
-    return state.identity === null ? [] : state.identity.carts;
+    return this.currentIdentity(state).carts;
   }
 
 
@@ -285,8 +285,8 @@ export class MarketState {
           if (identities.length > 0) {
             const selectedIdentity = ctx.getState().identity;
 
-            if (selectedIdentity !== null) {
-              const found = identities.find(id => id.id === selectedIdentity.id);
+            if (+selectedIdentity) {
+              const found = identities.find(id => id.id === +selectedIdentity);
               if (found !== undefined) {
                 // current selected identity is in the list so nothing to do: its already selected
                 return of(null);
@@ -342,18 +342,18 @@ export class MarketState {
       // TODO: not a great way to do this... but we need to verify that the application state wallet is the current wallet
       //  before setting the active identity to that wallet. Look into a better way of doing this...
       if (globalSettings['activatedWallet'] === identity.name) {
-        ctx.patchState({identity});
+        ctx.patchState({identity: +identity.id});
         return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
       }
     }
-    ctx.patchState({identity: NULL_IDENTITY});
+    ctx.patchState({identity: 0});
     return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
   }
 
 
   @Action(MarketStateActions.SetIdentityCartCount, {cancelUncompleted: true})
   setActiveIdentityCartCount(ctx: StateContext<MarketStateModel>) {
-    const identityCarts = ctx.getState().identity.carts;
+    const identityCarts = MarketState.currentIdentity(ctx.getState()).carts;
     if (identityCarts.length > 0) {
       return this._marketService.call('cartitem', ['list', +identityCarts[0].id]).pipe(
         catchError(() => of([])),
@@ -417,13 +417,6 @@ export class MarketState {
         identities: updateItem<Identity>(id => id.id === market.identityId, updatedId)
       }));
     }
-
-    const stateId = ctx.getState().identity;
-    if (stateId.id === market.identityId) {
-      const updatedId = JSON.parse(JSON.stringify(stateId));
-      updatedId.markets.push(market);
-      ctx.patchState({identity: updatedId});
-    }
   }
 
 
@@ -440,21 +433,11 @@ export class MarketState {
       const mIdx = updatedId.markets.findIndex(m => m.id === marketId);
       if (mIdx >= 0) {
         updatedId.markets.splice(mIdx, 1);
-      }
 
-      ctx.setState(patch({
-        identities: updateItem<Identity>(id => id.id === identityId, updatedId)
-      }));
-    }
-
-    const stateId = ctx.getState().identity;
-    if (stateId.id === identityId) {
-      const updatedId = JSON.parse(JSON.stringify(stateId));
-      const mIdx = updatedId.markets.findIndex(m => m.id === marketId);
-      if (mIdx >= 0) {
-        updatedId.markets.splice(mIdx, 1);
+        ctx.setState(patch({
+          identities: updateItem<Identity>(id => id.id === identityId, updatedId)
+        }));
       }
-      ctx.patchState({identity: updatedId});
     }
   }
 
@@ -487,7 +470,7 @@ export class MarketState {
 
   @Action(MarketUserActions.CartItemAdded)
   cartAddItem(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartItemAdded) {
-    if (action.identityId === ctx.getState().identity.id ) {
+    if (action.identityId === ctx.getState().identity ) {
       ctx.setState(patch<MarketStateModel>({
         notifications: patch<MarketNotifications>({
           identityCartItemCount: ctx.getState().notifications.identityCartItemCount + 1
@@ -500,8 +483,8 @@ export class MarketState {
   @Action(MarketUserActions.CartItemRemoved)
   cartRemoveItem(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartItemRemoved) {
     const identity = ctx.getState().identity;
-
-    if ((action.identityId === identity.id) && identity.carts[0] && (action.cartId === identity.carts[0].id) ) {
+    const currentIdentity = MarketState.currentIdentity(ctx.getState());
+    if ((action.identityId === identity) && currentIdentity.carts[0] && (action.cartId === currentIdentity.carts[0].id) ) {
       ctx.setState(patch<MarketStateModel>({
         notifications: patch<MarketNotifications>({
           identityCartItemCount: Math.max(ctx.getState().notifications.identityCartItemCount - 1, 0)
@@ -513,7 +496,7 @@ export class MarketState {
 
   @Action(MarketUserActions.CartCleared)
   cartRemoveAll(ctx: StateContext<MarketStateModel>, action: MarketUserActions.CartCleared) {
-    const identityId = ctx.getState().identity.id;
+    const identityId = ctx.getState().identity;
 
     if (action.identityId === identityId) {
       ctx.setState(patch<MarketStateModel>({
@@ -539,7 +522,7 @@ export class MarketState {
       notifications: patch<MarketNotifications>({
         // ensure uniqueness of order hashes in case duplicates are added (possible if adding from different sources)
         [itemKey]: nxgsIif(
-          ctx.getState().identity.id === identityId,
+          ctx.getState().identity === identityId,
           [...(new Set([...ctx.getState().notifications[itemKey], ...orderHashes]))]
         )
       })

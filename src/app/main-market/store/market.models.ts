@@ -66,7 +66,7 @@ export interface MarketStateModel {
   started: StartedStatus;
   profile: Profile;
   identities: Identity[];
-  identity: Identity;
+  identity: number;
   defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
   notifications: MarketNotifications;

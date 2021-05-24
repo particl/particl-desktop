@@ -187,11 +187,10 @@ export class MarketManagementService {
       const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
 
       return this._rpc.call('market', ['join', profileId, market.id, identityId]).pipe(
-        mapTo(true),
-        concatMap(isSuccess => {
-          if (isSuccess) {
+        concatMap((joinedMarket: RespMarketListMarketItem) => {
+          if (isBasicObjectType(joinedMarket) && +joinedMarket.id > 0) {
             const idMarket: Market = {
-              id: market.id,
+              id: joinedMarket.id,
               identityId: identityId,
               image: market.image,
               name: market.name,
@@ -202,9 +201,9 @@ export class MarketManagementService {
             return this._store.dispatch([
               new MarketUserActions.AddIdentityMarket(idMarket),
               new MarketUserActions.SetSetting('profile.marketsLastAdded', Date.now()),
-            ]).pipe(mapTo(isSuccess));
+            ]).pipe(mapTo(true));
           }
-          return of(isSuccess);
+          return of(false);
         })
       );
     });
