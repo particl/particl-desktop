@@ -5,8 +5,8 @@ import {
   StateContext,
   Selector,
 } from '@ngxs/store';
-import { delayWhen, retryWhen} from 'rxjs/operators';
-import { timer } from 'rxjs';
+import { delayWhen, retryWhen, tap, concatMap } from 'rxjs/operators';
+import { timer, of } from 'rxjs';
 import { environment } from 'environments/environment';
 
 import { Global, AppSettings } from './app.actions';
@@ -97,24 +97,25 @@ export class CoreConnectionState {
         errors => errors.pipe(
           delayWhen(() => timer(1000)), // retry every 1000 ms if an error occurs
         )
-      )
-    ).subscribe(
-      (blockchaininfo) => {
-        if ('chain' in blockchaininfo) {
-          ctx.patchState({testnet: blockchaininfo.chain === 'test'});
+      ),
+      tap((blockchaininfo) => {
+          if (blockchaininfo && ('chain' in blockchaininfo)) {
+            ctx.patchState({testnet: blockchaininfo.chain === 'test'});
+          }
+      }),
+      concatMap((blockchaininfo) => {
+        if (!blockchaininfo) {
+          return of(blockchaininfo);
         }
-
-        // @TODO: zaSmilingIdiot 2020-01-21 -> Might be better to move this into a component/service... not necessarily ideal here
-        //  Also, need to get rid of this nested-subscribe anti-pattern
-        ctx.dispatch([
+        return ctx.dispatch([
           new Global.SetLoadingMessage('Application ready'),
           new AppSettings.SetActiveWallet(null),
           new Global.ChangeMode(null),
-        ]).subscribe(
-          () => ctx.dispatch(new Global.Connected())
-        );
-      }
-    );
+        ]).pipe(
+          tap(() => ctx.dispatch(new Global.Connected()))
+        )
+      })
+    ).subscribe();
   }
 
 
