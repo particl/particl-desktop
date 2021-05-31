@@ -437,7 +437,24 @@ export class ListingsComponent implements OnInit, OnDestroy {
             tap((success) => {
               const newListingRef = this.listings[listingIdx];
               if (newListingRef && newListingRef.id === listing.id) {
-                this.listings.splice(listingIdx, 1);
+                const badHash = newListingRef.hash;
+                let tobeRemoved: number[] = [];
+
+                // looping over all listings because there is a need to remove potential duplicates as well
+                for (let ii = 0; ii < this.listings.length; ii++) {
+                  if (this.listings[ii].hash && (this.listings[ii].hash === badHash)) {
+                    tobeRemoved.push(ii);
+                  }
+                }
+
+                let successRemoved = 0;
+                for (let ii = 0; ii < tobeRemoved.length; ii++) {
+                  const actualIdx = tobeRemoved[ii] - successRemoved;
+                  if (this.listings[actualIdx].hash === badHash) {
+                    this.listings.splice(actualIdx, 1);
+                    successRemoved++;
+                  }
+                }
 
                 const modCount = this.listings.length % this.PAGE_COUNT;
                 if (!this.atEndOfListings && (modCount > 0) && (modCount < (this.PAGE_COUNT / 2))) {
@@ -491,14 +508,15 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
           dialogRef.afterClosed().pipe(take(1)).subscribe(() => {
             if ((favId !== listing.extra.favouriteId) || (proposalHash !== listing.extra.flaggedProposal)) {
-              // favourite Id of this listing changed
-              const foundListing = this.listings.find(l => l.id === listing.id);
-              if (foundListing) {
-                foundListing.extras.favouriteId = favId;
-                foundListing.extras.isFlagged = proposalHash.length > 0;
 
-                this._cdr.detectChanges();
+              const foundListings = this.listings.filter(li => li.hash === listing.hash);
+              for (const foundListing of foundListings) {
+                if (foundListing.id === listing.id) {
+                  foundListing.extras.favouriteId = favId;
+                }
+                foundListing.extras.isFlagged = foundListing.extras.isFlagged || proposalHash.length > 0;
               }
+              this._cdr.detectChanges();
             }
           });
 

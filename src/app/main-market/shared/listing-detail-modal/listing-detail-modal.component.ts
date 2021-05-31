@@ -58,6 +58,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
   expiryTimer: string = '';
   initialTab: InitialTabSelectionType = 'default';
+  canAction: boolean = true;
 
   readonly displayActions: Actionables = {
     cart: false,
@@ -124,7 +125,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
   private readonly SOON_DURATION: number = 1000 * 60 * 60 * 24; // 24 hours
   private destroy$: Subject<void> = new Subject();
   private selectedMarketId: number = 0;
-  private isActioning: boolean = false;
+  private isActioning: FormControl = new FormControl(false);
   private flagProposalControl: FormControl = new FormControl('');
 
 
@@ -387,6 +388,16 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       }
     }
 
+    this.isActioning.valueChanges.pipe(
+      tap((isBusy: boolean) => {
+        if (typeof isBusy === 'boolean') {
+          this.canAction = !isBusy;
+          this._cdr.detectChanges();
+        }
+      }),
+      takeUntil(this.destroy$)
+    )
+
     if (query$.length > 0) {
       merge(...query$).subscribe();
     }
@@ -406,10 +417,10 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
 
   actionFlagItem() {
-    if (!this.displayActions.governance || (this.details.governance.proposalHash.length > 0) || this.isActioning) {
+    if (!this.displayActions.governance || (this.details.governance.proposalHash.length > 0) || this.isActioning.value) {
       return;
     }
-    this.isActioning = true;
+    this.isActioning.setValue(true);
 
     this._unlocker.unlock({timeout: 10}).pipe(
       concatMap((unlocked: boolean) => iif(
@@ -424,13 +435,13 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         this._snackbar.open(TextContent.FLAG_SET_FAILED, 'warn');
         return of('');
       }),
-      finalize(() => this.isActioning = false)
+      finalize(() => this.isActioning.setValue(false))
     ).subscribe();
   }
 
 
   actionVoteItem(option: 'KEEP' | 'REMOVE') {
-    if (this.isActioning ||
+    if (this.isActioning.value ||
         !this.displayActions.governance ||
         (this.details.governance.proposalHash.length === 0) ||
         (this.details.governance.voteOptionKeep < 0) ||
@@ -438,7 +449,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     ) {
       return;
     }
-    this.isActioning = true;
+    this.isActioning.setValue(true);
 
     const selectedVote = option === 'KEEP' ? this.details.governance.voteOptionKeep : this.details.governance.voteOptionRemove;
 
@@ -449,14 +460,14 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
           tap((success) => {
             if (success) {
               this.details.governance.voteCast = selectedVote;
-              this._cdr.detectChanges();
+              // no need to detect display changes as that will be done via the isActioning value change
             } else {
               this._snackbar.open(TextContent.VOTE_SET_FAILED, 'warn');
             }
           })
         ))
       )),
-      finalize(() => this.isActioning = false)
+      finalize(() => this.isActioning.setValue(false))
     ).subscribe(
       null,
       () => {
@@ -467,10 +478,10 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
 
   actionToggleFavItem() {
-    if (!this.displayActions.fav || this.isActioning) {
+    if (!this.displayActions.fav || this.isActioning.value) {
       return;
     }
-    this.isActioning = true;
+    this.isActioning.setValue(true);
 
     let query$: Observable<any>;
 
@@ -492,10 +503,10 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
     query$.pipe(
       tap(() => {
-        this._cdr.detectChanges();
+        // no need to detect display changes as that will be done via the isActioning value change
         this.eventFavouritedItem.emit(this.details.favouriteId);
       }),
-      finalize(() => this.isActioning = false)
+      finalize(() => this.isActioning.setValue(false))
     ).subscribe(
       null,
       (err) => {
@@ -506,13 +517,14 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
 
 
   actionAddItemToCart() {
-    if (!this.displayActions.cart || this.isActioning) {
+    if (!this.displayActions.cart || this.isActioning.value) {
       return;
     }
+    this.isActioning.setValue(true);
     const currentCartId = this._store.selectSnapshot(MarketState.availableCarts)[0].id;
 
     this._detailsService.addItemToCart(this.details.id, currentCartId).pipe(
-      finalize(() => this.isActioning = false)
+      finalize(() => this.isActioning.setValue(false))
     ).subscribe(
       () => {
         this._snackbar.open(TextContent.CART_ADD_SUCCESS);
