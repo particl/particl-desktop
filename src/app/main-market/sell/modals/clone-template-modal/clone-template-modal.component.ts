@@ -14,10 +14,18 @@ import { CategoryItem } from '../../../services/data/data.models';
 import { MarketType } from './../../../shared/market.models';
 
 
+interface AvailableMarket {
+  name: string;
+  id: number;
+  image: string;
+  marketType: MarketType;
+}
+
+
 export interface CloneTemplateModalInput {
   templateTitle: string;
   templateImage?: string;
-  markets: {name: string; id: number, marketType: MarketType}[];
+  markets: AvailableMarket[];
 }
 
 
@@ -29,7 +37,7 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
 
   readonly productTitle: string = '';
   readonly productImage: string = '';
-  readonly availableMarkets: {name: string; id: number, marketType: MarketType}[] = [];
+  readonly availableMarkets: AvailableMarket[] = [];
   readonly categories$: Observable<CategoryItem[]>;
 
   selectedMarket: FormControl = new FormControl(0);
@@ -51,7 +59,7 @@ export class CloneTemplateModalComponent implements OnInit, OnDestroy {
       if (Array.isArray(this.data.markets)) {
         this.data.markets.forEach(m => {
           if (isBasicObjectType(m) && (+m.id > 0) && (typeof m.name === 'string')) {
-            this.availableMarkets.push({id: m.id, name: m.name, marketType: m.marketType});
+            this.availableMarkets.push({id: m.id, name: m.name, marketType: m.marketType, image: m.image});
           }
         });
       }

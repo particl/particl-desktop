@@ -60,7 +60,6 @@ export class MarketManagementService {
     this.marketRegionsMap.set(MARKET_REGION.ASIA_PACIFIC, TextContent.LABEL_REGION_ASIA_PACIFIC);
 
     const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
-    const marketSettings = this._store.selectSnapshot(MarketState.settings);
 
     this.marketDefaultImage = defaultConfig.imagePath;
 
@@ -188,11 +187,10 @@ export class MarketManagementService {
       const profileId = this._store.selectSnapshot(MarketState.currentProfile).id;
 
       return this._rpc.call('market', ['join', profileId, market.id, identityId]).pipe(
-        mapTo(true),
-        concatMap(isSuccess => {
-          if (isSuccess) {
+        concatMap((joinedMarket: RespMarketListMarketItem) => {
+          if (isBasicObjectType(joinedMarket) && +joinedMarket.id > 0) {
             const idMarket: Market = {
-              id: market.id,
+              id: joinedMarket.id,
               identityId: identityId,
               image: market.image,
               name: market.name,
@@ -203,9 +201,9 @@ export class MarketManagementService {
             return this._store.dispatch([
               new MarketUserActions.AddIdentityMarket(idMarket),
               new MarketUserActions.SetSetting('profile.marketsLastAdded', Date.now()),
-            ]).pipe(mapTo(isSuccess));
+            ]).pipe(mapTo(true));
           }
-          return of(isSuccess);
+          return of(false);
         })
       );
     });
@@ -281,11 +279,8 @@ export class MarketManagementService {
       map((market: RespMarketListMarketItem) => {
         const marketUrl = this._store.selectSnapshot(MarketState.defaultConfig).url;
 
-        const idMarket = parseMarketResponseItem(market, marketUrl);
+        const idMarket = parseMarketResponseItem(market, marketUrl, this.marketDefaultImage);
         if ((idMarket.id > 0) && (idMarket.identityId > 0)) {
-          if (idMarket.image.length === 0) {
-            idMarket.image = this.marketDefaultImage;
-          }
           this._store.dispatch(new MarketUserActions.AddIdentityMarket(idMarket));
         }
 
