@@ -1,0 +1,31 @@
+<main-layout-default>
+  <ng-container ngProjectAs="menu">
+
+    <div class="menu-items">
+      <ng-container *ngFor="let menuItem of menu; trackBy:trackByMenuFn">
+          <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+            <ng-container *ngIf="menuItem.icon.length > 0">
+              <mat-icon [fontIcon]="menuItem.icon"></mat-icon>
+            </ng-container>
+            <span class="text">{{ menuItem.text }}</span>
+          </a>
+      </ng-container>
+    </div>
+
+  </ng-container>
+
+  <ng-container ngProjectAs="app-version">
+    <mat-content class="client-version">
+      <div class="app item">
+        <!-- App name -->
+        Governance
+        <span class="version">{{ clientVersion }}</span>
+      </div>
+    </mat-content>
+  </ng-container>
+
+
+  <main-topbar></main-topbar>
+
+  <router-outlet></router-outlet>
+</main-layout-default>

@@ -19,7 +19,8 @@
   "author": "Particl contributors",
   "main": "main.js",
   "appVersions": {
-    "wallet": "1.5.0"
+    "wallet": "1.5.0",
+    "governance": "0.1.0"
   },
   "scripts": {
     "build": "ng build",

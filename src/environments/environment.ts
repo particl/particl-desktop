@@ -9,6 +9,7 @@ export const environment = {
   version: app.version,
   preRelease: app.preRelease,
   walletVersion: app.appVersions.wallet,
+  governanceVersion: app.appVersions.governance,
   marketVersion: MP.version,
   particlHost: 'localhost',
   particlPort: 51935,

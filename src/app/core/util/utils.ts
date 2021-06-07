@@ -182,12 +182,12 @@ export const genericPollingRetryStrategy = ({
       ) {
         return throwError(error);
       }
+      const newTime = retryAttempt * scalingDuration;
       console.log(
-        `Attempt ${retryAttempt}: retrying in ${retryAttempt *
-          scalingDuration}ms`
+        `Attempt ${retryAttempt}: retrying in ${newTime}ms`
       );
       // retry after 1s, 2s, etc...
-      return timer(retryAttempt * scalingDuration);
+      return timer(newTime);
     }),
     finalize(() => console.log('We are done!'))
   );
