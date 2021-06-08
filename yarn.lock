@@ -8050,6 +8050,11 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
+nan@2.14.2:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
+  integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
+
 nan@^2.12.1, nan@^2.13.2, nan@^2.14.0:
   version "2.14.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.1.tgz#d7be34dfa3105b91494c3147089315eff8874b01"
@@ -8153,7 +8158,7 @@ node-forge@0.9.0:
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.9.0.tgz#d624050edbb44874adca12bb9a52ec63cb782579"
   integrity sha512-7ASaDa3pD+lJ3WvXFsxekJQelBKRpne+GOVbLbtHYdd7pFspyeuJHnWfLplGf3SwKGbfs/aYl5V/JCIaHVUKKQ==
 
-node-gyp-build@^4.1.0:
+node-gyp-build@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.2.3.tgz#ce6277f853835f718829efb47db20f3e4d9c4739"
   integrity sha512-MN6ZpzmfNCRM+3t57PTJHgHyw/h4OWnZ6mR8P5j/uZtqQr46RRuDE/P+g3n0YR/AiYXeWixZZzaip77gdICfRg==
@@ -8951,9 +8956,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@./particl-marketplace-0.3.3-alpha001.tgz:
-  version "0.3.3-alpha001"
-  resolved "./particl-marketplace-0.3.3-alpha001.tgz#7472b826c9f4bd2a1f61259c758dd83a7cdf4c88"
+particl-marketplace@./particl-marketplace-0.3.2-local008.tgz:
+  version "0.3.2-local008"
+  resolved "./particl-marketplace-0.3.2-local008.tgz#451ea2949aad45e387d06c85750c22a6fbf8d537"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -8996,7 +9001,7 @@ particl-marketplace@./particl-marketplace-0.3.3-alpha001.tgz:
     multer "^1.4.1"
     omp-lib "^0.1.150"
     particl-bitcore-lib "^0.16.0"
-    particl-zmq "^1.0.5"
+    particl-zmq "^1.0.6"
     path "^0.12.7"
     piexifjs "^1.0.3"
     pluralize "^5.0.0"
@@ -9020,18 +9025,17 @@ particl-marketplace@./particl-marketplace-0.3.3-alpha001.tgz:
     typescript "2.4.2"
     web-request "^1.0.7"
     winston "^2.4.4"
-    zeromq "^6.0.0-beta.6"
   optionalDependencies:
     fsevents "^2.1.3"
 
-particl-zmq@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/particl-zmq/-/particl-zmq-1.0.5.tgz#8d9b388c15f296d1ab9d320c47b371b057c5d55e"
-  integrity sha512-ge4Edr2YSGlnY9vBe4MI7qVkAmYPVPjuyxRCjMbbL2VCg5LAWIgTqhkNMfgx5VjCgt3X7TEAEUYfmT5Ak2XwkA==
+particl-zmq@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/particl-zmq/-/particl-zmq-1.0.6.tgz#0c22a225918b837241b4012aa7ce9d1e263792a6"
+  integrity sha512-JrljoX3gJQP5o/eCdp/PK7GY557ctXmNSbE5wiOsE3AzaNUllRc9g/O9CWZBK2138uS5NkH7CKG1KFWDO3z/4w==
   dependencies:
     debug "^4.1.0"
     eventemitter2 "^5.0.1"
-    zeromq "^6.0.0-beta.6"
+    zeromq "^5.2.8"
 
 pascalcase@^0.1.1:
   version "0.1.1"
@@ -12714,12 +12718,13 @@ yn@^2.0.0:
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
   integrity sha1-5a2ryKz0CPY4X8dklWhMiOavaJo=
 
-zeromq@^6.0.0-beta.6:
-  version "6.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-6.0.0-beta.6.tgz#2b8934cafce735ea9007fd3074ec8aca9bf11204"
-  integrity sha512-wLf6M7pBHijl+BRltUL2VoDpgbQcOZetiX8UzycHL8CcYFxYnRrpoG5fi3UX3+Umavz1lk4/dGaQez8qiDgr/Q==
+zeromq@^5.2.8:
+  version "5.2.8"
+  resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-5.2.8.tgz#94b0b85e4152e98b8bb163f1db4a34280d44d9d0"
+  integrity sha512-bXzsk7KOmgLSv1tC0Ms1VXBy90+Rz27ZYf27cLuldRYbpqYpuWJfxxHFhO710t22zgWBnmdUP0m3SKFpLI0u5g==
   dependencies:
-    node-gyp-build "^4.1.0"
+    nan "2.14.2"
+    node-gyp-build "^4.2.3"
 
 zone.js@~0.9.1:
   version "0.9.1"
