@@ -224,6 +224,7 @@
     "@angular/platform-server": "^8.2.14",
     "@angular/router": "^8.2.14",
     "@types/jasmine": "2.8.9",
+    "@types/lodash": "^4.14.170",
     "@types/node": "^9.4.6",
     "angularx-qrcode": "^1.0.1",
     "checksum": "^0.1.1",

@@ -14,7 +14,10 @@ import {
   WalletStakingStateModel,
   RpcGetColdStakingInfo,
   WalletUTXOStateModel,
-  WalletSettingsStateModel
+  WalletSettingsStateModel,
+  PublicUTXO,
+  BlindUTXO,
+  AnonUTXO
 } from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
@@ -287,7 +290,7 @@ export class WalletUTXOState {
               updatedValues[resKey] = [];
             } else if (
               (currentState[resKey].length !== result[resKey].length) ||
-              (xorWith(
+              (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
                 currentState[resKey],
                 result[resKey],
                 (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)

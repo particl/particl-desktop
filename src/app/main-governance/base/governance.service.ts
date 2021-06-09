@@ -1,14 +1,17 @@
+import { ZmqConnectionState } from './../../core/store/zmq-connection.state';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
-import { Subject, Observable, concat, interval, iif, defer, of } from 'rxjs';
-import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged } from 'rxjs/operators';
+import { Subject, Observable, concat, interval, iif, defer, of, merge } from 'rxjs';
+import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged, auditTime } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
+import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType } from '../utils';
+import { RpcGetBlockchainInfo } from 'app/core/core.models';
 import { ResponseProposalDetail, ProposalItem } from './governance.models';
 import { GovernanceStateActions } from '../store/governance-store.actions';
 
@@ -61,19 +64,13 @@ export class GovernanceService implements OnDestroy {
           }
 
           return newItem;
-        }).filter(proposalItem => {
-          // validate ProposalItem 's
-          return  (proposalItem.blockStart > 0) &&
-                  (proposalItem.blockEnd > 0) &&
-                  (proposalItem.blockStart < proposalItem.blockEnd) &&
-                  (proposalItem.proposalId > 0)
-        });
+        }).filter(proposalItem => (proposalItem.proposalId > 0) && (proposalItem.name.length > 0));
       }
 
       return items;
     }),
     tap(proposalItems => {
-      // @TODO: PUSH TO STORE HERE
+      this._store.dispatch(new GovernanceStateActions.SetProposals(proposalItems));
     }),
     catchError(() => {
       // prevent errors from being thrown... client should use the store to determine if request had an error
@@ -85,10 +82,25 @@ export class GovernanceService implements OnDestroy {
   constructor(
     private _http: HttpClient,
     private _store: Store,
+    private _rpc: MainRpcService
   ) {
     this.log.d('starting service...');
 
-    this.isPolling.valueChanges.pipe(
+    const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashtx')).pipe(
+      auditTime(5000),
+      concatMap(() => this._rpc.call('getblockchaininfo').pipe(
+        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 1})),
+        tap((blockResult: RpcGetBlockchainInfo) => {
+          if (isBasicObjectType(blockResult) && !!!blockResult.initialblockdownload && (+blockResult.headers > 0)) {
+            const pcntComplete = +Math.fround(+blockResult.blocks / +blockResult.headers * 100).toPrecision(3);
+            this._store.dispatch(new GovernanceStateActions.SetBlockValues(+blockResult.blocks, pcntComplete));
+          }
+        })
+      )),
+      takeUntil(this.destroy$)
+    );
+
+    const poller$ = this.isPolling.valueChanges.pipe(
       distinctUntilChanged(),
       concatMap(value => iif(
         () => !!value,
@@ -106,7 +118,12 @@ export class GovernanceService implements OnDestroy {
       )),
       finalize(() => this._store.dispatch(new GovernanceStateActions.ResetState())),
       takeUntil(this.destroy$)
-    ).subscribe();
+    );
+
+    merge(
+      blockWatcher$,
+      poller$
+    ).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
 

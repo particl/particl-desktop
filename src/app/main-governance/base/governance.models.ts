@@ -1,4 +1,7 @@
 
+export type CHAIN_TYPE = 'main' | 'test';
+
+
 export interface ResponseProposalDetail {
   blockheight_end: number;
   blockheight_start: number;
@@ -16,7 +19,7 @@ export interface ProposalItem {
   name: string;
   blockStart: number;
   blockEnd: number;
-  network: 'main' | 'test';
+  network: CHAIN_TYPE;
   infoUrls: {
     ccs?: string;
     github?: string;
