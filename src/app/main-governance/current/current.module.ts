@@ -2,6 +2,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { GovernanceSharedModule } from '../shared/governance.module';
 import { CurrentComponent } from './current.component';
 
 
@@ -14,7 +15,8 @@ const routes: Routes = [
   imports: [
     RouterModule.forChild(routes),
     CommonModule,
-    CoreUiModule
+    CoreUiModule,
+    GovernanceSharedModule,
   ],
   exports: [
     RouterModule

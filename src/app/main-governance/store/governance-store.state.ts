@@ -14,6 +14,7 @@ const DEFAULT_STATE_VALUES: GovernanceStateModel = {
   blockchainSynced: false,
   chain: null,
   isPolling: false,
+  lastRequestTime: 0,
   lastRequestErrored: false,
   proposals: []
 };
@@ -31,6 +32,21 @@ export class GovernanceState {
   }
 
   @Selector()
+  static pollingStatus(state: GovernanceStateModel) {
+    return state.isPolling;
+  }
+
+  @Selector()
+  static hasError(state: GovernanceStateModel) {
+    return state.lastRequestErrored;
+  }
+
+  @Selector()
+  static currentChain(state: GovernanceStateModel) {
+    return state.chain ? state.chain : '';
+  }
+
+  @Selector()
   static latestBlock(state: GovernanceStateModel) {
     return state.blockCount;
   }
@@ -40,6 +56,10 @@ export class GovernanceState {
     return state.blockchainSynced;
   }
 
+  @Selector()
+  static lastSyncTime(state: GovernanceStateModel) {
+    return state.lastRequestTime;
+  }
 
   @Selector()
   static filteredProposals(state: GovernanceStateModel) {
@@ -68,6 +88,14 @@ export class GovernanceState {
       (filteredProposals: ProposalItem[][]): ProposalItem[] => {
         return filteredProposals[1] || [];
       }
+    );
+  }
+
+
+  static requestDidError() {
+    return createSelector(
+      [GovernanceState.hasError],
+      (didError: boolean): boolean => didError
     );
   }
 
@@ -122,9 +150,18 @@ export class GovernanceState {
   }
 
 
+  @Action(GovernanceStateActions.SetPollingStatus)
+  updatePollingStatus(ctx: StateContext<GovernanceStateModel>, { status }: GovernanceStateActions.SetPollingStatus) {
+    ctx.patchState({ isPolling: !!status });
+  }
+
+
   @Action(GovernanceStateActions.SetProposals)
   updateStoredProposals(ctx: StateContext<GovernanceStateModel>, { proposals }: GovernanceStateActions.SetProposals) {
     const currentState = ctx.getState();
+    const patchVals: Partial<GovernanceStateModel> = {
+      lastRequestTime: Math.round(Date.now() / 1000) * 1000 // rounded to closest seconds value
+    };
     if (
       (currentState.proposals.length !== proposals.length) ||
       (xorWith<ProposalItem>(
@@ -136,8 +173,10 @@ export class GovernanceState {
             (curr.blockEnd === req.blockEnd)
       ).length > 0)
     ) {
-      ctx.patchState({ proposals });
+      patchVals.proposals = proposals;
     }
+
+    ctx.patchState(patchVals);
   }
 
 }

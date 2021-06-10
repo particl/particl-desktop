@@ -9,6 +9,11 @@
   </app-page-intro>
 
 
+  <div>
+    <governance-status-bar></governance-status-bar>
+  </div>
+
+
   <!-- Filters -->
   <div class="filter">
 
@@ -48,8 +53,9 @@
                   </div>
                 </div><!-- .meta -->
                 <div class="status-wrap" fxFlex="0 0 140px">
-                  <div class="status" [class.active]="blockCounter > proposal.blockStart">
-                    <span class="dot"></span>{{ (proposal.blockStart === 0) || (proposal.blockStart > blockCounter) ? 'Pending' : 'Active' }}
+                  <div class="status active">
+                    <span class="dot"></span>
+                    Completed
                   </div>
                   <table>
                     <tr>

@@ -7,6 +7,7 @@ export interface GovernanceStateModel {
   blockchainSynced: boolean;
   chain: CHAIN_TYPE;
   isPolling: boolean;
+  lastRequestTime: number;
   lastRequestErrored: boolean;
   proposals: ProposalItem[];
 }

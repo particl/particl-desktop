@@ -1,3 +1,4 @@
+import { CoreConnectionState } from './../../core/store/coreconnection.state';
 import { ZmqConnectionState } from './../../core/store/zmq-connection.state';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -20,17 +21,17 @@ import { GovernanceStateActions } from '../store/governance-store.actions';
 @Injectable()
 export class GovernanceService implements OnDestroy {
 
-  private readonly AUTO_POLL_TIMEOUT: number = 1800000; // 30 minutes
+  readonly AUTO_POLL_TIMEOUT: number = 1_800_000; // 30 minutes
 
   private log: any = Log.create('governance.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroy$: Subject<void> = new Subject();
   private stopPolling$: Subject<void> = new Subject();
   private isPolling: FormControl = new FormControl(false);
 
-  private DATA_URL: string = 'https://raw.githubusercontent.com/dasource/partyman/master/votingproposals/mainnet/metadata.txt';
+  private DATA_URL: string = 'https://raw.githubusercontent.com/dasource/partyman/master/votingproposals/${chain}/metadata.txt';
 
-  private dataRequest$: Observable<ProposalItem[]> = this._http.get(this.DATA_URL).pipe(
-    retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 3})),
+  private dataRequest$: Observable<ProposalItem[]> = defer(() => this._http.get(this.DATA_URL).pipe(
+    retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2})),
     map((response: ResponseProposalDetail[]) => {
       let items: ProposalItem[] = [];
 
@@ -79,7 +80,7 @@ export class GovernanceService implements OnDestroy {
       this._store.dispatch(new GovernanceStateActions.SetRetrieveFailedStatus(true));
       return of([]);
     })
-  );
+  ));
 
   constructor(
     private _http: HttpClient,
@@ -87,6 +88,9 @@ export class GovernanceService implements OnDestroy {
     private _rpc: MainRpcService
   ) {
     this.log.d('starting service...');
+
+    const chain = this._store.selectSnapshot(CoreConnectionState.isTestnet) ? 'testnet' : 'mainnet';
+    this.DATA_URL = this.DATA_URL.replace('${chain}', chain);
 
     const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashtx')).pipe(
       auditTime(5000),
@@ -104,13 +108,14 @@ export class GovernanceService implements OnDestroy {
 
     const poller$ = this.isPolling.valueChanges.pipe(
       distinctUntilChanged(),
+      tap(newVal => this._store.dispatch(new GovernanceStateActions.SetPollingStatus(newVal))),
       concatMap(value => iif(
         () => !!value,
 
         defer(() => concat(
           // Make initial request, then on success, poll every 30 minutes
           this.dataRequest$.pipe(take(1)),
-          interval(1800000).pipe(
+          interval(this.AUTO_POLL_TIMEOUT).pipe(
             concatMap(() => this.dataRequest$),
             takeUntil(this.stopPolling$)
           )

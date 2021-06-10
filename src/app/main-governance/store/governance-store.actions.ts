@@ -20,6 +20,12 @@ export namespace GovernanceStateActions {
   }
 
 
+  export class SetPollingStatus {
+    static readonly type: string = '[Governance State] Set Polling Status';
+    constructor(public status: boolean) {}
+  }
+
+
   export class SetBlockValues {
     static readonly type: string = '[Governance State] Set Block Values';
     constructor(public blockCount: number, public percentComplete: number, public chainType: CHAIN_TYPE) {}
