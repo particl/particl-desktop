@@ -12,6 +12,7 @@ const DEFAULT_STATE_TOKEN = new StateToken<GovernanceStateModel>('governance');
 const DEFAULT_STATE_VALUES: GovernanceStateModel = {
   blockCount: 0,
   blockchainSynced: false,
+  chain: null,
   isPolling: false,
   lastRequestErrored: false,
   proposals: []
@@ -42,10 +43,10 @@ export class GovernanceState {
 
   @Selector()
   static filteredProposals(state: GovernanceStateModel) {
-    return  !state.blockchainSynced ?
+    return  !state.blockchainSynced || !state.chain ?
             [[], []] :
             partition(
-              state.proposals,
+              state.proposals.filter(p => p.network === state.chain),
               p => ((p.blockStart === 0) && (p.blockEnd === 0)) || (p.blockEnd >= state.blockCount)
             );
   }
@@ -104,9 +105,19 @@ export class GovernanceState {
 
 
   @Action(GovernanceStateActions.SetBlockValues)
-  updateBlockStatusValues(ctx: StateContext<GovernanceStateModel>, { blockCount, percentComplete }: GovernanceStateActions.SetBlockValues) {
+  updateBlockStatusValues(ctx: StateContext<GovernanceStateModel>, { blockCount, percentComplete, chainType }: GovernanceStateActions.SetBlockValues) {
+    const patchVals: Partial<GovernanceStateModel> = {};
+    const currentState = ctx.getState();
+    if (currentState.chain !== chainType) {
+      patchVals.chain = chainType;
+    }
     if ((blockCount > 0) && (percentComplete > 0)) {
-      ctx.patchState({ blockCount: blockCount, blockchainSynced: percentComplete >= 99});
+      patchVals.blockCount = blockCount;
+      patchVals.blockchainSynced = percentComplete >= 99;
+    }
+
+    if (Object.keys(patchVals).length > 0) {
+      ctx.patchState(patchVals);
     }
   }
 

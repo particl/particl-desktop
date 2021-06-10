@@ -1,5 +1,4 @@
-
-export type CHAIN_TYPE = 'main' | 'test';
+import { CHAIN_TYPE } from 'app/core/core.models';
 
 
 export interface ResponseProposalDetail {

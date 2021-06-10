@@ -1,3 +1,7 @@
+
+export type CHAIN_TYPE = 'main' | 'test';
+
+
 export interface CoreErrorModel {
   code: number;
   message: string;

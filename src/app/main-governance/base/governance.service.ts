@@ -20,6 +20,8 @@ import { GovernanceStateActions } from '../store/governance-store.actions';
 @Injectable()
 export class GovernanceService implements OnDestroy {
 
+  private readonly AUTO_POLL_TIMEOUT: number = 1800000; // 30 minutes
+
   private log: any = Log.create('governance.service id:' + Math.floor((Math.random() * 1000) + 1));
   private destroy$: Subject<void> = new Subject();
   private stopPolling$: Subject<void> = new Subject();
@@ -93,7 +95,7 @@ export class GovernanceService implements OnDestroy {
         tap((blockResult: RpcGetBlockchainInfo) => {
           if (isBasicObjectType(blockResult) && !!!blockResult.initialblockdownload && (+blockResult.headers > 0)) {
             const pcntComplete = +Math.fround(+blockResult.blocks / +blockResult.headers * 100).toPrecision(3);
-            this._store.dispatch(new GovernanceStateActions.SetBlockValues(+blockResult.blocks, pcntComplete));
+            this._store.dispatch(new GovernanceStateActions.SetBlockValues(+blockResult.blocks, pcntComplete, blockResult.chain));
           }
         })
       )),
