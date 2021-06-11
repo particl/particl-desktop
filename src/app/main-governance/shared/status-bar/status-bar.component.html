@@ -7,7 +7,7 @@
     <div>Current Block: {{ lastBlock | async }}</div>
 
     <div>
-      <button class="button" mat-button color="accent" appDebounceClick (debounceClick)="refreshProposals()" [disabled]="!canRefresh">
+      <button class="button" mat-button color="accent" appDebounceClick (debounceClick)="refreshProposals()" [disabled]="!(canRefresh$ | async)">
         <mat-icon fontIcon="part-refresh"></mat-icon>
         Refresh Proposals
       </button>

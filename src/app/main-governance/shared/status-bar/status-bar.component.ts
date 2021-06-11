@@ -1,7 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
-import { Observable, defer, Subject, timer, combineLatest } from 'rxjs';
-import { takeUntil, distinctUntilChanged, tap, map } from 'rxjs/operators';
+import { Observable, defer, Subject, timer, combineLatest, of, iif } from 'rxjs';
+import { takeUntil, distinctUntilChanged, map, switchMap, tap, startWith } from 'rxjs/operators';
 
 import { GovernanceState } from '../../store/governance-store.state';
 import { GovernanceService } from '../../base/governance.service';
@@ -17,24 +18,34 @@ export class StatusBarComponent implements OnInit, OnDestroy {
   @Select(GovernanceState.latestBlock) lastBlock: Observable<number>;
   @Select(GovernanceState.currentChain) network: Observable<CHAIN_TYPE | ''>;
 
-  canRefresh: boolean = false;
+  readonly canRefresh$: Observable<boolean>;
   readonly refreshCountdown$: Observable<string>;
 
 
   private destroy$: Subject<void> = new Subject();
   private performRefresh$: Observable<never>;
+  private canRefreshControl: FormControl = new FormControl(false);
 
   constructor(
     private _store: Store,
     private _governService: GovernanceService,
   ) {
 
+    // set up the observable for actually performing a refresh action
     this.performRefresh$ = defer(() => {
-      this.canRefresh = false;
+      this.canRefreshControl.setValue(false);
       this._governService.refreshProposals();
     });
 
+    // determine if the refresh button is enabled or not
+    this.canRefresh$ = combineLatest([
+      this._store.select(GovernanceState.isBlocksSynced).pipe(distinctUntilChanged(), takeUntil(this.destroy$)),
+      this.canRefreshControl.valueChanges.pipe(startWith(this.canRefreshControl.value), distinctUntilChanged(), takeUntil(this.destroy$)) as Observable<boolean>,
+    ]).pipe(
+      map(statuses => statuses[0] && statuses[1])
+    );
 
+    // set up countdown to when the next auto refresh is taking place
     this.refreshCountdown$ = combineLatest([
       timer(Date.now() % 1000, 1000).pipe(takeUntil(this.destroy$)),
       this._store.select(GovernanceState.lastSyncTime).pipe(takeUntil(this.destroy$)),
@@ -72,12 +83,19 @@ export class StatusBarComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._store.select(GovernanceState.isBlocksSynced).pipe(
-      distinctUntilChanged(),
-      tap(isSynced => this.canRefresh = isSynced),
+    // prevent timeout if a refresh was recently performed
+    const msRefreshTimeout = 5 * 1000;
+    this._store.select(GovernanceState.lastSyncTime).pipe(
+      switchMap(updateTime => iif(
+        () => (updateTime + msRefreshTimeout) <= Date.now(),
+        defer(() => of(true)),
+        defer(() => timer(msRefreshTimeout + 500).pipe(map(() => (updateTime + msRefreshTimeout) <= Date.now())))
+      )),
+      tap(value => {
+        this.canRefreshControl.setValue(value)
+      }),
       takeUntil(this.destroy$)
-    );
-
+    ).subscribe();
   }
 
 

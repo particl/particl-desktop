@@ -128,7 +128,7 @@ export class GovernanceState {
 
   @Action(GovernanceStateActions.SetRetrieveFailedStatus)
   updateRequestFailedStatus(ctx: StateContext<GovernanceStateModel>, { status }: GovernanceStateActions.SetRetrieveFailedStatus) {
-    ctx.patchState({ lastRequestErrored: !!status });
+    ctx.patchState({ lastRequestErrored: !!status, lastRequestTime: Math.round(Date.now() / 1000) * 1000 });
   }
 
 
