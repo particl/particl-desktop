@@ -1,5 +1,3 @@
-import { CoreConnectionState } from './../../core/store/coreconnection.state';
-import { ZmqConnectionState } from './../../core/store/zmq-connection.state';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
@@ -8,13 +6,16 @@ import { Subject, Observable, concat, interval, iif, defer, of, merge } from 'rx
 import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged, auditTime } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
+import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
+import { GovernanceStateActions } from '../store/governance-store.actions';
+
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType } from '../utils';
 import { RpcGetBlockchainInfo } from 'app/core/core.models';
 import { ResponseProposalDetail, ProposalItem } from './governance.models';
-import { GovernanceStateActions } from '../store/governance-store.actions';
 
 
 

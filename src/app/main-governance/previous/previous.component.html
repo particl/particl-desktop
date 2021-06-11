@@ -37,54 +37,66 @@
 
     <ng-container *ngIf="(isBlockchainSynced | async); else unsynced">
       <ng-container *ngIf="filteredProposals && (filteredProposals.length > 0); else noItems">
-        <ng-container *ngFor="let proposal of filteredProposals">
 
-          <mat-expansion-panel class="proposal list-item no-padding">
-            <mat-expansion-panel-header class="header">
-              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-                <div class="id">
-                  {{ proposal.proposalId }}
-                </div>
-                <div class="meta" fxFlex="1 1 100%">
-                  <div class="name">{{ proposal.name }}</div>
-                  <div class="desc">
-                    <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
-                    <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
+        <mat-accordion>
+          <ng-container *ngFor="let proposal of filteredProposals">
+
+            <mat-expansion-panel class="proposal list-item no-padding">
+              <mat-expansion-panel-header class="header">
+                <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                  <div class="id">
+                    {{ proposal.proposalId }}
                   </div>
-                </div><!-- .meta -->
-                <div class="status-wrap" fxFlex="0 0 140px">
-                  <div class="status active">
-                    <span class="dot"></span>
-                    Completed
+                  <div class="meta" fxFlex="1 1 100%">
+                    <div class="name">{{ proposal.name }}</div>
+                    <div class="desc">
+                      <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
+                      <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
+                    </div>
+                  </div><!-- .meta -->
+                  <div class="status-wrap" fxFlex="0 0 140px">
+                    <div class="status active">
+                      <span class="dot"></span>
+                      Completed
+                    </div>
+                    <table>
+                      <tr>
+                        <th class="title">
+                          Block Start
+                        </th>
+                        <td class="value">
+                          {{ proposal.blockStart > 0 ? proposal.blockStart : 'N/A' }}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th class="title">
+                          Block End
+                        </th>
+                        <td class="value">
+                          {{ proposal.blockEnd > 0 ? proposal.blockEnd : 'N/A' }}
+                        </td>
+                      </tr>
+                    </table>
                   </div>
-                  <table>
-                    <tr>
-                      <th class="title">
-                        Block Start
-                      </th>
-                      <td class="value">
-                        {{ proposal.blockStart > 0 ? proposal.blockStart : 'N/A' }}
-                      </td>
-                    </tr>
-                    <tr>
-                      <th class="title">
-                        Block End
-                      </th>
-                      <td class="value">
-                        {{ proposal.blockEnd > 0 ? proposal.blockEnd : 'N/A' }}
-                      </td>
-                    </tr>
-                  </table>
                 </div>
-              </div>
-            </mat-expansion-panel-header>
+              </mat-expansion-panel-header>
 
-            <div class="details">
-              TO BE COMPLETED
-            </div>
-          </mat-expansion-panel>
+              <ng-template matExpansionPanelContent>
 
-        </ng-container>
+                <div class="details">
+                    <p>Voting on this proposal has ended and the results displayed below are final</p>
+
+                    <div fxLayoutAlign="space-between stretch">
+                      <div>graph 1 here</div>
+                      <div>graph 2 here</div>
+                    </div>
+                </div>
+
+              </ng-template>
+            </mat-expansion-panel>
+
+          </ng-container>
+        </mat-accordion>
       </ng-container>
     </ng-container>
   </div>
