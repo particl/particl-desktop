@@ -1,5 +1,63 @@
 <div class="overview container-block without-tab-bar">
 
-<h1> HERE WE HAVE THE OVERVIEW PAGE</h1>
+  <app-page-intro>
+    <ng-container page-title>Particl (On-Chain) Governance</ng-container>
+    <ng-container page-content>
+
+      <h3>What Governance Is</h3>
+      <p>
+        The Particl network has a tool for community members to publish proposals named the Community Crowdfunding System (CCS). Any proposal published on the CCS can be set up to require a community vote to be activated.
+        Anyone may submit proposals on the CCS to request donations for initiatives from the community. This includes the Particl Team who will, from time to time, publish proposed objectives for the project via the CCS, and thus in turn allows for the community to particpiate in deciding on future objectives.
+      </p>
+      <h3>On-Chain Voting</h3>
+      <p>
+        Any CCS proposal can now request a network vote to determine consensus. The most common use for network votes will be for proposals requesting initiatives to be funded from the Community Fund, but can be used for other purposes as well.
+        This section displays any CCS proposals that require an on-chain vote.
+        The voting system works using staking weight, meaning that you register a vote every time you stake a block on the network. This ensures that only those with a stake or interest in the project can vote, preventing outside influence from affecting the votes unjustly
+      </p>
+
+
+      <h3>Voting Rules</h3>
+      <p>
+        For a proposal’s voting process to be considered valid, there are three requirements to fill. They are:
+      </p>
+      <ul>
+          <li>Quorum: The percentage of the blocks within a given voting process that cast a vote</li>
+          <li>Approval Rate: The percentage of the votes cast being in favor of a proposal</li>
+          <li>Duration: The number of blocks that the proposal will be available for voting on</li>
+      </ul>
+      <p>Proposals that require on-chain voting are separated into 2 categories: Consensus Vote Proposals and Non-Consensus Vote Proposals.</p>
+      <h5>Consensus Vote</h5>
+      <p>The more important of the two, these proposals can have a significant impact on the ecosystem and typically include involve proposals that initiate a change in the protocol. These have the general following requirements:</p>
+      <table>
+        <thead><tr><th>Requirement</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Quorum</td><td>20% of the blocks</td></tr>
+          <tr><td>Approval Rate</td><td>>= 75%</td></tr>
+          <tr><td>Duration</td><td>10,080 blocks (~2 weeks)</td></tr>
+        </tbody>
+      </table>
+      <h5>Non-Consensus Vote</h5>
+      <p>Not as significant, and do not require a major change in the protocol to be made. Examples of these types of proposals would be those that wish to claim funds from the Particl Community Fund, or possibly one that wishes to determine the direction of a particular initiative These have the general following requirements:</p>
+      <table>
+        <thead><tr><th>Requirement</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Quorum</td><td>20% of the blocks</td></tr>
+          <tr><td>Approval Rate</td><td>>= 60%</td></tr>
+          <tr><td>Duration</td><td>5,040 blocks (~1 week)</td></tr>
+        </tbody>
+      </table>
+
+
+      <h3>How To Vote</h3>
+      <p>To vote on a proposal, the proposal number and the vote option of your choice (a number) will need to be known. Voting is not currently built into this module, so intructions on how to vote can be found on the <a href="https://particl.wiki/tutorial/staking/how-to-vote/#how-to-vote" target="_blank">Particl Wiki</a></p>
+
+    </ng-container>
+    <ng-container page-help>
+      Below you can find results of past proposals, as well as the current progression on any proposals currently being voted on.<br>
+      More information on Proposals and Voting can be found on the <a href="https://particl.wiki/learn/misc/proposals/" target="_blank">Particl Wiki</a> and on <a href="https://particl.news/on-chain-voting-and-ccs-proposals/Particl" target="_blank">Particl News</a><br/>
+      CCS Proposals can be found on the <a href="https://ccs.particl.io/" target="_blank">Particl CCS</a> website.
+    </ng-container>
+  </app-page-intro>
 
 </div><!-- .container-block -->
