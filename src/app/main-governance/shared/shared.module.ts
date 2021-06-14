@@ -1,7 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
-import { StatusBarComponent } from './status-bar/status-bar.component';
 
 import { NightingalesRoseChartComponent } from './charts/NightingalesRoseChart/chart.component';
 
@@ -38,11 +37,9 @@ import * as echarts from 'echarts';
     NgxEchartsModule.forRoot({ echarts }),
   ],
   exports: [
-    StatusBarComponent,
     NightingalesRoseChartComponent,
   ],
   declarations: [
-    StatusBarComponent,
     NightingalesRoseChartComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
