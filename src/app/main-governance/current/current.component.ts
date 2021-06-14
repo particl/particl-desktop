@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject, combineLatest, Observable, iif, defer, of, merge } from 'rxjs';
-import { takeUntil, map, tap, startWith, distinctUntilChanged, debounceTime, switchMap, shareReplay } from 'rxjs/operators';
+import { takeUntil, map, tap, startWith, distinctUntilChanged, debounceTime, switchMap, shareReplay, take, concatMap, takeWhile } from 'rxjs/operators';
 import { xorWith } from 'lodash';
 
 import { Store, Select } from '@ngxs/store';
@@ -177,7 +177,7 @@ export class CurrentComponent implements OnInit, OnDestroy {
 
 
   fetchChartVoteData(proposalId: number, startBlock: number, endBlock: number): Observable<ChartDataItem[]> {
-    return this._governService.fetchProposalResult(proposalId, startBlock, endBlock).pipe(
+    const voteTally$ = this._governService.fetchProposalResult(proposalId, startBlock, endBlock).pipe(
       map(data => {
         if (data.proposalId !== proposalId) {
           return [];
@@ -194,6 +194,21 @@ export class CurrentComponent implements OnInit, OnDestroy {
           return cdi;
         });
       })
+    );
+
+    return this.blockCounter$.pipe(
+      take(1),
+      concatMap(currentBlock => iif(
+        // request vote tally once to check if proposal has completed.
+        () => currentBlock > endBlock,
+        // proposal already completed, so request tallied votes only once
+        voteTally$,
+        // proposal still voting, so for each new block received, re-request vote tally (until proposal has completed)
+        this.blockCounter$.pipe(
+          takeWhile(cb => cb <= endBlock),
+          switchMap(() => voteTally$)
+        )
+      ))
     );
   }
 
