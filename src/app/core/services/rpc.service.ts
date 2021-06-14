@@ -33,7 +33,8 @@ export class RpcService {
     'getblockchaininfo',
     'getpeerinfo',
     'getnetworkinfo',
-    'getblockcount'
+    'getblockcount',
+    'tallyvotes'
   ];
 
   /**

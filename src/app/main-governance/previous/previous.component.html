@@ -87,8 +87,14 @@
                     <p>Voting on this proposal has ended and the results displayed below are final</p>
 
                     <div fxLayoutAlign="space-between stretch">
-                      <div>graph 1 here</div>
-                      <div>graph 2 here</div>
+                      <div style="width: 100%; height: 100%;">
+                        <h3>Blocks Remaining:</h3>
+                        <governance-chart-rose titleData="Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                      </div>
+                      <div style="width: 100%; height: 100%;">
+                        <h3>Votes Cast:</h3>
+                        <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                      </div>
                     </div>
                 </div>
 

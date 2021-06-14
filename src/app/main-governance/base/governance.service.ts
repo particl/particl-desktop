@@ -15,7 +15,7 @@ import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType } from '../utils';
 import { RpcGetBlockchainInfo } from 'app/core/core.models';
-import { ResponseProposalDetail, ProposalItem } from './governance.models';
+import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes } from './governance.models';
 
 
 
@@ -152,4 +152,39 @@ export class GovernanceService implements OnDestroy {
   refreshProposals(): void {
     this.dataRequest$.subscribe();
   }
+
+
+  fetchProposalResult(proposalId: number, blockStart: number, blockEnd: number): Observable<TalliedVotes> {
+    return this._rpc.call('tallyvotes', [proposalId, blockStart, blockEnd]).pipe(
+      map((data: ResponseTallyVote) => {
+        const allVotes: TalliedVotes = {
+          proposalId: 0,
+          blocksCounted: 0,
+          votes: []
+        };
+
+        if (isBasicObjectType(data)) {
+          allVotes.proposalId = +data.proposal === proposalId ? +data.proposal : allVotes.proposalId;
+          allVotes.blocksCounted = getValueOrDefault(data.blocks_counted, 'number', allVotes.blocksCounted);
+
+          const genericKeys = [ 'proposal', 'blocks_counted', 'height_start', 'height_end', 'option' ];
+
+          for (const key of genericKeys) {
+            delete data[key];
+          }
+
+          for (const rKey of Object.keys(data)) {
+            const voteCount = +(getValueOrDefault(data[rKey] as string, 'string', '').split(',')[0] || '').trim();
+
+            if (voteCount >= 0) {
+              allVotes.votes.push({label: rKey, votes: voteCount});
+            }
+          }
+        }
+
+        return allVotes;
+      })
+    )
+  }
+
 }

@@ -109,22 +109,44 @@
                     </ng-template>
 
                     <div fxLayoutAlign="space-between stretch">
-                      <div>graph 1 here</div>
-                      <div>graph 2 here</div>
+                      <div style="width: 100%; height: 100%;">
+                        <h3>Vote Blocks Remaining:</h3>
+                        <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                      </div>
+                      <div style="width: 100%; height: 100%;">
+                        <h3>Votes Cast:</h3>
+                        <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                      </div>
                     </div>
 
                   </ng-container>
 
                   <ng-template #pendingProposal>
-                    <p>Voting on this proposal has not yet started.</p>
-                    <p>There is still time to review this proposal and discuss the proposal in further detail before voting begins.</p>
-                    <p>
-                      Further information on how to vote for the proposal (when voting begins) can be found here:
-                      <button mat-button color="basic" [routerLink]="['../overview']" class="small">
-                        <mat-icon fontIcon="part-overview"></mat-icon>
-                        Overview
-                      </button>
-                    </p>
+                    <div fxLayoutAlign="space-between stretch">
+
+                      <div>
+                        <p>Voting on this proposal has not yet started.</p>
+                        <p>There is still time to review this proposal and discuss the proposal in further detail before voting begins.</p>
+                        <p>
+                          Further information on how to vote for the proposal (when voting begins) can be found here:
+                          <button mat-button color="basic" [routerLink]="['../overview']" class="small">
+                            <mat-icon fontIcon="part-overview"></mat-icon>
+                            Overview
+                          </button>
+                        </p>
+                      </div>
+
+                      <div style="width: 100%; height: 100%;">
+                        <ng-container *ngIf="proposal.blockEnd === 0; else proposalTimeToGo">
+                          <p>Voting blocks for this proposal have not been decided yet</p>
+                        </ng-container>
+
+                        <ng-template #proposalTimeToGo>
+                          <governance-chart-rose titleData="Vote Starts in" [dataSeries$]="fetchChartStartBlocksCountdown(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                        </ng-template>
+                      </div>
+                    </div>
+
                   </ng-template>
                 </div>
               </ng-template>

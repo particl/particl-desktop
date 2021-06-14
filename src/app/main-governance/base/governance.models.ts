@@ -13,6 +13,16 @@ export interface ResponseProposalDetail {
 }
 
 
+export interface ResponseTallyVote {
+  proposal : number;        // The proposal id
+  option? : number;          // The option marked
+  height_start : number;    // The starting chain height
+  height_end : number;      // The ending chain height
+  blocks_counted : number;  // The ending chain height
+  // NB! Any other data presented here represents voted tallied options of the form: "Option x": total, %,(string) // The number of votes cast for option x.
+}
+
+
 export interface ProposalItem {
   proposalId: number;
   name: string;
@@ -23,4 +33,14 @@ export interface ProposalItem {
     ccs?: string;
     github?: string;
   };
+}
+
+
+export interface TalliedVotes {
+  proposalId: number;
+  blocksCounted: number;
+  votes: {
+    label: string;
+    votes: number;
+  }[];
 }
