@@ -1,0 +1,14 @@
+@import "../shared"; // shared styling for proposal items
+
+// Filter buttons at the bottom
+.filter-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.filter-button {
+  line-height: 36px;
+  &.refresh {
+    position: relative;
+  }
+}
