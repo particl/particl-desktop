@@ -194,6 +194,7 @@
     "got": "^9.6.0",
     "hammerjs": "^2.0.8",
     "iconv-lite": "^0.6.2",
+    "json2csv": "^5.0.6",
     "lodash": "^4.17.20",
     "ngx-infinite-scroll": "^8.0.0",
     "node-unzip-2": "^0.2.1",
@@ -202,6 +203,7 @@
     "particl-zmq": "^1.0.6",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
+    "rxjs-stream": "^3.2.1",
     "tslib": "1.9.3",
     "zone.js": "~0.9.1"
   },
