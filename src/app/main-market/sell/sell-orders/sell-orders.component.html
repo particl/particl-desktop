@@ -15,6 +15,13 @@
 <!-- Orders > Filter -->
 <div class="filter">
 
+  <div class="buttons">
+    <button mat-raised-button class="full-width" color="accent" [disabled]="filteredOrderIdxs.length === 0" appDebounceClick (debounceClick)="exportDisplayedOrders()">
+      <mat-icon fontIcon="part-next-double"></mat-icon>
+      Export Displayed Orders
+    </button>
+  </div>
+
   <h2 class="section-title">
     Search
   </h2>

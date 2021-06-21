@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material';
 import { Observable, Subject, of, merge, defer, iif } from 'rxjs';
 import {
   takeUntil, tap, switchMap, catchError, startWith, debounceTime,
-  distinctUntilChanged, filter, auditTime, concatMap, finalize
+  distinctUntilChanged, filter, auditTime, concatMap, finalize, take
 } from 'rxjs/operators';
 
 import { Store, Select } from '@ngxs/store';
@@ -13,6 +13,7 @@ import { MarketState } from '../../store/market.state';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
+import { IpcService } from 'app/core/services/ipc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { BidOrderService } from '../../services/orders/orders.service';
@@ -39,11 +40,40 @@ enum TextContent {
   ORDER_UPDATE_ERROR = 'Order update failed',
   ERROR_INSUFFICIENT_FUNDS = 'Insufficient funds to process order',
   ACTIONING_ORDER = 'Processing the selected item',
+  LABEL_DEFAULT_EXPORT_FILENAME_CSV = 'Filtered Orders - ${date}.csv',
+  CSV_EXPORTED_SUCCESS = 'Exported Successfully!',
+  CSV_EXPORTED_ERROR = 'Export Failed ${reason}'
 }
 
 interface BuyflowStep {
   value: BuyFlowOrderType;
   title: string;
+}
+
+
+interface ExportSellOrderItem {
+  orderId: number;
+  orderItemId: number;
+  orderHash: string;
+  orderCurrentStatusLabel: string;
+  orderCurrentStatusId: string;
+  orderIsFinalized: boolean;
+  timestampCreated: number;
+  timestampUpdated: number;
+  marketKey: string;
+  listingId: number;
+  listingTitle: string;
+  listingHash: string;
+  priceItem: string;
+  priceShipping: string;
+  priceSellerEscrow: string;
+  priceSaleValue: string;
+  shippingName: string;
+  shippingAddress: string;
+  noteBuyerEscrow: string;
+  noteBuyerRelease: string;
+  txnRelease: string;
+  txnEscrow: string;
 }
 
 
@@ -86,6 +116,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
 
   constructor(
+    private _ipc: IpcService,
     private _route: ActivatedRoute,
     private _store: Store,
     private _cdr: ChangeDetectorRef,
@@ -424,6 +455,131 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
         }
         this._snackbar.open(errMsg, 'err');
       }
+    );
+  }
+
+
+  exportDisplayedOrders(): void {
+    if (this.filteredOrderIdxs.length === 0) {
+      return;
+    }
+
+    const currentDate = new Date();
+    const dateLabel = [
+      `${currentDate.getFullYear()}`.padStart(2, '0'),
+      `${currentDate.getMonth()}`.padStart(2, '0'),
+      `${currentDate.getDate()}`.padStart(2, '0'),
+      `${currentDate.getHours()}`.padStart(2, '0'),
+      `${currentDate.getMinutes()}`.padStart(2, '0')
+    ].join('_');
+
+    const options = {
+      modalType: 'SaveDialog',
+      modalOptions: {
+        title: 'Save csv',
+        defaultPath : TextContent.LABEL_DEFAULT_EXPORT_FILENAME_CSV.replace('${date}', dateLabel),
+        buttonLabel : 'Save',
+
+        properties: ['createDirectory', 'showOverwriteConfirmation'],
+
+        filters : [
+          {name: 'csv', extensions: ['csv', ]},
+          {name: 'All Files', extensions: ['*']}
+        ]
+      }
+    };
+
+    this._ipc.runCommand('open-system-dialog', null, options).pipe(
+      take(1),
+      concatMap(path => iif(
+        () => (typeof path === 'string') && (path.length > 0),
+        defer(() => {
+          const orders = this.filteredOrderIdxs.map(idx => {
+
+            const exportOrder: ExportSellOrderItem = {
+              orderId: 0,
+              orderItemId: 0,
+              orderHash: '',
+              orderCurrentStatusLabel: '',
+              orderCurrentStatusId: '',
+              orderIsFinalized: null,
+              marketKey: '',
+              timestampCreated: 0,
+              timestampUpdated: 0,
+              listingId: 0,
+              listingTitle: '',
+              listingHash: '',
+              priceItem: '',
+              priceShipping: '',
+              priceSellerEscrow: '',
+              priceSaleValue: '',
+              shippingName: '',
+              shippingAddress: '',
+              noteBuyerEscrow: '',
+              noteBuyerRelease: '',
+              txnRelease: '',
+              txnEscrow: '',
+            };
+
+            const order = this.ordersList[idx];
+            if (order) {
+              exportOrder.orderId = order.orderId;
+              exportOrder.orderItemId = order.orderItemId;
+              exportOrder.orderHash = order.orderHash;
+              exportOrder.marketKey = order.marketKey;
+              if (order.currentState) {
+                exportOrder.orderIsFinalized = order.currentState.state.isFinalState;
+                exportOrder.orderCurrentStatusLabel = order.currentState.state.label;
+                exportOrder.orderCurrentStatusId = order.currentState.state.stateId;
+              }
+              exportOrder.marketKey = order.marketKey;
+              exportOrder.timestampCreated = order.created;
+              exportOrder.timestampUpdated = order.updated;
+
+              if (order.listing) {
+                exportOrder.listingId = order.listing.id;
+                exportOrder.listingTitle = order.listing.title;
+                exportOrder.listingHash = order.listing.hash + '"blahblah blah"';
+              }
+
+              if (order.pricing) {
+                exportOrder.priceItem = `${order.pricing.basePrice.whole}${order.pricing.basePrice.sep}${order.pricing.basePrice.fraction}`;
+                exportOrder.priceShipping = `${order.pricing.shippingPrice.whole}${order.pricing.shippingPrice.sep}${order.pricing.shippingPrice.fraction}`;
+                exportOrder.priceSellerEscrow = `${order.pricing.escrowAmount.whole}${order.pricing.escrowAmount.sep}${order.pricing.escrowAmount.fraction}`;
+                exportOrder.priceSaleValue = `${order.pricing.subTotal.whole}${order.pricing.subTotal.sep}${order.pricing.subTotal.fraction}`;
+              }
+
+              if(order.shippingDetails) {
+                exportOrder.shippingName = order.shippingDetails.name;
+                const addressParts = [
+                  order.shippingDetails.addressLine1,
+                ];
+                if (order.shippingDetails.addressLine2) addressParts.push(order.shippingDetails.addressLine2);
+                addressParts.push(
+                  order.shippingDetails.city,
+                  order.shippingDetails.state,
+                  order.shippingDetails.country,
+                  order.shippingDetails.code
+                );
+                exportOrder.shippingAddress = addressParts.join(' ; ');
+              }
+              if (order.extraDetails) {
+                exportOrder.noteBuyerEscrow = order.extraDetails.escrowMemo || '';
+                exportOrder.noteBuyerRelease = order.extraDetails.releaseMemo || '';
+                exportOrder.txnEscrow = order.extraDetails.escrowTxn || '';
+                exportOrder.txnRelease = order.extraDetails.releaseTxn || '';
+              }
+            }
+
+            return exportOrder;
+          }).filter(order => +order.orderId > 0);
+
+          return this._ipc.runCommand('market-export-writecsv', null, path, orders);
+        })
+      ))
+    ).subscribe(
+      () => this._snackbar.open(TextContent.CSV_EXPORTED_SUCCESS),
+      (err) => this._snackbar.open(TextContent.CSV_EXPORTED_ERROR.replace('${reason}', err))
     );
   }
 
