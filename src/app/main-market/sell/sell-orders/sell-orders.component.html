@@ -15,13 +15,6 @@
 <!-- Orders > Filter -->
 <div class="filter">
 
-  <div class="buttons">
-    <button mat-raised-button class="full-width" color="accent" [disabled]="filteredOrderIdxs.length === 0" appDebounceClick (debounceClick)="exportDisplayedOrders()">
-      <mat-icon fontIcon="part-next-double"></mat-icon>
-      Export Displayed Orders
-    </button>
-  </div>
-
   <h2 class="section-title">
     Search
   </h2>
@@ -70,6 +63,15 @@
     <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
     Clear all filters
   </button>
+
+  <mat-divider class="filter-separator"></mat-divider>
+
+  <div class="buttons">
+    <button mat-button class="full-width" color="accent" [disabled]="filteredOrderIdxs.length === 0" appDebounceClick (debounceClick)="exportDisplayedOrders()">
+      <mat-icon fontIcon="part-send"></mat-icon>
+      Export Displayed Orders
+    </button>
+  </div>
 
 </div><!-- .filter -->
 
