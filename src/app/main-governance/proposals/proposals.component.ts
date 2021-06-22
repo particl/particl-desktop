@@ -8,6 +8,7 @@ import { xorWith } from 'lodash';
 
 import { Store, Select } from '@ngxs/store';
 import { GovernanceState } from '../store/governance-store.state';
+import { WalletStakingState } from 'app/main/store/main.state';
 
 import { GovernanceService } from './../base/governance.service';
 
@@ -34,6 +35,7 @@ enum TextContent {
 export class ProposalsComponent implements OnInit, OnDestroy {
 
   @Select(GovernanceState.isBlocksSynced) isBlockchainSynced: Observable<boolean>;
+  @Select(WalletStakingState.getValue('cold_staking_enabled')) isColdStaking$: Observable<boolean>;
 
   readonly currentProposals$: Observable<ProposalItem[]>;
   readonly previousProposals$: Observable<ProposalItem[]>;

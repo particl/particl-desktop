@@ -180,6 +180,19 @@
               <ng-template matExpansionPanelContent>
                 <div class="details">
 
+                  <div>
+                    <p *ngIf="(isColdStaking$ | async); else hotStakingDetails">This wallet is currently cold-staking and thus any voting activity would need to occur on the cold-staking node itself and not here</p>
+
+                    <ng-template #hotStakingDetails>
+                      <p>
+                        Voting may be performed on this node. Please refer to the Particl Wiki for more information how to vote using this node.
+                      </p>
+                      <p>
+                        Remember to leave this node running and unlocked for staking only to increase your chance of this node staking and thus casting a vote!
+                      </p>
+                    </ng-template>
+                  </div>
+
                   <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposal">
 
                     <ng-container *ngIf="proposal.blockEnd <= blockCounter; else titleProposalCurrent">
