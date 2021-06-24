@@ -8,7 +8,7 @@ import { xorWith } from 'lodash';
 
 import { Store, Select } from '@ngxs/store';
 import { GovernanceState } from '../store/governance-store.state';
-import { WalletStakingState } from 'app/main/store/main.state';
+import { WalletInfoState, WalletStakingState } from 'app/main/store/main.state';
 
 import { GovernanceService } from './../base/governance.service';
 
@@ -35,12 +35,12 @@ enum TextContent {
 export class ProposalsComponent implements OnInit, OnDestroy {
 
   @Select(GovernanceState.isBlocksSynced) isBlockchainSynced: Observable<boolean>;
-  @Select(WalletStakingState.getValue('cold_staking_enabled')) isColdStaking$: Observable<boolean>;
 
   readonly currentProposals$: Observable<ProposalItem[]>;
   readonly previousProposals$: Observable<ProposalItem[]>;
   readonly canRefresh$: Observable<boolean>;
   readonly refreshCountdown$: Observable<string>;
+  readonly isColdStaking$: Observable<boolean>;
 
   readonly filterOptionsStatus: {value: string, title: string}[] = [
     {value: '', title: TextContent.LABEL_STATUS_ALL},
@@ -73,7 +73,12 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    this.currentProposals$ = combineLatest([
+    const proposalData$: Observable<ProposalItem[]> = combineLatest([
+
+      this._store.select(WalletInfoState.getValue('walletname')).pipe(
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      ),
 
       this._store.select(GovernanceState.currentProposals()).pipe(
         startWith([] as ProposalItem[]),
@@ -91,8 +96,32 @@ export class ProposalsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       ),
 
-      applyFilter$
+    ]).pipe(
+      switchMap(data => {
+        const currentProposals = data[1];
 
+        return iif(
+          () => currentProposals.length === 0,
+          defer(() => of(currentProposals)),
+          defer(() => this._governService.fetchVoteHistory().pipe(
+            map(currentVotes => {
+              for (const currentVote of currentVotes) {
+                const foundProposal = currentProposals.find(cp => cp.proposalId === currentVote.proposalId);
+                if (foundProposal) {
+                  foundProposal.voteCast = currentVote.voteCast;
+                }
+              }
+              return currentProposals;
+            })
+          ))
+        );
+
+      })
+    );
+
+    this.currentProposals$ = combineLatest([
+      proposalData$,
+      applyFilter$
     ]).pipe(
       switchMap(results => iif(
         () => !!results[1],
@@ -177,6 +206,13 @@ export class ProposalsComponent implements OnInit, OnDestroy {
         }
         return timestring;
       }),
+      takeUntil(this.destroy$)
+    );
+
+    // set up cold-staking check
+    this.isColdStaking$ = this._store.select(WalletStakingState.getValue('cold_staking_enabled')).pipe(
+      map((val: boolean) => val),
+      shareReplay(1),
       takeUntil(this.destroy$)
     );
   }
@@ -361,6 +397,11 @@ export class ProposalsComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+
+  // voteOnProposal(proposalId, blockStart, blockEnd): void {
+  //   //do something here
+  // }
 
 
   private _filterProposals(proposals: ProposalItem[]): Observable<ProposalItem[]> {

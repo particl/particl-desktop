@@ -23,6 +23,14 @@ export interface ResponseTallyVote {
 }
 
 
+export interface ResponseVoteHistory {
+  proposal: number;
+  option: number;
+  from_height: number;
+  to_height: number;
+}
+
+
 export interface ProposalItem {
   proposalId: number;
   name: string;
@@ -33,6 +41,7 @@ export interface ProposalItem {
     ccs?: string;
     github?: string;
   };
+  voteCast: number | null;
 }
 
 
@@ -43,4 +52,10 @@ export interface TalliedVotes {
     label: string;
     votes: number;
   }[];
+}
+
+
+export interface VoteHistoryItem {
+  proposalId: number;
+  voteCast: number;
 }

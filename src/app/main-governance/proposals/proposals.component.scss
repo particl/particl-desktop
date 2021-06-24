@@ -1,6 +1,16 @@
 @import "./src/assets/_config";
 
-// Filter buttons at the bottom
+.header-votes {
+  table.meta {
+    margin: 0 -24px;
+    padding: 24px var(--paddingH) 16px;
+    .title {
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 0 0 0 24px;
+    }
+  }
+}
 
 .filter {
   .mat-divider {
@@ -66,6 +76,11 @@
         }
         @include break(xl) {
           margin-bottom: 5px;
+        }
+
+        mat-icon {
+          color: var(--color-primary);
+          margin-right: 0.5em;
         }
       }
       .desc {
@@ -212,6 +227,42 @@
       }
       .value:not(:last-child) {
         border-right: 1px solid var(--bg-muted);
+      }
+    }
+  }
+}
+
+.mat-action-row {
+  padding: 12px 24px;
+  border-top: 1px solid var(--bg-muted);
+
+  &.warnings {
+    justify-content: center;
+    .alert {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+  }
+
+  &.action-buttons {
+    border-top: 1px solid var(--bg-muted);
+    padding: 12px 18px;
+
+    .reporting {
+      display: inline-block;
+      .reporting-status {
+        color: var(--text);
+        background-color: var(--color-white);
+        margin-left: -4px;
+        mat-icon {
+          color: var(--color-secondary);
+        }
+      }
+      button {
+        margin: 0;
+        .mat-icon {
+          margin-right: 4px;
+        }
       }
     }
   }

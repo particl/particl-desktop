@@ -27,12 +27,12 @@
       </ul>
       <p>Proposals that require on-chain voting are separated into 2 categories: Consensus Vote Proposals and Non-Consensus Vote Proposals.</p>
 
-      <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="header-votes" fxLayout="row" fxLayoutAlign="space-between stretch">
 
         <div>
           <h5>Consensus Vote</h5>
           <p>The more important of the two, these proposals can have a significant impact on the ecosystem and typically include involve proposals that initiate a change in the protocol. These have the general following requirements:</p>
-          <table>
+          <table class="meta">
             <thead><tr><th>Requirement</th><th></th></tr></thead>
             <tbody>
               <tr><td>Quorum</td><td>20% of the blocks</td></tr>
@@ -48,9 +48,9 @@
           <table>
             <thead><tr><th>Requirement</th><th></th></tr></thead>
             <tbody>
-              <tr><td>Quorum</td><td>20% of the blocks</td></tr>
-              <tr><td>Approval Rate</td><td>>= 60%</td></tr>
-              <tr><td>Duration</td><td>5,040 blocks (~1 week)</td></tr>
+              <tr><td class="title">Quorum</td><td>20% of the blocks</td></tr>
+              <tr><td class="title">Approval Rate</td><td>>= 60%</td></tr>
+              <tr><td class="title">Duration</td><td>5,040 blocks (~1 week)</td></tr>
             </tbody>
           </table>
         </div>
@@ -151,7 +151,7 @@
               <mat-expansion-panel-header class="header">
                 <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
                   <div class="meta" fxFlex="1 1 100%">
-                    <div class="name">({{proposal.proposalId}}) {{ proposal.name }}</div>
+                    <div class="name"> <mat-icon *ngIf="+proposal.voteCast > 0" fontIcon="part-circle-check"></mat-icon>({{proposal.proposalId}}) {{ proposal.name }}</div>
                     <div class="desc">
                       <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
                       <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
@@ -168,18 +168,6 @@
 
               <ng-template matExpansionPanelContent>
                 <div class="details">
-
-                  <div>
-                    <div *ngIf="(isColdStaking$ | async); else hotStakingDetails" class="alert --boxed --warning">
-                      <span>This wallet is currently cold-staking. Voting would need to be performed via the cold-staking wallet.</span>
-                    </div>
-
-                    <ng-template #hotStakingDetails>
-                      <p class="alert --boxed --info">
-                        <span>Please refer to the Particl Wiki for more information how to vote using this wallet.</span>
-                      </p>
-                    </ng-template>
-                  </div>
 
                   <h3 class="box-title">Voting Summary</h3>
                   <p class="desc">
@@ -243,6 +231,32 @@
                   </ng-template>
 
                 </div>
+
+                <mat-action-row *ngIf="(isColdStaking$ | async); else votingActions" class="warnings">
+                  <div class="alert --boxed --warning">
+                    <span>This wallet is currently cold-staking. Voting would need to be performed via the cold-staking wallet.</span>
+                  </div>
+                </mat-action-row>
+
+                <ng-template #votingActions>
+                  <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+                    <div class="left">
+                      <div class="reporting">
+                        <button mat-button disabled color="primary" class="reporting-status" tabindex="-1" (click)="null;">
+                          <mat-icon fontIcon="part-circle-info"></mat-icon>
+                          <strong>Your current vote</strong>: {{ proposal.voteCast || "Abstain" }}
+                        </button>
+                      </div><!-- .reporting -->
+                    </div>
+                    <!-- <div class="right">
+                      <button mat-raised-button color="primary" matTooltip="Vote on this proposal" appDebounceClick (debounceClick)="voteOnProposal(proposal.proposalId, proposal.blockStart, proposal.blockEnd)">
+                        <mat-icon fontIcon="part-notification-speaker"></mat-icon>
+                        Set Vote
+                      </button>
+                    </div> -->
+                  </mat-action-row>
+                </ng-template>
+
               </ng-template>
             </mat-expansion-panel>
 

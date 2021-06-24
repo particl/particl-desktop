@@ -15,7 +15,7 @@ import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType } from '../utils';
 import { RpcGetBlockchainInfo } from 'app/core/core.models';
-import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes } from './governance.models';
+import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes, ResponseVoteHistory, VoteHistoryItem } from './governance.models';
 
 
 
@@ -47,7 +47,8 @@ export class GovernanceService implements OnDestroy {
             blockStart: 0,
             blockEnd: 0,
             infoUrls: {},
-            network: null
+            network: null,
+            voteCast: null,
           };
 
           if (!isBasicObjectType(rpd)) {
@@ -185,6 +186,33 @@ export class GovernanceService implements OnDestroy {
         return allVotes;
       })
     )
+  }
+
+
+  fetchVoteHistory(): Observable<VoteHistoryItem[]> {
+    return this._rpc.call('votehistory', [true, true]).pipe(
+      catchError(() => of([])),
+      map((rpcCastVotes: ResponseVoteHistory[]) => {
+        const items: VoteHistoryItem[] = [];
+
+        if (Array.isArray(rpcCastVotes)) {
+          rpcCastVotes.forEach(rpcCastVote => {
+            if (isBasicObjectType(rpcCastVote)) {
+              const voteItem: VoteHistoryItem = {
+                proposalId: +rpcCastVote.proposal > 0 ? +rpcCastVote.proposal : 0,
+                voteCast: +rpcCastVote.option >= 0 ? +rpcCastVote.option : null,
+              };
+
+              if ((voteItem.proposalId !== 0) && voteItem.voteCast !== null) {
+                items.push(voteItem);
+              }
+            }
+          });
+        }
+
+        return items;
+      })
+    );
   }
 
 }
