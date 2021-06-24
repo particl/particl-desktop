@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { Observable, Subject, merge } from 'rxjs';
-import { takeUntil, skipWhile, tap, distinctUntilChanged, switchMap, map, shareReplay, startWith } from 'rxjs/operators';
+import { takeUntil, skipWhile, tap, distinctUntilChanged, switchMap, map, shareReplay } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
@@ -59,6 +59,7 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
 
   private walletSwitcherControl: FormControl = new FormControl('');
+  @ViewChild(MatExpansionPanel, {static: true}) private walletSelectorPanel: MatExpansionPanel;
 
 
   constructor(
@@ -142,6 +143,7 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
 
 
   switchWallet(wallet: Wallet) {
+    this.walletSelectorPanel.close();
     this.walletSwitcherControl.setValue(wallet.name);
   }
 
