@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
 import { Log } from 'ng2-logger';
 import { Subject, Observable, concat, interval, iif, defer, of, merge } from 'rxjs';
-import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged, auditTime } from 'rxjs/operators';
+import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged, auditTime, mapTo } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
@@ -15,7 +15,7 @@ import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType } from '../utils';
 import { RpcGetBlockchainInfo } from 'app/core/core.models';
-import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes, ResponseVoteHistory, VoteHistoryItem } from './governance.models';
+import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes, ResponseVoteHistory, VoteHistoryItem, ResponseSetVote } from './governance.models';
 
 
 
@@ -65,6 +65,14 @@ export class GovernanceService implements OnDestroy {
             const linkParam = `link-${url}`;
             if ((getValueOrDefault(rpd[linkParam], 'string', '').length > 0) && rpd[linkParam].startsWith('https://')) {
               newItem.infoUrls[url] = rpd[linkParam];
+            }
+          }
+
+          // caters for some weird testnet 'link field that doesn't match the other format
+          if ((newItem.network === 'test') && !newItem.infoUrls.github) {
+            const testnetlink = getValueOrDefault(rpd.link, 'string', '');
+            if ((testnetlink.length > 0) && testnetlink.startsWith('https://github.com/particl/ccs-proposals')) {
+              newItem.infoUrls.github = testnetlink;
             }
           }
 
@@ -213,6 +221,19 @@ export class GovernanceService implements OnDestroy {
         return items;
       })
     );
+  }
+
+
+  voteOnProposal(voteCast: number, proposalId: number, blockStart: number, blockEnd: number): Observable<boolean> {
+    return defer(() => {
+      if ((+voteCast >= 0) && (+proposalId > 0) && (+blockStart >= 0) && (+blockEnd >= 0) && (blockStart <= blockEnd)) {
+        return this._rpc.call('setvote', [voteCast === 0 ? 0 : proposalId, voteCast, blockStart, blockEnd]).pipe(
+          mapTo(true),
+          catchError(() => of(false))
+        );
+      }
+      return of(false);
+    });
   }
 
 }

@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { GovernanceSharedModule } from '../shared/shared.module';
 import { ProposalsComponent } from './proposals.component';
+import { SetVoteModalComponent } from './set-vote-modal/set-vote-modal.component';
 
 
 const routes: Routes = [
@@ -22,7 +23,11 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    ProposalsComponent
+    ProposalsComponent,
+    SetVoteModalComponent,
+  ],
+  entryComponents: [
+    SetVoteModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

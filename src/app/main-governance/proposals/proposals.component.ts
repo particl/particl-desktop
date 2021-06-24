@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 import { Subject, combineLatest, Observable, iif, defer, of, merge, timer } from 'rxjs';
 import {
   takeUntil, map, tap, startWith, distinctUntilChanged, debounceTime, switchMap, shareReplay, take, concatMap, takeWhile
@@ -11,6 +12,9 @@ import { GovernanceState } from '../store/governance-store.state';
 import { WalletInfoState, WalletStakingState } from 'app/main/store/main.state';
 
 import { GovernanceService } from './../base/governance.service';
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { SetVoteModalComponent, ProposalModalData } from './set-vote-modal/set-vote-modal.component';
 
 import { ProposalItem } from '../base/governance.models';
 import { ChartDataItem } from './../shared/charts/charts.models';
@@ -24,7 +28,8 @@ enum TextContent {
   LABEL_BLOCKS_REMAINING = 'Remaining',
   LABEL_BLOCKS_COMPLETED = 'Completed',
   LABEL_BLOCKS_TO_START = 'Starting In',
-  LABEL_PROPOSAL_DURATION = 'Proposal Duration'
+  LABEL_PROPOSAL_DURATION = 'Proposal Duration',
+  SET_VOTE_FAILED = 'An error occurred whlie setting the proposal\'s vote'
 }
 
 
@@ -61,11 +66,15 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   private applyFilter: FormControl = new FormControl(false);
   private performRefresh$: Observable<never>;
   private canRefreshControl: FormControl = new FormControl(true);
+  private forceUpdateCurrentControl: FormControl = new FormControl();
 
 
   constructor(
     private _store: Store,
-    private _governService: GovernanceService
+    private _governService: GovernanceService,
+    private _unlocker: WalletEncryptionService,
+    private _dialog: MatDialog,
+    private _snackbar: SnackbarService
   ) {
 
     const applyFilter$: Observable<boolean> = this.applyFilter.valueChanges.pipe(
@@ -96,6 +105,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       ),
 
+      this.forceUpdateCurrentControl.valueChanges.pipe(startWith(0), takeUntil(this.destroy$))
+
     ]).pipe(
       switchMap(data => {
         const currentProposals = data[1];
@@ -105,12 +116,17 @@ export class ProposalsComponent implements OnInit, OnDestroy {
           defer(() => of(currentProposals)),
           defer(() => this._governService.fetchVoteHistory().pipe(
             map(currentVotes => {
-              for (const currentVote of currentVotes) {
-                const foundProposal = currentProposals.find(cp => cp.proposalId === currentVote.proposalId);
-                if (foundProposal) {
-                  foundProposal.voteCast = currentVote.voteCast;
+              const pvSet = new Set(currentVotes.map(cv => cv.proposalId));
+
+              for (let ii = 0; ii < currentProposals.length; ii++) {
+                let proposal = currentProposals[ii];
+                let voteCast: number = null;
+                if (pvSet.has(proposal.proposalId)) {
+                  voteCast = currentVotes.find(cv => cv.proposalId === proposal.proposalId).voteCast;
                 }
+                currentProposals[ii] = {...proposal, voteCast};
               }
+
               return currentProposals;
             })
           ))
@@ -399,9 +415,42 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
 
-  // voteOnProposal(proposalId, blockStart, blockEnd): void {
-  //   //do something here
-  // }
+  voteOnProposal(proposalId, blockStart, blockEnd, proposalTitle: string, voteCast: number | null): void {
+    if ((+proposalId > 0) && (+blockStart > 0) && (+blockEnd > 0) && (blockStart < blockEnd)) {
+
+      const proposalData: ProposalModalData = {
+        proposalId,
+        proposalTitle,
+        existingVote: voteCast,
+      };
+
+      this._dialog.open(SetVoteModalComponent, {data: proposalData}).afterClosed().pipe(
+        take(1),
+        concatMap((voteCast: number | null | undefined) => iif(
+
+          () => (typeof voteCast === 'number') && +voteCast >=0,
+
+          defer(() => this._unlocker.unlock({timeout: 10}).pipe(
+            concatMap(unlocked => iif(
+              () => unlocked,
+
+              defer(() => this._governService.voteOnProposal(voteCast, proposalId, blockStart, blockEnd).pipe(
+                tap(success => {
+                  if (success) {
+                    this.forceUpdateCurrentControl.setValue(0);
+                  } else {
+                    this._snackbar.open(TextContent.SET_VOTE_FAILED, 'err');
+                  }
+                })
+              ))
+
+            ))
+
+          ))
+        ))
+      ).subscribe();
+    }
+  }
 
 
   private _filterProposals(proposals: ProposalItem[]): Observable<ProposalItem[]> {

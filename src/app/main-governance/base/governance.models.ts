@@ -6,6 +6,7 @@ export interface ResponseProposalDetail {
   blockheight_start: number;
   "link-ccs": string;
   "link-github": string;
+  link?: string;
   name: string;
   network: 'mainnet' | 'testnet';
   proposalid: number;
@@ -26,6 +27,13 @@ export interface ResponseTallyVote {
 export interface ResponseVoteHistory {
   proposal: number;
   option: number;
+  from_height: number;
+  to_height: number;
+}
+
+
+export interface ResponseSetVote {
+  result: string;
   from_height: number;
   to_height: number;
 }

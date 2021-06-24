@@ -249,16 +249,18 @@
                       <div class="reporting">
                         <button mat-button disabled color="primary" class="reporting-status" tabindex="-1" (click)="null;">
                           <mat-icon fontIcon="part-circle-info"></mat-icon>
-                          <strong>Your current vote</strong>: {{ proposal.voteCast || "Abstain" }}
+                          <span><strong>Your current vote</strong>: {{ proposal.voteCast || "Abstain" }}</span>
                         </button>
                       </div><!-- .reporting -->
                     </div>
-                    <!-- <div class="right">
-                      <button mat-raised-button color="primary" matTooltip="Vote on this proposal" appDebounceClick (debounceClick)="voteOnProposal(proposal.proposalId, proposal.blockStart, proposal.blockEnd)">
-                        <mat-icon fontIcon="part-notification-speaker"></mat-icon>
-                        Set Vote
+                    <div class="right">
+                      <button mat-raised-button color="primary" matTooltip="Vote on this proposal" appDebounceClick (debounceClick)="voteOnProposal(proposal.proposalId, proposal.blockStart, proposal.blockEnd, proposal.name, proposal.voteCast)">
+                        <mat-icon fontIcon="part-vote"></mat-icon>
+                        <span>
+                          <ng-container *ngIf="+proposal.voteCast > 0; else labelNoVoteButton">Update Proposal Vote</ng-container><ng-template #labelNoVoteButton>Vote On Proposal</ng-template>
+                        </span>
                       </button>
-                    </div> -->
+                    </div>
                   </mat-action-row>
                 </ng-template>
 
@@ -364,7 +366,7 @@
 
 <ng-template #unsynced>
   <div class="no-results">
-    <img class="illustration" src="./assets/images/illustrations/loading_animated.svg" alt="Blockchain is busy syncing">
+    <img class="illustration" src="./assets/images/illustrations/blockchain-sync_animated.svg" alt="Blockchain is busy syncing">
     <p>
       Determining Blockchain Sync Status
     </p>

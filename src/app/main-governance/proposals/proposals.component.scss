@@ -295,11 +295,12 @@
           color: var(--color-secondary);
         }
       }
-      button {
-        margin: 0;
-        .mat-icon {
-          margin-right: 4px;
-        }
+    }
+
+    button {
+      margin: 0;
+      mat-icon {
+        margin-right: 6px;
       }
     }
   }
