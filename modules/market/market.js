@@ -7,6 +7,7 @@ const rxIpc = require('rx-ipc-electron/lib/main').default;
 const Observable = require('rxjs').Observable;
 const bitcore = require('particl-bitcore-lib');
 const importer = require('./importer/importer');
+const exporter = require('./exporter/exporter');
 const _fs = require('fs');
 const _path = require('path');
 
@@ -23,6 +24,7 @@ let timeoutMonitor = null;
 exports.init = function() {
   exports.destroy();
   importer.init();
+  exporter.init();
   rxIpc.registerListener('start-market', function(appPort, zmqPort, timeout) {
     return new Observable(observer => {
 
@@ -149,12 +151,13 @@ exports.init = function() {
         }
       }
     });
-  })
+  });
 }
 
 
 exports.destroy = function() {
   importer.destroy();
+  exporter.destroy();
   rxIpc.removeListeners('start-market');
   rxIpc.removeListeners('stop-market');
   rxIpc.removeListeners('market-keygen');
