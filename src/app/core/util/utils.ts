@@ -10,7 +10,7 @@ export class PartoshiAmount {
   private amount: string = '0';
 
   constructor(amount: number, isPartoshiValue: boolean = false) {
-    const num = isPartoshiValue ? Math.round(+amount) : Math.round((+amount * Math.pow(10, 8)));
+    const num = isPartoshiValue ? Math.floor(+amount) : Math.round((+amount * Math.pow(10, 8)));
     this.amount = this.isValid(num) ? `${num}` : this.amount;
   }
 
