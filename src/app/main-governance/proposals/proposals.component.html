@@ -165,7 +165,8 @@
                   <div class="status-wrap" fxFlex="0 0 140px">
                     <div class="status" [class.active]="(blockCounter > proposal.blockStart) && (proposal.blockStart > 0)">
                       <span class="dot"></span>
-                      {{ (proposal.blockStart === 0) || (proposal.blockStart > blockCounter) ? 'Pending' : 'Active' }}
+                      <ng-container *ngIf="(proposal.blockStart === 0) || (proposal.blockStart > blockCounter); else textActiveLabel">Pending</ng-container>
+                      <ng-template #textActiveLabel>Active</ng-template>
                     </div>
                   </div>
                 </div>
@@ -202,7 +203,7 @@
                         <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
                         <td class="title">Remaining Blocks</td>
                         <td class="value">
-                          {{ (proposal.blockStart > 0) && (blockCounter >= blockStart) ? (proposal.blockEnd - proposal.blockStart) : "N/A" }}
+                          <ng-container *ngIf="(proposal.blockStart > 0) && (blockCounter >= blockStart); else notApplicableText">{{ (proposal.blockEnd - proposal.blockStart) }}</ng-container>
                         </td>
                       </tr>
                     </table>
@@ -231,7 +232,7 @@
                   <ng-template #pendingProposalGraphs>
                     <h3 class="box-title">Vote Starts In</h3>
                     <p class="desc">
-                      Blocks remaining until vote starts: {{ (proposal.blockStart > 0) ? proposal.blockStart - blockCounter : "N/A" }}
+                      Blocks remaining until vote starts: <ng-container *ngIf="proposal.blockStart > 0; else notApplicableText">{{ proposal.blockStart - blockCounter }}</ng-container>
                     </p>
                   </ng-template>
 
@@ -362,6 +363,9 @@
   </div>
 
 </div>
+
+
+<ng-template #notApplicableText>N/A</ng-template>
 
 
 <ng-template #unsynced>

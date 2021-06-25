@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 body {
   margin: 0 !important;
@@ -112,7 +112,7 @@ body {
       animation-delay: 0.8s;
       animation-fill-mode: forwards; // stay on the last "frame"
       position: absolute;
-      top: 50%;
+      // top: 50%;
       left: -50px;
       z-index: 10;
       top: calc(50% - (var(--app-height) / 2));
@@ -134,8 +134,7 @@ body {
         }
         &:hover,
         &:focus {
-          box-shadow: 0 1px 0 var(--bg-muted),
-            0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+          box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
         }
         .mat-icon {
           font-size: 22px;

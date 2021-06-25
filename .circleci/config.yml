@@ -24,10 +24,10 @@ jobs:
           name: CodeSpell Checking
           command: codespell --version && codespell -S=node_modules,dist,packages,.git,./src/assets,*mock-data,*terms-txt.ts,*yarn.lock,*package.json -L=datas,sortings,Ether,iif
           no_output_timeout: 2m
-      # - run:
-      #     name: Lint Codebase
-      #     command: yarn lint
-      #     no_output_timeout: 2m
+      - run:
+          name: Lint Codebase
+          command: yarn lint
+          no_output_timeout: 2m
       - run:
           name: Test Codabase
           command: yarn travis:test

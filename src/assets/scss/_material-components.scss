@@ -39,7 +39,7 @@ Customizations and modifiers for default Material components
       3.5. Radios
       3.6. Checkboxes
       3.7. Toggle Buttons
-    
+
     4. Plug-ins
       4.1. Lightbox gallery
 
@@ -105,7 +105,7 @@ a.mat-raised-button {
   &.not-round {
     border-radius: 0;
   }
-  &.--no-ripple {
+  &.#{--no-ripple} {
     .mat-button-ripple,
     .mat-button-focus-overlay {
       display: none;
@@ -121,7 +121,7 @@ mat-icon.mat-icon {
   height: auto !important;
   font-size: 16px;
   &.material-icons {
-    font-family: "part" !important; // overwrite Material icons by ours by default
+    font-family: 'part' !important; // overwrite Material icons by ours by default
     font-weight: 400 !important;
     line-height: 1;
   }
@@ -363,7 +363,7 @@ mat-expansion-panel.mat-expansion-panel {
     background: none !important;
   }
   // sell > import listings (custom layout)
-  &.--stepper-above-page-title {
+  &.#{--stepper-above-page-title} {
     .mat-horizontal-stepper-header-container {
       margin: calc(-1 * var(--paddingV)) calc(-1 * var(--paddingH)) 0;
       padding: 0 calc(var(--paddingH) - 24px);
@@ -429,12 +429,12 @@ mat-expansion-panel.mat-expansion-panel {
 .cdk-overlay-container { // needs high specificity to override default Mat styling
   .cdk-overlay-backdrop {
     backdrop-filter: blur(2px);
-    background: rgba(0, 0, 0, 0.25)
+    background: rgba(0, 0, 0, 0.25);
   }
   .mat-dialog-container {
     position: relative;
     max-width: 1000px;
-    padding: 18px 24px 24px 24px;
+    padding: 18px 24px 24px;
     .modal-close { // new modal close button (use with `mat-button color="warn"`
       @extend %tfx;
       position: absolute;
@@ -484,7 +484,7 @@ mat-dialog-title,
 mat-dialog-content.mat-dialog-content {
   line-height: 1.5;
   margin: 0 -24px;
-  &.--muted {
+  &.#{--muted} {
     background: var(--bg);
     border-top: 1px solid var(--bg-muted);
     border-bottom: 1px solid var(--bg-muted);
@@ -605,7 +605,7 @@ mat-dialog-actions.mat-dialog-actions {
       color: var(--text-muted);
     }
   }
-  &.--smaller { // smaller line height for menu items
+  &.#{--smaller} { // smaller line height for menu items
     .mat-menu-item {
       height: 36px;
       line-height: 36px;
@@ -615,7 +615,7 @@ mat-dialog-actions.mat-dialog-actions {
       }
     }
   }
-  &.--with-images { // menu options with images (e.g. Logos in Market selector)
+  &.#{--with-images} { // menu options with images (e.g. Logos in Market selector)
     .image {
       width: 24px;
       height: 24px;
@@ -679,7 +679,7 @@ mat-tree.mat-tree {
     color: var(--text);
   }
   // Market > Category/country filters: items clickable on their full width
-  &.--full-width-labels {
+  &.#{--full-width-labels} {
     .mat-checkbox-layout {
       display: block;
     }
@@ -701,7 +701,7 @@ label {
   .label {
     @extend %box-title;
     padding: var(--formfield-paddingV) 0 1px;
-    margin: 0 0 -0.6em 0;
+    margin: 0 0 -0.6em;
     position: relative;
     z-index: 2; // make sure label is on top (e.g. when character counter is present)
   }
@@ -713,12 +713,12 @@ label {
   & > .label {
     padding: var(--formfield-paddingV) var(--formfield-paddingH) 0;
   }
-  &.--larger {
+  &.#{--larger} {
     & > .label {
       padding: calc(var(--formfield-large-multi) * var(--formfield-paddingV)) calc(var(--formfield-large-multi) * var(--formfield-paddingH)) 0;
-      @include break(xl) {
-        //margin: 0 0 -0.9em 0;
-      }
+      // @include break(xl) {
+      //   //margin: 0 0 -0.9em 0;
+      // }
     }
     & > .label-desc {
       padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
@@ -798,7 +798,7 @@ label {
     margin-right: -8px;
   }
 
-  &.--larger {
+  &.#{--larger} {
     /*
     .label { // manually added labels, e.g. on Send page
       padding: 22px 0 0;
@@ -817,21 +817,21 @@ label {
       }
     }
   }
-  &.--smaller {
+  &.#{--smaller} {
     .mat-form-field-flex {
       padding: 0 calc(var(--formfield-small-multi) * var(--formfield-paddingH));
     }
   }
-  
+
   // Boxed, standalone variant (common)
-  &.--boxed {
+  &.#{--boxed} {
     box-shadow: 0 1px 10px -4px hsla(var(--text-hsl), 0.3);
     border-radius: var(--radius) var(--radius) 0 0;
     margin-bottom: 16px;
   }
 
   // Plain variant, used inside of MatCards
-  &.--plain {
+  &.#{--plain} {
     margin-bottom: 0;
     border-radius: 0;
     .mat-form-field-flex {
@@ -847,8 +847,8 @@ label {
       margin: 0;
     }
     // Send: Larger padding around input
-    &.--larger,
-    &.--largest {
+    &.#{--larger},
+    &.#{--largest} {
       font-size: var(--formfield-font-size-large);
       .mat-form-field-flex {
         padding: 0 calc(var(--formfield-large-multi) * var(--formfield-paddingH));
@@ -861,7 +861,7 @@ label {
         right: 14px;
       }
     }
-    &.--largest {
+    &.#{--largest} {
       font-size: 18px;
     }
   } // << INPUTS
@@ -879,7 +879,7 @@ label {
       }
     }
 
-    &.--larger {
+    &.#{--larger} {
       font-size: 15px;
       .mat-form-field-infix {
         padding: calc(1.4 * var(--formfield-paddingV)) 0;
@@ -889,7 +889,7 @@ label {
         }
       }
     }
-    &.--smaller {
+    &.#{--smaller} {
       .mat-form-field-infix {
         padding: calc(0.7 * var(--formfield-paddingV)) 0;
         min-width: 120px;
@@ -898,7 +898,7 @@ label {
     }
 
     // Boxed, standalone variant
-    &.--boxed {
+    &.#{--boxed} {
       .mat-form-field-infix {
         padding: var(--formfield-paddingV) 0;
       }
@@ -928,7 +928,7 @@ label {
         width: calc(100% - var(--formfield-paddingV));
       }
     }
-    &.--larger {
+    &.#{--larger} {
       .mat-form-field-flex {
         padding: 0 6px 10px calc(var(--formfield-large-multi) * var(--formfield-paddingH));
       }
@@ -1019,7 +1019,7 @@ mat-option.mat-option {
     color: var(--text) !important;
     font-weight: 500;
   }
-  &.--larger {
+  &.#{--larger} {
     .mat-option-text {
       font-size: 15px;
     }
@@ -1130,7 +1130,7 @@ mat-option.mat-option {
         }
         &:hover,
         &:focus {
-          background: hsla(var(--text-hsl), .04);
+          background: hsla(var(--text-hsl), 0.04);
         }
         &.mat-button-toggle-checked {
           background: hsla(var(--color-info-hsl), 0.1);

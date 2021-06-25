@@ -31,17 +31,17 @@
     background: var(--bg);
     margin: 14px 8px 0 var(--content-paddingH);
   }
-  &.--inactive { // not activated
+  &.#{--inactive} { // not activated
     .dot {
       background: hsla(var(--text-muted-hsl), 0.4);
     }
   }
-  &.--active {
+  &.#{--active} {
     .dot {
       background: var(--color-primary);
     }
   }
-  &.--paused { // set up, wallet locked
+  &.#{--paused} { // set up, wallet locked
     .dot {
       background: var(--color-info);
       position: relative;
