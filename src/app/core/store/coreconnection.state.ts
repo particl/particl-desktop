@@ -113,7 +113,7 @@ export class CoreConnectionState {
           new Global.ChangeMode(null),
         ]).pipe(
           tap(() => ctx.dispatch(new Global.Connected()))
-        )
+        );
       })
     ).subscribe();
   }

@@ -4,8 +4,8 @@ import { CHAIN_TYPE } from 'app/core/core.models';
 export interface ResponseProposalDetail {
   blockheight_end: number;
   blockheight_start: number;
-  "link-ccs": string;
-  "link-github": string;
+  'link-ccs': string;
+  'link-github': string;
   link?: string;
   name: string;
   network: 'mainnet' | 'testnet';
@@ -15,12 +15,13 @@ export interface ResponseProposalDetail {
 
 
 export interface ResponseTallyVote {
-  proposal : number;        // The proposal id
-  option? : number;          // The option marked
-  height_start : number;    // The starting chain height
-  height_end : number;      // The ending chain height
-  blocks_counted : number;  // The ending chain height
-  // NB! Any other data presented here represents voted tallied options of the form: "Option x": total, %,(string) // The number of votes cast for option x.
+  proposal: number;        // The proposal id
+  option?: number;          // The option marked
+  height_start: number;    // The starting chain height
+  height_end: number;      // The ending chain height
+  blocks_counted: number;  // The ending chain height
+  // NB! Any other data presented here represents voted tallied options of the form:
+  //  "Option x": total, %,(string) // The number of votes cast for option x.
 }
 
 

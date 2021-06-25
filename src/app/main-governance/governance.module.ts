@@ -11,7 +11,7 @@ import { routeData } from './governance.routing';
 
 const actualRoutes: Routes = routeData.map(rd => ({path: rd.path, loadChildren: rd.lazyModule}));
 if (actualRoutes.length) {
-  actualRoutes.push({path: '**', redirectTo: (routeData.find(rd => !!rd.isFallbackRoute) || routeData[0]).path })
+  actualRoutes.push({path: '**', redirectTo: (routeData.find(rd => !!rd.isFallbackRoute) || routeData[0]).path });
 }
 
 const routes: Routes = [

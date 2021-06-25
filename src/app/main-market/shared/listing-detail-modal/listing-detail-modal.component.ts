@@ -396,7 +396,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
         }
       }),
       takeUntil(this.destroy$)
-    )
+    );
 
     if (query$.length > 0) {
       merge(...query$).subscribe();

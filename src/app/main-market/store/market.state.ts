@@ -85,7 +85,9 @@ export class MarketState {
 
   @Selector()
   static currentIdentity(state: MarketStateModel): Identity {
-    return +state.identity ? state.identities.find(id => id.id === +state.identity) || JSON.parse(JSON.stringify(NULL_IDENTITY)) : JSON.parse(JSON.stringify(NULL_IDENTITY));
+    return +state.identity ?
+      state.identities.find(id => id.id === +state.identity) || JSON.parse(JSON.stringify(NULL_IDENTITY)) :
+      JSON.parse(JSON.stringify(NULL_IDENTITY));
   }
 
 

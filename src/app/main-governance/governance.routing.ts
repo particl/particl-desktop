@@ -5,8 +5,8 @@ interface RouteItem {
   path: string;
   text: string;
   icon?: string;
-  lazyModule: LoadChildren,
-  isFallbackRoute?: boolean
+  lazyModule: LoadChildren;
+  isFallbackRoute?: boolean;
 }
 
 enum TextContent {

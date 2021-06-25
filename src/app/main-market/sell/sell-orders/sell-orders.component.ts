@@ -549,12 +549,14 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
                 exportOrder.priceSaleValue = `${order.pricing.subTotal.whole}${order.pricing.subTotal.sep}${order.pricing.subTotal.fraction}`;
               }
 
-              if(order.shippingDetails) {
+              if (order.shippingDetails) {
                 exportOrder.shippingName = order.shippingDetails.name;
                 const addressParts = [
                   order.shippingDetails.addressLine1,
                 ];
-                if (order.shippingDetails.addressLine2) addressParts.push(order.shippingDetails.addressLine2);
+                if (order.shippingDetails.addressLine2) {
+                  addressParts.push(order.shippingDetails.addressLine2);
+                }
                 addressParts.push(
                   order.shippingDetails.city,
                   order.shippingDetails.state,

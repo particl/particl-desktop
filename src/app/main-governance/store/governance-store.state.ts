@@ -133,7 +133,10 @@ export class GovernanceState {
 
 
   @Action(GovernanceStateActions.SetBlockValues)
-  updateBlockStatusValues(ctx: StateContext<GovernanceStateModel>, { blockCount, percentComplete, chainType }: GovernanceStateActions.SetBlockValues) {
+  updateBlockStatusValues(
+    ctx: StateContext<GovernanceStateModel>,
+    { blockCount, percentComplete, chainType }: GovernanceStateActions.SetBlockValues
+  ) {
     const patchVals: Partial<GovernanceStateModel> = {};
     const currentState = ctx.getState();
     if (currentState.chain !== chainType) {

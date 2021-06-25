@@ -438,7 +438,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
               const newListingRef = this.listings[listingIdx];
               if (newListingRef && newListingRef.id === listing.id) {
                 const badHash = newListingRef.hash;
-                let tobeRemoved: number[] = [];
+                const tobeRemoved: number[] = [];
 
                 // looping over all listings because there is a need to remove potential duplicates as well
                 for (let ii = 0; ii < this.listings.length; ii++) {

@@ -5,11 +5,11 @@ export interface ChartDataItem {
   value: number;
   itemStyle?: {
     color?: string;
-  }
+  };
   label?: {
     show: boolean;
     position?: 'outside' | 'inside';
     color?: string;
     backgroundColor?: string;
-  }
+  };
 }

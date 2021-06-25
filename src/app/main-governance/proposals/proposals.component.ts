@@ -119,7 +119,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
               const pvSet = new Set(currentVotes.map(cv => cv.proposalId));
 
               for (let ii = 0; ii < currentProposals.length; ii++) {
-                let proposal = currentProposals[ii];
+                const proposal = currentProposals[ii];
                 let voteCast: number = null;
                 if (pvSet.has(proposal.proposalId)) {
                   voteCast = currentVotes.find(cv => cv.proposalId === proposal.proposalId).voteCast;
@@ -185,7 +185,11 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     // determine if the refresh button is enabled or not
     this.canRefresh$ = combineLatest([
       this._store.select(GovernanceState.isBlocksSynced).pipe(distinctUntilChanged(), takeUntil(this.destroy$)),
-      this.canRefreshControl.valueChanges.pipe(startWith(this.canRefreshControl.value), distinctUntilChanged(), takeUntil(this.destroy$)) as Observable<boolean>,
+      this.canRefreshControl.valueChanges.pipe(
+        startWith(this.canRefreshControl.value),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$)
+      ) as Observable<boolean>,
     ]).pipe(
       map(statuses => statuses[0] && statuses[1])
     );
@@ -267,11 +271,9 @@ export class ProposalsComponent implements OnInit, OnDestroy {
         defer(() => of(true)),
         defer(() => timer(msRefreshTimeout).pipe(map(() => true)))
       )),
-      tap(value => {
-        this.canRefreshControl.setValue(value)
-      }),
+      tap(value => this.canRefreshControl.setValue(value)),
       takeUntil(this.destroy$)
-    )
+    );
 
     merge(
       blockCounter$,
@@ -357,7 +359,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
             label: {
               show: vote.votes > 0
             }
-          }
+          };
           return cdi;
         });
       })
@@ -415,20 +417,20 @@ export class ProposalsComponent implements OnInit, OnDestroy {
   }
 
 
-  voteOnProposal(proposalId, blockStart, blockEnd, proposalTitle: string, voteCast: number | null): void {
+  voteOnProposal(proposalId: number, blockStart: number, blockEnd: number, proposalTitle: string, currentVote: number | null): void {
     if ((+proposalId > 0) && (+blockStart > 0) && (+blockEnd > 0) && (blockStart < blockEnd)) {
 
       const proposalData: ProposalModalData = {
         proposalId,
         proposalTitle,
-        existingVote: voteCast,
+        existingVote: currentVote,
       };
 
       this._dialog.open(SetVoteModalComponent, {data: proposalData}).afterClosed().pipe(
         take(1),
         concatMap((voteCast: number | null | undefined) => iif(
 
-          () => (typeof voteCast === 'number') && +voteCast >=0,
+          () => (typeof voteCast === 'number') && (+voteCast >= 0),
 
           defer(() => this._unlocker.unlock({timeout: 10}).pipe(
             concatMap(unlocked => iif(
@@ -459,7 +461,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
     return of(proposals.filter(p => {
       let s = false;
-      switch(status) {
+      switch (status) {
         case '' : s = true; break;
         case 'pending' : s = (p.blockEnd === 0) || (p.blockStart > this.blockCounter); break;
         case 'active' : s = (p.blockEnd !== 0) && (p.blockStart <= this.blockCounter) && (p.blockEnd > this.blockCounter); break;

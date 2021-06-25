@@ -40,7 +40,7 @@ export class GovernanceService implements OnDestroy {
 
       if (Array.isArray(response)) {
         items = response.map(rpd => {
-          //extract received data
+          // extract received data
           const newItem: ProposalItem = {
             proposalId: 0,
             name: '',
@@ -193,7 +193,7 @@ export class GovernanceService implements OnDestroy {
 
         return allVotes;
       })
-    )
+    );
   }
 
 

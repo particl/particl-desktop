@@ -1,5 +1,5 @@
 import { CHAIN_TYPE } from 'app/core/core.models';
-import { ProposalItem } from "../base/governance.models";
+import { ProposalItem } from '../base/governance.models';
 
 
 

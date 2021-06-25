@@ -46,7 +46,7 @@
             <table class="meta">
               <tr class="data-row"><th>Requirement</th><th></th></tr>
               <tr class="data-row"><td class="title">Quorum</td><td class="value">20% of the blocks</td></tr>
-              <tr class="data-row"><td class="title">Approval Rate</td><td class="value">>= 75%</td></tr>
+              <tr class="data-row"><td class="title">Approval Rate</td><td class="value">&gt;= 75%</td></tr>
               <tr class="data-row"><td class="title">Duration</td><td class="value">10,080 blocks (~2 weeks)</td></tr>
             </table>
           </div>
@@ -55,7 +55,7 @@
             <table class="meta">
               <tr class="data-row"><th>Requirement</th><th></th></tr>
               <tr class="data-row"><td class="title">Quorum</td><td class="value">20% of the blocks</td></tr>
-              <tr class="data-row"><td class="title">Approval Rate</td><td class="value">>= 60%</td></tr>
+              <tr class="data-row"><td class="title">Approval Rate</td><td class="value">&gt;= 60%</td></tr>
               <tr class="data-row"><td class="title">Duration</td><td class="value">5,040 blocks (~1 week)</td></tr>
             </table>
           </div>
@@ -212,16 +212,16 @@
 
                   <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposalGraphs">
                     <div fxLayoutAlign="space-between stretch">
-                      <div style="width: 100%; height: 100%;" fxLayout="column" fxLayoutAlign="space-between center">
+                      <div fxLayout="column" fxLayoutAlign="space-between center" class="graph-container">
                         <h3 class="title">Vote Blocks Remaining</h3>
-                        <div style="width: 100%; height: 100%;">
+                        <div class="graph-container">
                           <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                         </div>
                       </div>
 
-                      <div style="width: 100%; height: 100%;" fxLayout="column" fxLayoutAlign="space-between center">
+                      <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
                         <h3 class="title">Votes Cast</h3>
-                        <div style="width: 100%; height: 100%;">
+                        <div class="graph-container">
                           <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                         </div>
                       </div>
@@ -333,16 +333,16 @@
                   <mat-divider></mat-divider>
 
                   <div fxLayoutAlign="space-between stretch">
-                    <div style="width: 100%; height: 100%;" fxLayout="column" fxLayoutAlign="space-between center">
+                    <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
                       <h3 class="title">Vote Blocks Remaining</h3>
-                      <div style="width: 100%; height: 100%;">
+                      <div class="graph-container">
                         <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                       </div>
                     </div>
 
-                    <div style="width: 100%; height: 100%;" fxLayout="column" fxLayoutAlign="space-between center">
+                    <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
                       <h3 class="title">Votes Cast</h3>
-                      <div style="width: 100%; height: 100%;">
+                      <div class="graph-container">
                         <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                       </div>
                     </div>

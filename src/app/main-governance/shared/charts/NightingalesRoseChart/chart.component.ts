@@ -1,5 +1,5 @@
 import { tap } from 'rxjs/operators';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { isBasicObjectType } from 'app/main-governance/utils';
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { ChartDataItem } from '../charts.models';
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss']
 })
-export class NightingalesRoseChartComponent implements OnInit {
+export class NightingalesRoseChartComponent implements OnInit, OnDestroy {
 
   @Input() titleData: any; // refer to https://echarts.apache.org/en/option.html#title for options
   @Input() dataSeries$: Observable<ChartDataItem[]> = of([]);
@@ -24,7 +24,7 @@ export class NightingalesRoseChartComponent implements OnInit {
   private destroy$: Subject<void> = new Subject();
   private defaultOptions: any = {
     legend: {
-      type: "scroll",
+      type: 'scroll',
       // orient: "vertical",
       // left: "left",
     },

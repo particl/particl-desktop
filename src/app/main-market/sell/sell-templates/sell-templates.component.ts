@@ -540,7 +540,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       foundProduct.displayDetails.availableMarkets.filter(
         mkey => this.profileMarkets[mkey]
       ).map(
-        mkey => ({id: this.profileMarkets[mkey].id, name: this.profileMarkets[mkey].name, marketType: this.profileMarkets[mkey].type, image: this.profileMarkets[mkey].image})
+        mkey => ({
+          id: this.profileMarkets[mkey].id,
+          name: this.profileMarkets[mkey].name,
+          marketType: this.profileMarkets[mkey].type,
+          image: this.profileMarkets[mkey].image
+        })
       ).forEach(m => modalData.markets.push(m));
     }
 
