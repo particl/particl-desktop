@@ -51,7 +51,7 @@ export class NightingalesRoseChartComponent implements OnInit, OnDestroy {
         left: '10%',
         right: '10%',
         top: '10%',
-        botton: '10%',
+        bottom: '10%',
         center: ['50%', '50%'],   // relative to container
         radius: ['30%', '65%'],
         data: []

@@ -29,7 +29,7 @@ enum TextContent {
   LABEL_BLOCKS_COMPLETED = 'Completed',
   LABEL_BLOCKS_TO_START = 'Starting In',
   LABEL_PROPOSAL_DURATION = 'Proposal Duration',
-  SET_VOTE_FAILED = 'An error occurred whlie setting the proposal\'s vote'
+  SET_VOTE_FAILED = 'An error occurred while setting the proposal\'s vote'
 }
 
 
