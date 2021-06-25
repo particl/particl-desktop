@@ -155,7 +155,7 @@ describe('PartoshiAmount', () => {
     expect(amount.particlStringFraction()).toBe('');
     expect(amount.particlStringSep()).toBe('');
 
-    //exceeds limitations
+    // exceeds limitations
     amount = new PartoshiAmount(100000000);
     expect(amount.partoshis()).toBe(0);
     expect(amount.particls()).toBe(0);
