@@ -12,13 +12,18 @@
     font-size: 18px;
     margin-top: 24px;
   }
+
   h4 {
-    @extend %box-title;
+    font-size: 16px;
+    font-weight: 500;
   }
 
   p {
     color: var(--text-muted);
     line-height: 1.6;
+    @include break(xl) {
+      font-size: 15px;
+    }
     &:first-of-type {
       margin-top: 0;
     }
@@ -28,6 +33,9 @@
     color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 0.2rem;
+    @include break(xl) {
+      font-size: 15px;
+    }
   }
 
   strong, th {
@@ -54,16 +62,23 @@
 
 .block-links {
   @extend %mat-card;
+  position: sticky;
+  top: calc(var(--header-main-height) + var(--paddingV));
+  border-radius: var(--radius);
+  overflow: hidden;
   .link {
     @extend %tfx;
     border-bottom: 1px solid var(--bg-muted);
     display: block;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
     text-decoration: none;
     color: var(--text);
+    font-weight: 500;
+    font-size: 14.5px;
     &:last-of-type { border: none; }
     &:hover, &:focus {
-      background: hsla(var(--bg-hsl), 0.5);
+      color: var(--color-tertiary);
+      background: hsla(var(--color-tertiary-hsl), 0.05);
     }
   }
 }
@@ -74,5 +89,11 @@
     flex: 1 1 50%;
     margin-right: var(--paddingH);
     &:last-of-type { margin: 0; }
+
+    // "Useful links"
+    &.sidebar {
+      flex: 0 0 300px;
+    }
+
   }
 }
