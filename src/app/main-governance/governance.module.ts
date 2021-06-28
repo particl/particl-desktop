@@ -7,18 +7,22 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
 
 import { GovernanceState } from './store/governance-store.state';
 import { GovernanceBaseComponent } from './base/governance-base.component';
-import { routeData } from './governance.routing';
 
-const actualRoutes: Routes = routeData.map(rd => ({path: rd.path, loadChildren: rd.lazyModule}));
-if (actualRoutes.length) {
-  actualRoutes.push({path: '**', redirectTo: (routeData.find(rd => !!rd.isFallbackRoute) || routeData[0]).path });
-}
 
 const routes: Routes = [
   {
     path: '',
     component: GovernanceBaseComponent,
-    children: actualRoutes
+    children: [
+      {
+        path: 'proposals',
+        loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsModule),
+      },
+      { path: 'about-howto',
+        loadChildren: () => import('./about-howto/about-howto.module').then(m => m.AboutHowtoModule),
+      },
+      { path: '**', redirectTo: 'proposals' },
+    ]
   }
 ];
 

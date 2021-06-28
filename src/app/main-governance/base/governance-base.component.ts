@@ -12,7 +12,6 @@ import { WalletUTXOStateModel } from 'app/main/store/main.models';
 import { WalletInfoService } from 'app/main/services/wallet-info/wallet-info.service';
 
 import { environment } from 'environments/environment';
-import { routeData } from '../governance.routing';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { GovernanceService } from './governance.service';
 
@@ -22,6 +21,8 @@ import { PartoshiAmount } from 'app/core/util/utils';
 
 
 enum TextContent {
+  ROUTE_LABEL_PROPOSALS = 'Proposals',
+  ROUTE_LABEL_ABOUT = 'About & Howto',
   UNKNOWN_WALLET = '<invalid>',
   DEFAULT_WALLETNAME = 'Default Wallet',
   REFRESH_ERROR = 'Updating of the proposals failed',
@@ -51,7 +52,10 @@ interface Wallet {
 export class GovernanceBaseComponent implements OnInit, OnDestroy {
 
   readonly clientVersion: string = environment.governanceVersion || '';
-  readonly menu: MenuItem[] = routeData.map(rd => ({text: rd.text, path: rd.path, icon: rd.icon}));
+  readonly menu: MenuItem[] = [
+    { path: 'proposals', icon: 'part-vote', text: TextContent.ROUTE_LABEL_PROPOSALS },
+    { path: 'about-howto', icon: 'part-circle-info', text: TextContent.ROUTE_LABEL_ABOUT },
+  ];
   readonly selectedWallet$: Observable<Wallet>;
   readonly currentWalletBalance$: Observable<string>;
   readonly otherWallets$: Observable<Wallet[]>;
