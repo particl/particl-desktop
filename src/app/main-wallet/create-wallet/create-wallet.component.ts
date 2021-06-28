@@ -184,14 +184,14 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
     const invalidWallet = (typeof this.walletName !== 'string') || !this.isWalletInitialized;
     if (isBusy || invalidWallet) {
       return of(false).pipe(
-        tap(() =>this._snackbar.open(
+        tap(() => this._snackbar.open(
           invalidWallet ? TextContent.NAV_WARN_NOWALLET : TextContent.NAV_WARN_BUSY,
           'warn'
         ))
       );
     }
 
-    return this._store.dispatch(new MainActions.ChangeWallet(this.walletName)).pipe(mapTo(true))
+    return this._store.dispatch(new MainActions.ChangeWallet(this.walletName)).pipe(mapTo(true));
   }
 
 
