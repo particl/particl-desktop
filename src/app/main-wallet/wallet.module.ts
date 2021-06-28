@@ -6,6 +6,7 @@ import { MainSharedModule } from 'app/main/components/main-shared.module';
 
 import { WalletBaseComponent } from './base/wallet-base.component';
 import { WalletGuardService } from './wallet-guard-service';
+import { DeactivationRouteGuard } from './deactivation.guard';
 
 
 const routes: Routes = [
@@ -35,7 +36,8 @@ const routes: Routes = [
     WalletBaseComponent
   ],
   providers: [
-    WalletGuardService
+    WalletGuardService,
+    DeactivationRouteGuard
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
