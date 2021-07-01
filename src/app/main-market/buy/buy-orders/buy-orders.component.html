@@ -4,7 +4,7 @@
     Manage your orders which you're buying from Sellers.
   </ng-container>
   <ng-container page-info *ngIf="identityIsEncrypted">
-    <span>As this is an encrypted wallet, your wallet will need to be unlocked in order to process bid update messages!</span>
+    <span>As this is an encrypted wallet, your wallet will need to be unlocked in order to process order update messages!</span>
   </ng-container>
   <ng-container page-help>
     Each step of the buying process needs to be confirmed in this page (i.e. marking an order as "Shipped").
@@ -126,7 +126,7 @@
 
           <ng-template #errorBuyFlow>
             <div class="step rejected" fxFlex>
-              <div class="value">Bidding</div>
+              <div class="value">Order request</div>
               <div class="dot"></div>
             </div>
             <div class="step rejected" fxFlex>

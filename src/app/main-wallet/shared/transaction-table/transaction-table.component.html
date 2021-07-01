@@ -152,7 +152,7 @@
             </span>
             <ng-container *ngSwitchCase="'internal_transfer'">
               <span *ngIf="!txn.isListingFee">
-                Payment within your own wallet &ndash; converting between your Public and Private balances / preparing outputs while bidding on Market listings
+                Payment within your own wallet &ndash; converting between your Public and Private balances / preparing outputs when ordering Market listings
               </span>
               <span *ngIf="txn.isListingFee">
                 Publishing fee for either posting a listing on the Market or voting on Proposals

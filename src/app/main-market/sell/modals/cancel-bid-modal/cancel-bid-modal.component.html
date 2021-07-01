@@ -1,4 +1,4 @@
-<mat-dialog-title>Cancel bid</mat-dialog-title>
+<mat-dialog-title>Cancel Order</mat-dialog-title>
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
@@ -13,10 +13,10 @@
 
     <div class="text">
       <p class="lead">
-        Are you sure you want to cancel this bid?
+        Are you sure you want to cancel this order?
       </p>
       <p class="help-text">
-        Changed your mind and don't want to bid on this item anymore? Cancelling the bid will unlock any locked funds associated with this bid.
+        Changed your mind and don't want to fulfil this order anymore? Cancelling the order will unlock any locked or reserved funds associated with it.
       </p>
     </div>
 
@@ -31,6 +31,6 @@
   </button>
   <button mat-raised-button color="warn" appDebounceClick (debounceClick)="doAction()">
     <mat-icon fontIcon="part-circle-remove"></mat-icon>
-    Yes, cancel bid
+    Yes, cancel order
   </button>
 </mat-dialog-actions>
