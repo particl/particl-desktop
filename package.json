@@ -22,6 +22,9 @@
     "wallet": "1.5.0",
     "governance": "0.1.0"
   },
+  "browserslist": [
+    "last 1 version"
+  ],
   "scripts": {
     "build": "ng build",
     "test": "ng test",
