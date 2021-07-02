@@ -17,7 +17,12 @@
     "governance": "0.1.0"
   },
   "browserslist": [
-    "last 1 Chrome version"
+    "defaults",
+    "not > 0.5%",
+    "not last 2 versions",
+    "not Firefox ESR",
+    "not dead",
+    "not IE 9-11"
   ],
   "scripts": {
     "build": "ng build",
