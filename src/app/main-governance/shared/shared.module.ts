@@ -6,9 +6,9 @@ import { NightingalesRoseChartComponent } from './charts/NightingalesRoseChart/c
 
 import { NgxEchartsModule } from 'ngx-echarts';
 
+// import * as echarts from 'echarts';
 // Import the echarts core module, which provides the necessary interfaces for using echarts.
 import * as echarts from 'echarts/core';
-// import * as echarts from 'echarts';
 // Import specific chart types, all with Chart suffix
 import {
     PieChart
@@ -24,7 +24,6 @@ import {
 import {
   CanvasRenderer
 } from 'echarts/renderers';
-
 
 // define components for echarts to use: allows for treeshaking and importing of only the specific charts used
 echarts.use(
