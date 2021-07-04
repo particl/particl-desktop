@@ -1,8 +1,16 @@
 @import './src/assets/_config';
 
 .filter {
-  .mat-divider {
-    margin: 24px 0;
+  .block-counter {
+    @extend %mat-card;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    margin-bottom: var(--paddingV);
+    &::before {
+      content: "#";
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
   }
   .filter-buttons {
     display: flex;
@@ -82,7 +90,6 @@
       }
       .link {
         margin: 2px 12px 0 0;
-
         &.ccs {
           color: var(--color-secondary) !important;
           border-color: var(--color-secondary);
@@ -146,8 +153,7 @@
         content: none;
       }
     }
-    .dot {
-      // status indicator
+    .dot { // "pending" status indicator
       display: inline-block;
       width: 7px;
       height: 7px;
@@ -158,14 +164,14 @@
       background: var(--bg-muted);
     }
 
-    &.complete {
-      .dot {
-        background: var(--color-primary);
-      }
-    }
-    &.active {
+    &.complete { // "complete" status indicator
       .dot {
         background: var(--color-secondary);
+      }
+    }
+    &.active { // "active" status indicator
+      .dot {
+        background: var(--color-primary);
       }
       .dot::after {
         content: '';

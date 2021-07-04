@@ -1,13 +1,9 @@
 <div class="overview container-block without-tab-bar">
   <app-page-intro>
-    <ng-container page-title>Particl (On-Chain) Governance</ng-container>
+    <ng-container page-title>Particl Governance <small>(on-chain)</small></ng-container>
     <ng-container page-content>
-      <div class="page-header-content">
-        xxx
-      </div>
     </ng-container>
     <ng-container page-help>
-      xxx
     </ng-container>
   </app-page-intro>
 
@@ -18,9 +14,7 @@
     <h2 class="section-title">
       Current Block
     </h2>
-    <h2 class="help-text">{{ blockCounter }}</h2>
-
-    <mat-divider></mat-divider>
+    <div class="block-counter">{{ blockCounter }}</div>
 
     <p class="section-title">
       Search
@@ -80,12 +74,12 @@
           Active and Upcoming Proposals
         </h2>
 
-        <div>
+        <!--div>
           <div class="details">
             <p class="desc">This section lists any proposals that are currently being voted on, as well as any proposals that will require a vote in the near future.</p>
           </div>
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider></mat-divider-->
         <mat-accordion *ngIf="currentProposals && (currentProposals.length > 0); else noItems">
           <ng-container *ngFor="let proposal of currentProposals">
 
@@ -217,12 +211,12 @@
           Completed Proposals
         </h2>
 
-        <div>
+        <!--div>
           <div class="details">
             <p class="desc">View the results of the voting on proposals that have completed the voting round.</p>
           </div>
         </div>
-        <mat-divider></mat-divider>
+        <mat-divider></mat-divider-->
         <mat-accordion *ngIf="previousProposals && (previousProposals.length > 0); else noItems">
           <ng-container *ngFor="let proposal of previousProposals">
 
@@ -237,9 +231,9 @@
                     </div>
                   </div>
                   <div class="status-wrap" fxFlex="0 0 140px">
+                    <!-- @TODO: can we do "passed" and "failed" instead of just "complete"? that would give much nicer quick overview without the need to click through to GH -->
                     <div class="status complete">
-                      <span class="dot"></span>
-                      Completed
+                      <span class="dot"></span>Completed
                     </div>
                   </div>
                 </div>
