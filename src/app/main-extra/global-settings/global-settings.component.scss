@@ -71,7 +71,7 @@ hr.divider {
   @include break(xl) {
     --item-paddingV: 24px;
   }
-  &.--with-error {
+  &.#{--with-error} {
     background: hsla(var(--color-alert-hsl), 0.015);
   }
   label,
@@ -80,8 +80,8 @@ hr.divider {
     padding: var(--item-paddingV) var(--item-paddingH) 0;
     &.checkbox,
     &.button {
-     padding-bottom: var(--item-paddingV);
-     border-bottom: 1px solid var(--bg-muted);
+      padding-bottom: var(--item-paddingV);
+      border-bottom: 1px solid var(--bg-muted);
     }
   }
   .mat-form-field { // shared for form fields
@@ -122,7 +122,7 @@ mat-slider {
 }
 
 // Error messages for category switcher
-.switcher-option.--with-error {
+.switcher-option.#{--with-error} {
   animation: pulse-color-alert infinite 1.5s;
 }
 

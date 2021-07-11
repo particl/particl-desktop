@@ -21,6 +21,7 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { CreateWalletService } from './create-wallet.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { CanComponentDeactivate } from '../deactivation.guard';
 
 
 enum TextContent {
@@ -38,7 +39,10 @@ enum TextContent {
   ERROR_SETUP_FAILED = 'An error occurred while completing the final wallet setup!',
   ERROR_UNLOCK_WALLET = 'Please ensure the wallet is unlocked in order to continue',
   WARNING_FAILED_ADDRESS_GENERATION = 'Please create new wallet addresses manually',
-  SETUP_PROCESSING = 'Creating your wallet & scanning for transactions'
+  SETUP_PROCESSING = 'Creating your wallet & scanning for transactions',
+
+  NAV_WARN_BUSY = 'Please wait for processing to complete',
+  NAV_WARN_NOWALLET = 'Wallet is not active: complete setup or select a different wallet',
 }
 
 
@@ -80,7 +84,7 @@ const RESTORE_STEPS: Step[] = [
   styleUrls: ['./create-wallet.component.scss'],
   providers: [CreateWalletService]
 })
-export class CreateWalletComponent implements OnInit, OnDestroy {
+export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDeactivate {
 
   Step: typeof Step = Step; // so we can use it in HTML
 
@@ -109,6 +113,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
 
   private isEncrypted: boolean;
   private walletName: string;
+  private isWalletInitialized: boolean = false;
 
   // mnemonic words verification
   private wordsVerification: string[] = [];
@@ -151,6 +156,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
         this.isEncrypted = (
           (typeof info.encryptionstatus === 'string') && (info.encryptionstatus !== 'Unencrypted')
         ) || (+info.unlocked_until > 0);
+
+        this.isWalletInitialized = (typeof info.hdseedid === 'string') && (info.hdseedid.length > 0);
       }
     );
 
@@ -169,6 +176,22 @@ export class CreateWalletComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  canDeactivate(): Observable<boolean> {
+    const isBusy = this.isBusy || (this.currentStep === Step.WAITING);
+    const invalidWallet = (typeof this.walletName !== 'string') || !this.isWalletInitialized;
+    if (isBusy || invalidWallet) {
+      return of(false).pipe(
+        tap(() => this._snackbar.open(
+          invalidWallet ? TextContent.NAV_WARN_NOWALLET : TextContent.NAV_WARN_BUSY,
+          'warn'
+        ))
+      );
+    }
+
+    return this._store.dispatch(new MainActions.ChangeWallet(this.walletName)).pipe(mapTo(true));
   }
 
 

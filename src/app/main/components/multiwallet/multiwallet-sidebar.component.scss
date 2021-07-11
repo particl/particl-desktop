@@ -50,7 +50,7 @@
       @extend %reset;
       box-shadow: 2px 0 0 var(--color-primary) inset;
     }
-    &.--active { // active/selected app tab
+    &.#{--active} { // active/selected app tab
       @extend %reset;
       background: var(--bg-sidebar);
     }

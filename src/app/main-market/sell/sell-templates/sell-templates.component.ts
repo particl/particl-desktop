@@ -112,7 +112,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const init$ = forkJoin(
+    const init$ = forkJoin([
       this._sharedService.loadMarkets().pipe(
         tap(marketsList => {
           marketsList.forEach(market => {
@@ -131,7 +131,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       ),
 
       this.loadProductItems()
-    );
+    ]);
 
     const search$ = this.searchQuery.valueChanges.pipe(
       debounceTime(400),
@@ -343,7 +343,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         id: this.profileMarkets[mkey].id,
         name: this.profileMarkets[mkey].name,
         key: mkey,
-        marketType: this.profileMarkets[mkey].type
+        marketType: this.profileMarkets[mkey].type,
+        image: this.profileMarkets[mkey].image
       })),
       products: this.allProducts.map(p => ({
         id: p.id,
@@ -539,7 +540,12 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       foundProduct.displayDetails.availableMarkets.filter(
         mkey => this.profileMarkets[mkey]
       ).map(
-        mkey => ({id: this.profileMarkets[mkey].id, name: this.profileMarkets[mkey].name, marketType: this.profileMarkets[mkey].type})
+        mkey => ({
+          id: this.profileMarkets[mkey].id,
+          name: this.profileMarkets[mkey].name,
+          marketType: this.profileMarkets[mkey].type,
+          image: this.profileMarkets[mkey].image
+        })
       ).forEach(m => modalData.markets.push(m));
     }
 

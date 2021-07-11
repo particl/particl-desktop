@@ -64,6 +64,15 @@
     Clear all filters
   </button>
 
+  <mat-divider class="filter-separator"></mat-divider>
+
+  <div class="buttons">
+    <button mat-button class="full-width" color="accent" [disabled]="filteredOrderIdxs.length === 0" appDebounceClick (debounceClick)="exportDisplayedOrders()">
+      <mat-icon fontIcon="part-send"></mat-icon>
+      Export Displayed Orders
+    </button>
+  </div>
+
 </div><!-- .filter -->
 
 
@@ -126,7 +135,7 @@
 
           <ng-template #errorBuyFlow>
             <div class="step bidding rejected" fxFlex>
-              <div class="value">Bidding</div>
+              <div class="value">Order Requested</div>
               <div class="dot"></div>
             </div>
             <div class="step cancelled rejected" fxFlex>

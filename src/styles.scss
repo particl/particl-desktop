@@ -574,7 +574,7 @@ body {
       display: inline-block;
       height: 10px;
       width: 40%;
-      &.--lighter {
+      &.#{--lighter} {
         background: hsla(var(--bg-muted-hsl), 0.25);
       }
     }
@@ -666,7 +666,7 @@ body {
   button {
     margin-top: 12px;
   }
-  &.--smaller {
+  &.#{--smaller} {
     padding: 50px var(--paddingH);
     @include break(l) {
       padding: 75px var(--paddingH);
@@ -678,7 +678,7 @@ body {
       padding: 140px var(--paddingH);
     }
   }
-  &.--horizontal { // more compact, horizontal layout (text besides illustration) - in Listing > Q/A
+  &.#{--horizontal} { // more compact, horizontal layout (text besides illustration) - in Listing > Q/A
     display: flex;
     justify-content: center;
     align-items: center;
@@ -692,7 +692,7 @@ body {
       }
     }
   }
-  &.--no-bg {
+  &.#{--no-bg} {
     background: transparent;
     border: 0;
   }
@@ -899,7 +899,7 @@ h1 {
   @include break(xl) {
     font-size: 15px;
   }
-  &.--larger {
+  &.#{--larger} {
     font-size: 15px;
     @include break(xl) {
       font-size: 16px;
@@ -1023,19 +1023,19 @@ div.alert {
     padding-right: 16px;
     align-self: center;
   }
-  &.--boxed {
+  &.#{--boxed} {
     background: var(--color-white);
     box-shadow: 0 1px 0 var(--bg-muted), 0 1px 10px -4px hsla(var(--text-hsl), 0.3) !important;
     border-radius: var(--radius);
     overflow: hidden;
   }
-  &.--warning {
+  &.#{--warning} {
     &::before {
       content: '\ea03';
       background: linear-gradient(to right, var(--color-alert) 0%, var(--color-alert-to-gradient) 100%);
     }
   }
-  &.--info {
+  &.#{--info} {
     &::before {
       content: '\ea25';
       background: linear-gradient(to right, var(--color-info) 0%, var(--color-info-to-gradient) 100%);
@@ -1062,7 +1062,7 @@ p.message {
     margin-right: 8px;
   }
   // Info messages
-  &.--info {
+  &.#{--info} {
     &::before {
       content: '\ea25'; // part-info icon
       color: var(--color-info);
@@ -1072,7 +1072,7 @@ p.message {
     }
   }
   // Warning messages
-  &.--warning {
+  &.#{--warning} {
     &::before {
       content: '\ea03'; // part-alert icon
       color: var(--color-alert);
@@ -1151,23 +1151,23 @@ p.info {
   &:empty { // hide empty tags
     display: none;
   }
-  &.--primary {
+  &.#{--primary} {
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
   }
-  &.--secondary {
+  &.#{--secondary} {
     color: var(--color-secondary);
     border: 1px solid var(--color-secondary);
   }
-  &.--tertiary {
+  &.#{--tertiary} {
     color: var(--color-tertiary);
     border: 1px solid var(--color-tertiary);
   }
-  &.--alert {
+  &.#{--alert} {
     color: var(--color-alert);
     border: 1px solid var(--color-alert);
   }
-  &.--smaller {
+  &.#{--smaller} {
     font-size: 9px;
     padding: 0 5px;
   }
@@ -1230,7 +1230,9 @@ p.info {
 .terms-text {
   text-align: justify;
   color: var(--text-muted);
-  h2, b, strong {
+  h2,
+  b,
+  strong {
     color: var(--text);
     font-weight: 500;
     margin-top: 0;

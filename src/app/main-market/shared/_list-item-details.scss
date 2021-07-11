@@ -168,14 +168,14 @@
       border-color: transparent var(--bg) transparent transparent;
       position: absolute;
     }
-    &.--rounded {
+    &.#{--rounded} {
       border-radius: 999px;
       padding: 7px 16px;
       &::before {
         content: none;
       }
     }
-    &.--plain {
+    &.#{--plain} {
       padding: 0;
       background: none;
       &::before {

@@ -53,7 +53,7 @@ export class WalletMenuActionsComponent implements AfterViewInit, OnDestroy {
 
 
   private findPortalHost(): Observable<DomPortalHost> {
-    return Observable.create((observer: Observer<DomPortalHost>) => {
+    return new Observable((observer: Observer<DomPortalHost>) => {
       const ref = new DomPortalHost(
         document.querySelector('#wallet-menu-portal-container'),
         this.componentFactoryResolver,

@@ -11,7 +11,7 @@
     width: 1px;
     height: 3.5rem;
     background: var(--bg-muted);
-    &.--blank {
+    &.#{--blank} {
       background: transparent;
     }
   }

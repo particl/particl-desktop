@@ -1,0 +1,30 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+mat-dialog-title {
+  .proposal-name {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-weight: 400;
+    .mat-icon {
+      font-size: 14px;
+      position: relative;
+      top: 1px;
+      margin-right: 3px;
+    }
+  }
+}
+
+.mat-dialog-content {
+  padding: var(--padding);
+  width: 40rem;
+}
+
+// ------ UI ------ //
+
+// ------ LAYOUT ------ //
+
+form.proposal-form {
+  max-width: 40rem;
+  margin: 0 auto;
+}

@@ -3,7 +3,7 @@
 
 // ------------------------ CART ------------------------ //
 
-.--cart-layout { // "fake" table-like layout, but with flexbox and mat-cards
+.#{--cart-layout} { // "fake" table-like layout, but with flexbox and mat-cards
   --cart-item-size: 90px;
   @include break(l) {
     --cart-item-size: 100px;
@@ -163,11 +163,11 @@
         display: inline-block;
         margin-top: 4px;
         position: relative;
-        &.--error {
+        &.#{--error} {
           background: hsla(var(--color-alert-hsl), 0.1);
           color: var(--color-alert);
         }
-        &.--info {
+        &.#{--info} {
           background: hsla(var(--color-info-hsl), 0.1);
           color: var(--color-info);
         }

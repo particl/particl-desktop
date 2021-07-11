@@ -30,9 +30,11 @@ export class RpcService {
     'smsgsetwallet',
     'unloadwallet',
     'getzmqnotifications',
+    'getblockchaininfo',
     'getpeerinfo',
     'getnetworkinfo',
-    'getblockcount'
+    'getblockcount',
+    'tallyvotes'
   ];
 
   /**

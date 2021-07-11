@@ -10,7 +10,7 @@ export class PartoshiAmount {
   private amount: string = '0';
 
   constructor(amount: number, isPartoshiValue: boolean = false) {
-    const num = isPartoshiValue ? Math.round(+amount) : Math.round((+amount * Math.pow(10, 8)));
+    const num = isPartoshiValue ? Math.floor(+amount) : Math.round((+amount * Math.pow(10, 8)));
     this.amount = this.isValid(num) ? `${num}` : this.amount;
   }
 
@@ -182,12 +182,12 @@ export const genericPollingRetryStrategy = ({
       ) {
         return throwError(error);
       }
+      const newTime = retryAttempt * scalingDuration;
       console.log(
-        `Attempt ${retryAttempt}: retrying in ${retryAttempt *
-          scalingDuration}ms`
+        `Attempt ${retryAttempt}: retrying in ${newTime}ms`
       );
       // retry after 1s, 2s, etc...
-      return timer(retryAttempt * scalingDuration);
+      return timer(newTime);
     }),
     finalize(() => console.log('We are done!'))
   );

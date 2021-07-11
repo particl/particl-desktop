@@ -76,19 +76,36 @@ describe('Util Functions', () => {
 describe('PartoshiAmount', () => {
 
   it('should validate numbers correctly', () => {
-    let amount = new PartoshiAmount(100000000);
+    let amount;
+
+    // providing partoshi-denominated values
+    amount = new PartoshiAmount(100000000, true);
     expect(amount.partoshisString()).toBe('100000000');
-    amount = new PartoshiAmount(12.5);
+    amount = new PartoshiAmount(12.5, true);
     expect(amount.partoshisString()).toBe('12');
-    amount = new PartoshiAmount(-10);
+    amount = new PartoshiAmount(-10, true);
+    expect(amount.partoshisString()).toBe('0');
+    amount = new PartoshiAmount(Number.MAX_SAFE_INTEGER, true);
+    expect(amount.partoshisString()).toBe(`${Number.MAX_SAFE_INTEGER}`);
+    amount = new PartoshiAmount(Number.MAX_SAFE_INTEGER + 1, true);
+    expect(amount.partoshisString()).toBe('0');
+    amount = new PartoshiAmount(1, true);
+    expect(amount.partoshisString()).toBe('1');
+    amount = new PartoshiAmount(0, true);
+    expect(amount.partoshisString()).toBe('0');
+
+    // providing particl-denominated values
+    amount = new PartoshiAmount(1);
+    expect(amount.partoshisString()).toBe('100000000');
+    amount = new PartoshiAmount(0);
     expect(amount.partoshisString()).toBe('0');
     amount = new PartoshiAmount(Number.MAX_SAFE_INTEGER);
-    expect(amount.partoshisString()).toBe(`${Number.MAX_SAFE_INTEGER}`);
+    expect(amount.partoshisString()).toBe(`0`);
     amount = new PartoshiAmount(Number.MAX_SAFE_INTEGER + 1);
     expect(amount.partoshisString()).toBe('0');
-    amount = new PartoshiAmount(1);
-    expect(amount.partoshisString()).toBe('1');
-    amount = new PartoshiAmount(0);
+    amount = new PartoshiAmount(12.5);
+    expect(amount.partoshisString()).toBe('1250000000');
+    amount = new PartoshiAmount(-10);
     expect(amount.partoshisString()).toBe('0');
   });
 
@@ -101,38 +118,74 @@ describe('PartoshiAmount', () => {
     expect(amount.particlStringInteger()).toBe('0');
     expect(amount.particlStringFraction()).toBe('');
     expect(amount.particlStringSep()).toBe('');
+
+    const pAmount = new PartoshiAmount(0, true);
+    expect(pAmount.partoshis()).toBe(0);
+    expect(pAmount.partoshisString()).toBe('0');
+    expect(pAmount.particlsString()).toBe('0');
+    expect(pAmount.particls()).toBe(0);
+    expect(pAmount.particlStringInteger()).toBe('0');
+    expect(pAmount.particlStringFraction()).toBe('');
+    expect(pAmount.particlStringSep()).toBe('');
   });
 
-  it('should be define correctly from calculation inputs', () => {
+  it('should be defined correctly from calculation inputs', () => {
     let amount = new PartoshiAmount(100 + 200);
-    expect(amount.partoshis()).toBe(300);
+    expect(amount.particls()).toBe(300);
+
+    // exceed limitations
     amount = new PartoshiAmount(99999999 + 1);
-    expect(amount.partoshis()).toBe(100000000);
+    expect(amount.particls()).toBe(0);
+
+    amount = new PartoshiAmount(100 + 200, true);
+    expect(amount.particls()).toBe(0.00000300);
+
+    amount = new PartoshiAmount(99999999 + 1, true);
+    expect(amount.particls()).toBe(1);
+
   });
 
   it('should return the correct string representation of the values', () => {
     let amount = new PartoshiAmount(1);
-    expect(amount.partoshisString()).toBe('1');
-    expect(amount.particlsString()).toBe('0.00000001');
-    expect(amount.particlStringInteger()).toBe('0');
-    expect(amount.particlStringFraction()).toBe('00000001');
-    expect(amount.particlStringSep()).toBe('.');
-
-    amount = new PartoshiAmount(100000000);
+    expect(amount.partoshis()).toBe(100000000);
+    expect(amount.particls()).toBe(1);
     expect(amount.partoshisString()).toBe('100000000');
     expect(amount.particlsString()).toBe('1');
     expect(amount.particlStringInteger()).toBe('1');
     expect(amount.particlStringFraction()).toBe('');
     expect(amount.particlStringSep()).toBe('');
 
-    amount = new PartoshiAmount(100000001);
+    // exceeds limitations
+    amount = new PartoshiAmount(100000000);
+    expect(amount.partoshis()).toBe(0);
+    expect(amount.particls()).toBe(0);
+    expect(amount.partoshisString()).toBe('0');
+    expect(amount.particlsString()).toBe('0');
+    expect(amount.particlStringInteger()).toBe('0');
+    expect(amount.particlStringFraction()).toBe('');
+    expect(amount.particlStringSep()).toBe('');
+
+    amount = new PartoshiAmount(100000000, true);
+    expect(amount.partoshis()).toBe(100000000);
+    expect(amount.particls()).toBe(1);
+    expect(amount.partoshisString()).toBe('100000000');
+    expect(amount.particlsString()).toBe('1');
+    expect(amount.particlStringInteger()).toBe('1');
+    expect(amount.particlStringFraction()).toBe('');
+    expect(amount.particlStringSep()).toBe('');
+
+    amount = new PartoshiAmount(100000001, true);
+    expect(amount.partoshis()).toBe(100000001);
+    expect(amount.particls()).toBe(1.00000001);
     expect(amount.partoshisString()).toBe('100000001');
     expect(amount.particlsString()).toBe('1.00000001');
     expect(amount.particlStringInteger()).toBe('1');
     expect(amount.particlStringFraction()).toBe('00000001');
     expect(amount.particlStringSep()).toBe('.');
 
-    amount = new PartoshiAmount(12345678);
+    amount = new PartoshiAmount(12345678, true);
+    expect(amount.partoshis()).toBe(12345678);
+    expect(amount.particls()).toBe(0.12345678);
     expect(amount.partoshisString()).toBe('12345678');
     expect(amount.particlsString()).toBe('0.12345678');
     expect(amount.particlStringInteger()).toBe('0');
@@ -140,13 +193,26 @@ describe('PartoshiAmount', () => {
     expect(amount.particlStringSep()).toBe('.');
 
     amount = new PartoshiAmount(1000);
+    expect(amount.partoshis()).toBe(100000000000);
+    expect(amount.particls()).toBe(1000);
+    expect(amount.partoshisString()).toBe('100000000000');
+    expect(amount.particlsString()).toBe('1000');
+    expect(amount.particlStringInteger()).toBe('1000');
+    expect(amount.particlStringFraction()).toBe('');
+    expect(amount.particlStringSep()).toBe('');
+
+    amount = new PartoshiAmount(1000, true);
+    expect(amount.partoshis()).toBe(1000);
+    expect(amount.particls()).toBe(0.00001);
     expect(amount.partoshisString()).toBe('1000');
     expect(amount.particlsString()).toBe('0.00001');
     expect(amount.particlStringInteger()).toBe('0');
     expect(amount.particlStringFraction()).toBe('00001');
     expect(amount.particlStringSep()).toBe('.');
 
-    amount = new PartoshiAmount(110000000);
+    amount = new PartoshiAmount(110000000, true);
+    expect(amount.partoshis()).toBe(110000000);
+    expect(amount.particls()).toBe(1.1);
     expect(amount.partoshisString()).toBe('110000000');
     expect(amount.particlsString()).toBe('1.1');
     expect(amount.particlStringInteger()).toBe('1');
@@ -157,10 +223,23 @@ describe('PartoshiAmount', () => {
   it('should add other PartoshiAmounts correctly', () => {
     let amountBase = new PartoshiAmount(1);
     let amountOther = new PartoshiAmount(1);
-    expect(amountBase.add(amountOther).partoshisString()).toBe('2');
+    expect(amountBase.add(amountOther).particlsString()).toBe('2');
 
+    // exceed limitations
     amountBase = new PartoshiAmount(Number.MAX_SAFE_INTEGER - 100);
     amountOther = new PartoshiAmount(101);
-    expect(amountBase.add(amountOther).partoshisString()).toBe(`${Number.MAX_SAFE_INTEGER - 100}`);
+    expect(amountBase.add(amountOther).particlsString()).toBe(`101`);
+
+    amountBase = new PartoshiAmount(1.1);
+    amountOther = new PartoshiAmount(2.2);
+    expect(amountBase.add(amountOther).particlsString()).toBe(`3.3`);
+
+    amountBase = new PartoshiAmount(1.9, true);
+    amountOther = new PartoshiAmount(1, true);
+    expect(amountBase.add(amountOther).particlsString()).toBe(`0.00000002`);
+
+    amountBase = new PartoshiAmount(100, true);
+    amountOther = new PartoshiAmount(1);
+    expect(amountBase.add(amountOther).particlsString()).toBe(`1.000001`);
   });
 });

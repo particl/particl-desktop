@@ -34,20 +34,20 @@ enum TextContent {
   STATE_INVALID_LABEL = '<unsupported>',
   STATE_INVALID_STATUSTEXT = '<unsupported>',
 
-  STATE_CREATED_LABEL = 'Bidding',
-  STATE_CREATED_STATUS_BUYER = 'Waiting for Seller to manually accept (or reject) your bid',
-  STATE_CREATED_STATUS_SELLER = 'Buyer wants to purchase this item - approve or reject this bid to continue',
+  STATE_CREATED_LABEL = 'Requesting',
+  STATE_CREATED_STATUS_BUYER = 'Waiting for Seller to manually accept (or reject) your order request',
+  STATE_CREATED_STATUS_SELLER = 'Buyer wants to purchase this item - approve or reject this request to continue',
 
   STATE_REJECTED_LABEL = 'Rejected',
-  STATE_REJECTED_STATUS_BUYER = 'Seller rejected bid on this item, bid has been cancelled (no money was spent)',
-  STATE_REJECTED_STATUS_SELLER = 'You have rejected this bid and the bid has been cancelled',
+  STATE_REJECTED_STATUS_BUYER = 'Seller rejected the request for this item, order has been cancelled (no money was spent)',
+  STATE_REJECTED_STATUS_SELLER = 'You have rejected this order request and it has been cancelled',
 
   STATE_CANCELLED_LABEL = 'Cancelled',
-  STATE_CANCELLED_STATUS_BUYER = 'Bid has been cancelled',
-  STATE_CANCELLED_STATUS_SELLER = 'Bid has been cancelled',
+  STATE_CANCELLED_STATUS_BUYER = 'Order has been cancelled',
+  STATE_CANCELLED_STATUS_SELLER = 'Order has been cancelled',
 
   STATE_ACCEPTED_LABEL = 'Accepted',
-  STATE_ACCEPTED_STATUS_BUYER = 'Seller accepted your bid - please make the request for escrow to be created',
+  STATE_ACCEPTED_STATUS_BUYER = 'Seller accepted your order request - please make the request for escrow to be created',
   STATE_ACCEPTED_STATUS_SELLER = 'Awaiting on buyer to confirm proceeding to creating escrow',
 
   STATE_ESCROW_LOCKED_LABEL = 'Escrow',
@@ -66,14 +66,14 @@ enum TextContent {
   STATE_COMPLETE_STATUS_BUYER = 'Successfully finalized order',
   STATE_COMPLETE_STATUS_SELLER = 'Order delivery confirmed by Buyer - order successfully finalized',
 
-  ACTION_CANCEL_LABEL = 'Cancel Bid',
-  ACTION_CANCEL_TOOLTIP = 'Cancel the bid request',
+  ACTION_CANCEL_LABEL = 'Cancel order',
+  ACTION_CANCEL_TOOLTIP = 'Cancel the order request',
 
-  ACTION_REJECT_LABEL = 'Reject & cancel bid',
-  ACTION_REJECT_TOOLTIP = 'Reject this bid, cancelling the bid request',
+  ACTION_REJECT_LABEL = 'Reject & cancel order',
+  ACTION_REJECT_TOOLTIP = 'Reject this order request, cancelling the order',
 
-  ACTION_ACCEPT_LABEL = 'Accept bid',
-  ACTION_ACCEPT_TOOLTIP = 'Approve this bid and sell to this Buyer',
+  ACTION_ACCEPT_LABEL = 'Accept order request',
+  ACTION_ACCEPT_TOOLTIP = 'Approve this order request and sell to this Buyer',
 
   ACTION_REQUEST_ESCROW_LABEL = 'Request Escrow',
   ACTION_REQUEST_ESCROW_TOOLTIP = 'Confirm your escrow contribution and request seller to confirm theirs',
@@ -87,9 +87,9 @@ enum TextContent {
   ACTION_COMPLETE_LABEL = 'Mark as delivered',
   ACTION_COMPLETE_TOOLTIP = 'Confirm that you have received the order',
 
-  PLACEHOLDER_REJECTED = 'Bid rejected',
+  PLACEHOLDER_REJECTED = 'Order request rejected',
   PLACEHOLDER_WAITING_FOR_SELLER = 'Waiting for seller',
-  PLACEHOLDER_CANCELLED = 'Bid Cancelled',
+  PLACEHOLDER_CANCELLED = 'Order Cancelled',
   PLACEHOLDER_ESCROW_PENDING = 'Waiting for Buyer',
   PLACEHOLDER_ESCROW_PENDING_TOOLTIP = 'Waiting for buyer to proceed to escrow step',
   PLACEHOLDER_SHIPPING_PENDING_TOOLTIP = 'Shipment of item is pending',
@@ -743,16 +743,6 @@ export class BidOrderService implements IBuyflowController {
     actions[ORDER_ITEM_STATUS.CREATED] = [
       {
         fromState: ORDER_ITEM_STATUS.CREATED,
-        toState: ORDER_ITEM_STATUS.ACCEPTED,
-        user: 'SELLER',
-        actionType: 'PRIMARY',
-        details: {
-          label: TextContent.ACTION_ACCEPT_LABEL, tooltip: TextContent.ACTION_ACCEPT_TOOLTIP, colour: 'primary', icon: 'part-check'
-        },
-        transition: this.actionBidAccept.bind(this)
-      },
-      {
-        fromState: ORDER_ITEM_STATUS.CREATED,
         toState: ORDER_ITEM_STATUS.REJECTED,
         user: 'SELLER',
         actionType: 'PRIMARY',
@@ -760,6 +750,16 @@ export class BidOrderService implements IBuyflowController {
           label: TextContent.ACTION_REJECT_LABEL, tooltip: TextContent.ACTION_REJECT_TOOLTIP, colour: 'warn', icon: 'part-cross'
         },
         transition: this.actionBidReject.bind(this)
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.CREATED,
+        toState: ORDER_ITEM_STATUS.ACCEPTED,
+        user: 'SELLER',
+        actionType: 'PRIMARY',
+        details: {
+          label: TextContent.ACTION_ACCEPT_LABEL, tooltip: TextContent.ACTION_ACCEPT_TOOLTIP, colour: 'primary', icon: 'part-check'
+        },
+        transition: this.actionBidAccept.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.CREATED,

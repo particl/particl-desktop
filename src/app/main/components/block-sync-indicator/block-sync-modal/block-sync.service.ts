@@ -3,7 +3,8 @@ import { Log } from 'ng2-logger';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { retryWhen, map, concatMap } from 'rxjs/operators';
 
-import { RpcGetPeerInfo, PeerCalculatedStats } from './block-sync.models';
+import { RpcGetPeerInfo } from 'app/core/core.models';
+import { PeerCalculatedStats } from './block-sync.models';
 import { Observable } from 'rxjs';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 

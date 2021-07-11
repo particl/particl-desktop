@@ -38,6 +38,19 @@ mat-dialog-title {
   }
 }
 
+.mat-option {
+  img.image {
+    // photos in Market switcher
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
+  }
+}
+
 .publish-options {
   margin: 0 -74px -16px -24px;
   line-height: 1.1;
@@ -117,7 +130,6 @@ mat-dialog-title {
       margin: 0 24px 0 20px;
     }
   }
-
 } // .available-products
 
 @keyframes loading-rotate {
@@ -126,11 +138,10 @@ mat-dialog-title {
   }
 }
 
-
-
 .mat-dialog-actions {
   display: block;
-  .publish-progress { // mat-progress-bar
+  .publish-progress {
+    // mat-progress-bar
     --actions-paddingH: 16px;
     margin: -12px calc(-1 * var(--actions-paddingH)) 13px;
     width: calc(100% + 2 * var(--actions-paddingH));

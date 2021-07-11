@@ -309,7 +309,8 @@
       <button mat-button class="small icon-only"
               [color]="details.governance.proposalHash.length > 0 ? 'warn' : 'basic'" appDebounceClick (debounceClick)="actionFlagItem()"
               [matTooltip]="details.governance.proposalHash.length > 0 ? 'Item has been reported' : 'Report'"
-              matTooltipPosition="above">
+              matTooltipPosition="above"
+              [disabled]="!canAction">
         <mat-icon fontSet="partIcon" fontIcon="part-flag" [class.active]="details.governance.proposalHash.length > 0"></mat-icon>
       </button>
 
@@ -317,11 +318,11 @@
         <!-- Reported, not voted yet by user -->
         <div *ngIf="details.governance.voteCast < 0">
           <span class="title"><strong>Item reported</strong> as inappropriate, please vote:</span>
-          <button mat-button class="small" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')" matTooltip="Item is fine and should stay on Market">
+          <button [disabled]="!canAction" mat-button class="small" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')" matTooltip="Item is fine and should stay on Market">
             <mat-icon fontIcon="part-thumb-up"></mat-icon>
             Keep it
           </button>
-          <button mat-button class="small" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')" matTooltip="Item is inappropriate/illegal and should be removed from Market">
+          <button [disabled]="!canAction" mat-button class="small" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')" matTooltip="Item is inappropriate/illegal and should be removed from Market">
             <mat-icon fontIcon="part-thumb-down"></mat-icon>
             Remove it
           </button>
@@ -329,14 +330,14 @@
         <!-- Reported & voted already -->
         <div *ngIf="details.governance.voteCast >= 0" class="voted">
           <p *ngIf="details.governance.voteCast === details.governance.voteOptionRemove">
-            <button mat-button class="small icon-only" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')"
+            <button [disabled]="!canAction" mat-button class="small icon-only" color="primary" appDebounceClick (debounceClick)="actionVoteItem('KEEP')"
               matTooltip="I've changed my mind, the item is fine and should stay on Market">
               <mat-icon fontIcon="part-thumb-up"></mat-icon>
             </button>
             I've changed my mind, the item is fine and should stay on Market
           </p>
           <p *ngIf="details.governance.voteCast === details.governance.voteOptionKeep">
-            <button mat-button class="small icon-only" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')"
+            <button [disabled]="!canAction" mat-button class="small icon-only" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')"
               matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
               <mat-icon fontIcon="part-thumb-down"></mat-icon>
             </button>
@@ -350,7 +351,7 @@
   </div>
 
   <div class="right" fxLayout fxLayoutAlign="end center">
-    <button *ngIf="displayActions.fav" class="favorite" mat-button
+    <button [disabled]="!canAction" *ngIf="displayActions.fav" class="favorite" mat-button
           [color]="details.favouriteId > 0 ? 'warn' : 'basic'" appDebounceClick (debounceClick)="actionToggleFavItem()"
           [matTooltip]="details.favouriteId > 0 ? 'Remove from Favorites' : 'Add to Favorites'" matTooltipPosition="above">
       <mat-icon class="fav icon" fontSet="partIcon"
@@ -367,7 +368,7 @@
       </button>
 
       <!-- @TODO: can we disable the button and switch label to "Added to Cart" after it has been added to cart? -->
-      <button mat-raised-button *ngIf="!details.isOwner" [disabled]="itemExpiry.hasExpired" appDebounceClick (debounceClick)="actionAddItemToCart()" color="primary">
+      <button [disabled]="!canAction || itemExpiry.hasExpired" mat-raised-button *ngIf="!details.isOwner" appDebounceClick (debounceClick)="actionAddItemToCart()" color="primary">
         <mat-icon fontIcon="part-cart"></mat-icon>
         Add to Cart
       </button>

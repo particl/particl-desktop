@@ -48,7 +48,7 @@ Keep in mind that the development currently happens on a private fork of this re
 
 ### Requirements
 
-- [Node.js®](https://nodejs.org/) v12
+- [Node.js®](https://nodejs.org/) v14
 - [git](https://git-scm.com/)
 - [yarn](https://yarnpkg.com/en/)
 

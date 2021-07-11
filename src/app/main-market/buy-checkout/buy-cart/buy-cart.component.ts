@@ -26,10 +26,10 @@ enum TextContent {
   LOADING_ERROR = 'Could not obtain all data for this page',
   CART_ITEM_REMOVE_ERROR = 'An error occurred while trying to remove that item',
   CART_CLEAR_ERROR = 'Could not remove 1 or more items from the cart',
-  PROCESSING_CHECKOUT = 'Placing bids on your items',
-  BID_SEND_ERROR = 'Error: Not all of your bids were able to be placed!',
-  BID_CONSISTENCY_ERROR = 'Something went wrong during bidding. Please verify orders placed vs cart items',
-  BID_SUCCESSFUL = 'Successfully bid on items!'
+  PROCESSING_CHECKOUT = 'Placing order requests for each of your items',
+  BID_SEND_ERROR = 'Error: Not all of your orders were able to be placed!',
+  BID_CONSISTENCY_ERROR = 'Something went wrong during order placement. Please verify orders placed vs cart items',
+  BID_SUCCESSFUL = 'Successfully requested all items!'
 }
 
 

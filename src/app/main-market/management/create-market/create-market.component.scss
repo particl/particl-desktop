@@ -61,7 +61,8 @@ form.market-form { // form = stepper content (centered)
 }
 
 mat-card.new-market-considerations {
-  p, li {
+  p,
+  li {
     color: var(--text-muted);
     line-height: 1.55;
   }

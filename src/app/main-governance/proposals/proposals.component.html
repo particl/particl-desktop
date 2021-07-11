@@ -1,0 +1,392 @@
+<div class="overview container-block without-tab-bar">
+  <app-page-intro>
+    <ng-container page-title>Particl (On-Chain) Governance</ng-container>
+    <ng-container page-content>
+      <div class="page-header-content">
+        <h3>What Governance Is</h3>
+        <p>
+          The Particl network has a tool for community members to publish proposals named the Community Crowdfunding System (CCS). Any proposal published on the CCS can be set up to require a community vote to be activated.
+          Anyone may submit proposals on the CCS to request donations for initiatives from the community. This includes the Particl Team who will, from time to time, publish proposed objectives for the project via the CCS, and thus in turn allows for the community to particpiate in deciding on future objectives.
+        </p>
+        <h3>On-Chain Voting</h3>
+        <p>
+          Any CCS proposal can now request a network vote to determine consensus. The most common use for network votes will be for proposals requesting initiatives to be funded from the Community Fund, but can be used for other purposes as well.
+          This section displays any CCS proposals that require an on-chain vote.
+          The voting system works using staking weight, meaning that you register a vote every time you stake a block on the network. This ensures that only those with a stake or interest in the project can vote, preventing outside influence from affecting the votes unjustly
+        </p>
+
+
+        <h3>Voting Rules</h3>
+        <p>
+          For a proposal’s voting process to be considered valid, there are three requirements to fill. They are:
+        </p>
+        <ul>
+            <li>Quorum: The percentage of the blocks within a given voting process that cast a vote</li>
+            <li>Approval Rate: The percentage of the votes cast being in favor of a proposal</li>
+            <li>Duration: The number of blocks that the proposal will be available for voting on</li>
+        </ul>
+        <p>Proposals that require on-chain voting are separated into 2 categories: Consensus Vote Proposals and Non-Consensus Vote Proposals.</p>
+
+        <div class="header-votes" fxLayout="row" fxLayoutAlign="space-between stretch">
+
+          <div class="category">
+            <h4>Consensus Vote</h4>
+            <p>The more important of the two, these proposals can have a significant impact on the ecosystem and typically include involve proposals that initiate a change in the protocol. These have the general following requirements:</p>
+          </div>
+
+          <div class="category">
+            <h4>Non-Consensus Vote</h4>
+            <p>Not as significant, and do not require a major change in the protocol to be made. Examples of these types of proposals would be those that wish to claim funds from the Particl Community Fund, or possibly one that wishes to determine the direction of a particular initiative These have the general following requirements:</p>
+          </div>
+        </div>
+
+        <div class="header-votes" fxLayout="row" fxLayoutAlign="space-between stretch">
+
+          <div class="category">
+            <table class="meta">
+              <tr class="data-row"><th>Requirement</th><th></th></tr>
+              <tr class="data-row"><td class="title">Quorum</td><td class="value">20% of the blocks</td></tr>
+              <tr class="data-row"><td class="title">Approval Rate</td><td class="value">&gt;= 75%</td></tr>
+              <tr class="data-row"><td class="title">Duration</td><td class="value">10,080 blocks (~2 weeks)</td></tr>
+            </table>
+          </div>
+
+          <div class="category">
+            <table class="meta">
+              <tr class="data-row"><th>Requirement</th><th></th></tr>
+              <tr class="data-row"><td class="title">Quorum</td><td class="value">20% of the blocks</td></tr>
+              <tr class="data-row"><td class="title">Approval Rate</td><td class="value">&gt;= 60%</td></tr>
+              <tr class="data-row"><td class="title">Duration</td><td class="value">5,040 blocks (~1 week)</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <h3>How To Vote</h3>
+        <p>To vote on a proposal, the proposal number and the vote option of your choice (a number) will need to be known. Voting is not currently built into this module, so instructions on how to vote can be found on the <a mat-button href="https://particl.wiki/tutorial/staking/how-to-vote/#how-to-vote" target="_blank" color="accent" class="small">Particl Wiki</a></p>
+        <mat-divider></mat-divider>
+      </div>
+    </ng-container>
+    <ng-container page-help>
+      Below you can find results of past proposals, as well as the current progression on any proposals currently being voted on.<br>
+      More information on Proposals and Voting can be found on the <a mat-button href="https://particl.wiki/learn/misc/proposals/" target="_blank" color="accent" class="small">Particl Wiki</a> and on <a mat-button href="https://particl.news/on-chain-voting-and-ccs-proposals/Particl" target="_blank" color="primary" class="small">Particl News</a><br/>
+      CCS Proposals can be found on the <a mat-button href="https://ccs.particl.io/" target="_blank" color="warn" class="small">Particl CCS</a> website. <br/>
+      Comments and questions on an upcoming proposal should be done on the proposal via <a mat-button href="https://github.com/particl/ccs-proposals/pulls" target="_blank" class="small">Github</a>.
+    </ng-container>
+  </app-page-intro>
+
+
+  <!-- Filters -->
+  <div class="filter">
+
+    <h2 class="section-title">
+      Current Block
+    </h2>
+    <h2 class="help-text">{{ blockCounter }}</h2>
+
+    <mat-divider></mat-divider>
+
+    <p class="section-title">
+      Search
+    </p>
+
+    <mat-form-field class="--boxed" appearance="fill">
+      <input matInput type="text" [formControl]="querySearch"
+            placeholder="Search Proposals" (keyup.escape)="querySearch.setValue('')">
+      <button *ngIf="querySearch.value.length > 0" matSuffix mat-button class="small" (click)="querySearch.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="querySearch.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+    </mat-form-field>
+
+    <h2 class="section-title">
+      Filter
+    </h2>
+
+    <mat-card class="filter-card">
+      <mat-radio-group class="radio-group block-radio" [formControl]="queryFilterStatus">
+        <mat-radio-button class="filter-option" *ngFor="let statusFilter of filterOptionsStatus" [value]="statusFilter.value" color="accent">
+          {{ statusFilter.title }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
+
+    <div class="filter-buttons">
+      <div class="left" *appVar="(refreshCountdown$ | async ) as timerString">
+        <!-- Refresh Listings -->
+        <button mat-button class="small filter-button refresh" appDebounceClick (debounceClick)="refreshProposals()" [disabled]="!(canRefresh$ | async)" matTooltip="Auto refresh in {{ timerString }}">
+          <mat-icon fontIcon="part-refresh"></mat-icon>
+          Refresh
+          <div class="dot"></div>
+        </button>
+      </div>
+
+      <div class="right">
+        <!-- Clear filters -->
+        <button mat-button color="basic" class="small icon-only filter-button clear-filters" appDebounceClick (debounceClick)="clearAllFilters()" matTooltip="Clear all filters">
+          <mat-icon fontIcon="part-clear-all"></mat-icon>
+          Clear filters
+        </button>
+      </div>
+
+    </div><!-- .filter-buttons -->
+
+  </div><!-- .filter -->
+
+
+  <div class="proposals section with-filter">
+
+    <ng-container *ngIf="(isBlockchainSynced | async); else unsynced">
+
+      <!-- Current Proposals -->
+      <div class="proposal-group" *appVar="(currentProposals$ | async) as currentProposals">
+        <h2 class="section-title">
+          Active and Upcoming Proposals
+        </h2>
+
+        <div>
+          <div class="details">
+            <p class="desc">This section lists any proposals that are currently being voted on, as well as any proposals that will require a vote in the near future.</p>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <mat-accordion *ngIf="currentProposals && (currentProposals.length > 0); else noItems">
+          <ng-container *ngFor="let proposal of currentProposals">
+
+            <mat-expansion-panel class="list-item no-padding">
+              <mat-expansion-panel-header class="header">
+                <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                  <div class="meta" fxFlex="1 1 100%">
+                    <div class="name"> <mat-icon *ngIf="+proposal.voteCast > 0" fontIcon="part-circle-check"></mat-icon>({{proposal.proposalId}}) {{ proposal.name }}</div>
+                    <div class="desc">
+                      <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
+                      <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
+                    </div>
+                  </div>
+                  <div class="status-wrap" fxFlex="0 0 140px">
+                    <div class="status" [class.active]="(blockCounter > proposal.blockStart) && (proposal.blockStart > 0)">
+                      <span class="dot"></span>
+                      <ng-container *ngIf="(proposal.blockStart === 0) || (proposal.blockStart > blockCounter); else textActiveLabel">Pending</ng-container>
+                      <ng-template #textActiveLabel>Active</ng-template>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel-header>
+
+              <ng-template matExpansionPanelContent>
+                <div class="details">
+
+                  <h3 class="box-title">Voting Summary</h3>
+                  <p class="desc">
+                    <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposalDescription">
+                      <ng-container *ngIf="proposal.blockEnd <= blockCounter; else descriptionProposalCurrent">
+                        Voting on this proposal has ended and the results displayed below are final.
+                      </ng-container>
+                      <ng-template #descriptionProposalCurrent>
+                        Voting is still in progress, with {{ proposal.blockEnd - blockCounter }} blocks remaining.
+                      </ng-template>
+                    </ng-container>
+
+                    <ng-template #pendingProposalDescription>
+                      Voting on this proposal has not yet started. There is still time to review this proposal and discuss the proposal in further detail before voting begins.
+                    </ng-template>
+                  </p>
+
+                  <mat-divider></mat-divider>
+
+                  <h3 class="box-title">Vote Block Details</h3>
+                  <div class="desc" fxLayoutAlign="space-around center">
+                    <table class="meta">
+                      <tr>
+                        <td class="title">Block Start</td>
+                        <td class="value">{{ proposal.blockStart || "N/A" }}</td>
+                        <td class="title">Block End</td>
+                        <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
+                        <td class="title">Remaining Blocks</td>
+                        <td class="value">
+                          <ng-container *ngIf="(proposal.blockStart > 0) && (blockCounter >= blockStart); else notApplicableText">{{ (proposal.blockEnd - proposal.blockStart) }}</ng-container>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <mat-divider></mat-divider>
+
+                  <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposalGraphs">
+                    <div fxLayoutAlign="space-between stretch">
+                      <div fxLayout="column" fxLayoutAlign="space-between center" class="graph-container">
+                        <h3 class="title">Vote Blocks Remaining</h3>
+                        <div class="graph-container">
+                          <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                        </div>
+                      </div>
+
+                      <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
+                        <h3 class="title">Votes Cast</h3>
+                        <div class="graph-container">
+                          <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <ng-template #pendingProposalGraphs>
+                    <h3 class="box-title">Vote Starts In</h3>
+                    <p class="desc">
+                      Blocks remaining until vote starts: <ng-container *ngIf="proposal.blockStart > 0; else notApplicableText">{{ proposal.blockStart - blockCounter }}</ng-container>
+                    </p>
+                  </ng-template>
+
+                </div>
+
+                <mat-action-row *ngIf="(isColdStaking$ | async); else votingActions" class="warnings">
+                  <div class="alert --boxed --warning">
+                    <span>This wallet is currently cold-staking. Voting would need to be performed via the cold-staking wallet.</span>
+                  </div>
+                </mat-action-row>
+
+                <ng-template #votingActions>
+                  <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+                    <div class="left">
+                      <div class="reporting">
+                        <button mat-button disabled color="primary" class="reporting-status" tabindex="-1" (click)="null;">
+                          <mat-icon fontIcon="part-circle-info"></mat-icon>
+                          <span><strong>Your current vote</strong>: {{ proposal.voteCast || "Abstain" }}</span>
+                        </button>
+                      </div><!-- .reporting -->
+                    </div>
+                    <div class="right">
+                      <button mat-raised-button color="primary" matTooltip="Vote on this proposal" appDebounceClick (debounceClick)="voteOnProposal(proposal.proposalId, proposal.blockStart, proposal.blockEnd, proposal.name, proposal.voteCast)">
+                        <mat-icon fontIcon="part-vote"></mat-icon>
+                        <span>
+                          <ng-container *ngIf="+proposal.voteCast > 0; else labelNoVoteButton">Update Proposal Vote</ng-container><ng-template #labelNoVoteButton>Vote On Proposal</ng-template>
+                        </span>
+                      </button>
+                    </div>
+                  </mat-action-row>
+                </ng-template>
+
+              </ng-template>
+            </mat-expansion-panel>
+
+          </ng-container>
+        </mat-accordion>
+      </div>
+      <!-- End: Current Proposals -->
+
+
+      <!-- Previous Proposals -->
+      <div class="proposal-group completed" *appVar="(previousProposals$ | async) as previousProposals">
+        <h2 class="section-title">
+          Completed Proposals
+        </h2>
+
+        <div>
+          <div class="details">
+            <p class="desc">View the results of the voting on proposals that have completed the voting round.</p>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <mat-accordion *ngIf="previousProposals && (previousProposals.length > 0); else noItems">
+          <ng-container *ngFor="let proposal of previousProposals">
+
+            <mat-expansion-panel class="list-item no-padding">
+              <mat-expansion-panel-header class="header">
+                <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                  <div class="meta" fxFlex="1 1 100%">
+                    <div class="name">({{proposal.proposalId}}) {{ proposal.name }}</div>
+                    <div class="desc">
+                      <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
+                      <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
+                    </div>
+                  </div>
+                  <div class="status-wrap" fxFlex="0 0 140px">
+                    <div class="status complete">
+                      <span class="dot"></span>
+                      Completed
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel-header>
+
+              <ng-template matExpansionPanelContent>
+
+                <div class="details">
+
+                  <h3 class="box-title">Voting Summary</h3>
+                  <p class="desc">Voting on this proposal has ended and the results displayed below are final.</p>
+
+                  <mat-divider></mat-divider>
+
+                  <h3 class="box-title">Vote Block Details</h3>
+                  <div class="desc" fxLayoutAlign="space-around center">
+                    <table class="meta">
+                      <tr>
+                        <td class="title">Block Start</td>
+                        <td class="value">{{ proposal.blockStart || "N/A" }}</td>
+                        <td class="title">Block End</td>
+                        <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
+                        <td class="title">Remaining Blocks</td>
+                        <td class="value">0</td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <mat-divider></mat-divider>
+
+                  <div fxLayoutAlign="space-between stretch">
+                    <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
+                      <h3 class="title">Vote Blocks Remaining</h3>
+                      <div class="graph-container">
+                        <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                      </div>
+                    </div>
+
+                    <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
+                      <h3 class="title">Votes Cast</h3>
+                      <div class="graph-container">
+                        <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </ng-template>
+            </mat-expansion-panel>
+
+          </ng-container>
+        </mat-accordion>
+      </div>
+      <!-- End: Previous Proposals -->
+
+    </ng-container>
+  </div>
+
+</div>
+
+
+<ng-template #notApplicableText>N/A</ng-template>
+
+
+<ng-template #unsynced>
+  <div class="no-results">
+    <img class="illustration" src="./assets/images/illustrations/blockchain-sync_animated.svg" alt="Blockchain is busy syncing">
+    <p>
+      Determining Blockchain Sync Status
+    </p>
+    <p class="help-text">
+      Whether a proposal is active or not, along with various actions and information, relies on an up-to-date node. Please wait while this node completes syncing.
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #noItems>
+  <div class="no-results --smaller">
+    <p>
+      No Proposals Listed
+    </p>
+    <p class="help-text">
+      There are no proposals currently in this category
+    </p>
+  </div>
+</ng-template>

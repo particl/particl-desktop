@@ -1,5 +1,5 @@
-@import "./src/assets/config"; // import shared colors etc.
-@import "./src/app/main-market/shared/list-item-details"; // shared styling for list items
+@import './src/assets/config'; // import shared colors etc.
+@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
 
 .action-buttons {
   margin-top: var(--paddingV);
@@ -35,5 +35,5 @@
 }
 
 .mat-divider {
-  margin: 24px 0px;
+  margin: 24px 0;
 }
