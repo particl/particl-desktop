@@ -8608,10 +8608,10 @@ obuf@^1.0.0, obuf@^1.1.2:
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
 
-omp-lib@^0.1.150:
-  version "0.1.150"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.150.tgz#b85075873b429549f3fed7f45f45778cceb4a03e"
-  integrity sha512-GKUT2LY/zNg8Yrzyuitg5cyk57ttUjIrwGbYVdjvQdLjKlYgBwphN7pG5Rpo1RX5QMMgx5DOZb/y7Dns5DV4jg==
+omp-lib@^0.1.152:
+  version "0.1.152"
+  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.152.tgz#95ac74af1bdd71d31530eb7f3c37c363cb77988c"
+  integrity sha512-jM8HE8DXwy3b+sa7pqfpFsW+rNDXFfkF2mkl6DfApkEBlcmEHIb7Kg4M+2ZtfD49HZgIbbsu7GXCj4l5JsB80g==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -9008,9 +9008,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9019,9 +9019,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-particl-marketplace@./particl-marketplace-0.3.3-alpha002.tgz:
-  version "0.3.3-alpha002"
-  resolved "./particl-marketplace-0.3.3-alpha002.tgz#9b2f37c2eab4471e2a3e6c0dc3061820f84f2e3f"
+particl-marketplace@./particl-marketplace-0.3.3-alpha004.tgz:
+  version "0.3.3-alpha004"
+  resolved "./particl-marketplace-0.3.3-alpha004.tgz#5a00471c28f5d74b15c6650734064c8e29ea4994"
   dependencies:
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -9062,7 +9062,7 @@ particl-marketplace@./particl-marketplace-0.3.3-alpha002.tgz:
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.150"
+    omp-lib "^0.1.152"
     particl-bitcore-lib "^0.16.0"
     particl-zmq "^1.0.6"
     path "^0.12.7"

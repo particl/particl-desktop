@@ -66,13 +66,13 @@ enum TextContent {
   STATE_COMPLETE_STATUS_BUYER = 'Successfully finalized order',
   STATE_COMPLETE_STATUS_SELLER = 'Order delivery confirmed by Buyer - order successfully finalized',
 
-  ACTION_CANCEL_LABEL = 'Cancel Order',
+  ACTION_CANCEL_LABEL = 'Cancel order',
   ACTION_CANCEL_TOOLTIP = 'Cancel the order request',
 
-  ACTION_REJECT_LABEL = 'Reject & cancel order request',
+  ACTION_REJECT_LABEL = 'Reject & cancel order',
   ACTION_REJECT_TOOLTIP = 'Reject this order request, cancelling the order',
 
-  ACTION_ACCEPT_LABEL = 'Accept order',
+  ACTION_ACCEPT_LABEL = 'Accept order request',
   ACTION_ACCEPT_TOOLTIP = 'Approve this order request and sell to this Buyer',
 
   ACTION_REQUEST_ESCROW_LABEL = 'Request Escrow',
@@ -743,16 +743,6 @@ export class BidOrderService implements IBuyflowController {
     actions[ORDER_ITEM_STATUS.CREATED] = [
       {
         fromState: ORDER_ITEM_STATUS.CREATED,
-        toState: ORDER_ITEM_STATUS.ACCEPTED,
-        user: 'SELLER',
-        actionType: 'PRIMARY',
-        details: {
-          label: TextContent.ACTION_ACCEPT_LABEL, tooltip: TextContent.ACTION_ACCEPT_TOOLTIP, colour: 'primary', icon: 'part-check'
-        },
-        transition: this.actionBidAccept.bind(this)
-      },
-      {
-        fromState: ORDER_ITEM_STATUS.CREATED,
         toState: ORDER_ITEM_STATUS.REJECTED,
         user: 'SELLER',
         actionType: 'PRIMARY',
@@ -760,6 +750,16 @@ export class BidOrderService implements IBuyflowController {
           label: TextContent.ACTION_REJECT_LABEL, tooltip: TextContent.ACTION_REJECT_TOOLTIP, colour: 'warn', icon: 'part-cross'
         },
         transition: this.actionBidReject.bind(this)
+      },
+      {
+        fromState: ORDER_ITEM_STATUS.CREATED,
+        toState: ORDER_ITEM_STATUS.ACCEPTED,
+        user: 'SELLER',
+        actionType: 'PRIMARY',
+        details: {
+          label: TextContent.ACTION_ACCEPT_LABEL, tooltip: TextContent.ACTION_ACCEPT_TOOLTIP, colour: 'primary', icon: 'part-check'
+        },
+        transition: this.actionBidAccept.bind(this)
       },
       {
         fromState: ORDER_ITEM_STATUS.CREATED,

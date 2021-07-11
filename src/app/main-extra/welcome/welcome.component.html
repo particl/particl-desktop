@@ -32,7 +32,7 @@
           <p class="desc">Swap your crypto to and from PART effortlessly</p>
         </a-->
 
-        <a class="app item" routerLink="/main/governance">
+        <a class="app item" [routerLink]="null">
           <mat-icon fontIcon="part-vote" class="icon"></mat-icon>
           <h2 class="name">Governance</h2>
           <p class="desc">On-chain community governance proposals and voting results</p>
@@ -52,14 +52,16 @@
 
     </section>
 
+    <div class="messages">
+      <div fxFlex="65" *ngIf="(motd.text.length > 0)">
+        <p>{{ motd.text }}</p>
+        <footer *ngIf="(motd.author.length > 0)" class="author">&mdash; {{ motd.author }}</footer>
+      </div>
+    </div>
+
     <p class="version">
       Particl Desktop {{ clientVersion }}
     </p>
-
-    <blockquote class="quote" *ngIf="(motd.text.length > 0)">
-      <p>{{ motd.text }}</p>
-      <footer *ngIf="(motd.author.length > 0)" class="author">&mdash; {{ motd.author }}</footer>
-    </blockquote>
 
   </div>
 </div><!-- .container -->

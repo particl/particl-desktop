@@ -11,8 +11,30 @@ export interface MessageQuote {
 export class MotdService {
 
   private readonly _messages: MessageQuote[] = [
-    // @TODO: populate these with relevant quotations and optionally their authors (leave blank string for no author)
-    // {text: '', author: ''},
+    {
+      text: 'Did you know that Particl Marketplace allows users to buy currencies, acting as a decentralized exchange? Particl continues Satoshi\'s work.',
+      author: ''
+    },
+    {
+      text: '“I started implementing a marketplace feature earlier that facilitates offering things for sale and taking orders (...). A bit like e-bay, but without auctions (...). Among other things, it would make it easy for anyone to offer currency exchange.”',
+      author: 'Satoshi Nakamoto, Apr 14, 2009'
+    },
+    {
+      text: 'Particl market provides added protection for buyers and sellers, making it a smarter, safer way to shop online. Particl continues Satoshi\'s work.',
+      author: ''
+    },
+    {
+      text: '“I was trying to implement an eBay style marketplace built in to the client(...).”',
+      author: 'Satoshi Nakamoto, Mar 9, 2011'
+    },
+    {
+      text: 'Did you know that Satoshi Nakomoto originally included a decentralised marketplace in the Bitcoin protocol. Particl continues his work.',
+      author: '"#include "market.h" , Satoshi Nakamoto, 2009 Bitcoin source code, headers.h, line 69'
+    },
+    {
+      text: '"// Add atoms to user reviews for coins created"',
+      author: 'Satosh Nakamoto, Bitcoin source code 2009, main.cpp, Line 1226'
+    }
   ];
 
   private readonly _messageIntervalSeconds: number = 120;
