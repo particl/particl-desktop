@@ -38,7 +38,8 @@
     }
   }
 
-  strong, th {
+  strong,
+  th {
     color: var(--text);
     font-weight: 500;
   }
@@ -75,8 +76,9 @@
     color: var(--text);
     font-weight: 500;
     font-size: 14.5px;
-    &:last-of-type { border: none; }
-    &:hover, &:focus {
+    &:last-of-type { border: 0; }
+    &:hover,
+    &:focus {
       color: var(--color-tertiary);
       background: hsla(var(--color-tertiary-hsl), 0.05);
     }
