@@ -19,6 +19,7 @@ const ALLOWED_EXTERNAL_URLS = [
   'https://particl.community',
   'https://particl.wiki',
   'https://ccs.particl.io',
+  'https://academy.particl.io',
 
   // social media links - url path included to prevent any accidental bypass
   'https://discordapp.com/invite/2tVJaZ9',
@@ -330,7 +331,8 @@ if (!instanceLock) {
 
       let matchesAllowedURL = false;
       for (const allowedUrl of ALLOWED_EXTERNAL_URLS) {
-        if (requestUrl.startsWith(allowedUrl)) {
+        const url = allowedUrl.endsWith('/') ? allowedUrl : `${allowedUrl}/`;
+        if ((requestUrl === allowedUrl) || requestUrl.startsWith(url)) {
           matchesAllowedURL = true;
           break;
         }

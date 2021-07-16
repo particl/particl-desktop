@@ -41,7 +41,7 @@ export class WalletSettingsComponent implements OnInit {
   readonly pageDetails: PageInfo = {
     title: 'Wallet Settings',
     description: 'Adjust settings and configuration that apply only to the currently selected wallet',
-    help: 'For configuration of global app settings, click the settings icon in bottom right corner'
+    help: 'For configuration of global app settings, click the settings icon in bottom left corner'
   } as PageInfo;
 
   private _currentGroupIdx: number = 0;
