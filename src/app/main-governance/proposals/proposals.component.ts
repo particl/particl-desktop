@@ -307,14 +307,14 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     return this.blockCounter$.pipe(
       map(currentBlock => {
         const sBlock = +startBlock || 0;
-        const eBlock = 1 + (+endBlock || 0);
+        const eBlock = (+endBlock || 0);
         const totalBlocks = eBlock - sBlock;
         let completedBlocks = 0;
         let remainingBlocks = 0;
 
         if (totalBlocks > 1) {
           remainingBlocks = eBlock > currentBlock ? eBlock - currentBlock : 0;
-          completedBlocks = totalBlocks - remainingBlocks;
+          completedBlocks = totalBlocks - remainingBlocks + 1;
         }
 
         const completed: ChartDataItem = {

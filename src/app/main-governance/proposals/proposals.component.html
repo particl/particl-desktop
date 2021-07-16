@@ -143,7 +143,7 @@
                           <tr>
                             <th class="title">Remaining Blocks</th>
                             <td class="value">
-                              <ng-container *ngIf="(proposal.blockStart > 0) && (blockCounter >= blockStart); else notApplicableText">{{ (proposal.blockEnd - proposal.blockStart) }}</ng-container>
+                              <ng-container *ngIf="(proposal.blockStart > 0) && (blockCounter >= proposal.blockStart); else notApplicableText">{{ (proposal.blockEnd - blockCounter) }}</ng-container>
                             </td>
                           </tr>
                         </table>
@@ -282,7 +282,7 @@
                       </div>
                     </div><!-- .vote-block-details -->
 
-                  </div><!-- .meta-stats -->                  
+                  </div><!-- .meta-stats -->
 
                   <mat-divider></mat-divider>
 
