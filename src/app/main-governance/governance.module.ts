@@ -18,6 +18,9 @@ const routes: Routes = [
         path: 'proposals',
         loadChildren: () => import('./proposals/proposals.module').then(m => m.ProposalsModule),
       },
+      { path: 'about-howto',
+        loadChildren: () => import('./about-howto/about-howto.module').then(m => m.AboutHowtoModule),
+      },
       { path: '**', redirectTo: 'proposals' },
     ]
   }

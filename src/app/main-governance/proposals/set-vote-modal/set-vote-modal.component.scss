@@ -12,12 +12,21 @@ mat-dialog-title {
       top: 1px;
       margin-right: 3px;
     }
+    span.proposal-id {
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 4px;
+      font-size: 13px;
+      &::before {
+        content: "#";
+      }
+    }
   }
 }
 
 .mat-dialog-content {
   padding: var(--padding);
-  width: 40rem;
+  width: 30rem;
 }
 
 // ------ UI ------ //

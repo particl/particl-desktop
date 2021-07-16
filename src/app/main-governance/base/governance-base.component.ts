@@ -22,6 +22,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 
 enum TextContent {
   ROUTE_LABEL_PROPOSALS = 'Proposals',
+  ROUTE_LABEL_ABOUT = 'About & Howto',
   UNKNOWN_WALLET = '<invalid>',
   DEFAULT_WALLETNAME = 'Default Wallet',
   REFRESH_ERROR = 'Updating of the proposals failed',
@@ -52,7 +53,8 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
 
   readonly clientVersion: string = environment.governanceVersion || '';
   readonly menu: MenuItem[] = [
-    { path: 'proposals', icon: 'part-vote', text: TextContent.ROUTE_LABEL_PROPOSALS }
+    { path: 'proposals', icon: 'part-vote', text: TextContent.ROUTE_LABEL_PROPOSALS },
+    { path: 'about-howto', icon: 'part-circle-info', text: TextContent.ROUTE_LABEL_ABOUT },
   ];
   readonly selectedWallet$: Observable<Wallet>;
   readonly currentWalletBalance$: Observable<string>;

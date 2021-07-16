@@ -1,57 +1,16 @@
 @import './src/assets/_config';
 
-.page-header-content {
-  h3 {
-    margin-bottom: 1.25em;
-    margin-top: 2.25em;
-  }
-
-  .mat-divider {
-    margin: 24px 0;
-  }
-
-  .header-votes {
-    display: flex;
-
-    .category {
-      flex: 50%;
-      margin-right: 48px;
-    }
-
-    table.meta {
-      display: block;
-      width: 100%;
-      padding: 5px 0 0;
-      // color: hsla(var(--text-hsl), 0.7);
-      tr {
-        display: flex;
-        &.data-row {
-          border-bottom: 1px solid var(--bg-muted);
-        }
-      }
-      th {
-        padding: 0 0 5px 2px;
-        font-weight: 500;
-        // color: var(--text);
-      }
-      td {
-        line-height: 40px; // match checkbox's ripple height (otherwise vertical scroll is triggered)
-        padding: 0;
-        padding-left: 4px;
-      }
-      .title {
-        flex: 25%;
-      }
-      .value {
-        flex: 50%;
-      }
-    }
-  }
-}
-
 .filter {
-  .mat-divider {
-    margin: 24px 0;
+  .block-counter {
+    @extend %mat-card;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    margin-bottom: var(--paddingV);
+    &::before {
+      content: "#";
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
   }
   .filter-buttons {
     display: flex;
@@ -68,22 +27,22 @@
 
 .proposal-group {
   &.completed {
-    margin: 48px 0;
+    margin: var(--paddingV) 0 0;
   }
 
   .mat-divider {
-    margin: 24px 0;
+    margin: var(--paddingV) calc(-1 * var(--paddingH));
   }
 }
 
 .list-item {
   // Listing/Order
-  --list-item-size: 80px;
+  --list-item-size: 90px;
   @include break(l) {
-    --list-item-size: 85px;
+    --list-item-size: 100px;
   }
   @include break(xl) {
-    --list-item-size: 90px;
+    --list-item-size: 105px;
   }
   padding: 0;
   margin-bottom: var(--card-spacing) !important;
@@ -97,7 +56,7 @@
   .header-wrapper {
     width: 100%;
     padding-right: 24px;
-    padding-left: 24px;
+    padding-left: 32px;
     place-content: center space-between;
     align-items: center;
     .meta {
@@ -114,10 +73,20 @@
         @include break(xl) {
           margin-bottom: 5px;
         }
-
         mat-icon {
           color: var(--color-primary);
-          margin-right: 0.5em;
+          margin-right: 3px;
+          position: relative;
+          top: 2px;
+        }
+        span.proposal-id {
+          font-weight: 400;
+          color: var(--text-muted);
+          margin-left: 4px;
+          font-size: 13px;
+          &::before {
+            content: "#";
+          }
         }
       }
       .desc {
@@ -131,7 +100,6 @@
       }
       .link {
         margin: 2px 12px 0 0;
-
         &.ccs {
           color: var(--color-secondary) !important;
           border-color: var(--color-secondary);
@@ -195,8 +163,7 @@
         content: none;
       }
     }
-    .dot {
-      // status indicator
+    .dot { // "pending" status indicator
       display: inline-block;
       width: 7px;
       height: 7px;
@@ -207,26 +174,26 @@
       background: var(--bg-muted);
     }
 
-    &.complete {
-      .dot {
-        background: var(--color-primary);
-      }
-    }
-    &.active {
+    &.complete { // "complete" status indicator
       .dot {
         background: var(--color-secondary);
       }
-      .dot::after {
-        content: '';
-        animation: pulse-fade 1s infinite;
-        width: 7px;
-        height: 7px;
-        display: block;
-        border-radius: 50%;
-        border: 2px solid var(--bg-muted);
-        position: absolute;
-        top: -2px;
-        left: -2px;
+    }
+    &.active { // "active" status indicator
+      .dot {
+        background: var(--color-primary);
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 7px;
+          height: 7px;
+          display: block;
+          border-radius: 50%;
+          border: 2px solid var(--color-primary);
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
       }
     }
   }
@@ -234,6 +201,16 @@
   .details {
     border-top: 1px dashed var(--bg-muted);
     padding: 0 32px 24px;
+    .meta-stats {
+      display: flex;
+      .voting-summary {
+        flex: 0 0 50%;
+      }
+      .vote-block-details {
+        flex: 0 0 50%;
+        margin-left: var(--paddingH);
+      }
+    }
     .item-subtitle {
       @include break(l) {
         margin-top: 28px;
