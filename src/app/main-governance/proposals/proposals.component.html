@@ -53,7 +53,7 @@
 
       <div class="right">
         <!-- Clear filters -->
-        <button mat-button color="basic" class="small icon-only filter-button clear-filters" appDebounceClick (debounceClick)="clearAllFilters()" matTooltip="Clear all filters">
+        <button mat-button color="basic" class="small filter-button clear-filters" appDebounceClick (debounceClick)="clearAllFilters()" matTooltip="Clear all filters">
           <mat-icon fontIcon="part-clear-all"></mat-icon>
           Clear filters
         </button>
@@ -78,8 +78,7 @@
           <div class="details">
             <p class="desc">This section lists any proposals that are currently being voted on, as well as any proposals that will require a vote in the near future.</p>
           </div>
-        </div>
-        <mat-divider></mat-divider-->
+        </div-->
         <mat-accordion *ngIf="currentProposals && (currentProposals.length > 0); else noItems">
           <ng-container *ngFor="let proposal of currentProposals">
 
@@ -87,7 +86,11 @@
               <mat-expansion-panel-header class="header">
                 <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
                   <div class="meta" fxFlex="1 1 100%">
-                    <div class="name"> <mat-icon *ngIf="+proposal.voteCast > 0" fontIcon="part-circle-check"></mat-icon>({{proposal.proposalId}}) {{ proposal.name }}</div>
+                    <div class="name">
+                      <mat-icon *ngIf="+proposal.voteCast > 0" fontIcon="part-circle-check" matTooltip="Actively voting on this Proposal" matTooltipPosition="before"></mat-icon>
+                      {{ proposal.name }}
+                      <span class="proposal-id">{{proposal.proposalId}}</span>
+                    </div>
                     <div class="desc">
                       <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
                       <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
@@ -105,54 +108,63 @@
 
               <ng-template matExpansionPanelContent>
                 <div class="details">
+                  <div class="meta-stats">
 
-                  <h3 class="box-title">Voting Summary</h3>
-                  <p class="desc">
-                    <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposalDescription">
-                      <ng-container *ngIf="proposal.blockEnd <= blockCounter; else descriptionProposalCurrent">
-                        Voting on this proposal has ended and the results displayed below are final.
-                      </ng-container>
-                      <ng-template #descriptionProposalCurrent>
-                        Voting is still in progress, with {{ proposal.blockEnd - blockCounter }} blocks remaining.
-                      </ng-template>
-                    </ng-container>
+                    <div class="voting-summary">
+                      <h3 class="item-subtitle">Voting Summary</h3>
+                      <p class="desc">
+                        <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposalDescription">
+                          <ng-container *ngIf="proposal.blockEnd <= blockCounter; else descriptionProposalCurrent">
+                            Voting on this proposal has ended and the results displayed below are final
+                          </ng-container>
+                          <ng-template #descriptionProposalCurrent>
+                            Voting is still in progress, with {{ proposal.blockEnd - blockCounter }} blocks remaining
+                          </ng-template>
+                        </ng-container>
 
-                    <ng-template #pendingProposalDescription>
-                      Voting on this proposal has not yet started. There is still time to review this proposal and discuss the proposal in further detail before voting begins.
-                    </ng-template>
-                  </p>
+                        <ng-template #pendingProposalDescription>
+                          Voting on this proposal has not yet started. There is still time to review this proposal and discuss the proposal in further detail before voting begins.
+                        </ng-template>
+                      </p>
+                    </div><!-- .voting-summary -->
 
-                  <mat-divider></mat-divider>
+                    <div class="vote-block-details">
+                      <h3 class="item-subtitle">Vote Block Details</h3>
+                      <div class="desc">
+                        <table class="prices">
+                          <tr>
+                            <th class="title">Block Start</th>
+                            <td class="value">{{ proposal.blockStart || "N/A" }}</td>
+                          </tr>
+                          <tr>
+                            <th class="title">Block End</th>
+                            <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
+                          </tr>
+                          <tr>
+                            <th class="title">Remaining Blocks</th>
+                            <td class="value">
+                              <ng-container *ngIf="(proposal.blockStart > 0) && (blockCounter >= blockStart); else notApplicableText">{{ (proposal.blockEnd - proposal.blockStart) }}</ng-container>
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div><!-- .vote-block-details -->
 
-                  <h3 class="box-title">Vote Block Details</h3>
-                  <div class="desc" fxLayoutAlign="space-around center">
-                    <table class="meta">
-                      <tr>
-                        <td class="title">Block Start</td>
-                        <td class="value">{{ proposal.blockStart || "N/A" }}</td>
-                        <td class="title">Block End</td>
-                        <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
-                        <td class="title">Remaining Blocks</td>
-                        <td class="value">
-                          <ng-container *ngIf="(proposal.blockStart > 0) && (blockCounter >= blockStart); else notApplicableText">{{ (proposal.blockEnd - proposal.blockStart) }}</ng-container>
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
+                  </div><!-- .meta-stats-->
 
                   <mat-divider></mat-divider>
 
                   <ng-container *ngIf="(proposal.blockStart !== 0) && (proposal.blockStart <= blockCounter); else pendingProposalGraphs">
                     <div fxLayoutAlign="space-between stretch">
                       <div fxLayout="column" fxLayoutAlign="space-between center" class="graph-container">
-                        <h3 class="title">Vote Blocks Remaining</h3>
+                        <h3 class="item-subtitle">Vote Blocks Remaining</h3>
                         <div class="graph-container">
                           <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                         </div>
                       </div>
 
                       <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
-                        <h3 class="title">Votes Cast</h3>
+                        <h3 class="item-subtitle">Votes Cast</h3>
                         <div class="graph-container">
                           <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                         </div>
@@ -161,7 +173,7 @@
                   </ng-container>
 
                   <ng-template #pendingProposalGraphs>
-                    <h3 class="box-title">Vote Starts In</h3>
+                    <h3 class="item-subtitle">Vote Starts In</h3>
                     <p class="desc">
                       Blocks remaining until vote starts: <ng-container *ngIf="proposal.blockStart > 0; else notApplicableText">{{ proposal.blockStart - blockCounter }}</ng-container>
                     </p>
@@ -215,8 +227,7 @@
           <div class="details">
             <p class="desc">View the results of the voting on proposals that have completed the voting round.</p>
           </div>
-        </div>
-        <mat-divider></mat-divider-->
+        </div-->
         <mat-accordion *ngIf="previousProposals && (previousProposals.length > 0); else noItems">
           <ng-container *ngFor="let proposal of previousProposals">
 
@@ -224,14 +235,16 @@
               <mat-expansion-panel-header class="header">
                 <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
                   <div class="meta" fxFlex="1 1 100%">
-                    <div class="name">({{proposal.proposalId}}) {{ proposal.name }}</div>
+                    <div class="name">
+                      {{ proposal.name }}
+                      <span class="proposal-id">{{proposal.proposalId}}</span>
+                    </div>
                     <div class="desc">
-                      <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs" >View on CCS website</a>
-                      <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github" >View on Github</a>
+                      <a [href]="proposal.infoUrls.ccs" target="_blank" *ngIf="proposal.infoUrls?.ccs?.length > 0" class="link tag ccs">View on CCS website</a>
+                      <a [href]="proposal.infoUrls.github" target="_blank" *ngIf="proposal.infoUrls?.github?.length > 0" class="link tag github">View on Github</a>
                     </div>
                   </div>
                   <div class="status-wrap" fxFlex="0 0 140px">
-                    <!-- @TODO: can we do "passed" and "failed" instead of just "complete"? that would give much nicer quick overview without the need to click through to GH -->
                     <div class="status complete">
                       <span class="dot"></span>Completed
                     </div>
@@ -242,38 +255,47 @@
               <ng-template matExpansionPanelContent>
 
                 <div class="details">
+                  <div class="meta-stats">
 
-                  <h3 class="box-title">Voting Summary</h3>
-                  <p class="desc">Voting on this proposal has ended and the results displayed below are final.</p>
+                    <div class="voting-summary">
+                      <h3 class="item-subtitle">Voting Summary</h3>
+                      <p class="desc">Voting on this proposal has ended and the results displayed below are final</p>
+                    </div><!-- .voting-summary -->
 
-                  <mat-divider></mat-divider>
+                    <div class="vote-block-details">
+                      <h3 class="item-subtitle">Vote Block Details</h3>
+                      <div class="desc">
+                        <table class="prices">
+                          <tr>
+                            <th class="title">Block Start</th>
+                            <td class="value">{{ proposal.blockStart || "N/A" }}</td>
+                          </tr>
+                          <tr>
+                            <th class="title">Block End</th>
+                            <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
+                          </tr>
+                          <tr>
+                            <th class="title">Remaining Blocks</th>
+                            <td class="value">0</td>
+                          </tr>
+                        </table>
+                      </div>
+                    </div><!-- .vote-block-details -->
 
-                  <h3 class="box-title">Vote Block Details</h3>
-                  <div class="desc" fxLayoutAlign="space-around center">
-                    <table class="meta">
-                      <tr>
-                        <td class="title">Block Start</td>
-                        <td class="value">{{ proposal.blockStart || "N/A" }}</td>
-                        <td class="title">Block End</td>
-                        <td class="value">{{ proposal.blockEnd || "N/A" }}</td>
-                        <td class="title">Remaining Blocks</td>
-                        <td class="value">0</td>
-                      </tr>
-                    </table>
-                  </div>
+                  </div><!-- .meta-stats -->                  
 
                   <mat-divider></mat-divider>
 
                   <div fxLayoutAlign="space-between stretch">
                     <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
-                      <h3 class="title">Vote Blocks Remaining</h3>
+                      <h3 class="item-subtitle">Vote Blocks Remaining</h3>
                       <div class="graph-container">
                         <governance-chart-rose titleData="Vote Blocks Remaining" [dataSeries$]="fetchChartBlocksData(proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                       </div>
                     </div>
 
                     <div class="graph-container" fxLayout="column" fxLayoutAlign="space-between center">
-                      <h3 class="title">Votes Cast</h3>
+                      <h3 class="item-subtitle">Votes Cast</h3>
                       <div class="graph-container">
                         <governance-chart-rose titleData="Votes Cast" [dataSeries$]="fetchChartVoteData(proposal.proposalId, proposal.blockStart, proposal.blockEnd)"></governance-chart-rose>
                       </div>

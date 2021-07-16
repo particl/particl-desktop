@@ -27,22 +27,22 @@
 
 .proposal-group {
   &.completed {
-    margin: 48px 0;
+    margin: var(--paddingV) 0 0;
   }
 
   .mat-divider {
-    margin: 24px 0;
+    margin: var(--paddingV) calc(-1 * var(--paddingH));
   }
 }
 
 .list-item {
   // Listing/Order
-  --list-item-size: 80px;
+  --list-item-size: 90px;
   @include break(l) {
-    --list-item-size: 85px;
+    --list-item-size: 100px;
   }
   @include break(xl) {
-    --list-item-size: 90px;
+    --list-item-size: 105px;
   }
   padding: 0;
   margin-bottom: var(--card-spacing) !important;
@@ -56,7 +56,7 @@
   .header-wrapper {
     width: 100%;
     padding-right: 24px;
-    padding-left: 24px;
+    padding-left: 32px;
     place-content: center space-between;
     align-items: center;
     .meta {
@@ -73,10 +73,20 @@
         @include break(xl) {
           margin-bottom: 5px;
         }
-
         mat-icon {
           color: var(--color-primary);
-          margin-right: 0.5em;
+          margin-right: 3px;
+          position: relative;
+          top: 2px;
+        }
+        span.proposal-id {
+          font-weight: 400;
+          color: var(--text-muted);
+          margin-left: 4px;
+          font-size: 13px;
+          &::before {
+            content: "#";
+          }
         }
       }
       .desc {
@@ -172,18 +182,18 @@
     &.active { // "active" status indicator
       .dot {
         background: var(--color-primary);
-      }
-      .dot::after {
-        content: '';
-        animation: pulse-fade 1s infinite;
-        width: 7px;
-        height: 7px;
-        display: block;
-        border-radius: 50%;
-        border: 2px solid var(--bg-muted);
-        position: absolute;
-        top: -2px;
-        left: -2px;
+        &::after {
+          content: '';
+          animation: pulse-fade 1s infinite;
+          width: 7px;
+          height: 7px;
+          display: block;
+          border-radius: 50%;
+          border: 2px solid var(--color-primary);
+          position: absolute;
+          top: -2px;
+          left: -2px;
+        }
       }
     }
   }
@@ -191,6 +201,16 @@
   .details {
     border-top: 1px dashed var(--bg-muted);
     padding: 0 32px 24px;
+    .meta-stats {
+      display: flex;
+      .voting-summary {
+        flex: 0 0 50%;
+      }
+      .vote-block-details {
+        flex: 0 0 50%;
+        margin-left: var(--paddingH);
+      }
+    }
     .item-subtitle {
       @include break(l) {
         margin-top: 28px;
