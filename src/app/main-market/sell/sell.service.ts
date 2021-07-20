@@ -400,8 +400,18 @@ export class SellService {
 
     return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => {
-        if (isBasicObjectType(resp) && (+resp.fee > 0)) {
-          return +resp.fee;
+
+        if (isBasicObjectType(resp)) {
+          let amount = 0;
+          if (+resp.totalFees > 0) {
+            amount = +resp.totalFees;
+          } else if (+resp.fee > 0) {
+            amount += +resp.fee;
+          }
+
+          if (amount > 0) {
+            return amount;
+          }
         }
         throwError('Invalid market request!');
       })

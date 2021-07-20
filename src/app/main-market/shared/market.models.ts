@@ -422,10 +422,15 @@ export interface RespListingTemplate {
 
 
 export interface RespItemPost {
+  availableUtxos: number;
+  error: string;
+  fee?: number;
   result: string;  // Should be: 'Sent' | 'Not Sent'; but sometimes seems to include '.' characters sometimes not, etc
+  totalFees: number;
   msgid?: string;
   txid?: string;
-  fee?: number;
+  tx_bytes?: number;
+  childResults: {result: string; fee: number; tx_bytes: number;}[];
 }
 
 
