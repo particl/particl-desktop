@@ -430,7 +430,7 @@ export interface RespItemPost {
   msgid?: string;
   txid?: string;
   tx_bytes?: number;
-  childResults: {result: string; fee: number; tx_bytes: number;}[];
+  childResults?: { result: string; fee: number; tx_bytes: number; }[];
 }
 
 
