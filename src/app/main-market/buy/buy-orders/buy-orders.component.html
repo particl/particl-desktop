@@ -137,6 +137,9 @@
         </div>
 
         <div class="detail">
+          <div *ngIf="orderItem?.extraDetails?.wasPreviouslyCancelled" class="alert --boxed --warning">
+            <span>This item was cancelled, however, the seller had already locked the escrow thus voiding the cancellation request.</span>
+          </div>
 
           <div class="highlights" *ngIf="orderItem.extraDetails !== undefined">
             <table>
