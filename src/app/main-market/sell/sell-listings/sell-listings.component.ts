@@ -274,10 +274,18 @@ export class SellListingsComponent implements OnInit, OnDestroy {
     const foundIndexes: number[] = [];
 
     this.allListings.forEach((li: SellListing, idx: number) => {
+      let statusFilter = false;
+      switch(filterStatus) {
+        case FilterStatusValues.ALL: statusFilter = true; break;
+        case FilterStatusValues.ACTIVE: statusFilter = li.expires > 0; break;
+        case FilterStatusValues.ALL: statusFilter = li.expires <= now; break;
+        default:
+          statusFilter = false;
+      }
       if (
         (baseTemplateId > 0 ? li.idBaseTemplate === baseTemplateId : true) &&
         (filterMarket === '' ? true : li.marketKey === filterMarket) &&
-        (filterStatus === FilterStatusValues.ALL ? true : (filterStatus === FilterStatusValues.ACTIVE ? li.expires > now : false)) &&
+        statusFilter &&
         li.title.toLowerCase().includes(searchStr)
       ) {
         foundIndexes.push(idx);
