@@ -187,7 +187,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
 
                       case '[object Array]':
                         // value comes back as a string, so split and trim each item and then assign
-                        detail[f.mappedTo] = (<string>getValueOrDefault(res[f.field], 'string', detail[f.mappedTo]))
+                        detail[f.mappedTo] = (<string>getValueOrDefault(res[f.field], 'string', ''))
                           .split(',')
                           .map(s => s.trim())
                           .filter(s => s.length > 0);
