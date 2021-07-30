@@ -6,8 +6,9 @@ import { exhaustMap, takeUntil, finalize, map, take, concatMap } from 'rxjs/oper
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
-import { TemplateFormDetails } from 'app/main-market/sell/sell.models';
+import { isBasicObjectType, getValueOrDefault } from '../../../../shared/utils';
+import { TemplateFormDetails } from '../../../sell.models';
+import { RegionListService } from '../../../../services/region-list/region-list.service';
 
 
 interface CsvImportOptions {
@@ -42,6 +43,8 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
     {field: 'domestic_shipping_price', mappedTo: 'priceShipLocal', description: 'price (in PART) for shipping the Product inside your country (specified later)'},
     {field: 'international_shipping_price', mappedTo: 'priceShipIntl', description: 'price for shipping the Product worldwide (outside your country)'},
     {field: 'source_country', mappedTo: 'shippingOrigin', description: 'the ISO3166 (alpha-2) 2 letter country code where the product is to be shipped from'},
+    {field: 'destination_countries', mappedTo: 'shippingDestinations',
+      description: '(optional), a comma-separated list of the ISO3166 (alpha-2) 2 letter country codes where the product can be purchased from (where the product can be shipped to).'},
   ];
 
   csvInputForm: FormGroup;
@@ -54,7 +57,8 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
 
   constructor(
     private _ipc: IpcService,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _regionService: RegionListService
   ) {
     this.csvInputForm = new FormGroup({
       source: new FormControl('', [Validators.required]),
@@ -147,6 +151,15 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
               return details;
             }
 
+            const allCountriesList = this._regionService.getCountryList();
+            const getCountryISO = (codeOrCountry: string): string => {
+              const country = allCountriesList.find(c => (c.iso === codeOrCountry) || (c.name === codeOrCountry));
+              if (country) {
+                return country.iso;
+              }
+              return '';
+            }
+
             results.forEach(res => {
 
               if (isBasicObjectType(res)) {
@@ -166,9 +179,29 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
 
                 this.CSV_FIELDS.forEach(f => {
                   if (f.mappedTo.length > 0) {
-                    detail[f.mappedTo] = getValueOrDefault(res[f.field], 'string', detail[f.mappedTo]);
+
+                    switch(Object.prototype.toString.call(detail[f.mappedTo])) {
+                      case '[object String]':
+                        detail[f.mappedTo] = getValueOrDefault(res[f.field], 'string', detail[f.mappedTo]).trim();
+                        break;
+
+                      case '[object Array]':
+                        // value comes back as a string, so split and trim each item and then assign
+                        detail[f.mappedTo] = (<string>getValueOrDefault(res[f.field], 'string', detail[f.mappedTo]))
+                          .split(',')
+                          .map(s => s.trim())
+                          .filter(s => s.length > 0);
+                        break;
+                    }
                   }
                 });
+
+                if (detail.shippingOrigin) {
+                  detail.shippingOrigin = getCountryISO(detail.shippingOrigin);
+                }
+                if (detail.shippingDestinations) {
+                  detail.shippingDestinations.map(s => getCountryISO(s.trim())).filter(s => s.length > 0);
+                }
 
                 details.push(detail);
               }
