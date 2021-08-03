@@ -12,7 +12,7 @@ import { WalletUTXOState } from 'app/main/store/main.state';
 import { SellService } from '../../sell.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
-import { PublishDurations } from '../../sell.models';
+import { PublishDurations, PublishWarnings } from '../../sell.models';
 import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 
 
@@ -44,8 +44,11 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
 
   currentBalance: number = 0;
   selectedDuration: FormControl = new FormControl(0);
+  warningConfirmation: FormControl = new FormControl(false);
   selectedDurationOptionIndex: number = -1;
   formIsValid: FormControl = new FormControl(false);
+  hasWarnings: boolean = false;
+
 
   readonly templateDetails: TemplateDetails;
 
@@ -103,13 +106,18 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       const baseDuration = this.availableDurations.find(d => d.value > 0);
       if (baseDuration) {
         init$ = this._sellService.estimatePublishFee(this.templateDetails.templateID, baseDuration.value).pipe(
-          tap(fee => {
+          tap(({fee, warnings}) => {
             if (+fee > 0) {
               this.availableDurations.forEach(dur => {
                 dur.estimateFee = new PartoshiAmount(dur.value / baseDuration.value).multiply(fee).particls();
               });
+
+              if (warnings.includes(PublishWarnings.INSUFFICIENT_UTXOS)) {
+                this.hasWarnings = true;
+              }
             }
           }),
+          map(({ fee }) => +fee),
           catchError(() => of(0)) // basically, do nothing if there is an error
         );
       }
@@ -144,9 +152,14 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    const warnings$ = this.warningConfirmation.valueChanges.pipe(
+      takeUntil(this.destroy$)
+    );
+
     const validity$ = merge(
       balanceChange$,
       durationChange$,
+      warnings$,
       init$
     ).pipe(
       tap(() => {
@@ -154,7 +167,8 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
           this.isDataValid &&
           (this.selectedDurationOptionIndex > -1) &&
           (+this.availableDurations[this.selectedDurationOptionIndex].estimateFee > 0) &&
-          (+this.availableDurations[this.selectedDurationOptionIndex].estimateFee <= +this.currentBalance)
+          (+this.availableDurations[this.selectedDurationOptionIndex].estimateFee <= +this.currentBalance) &&
+          (this.hasWarnings ? this.warningConfirmation.value : true)
         );
       }),
       takeUntil(this.destroy$)
