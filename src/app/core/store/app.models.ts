@@ -15,6 +15,7 @@ export interface AppStateModel {
 
 export interface CoreConnectionModel {
   testnet: boolean;
+  regtest: boolean;
   auth: string;
   rpcbind: string;
   port: number;

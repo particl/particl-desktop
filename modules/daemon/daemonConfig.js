@@ -303,6 +303,8 @@ const initializeIpcChannels = () => {
         let walletPath = cookie.getParticlPath(_options);
         if (_options.testnet) {
           walletPath = path.join(walletPath, 'testnet');
+        } else if (_options.regtest) {
+          walletPath = path.join(walletPath, 'regtest');
         }
 
         let pathExists = false;
