@@ -275,7 +275,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
 
     this.allListings.forEach((li: SellListing, idx: number) => {
       let statusFilter = false;
-      switch(filterStatus) {
+      switch (filterStatus) {
         case FilterStatusValues.ALL: statusFilter = true; break;
         case FilterStatusValues.ACTIVE: statusFilter = li.expires > 0; break;
         case FilterStatusValues.ALL: statusFilter = li.expires <= now; break;

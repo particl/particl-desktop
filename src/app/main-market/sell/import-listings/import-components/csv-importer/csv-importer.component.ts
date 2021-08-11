@@ -158,7 +158,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                 return country.iso;
               }
               return '';
-            }
+            };
 
             results.forEach(res => {
 
@@ -180,7 +180,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                 this.CSV_FIELDS.forEach(f => {
                   if (f.mappedTo.length > 0) {
 
-                    switch(Object.prototype.toString.call(detail[f.mappedTo])) {
+                    switch (Object.prototype.toString.call(detail[f.mappedTo])) {
                       case '[object String]':
                         detail[f.mappedTo] = getValueOrDefault(res[f.field], 'string', detail[f.mappedTo]).trim();
                         break;

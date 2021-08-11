@@ -361,7 +361,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
               show: vote.votes > 0
             }
           };
-          // temporary measure to attempt showing a gray colour for non-cast votes: temporary because it'll possibly fail if using different languages
+          // temporary measure to attempt showing a gray colour for non-cast votes:
+          //    (temporary because it'll possibly fail if using different languages)
           if (vote.label === 'Abstain') {
             cdi.itemStyle = { color: '#858c92' };
           }
