@@ -65,6 +65,7 @@ export interface OrderItem {
     escrowTxn: string;
     releaseTxn: string;
     rejectionReason: string;
+    wasPreviouslyCancelled: boolean;
   };
 }
 

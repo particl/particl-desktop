@@ -81,6 +81,13 @@
         <p>
           Fee is estimated at: PART {{ availableDurations[selectedDurationOptionIndex].estimateFee }}
         </p>
+        <p class="warning" *ngIf="hasWarnings">
+          While you have sufficient funds to create this listing item, there may not be enough utxos to publish all of its images. You should either:
+        </p>
+        <ul class="checks" *ngIf="hasWarnings">
+          <li>Create additional utxos, typically by sending/converting additional funds (possibly increasing the number of utxo split count)</li>
+          <li>Remove some of the item's images</li>
+        </ul>
       </ng-container>
     </ng-template>
   </mat-card><!-- .publish-duration -->
@@ -92,14 +99,22 @@
 
 <mat-dialog-actions>
 
-  <button type="button" mat-button mat-dialog-close>
-    <mat-icon fontIcon="part-cross"></mat-icon>
-    Cancel
-  </button>
+  <div class="left">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+  </div>
 
-  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doPublish()" [disabled]="!formIsValid.value">
-    <mat-icon fontIcon="part-check"></mat-icon>
-    Publish Listing
-  </button>
+  <div class="right">
+    <mat-checkbox *ngIf="hasWarnings" [formControl]="warningConfirmation" class="confirmation-checkbox">
+      Publish anyway?
+    </mat-checkbox>
+
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doPublish()" [disabled]="!formIsValid.value">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Publish Listing
+    </button>
+  </div>
 
 </mat-dialog-actions>

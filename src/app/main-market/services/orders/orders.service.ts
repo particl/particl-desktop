@@ -10,7 +10,7 @@ import { RegionListService } from '../region-list/region-list.service';
 
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
-import { BID_DATA_KEY, ORDER_ITEM_STATUS, RespOrderSearchItem, ESCROW_TYPE } from '../../shared/market.models';
+import { BID_DATA_KEY, ORDER_ITEM_STATUS, RespOrderSearchItem, ESCROW_TYPE, BID_STATUS } from '../../shared/market.models';
 import {
   OrderItem,
   OrderUserType,
@@ -456,6 +456,8 @@ export class BidOrderService implements IBuyflowController {
       // find the child bid with the highest quantity of bid datas
       let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
 
+      let hasCancelOrderRequest = false;
+
       src.OrderItems[0].Bid.ChildBids.forEach(childBid => {
         if (isBasicObjectType(childBid)) {
           if (Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
@@ -465,6 +467,9 @@ export class BidOrderService implements IBuyflowController {
           if ((+childBid.generatedAt > latestGenerated) && (typeof childBid.hash === 'string') && (childBid.hash.length > 0)) {
             latestGenerated = +childBid.generatedAt;
             latestBidHash = childBid.hash;
+          }
+          if (childBid.type === BID_STATUS.ORDER_CANCELLED) {
+            hasCancelOrderRequest = true;
           }
         }
       });
@@ -481,7 +486,8 @@ export class BidOrderService implements IBuyflowController {
           releaseMemo: '',
           escrowTxn: '',
           releaseTxn: '',
-          rejectionReason: ''
+          rejectionReason: '',
+          wasPreviouslyCancelled: hasCancelOrderRequest && (src.OrderItems[0].status !== ORDER_ITEM_STATUS.CANCELLED),
         };
         foundBidDatas.forEach(d => {
           if (isBasicObjectType(d)) {
