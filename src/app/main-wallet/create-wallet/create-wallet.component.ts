@@ -117,6 +117,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
 
   // mnemonic words verification
   private wordsVerification: string[] = [];
+  private useTwelveWordWallet: boolean = false;
 
   private isSettingWalletName: boolean = false;
   @ViewChild('mainPage', {static: true}) private mainContentPage: ElementRef;
@@ -210,7 +211,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   get isSeedWordsValid(): boolean {
-    return !((this.words.length === 0) || (this.words.filter(word => word.trim().length === 0).length > 0));
+    return (this.words.length !== 0) && this.words.filter(word => word.trim().length === 0).length === (this.useTwelveWordWallet ? this.words.length - 12 : 0);
   }
 
 
@@ -549,14 +550,14 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
           obs = of(true);
         } else if (this.actionFlow === 'restore') {
           this.words = this.words.map(word => word.trim());
-          const unmatched = this.words.filter(word => word.length > 0);
-          if (unmatched.length === this.words.length) {
+          const providedWords = this.words.filter(word => word.length > 0);
+          if (providedWords.length === (this.useTwelveWordWallet ? 12 : this.words.length)) {
             obs = this._createService.dumpWordsList().pipe(
               catchError(() => of({words: []})),
               concatMap((response) => {
                 const allWords = response.words;
                 let valid = true;
-                for (const word of this.words) {
+                for (const word of providedWords) {
                   if (!allWords.includes(word)) {
                     valid = false;
                     this.errorString = TextContent.ERROR_MNEMONIC_INVALID_WORD;

@@ -305,6 +305,12 @@
               <mat-card class="mnemonic-verify">
                 <h3 class="box-title --larger">Fill in your Recovery Phrase</h3>
                 <words-list #passphraseComponent [words]="words" *ngIf="words.length > 0"></words-list>
+
+                <p *ngIf="actionFlow === 'restore'">
+                  <mat-checkbox [(ngModel)]="useTwelveWordWallet" class="restore-checkbox">
+                    Use a 12 word word mnemonic that was generated using, for example, Particl Copay
+                  </mat-checkbox>
+                </p>
                 <p *ngIf="!!errorString" class="warning bottom">
                   {{ errorString }}
                 </p>
