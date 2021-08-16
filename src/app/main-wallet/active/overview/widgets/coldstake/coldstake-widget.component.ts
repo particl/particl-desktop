@@ -94,8 +94,10 @@ export class ColdstakeWidgetComponent implements OnDestroy {
     }
     this.isProcessing = true;
 
-    this._unlocker.unlock({timeout: 30}).pipe(
-      finalize(() => this.isProcessing = false),
+    this._unlocker.unlock({timeout: 5 * 60 * 60}).pipe(
+      finalize(() => {
+        this.isProcessing = false;
+      }),
       concatMap((unlocked) => iif(() => unlocked, defer(() => this._coldStake.fetchZapInformation())))
     ).subscribe(
       (zapDetails: ZapInformation) => {
@@ -204,25 +206,19 @@ export class ColdstakeWidgetComponent implements OnDestroy {
 
     dialog.componentInstance.isConfirmed.pipe(
       tap(() => this.isProcessing = true),
-      take(1),
-      concatMap(() => this._unlocker.unlock({timeout: 10}).pipe(
-        concatMap(
-          (unlocked) => iif(
-            () => unlocked,
-            defer(() => this._coldStake.zapTransaction(zapInfo.scriptHex, zapInfo.utxoAmount, zapInfo.utxos, false))
-          )
-        )
-      )),
-      finalize(() => this.isProcessing = false)
+      finalize(() => {
+        this.isProcessing = false;
+      })
     ).subscribe(
       (info: any) => {
         this.log.d('zap() success: ', info);
         this.refreshState();
-        this._snackbar.open(TextContent.ZAP_SUCCESS.replace('${amount}', `${zapInfo.utxoAmount}`), '');
+        //this._snackbar.open(TextContent.ZAP_SUCCESS.replace('${amount}', `${zapInfo.utxoAmount}`), '');
       },
 
       (err) => {
         this.log.er('zap() failed:', err);
+        this._unlocker.lock();
         this._snackbar.open(TextContent.ZAP_ERROR, 'err');
       }
     );

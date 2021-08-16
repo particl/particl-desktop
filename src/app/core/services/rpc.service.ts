@@ -85,7 +85,6 @@ export class RpcService {
    * ```
    */
   call(walletName: string, method: string, params?: Array<any> | null): Observable<any> {
-
     if (!this.isConnected) {
       return observableThrowError('RPC services not connected...');
     }

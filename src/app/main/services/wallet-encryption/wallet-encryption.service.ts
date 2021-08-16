@@ -68,6 +68,9 @@ export class WalletEncryptionService implements OnDestroy {
     this.destroy$.complete();
   }
 
+  currentStatus(): string {
+    return <string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'));
+  }
 
   changeCurrentStatus() {
     const currentStatus = <string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'));
@@ -107,6 +110,22 @@ export class WalletEncryptionService implements OnDestroy {
     }
 
     return of(true);
+  }
+
+  lock(): Observable<boolean> {
+    const currentStatus = <string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'));
+
+    if (['Unlocked', 'Unlocked, staking only'].includes(currentStatus)) {
+      return this._walletService.lockWallet().pipe(
+          tap((resp: boolean) => {
+            if (resp) {
+              this._store.dispatch(new MainActions.RefreshWalletInfo());
+            }
+          })
+        );
+    }
+
+    return of(false);
   }
 
 
