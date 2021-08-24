@@ -2,7 +2,7 @@ const rxIpc       = require('rx-ipc-electron/lib/main').default;
 const Observable  = require('rxjs').Observable;
 const _subject    = require('rxjs').Subject;
 const _rxjsOperators = require('rxjs/operators');
-const _zmq        = require('particl-zmq');
+const _zmq        = require('@zasmilingidiot/particl-zmq');
 const log         = require('electron-log');
 const _services    = require('./services');
 

@@ -174,7 +174,7 @@
     "asar": true,
     "asarUnpack": [
       "node_modules/sqlite3/**/*",
-      "node_modules/particl-marketplace/**/*",
+      "node_modules/@zasmilingidiot/particl-marketplace/**/*",
       "node_modules/zeromq/**/*",
       "node_modules/event-loop-stats/**/*",
       "resources/templates/*"
@@ -186,6 +186,8 @@
     "@ngx-gallery/gallerize": "^5.0.0-beta.0",
     "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
+    "@zasmilingidiot/particl-marketplace": "0.3.2",
+    "@zasmilingidiot/particl-zmq": "1.0.7",
     "angularx-qrcode": "^1.0.1",
     "autodetect-decoder-stream": "^1.0.3",
     "bluebird": "^3.4.7",
@@ -206,8 +208,6 @@
     "ngx-infinite-scroll": "^8.0.0",
     "node-unzip-2": "^0.2.1",
     "particl-bitcore-lib": "^0.16.0",
-    "particl-marketplace": "./particl-marketplace-0.3.3-alpha005.tgz",
-    "particl-zmq": "^1.0.6",
     "resize-observer-polyfill": "^1.5.1",
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
