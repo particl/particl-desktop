@@ -1407,6 +1407,88 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
+"@zasmilingidiot/particl-marketplace@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.2.tgz#c2368c8a8590c4f6e04d3202f0d44d3ca9daea69"
+  integrity sha512-/gzUAhmN1PklR4K428+ygqm3TTfeQ4PdWf7Ld38Vx8NjgmpCmrvSO1MuO31bmVfL9VEUoEDs+fzFAYisiphlFA==
+  dependencies:
+    "@zasmilingidiot/particl-zmq" "1.0.7"
+    basic-auth "^2.0.0"
+    body-parser "^1.17.2"
+    bookshelf "^0.10.4"
+    bookshelf-camelcase "^1.1.4"
+    chalk "^2.0.1"
+    class-validator "^0.8.5"
+    commander "^2.11.0"
+    compression "^1.7.0"
+    cors "^2.8.4"
+    cryptiles "^4.1.2"
+    crypto-js "^3.1.9-1"
+    deep-extend "^0.5.1"
+    del "^3.0.0"
+    diff "3.5.0"
+    dotenv "^8.2.0"
+    express "^4.16.2"
+    express-status-monitor "^1.1.4"
+    faker "^4.1.0"
+    figlet "^1.2.0"
+    fstream "^1.0.12"
+    glob "^7.1.2"
+    handlebars "^4.5.3"
+    helmet "^3.6.1"
+    hoek "^4.2.1"
+    inquirer "^3.2.0"
+    inversify "^4.11.0"
+    inversify-express-utils "^4.2.2"
+    iso3166-2-db "^2.2.1"
+    jayson "^2.0.5"
+    jimp "^0.2.28"
+    jpeg-js "^0.4.0"
+    jsonwebtoken "^8.3.0"
+    knex "^0.12.9"
+    lodash "^4.17.20"
+    lokijs "^1.5.3"
+    mathjs "^7.3.0"
+    merge "1.2.1"
+    morgan "^1.9.1"
+    multer "^1.4.1"
+    omp-lib "^0.1.153"
+    particl-bitcore-lib "^0.16.0"
+    path "^0.12.7"
+    piexifjs "^1.0.3"
+    pluralize "^5.0.0"
+    pm-delay "^4.3.0"
+    pm-forever "^2.1.2"
+    pm-queue "^6.2.4"
+    postal-codes-js "^1.0.0"
+    prepend "^1.0.2"
+    reflect-metadata "^0.1.10"
+    request "2.81.0"
+    request-promise "^4.2.1"
+    serve-favicon "^2.4.3"
+    socket.io "^2.4.0"
+    sqlite3 "^5.0.0"
+    sshpk "^1.13.2"
+    stringstream "0.0.6"
+    sync-fs "^1.0.1"
+    tar "^2.2.2"
+    ts-enums "0.0.6"
+    tslib "^1.9.3"
+    typescript "2.4.2"
+    web-request "^1.0.7"
+    winston "^2.4.4"
+  optionalDependencies:
+    fsevents "^2.1.3"
+
+"@zasmilingidiot/particl-zmq@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-zmq/-/particl-zmq-1.0.7.tgz#a3cd7e3bdfcca8e054288e8f296f5e022ed324ef"
+  integrity sha512-Tl1s//unWpjal8iY72Mfk1YkVzsPmD/oT16bDxe5otIq/DIuRd+CH5O8kqBvg0MXMXGPQRUyiNlKYogQ99iSRQ==
+  dependencies:
+    debug "^4.1.0"
+    eventemitter2 "^5.0.1"
+    zeromq "^6.0.0-beta.6"
+
 JSONStream@^1.3.1, JSONStream@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/JSONStream/-/JSONStream-1.3.5.tgz#3208c1f08d3a4d99261ab64f92302bc15e111ca0"
@@ -8148,7 +8230,7 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@2.14.2, nan@^2.12.1, nan@^2.14.0:
+nan@^2.12.1, nan@^2.14.0:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
@@ -8261,7 +8343,7 @@ node-forge@^0.10.0:
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
   integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
 
-node-gyp-build@^4.2.3:
+node-gyp-build@^4.1.0:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/node-gyp-build/-/node-gyp-build-4.2.3.tgz#ce6277f853835f718829efb47db20f3e4d9c4739"
   integrity sha512-MN6ZpzmfNCRM+3t57PTJHgHyw/h4OWnZ6mR8P5j/uZtqQr46RRuDE/P+g3n0YR/AiYXeWixZZzaip77gdICfRg==
@@ -9008,9 +9090,9 @@ particl-bitcore-lib@^0.16.0:
     inherits "=2.0.1"
     lodash "=4.17.11"
 
-"particl-bitcore-lib@git+https://github.com/kewde/particl-bitcore-lib.git":
+"particl-bitcore-lib@https://github.com/kewde/particl-bitcore-lib.git":
   version "0.14.1"
-  resolved "git+https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
+  resolved "https://github.com/kewde/particl-bitcore-lib.git#612c7b7b77385051168ef3831c4c2451eb807ffd"
   dependencies:
     bn.js "=2.0.4"
     bs58 "=2.0.0"
@@ -9018,87 +9100,6 @@ particl-bitcore-lib@^0.16.0:
     elliptic "=3.0.3"
     inherits "=2.0.1"
     lodash "=3.10.1"
-
-particl-marketplace@./particl-marketplace-0.3.3-alpha005.tgz:
-  version "0.3.3-alpha005"
-  resolved "./particl-marketplace-0.3.3-alpha005.tgz#2154dba1ce0b3953b824a35d98da8aaff6ce23f1"
-  dependencies:
-    basic-auth "^2.0.0"
-    body-parser "^1.17.2"
-    bookshelf "^0.10.4"
-    bookshelf-camelcase "^1.1.4"
-    chalk "^2.0.1"
-    class-validator "^0.8.5"
-    commander "^2.11.0"
-    compression "^1.7.0"
-    cors "^2.8.4"
-    cryptiles "^4.1.2"
-    crypto-js "^3.1.9-1"
-    deep-extend "^0.5.1"
-    del "^3.0.0"
-    diff "3.5.0"
-    dotenv "^8.2.0"
-    express "^4.16.2"
-    express-status-monitor "^1.1.4"
-    faker "^4.1.0"
-    figlet "^1.2.0"
-    fstream "^1.0.12"
-    glob "^7.1.2"
-    handlebars "^4.5.3"
-    helmet "^3.6.1"
-    hoek "^4.2.1"
-    inquirer "^3.2.0"
-    inversify "^4.11.0"
-    inversify-express-utils "^4.2.2"
-    iso3166-2-db "^2.2.1"
-    jayson "^2.0.5"
-    jimp "^0.2.28"
-    jpeg-js "^0.4.0"
-    jsonwebtoken "^8.3.0"
-    knex "^0.12.9"
-    lodash "^4.17.20"
-    lokijs "^1.5.3"
-    mathjs "^7.3.0"
-    merge "1.2.1"
-    morgan "^1.9.1"
-    multer "^1.4.1"
-    omp-lib "^0.1.153"
-    particl-bitcore-lib "^0.16.0"
-    particl-zmq "^1.0.6"
-    path "^0.12.7"
-    piexifjs "^1.0.3"
-    pluralize "^5.0.0"
-    pm-delay "^4.3.0"
-    pm-forever "^2.1.2"
-    pm-queue "^6.2.4"
-    postal-codes-js "^1.0.0"
-    prepend "^1.0.2"
-    reflect-metadata "^0.1.10"
-    request "2.81.0"
-    request-promise "^4.2.1"
-    serve-favicon "^2.4.3"
-    socket.io "^2.4.0"
-    sqlite3 "^5.0.0"
-    sshpk "^1.13.2"
-    stringstream "0.0.6"
-    sync-fs "^1.0.1"
-    tar "^2.2.2"
-    ts-enums "0.0.6"
-    tslib "^1.9.3"
-    typescript "2.4.2"
-    web-request "^1.0.7"
-    winston "^2.4.4"
-  optionalDependencies:
-    fsevents "^2.1.3"
-
-particl-zmq@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/particl-zmq/-/particl-zmq-1.0.6.tgz#0c22a225918b837241b4012aa7ce9d1e263792a6"
-  integrity sha512-JrljoX3gJQP5o/eCdp/PK7GY557ctXmNSbE5wiOsE3AzaNUllRc9g/O9CWZBK2138uS5NkH7CKG1KFWDO3z/4w==
-  dependencies:
-    debug "^4.1.0"
-    eventemitter2 "^5.0.1"
-    zeromq "^5.2.8"
 
 pascalcase@^0.1.1:
   version "0.1.1"
@@ -12743,13 +12744,12 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zeromq@^5.2.8:
-  version "5.2.8"
-  resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-5.2.8.tgz#94b0b85e4152e98b8bb163f1db4a34280d44d9d0"
-  integrity sha512-bXzsk7KOmgLSv1tC0Ms1VXBy90+Rz27ZYf27cLuldRYbpqYpuWJfxxHFhO710t22zgWBnmdUP0m3SKFpLI0u5g==
+zeromq@^6.0.0-beta.6:
+  version "6.0.0-beta.6"
+  resolved "https://registry.yarnpkg.com/zeromq/-/zeromq-6.0.0-beta.6.tgz#2b8934cafce735ea9007fd3074ec8aca9bf11204"
+  integrity sha512-wLf6M7pBHijl+BRltUL2VoDpgbQcOZetiX8UzycHL8CcYFxYnRrpoG5fi3UX3+Umavz1lk4/dGaQez8qiDgr/Q==
   dependencies:
-    nan "2.14.2"
-    node-gyp-build "^4.2.3"
+    node-gyp-build "^4.1.0"
 
 zone.js@~0.9.1:
   version "0.9.1"
