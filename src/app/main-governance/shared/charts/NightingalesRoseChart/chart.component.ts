@@ -61,6 +61,7 @@ export class NightingalesRoseChartComponent implements OnInit, OnDestroy {
 
 
   constructor() {
+    this.chartOptions = JSON.parse(JSON.stringify(this.defaultOptions));
     if (isBasicObjectType(this.titleData)) {
       this.chartOptions.text = this.titleData;
     }
@@ -70,7 +71,8 @@ export class NightingalesRoseChartComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dataSeries$.pipe(
       tap(data => {
-        const newOptions = JSON.parse(JSON.stringify(this.defaultOptions));
+        const newOptions = JSON.parse(JSON.stringify(this.chartOptions));
+        newOptions.series[0].data = [];
         data.forEach(d => {
           newOptions.series[0].data.push(d);
         });
