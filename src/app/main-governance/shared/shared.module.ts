@@ -31,7 +31,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
 //   [TitleComponent, TooltipComponent, LegendComponent, PolarComponent, SingleAxisComponent, PieChart, CanvasRenderer]
 // );
 
-// @TODO: This fixes an issue with echarts not rendering after builds using Angular 8 - see https://github.com/xieziyu/ngx-echarts/issues/236
+// @TODO: This fixes an issue with echarts not rendering after builds using Angular 8
+//  See https://github.com/xieziyu/ngx-echarts/issues/236
 //  Should be revisited and updated accordingly after updating Angular to a newer version.
 export function chartModule(): any {
   return import('echarts');
