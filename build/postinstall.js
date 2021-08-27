@@ -67,6 +67,15 @@ for (const modName of Object.keys(modNames)) {
     However when it links to the libzmq static lib it errors out as libzmq was built in /MD mode.
 
  * The files copied are based on this patch: https://github.com/tecnovert/zeromq.js/commit/026b4cb9792bbc4a8348f7f027543ad8f387f19d
+
+    Generating the .node file(s) can be done as follows (in Windows) for zeromq (using the build files used here or the commit patch mentioned above), per tecnovert:
+
+    Install nodejs (v14) vs 2017 cmake and git
+    Right click -> git bash here
+
+    $ npm config set msvs_version 2017
+    $ npm install
+    $ prebuildify --napi --strip --electron-compat
  *
  * @param {string} moduleDir - the path to the (node_modules) module
  * @returns {boolean} Whether patching was completed successfully or not
@@ -85,8 +94,9 @@ function patchzeromq(moduleDir) {
     }
 
     const fileCopies = {
-        'binding.gyp': [_path.join(__dirname, 'zeromq', 'binding.gyp'), _path.join(moduleDir, 'binding.gyp')],
-        'build.sh': [_path.join(__dirname, 'zeromq', 'build.sh'), _path.join(moduleDir, 'script', 'build.sh')],
+        'binding.gyp': [_path.join(__dirname, 'win', 'zeromq', 'binding.gyp'), _path.join(moduleDir, 'binding.gyp')],
+        'build.sh': [_path.join(__dirname, 'win', 'zeromq', 'build.sh'), _path.join(moduleDir, 'script', 'build.sh')],
+        'electron.napi.node (x64)': [_path.join(__dirname, 'win', 'zeromq', 'electron.napi.node'), _path.join(moduleDir, 'prebuilds', 'win32-x64', 'electron.napi.node')],
     };
 
     for (const fileCopy of Object.keys(fileCopies)) {

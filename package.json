@@ -37,8 +37,8 @@
     "start:electron": "ng build --base-href=./ && electron .",
     "package:mac": "yarn build:electron:prod && electron-builder -m && yarn checksum",
     "package:linux": "yarn build:electron:prod && electron-builder -l && yarn checksum",
-    "package:win": "node ./build/win/postinstall && yarn build:electron:prod && electron-builder --win --x64 && yarn checksum",
-    "package": "yarn build:electron:prod && electron-builder -ml && node ./build/win/postinstall && electron-builder --win --x64 && yarn checksum",
+    "package:win": "yarn build:electron:prod && electron-builder --win --x64 && yarn checksum",
+    "package": "yarn build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
     "compodoc": "compodoc -p tsconfig.json -d docs",
     "travis:mac": "electron-builder -m && yarn checksum",
@@ -47,7 +47,7 @@
     "travis:win32": "electron-builder --win --ia32 && yarn checksum",
     "travis:test": "ng test --watch=false --code-coverage",
     "start": "yarn start:electron:fast",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "node build/postinstall && electron-builder install-app-deps"
   },
   "build": {
     "electronVersion": "10.1.6",
