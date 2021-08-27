@@ -47,7 +47,7 @@
     "travis:win32": "electron-builder --win --ia32 && yarn checksum",
     "travis:test": "ng test --watch=false --code-coverage",
     "start": "yarn start:electron:fast",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "node build/postinstall && electron-builder install-app-deps"
   },
   "build": {
     "electronVersion": "10.1.6",

@@ -211,7 +211,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
   }
 
   get isSeedWordsValid(): boolean {
-    return (this.words.length !== 0) && this.words.filter(word => word.trim().length === 0).length === (this.useTwelveWordWallet ? this.words.length - 12 : 0);
+    return (this.words.length !== 0) &&
+            this.words.filter(word => word.trim().length === 0).length === (this.useTwelveWordWallet ? this.words.length - 12 : 0);
   }
 
 
