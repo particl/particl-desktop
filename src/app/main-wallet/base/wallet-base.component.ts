@@ -155,6 +155,10 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
             wName.startsWith('testnet/') ||
             wName.startsWith('testnet\\') ||
             (wName === 'testnet') ||
+            // prevent regtest wallets on mainnet
+            wallet.name.startsWith('regtest/') ||
+            wallet.name.startsWith('regtest\\') ||
+            (wallet.name === 'regtest') ||
             // avoid including the current active wallet
             (wallet.name === this._currentWallet.name) ||
             // avoid market profiles (that are technically wallets but shouldn't be used as them for now)

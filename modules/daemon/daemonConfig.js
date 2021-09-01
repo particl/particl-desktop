@@ -121,6 +121,10 @@ const loadConfiguration = () => {
     settings = { ...settings, ...(config.test || {}) };
   }
 
+  if ( settings.regtest || _options.regtest) {
+    settings = { ...settings, ...(config.regtest || {}) };
+  }
+
   settings = { ...settings, ..._options};
   settings.port = +(settings.rpcport ? settings.rpcport : settings.port);
   STORED_CONFIGURATION = settings;
