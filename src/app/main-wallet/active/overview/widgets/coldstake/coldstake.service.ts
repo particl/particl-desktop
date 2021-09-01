@@ -2,18 +2,12 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
 import { Observable, of, forkJoin, throwError, iif, defer } from 'rxjs';
-import { catchError, map, concatMap, mergeMap } from 'rxjs/operators';
+import { catchError, map, concatMap } from 'rxjs/operators';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AddressService } from '../../../../shared/address.service';
 import {
-  ZapDetailsModel,
-  RpcWalletSettingsChangeAddress,
-  RpcUnspentTx,
-  ZapDetailUTXOModel,
-  RpcSendTypeToZap,
   RpcColdStakingEnabled,
   RpcColdStakingDisabled,
-  ZapInformation
 } from './coldstake.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { PublicUTXO } from 'app/main/store/main.models';
@@ -61,15 +55,6 @@ export class ColdstakeService {
     );
   }
 
-
-  fetchZapInformation(): Observable<ZapInformation> {
-      return of({
-          utxos: [],
-          scriptHex: '',
-          utxoAmount: 0,
-          fee: 0
-      });
-  }
 
   private setColdStakingChangeAddress(address: string): Observable<RpcColdStakingDisabled | RpcColdStakingEnabled> {
     const params = {};

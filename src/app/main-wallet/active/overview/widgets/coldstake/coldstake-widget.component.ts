@@ -15,7 +15,6 @@ import { DisableColdstakingConfirmationModalComponent } from './disable-coldstak
 import { ColdStakeModalComponent } from './coldstake-modal/coldstake-modal.component';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { CoreErrorModel } from 'app/core/core.models';
-import { ZapInformation } from './coldstake.models';
 
 
 enum TextContent {
@@ -27,9 +26,6 @@ enum TextContent {
   REVERT_SUCCESS = 'Succesfully brought cold staking balance into hot wallet',
   REVERT_FAILED = 'Failed to properly disable coldstaking!',
   REVERT_DETAILS_ERROR = 'Could not fetch cold staking details',
-  ZAP_DETAILS_ERROR = 'Could not fetch details needed for the zap process to continue',
-  ZAP_ERROR = 'An error occurred while attempting to zap to cold staking',
-  ZAP_SUCCESS = 'Succesfully zapped ${amount} PART to cold staking',
 }
 
 
@@ -94,20 +90,7 @@ export class ColdstakeWidgetComponent implements OnDestroy {
     }
     this.isProcessing = true;
 
-    this._unlocker.unlock({timeout: 5 * 60 * 60}).pipe(
-      finalize(() => {
-        this.isProcessing = false;
-      }),
-      concatMap((unlocked) => iif(() => unlocked, defer(() => this._coldStake.fetchZapInformation())))
-    ).subscribe(
-      (zapDetails: ZapInformation) => {
-        this.openZapDetailsModal(zapDetails);
-      },
-      (err) => {
-        this.log.er('fetch zap() info failed: ', err);
-        this._snackbar.open(TextContent.ZAP_DETAILS_ERROR, 'err');
-      }
-    );
+    this.openZapDetailsModal();
   }
 
 
@@ -201,29 +184,16 @@ export class ColdstakeWidgetComponent implements OnDestroy {
   }
 
 
-  private openZapDetailsModal(zapInfo: ZapInformation): void {
-    const dialog = this._dialog.open(ZapColdstakingModalComponent, {data: {fee: zapInfo.fee || 0}});
-
-    dialog.componentInstance.isConfirmed.pipe(
-      tap(() => this.isProcessing = true),
-      finalize(() => {
-        this.isProcessing = false;
-      })
-    ).subscribe(
-      (info: any) => {
-        this.log.d('zap() success: ', info);
-        this.refreshState();
-        //this._snackbar.open(TextContent.ZAP_SUCCESS.replace('${amount}', `${zapInfo.utxoAmount}`), '');
-      },
-
-      (err) => {
-        this.log.er('zap() failed:', err);
-        this._unlocker.lock();
-        this._snackbar.open(TextContent.ZAP_ERROR, 'err');
-      }
-    );
-
-    dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
+  private openZapDetailsModal(): void {
+    this._dialog
+      .open(ZapColdstakingModalComponent, {disableClose: true})
+      .afterClosed().pipe(
+        take(1),
+        finalize(() => {
+          this.isProcessing = false;
+          this.refreshState();
+        })
+      ).subscribe();
   }
 
 
