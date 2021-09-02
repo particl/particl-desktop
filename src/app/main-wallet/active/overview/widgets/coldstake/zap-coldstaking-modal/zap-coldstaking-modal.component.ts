@@ -1,10 +1,39 @@
-import { Component, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
-import { PartoshiAmount } from 'app/core/util/utils';
+import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import { Observable, Subject, merge, iif, defer, of, throwError, EMPTY } from 'rxjs';
+import { takeUntil, filter, tap, skip, concatMap, expand, delay, map, catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Log } from 'ng2-logger';
+
+import { Store } from '@ngxs/store';
+import { WalletInfoState } from 'app/main/store/main.state';
+
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
+import { ColdstakeService } from './../coldstake.service';
+import { PartoshiAmount } from 'app/core/util/utils';
+import { PublicUTXO } from 'app/main/store/main.models';
+import { ZapStakingStrategy as StakingStrategy, ZapStakingStrategy, ZapGroupDetailsType, SelectedInputs } from '../coldstake.models';
+
+
+interface ZapOption {
+  name: string;
+  value: StakingStrategy;
+  description: string;
+}
+
+
+enum TextContent {
+  ZAP_STRATEGY_STAKING_LABEL = 'Optimized for Staking',
+  ZAP_STRATEGY_STAKING_DESCRIPTION = 'Any inputs will be joined together for larger transaction outputs that are more likely to stake.',
+  ZAP_STRATEGY_PRIVACY_LABEL = 'Optimized for Privacy',
+  ZAP_STRATEGY_PRIVACY_DESCRIPTION = 'Only inputs already linked in the chain will be joined together.',
+  INFO_LABEL = 'Up to ${inputs} inputs will be selected per transaction or until the output value is over ${amount} PART.',
+
+  ZAP_ERROR_FAILED_TRANSACTION = 'Failed to process one or more transactions',
+  ZAP_ERROR_INVALID_ADDRESS = 'Invalid stake or spend address detected',
+  ZAP_ERROR_WALLET_LOCK = 'Wallet locked',
+  ZAP_ERROR_GENERIC_FAILURE = 'An unexpected error occurred',
+}
 
 /*
   Could pre-generate and sign all transactions then slowly emit them.
@@ -18,317 +47,298 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
   Current workaround is to unlock the wallet for 5 hours and relock when the modal closes.
 */
 
-interface ZapTemplateInputs {
-  fee: number;
-}
-
-interface InputSelection {
-  selected: Array<Object>;
-  total_value: PartoshiAmount;
-}
-
-interface GroupedCandidates {
-  groups: Map<string, Array<Object> >;
-  group_totals: Map<string, PartoshiAmount>;
-}
 
 @Component({
   templateUrl: './zap-coldstaking-modal.component.html',
   styleUrls: ['./zap-coldstaking-modal.component.scss']
 })
-export class ZapColdstakingModalComponent {
+export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
-  @Output() isConfirmed: EventEmitter<boolean> = new EventEmitter();
+  readonly selectorOptions: ZapOption[] = [
+    { name: TextContent.ZAP_STRATEGY_STAKING_LABEL, value: StakingStrategy.STAKING, description: TextContent.ZAP_STRATEGY_STAKING_DESCRIPTION },
+    { name: TextContent.ZAP_STRATEGY_PRIVACY_LABEL, value: StakingStrategy.PRIVACY, description: TextContent.ZAP_STRATEGY_PRIVACY_DESCRIPTION },
+  ];
+  readonly labelInputsValue: string = '';
+  readonly zapTxDelaySecMin: number = 0;
+  readonly zapTxDelaySecMax: number = 3600;
 
-  is_zapping: boolean = false;
-  select_mode: number = 1;
-  delay_for: number = 600;
-  readonly fee: number = 0;
-  readonly max_select: number = 20;
-  readonly max_value: number = 1000;
-  dust_partoshis: number = 10000;
-  txns_created: number = 0;
-  next_tx_at: string = '';
-  timer: ReturnType<typeof setTimeout>;
-  str_error: string = '';
-  str_message: string = '';
-  outputs_start: number = 0;
-  outputs_current: number = 0;
-  value_start: PartoshiAmount = new PartoshiAmount(0);
-  value_current: PartoshiAmount = new PartoshiAmount(0);
+  zapOptionsForm: FormGroup;
+  processingTotalValue: number = 0;
+  processingTotalCount: number = 0;
+  processingCurrentValue: number = 0;
+  processingCurrentCount: number = 0;
+  processError: string = '';
 
+
+  private destroy$: Subject<void> = new Subject();
+  private stopZap$: Subject<boolean> = new Subject();
   private log: any = Log.create('zap-coldstaking-modal.component');
+  private readonly zapMaxAmount: number = 1000;
+  private readonly zapMaxInputs: number = 20;
+  private readonly DUST_PARTOSHIS: number = 10000;
+
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: ZapTemplateInputs,
+    private _store: Store,
     private _dialogRef: MatDialogRef<ZapColdstakingModalComponent>,
-    private _rpc: MainRpcService,
+    private _coldstakeService: ColdstakeService,
     private _unlocker: WalletEncryptionService,
   ) {
-    this.fee = Math.max(+data.fee || 0, 0);
-    this._dialogRef.beforeClosed().subscribe(data=>{
-      this.stopZapping();
-      this._unlocker.lock().subscribe();
-    })
 
-    this.gatherInfo();
+    this.labelInputsValue = TextContent.INFO_LABEL.replace('${inputs}', `${this.zapMaxInputs}`).replace('${amount}', `${this.zapMaxAmount}`);
+
+    this.zapOptionsForm = new FormGroup({
+      zapStrategy: new FormControl(StakingStrategy.STAKING),
+      zapTxDelay: new FormControl(5, [Validators.min(this.zapTxDelaySecMin), Validators.max(this.zapTxDelaySecMax)]),
+    });
   }
 
-  selectModeChanged(event): boolean {
-    this.select_mode = event.target.value;
-    return true;
-  }
 
-  delayForChanged(event): boolean {
-    this.delay_for = event.target.value;
-    return true;
-  }
+  ngOnInit() {
 
-  pad2(i): string {
-    return (`0${i}`).slice(-2);
-  }
-
-  stopZapping(): void {
-    this.log.i('Stopping zapping');
-    this.is_zapping = false;
-    clearTimeout(this.timer);
-  }
-
-  errorToString(e): string {
-    if (typeof e === 'object') {
-      return e.message;
-    }
-    if (typeof e === 'string') {
-      return e;
-    }
-    return JSON.stringify(e);
-  }
-
-  selectInputs(groups, group_totals): InputSelection {
-    let selected = new Array();
-    let total_value = new PartoshiAmount(0);
-    const max_value = new PartoshiAmount(this.max_value).partoshis();
-    let addrs = group_totals.keys();
-    // TODO: sort groups by value
-
-    for (let addr of addrs) {
-      let txos = groups.get(addr);
-
-      while (true) {
-        if (txos.length < 1) {
-          groups.delete(addr);
-          group_totals.delete(addr);
-        }
-        if (selected.length >= this.max_select || total_value.partoshis() >= max_value) {
-          return {
-            selected: selected,
-            total_value: total_value
-          }
-        }
-        if (txos.length < 1) {
-          break;
-        }
-        let txo = txos.pop();
-        total_value.add(new PartoshiAmount(txo['amount']));
-        selected.push(txo);
-      }
-      if (this.select_mode == 2) {
-        return {
-          selected: selected,
-          total_value: total_value
-        }
-      }
-    }
-
-    return {
-      selected: selected,
-      total_value: total_value
-    };
-  }
-
-  async groupCandidates(): Promise<GroupedCandidates> {
-    let address_groups = new Map();
-    let groups = new Map();
-    let group_totals = new Map();
-
-    const utxos = await this._rpc.call('listunspent').toPromise();
-
-    if (this.select_mode == 2) {
-      const ags = await this._rpc.call('listaddressgroupings').toPromise();
-      for (let ag of ags) {
-        if (ag.length < 2) {
-          continue;
-        }
-        let grouping_name = `group_${ag.length}`;
-        for (let a of ag) {
-          address_groups[a[0]] = grouping_name;
-        }
-      }
-    }
-
-    for (let txo of utxos) {
-      if ('coldstaking_address' in txo) {
-        continue;
-      }
-      if (!txo['desc'].startsWith('pkh(')) {
-        continue;
-      }
-      let addr = txo['address'];
-      if (address_groups.has(addr)) {
-        addr = address_groups.get(addr);
-      }
-      if (!groups.has(addr)) {
-        groups.set(addr, new Array<typeof txo>());
-      }
-      groups.get(addr).push(txo);
-      if (!group_totals.has(addr)) {
-        group_totals.set(addr, new PartoshiAmount(0));
-      }
-      group_totals.set(addr, group_totals.get(addr).add(new PartoshiAmount(txo['amount'])));
-    }
-    // Sort utxos by value asc
-    for (let addr of groups.keys()) {
-      groups.set(addr, groups.get(addr).sort((a, b) => (a['amount'] < b['amount'] ? 1 : -1)));
-    }
-    return {
-      groups: groups,
-      group_totals: group_totals
-    };
-  }
-
-  async gatherInfo() {
-    this.log.d('Gathering info'
+    const walletLockListener$ = this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
+      skip(1), // skip the initial load status
+      filter((status: string) => status !== 'Unlocked'),
+      distinctUntilChanged(),
+      tap(() => {
+        this.log.d('wallet locked - ensure any running zap processing is terminated');
+        this.stopZap$.next();
+        this.processError = TextContent.ZAP_ERROR_WALLET_LOCK;
+      }),
+      takeUntil(this.destroy$)
     );
-    let utxos = await this.groupCandidates();
 
-    while (true) {
-      var inputs = this.selectInputs(utxos.groups, utxos.group_totals)
-      if (inputs.selected.length < 1) {
-        break;
-      }
-      if (inputs.total_value.partoshis() < this.dust_partoshis) {
-        //this.log.d('Skipping inputs below dust value');
-        continue;
-      }
-      this.outputs_start += inputs.selected.length;
-      this.value_start.add(inputs.total_value);
-    }
-    this.log.d(`Candidate outputs ${this.outputs_start}, value ${this.value_start.particlsString()}`);
+    const stopZapListener$ = this.stopZap$.asObservable().pipe(
+      filter(() => this.zapOptionsForm.disabled),
+      tap(() => {
+        this.zapOptionsForm.enable();
+      }),
+      concatMap((completed) => this._unlocker.lock().pipe(
+        tap(() => {
+          this.log.d('zap processing terminated: zap processing completed successfully?', !!completed);
+          if (completed) {
+            this._closeModal(true);
+          }
+        })
+      )),
+      takeUntil(this.destroy$)
+    );
+
+    merge(
+      walletLockListener$,
+      stopZapListener$
+    ).subscribe();
   }
 
-  async createZapTx(spend_address, stake_address): Promise<boolean> {
-    if (!this.is_zapping) {
+
+  ngOnDestroy() {
+    this.stopZap$.next();
+    this.stopZap$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+
+  get formControlTxDelay(): AbstractControl {
+    return this.zapOptionsForm.get('zapTxDelay');
+  }
+
+
+  closeModal() {
+    this.log.d('user close modal request');
+    if (this.zapOptionsForm.disabled) {
       return;
     }
-    this.log.d('createZapTx');
-
-    let utxos = await this.groupCandidates();
-
-    if (utxos.groups.size < 1) {
-      this.log.i('No valid inputs');
-      return false
-    }
-
-    while (true) {
-      var inputs = this.selectInputs(utxos.groups, utxos.group_totals)
-      if (inputs.selected.length < 1) {
-        this.log.i('No valid inputs');
-        return false;
-      }
-      if (inputs.total_value.partoshis() < this.dust_partoshis) {
-        this.log.i('Skipping inputs below dust value');
-        continue;
-      }
-      break;
-    }
-
-    let prevouts = new Array<Object>();
-    for (let utxo of inputs.selected) {
-      prevouts.push({ tx: utxo['txid'], n: utxo['vout'] })
-    }
-    let txid = await this._rpc.call('sendtypeto', [
-      'part',
-      'part',
-      [ {
-          subfee: true,
-          address: spend_address,
-          stakeaddress: stake_address,
-          amount: inputs.total_value.particlsString()
-        } ],
-      'zap',
-      '',
-      1,
-      5,
-      false,
-      {inputs: prevouts}
-    ]).toPromise();
-
-    this.log.d('Sending zap txn', txid);
-    this.outputs_current += prevouts.length;
-    this.value_current.add(inputs.total_value);
-
-    return true;
+    this._closeModal();
   }
 
-  async createZapTxns(spend_address, stake_address) {
-    try {
-      if (!this.is_zapping) {
-        return;
-      }
 
-      let rv = await this.createZapTx(spend_address, stake_address);
-
-      this.txns_created += 1;
-      if (!rv) {
-        this.log.i('Zapping complete');
-        this.str_message = 'Zapping complete';
-        this.stopZapping();
-        this._unlocker.lock();
-        return;
-      }
-
-      let half_delay = this.delay_for * 0.5;
-      let delay_for = half_delay + Math.floor(Math.random() * this.delay_for);
-      let ts = Date.now();
-      let dt_text = new Date(ts + delay_for * 1000);
-      let hours = this.pad2(dt_text.getHours());
-      let minutes = this.pad2(dt_text.getMinutes());
-      let seconds = this.pad2(dt_text.getSeconds());
-      this.next_tx_at = `${hours}:${minutes}:${seconds}`;
-
-      this.log.i('Delaying for', delay_for);
-      this.timer = setTimeout(this.createZapTxns.bind(this), delay_for * 1000, spend_address, stake_address)
-    } catch(e) {
-      this.str_error = this.errorToString(e);
-      this.log.er(e);
-      this.stopZapping();
+  zap() {
+    if (this.zapOptionsForm.disabled) {
+      return;
     }
+    this.zapOptionsForm.disable();
+    this.processingTotalValue = 0;
+    this.processingTotalCount = 0;
+    this.processingCurrentCount = 0;
+    this.processingCurrentValue = 0;
+    this.processError = '';
+
+    const selectedOption = +this.zapOptionsForm.get('zapStrategy').value;
+    const selectedDelay = +this.zapOptionsForm.get('zapTxDelay').value * 1000;
+
+    this._unlocker.unlock({timeout: 5*60*60}).pipe(
+      concatMap((isUnlocked) => iif(
+        () => isUnlocked,
+
+        defer(() => this.zapAmounts(selectedOption, selectedDelay)),
+
+        defer(() => this.stopZap$.next())
+      ))
+    ).subscribe();
   }
 
-  async zap() {
-    this.log.i(`Starting zapping, mode ${this.select_mode}, delay ${this.delay_for}`);
-    this.is_zapping = true;
-    this.txns_created = 0;
 
-    try {
-      const extkey_accounts = await this._rpc.call('extkey', ['account']).toPromise();
-      let spend_address = '';
-      for (let chain of extkey_accounts['chains']) {
-        if ('function' in chain &&  chain['function'] == 'active_internal') {
-          spend_address = chain['chain'];
+  stopZap() {
+    if (!this.zapOptionsForm.disabled) {
+      return;
+    }
+    this.stopZap$.next();
+  }
+
+//   pad2(i): string {
+//     return (`0${i}`).slice(-2);
+//   }
+
+
+  private _closeModal(success?: boolean) {
+    this._dialogRef.close(success);
+  }
+
+
+  private selectInputs(strategy: ZapStakingStrategy, groupings: ZapGroupDetailsType): SelectedInputs {
+    let runningTotal = new PartoshiAmount(0);
+    let selectedUtxos: PublicUTXO[] = [];
+    const maxValue = new PartoshiAmount(this.zapMaxAmount).partoshis();
+    let addrs = [...groupings.keys()];
+
+    let isSatified = false;
+
+    for (const addr of addrs) {
+      let group = groupings.get(addr);
+
+      while (true) {
+        if (group.utxos.length < 1) {
+          groupings.delete(addr);
+        }
+        if (selectedUtxos.length >= this.zapMaxInputs || runningTotal.partoshis() >= maxValue) {
+          isSatified = true;
           break;
         }
+        if (group.utxos.length < 1) {
+          break;
+        }
+        let utxo = group.utxos.pop();
+        runningTotal.add(new PartoshiAmount(utxo['amount']));
+        selectedUtxos.push(utxo);
       }
 
-      const walletsettings_changeaddress = await this._rpc.call('walletsettings', ['changeaddress']).toPromise();
-      let stake_address = walletsettings_changeaddress['changeaddress']['coldstakingaddress'];
-      this.log.d(`Using spend_address ${spend_address}, stake_address ${stake_address}`);
-
-      this.createZapTxns(spend_address, stake_address);
-    } catch(e) {
-      this.str_error = this.errorToString(e);
-      this.log.er(e);
-      this.stopZapping();
+      if (isSatified || (strategy === ZapStakingStrategy.PRIVACY)) {
+        break;
+      }
     }
+
+    const rValue: SelectedInputs = {
+      utxos: selectedUtxos.map(utxo => ({tx: utxo.txid, n: utxo.vout})),
+      value: runningTotal.partoshis(),
+    }
+
+    return rValue;
   }
+
+
+  private zapAmounts(selectedOption: ZapStakingStrategy, selectedDelay: number): Observable<boolean> {
+    this.log.i(`Zapping! Selected Strategy: ${selectedOption}  ,  Txn Delay Duration(s) Selected: ${selectedDelay}`);
+
+    return this._coldstakeService.fetchColdStakingDetails().pipe(
+
+      concatMap(csDetails => iif(
+        () => !csDetails.spendAddress || !csDetails.stakeAddress,
+
+        defer(() => throwError(new Error('INVALID_ADDRESS'))),
+
+        defer(() => this._coldstakeService.fetchZapGroupDetails(selectedOption).pipe(
+          // calculate totals
+          tap(groupings => {
+            this.log.d(`Using spend_address ${csDetails.spendAddress}, stake_address ${csDetails.stakeAddress}`);
+
+            while (true) {
+              const selected = this.selectInputs(selectedOption, groupings);
+              if (selected.utxos.length < 1) {
+                break;
+              }
+              if (selected.value < this.DUST_PARTOSHIS) {
+                this.log.d('Skipping candidate inputs below dust value');
+                continue;
+              }
+              this.processingTotalCount += selected.utxos.length;
+              this.processingTotalValue = new PartoshiAmount(this.processingTotalValue).add(new PartoshiAmount(selected.value, true)).particls();
+              this.log.d(`Candidate outputs: ${this.processingTotalCount}, value: ${this.processingTotalValue}`);
+            }
+          }),
+
+          // process individual zap transactions
+          expand(() => of({}).pipe(
+            concatMap(() => this._coldstakeService.fetchZapGroupDetails(selectedOption).pipe(
+              map(groupings => {
+                let selected: SelectedInputs;
+
+                while (true) {
+                  selected = this.selectInputs(selectedOption, groupings);
+                  if (selected.utxos.length < 1) {
+                    this.log.i('Txn: No valid inputs');
+                    break;
+                  }
+                  if (selected.value < this.DUST_PARTOSHIS) {
+                    this.log.d('Txn: Skipping inputs below dust value');
+                    continue;
+                  }
+                  break;
+                }
+
+                this.log.d('Txn: found utxo selection?', !!selected);
+
+                return selected;
+              }),
+
+              concatMap(selected => iif(
+                () => selected && (selected.utxos.length > 0) && (selected.value > 0),
+
+                // send next transaction on its way
+                defer(() => {
+                  this.log.i('Sending zap transaction on its way');
+                  return this._coldstakeService.zapSelectedPrevouts(selected, csDetails.spendAddress, csDetails.stakeAddress).pipe(
+                    tap((success) => {
+                      if (success) {
+                        this.processingCurrentCount += selected.utxos.length;
+                        this.processingCurrentValue = new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value, true)).particls();
+                        return;
+                      }
+                      throwError(new Error('ERROR_FAILED_TRANSACTION'));
+                    })
+                  );
+                }),
+
+                // all done
+                defer(() => {
+                  this.log.i('Zapping complete');
+                  this.stopZap$.next(true);
+                })
+              ))
+            )),
+
+            // delay next transaction processing
+            delay( selectedDelay )
+          ))
+        ))
+
+      )),
+
+      catchError((err) => {
+        this.log.er(err);
+        switch (err.message) {
+          case 'ERROR_FAILED_TRANSACTION': this.processError = TextContent.ZAP_ERROR_FAILED_TRANSACTION; break;
+          case 'INVALID_ADDRESS': this.processError = TextContent.ZAP_ERROR_INVALID_ADDRESS; break;
+          default: this.processError = `${TextContent.ZAP_ERROR_GENERIC_FAILURE}: ${err.message}`; break;
+        }
+
+        this.stopZap$.next();
+
+        return EMPTY;
+      }),
+
+      takeUntil(this.stopZap$),
+    );
+  }
+
 }

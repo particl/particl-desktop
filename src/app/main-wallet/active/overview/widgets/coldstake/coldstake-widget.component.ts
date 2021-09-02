@@ -21,11 +21,12 @@ enum TextContent {
   ACTIVATE_ERROR_GENERIC = 'Failed to activate cold staking!',
   ACTIVATE_ERROR_ADDRESS = 'Address provided is invalid',
   ACTIVATE_SUCCESS = 'Cold staking successfully activated',
-  REVERT_SUCCESS_NO_TXS = 'Succesfully disabled coldstaking, no transactions needed.',
+  REVERT_SUCCESS_NO_TXS = 'Successfully disabled coldstaking, no transactions needed.',
   REVERT_PARTIAL_SUCCESS = 'Disabling succeeded, but some funds may still be associated with a cold-staking node',
-  REVERT_SUCCESS = 'Succesfully brought cold staking balance into hot wallet',
+  REVERT_SUCCESS = 'Successfully brought cold staking balance into hot wallet',
   REVERT_FAILED = 'Failed to properly disable coldstaking!',
   REVERT_DETAILS_ERROR = 'Could not fetch cold staking details',
+  ZAP_SUCCESS = 'Successfully zapped your funds to coldstaking',
 }
 
 
@@ -33,7 +34,6 @@ enum TextContent {
   selector: 'widget-coldstake',
   templateUrl: './coldstake-widget.component.html',
   styleUrls: ['./coldstake-widget.component.scss'],
-  providers: [ColdstakeService]
 })
 export class ColdstakeWidgetComponent implements OnDestroy {
 
@@ -193,7 +193,13 @@ export class ColdstakeWidgetComponent implements OnDestroy {
           this.isProcessing = false;
           this.refreshState();
         })
-      ).subscribe();
+      ).subscribe({
+        next: (resp: boolean) => {
+          if ((typeof resp === 'boolean') && resp) {
+            this._snackbar.open(TextContent.ZAP_SUCCESS);
+          }
+        }
+      });
   }
 
 

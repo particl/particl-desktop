@@ -1,64 +1,90 @@
 <mat-dialog-title>Cold staking Zap</mat-dialog-title>
 
-<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+<button mat-button color="warn" [disabled]="zapOptionsForm.disabled" class="modal-close" tabindex="-1" appDebounceClick (debounceClick)="closeModal()">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
 
 
-<mat-dialog-content class="--muted">
+<mat-dialog-content class="--muted" [formGroup]="zapOptionsForm">
 
-  <p class="lead">
+  <p>
     Zapping will move any non-coldstaking unspent outputs in the wallet to coldstaking scripts in one or more transactions.
   </p>
   <p>
-    Input selection strategy:
-    <div class="select">
-      <input type="range" id="selection_type" name="selection_type"
-             min="1" max="2" (input)="selectModeChanged($event)" [value]="this.select_mode" [disabled]="is_zapping==true">
-      <label for="selection_type"><span *ngIf="this.select_mode==1">Better staking</span><span *ngIf="this.select_mode==2">Better privacy</span></label>
-    <br/>
-    Up to {{ this.max_select }} inputs will be selected per transaction or until the output value is over {{ this.max_value }} PART.<br/>
-    <b *ngIf="this.select_mode==1">
-      Any inputs will be joined together for larger transaction outputs more likely to stake.</b>
-    <b *ngIf="this.select_mode==2">
-      Only inputs already linked in the chain will be joined together.</b>
-    </div>
-    <div>
-      <input type="range" id="seconds_delay" name="seconds_delay" class="seconds_delay"
-             min="1" max="3600" (input)="delayForChanged($event)" [value]="this.delay_for" [disabled]="is_zapping==true"><br/>
-      <label for="seconds_delay">Seconds to wait between multiple transactions</label>
-      <br/> Delay for around {{ this.delay_for }} seconds between transactions.
-    </div>
-    <p class="help-text">
-      Recently staked coins won't be affected. If the outputs you want to move are in your staked balance, you must wait for them to mature.</p>
-    <p class="help-text">
-      Wallet must be unlocked until all transactions have been sent.</p>
-    <p>
-      Processed {{ this.outputs_current }} of {{ this.outputs_start }} outputs, {{ this.value_current.particlsString() }} PART.</p>
-    <p *ngIf="this.txns_created>0">
-      Created {{ this.txns_created }} txns, next tx at {{ this.next_tx_at }}.</p>
-    <p *ngIf="this.str_error!=''">
-      <b>Error: {{ this.str_error }}.</b></p>
-    <p *ngIf="this.str_message!=''">
-      <b>Message: {{ this.str_message }}.</b></p>
+    Be warned, this bundles your unstaked remaining coins together (the inputs), which may decrease your financial privacy. It is advised to zap only the small remaining part of your coins (last ~10 %) &ndash; those that may take a really long time to be processed.
+  </p>
+
+  <h2 class="section-title">
+    Input selection strategy
+  </h2>
+
+  <mat-card>
+    <mat-radio-group class="from-balance-type block-radio" name="zapStrategy" formControlName="zapStrategy"
+                      fxLayout="column" fxLayoutGap="10px">
+      <mat-radio-button class="zap-option" *ngFor="let option of selectorOptions" [value]="option.value" fxFlex>
+        <div class="name">{{ option.name }}</div>
+        <div class="desc">
+          {{ option.description }}
+        </div>
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+
+  <p class="alert --boxed --info">
+    <span>{{ labelInputsValue }}</span>
+  </p>
+
+  <h2 class="section-title">
+    Seconds to wait between multiple transactions
+  </h2>
+
+  <mat-card>
+    <mat-slider
+      thumbLabel
+      color="accent"
+      [min]="zapTxDelaySecMin"
+      [max]="zapTxDelaySecMax"
+      (change)="formControlTxDelay.setValue($event.value)"
+      [value]="formControlTxDelay.value"
+      [disabled]="formControlTxDelay.disabled">
+    </mat-slider>
+  </mat-card>
+
+  <p class="help-text">
+    Please take note of the following:
+  </p>
+  <ul class="help-text">
+    <li>Recently staked coins won't be affected. If the outputs you want to move are in your staked balance, you must wait for them to mature.</li>
+    <li>This wallet must be unlocked until all transactions have been sent.</li>
+  </ul>
+
+  <p>
+    ERROR MESSAGE: {{ processError }}
+  </p>
+  <p>
+    COUNTS: {{ processingCurrentCount }} of {{ processingTotalCount }}
+  </p>
+  <p>
+    VALUE: {{ processingCurrentValue }} of {{ processingTotalValue }}
+  </p>
 
 </mat-dialog-content>
 
 
 <mat-dialog-actions>
 
-  <button mat-button mat-dialog-close>
+  <button mat-button [disabled]="zapOptionsForm.disabled" appDebounceClick (debounceClick)="closeModal()">
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
 
-  <button *ngIf="this.is_zapping==false" mat-raised-button color="accent" (click)="zap()">
+  <button [disabled]="zapOptionsForm.enabled" mat-raised-button color="warn" appDebounceClick (debounceClick)="stopZap()">
     <mat-icon fontIcon="part-lightning"></mat-icon>
-    Start Zapping
+    Stop Zap
   </button>
-  <button *ngIf="this.is_zapping==true" mat-raised-button color="accent" (click)="stopZapping()">
+  <button [disabled]="zapOptionsForm.disabled || zapOptionsForm.invalid" mat-raised-button color="accent" appDebounceClick (debounceClick)="zap()">
     <mat-icon fontIcon="part-lightning"></mat-icon>
-    Stop Zapping
+    Start Zap
   </button>
 
 </mat-dialog-actions>

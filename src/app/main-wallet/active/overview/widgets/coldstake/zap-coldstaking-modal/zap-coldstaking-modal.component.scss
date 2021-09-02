@@ -2,10 +2,41 @@
 @import '../coldstake-modals-shared'; // shared styles for coldstake modals
 
 
-div.select {
-  height: 10em;
+// .mat-dialog-content {
+//   width: 49vw;
+// }
+
+
+.zap-option {
+  @extend %tfx;
+  padding: 8px 24px;
+  margin: 0 -24px !important;
+  font-family: var(--font);
+  &:hover {
+    background: var(--bg-hover);
+  }
+  &.mat-radio-checked {
+    .name {
+      font-weight: 700;
+    }
+    .desc {
+      font-weight: 400;
+    }
+  }
+  .name {
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 2px;
+    padding-left: 4px;
+  }
+  .desc {
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 400;
+    padding-left: 4px;
+  }
 }
 
-input.seconds_delay {
-  width: 94% !important;
+mat-slider {
+  width: 100%;
 }

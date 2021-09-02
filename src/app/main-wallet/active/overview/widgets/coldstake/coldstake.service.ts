@@ -2,12 +2,19 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
 import { Observable, of, forkJoin, throwError, iif, defer } from 'rxjs';
-import { catchError, map, concatMap } from 'rxjs/operators';
+import { catchError, map, concatMap, take, mapTo } from 'rxjs/operators';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AddressService } from '../../../../shared/address.service';
 import {
   RpcColdStakingEnabled,
   RpcColdStakingDisabled,
+  RpcWalletsettingsChangeaddress,
+  RpcExtkeyAccount,
+  RpcListaddressgroupings,
+  ZapStakingStrategy,
+  ZapGroupDetailsType,
+  ColdStakingDetails,
+  SelectedInputs,
 } from './coldstake.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { PublicUTXO } from 'app/main/store/main.models';
@@ -52,6 +59,130 @@ export class ColdstakeService {
           throwError('FAILED_CHANGEADDRESS')
         );
       }),
+    );
+  }
+
+
+  fetchColdStakingDetails(): Observable<ColdStakingDetails> {
+    return forkJoin({
+      spendAddress: this._rpc.call('extkey', ['account']).pipe(
+        map((resp: RpcExtkeyAccount) => {
+          if ((Object.prototype.toString.call(resp) === '[object Object]') && Array.isArray(resp.chains)) {
+            const chain = resp.chains.find(c => (c.function === 'active_internal') && (typeof c.chain === 'string') && (c.chain.length > 0));
+            if (chain) {
+              return chain.chain;
+            }
+          }
+          return '';
+        }),
+      ),
+
+      stakeAddress: this._rpc.call('walletsettings', ['changeaddress']).pipe(
+        map((resp: RpcWalletsettingsChangeaddress) => {
+          if (
+            (Object.prototype.toString.call(resp) === '[object Object]') &&
+            (Object.prototype.toString.call(resp.changeaddress) === '[object Object]') &&
+            (typeof resp.changeaddress.coldstakingaddress === 'string')
+          ) {
+            return resp.changeaddress.coldstakingaddress;
+          }
+          return '';
+        })
+      ),
+    });
+  }
+
+
+  fetchZapGroupDetails(strategy: ZapStakingStrategy): Observable<ZapGroupDetailsType> {
+    return forkJoin({
+      utxos: this._store.selectOnce(WalletUTXOState.getValue('public')).pipe(take(1)) as Observable<PublicUTXO[]>,
+
+      groupings: iif(
+        () => strategy !== ZapStakingStrategy.PRIVACY,
+
+        defer(() => of(new Map<string, string>())),
+
+        defer(() => this._rpc.call('listaddressgroupings').pipe(
+
+          map((groupings: RpcListaddressgroupings) => {
+            const addressGroups = new Map<string, string>();
+            if (!Array.isArray(groupings)) {
+              return addressGroups;
+            }
+            groupings.forEach(group => {
+              if (Array.isArray(group)) {
+                if (group.length >= 2) {
+                  const groupName = `group_${group.length}`;
+                  group.forEach(g => {
+                    if (Array.isArray(g) && (typeof g[0] === 'string')) {
+                      addressGroups[g[0]] = groupName;
+                    }
+                  });
+                }
+              }
+            });
+            return addressGroups;
+          }),
+        ))
+      ),
+
+    }).pipe(
+      map(data => {
+
+        const groupsMap = new Map<string, {total: PartoshiAmount, utxos: PublicUTXO[]}>();
+
+        data.utxos
+        .filter(utxo => !utxo.coldstaking_address && (typeof utxo.desc === 'string') && utxo.desc.startsWith('pkh(') && (typeof utxo.address === 'string') )
+        .forEach(utxo => {
+          const addr = data.groupings.get(utxo.address) || utxo.address;
+
+          if (!groupsMap.has(addr)) {
+            groupsMap.set(addr, {total: new PartoshiAmount(0), utxos: []});
+          }
+          const groupsMapItem = groupsMap.get(addr);
+          groupsMapItem.total.add(new PartoshiAmount(utxo.amount));
+          groupsMapItem.utxos.push(utxo);
+        });
+
+        const removableKeys: string[] = [];
+
+        for (const key of groupsMap.keys()) {
+          const val = groupsMap.get(key);
+          val.utxos = val.utxos.sort((a, b) => (a['amount'] < b['amount'] ? 1 : -1));
+          groupsMap.set(key, val);
+
+          if (val.utxos.length === 0) {
+            removableKeys.push(key);
+          }
+        }
+
+        removableKeys.forEach(key => groupsMap.delete(key));
+
+        return groupsMap;
+      })
+    )
+  }
+
+
+  zapSelectedPrevouts(selectedPrevouts: SelectedInputs, spendAddress: string, stakeAddress: string ): Observable<boolean> {
+    return this._rpc.call('sendtypeto', [
+      'part',
+      'part',
+      [ {
+          subfee: true,
+          address: spendAddress,
+          stakeaddress: stakeAddress,
+          amount: selectedPrevouts.value,
+        } ],
+      'zap',
+      '',
+      1,
+      5,
+      false,
+      {inputs: selectedPrevouts.utxos}
+    ]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
     );
   }
 

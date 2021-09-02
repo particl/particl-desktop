@@ -12,6 +12,8 @@ import { ColdStakeModalComponent } from './widgets/coldstake/coldstake-modal/col
 import { ZapColdstakingModalComponent } from './widgets/coldstake/zap-coldstaking-modal/zap-coldstaking-modal.component';
 import { WalletSharedModule } from '../../shared/wallet-shared.module';
 
+import { ColdstakeService } from './widgets/coldstake/coldstake.service';
+
 
 const routes: Routes = [
   { path: '', component: OverviewComponent, data: { title: 'Wallet Overview'} }
@@ -42,6 +44,7 @@ const routes: Routes = [
     ZapColdstakingModalComponent,
     ColdStakeModalComponent,
   ],
+  providers: [ColdstakeService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OverviewModule { }
