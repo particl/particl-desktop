@@ -68,6 +68,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
   processingCurrentValue: number = 0;
   processingCurrentCount: number = 0;
   processError: string = '';
+  processingNextTxnTimestamp: number = 0;
 
 
   private destroy$: Subject<void> = new Subject();
@@ -89,7 +90,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
     this.zapOptionsForm = new FormGroup({
       zapStrategy: new FormControl(StakingStrategy.STAKING),
-      zapTxDelay: new FormControl(5, [Validators.min(this.zapTxDelaySecMin), Validators.max(this.zapTxDelaySecMax)]),
+      zapTxDelay: new FormControl(30, [Validators.min(this.zapTxDelaySecMin), Validators.max(this.zapTxDelaySecMax)]),
     });
   }
 
@@ -98,10 +99,10 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
     const walletLockListener$ = this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
       skip(1), // skip the initial load status
-      filter((status: string) => status !== 'Unlocked'),
+      filter((status: string) => this.zapOptionsForm.disabled && (status !== 'Unlocked')), // trigger only when currently zapping and wallet 'locks'
       distinctUntilChanged(),
       tap(() => {
-        this.log.d('wallet locked - ensure any running zap processing is terminated');
+        this.log.d('wallet locked - terminate running zapping process');
         this.stopZap$.next();
         this.processError = TextContent.ZAP_ERROR_WALLET_LOCK;
       }),
@@ -143,6 +144,12 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
     return this.zapOptionsForm.get('zapTxDelay');
   }
 
+  get formattedSliderDuration() {
+    return +this.formControlTxDelay.value < 60 ?
+      `${this.formControlTxDelay.value} seconds` :
+      `${Math.floor(+this.formControlTxDelay.value / 60) } min ${+this.formControlTxDelay.value % 60} seconds`;
+  }
+
 
   closeModal() {
     this.log.d('user close modal request');
@@ -163,6 +170,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
     this.processingCurrentCount = 0;
     this.processingCurrentValue = 0;
     this.processError = '';
+    this.processingNextTxnTimestamp = 0;
 
     const selectedOption = +this.zapOptionsForm.get('zapStrategy').value;
     const selectedDelay = +this.zapOptionsForm.get('zapTxDelay').value * 1000;
@@ -185,10 +193,6 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
     }
     this.stopZap$.next();
   }
-
-//   pad2(i): string {
-//     return (`0${i}`).slice(-2);
-//   }
 
 
   private _closeModal(success?: boolean) {
@@ -263,6 +267,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
               }
               this.processingTotalCount += selected.utxos.length;
               this.processingTotalValue = new PartoshiAmount(this.processingTotalValue).add(new PartoshiAmount(selected.value, true)).particls();
+              this.processingNextTxnTimestamp = Date.now() + 1000;
               this.log.d(`Candidate outputs: ${this.processingTotalCount}, value: ${this.processingTotalValue}`);
             }
           }),
@@ -300,6 +305,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
                   return this._coldstakeService.zapSelectedPrevouts(selected, csDetails.spendAddress, csDetails.stakeAddress).pipe(
                     tap((success) => {
                       if (success) {
+                        this.processingNextTxnTimestamp = Date.now() + selectedDelay;
                         this.processingCurrentCount += selected.utxos.length;
                         this.processingCurrentValue = new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value, true)).particls();
                         return;
@@ -319,16 +325,19 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
             // delay next transaction processing
             delay( selectedDelay )
-          ))
+          ), 1)
         ))
 
       )),
 
       catchError((err) => {
         this.log.er(err);
-        switch (err.message) {
-          case 'ERROR_FAILED_TRANSACTION': this.processError = TextContent.ZAP_ERROR_FAILED_TRANSACTION; break;
-          case 'INVALID_ADDRESS': this.processError = TextContent.ZAP_ERROR_INVALID_ADDRESS; break;
+        switch (true) {
+          case err.message === 'ERROR_FAILED_TRANSACTION': this.processError = TextContent.ZAP_ERROR_FAILED_TRANSACTION; break;
+          case err.message === 'INVALID_ADDRESS': this.processError = TextContent.ZAP_ERROR_INVALID_ADDRESS; break;
+          case (err.code === -13) || (typeof err.message === 'string' && err.message.toLowerCase().includes('wallet locked')):
+            this.processError = TextContent.ZAP_ERROR_WALLET_LOCK;
+            break;
           default: this.processError = `${TextContent.ZAP_ERROR_GENERIC_FAILURE}: ${err.message}`; break;
         }
 
