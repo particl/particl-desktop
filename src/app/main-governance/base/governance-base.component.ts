@@ -99,6 +99,9 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
               wallet.name.startsWith('testnet/') ||
               wallet.name.startsWith('testnet\\') ||
               (wallet.name === 'testnet') ||
+              wallet.name.startsWith('regtest/') ||
+              wallet.name.startsWith('regtest\\') ||
+              (wallet.name === 'regtest') ||
               (wallet.name === currentWallet.name)
             )
           ).map(wallet =>

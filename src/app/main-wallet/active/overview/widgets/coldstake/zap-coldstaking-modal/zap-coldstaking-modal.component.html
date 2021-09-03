@@ -1,38 +1,107 @@
 <mat-dialog-title>Cold staking Zap</mat-dialog-title>
 
-<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+<!-- <button mat-button color="warn" [disabled]="zapOptionsForm.disabled" class="modal-close" tabindex="-1" appDebounceClick (debounceClick)="closeModal()">
   <mat-icon fontIcon="part-cross"></mat-icon>
-</button>
+</button> -->
 
 
-<mat-dialog-content class="--muted">
+<mat-dialog-content class="--muted" [formGroup]="zapOptionsForm">
 
-  <p class="lead">
-    Zapping will fast-forward the cold staking progress instantly to 100%
+  <p>
+    Zapping will move any non-coldstaking unspent outputs in the wallet to coldstaking scripts in one or more transactions.
   </p>
   <p>
-    Be warned, that this decreases your financial privacy, as it bundles all your remaining coins into one big transaction. It is advised to zap only the small remaining part of your coins (last ~10 %) &ndash; those that take ages to get processed.
-  </p>
-  <p class="alert --boxed --info">
-    <span>Zapping transaction(s) will consume <strong>{{ fee }} PART</strong> fee in the process.</span>
-  </p>
-  <p class="help-text">
-    Staked coins won't be affected. If the outputs you want to move are in your staked balance, you must wait for them to mature.
+    Be warned, this bundles your unstaked remaining coins together (the inputs), which may decrease your financial privacy. It is advised to zap only the small remaining part of your coins (last ~10 %) &ndash; those that may take a really long time to be processed.
   </p>
 
+  <h2 class="section-title">
+    Input selection strategy
+  </h2>
+
+  <mat-card>
+    <mat-radio-group class="from-balance-type block-radio" name="zapStrategy" formControlName="zapStrategy"
+                      fxLayout="column" fxLayoutGap="10px">
+      <mat-radio-button class="zap-option" *ngFor="let option of selectorOptions" [value]="option.value" fxFlex>
+        <div class="name">{{ option.name }}</div>
+        <div class="desc">
+          {{ option.description }}
+        </div>
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+
+  <h2 class="section-title">
+    Seconds to wait between multiple transactions
+  </h2>
+
+  <mat-card>
+    <mat-slider
+      thumbLabel
+      color="accent"
+      [min]="zapTxDelaySecMin"
+      [max]="zapTxDelaySecMax"
+      step="30"
+      (change)="formControlTxDelay.setValue($event.value)"
+      [value]="formControlTxDelay.value"
+      [disabled]="formControlTxDelay.disabled">
+    </mat-slider>
+    <div class="right">
+      <p>Selected Duration: {{ formattedSliderDuration }}</p>
+    </div>
+  </mat-card>
+
+  <p class="alert --boxed --info">
+    <span>{{ labelInputsValue }}</span>
+  </p>
+
+  <p class="help-text">
+    Please take note of the following:
+  </p>
+  <ul class="help-text">
+    <li>Recently staked coins won't be affected. If the outputs you want to move are in your staked balance, you must wait for them to mature.</li>
+    <li>This wallet must be unlocked until all transactions have been sent.</li>
+  </ul>
 </mat-dialog-content>
 
 
 <mat-dialog-actions>
 
-  <button mat-button mat-dialog-close>
-    <mat-icon fontIcon="part-cross"></mat-icon>
-    Cancel
-  </button>
+  <div class="left">
+    <button mat-button [disabled]="zapOptionsForm.disabled" appDebounceClick (debounceClick)="closeModal()">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+  </div>
 
-  <button mat-raised-button color="accent" (click)="zap()" [disabled]="fee <= 0">
-    <mat-icon fontIcon="part-lightning"></mat-icon>
-    Zap to 100%
-  </button>
+  <div class="right" fxLayout fxLayoutAlign="end center">
+
+    <div *ngIf="zapOptionsForm.disabled && (processingNextTxnTimestamp > 0)">
+      <span class="txn-time" matTooltip="Next transaction at ~ {{ processingNextTxnTimestamp | date:'medium' }}" matTooltipPosition="above">
+        <mat-icon fontIcon="part-circle-question" ></mat-icon>
+      </span>
+    </div>
+
+    <div *ngIf="(processingTotalCount > 0) || (processingTotalValue > 0)" class="processing">
+      <table>
+        <tbody>
+          <tr><td class="processing-label">Completed Outputs:</td><td>{{ processingCurrentCount }} of {{ processingTotalCount }}</td></tr>
+          <tr><td class="processing-label">Zapped Value:</td><td>{{ processingCurrentValue }} of {{ processingTotalValue }}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="processError.length > 0" class="dot" [matTooltip]="processError" matTooltipPosition="above">
+      <mat-icon fontIcon="part-circle-alert" ></mat-icon>
+    </div>
+
+    <button [disabled]="zapOptionsForm.enabled" mat-raised-button color="warn" appDebounceClick (debounceClick)="stopZap()">
+      <mat-icon fontIcon="part-error"></mat-icon>
+      Stop Zap
+    </button>
+    <button [disabled]="zapOptionsForm.disabled || zapOptionsForm.hasError()" mat-raised-button color="accent" appDebounceClick (debounceClick)="zap()">
+      <mat-icon fontIcon="part-lightning"></mat-icon>
+      Start Zap
+    </button>
+  </div>
 
 </mat-dialog-actions>
