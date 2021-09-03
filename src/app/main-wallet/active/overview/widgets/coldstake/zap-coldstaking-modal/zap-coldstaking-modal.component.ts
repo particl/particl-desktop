@@ -55,8 +55,16 @@ enum TextContent {
 export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
   readonly selectorOptions: ZapOption[] = [
-    { name: TextContent.ZAP_STRATEGY_STAKING_LABEL, value: StakingStrategy.STAKING, description: TextContent.ZAP_STRATEGY_STAKING_DESCRIPTION },
-    { name: TextContent.ZAP_STRATEGY_PRIVACY_LABEL, value: StakingStrategy.PRIVACY, description: TextContent.ZAP_STRATEGY_PRIVACY_DESCRIPTION },
+    {
+      name: TextContent.ZAP_STRATEGY_STAKING_LABEL,
+      value: StakingStrategy.STAKING,
+      description: TextContent.ZAP_STRATEGY_STAKING_DESCRIPTION
+    },
+    {
+      name: TextContent.ZAP_STRATEGY_PRIVACY_LABEL,
+      value: StakingStrategy.PRIVACY,
+      description: TextContent.ZAP_STRATEGY_PRIVACY_DESCRIPTION
+    },
   ];
   readonly labelInputsValue: string = '';
   readonly zapTxDelaySecMin: number = 0;
@@ -86,7 +94,9 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
     private _unlocker: WalletEncryptionService,
   ) {
 
-    this.labelInputsValue = TextContent.INFO_LABEL.replace('${inputs}', `${this.zapMaxInputs}`).replace('${amount}', `${this.zapMaxAmount}`);
+    this.labelInputsValue = TextContent.INFO_LABEL
+      .replace('${inputs}', `${this.zapMaxInputs}`)
+      .replace('${amount}', `${this.zapMaxAmount}`);
 
     this.zapOptionsForm = new FormGroup({
       zapStrategy: new FormControl(StakingStrategy.STAKING),
@@ -99,7 +109,9 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
     const walletLockListener$ = this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
       skip(1), // skip the initial load status
-      filter((status: string) => this.zapOptionsForm.disabled && (status !== 'Unlocked')), // trigger only when currently zapping and wallet 'locks'
+
+      // trigger only when currently zapping and wallet 'locks'
+      filter((status: string) => this.zapOptionsForm.disabled && (status !== 'Unlocked')),
       distinctUntilChanged(),
       tap(() => {
         this.log.d('wallet locked - terminate running zapping process');
@@ -175,7 +187,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
     const selectedOption = +this.zapOptionsForm.get('zapStrategy').value;
     const selectedDelay = +this.zapOptionsForm.get('zapTxDelay').value * 1000;
 
-    this._unlocker.unlock({timeout: 5*60*60}).pipe(
+    this._unlocker.unlock({timeout: 5 * 60 * 60 }).pipe(
       concatMap((isUnlocked) => iif(
         () => isUnlocked,
 
@@ -201,15 +213,15 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
 
   private selectInputs(strategy: ZapStakingStrategy, groupings: ZapGroupDetailsType): SelectedInputs {
-    let runningTotal = new PartoshiAmount(0);
-    let selectedUtxos: PublicUTXO[] = [];
+    const runningTotal = new PartoshiAmount(0);
+    const selectedUtxos: PublicUTXO[] = [];
     const maxValue = new PartoshiAmount(this.zapMaxAmount).partoshis();
-    let addrs = [...groupings.keys()];
+    const addrs = [...groupings.keys()];
 
     let isSatified = false;
 
     for (const addr of addrs) {
-      let group = groupings.get(addr);
+      const group = groupings.get(addr);
 
       while (true) {
         if (group.utxos.length < 1) {
@@ -222,7 +234,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
         if (group.utxos.length < 1) {
           break;
         }
-        let utxo = group.utxos.pop();
+        const utxo = group.utxos.pop();
         runningTotal.add(new PartoshiAmount(utxo['amount']));
         selectedUtxos.push(utxo);
       }
@@ -235,7 +247,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
     const rValue: SelectedInputs = {
       utxos: selectedUtxos.map(utxo => ({tx: utxo.txid, n: utxo.vout})),
       value: runningTotal.particls(),
-    }
+    };
 
     return rValue;
   }
@@ -307,7 +319,8 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
                       if (success) {
                         this.processingNextTxnTimestamp = Date.now() + selectedDelay;
                         this.processingCurrentCount += selected.utxos.length;
-                        this.processingCurrentValue = new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value)).particls();
+                        this.processingCurrentValue =
+                          new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value)).particls();
 
                         // no need to wait for next transaction processing (and accompanying delay) if this was the last to be processed
                         if (this.processingCurrentCount >= this.processingTotalCount) {

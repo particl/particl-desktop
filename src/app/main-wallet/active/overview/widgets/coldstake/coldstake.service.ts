@@ -68,7 +68,9 @@ export class ColdstakeService {
       spendAddress: this._rpc.call('extkey', ['account']).pipe(
         map((resp: RpcExtkeyAccount) => {
           if ((Object.prototype.toString.call(resp) === '[object Object]') && Array.isArray(resp.chains)) {
-            const chain = resp.chains.find(c => (c.function === 'active_internal') && (typeof c.chain === 'string') && (c.chain.length > 0));
+            const chain = resp.chains.find(
+              c => (c.function === 'active_internal') && (typeof c.chain === 'string') && (c.chain.length > 0)
+            );
             if (chain) {
               return chain.chain;
             }
@@ -132,7 +134,12 @@ export class ColdstakeService {
         const groupsMap = new Map<string, {total: PartoshiAmount, utxos: PublicUTXO[]}>();
 
         data.utxos
-        .filter(utxo => !utxo.coldstaking_address && (typeof utxo.desc === 'string') && utxo.desc.startsWith('pkh(') && (typeof utxo.address === 'string') )
+        .filter(utxo =>
+          !utxo.coldstaking_address &&
+          (typeof utxo.desc === 'string') &&
+          utxo.desc.startsWith('pkh(') &&
+          (typeof utxo.address === 'string')
+        )
         .forEach(utxo => {
           const addr = data.groupings.get(utxo.address) || utxo.address;
 
@@ -160,7 +167,7 @@ export class ColdstakeService {
 
         return groupsMap;
       })
-    )
+    );
   }
 
 

@@ -58,7 +58,7 @@ export interface RpcExtkeyAccount {
   chains: {
     function?: 'active_external' | 'active_internal' | 'active_stealth';
     id: string;                                     // eg: "xNAdQKBRq1rbLPVjMhsWwoPrNSXMqdxaVt"
-    chain: string;                                  // eg: "pparszMYp2SyZfGqV2bAEv5euGKjj7D8JtseVxYyxfezXJF3bf5K4uAGt6YiR2ynkH4phG6xH5iGMKBahDJ3Hha39NHAop6o7e56D2SfuY7FbEHy"
+    chain: string;                                  // eg: "pparszMYp2SyZfGqV2bAEv5euGKjj7D8JtseV..."
     label: string;
     active: 'true' | 'false';
     receive_on: 'true' | 'false';
