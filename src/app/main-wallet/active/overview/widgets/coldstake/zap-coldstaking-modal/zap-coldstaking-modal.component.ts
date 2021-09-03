@@ -76,7 +76,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
   private log: any = Log.create('zap-coldstaking-modal.component');
   private readonly zapMaxAmount: number = 1000;
   private readonly zapMaxInputs: number = 20;
-  private readonly DUST_PARTOSHIS: number = 10000;
+  private readonly DUST_PARTOSHIS: PartoshiAmount = new PartoshiAmount(10000, true);
 
 
   constructor(
@@ -234,7 +234,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
     const rValue: SelectedInputs = {
       utxos: selectedUtxos.map(utxo => ({tx: utxo.txid, n: utxo.vout})),
-      value: runningTotal.partoshis(),
+      value: runningTotal.particls(),
     }
 
     return rValue;
@@ -261,12 +261,12 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
               if (selected.utxos.length < 1) {
                 break;
               }
-              if (selected.value < this.DUST_PARTOSHIS) {
+              if (selected.value < this.DUST_PARTOSHIS.particls()) {
                 this.log.d('Skipping candidate inputs below dust value');
                 continue;
               }
               this.processingTotalCount += selected.utxos.length;
-              this.processingTotalValue = new PartoshiAmount(this.processingTotalValue).add(new PartoshiAmount(selected.value, true)).particls();
+              this.processingTotalValue = new PartoshiAmount(this.processingTotalValue).add(new PartoshiAmount(selected.value)).particls();
               this.processingNextTxnTimestamp = Date.now() + 1000;
               this.log.d(`Candidate outputs: ${this.processingTotalCount}, value: ${this.processingTotalValue}`);
             }
@@ -284,7 +284,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
                     this.log.i('Txn: No valid inputs');
                     break;
                   }
-                  if (selected.value < this.DUST_PARTOSHIS) {
+                  if (selected.value < this.DUST_PARTOSHIS.particls()) {
                     this.log.d('Txn: Skipping inputs below dust value');
                     continue;
                   }
@@ -307,7 +307,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
                       if (success) {
                         this.processingNextTxnTimestamp = Date.now() + selectedDelay;
                         this.processingCurrentCount += selected.utxos.length;
-                        this.processingCurrentValue = new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value, true)).particls();
+                        this.processingCurrentValue = new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value)).particls();
                         return;
                       }
                       throwError(new Error('ERROR_FAILED_TRANSACTION'));
