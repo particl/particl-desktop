@@ -1,5 +1,5 @@
 import * as app from '../../package.json';
-import * as MP from '../../node_modules/particl-marketplace/package.json';
+import * as MP from '../../node_modules/@zasmilingidiot/particl-marketplace/package.json';
 
 export const environment = {
   production: false,

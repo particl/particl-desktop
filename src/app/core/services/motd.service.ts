@@ -20,7 +20,7 @@ export class MotdService {
       author: 'Satoshi Nakamoto, Apr 14, 2009'
     },
     {
-      text: 'Particl market provides added protection for buyers and sellers, making it a smarter, safer way to shop online. Particl continues Satoshi\'s work.',
+      text: 'Particl Marketplace provides added protection for buyers and sellers, making it a smarter, safer way to shop online. Particl continues Satoshi\'s work.',
       author: ''
     },
     {
@@ -34,7 +34,39 @@ export class MotdService {
     {
       text: '"// Add atoms to user reviews for coins created"',
       author: 'Satosh Nakamoto, Bitcoin source code 2009, main.cpp, Line 1226'
-    }
+    },
+    {
+      text: 'There’s only one basic principle of self-defense. You must apply the most effective weapon, as soon as possible, to the most vulnerable target.',
+      author: 'Bruce Lee'
+    },
+    {
+      text: 'The right of self-defense never ceases. It is among the most sacred, and alike necessary to nations and to individuals.',
+      author: 'James Monroe'
+    },
+    {
+      text: 'Arguing that you don\'t care about the right to privacy because you have nothing to hide is no different than saying you don\'t care about free speech because you have nothing to say.',
+      author: 'Edward Snowden'
+    },
+    {
+      text: 'They who can give up essential liberty to obtain a little temporary safety deserve neither liberty nor safety.',
+      author: 'Benjamin Franklin'
+    },
+    {
+      text: 'All human beings have three lives: public, private, and secret.',
+      author: 'Gabriel García Márquez'
+    },
+    {
+      text: 'In the truest sense, freedom cannot be bestowed; it must be achieved.',
+      author: 'Franklin D. Roosevelt'
+    },
+    {
+      text: 'We must be free not because we claim freedom, but because we practice it.',
+      author: 'William Faulkner'
+    },
+    {
+      text: 'For to be free is not merely to cast off one’s chains, but to live in a way that respects and enhances the freedom of others',
+      author: 'Nelson Mandela'
+    },
   ];
 
   private readonly _messageIntervalSeconds: number = 120;

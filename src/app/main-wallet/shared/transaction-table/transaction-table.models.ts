@@ -62,6 +62,7 @@ export interface FilterTransactionModel {
   abandoned?: boolean;
   outputs: FilterTransactionOutputModel[];
   amount: number;
+  type_in?: 'anon';
 }
 
 
@@ -94,6 +95,10 @@ export class FilteredTransaction {
     /* transactions */
     this.txid = json.txid;
     this.category = json.category;
+    if ((this.category === 'unknown' && json.type_in === 'anon')) {
+      // caters for using anon funds for sending of smsg
+      this.category = 'internal_transfer';
+    }
     this.requiredConfirmations = 12;
 
     const partoshiAmount = new PartoshiAmount(Math.abs(+json.amount));
@@ -107,7 +112,7 @@ export class FilteredTransaction {
     this.confirmations = +json.confirmations;
     this.outputs = json.outputs || [];
 
-    this.isListingFee = this.category === 'internal_transfer' && this.outputs.length === 0;
+    this.isListingFee = (this.category === 'internal_transfer') && (this.outputs.length === 0);
 
     this.address = '';
     this.addressType = AddressType.NORMAL;
