@@ -308,6 +308,12 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
                         this.processingNextTxnTimestamp = Date.now() + selectedDelay;
                         this.processingCurrentCount += selected.utxos.length;
                         this.processingCurrentValue = new PartoshiAmount(this.processingCurrentValue).add(new PartoshiAmount(selected.value)).particls();
+
+                        // no need to wait for next transaction processing (and accompanying delay) if this was the last to be processed
+                        if (this.processingCurrentCount >= this.processingTotalCount) {
+                          this.stopZap$.next(true);
+                        }
+
                         return;
                       }
                       throwError(new Error('ERROR_FAILED_TRANSACTION'));
