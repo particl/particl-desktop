@@ -1407,10 +1407,10 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-"@zasmilingidiot/particl-marketplace@0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.2.tgz#c2368c8a8590c4f6e04d3202f0d44d3ca9daea69"
-  integrity sha512-/gzUAhmN1PklR4K428+ygqm3TTfeQ4PdWf7Ld38Vx8NjgmpCmrvSO1MuO31bmVfL9VEUoEDs+fzFAYisiphlFA==
+"@zasmilingidiot/particl-marketplace@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.3.tgz#fae8b1c38b5b842bc7f475a360765aeee6282a4c"
+  integrity sha512-LQf3PNexYUKQL/Lz7N0b8IB5ilRD66WqnRrmWz0L56jtDB7IwEEvyWCWtO51pDahY41CWhmeqe4B4un+o80vEA==
   dependencies:
     "@zasmilingidiot/particl-zmq" "1.0.7"
     basic-auth "^2.0.0"
