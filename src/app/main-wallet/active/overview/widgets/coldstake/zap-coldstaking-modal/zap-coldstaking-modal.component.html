@@ -98,7 +98,7 @@
       <mat-icon fontIcon="part-error"></mat-icon>
       Stop Zap
     </button>
-    <button [disabled]="zapOptionsForm.disabled || zapOptionsForm.hasError()" mat-raised-button color="accent" appDebounceClick (debounceClick)="zap()">
+    <button [disabled]="zapOptionsForm.disabled || zapOptionsForm.invalid" mat-raised-button color="accent" appDebounceClick (debounceClick)="zap()">
       <mat-icon fontIcon="part-lightning"></mat-icon>
       Start Zap
     </button>
