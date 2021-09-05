@@ -1,0 +1,101 @@
+@import './src/assets/_config';
+
+.text-page {
+  @extend %mat-card;
+  padding: var(--padding);
+  margin-bottom: var(--paddingV);
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    font-size: 18px;
+    margin-top: 24px;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    @include break(xl) {
+      font-size: 15px;
+    }
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  li {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 0.2rem;
+    @include break(xl) {
+      font-size: 15px;
+    }
+  }
+
+  strong,
+  th {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .header-votes {
+    border-top: 1px dashed var(--bg-muted);
+    margin: var(--paddingV) calc(-1 * var(--paddingH)) 0;
+    padding: calc(0.5 * var(--paddingV)) var(--paddingH) 0;
+    table.requirements {
+      width: 100%;
+      border-spacing: 0;
+      color: var(--text-muted);
+      line-height: 1.7;
+      th {
+        text-align: left;
+      }
+    }
+  }
+
+}
+
+.block-links {
+  @extend %mat-card;
+  position: sticky;
+  top: calc(var(--header-main-height) + var(--paddingV));
+  border-radius: var(--radius);
+  overflow: hidden;
+  .link {
+    @extend %tfx;
+    border-bottom: 1px solid var(--bg-muted);
+    display: block;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 14.5px;
+    &:last-of-type { border: 0; }
+    &:hover,
+    &:focus {
+      color: var(--color-tertiary);
+      background: hsla(var(--color-tertiary-hsl), 0.05);
+    }
+  }
+}
+
+.row {
+  display: flex;
+  & > .column {
+    flex: 1 1 50%;
+    margin-right: var(--paddingH);
+    &:last-of-type { margin: 0; }
+
+    // "Useful links"
+    &.sidebar {
+      flex: 0 0 300px;
+    }
+
+  }
+}

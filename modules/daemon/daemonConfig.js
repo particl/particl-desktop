@@ -121,6 +121,10 @@ const loadConfiguration = () => {
     settings = { ...settings, ...(config.test || {}) };
   }
 
+  if ( settings.regtest || _options.regtest) {
+    settings = { ...settings, ...(config.regtest || {}) };
+  }
+
   settings = { ...settings, ..._options};
   settings.port = +(settings.rpcport ? settings.rpcport : settings.port);
   STORED_CONFIGURATION = settings;
@@ -303,6 +307,8 @@ const initializeIpcChannels = () => {
         let walletPath = cookie.getParticlPath(_options);
         if (_options.testnet) {
           walletPath = path.join(walletPath, 'testnet');
+        } else if (_options.regtest) {
+          walletPath = path.join(walletPath, 'regtest');
         }
 
         let pathExists = false;

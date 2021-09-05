@@ -18,7 +18,9 @@ import {
   UpdateTemplateRequest,
   ProductItem,
   ProductMarketTemplate,
-  TEMPLATE_STATUS_TYPE } from './sell.models';
+  TEMPLATE_STATUS_TYPE,
+  PublishWarnings
+} from './sell.models';
 import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail.models';
 
 
@@ -389,7 +391,7 @@ export class SellService {
   }
 
 
-  estimatePublishFee(templateId: number, durationDays: number): Observable<number> {
+  estimatePublishFee(templateId: number, durationDays: number): Observable<{fee: number, warnings: PublishWarnings[]}> {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
@@ -400,8 +402,27 @@ export class SellService {
 
     return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => {
-        if (isBasicObjectType(resp) && (+resp.fee > 0)) {
-          return +resp.fee;
+
+        if (isBasicObjectType(resp)) {
+          const sendErrors: PublishWarnings[] = [];
+
+          let amount = 0;
+
+          if (+resp.totalFees > 0) {
+            amount = +resp.totalFees;
+          } else if (+resp.fee > 0) {
+            amount += +resp.fee;
+          }
+
+          if ((typeof resp.error === 'string')) {
+            if (usingAnonFees && (resp.error.toLowerCase().includes('enough utxos'))) {
+              sendErrors.push(PublishWarnings.INSUFFICIENT_UTXOS);
+            }
+          }
+
+          if (amount > 0) {
+            return {fee: amount, warnings: sendErrors};
+          }
         }
         throwError('Invalid market request!');
       })

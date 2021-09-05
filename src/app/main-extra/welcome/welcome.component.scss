@@ -147,8 +147,11 @@ body {
           &.part-bag {
             color: var(--color-secondary);
           }
-          &.part-swap {
+          &.part-vote {
             color: var(--color-tertiary);
+          }
+          &.part-swap {
+            color: var(--color-warning);
           }
         }
         .name {

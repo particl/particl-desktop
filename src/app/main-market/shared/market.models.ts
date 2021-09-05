@@ -58,7 +58,7 @@ export enum BID_STATUS {
   ITEM_SHIPPED = 'MPA_SHIP',
   COMPLETED = 'MPA_RELEASE',
   BID_REJECTED = 'MPA_REJECT_03',
-  ORDER_CANCELLED = 'MPA_CANCELLED'
+  ORDER_CANCELLED = 'MPA_CANCEL_03'
 }
 export enum BID_DATA_KEY {
   MARKET_KEY = 'market.address',
@@ -422,10 +422,15 @@ export interface RespListingTemplate {
 
 
 export interface RespItemPost {
+  availableUtxos: number;
+  error: string;
+  fee?: number;
   result: string;  // Should be: 'Sent' | 'Not Sent'; but sometimes seems to include '.' characters sometimes not, etc
+  totalFees: number;
   msgid?: string;
   txid?: string;
-  fee?: number;
+  tx_bytes?: number;
+  childResults?: { result: string; fee: number; tx_bytes: number; }[];
 }
 
 

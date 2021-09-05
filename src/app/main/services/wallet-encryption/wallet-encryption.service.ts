@@ -90,6 +90,10 @@ export class WalletEncryptionService implements OnDestroy {
   }
 
 
+  /**
+   *
+   * @returns {Observable<boolean>} Indicates whether the wallet is successfully unlocked
+   */
   unlock(data: UnlockModalConfig = {}): Observable<boolean> {
     const currentStatus = <string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'));
 
@@ -104,6 +108,29 @@ export class WalletEncryptionService implements OnDestroy {
       if (data.timeout > secondsLeft) {
         return this.getUnlockModal(data);
       }
+    }
+
+    return of(true);
+  }
+
+
+  /**
+   *
+   * @returns {Observable<boolean>} Indicates whether this call succeeded or not:
+   *  if the wallet was not encrypted to begin with then the request to lock is ignored but returns true
+   *  to indicate that the request completed successfully.
+   */
+  lock(): Observable<boolean> {
+    const currentStatus = <string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'));
+
+    if (['Unlocked', 'Unlocked, staking only'].includes(currentStatus)) {
+      return this._walletService.lockWallet().pipe(
+          tap((resp: boolean) => {
+            if (resp) {
+              this._store.dispatch(new MainActions.RefreshWalletInfo());
+            }
+          })
+        );
     }
 
     return of(true);

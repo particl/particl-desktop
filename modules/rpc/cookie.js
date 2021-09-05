@@ -123,6 +123,8 @@ function getCookiePath(options) {
   const segments = [dataDir];
   if (options.testnet) {
     segments.push('testnet');
+  } else if (options.regtest) {
+    segments.push('regtest');
   }
   segments.push(getCookieName(options));
   return path.join(...segments);

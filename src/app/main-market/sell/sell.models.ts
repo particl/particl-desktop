@@ -18,6 +18,11 @@ export const PublishDurations = [
 ];
 
 
+export enum PublishWarnings {
+  INSUFFICIENT_UTXOS,
+}
+
+
 export enum TEMPLATE_STATUS_TYPE {
   UNKNOWN = 'unknown',
   UNPUBLISHED = 'unpublished',

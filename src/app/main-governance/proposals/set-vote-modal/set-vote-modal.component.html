@@ -1,10 +1,12 @@
 <mat-dialog-title>
-  Set Vote For Proposal
+  {{ proposalName }}
   <small class="proposal-name">
-    <mat-icon fontIcon="part-shop"></mat-icon>
-    ({{ proposalId }}) {{ proposalName }}
+    <mat-icon fontIcon="part-vote"></mat-icon>
+    Voting on Proposal
+    <span class="proposal-id">{{ proposalId }}</span>
   </small>
 </mat-dialog-title>
+
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
 </button>
@@ -15,19 +17,13 @@
 
     <form class="proposal-form" [formGroup]="proposalForm">
 
-      <h2 class="section-title">
-        Vote details
-      </h2>
+      <h2 class="section-title">You’re about to vote on a proposal</h2>
 
-      <div>
-        <div class="details">
-          <p class="desc">You’re about to vote on a proposal. If your wallet stakes a block during the proposal's voting duration, then your vote will be reflected for that block, and contribute to the total votes.</p>
-        </div>
-      </div>
+      <p class="desc">
+        If your wallet stakes a block during the proposal's voting duration, then your vote will be reflected for that block, and contribute to the total votes.
+      </p>
 
-      <h2 class="section-title">
-        Your Vote
-      </h2>
+      <h2 class="section-title">Your Vote</h2>
 
       <mat-form-field class="--boxed --larger" appearance="fill">
         <mat-icon matPrefix fontIcon="part-vote"></mat-icon>

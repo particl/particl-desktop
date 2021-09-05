@@ -74,9 +74,14 @@ mat-dialog-title {
   }
 }
 
+.confirmation-checkbox {
+  margin-right: 24px;
+  color: var(--text-muted);
+}
+
 /* // redundant from before? category selection/creation no longer happens here..?
 // Select Category
-.select-category {  
+.select-category {
   margin-bottom: var(--card-spacing);
 }
 .create-category {

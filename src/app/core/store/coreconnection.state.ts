@@ -16,7 +16,6 @@ import {
 import { IpcService } from '../services/ipc.service';
 import { RpcService } from '../services/rpc.service';
 
-
 const CORE_CONFIG_TOKEN = new StateToken<CoreConnectionModel>('coreconnection');
 
 
@@ -24,6 +23,7 @@ const CORE_CONFIG_TOKEN = new StateToken<CoreConnectionModel>('coreconnection');
   name: CORE_CONFIG_TOKEN,
   defaults: {
     testnet: false,
+    regtest: false,
     auth: btoa('test:test'),
     rpcbind: environment.particlHost,
     port: environment.particlPort,
@@ -36,6 +36,10 @@ export class CoreConnectionState {
   @Selector()
   static isTestnet(state: CoreConnectionModel) {
     return state.testnet;
+  }
+
+  static isRegtest(state: CoreConnectionModel) {
+    return state.regtest;
   }
 
 
@@ -78,6 +82,8 @@ export class CoreConnectionState {
 
     if (keys.includes('testnet')) {
       ctx.patchState({testnet: Boolean(+action.config.testnet)});
+    } else if (keys.includes('regtest')) {
+      ctx.patchState({regtest: Boolean(+action.config.regtest)});
     }
 
     const appState = ctx.getState();
@@ -101,6 +107,7 @@ export class CoreConnectionState {
       tap((blockchaininfo) => {
           if (blockchaininfo && ('chain' in blockchaininfo)) {
             ctx.patchState({testnet: blockchaininfo.chain === 'test'});
+            ctx.patchState({regtest: blockchaininfo.chain === 'regtest'});
           }
       }),
       concatMap((blockchaininfo) => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, combineLatest, Observable, iif, defer, of, merge, timer } from 'rxjs';
@@ -35,7 +35,8 @@ enum TextContent {
 
 @Component({
   templateUrl: './proposals.component.html',
-  styleUrls: ['./proposals.component.scss']
+  styleUrls: ['./proposals.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProposalsComponent implements OnInit, OnDestroy {
 
@@ -307,14 +308,14 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     return this.blockCounter$.pipe(
       map(currentBlock => {
         const sBlock = +startBlock || 0;
-        const eBlock = 1 + (+endBlock || 0);
+        const eBlock = (+endBlock || 0);
         const totalBlocks = eBlock - sBlock;
         let completedBlocks = 0;
         let remainingBlocks = 0;
 
         if (totalBlocks > 1) {
           remainingBlocks = eBlock > currentBlock ? eBlock - currentBlock : 0;
-          completedBlocks = totalBlocks - remainingBlocks;
+          completedBlocks = totalBlocks - remainingBlocks + 1;
         }
 
         const completed: ChartDataItem = {
@@ -360,6 +361,11 @@ export class ProposalsComponent implements OnInit, OnDestroy {
               show: vote.votes > 0
             }
           };
+          // temporary measure to attempt showing a gray colour for non-cast votes:
+          //    (temporary because it'll possibly fail if using different languages)
+          if (vote.label === 'Abstain') {
+            cdi.itemStyle = { color: '#858c92' };
+          }
           return cdi;
         });
       })

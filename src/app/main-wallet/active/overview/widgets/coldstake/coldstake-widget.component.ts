@@ -15,21 +15,18 @@ import { DisableColdstakingConfirmationModalComponent } from './disable-coldstak
 import { ColdStakeModalComponent } from './coldstake-modal/coldstake-modal.component';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { CoreErrorModel } from 'app/core/core.models';
-import { ZapInformation } from './coldstake.models';
 
 
 enum TextContent {
   ACTIVATE_ERROR_GENERIC = 'Failed to activate cold staking!',
   ACTIVATE_ERROR_ADDRESS = 'Address provided is invalid',
   ACTIVATE_SUCCESS = 'Cold staking successfully activated',
-  REVERT_SUCCESS_NO_TXS = 'Succesfully disabled coldstaking, no transactions needed.',
+  REVERT_SUCCESS_NO_TXS = 'Successfully disabled coldstaking, no transactions needed.',
   REVERT_PARTIAL_SUCCESS = 'Disabling succeeded, but some funds may still be associated with a cold-staking node',
-  REVERT_SUCCESS = 'Succesfully brought cold staking balance into hot wallet',
+  REVERT_SUCCESS = 'Successfully brought cold staking balance into hot wallet',
   REVERT_FAILED = 'Failed to properly disable coldstaking!',
   REVERT_DETAILS_ERROR = 'Could not fetch cold staking details',
-  ZAP_DETAILS_ERROR = 'Could not fetch details needed for the zap process to continue',
-  ZAP_ERROR = 'An error occurred while attempting to zap to cold staking',
-  ZAP_SUCCESS = 'Succesfully zapped ${amount} PART to cold staking',
+  ZAP_SUCCESS = 'Successfully zapped your funds to coldstaking',
 }
 
 
@@ -37,7 +34,6 @@ enum TextContent {
   selector: 'widget-coldstake',
   templateUrl: './coldstake-widget.component.html',
   styleUrls: ['./coldstake-widget.component.scss'],
-  providers: [ColdstakeService]
 })
 export class ColdstakeWidgetComponent implements OnDestroy {
 
@@ -94,18 +90,7 @@ export class ColdstakeWidgetComponent implements OnDestroy {
     }
     this.isProcessing = true;
 
-    this._unlocker.unlock({timeout: 30}).pipe(
-      finalize(() => this.isProcessing = false),
-      concatMap((unlocked) => iif(() => unlocked, defer(() => this._coldStake.fetchZapInformation())))
-    ).subscribe(
-      (zapDetails: ZapInformation) => {
-        this.openZapDetailsModal(zapDetails);
-      },
-      (err) => {
-        this.log.er('fetch zap() info failed: ', err);
-        this._snackbar.open(TextContent.ZAP_DETAILS_ERROR, 'err');
-      }
-    );
+    this.openZapDetailsModal();
   }
 
 
@@ -199,35 +184,22 @@ export class ColdstakeWidgetComponent implements OnDestroy {
   }
 
 
-  private openZapDetailsModal(zapInfo: ZapInformation): void {
-    const dialog = this._dialog.open(ZapColdstakingModalComponent, {data: {fee: zapInfo.fee || 0}});
-
-    dialog.componentInstance.isConfirmed.pipe(
-      tap(() => this.isProcessing = true),
-      take(1),
-      concatMap(() => this._unlocker.unlock({timeout: 10}).pipe(
-        concatMap(
-          (unlocked) => iif(
-            () => unlocked,
-            defer(() => this._coldStake.zapTransaction(zapInfo.scriptHex, zapInfo.utxoAmount, zapInfo.utxos, false))
-          )
-        )
-      )),
-      finalize(() => this.isProcessing = false)
-    ).subscribe(
-      (info: any) => {
-        this.log.d('zap() success: ', info);
-        this.refreshState();
-        this._snackbar.open(TextContent.ZAP_SUCCESS.replace('${amount}', `${zapInfo.utxoAmount}`), '');
-      },
-
-      (err) => {
-        this.log.er('zap() failed:', err);
-        this._snackbar.open(TextContent.ZAP_ERROR, 'err');
-      }
-    );
-
-    dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
+  private openZapDetailsModal(): void {
+    this._dialog
+      .open(ZapColdstakingModalComponent, {disableClose: true})
+      .afterClosed().pipe(
+        take(1),
+        finalize(() => {
+          this.isProcessing = false;
+          this.refreshState();
+        })
+      ).subscribe({
+        next: (resp: boolean) => {
+          if ((typeof resp === 'boolean') && resp) {
+            this._snackbar.open(TextContent.ZAP_SUCCESS);
+          }
+        }
+      });
   }
 
 
