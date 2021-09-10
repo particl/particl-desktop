@@ -20,7 +20,8 @@ import { CreateMarketRequest } from '../management.models';
 
 enum TextContent {
   ERROR_IMAGE_ADD = 'The image selected was not valid',
-  ERROR_MARKET_ADD = 'Error while attempting to add the market',
+  ERROR_MARKET_ADD_GENERIC = 'Error while attempting to add the market',
+  ERROR_MARKET_ADD_DUPLICATE_NAME = 'Error adding the market: a market with that name already exists',
   SUCCESS_MARKET_ADD = 'Successfully added the market',
   LABEL_TYPE_MARKETPLACE = 'Marketplace',
   LABEL_TYPE_STOREFRONT = 'Storefront',
@@ -190,7 +191,11 @@ export class CreateMarketComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigate(['../'], {relativeTo: this._route, queryParams});
       },
       (err) => {
-        this._snackbar.open(TextContent.ERROR_MARKET_ADD, 'warn');
+        let errMsg = TextContent.ERROR_MARKET_ADD_GENERIC;
+        if ((typeof err === 'string') && err.includes('name') && err.includes('already exists')) {
+          errMsg = TextContent.ERROR_MARKET_ADD_DUPLICATE_NAME;
+        }
+        this._snackbar.open(errMsg, 'warn');
       }
     );
   }
