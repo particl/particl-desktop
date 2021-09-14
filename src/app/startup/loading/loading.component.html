@@ -10,6 +10,10 @@
       <p>Embrace your digital sovereignty and thrive on a fair level playing field.</p>
     </div>
 
+    <p class="warning" *ngIf="hasError">
+      Please review the logs for more information on why this error may be occurring. Alternatively, the <a mat-button class="tiny" href="https://academy.particl.io/" target="_blank" color="accent"> Particl Academy</a> can be used to obtain more information on resolving this error.
+    </p>
+
     <section>
 
       <div class="starting">
@@ -17,11 +21,10 @@
           <mat-spinner color="accent" class="small"></mat-spinner>
           <div class="text">
             <div class="title">Starting</div>
-            <div class="desc" *ngIf="loadingMessage">{{loadingMessage | async}}</div>
+            <div class="desc" *ngIf="loadingMessage.length > 0">{{loadingMessage}}</div>
           </div>
         </mat-card>
       </div><!-- .starting -->
-
     </section>
 
     <p class="version">

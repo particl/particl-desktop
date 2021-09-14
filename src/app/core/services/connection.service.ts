@@ -55,7 +55,7 @@ export class ConnectionService {
           this.update(status.content);
           break;
         case 'error':
-          this.updateStatus(status.content);
+          this.updateStatus(`ERROR: ${status.content}`);
           break;
         case 'info':
           this.updateStatus(status.content);
