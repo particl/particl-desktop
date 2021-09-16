@@ -66,6 +66,8 @@
         vertical-align: top;
         width: calc(100% - (var(--table-paddingH) * 2));
         padding-bottom: 3px;
+        white-space: pre-wrap;
+        word-break: break-word;
         @include break(l) {
           padding-bottom: 5px;
         }
