@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Store } from '@ngxs/store';
-import { Observable, Subject } from 'rxjs';
+import { Subject, merge } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -19,7 +19,8 @@ export class LoadingComponent implements OnInit, OnDestroy {
 
   public readonly clientVersion: string = environment.version;
 
-  loadingMessage: Observable <string>;
+  loadingMessage: string = '';
+  hasError: boolean = false;
   motd: MessageQuote = {author: '', text: ''};
 
   private unsubscribe$: Subject<void> = new Subject();
@@ -31,15 +32,30 @@ export class LoadingComponent implements OnInit, OnDestroy {
     private _motdService: MotdService,
   ) {
     this.log.i('loading component initialized');
-    this.loadingMessage = this._store.select(state => state.global.loadingMessage);
-
-    this._motdService.motd.pipe(
-      tap((motd) => this.motd = motd),
-      takeUntil(this.unsubscribe$)
-    ).subscribe();
   }
 
   ngOnInit() {
+
+    merge(
+      this._store.select(state => state.global.loadingMessage).pipe(
+        tap((msg: string) => {
+          this.hasError = msg.startsWith('ERROR:');
+
+          if (!this.hasError) {
+            this.loadingMessage = msg.replace('ERROR:', '');
+            return;
+          }
+          this.loadingMessage = msg;
+        }),
+        takeUntil(this.unsubscribe$),
+      ),
+
+      this._motdService.motd.pipe(
+        tap((motd) => this.motd = motd),
+        takeUntil(this.unsubscribe$)
+      )
+    ).subscribe();
+
     this._store.select(state => state.global.isConnected).pipe(
       takeUntil(this.unsubscribe$)
     ).subscribe(

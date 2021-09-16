@@ -41,6 +41,12 @@ export class SendService {
     let utxoCount = 1;
     if (tx.targetTransfer === 'anon') {
       utxoCount = this._store.selectSnapshot(WalletSettingsState.settings).anon_utxo_split || 1;
+    } else {
+      utxoCount = this._store.selectSnapshot(WalletSettingsState.settings).public_utxo_split || 1;
+    }
+
+    if (! (+utxoCount > 0)) {
+      utxoCount = 1;
     }
 
     return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee, utxoCount));

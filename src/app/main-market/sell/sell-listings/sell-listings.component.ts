@@ -277,11 +277,12 @@ export class SellListingsComponent implements OnInit, OnDestroy {
       let statusFilter = false;
       switch (filterStatus) {
         case FilterStatusValues.ALL: statusFilter = true; break;
-        case FilterStatusValues.ACTIVE: statusFilter = li.expires > 0; break;
-        case FilterStatusValues.ALL: statusFilter = li.expires <= now; break;
+        case FilterStatusValues.ACTIVE: statusFilter = li.expires > now; break;
+        case FilterStatusValues.EXPIRED: statusFilter = li.expires <= now; break;
         default:
           statusFilter = false;
       }
+
       if (
         (baseTemplateId > 0 ? li.idBaseTemplate === baseTemplateId : true) &&
         (filterMarket === '' ? true : li.marketKey === filterMarket) &&
@@ -290,6 +291,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
       ) {
         foundIndexes.push(idx);
       }
+
     });
 
     foundIndexes.sort((a, b) => {

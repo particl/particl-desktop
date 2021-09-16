@@ -21,7 +21,8 @@
     <div class="alert --boxed --warning" *ngIf="startedStatus !== STARTEDSTATUS.PENDING">
       <span>
         The Particl Marketplace failed to start correctly!<br>
-        If you changed some settings recently, try reverting them back.
+        If you changed some settings recently, try reverting them back.<br>
+        Alternatively, if this is not a result of any recent changes (or for more information on what these settings do), the <a mat-button class="tiny" href="https://academy.particl.io/" target="_blank" color="accent">Particl Academy</a> may be a useful resource to troubleshooting marketplace startup issues.
       </span>
       <div class="action-button">
         <button class="button" mat-button color="warn" (click)="restartMarketplace()">

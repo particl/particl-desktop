@@ -94,6 +94,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
   public errorString: string = '';
   public isBusy: boolean = false;
   wordsListOpened: boolean = false;
+  useTwelveWordWallet: boolean = false;
 
   // encrypt password
   encrypt: string = '';
@@ -117,7 +118,6 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
 
   // mnemonic words verification
   private wordsVerification: string[] = [];
-  private useTwelveWordWallet: boolean = false;
 
   private isSettingWalletName: boolean = false;
   @ViewChild('mainPage', {static: true}) private mainContentPage: ElementRef;

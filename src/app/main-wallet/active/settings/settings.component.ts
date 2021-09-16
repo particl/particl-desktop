@@ -364,6 +364,20 @@ export class WalletSettingsComponent implements OnInit {
       validate: this.actionValidateSplitUTXO
     } as Setting);
 
+    walletActions.settings.push({
+      id: 'public_utxo_split',
+      title: 'Split UTXOs when sending Public TXs',
+      description: 'Creates a number of UTXOs when sending funds from this wallet to a *public* address – higher the number, the more utxos available, the greater coin usage and fees (default: 1, max: 20)',
+      isDisabled: false,
+      type: SettingType.NUMBER,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: walletSettings.public_utxo_split,
+      limits: {min: 1, max: 20},
+      validate: this.actionValidateSplitUTXO
+    } as Setting);
+
     this.settingGroups.push(walletActions);
 
 
