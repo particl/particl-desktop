@@ -204,7 +204,13 @@ export class MarketState {
           () => isSuccess,
 
           defer(() => {
-            return ctx.dispatch(new MarketStateActions.LoadIdentities()).pipe(tap(() => ctx.patchState({started: StartedStatus.STARTED})));
+            return ctx.dispatch(new MarketStateActions.LoadIdentities()).pipe(tap(() => {
+              if (!ctx.getState().identity) {
+                ctx.patchState({ started: StartedStatus.FAILED });
+                return;
+              }
+              ctx.patchState({started: StartedStatus.STARTED})
+            }));
           })
       ))
     );
