@@ -209,7 +209,7 @@ export class MarketState {
                 ctx.patchState({ started: StartedStatus.FAILED });
                 return;
               }
-              ctx.patchState({started: StartedStatus.STARTED})
+              ctx.patchState({ started: StartedStatus.STARTED });
             }));
           })
       ))
