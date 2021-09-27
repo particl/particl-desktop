@@ -145,7 +145,11 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
 
     const expiryReset$ = this.actionRefreshControl.valueChanges.pipe(
-      tap(() => this.resetMarketListingTimer()),
+      tap((value) => {
+        if ((typeof value === 'boolean') && value) {
+          this.resetMarketListingTimer();
+        }
+      }),
       takeUntil(this.destroy$)
     );
 
@@ -216,7 +220,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         }
 
         this.allProducts.splice(foundProductIdx, 1);
-        this.actionRefreshControl.setValue(null);
+        this.actionRefreshControl.setValue(false);
       }
     );
   }
@@ -308,7 +312,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
                       if (marketTempl.hash.length === 0) {
                         marketTempl.hash = 'abcdefg';
                       }
-                      this.actionRefreshControl.setValue(null);
+                      this.actionRefreshControl.setValue(true);
                     } else {
                       this._snackbar.open(TextContent.PUBLISH_FAILED, 'warn');
                     }
@@ -418,7 +422,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this.allProducts = products;
             this.marketUpdateControl.setValue(null);
-            this.actionRefreshControl.setValue(null);
+            this.actionRefreshControl.setValue(true);
           })
         ))
       );
@@ -615,7 +619,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
           foundProduct.markets.push(newItem as ProductMarketTemplate);
         }
 
-        this.actionRefreshControl.setValue(null);
+        this.actionRefreshControl.setValue(false);
       }),
 
       map((newItem: ProductItem | ProductMarketTemplate | null) => newItem === null ? 0 : newItem.id)

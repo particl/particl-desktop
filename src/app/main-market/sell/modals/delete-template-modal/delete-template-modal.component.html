@@ -1,4 +1,4 @@
-<mat-dialog-title>Cancel bid</mat-dialog-title>
+<mat-dialog-title>Delete product</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>
@@ -30,7 +30,7 @@
     <mat-icon fontIcon="part-cross"></mat-icon>
     Cancel
   </button>
-  <button mat-raised-button color="warn" (click)="confirmDelete()">
+  <button mat-raised-button color="warn" appDebounceClick (debounceClick)="confirmDelete()">
     <mat-icon fontIcon="part-circle-remove"></mat-icon>
     Yes, delete this item
   </button>
