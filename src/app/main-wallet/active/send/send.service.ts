@@ -56,14 +56,14 @@ export class SendService {
   runTransaction(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
     let source: Observable<SendTransaction>;
     if (tx.transactionType === 'transfer') {
-      let addressSource: Observable<string>;
+      // let addressSource: Observable<string>;
 
-      if (estimateFee || (tx.targetTransfer !== 'anon')) {
-        addressSource = this._addressService.getDefaultStealthAddress();
-      } else { // is not estimating fee AND is an anon target
-        addressSource = this._addressService.generateStealthAddress();
-      }
-      source = addressSource.pipe(
+      // if (estimateFee || (tx.targetTransfer !== 'anon')) {
+      //   addressSource = this._addressService.getDefaultStealthAddress();
+      // } else { // is not estimating fee AND is an anon target
+      //   addressSource = this._addressService.generateStealthAddress();
+      // }
+      source = this._addressService.getDefaultStealthAddress().pipe(
         map((address) => {
           tx.targetAddress = address;
           return tx;
