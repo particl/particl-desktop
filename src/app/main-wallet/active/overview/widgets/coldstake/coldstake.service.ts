@@ -97,7 +97,7 @@ export class ColdstakeService {
 
   fetchZapGroupDetails(strategy: ZapStakingStrategy): Observable<ZapGroupDetailsType> {
     return forkJoin({
-      utxos: this._store.selectOnce(WalletUTXOState.getValue('public')).pipe(take(1)) as Observable<PublicUTXO[]>,
+      utxos: this._store.selectOnce<PublicUTXO[]>(WalletUTXOState.utxosPublic()).pipe(take(1)),
 
       groupings: iif(
         () => strategy !== ZapStakingStrategy.PRIVACY,
