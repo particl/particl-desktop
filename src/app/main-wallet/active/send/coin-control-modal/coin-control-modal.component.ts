@@ -115,9 +115,22 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._store.select(WalletUTXOState.getValue(this.utxoType)).pipe(
+    let func: any;
+
+    switch (this.utxoType) {
+      case 'public': func = WalletUTXOState.utxosPublic; break;
+      case 'blind': func = WalletUTXOState.utxosBlind; break;
+      case 'anon': func = WalletUTXOState.utxosAnon; break;
+      default: func = null;
+    }
+
+    if (!func) {
+      return;
+    }
+
+    this._store.select<Array<PublicUTXO | BlindUTXO | AnonUTXO>>(func()).pipe(
       tap((utxos) => {
-        const newUtxos = utxos.map((utxo: PublicUTXO | BlindUTXO | AnonUTXO) => {
+        const newUtxos = utxos.map(utxo => {
           const utxoListItem: UTXOListItem = {
             selected: false,
             address: '',

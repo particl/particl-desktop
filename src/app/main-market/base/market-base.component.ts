@@ -14,8 +14,7 @@ import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { NotificationsService } from './notifications.service';
 import { StartedStatus, Identity, MarketSettings } from '../store/market.models';
-import { WalletInfoStateModel, WalletUTXOStateModel } from 'app/main/store/main.models';
-import { PartoshiAmount } from 'app/core/util/utils';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
 import { environment } from 'environments/environment';
 
 
@@ -132,14 +131,13 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
 
     this.currentBalance = merge(
-      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
+      this._store.select(WalletUTXOState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
     ).pipe(
       startWith('0'),
       map(() => {
         if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
-          const utxos: WalletUTXOStateModel = this._store.selectSnapshot(WalletUTXOState);
-          return this.extractSpendableBalance(utxos);
+          return this._store.selectSnapshot(WalletUTXOState.spendableAmountAnon());
         }
         return '0';
       }),
@@ -219,23 +217,5 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
         this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
       }
     );
-  }
-
-
-  private extractSpendableBalance(allUtxos: WalletUTXOStateModel): string {
-    const tempBal = new PartoshiAmount(0);
-    const utxos = allUtxos.anon || [];
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particlsString();
   }
 }

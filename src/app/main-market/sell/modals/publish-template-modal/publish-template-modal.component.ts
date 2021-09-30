@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subject, of, Observable, merge, combineLatest } from 'rxjs';
-import { tap, takeUntil, map, catchError } from 'rxjs/operators';
+import { Subject, of, Observable, merge, iif, defer } from 'rxjs';
+import { tap, takeUntil, map, catchError, switchMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
@@ -13,7 +13,6 @@ import { SellService } from '../../sell.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
 import { PublishDurations, PublishWarnings } from '../../sell.models';
-import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 
 
 interface TemplateDetails {
@@ -132,18 +131,18 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = combineLatest([
-      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
-      this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
-    ]).pipe(
-      map((values) => {
-        const utxosSet: WalletUTXOStateModel = values[0];
-        const settings = values[1];
-        return this.extractSpendableBalance(settings.useAnonBalanceForFees ? utxosSet.anon : utxosSet.public);
-      }),
+    const balanceChange$ = this._store.select(MarketState.settings).pipe(
+      switchMap((settings) => iif(
+        () => settings.useAnonBalanceForFees,
+
+        defer(() => this._store.select(WalletUTXOState.spendableAmountAnon())),
+        defer(() => this._store.select(WalletUTXOState.spendableAmountPublic())),
+      )),
+      map(value => +value),
       tap((balance) => this.currentBalance = balance),
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$),
     );
+
 
     const durationChange$ = this.selectedDuration.valueChanges.pipe(
       tap((value) => {
@@ -194,22 +193,5 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
     }
 
     this._dialogRef.close({duration: +this.selectedDuration.value});
-  }
-
-
-  private extractSpendableBalance(utxos: PublicUTXO[] | AnonUTXO[] = []): number {
-    const tempBal = new PartoshiAmount(0);
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particls();
   }
 }

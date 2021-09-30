@@ -10,9 +10,7 @@ import { WalletUTXOState } from 'app/main/store/main.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
-import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from '../../shared/utils';
-import { WalletUTXOStateModel, PublicUTXO } from 'app/main/store/main.models';
 import { GovernanceActions } from '../management.models';
 
 
@@ -74,10 +72,8 @@ export class MarketGovernanceModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = this._store.select(WalletUTXOState).pipe(
-      tap((utxos: WalletUTXOStateModel) => {
-        this.currentBalance = (this.extractSpendableBalance(utxos.public));
-      }),
+    const balanceChange$ = this._store.select(WalletUTXOState.spendableAmountPublic()).pipe(
+      tap((amount) => this.currentBalance = +amount || 0),
       takeUntil(this.destroy$)
     );
 
@@ -125,22 +121,4 @@ export class MarketGovernanceModalComponent implements OnInit, OnDestroy {
       marketId: this.marketId
     });
   }
-
-
-  private extractSpendableBalance(utxos: PublicUTXO[] = []): number {
-    const tempBal = new PartoshiAmount(0);
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particls();
-  }
-
 }

@@ -2,14 +2,12 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { takeUntil, map } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
 
-import { AnonUTXO } from 'app/main/store/main.models';
 import { PriceItem } from '../../../shared/market.models';
 import { isBasicObjectType, getValueOrDefault } from '../../../shared/utils';
-import { PartoshiAmount } from 'app/core/util/utils';
 
 
 interface ErrorTypes {
@@ -126,23 +124,11 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._store.select(WalletUTXOState.getValue('anon')).pipe(
-      map((utxos: AnonUTXO[]) => {
-        const totalSpendable = new PartoshiAmount(0);
-
-        for (const utxo of utxos) {
-          let spendable = true;
-          if ('spendable' in utxo) {
-            spendable = utxo.spendable;
-          }
-          if ((!utxo.coldstaking_address || utxo.address) && spendable) {
-            totalSpendable.add(new PartoshiAmount(utxo.amount));
-          }
-        }
-
+    this._store.select(WalletUTXOState.spendableAmountAnon()).pipe(
+      tap((amount) => {
         const requiredBalance = +`${this.summary.pricingSummary.orderTotal.whole}${this.summary.pricingSummary.orderTotal.sep}${this.summary.pricingSummary.orderTotal.fraction}` || 0;
-        this.errors.insufficientFunds = !this.errors.invalidData && (requiredBalance > totalSpendable.particls());
-        this.errors.insufficientUtxos = !this.errors.insufficientFunds && (this.summary.items.length > utxos.length);
+        this.errors.insufficientFunds = !this.errors.invalidData && (requiredBalance > +amount);
+        this.errors.insufficientUtxos = !this.errors.insufficientFunds && (this.summary.items.length > this._store.selectSnapshot(WalletUTXOState.utxosAnon()).length);
       }),
       takeUntil(this.destroy$)
     ).subscribe();

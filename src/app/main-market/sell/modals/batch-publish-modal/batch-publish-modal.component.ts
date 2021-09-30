@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject, ViewChildren, QueryList } from '@
 import { FormGroup, FormControl, Validators, FormArray, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Observable, Subject, BehaviorSubject, merge, of, iif, defer, combineLatest } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, merge, of, iif, defer } from 'rxjs';
 import { tap, takeUntil, distinctUntilChanged, switchMap, catchError, map, concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -13,9 +13,7 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
 import { DataService } from '../../../services/data/data.service';
 import { SellService } from '../../sell.service';
 import { TreeSelectComponent } from '../../../shared/shared.module';
-import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType } from '../../../shared/utils';
-import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { PublishDurations, BatchPublishProductItem } from '../../sell.models';
 import { MarketType } from '../../../shared/market.models';
 
@@ -152,17 +150,16 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = combineLatest([
-      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
-      this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
-    ]).pipe(
-      map((values) => {
-        const utxosSet: WalletUTXOStateModel = values[0];
-        const settings = values[1];
-        return this.extractSpendableBalance(settings.useAnonBalanceForFees ? utxosSet.anon : utxosSet.public);
-      }),
+    const balanceChange$ = this._store.select(MarketState.settings).pipe(
+      switchMap((settings) => iif(
+        () => settings.useAnonBalanceForFees,
+
+        defer(() => this._store.select(WalletUTXOState.spendableAmountAnon())),
+        defer(() => this._store.select(WalletUTXOState.spendableAmountPublic())),
+      )),
+      map(value => +value),
       tap((balance) => this.currentBalance = balance),
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$),
     );
 
     const marketChange$ = this.batchPublishForm.get('selectedMarket').valueChanges.pipe(
@@ -307,23 +304,6 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
     }
 
     this.isProcessingControl.setValue(true);
-  }
-
-
-  private extractSpendableBalance(utxos: PublicUTXO[] | AnonUTXO[] = []): number {
-    const tempBal = new PartoshiAmount(0);
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particls();
   }
 
 

@@ -207,7 +207,7 @@ export class ColdstakeService {
     address: string,
     estimateOnly: boolean = true
   ): Observable<{count: number, errors: number, fee: PartoshiAmount}> {
-    const utxos: PublicUTXO[] = this._store.selectSnapshot(WalletUTXOState.getValue('public'));
+    const utxos = this._store.selectSnapshot<PublicUTXO[]>(WalletUTXOState.utxosPublic());
     const actualValues: Array<{amount: number, inputs: {tx: string, n: number}}> = [];
     utxos.forEach(utxo => {
       if (!utxo.coldstaking_address || !utxo.address) {
