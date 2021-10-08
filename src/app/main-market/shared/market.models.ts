@@ -188,7 +188,7 @@ export interface PriceItem {
 
 
 // tslint:disable:no-empty-interface
-export interface RespProfileListItem extends RespGeneralProfile {}
+export interface RespProfileListItem extends RespGeneralIdentity {}
 // tslint:enable:no-empty-interface
 
 
@@ -894,4 +894,9 @@ export interface RespOrderSearchItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   };
+}
+
+export interface RespProfileMnemonic {
+  mnemonic: string;
+  passphrase: string;
 }

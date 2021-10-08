@@ -69,9 +69,9 @@
     <div class="content row">
       <div class="third">
         <ng-container *ngIf="(currentGroup !== undefined) && (currentGroup.settings.length > 0)">
-          <h2 class="section-title"> {{ currentGroup.name }} </h2>
-          <mat-card>
-            <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
+          <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
+            <h2 *ngIf="setting._type === 'heading'" class="section-title"> {{ setting.title }} </h2>
+            <mat-card *ngIf="setting._type === 'setting'">
               <div class="item" [ngSwitch]="setting.type" [ngClass]="setting.errorMsg ? '--with-error' : ''">
 
                 <!-- ========= BOOLEAN ========= -->
@@ -188,10 +188,8 @@
                 </ng-container>
 
               </div><!-- .item -->
-
-              <!--hr class="divider" *ngIf="!isLastSetting"-->
-            </ng-container>
-          </mat-card>
+            </mat-card>
+          </ng-container>
         </ng-container>
       </div><!-- .third -->
     </div><!-- .row -->

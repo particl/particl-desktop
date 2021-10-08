@@ -11,6 +11,7 @@ import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-add-details-modal.component';
+import { ProfileBackupModalComponent } from './profile-backup-modal/profile-backup-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { NotificationsService } from './notifications.service';
 import { StartedStatus, Identity, MarketSettings } from '../store/market.models';
@@ -51,6 +52,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   currentBalance: Observable<string>;
 
   isWarningVisible: boolean = true;
+  showProfileWarning: boolean = false;
 
   readonly mpVersion: string;
 
@@ -90,6 +92,11 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
+    const profile$ = this._store.select(MarketState.currentProfile).pipe(
+      tap(profile => this.showProfileWarning = profile.hasMnemonicSaved),
+      takeUntil(this.destroy$)
+    );
+
     const indicators$ = merge(
       this._store.select(MarketState.notificationValue('identityCartItemCount')).pipe(
         tap((cartCountValue) => {
@@ -124,7 +131,8 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
     merge(
       startedStatus$,
-      indicators$
+      indicators$,
+      profile$,
     ).pipe(
       takeUntil(this.destroy$)
     ).subscribe();
@@ -168,6 +176,11 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
   openWarningMessage() {
     this._dialog.open(AlphaMainnetWarningComponent);
+  }
+
+
+  openBackupProfileModal() {
+    this._dialog.open(ProfileBackupModalComponent);
   }
 
 

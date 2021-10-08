@@ -93,7 +93,7 @@ export class MarketState {
 
   @Selector()
   static currentProfile(state: MarketStateModel): Profile {
-    const nullProfile: Profile = { id: 0, name: '-'};
+    const nullProfile: Profile = { id: 0, name: '-', hasMnemonicSaved: false};
     return state.profile !== null ? state.profile : nullProfile;
   }
 
@@ -172,13 +172,29 @@ export class MarketState {
       const savedProfileId = +ctx.getState().settings.defaultProfileID;
 
       return this._marketService.call('profile', ['list']).pipe(
-        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 5})),
+        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
         catchError(() => of([])),
-        concatMap((profileList: RespProfileListItem[]) => {
+        map((profileList: RespProfileListItem[]) => {
+          const profiles: Profile[] = [];
+          if (Array.isArray(profileList)) {
+            profileList.forEach(p => {
+              if (isBasicObjectType(p) && ((+p.profileId > 0) || (!('profileId' in p) && ('id' in p))) && (typeof p.name === 'string')) {
+                profiles.push({
+                  id: +p.profileId || +p.id,
+                  name: p.name,
+                  hasMnemonicSaved: (typeof p.mnemonic === 'string') && (p.mnemonic.length > 0)
+                });
+              }
+            });
+          }
+          return profiles;
+        }),
+        concatMap((profileList: Profile[]) => {
+
           if (savedProfileId > 0) {
             const found = profileList.find(profileItem => profileItem.id === savedProfileId);
             if (found !== undefined) {
-              ctx.patchState({profile: {id: found.id, name: found.name}});
+              ctx.patchState({profile: found});
               return of(true);
             }
           }
@@ -186,7 +202,7 @@ export class MarketState {
           // no saved profile -OR- previously saved profile doesn't exist anymore -> revert to loading the default profile
           const defaultProfile = profileList.find(profileItem => profileItem.name === 'DEFAULT');
           if (defaultProfile !== undefined) {
-            ctx.patchState({profile: {id: defaultProfile.id, name: defaultProfile.name}});
+            ctx.patchState({profile: defaultProfile});
             return of(true);
           }
 
@@ -380,6 +396,31 @@ export class MarketState {
         })
       }));
     }
+  }
+
+
+  @Action(MarketUserActions.UpdateCurrentProfileDetails)
+  updateCurrentProfileDetails(ctx: StateContext<MarketStateModel>, { profileData }: MarketUserActions.UpdateCurrentProfileDetails) {
+    return iif(
+      () => ctx.getState().profile && isBasicObjectType(profileData),
+
+      defer(() => {
+        const excludedKeys = ['id'];
+        const filteredData = Object.keys(profileData)
+          .filter(key => !excludedKeys.includes(key))
+          .reduce((acc, key) => {
+            return {...acc, [key]: profileData[key]};
+          }, {});
+
+        if (Object.keys(filteredData).length > 0) {
+          ctx.setState(patch<MarketStateModel>({
+            profile: patch<Profile>(filteredData)
+          }));
+        }
+      }),
+
+      defer(() => of(true))
+    );
   }
 
 

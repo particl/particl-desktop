@@ -128,7 +128,9 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
       tap((amount) => {
         const requiredBalance = +`${this.summary.pricingSummary.orderTotal.whole}${this.summary.pricingSummary.orderTotal.sep}${this.summary.pricingSummary.orderTotal.fraction}` || 0;
         this.errors.insufficientFunds = !this.errors.invalidData && (requiredBalance > +amount);
-        this.errors.insufficientUtxos = !this.errors.insufficientFunds && (this.summary.items.length > this._store.selectSnapshot(WalletUTXOState.utxosAnon()).length);
+        this.errors.insufficientUtxos =
+          !this.errors.insufficientFunds &&
+          (this.summary.items.length > this._store.selectSnapshot(WalletUTXOState.utxosAnon()).length);
       }),
       takeUntil(this.destroy$)
     ).subscribe();
