@@ -12,6 +12,7 @@ export interface Profile {
   id: number;
   name: string;
   hasMnemonicSaved: boolean;
+  walletPath: string;
 }
 
 

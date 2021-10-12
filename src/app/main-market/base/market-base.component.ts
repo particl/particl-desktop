@@ -8,6 +8,7 @@ import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
 
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-add-details-modal.component';
@@ -77,6 +78,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
     private _notifications: NotificationsService,
+    private _unlocker: WalletEncryptionService
   ) {
     this.mpVersion = environment.marketVersion || '';
     // _notifications is included in base so as to ensure its init'ed correctly when the market base is created, and then destroyed when
@@ -188,19 +190,27 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     this._dialog.open(IdentityAddDetailsModalComponent).afterClosed().pipe(
       concatMap((idName) => iif(
         () => (typeof idName === 'string') && (idName.length > 0),
-        defer(() =>
-          this._store.dispatch(new MarketUserActions.CreateIdentity(idName)).pipe(
-            mapTo(true),
-            catchError(() => of(false)),
-            tap(success => {
-              if (success) {
-                this._snackbar.open(TextContent.IDENTITY_ADD_SUCCESS);
-                return;
-              }
-              this._snackbar.open(TextContent.IDENTITY_ADD_ERROR, 'warn');
-            })
-          )
-        )
+        defer(() => {
+          const profilePath: string = this._store.selectSnapshot(MarketState.currentProfile).walletPath;
+          return this._unlocker.unlock({timeout: 20, wallet: profilePath}).pipe(
+            concatMap(unlocked => iif(
+              () => unlocked,
+
+              defer(() => this._store.dispatch(new MarketUserActions.CreateIdentity(idName)).pipe(
+                mapTo(true),
+                catchError(() => of(false)),
+                tap(success => {
+                  if (success) {
+                    this._snackbar.open(TextContent.IDENTITY_ADD_SUCCESS);
+                    return;
+                  }
+                  this._snackbar.open(TextContent.IDENTITY_ADD_ERROR, 'warn');
+                })
+              ))
+
+            ))
+          );
+        })
       ))
     ).subscribe();
   }

@@ -85,6 +85,9 @@
       <ng-template [ngIf]="activeStep.value === STEPS.DISPLAY_PASSWORD || activeStep.value === STEPS.CONFIRM_PASSWORD">
         <h4 class="option">Encryption password</h4>
         <p class="desc">
+          If the profile wallet is encrypted, this is the default generated password for the wallet.
+        </p>
+        <p class="desc">
           <ng-container *ngIf="activeStep.value === STEPS.DISPLAY_PASSWORD; else passwordConfirmation">It will be necessary to input this password when modifying this profile, such as when creating a new identity.</ng-container>
           <ng-template #passwordConfirmation>Confirm that the encryption password has been properly recorded!</ng-template>
         </p>

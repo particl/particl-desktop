@@ -93,7 +93,7 @@ export class MarketState {
 
   @Selector()
   static currentProfile(state: MarketStateModel): Profile {
-    const nullProfile: Profile = { id: 0, name: '-', hasMnemonicSaved: false};
+    const nullProfile: Profile = { id: 0, name: '-', hasMnemonicSaved: false, walletPath: ''};
     return state.profile !== null ? state.profile : nullProfile;
   }
 
@@ -182,7 +182,8 @@ export class MarketState {
                 profiles.push({
                   id: +p.profileId || +p.id,
                   name: p.name,
-                  hasMnemonicSaved: (typeof p.mnemonic === 'string') && (p.mnemonic.length > 0)
+                  hasMnemonicSaved: (typeof p.mnemonic === 'string') && (p.mnemonic.length > 0),
+                  walletPath: p.wallet
                 });
               }
             });
