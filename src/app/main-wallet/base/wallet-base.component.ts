@@ -160,9 +160,9 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
             wallet.name.startsWith('regtest\\') ||
             (wallet.name === 'regtest') ||
             // avoid including the current active wallet
-            (wallet.name === this._currentWallet.name) ||
+            (wallet.name === this._currentWallet.name)
             // avoid market profiles (that are technically wallets but shouldn't be used as them for now)
-            (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
+            // (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
           )) {
             this.otherWallets.push(this.processWallet(wallet.name));
           }
