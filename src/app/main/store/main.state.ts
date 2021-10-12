@@ -94,6 +94,14 @@ export class WalletInfoState {
   }
 
 
+  static hasEncryptionPassword() {
+    return createSelector(
+      [WalletInfoState.getValue('encryptionstatus')],
+      (status: string): boolean => ['Locked', 'Unlocked, staking only', 'Unlocked'].includes(status)
+    );
+  }
+
+
   constructor(
     private _walletService: WalletInfoService
   ) {}
