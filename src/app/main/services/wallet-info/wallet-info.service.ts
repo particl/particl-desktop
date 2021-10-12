@@ -58,8 +58,8 @@ export class WalletInfoService {
   }
 
 
-  walletPassphrase(password: string, timeout: number, staking: boolean = false): Observable<any> {
-    return this._rpc.call('walletpassphrase', [password, (staking ? 0 : timeout), staking]);
+  walletPassphrase(wallet: string | null, password: string, timeout: number, staking: boolean = false): Observable<any> {
+    return this._rpc.call('walletpassphrase', [password, (staking ? 0 : timeout), staking], wallet);
   }
 
 
