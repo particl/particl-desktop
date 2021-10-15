@@ -439,7 +439,6 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
       const marketState: MarketStateModel = this._store.selectSnapshot(MarketState);
       const marketSettings: MarketSettings = marketState.settings;
-      const currentProfile = this._store.selectSnapshot(MarketState.currentProfile);
 
       const generalSettings: MarketSettingGroup = {
         name: 'Profile',

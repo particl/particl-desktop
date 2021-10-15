@@ -80,7 +80,7 @@
                   <div class="checkbox label">
                     <mat-checkbox
                       class="align-top wrap"
-                      [disabled]="setting.isDisabled"
+                      [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                       [(ngModel)]="setting.newValue"
                       (change)="settingChangedValue(settingIdx)">
                       <h4 class="option">
@@ -107,14 +107,14 @@
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                     <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
                       <input matInput type="number" *ngIf="!setting.limits"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         [(ngModel)]="setting.newValue"
                         (change)="settingChangedValue(settingIdx)">
                       <input matInput type="number" *ngIf="setting.limits"
                         [min]="setting.limits.min"
                         [step]="setting.limits.step"
                         [max]="setting.limits.max"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         [(ngModel)]="setting.newValue"
                         (change)="settingChangedValue(settingIdx)">
                     </mat-form-field>
@@ -135,7 +135,7 @@
                     <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
                       <input matInput
                         [placeholder]="setting.limits?.placeholder"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         [(ngModel)]="setting.newValue"
                         (change)="settingChangedValue(settingIdx)">
                     </mat-form-field>
@@ -154,7 +154,7 @@
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                     <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
-                      <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
+                      <mat-select [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
                         <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
                           {{ option.text }}
                         </mat-option>
@@ -178,7 +178,7 @@
                       <button mat-button
                         color="{{ setting.limits ? setting.limits.color || 'accent' : 'accent' }}"
                         class="validate"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         (click)="settingChangedValue(settingIdx)">
                         <mat-icon *ngIf="setting.limits?.icon?.length > 0" [fontIcon]="setting.limits.icon"></mat-icon>
                         {{ setting.title }}
@@ -199,7 +199,7 @@
     <div class="left">
       <button mat-button
         color="basic"
-        [disabled]="!hasChanges"
+        [disabled]="!hasChanges  || (startedStatus === STARTEDSTATUS.PENDING)"
         appDebounceClick
         (debounceClick)="clearChanges()"
       >
