@@ -1,14 +1,14 @@
-import { tap, catchError } from 'rxjs/operators';
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { Observable, of, defer } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { ChangeWalletPasswordService } from './change-wallet-password.service';
+import { WalletSettingsService } from '../settings.service';
 
 
 enum TextContent {
@@ -35,7 +35,6 @@ const unchangedValidator: ValidatorFn = (control: AbstractControl): ValidationEr
 @Component({
   templateUrl: './change-wallet-password-modal.component.html',
   styleUrls: ['./change-wallet-password-modal.component.scss'],
-  providers: [ChangeWalletPasswordService]
 })
 export class ChangeWalletPasswordModalComponent {
 
@@ -91,7 +90,7 @@ export class ChangeWalletPasswordModalComponent {
 
   constructor(
     private _dialog: MatDialogRef<ChangeWalletPasswordModalComponent>,
-    private _changeService: ChangeWalletPasswordService,
+    private _changeService: WalletSettingsService,
     private _snackbar: SnackbarService
   ) { }
 
