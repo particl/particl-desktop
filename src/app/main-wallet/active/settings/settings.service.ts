@@ -96,7 +96,7 @@ export class WalletSettingsService {
       }
 
       const derivedLabel = walletLabels[countProcessed];
-      let walletPath: string = derivedLabel;
+      const walletPath: string = derivedLabel;    // can be reassigned as approiate later if other paths become possible
       const walletCreated = await this._rpc.call('createwallet', [derivedLabel, false, true]).toPromise()
         .then((creationResult ) => {
           console.log('wallet creation result is: ', creationResult);
@@ -108,9 +108,13 @@ export class WalletSettingsService {
         continue;
       }
 
-      const importedExtKey: ExtKeyResult = await this._rpc.call('extkey', ['import', extKeyAlt, 'master key', true, true], walletPath).toPromise()
+      const importedExtKey: ExtKeyResult = await this._rpc.call(
+        'extkey',
+        ['import', extKeyAlt, 'master key', true, true],
+        walletPath
+      ).toPromise()
         .then((result: ExtKeyResult) => {
-          if (!result || (typeof result.id != 'string') || (result.id.length < 1)) {
+          if (!result || (typeof result.id !== 'string') || (result.id.length < 1)) {
             throw new Error('invalid result');
           }
           return result;
@@ -133,13 +137,23 @@ export class WalletSettingsService {
         continue;
       }
 
-      const derivedAccount: ExtKeyResult = await this._rpc.call('extkey', ['deriveAccount', '', ], walletPath).toPromise().catch(() => null);
+      const derivedAccount: ExtKeyResult = await this._rpc.call(
+        'extkey',
+        ['deriveAccount', '', ],
+        walletPath
+      ).toPromise()
+        .catch(() => null);
       if (!derivedAccount || typeof derivedAccount.account !== 'string') {
         ++countProcessed;
         continue;
       }
 
-      const setDefaultResult = await this._rpc.call('extkey', ['setDefaultAccount', derivedAccount.account], walletPath).toPromise().catch(() => null);
+      const setDefaultResult = await this._rpc.call(
+        'extkey',
+        ['setDefaultAccount', derivedAccount.account],
+        walletPath
+      ).toPromise()
+        .catch(() => null);
       if (setDefaultResult !== null) {
         successes[countProcessed] = true;
       }
