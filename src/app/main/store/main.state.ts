@@ -26,6 +26,7 @@ import { concatMap, tap, mapTo } from 'rxjs/operators';
 import { xorWith } from 'lodash';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 import { SettingsService } from 'app/core/services/settings.service';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
@@ -89,6 +90,14 @@ export class WalletInfoState {
       (state: WalletInfoStateModel): number | string | boolean | null => {
         return field in state ? state[field] : null;
       }
+    );
+  }
+
+
+  static hasEncryptionPassword() {
+    return createSelector(
+      [WalletInfoState.getValue('encryptionstatus')],
+      (status: string): boolean => ['Locked', 'Unlocked, staking only', 'Unlocked'].includes(status)
     );
   }
 
@@ -251,9 +260,74 @@ export class WalletUTXOState {
     return createSelector(
       [WalletUTXOState],
       (state: WalletUTXOState): any[] => {
-        return field in state ? state[field] : 0;
+        return field in state ? state[field] : [];
       }
     );
+  }
+
+
+  static utxosPublic() {
+    return createSelector(
+      [WalletUTXOState.getValue('public')],
+      (utxos: PublicUTXO[]): PublicUTXO[] => utxos
+    );
+  }
+
+
+  static utxosBlind() {
+    return createSelector(
+      [WalletUTXOState.getValue('blind')],
+      (utxos: BlindUTXO[]): BlindUTXO[] => utxos
+    );
+  }
+
+
+  static utxosAnon() {
+    return createSelector(
+      [WalletUTXOState.getValue('anon')],
+      (utxos: AnonUTXO[]): AnonUTXO[] => utxos
+    );
+  }
+
+
+  static spendableAmountPublic() {
+    return createSelector(
+      [WalletUTXOState.utxosPublic()],
+      (utxos: PublicUTXO[]): string => WalletUTXOState.calculateSpendableAmounts(utxos)
+    );
+  }
+
+
+  static spendableAmountBlind() {
+    return createSelector(
+      [WalletUTXOState.utxosBlind()],
+      (utxos: BlindUTXO[]): string => WalletUTXOState.calculateSpendableAmounts(utxos)
+    );
+  }
+
+
+  static spendableAmountAnon() {
+    return createSelector(
+      [WalletUTXOState.utxosAnon()],
+      (utxos: AnonUTXO[]): string => WalletUTXOState.calculateSpendableAmounts(utxos)
+    );
+  }
+
+
+  private static calculateSpendableAmounts(utxos: PublicUTXO[] | BlindUTXO[] | AnonUTXO[]) {
+    const tempBal = new PartoshiAmount(0);
+
+    for (const utxo of utxos) {
+      let spendable = true;
+      if ('spendable' in utxo) {
+        spendable = utxo.spendable;
+      }
+      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
+        tempBal.add(new PartoshiAmount(utxo.amount));
+      }
+    }
+
+    return tempBal.particlsString();
   }
 
 

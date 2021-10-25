@@ -22,6 +22,8 @@ export class WalletInfoService {
 
   private log: any = Log.create('wallet-info-service.service id:' + Math.floor((Math.random() * 1000) + 1));
 
+  private MIN_ANON_UTXO_AMOUNT: number = 1e-08;
+
   constructor(
     private _rpc: MainRpcService
   ) {
@@ -56,8 +58,8 @@ export class WalletInfoService {
   }
 
 
-  walletPassphrase(password: string, timeout: number, staking: boolean = false): Observable<any> {
-    return this._rpc.call('walletpassphrase', [password, (staking ? 0 : timeout), staking]);
+  walletPassphrase(wallet: string | null, password: string, timeout: number, staking: boolean = false): Observable<any> {
+    return this._rpc.call('walletpassphrase', [password, (staking ? 0 : timeout), staking], wallet);
   }
 
 
@@ -87,7 +89,10 @@ export class WalletInfoService {
     );
     const anon$: Observable<AnonUTXO[]> = this._rpc.call('listunspentanon').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1})),
-      catchError(() => of([]))
+      catchError(() => of([])),
+      map((utxos: AnonUTXO[]) => utxos.filter(utxo =>
+        utxo && (Object.prototype.toString.call(utxo) === '[object Object]') && (+utxo.amount > this.MIN_ANON_UTXO_AMOUNT)
+      ))
     );
 
     return forkJoin(

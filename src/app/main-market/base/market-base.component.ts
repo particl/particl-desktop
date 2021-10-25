@@ -8,14 +8,15 @@ import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
 
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { AlphaMainnetWarningComponent } from './alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { IdentityAddDetailsModalComponent } from './identity-add-modal/identity-add-details-modal.component';
+import { ProfileBackupModalComponent } from './profile-backup-modal/profile-backup-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { NotificationsService } from './notifications.service';
 import { StartedStatus, Identity, MarketSettings } from '../store/market.models';
-import { WalletInfoStateModel, WalletUTXOStateModel } from 'app/main/store/main.models';
-import { PartoshiAmount } from 'app/core/util/utils';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
 import { environment } from 'environments/environment';
 
 
@@ -52,6 +53,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   currentBalance: Observable<string>;
 
   isWarningVisible: boolean = true;
+  showProfileWarning: boolean = false;
 
   readonly mpVersion: string;
 
@@ -76,6 +78,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     private _snackbar: SnackbarService,
     private _dialog: MatDialog,
     private _notifications: NotificationsService,
+    private _unlocker: WalletEncryptionService
   ) {
     this.mpVersion = environment.marketVersion || '';
     // _notifications is included in base so as to ensure its init'ed correctly when the market base is created, and then destroyed when
@@ -88,6 +91,11 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
     const startedStatus$ = this._store.select(MarketState.startedStatus).pipe(
       tap((status) => this.startedStatus = status),
+      takeUntil(this.destroy$)
+    );
+
+    const profile$ = this._store.select(MarketState.currentProfile).pipe(
+      tap(profile => this.showProfileWarning = profile.hasMnemonicSaved),
       takeUntil(this.destroy$)
     );
 
@@ -125,21 +133,21 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
     merge(
       startedStatus$,
-      indicators$
+      indicators$,
+      profile$,
     ).pipe(
       takeUntil(this.destroy$)
     ).subscribe();
 
 
     this.currentBalance = merge(
-      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
+      this._store.select(WalletUTXOState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
     ).pipe(
       startWith('0'),
       map(() => {
         if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
-          const utxos: WalletUTXOStateModel = this._store.selectSnapshot(WalletUTXOState);
-          return this.extractSpendableBalance(utxos);
+          return this._store.selectSnapshot(WalletUTXOState.spendableAmountAnon());
         }
         return '0';
       }),
@@ -173,23 +181,36 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   }
 
 
+  openBackupProfileModal() {
+    this._dialog.open(ProfileBackupModalComponent);
+  }
+
+
   openCreateIdentityModal() {
     this._dialog.open(IdentityAddDetailsModalComponent).afterClosed().pipe(
       concatMap((idName) => iif(
         () => (typeof idName === 'string') && (idName.length > 0),
-        defer(() =>
-          this._store.dispatch(new MarketUserActions.CreateIdentity(idName)).pipe(
-            mapTo(true),
-            catchError(() => of(false)),
-            tap(success => {
-              if (success) {
-                this._snackbar.open(TextContent.IDENTITY_ADD_SUCCESS);
-                return;
-              }
-              this._snackbar.open(TextContent.IDENTITY_ADD_ERROR, 'warn');
-            })
-          )
-        )
+        defer(() => {
+          const profilePath: string = this._store.selectSnapshot(MarketState.currentProfile).walletPath;
+          return this._unlocker.unlock({timeout: 20, wallet: profilePath}).pipe(
+            concatMap(unlocked => iif(
+              () => unlocked,
+
+              defer(() => this._store.dispatch(new MarketUserActions.CreateIdentity(idName)).pipe(
+                mapTo(true),
+                catchError(() => of(false)),
+                tap(success => {
+                  if (success) {
+                    this._snackbar.open(TextContent.IDENTITY_ADD_SUCCESS);
+                    return;
+                  }
+                  this._snackbar.open(TextContent.IDENTITY_ADD_ERROR, 'warn');
+                })
+              ))
+
+            ))
+          );
+        })
       ))
     ).subscribe();
   }
@@ -219,23 +240,5 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
         this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
       }
     );
-  }
-
-
-  private extractSpendableBalance(allUtxos: WalletUTXOStateModel): string {
-    const tempBal = new PartoshiAmount(0);
-    const utxos = allUtxos.anon || [];
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particlsString();
   }
 }

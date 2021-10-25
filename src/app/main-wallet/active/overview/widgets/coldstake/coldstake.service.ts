@@ -97,7 +97,7 @@ export class ColdstakeService {
 
   fetchZapGroupDetails(strategy: ZapStakingStrategy): Observable<ZapGroupDetailsType> {
     return forkJoin({
-      utxos: this._store.selectOnce(WalletUTXOState.getValue('public')).pipe(take(1)) as Observable<PublicUTXO[]>,
+      utxos: this._store.selectOnce<PublicUTXO[]>(WalletUTXOState.utxosPublic()).pipe(take(1)),
 
       groupings: iif(
         () => strategy !== ZapStakingStrategy.PRIVACY,
@@ -207,7 +207,7 @@ export class ColdstakeService {
     address: string,
     estimateOnly: boolean = true
   ): Observable<{count: number, errors: number, fee: PartoshiAmount}> {
-    const utxos: PublicUTXO[] = this._store.selectSnapshot(WalletUTXOState.getValue('public'));
+    const utxos = this._store.selectSnapshot<PublicUTXO[]>(WalletUTXOState.utxosPublic());
     const actualValues: Array<{amount: number, inputs: {tx: string, n: number}}> = [];
     utxos.forEach(utxo => {
       if (!utxo.coldstaking_address || !utxo.address) {

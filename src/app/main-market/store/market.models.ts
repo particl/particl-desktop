@@ -11,6 +11,8 @@ export enum StartedStatus {
 export interface Profile {
   id: number;
   name: string;
+  hasMnemonicSaved: boolean;
+  walletPath: string;
 }
 
 
@@ -64,9 +66,9 @@ export interface MarketNotifications {
 
 export interface MarketStateModel {
   started: StartedStatus;
-  profile: Profile;
-  identities: Identity[];
-  identity: number;
+  profile: Profile;                       //  active profile
+  identities: Identity[];                 //  list of identities belonging to the current profile
+  identity: number;                       //  active identity
   defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
   notifications: MarketNotifications;

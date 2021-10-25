@@ -2,15 +2,14 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Subject, merge, combineLatest, of } from 'rxjs';
-import { tap, takeUntil, map, catchError } from 'rxjs/operators';
+import { Subject, merge, of, defer, iif } from 'rxjs';
+import { tap, takeUntil, map, catchError, switchMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { WalletUTXOState } from 'app/main/store/main.state';
 import { MarketState } from '../../../store/market.state';
 
 import { MarketManagementService } from '../../management.service';
-import { WalletUTXOStateModel, PublicUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { isBasicObjectType, getValueOrDefault } from '../../../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { GenericModalInfo } from '../joined-markets.models';
@@ -143,17 +142,16 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = combineLatest([
-      this._store.select(WalletUTXOState).pipe(takeUntil(this.destroy$)),
-      this._store.select(MarketState.settings).pipe(takeUntil(this.destroy$))
-    ]).pipe(
-      map((values) => {
-        const utxosSet: WalletUTXOStateModel = values[0];
-        const settings = values[1];
-        return this.extractSpendableBalance(settings.useAnonBalanceForFees ? utxosSet.anon : utxosSet.public);
-      }),
+    const balanceChange$ = this._store.select(MarketState.settings).pipe(
+      switchMap((settings) => iif(
+        () => settings.useAnonBalanceForFees,
+
+        defer(() => this._store.select(WalletUTXOState.spendableAmountAnon())),
+        defer(() => this._store.select(WalletUTXOState.spendableAmountPublic())),
+      )),
+      map(value => +value),
       tap((balance) => this.publishForm.get('currentBalance').setValue(balance)),
-      takeUntil(this.destroy$)
+      takeUntil(this.destroy$),
     );
 
     const durationChange$ = this.publishForm.get('selectedDuration').valueChanges.pipe(
@@ -194,22 +192,5 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
 
   doAction() {
     this._dialogRef.close(+this.selectedDurationControl.value);
-  }
-
-
-  private extractSpendableBalance(utxos: PublicUTXO[] | AnonUTXO[] = []): number {
-    const tempBal = new PartoshiAmount(0);
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particls();
   }
 }

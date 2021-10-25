@@ -1,0 +1,152 @@
+<mat-dialog-title>Backup Profile Secrets</mat-dialog-title>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+  <div class="row">
+
+    <section [formGroup]="secretsForm">
+
+      <ng-template [ngIf]="activeStep.value === STEPS.LOADING">
+        <div class="no-results --horizontal --smaller">
+          <img class="illustration" src="./assets/images/illustrations/loading_animated.svg" alt="Profile secrets loading">
+          <div class="text">
+            <p>
+              Fetching profile secrets
+            </p>
+            <p class="help-text">
+            </p>
+          </div>
+        </div><!-- .no-results -->
+      </ng-template>
+
+
+
+
+      <ng-template [ngIf]="activeStep.value === STEPS.ERROR">
+        <div class="no-results --horizontal --smaller">
+          <img class="illustration" src="./assets/app-wallet/illustrations/no-tx-address.svg" alt="Secrets Load Error">
+          <div class="text">
+            <p>
+              Error retrieving profile secrets
+            </p>
+            <p class="help-text">
+              It might be that the profile details have already been backed up, or there was a temporary error while trying to get them.
+            </p>
+          </div>
+        </div><!-- .no-results -->
+      </ng-template>
+
+
+
+
+      <ng-template [ngIf]="activeStep.value === STEPS.DISPLAY_WORDS || activeStep.value === STEPS.CONFIRM_WORDS">
+        <h4 class="option">Your Recovery Phrase</h4>
+        <p class="desc">
+          <ng-container *ngIf="activeStep.value === STEPS.DISPLAY_WORDS; else wordsConfirmation">The words that can be used to restore the wallet associated to this profile, as well as the wallets associated with the identities created from this profile.</ng-container>
+          <ng-template #wordsConfirmation>Confirm that the recovery words have been properly recorded!</ng-template>
+        </p>
+
+        <div class="container-flex">
+          <div class="content-wrapper">
+            <div class="word-list" fxLayout="row wrap" fxLayoutGap="1%">
+
+              <ng-container formArrayName="words">
+                <div class="item" fxFlex="19%" fxLayout fxLayoutAlign="space-between center" *ngFor="let wordControl of wordsControl.controls; let i = index">
+                  <div class="word-no">
+                    {{ i + 1 }}
+                  </div>
+                  <mat-form-field class="word --plain" appearance="fill">
+                    <input
+                      matInput
+                      [formControlName]="i"
+                      class="enable-select"
+                      [class.verify-error]="wordControl.invalid"/>
+                  </mat-form-field>
+                </div>
+              </ng-container>
+            </div>
+
+            <div class="actions" fxLayoutAlign="center center" *ngIf="activeStep.value === STEPS.DISPLAY_WORDS">
+              <button mat-button appDebounceClick (debounceClick)="copiedToClipboard()" ngxClipboard [cbContent]="joinedWords()" class="copy">
+                <mat-icon fontIcon="part-copy"></mat-icon>
+                Copy to Clipboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+
+
+
+      <ng-template [ngIf]="activeStep.value === STEPS.DISPLAY_PASSWORD || activeStep.value === STEPS.CONFIRM_PASSWORD">
+        <h4 class="option">Encryption password</h4>
+        <p class="desc">
+          If the profile wallet is encrypted, this is the default generated password for the wallet.
+        </p>
+        <p class="desc">
+          <ng-container *ngIf="activeStep.value === STEPS.DISPLAY_PASSWORD; else passwordConfirmation">It will be necessary to input this password when modifying this profile, such as when creating a new identity.</ng-container>
+          <ng-template #passwordConfirmation>Confirm that the encryption password has been properly recorded!</ng-template>
+        </p>
+        <p class="message --warning">Do not forget this password or you will not be able to perform various profile activities, such as creating new identities</p>
+        <div fxLayout="column wrap" fxLayoutGap="1%" fxLayoutAlign="center center">
+          <mat-form-field class="word --plain" appearance="fill">
+            <input
+              matInput
+              appearance="fill"
+              formControlName="password"
+              class="enable-select"
+              [class.verify-error]="passwordControl.invalid"/>
+          </mat-form-field>
+
+          <div class="actions" fxLayoutAlign="center center" *ngIf="activeStep.value === STEPS.DISPLAY_PASSWORD">
+            <button mat-button appDebounceClick (debounceClick)="copiedToClipboard()" ngxClipboard [cbContent]="passwordControl.value" class="copy">
+              <mat-icon fontIcon="part-copy"></mat-icon>
+              Copy to Clipboard
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+
+
+
+      <ng-template [ngIf]="activeStep.value === STEPS.CLEAR">
+        <h3 class="option">Clear stored details</h3>
+        <p class="desc">
+          The secrets shown previously are currently stored unencrypted in the marketplace service database on your machine.
+        </p>
+        <p class="desc">
+          This can present a security risk if the database is copied, or someone other than you has access to your files and folders, as they would be able to access your coins in any identity on this machine, or recreate the identities on another machine.
+        </p>
+        <p class="message --warning">
+          It is strongly recommended to remove these details from your marketplace database!
+        </p>
+        <div fxLayout="column wrap" fxLayoutGap="1%" fxLayoutAlign="center center">
+          <div class="actions" fxLayoutAlign="center center">
+            <button mat-raised-button color="warn" appDebounceClick (debounceClick)="clearProfileDetails()">
+              <mat-icon fontIcon="part-circle-alert"></mat-icon>
+              Wipe Stored Secrets
+            </button>
+          </div>
+        </div>
+      </ng-template>
+
+    </section>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doAction()" [disabled]="secretsForm.invalid">
+    {{ actionButtonLabel }}
+  </button>
+</mat-dialog-actions>

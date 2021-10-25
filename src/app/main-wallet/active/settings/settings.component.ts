@@ -8,6 +8,9 @@ import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
+import { ChangeWalletPasswordModalComponent } from './change-wallet-password-modal/change-wallet-password-modal.component';
+import { DeriveWalletModalComponent } from './derive-wallet-modal/derive-wallet-modal.component';
+
 
 import {
   PageInfo,
@@ -28,7 +31,7 @@ enum SpecificTextContent {
 
 @Component({
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
 })
 export class WalletSettingsComponent implements OnInit {
 
@@ -308,6 +311,7 @@ export class WalletSettingsComponent implements OnInit {
   private loadPageData() {
 
     const walletSettings: WalletSettingsStateModel = this._store.selectSnapshot(WalletSettingsState);
+    const hasEncryptionPassword = this._store.selectSnapshot(WalletInfoState.hasEncryptionPassword());
 
     // const notificationsWallet = {
     //   name: 'System notifications',
@@ -382,7 +386,7 @@ export class WalletSettingsComponent implements OnInit {
 
 
     const dangerZone = {
-      name: 'Danger zone',
+      name: 'Security',
       icon: 'part-alert',
       settings: [],
       errors: []
@@ -403,6 +407,36 @@ export class WalletSettingsComponent implements OnInit {
       onChange: this.actionBackupWallet
     } as Setting);
 
+    dangerZone.settings.push({
+      id: '',
+      title: 'Change Wallet Password',
+      description: 'Allows for the changing of the wallet password if the wallet has an encryption password set',
+      isDisabled: !hasEncryptionPassword,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: {color: 'primary', icon: 'part-refresh'},
+      onChange: this.actionChangePassword
+    } as Setting);
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Create Derived Wallet Accounts',
+      description: 'Create wallets that are derived accounts from the current active wallet',
+      isDisabled: false,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: ['Advanced'],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: {color: 'warn', icon: 'part-add-account'},
+      onChange: this.actionDeriveAccount
+    } as Setting);
+
     this.settingGroups.push(dangerZone);
   }
 
@@ -416,6 +450,16 @@ export class WalletSettingsComponent implements OnInit {
       const message = success ? TextContent.SAVE_SUCCESSFUL : TextContent.SAVE_FAILED;
       this._snackbar.open(message);
     });
+  }
+
+
+  private actionChangePassword() {
+    this._dialog.open(ChangeWalletPasswordModalComponent);
+  }
+
+
+  private actionDeriveAccount() {
+    this._dialog.open(DeriveWalletModalComponent, { autoFocus: false });
   }
 
   private actionValidateSplitUTXO(newValue: number, setting: Setting): string {
