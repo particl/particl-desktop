@@ -1,13 +1,10 @@
 import { AddressType } from '../../shared/address.models';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE } from 'app/main/store/main.models';
 
 
 export type TabType = 'transfer' | 'send';
 export type TxType = 'anon' | 'blind' | 'part';
-
-export const MIN_RING_SIZE = 3;
-export const MAX_RING_SIZE = 32;
-export const DEFAULT_RING_SIZE = 24;
 
 
 export interface TabModel {
@@ -62,7 +59,7 @@ export class SendTransaction {
   targetTransfer: TxType = 'part';
   amount: number;
   narration: string = '';
-  ringSize: number = 8;
+  ringSize: number = DEFAULT_RING_SIZE;
   deductFeesFromTotal: boolean = false;
   coinControl: SendTypeToCoinControl = {};
 
@@ -117,7 +114,7 @@ export class SendTransaction {
       null,
       null,
       ringSize,
-      MAX_RING_SIZE,
+      1,
       estimate,
       this.coinControl
     ];

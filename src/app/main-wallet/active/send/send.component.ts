@@ -19,14 +19,13 @@ import {
   TxTypeOption,
   TabModel,
   SavedAddress,
-  MAX_RING_SIZE,
-  DEFAULT_RING_SIZE,
-  MIN_RING_SIZE,
   SendTransaction,
   SendTypeToEstimateResponse
 } from './send.models';
+import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE } from 'app/main/store/main.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { WalletSettingsState } from 'app/main/store/main.state';
 
 
 enum TextContent {
@@ -54,7 +53,7 @@ export class SendComponent implements OnInit, OnDestroy {
 
   readonly minRingSize: number = MIN_RING_SIZE;
   readonly maxRingSize: number = MAX_RING_SIZE;
-  readonly defaultRingSize: number = DEFAULT_RING_SIZE;
+  readonly defaultRingSize: number;
 
   readonly tabs: TabModel[] = [
     { icon: 'part-send', type: 'send', title: 'Send payment'},
@@ -82,8 +81,10 @@ export class SendComponent implements OnInit, OnDestroy {
     private _snackbar: SnackbarService,
     private _addressValidator: ValidAddressValidator,
     private _dialog: MatDialog,
-    private _store: Store
-  ) { }
+    private _store: Store,
+  ) {
+    this.defaultRingSize = _store.selectSnapshot(WalletSettingsState.settings).default_ringct_size || DEFAULT_RING_SIZE;
+  }
 
 
   ngOnInit() {

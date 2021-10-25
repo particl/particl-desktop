@@ -1,4 +1,10 @@
 
+
+export const MIN_RING_SIZE = 3;
+export const MAX_RING_SIZE = 32;
+export const DEFAULT_RING_SIZE = 12;
+
+
 export interface WalletInfoStateModel {
   walletname: string;
   walletversion: number;
@@ -24,6 +30,7 @@ export interface WalletSettingsStateModel {
   notifications_staking_reward: boolean;
   anon_utxo_split: number;
   public_utxo_split: number;
+  default_ringct_size: number;
 }
 
 

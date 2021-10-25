@@ -20,12 +20,12 @@ import {
   Setting
 } from 'app/main-extra/global-settings/settings.types';
 import { WalletInfoState, WalletSettingsState } from 'app/main/store/main.state';
-import { WalletSettingsStateModel } from 'app/main/store/main.models';
+import { WalletSettingsStateModel, DEFAULT_RING_SIZE, MAX_RING_SIZE, MIN_RING_SIZE } from 'app/main/store/main.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
 
 
 enum SpecificTextContent {
-  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${min}, with a max of ${max}'
+  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${min}, with a max of ${max}',
 }
 
 
@@ -437,6 +437,20 @@ export class WalletSettingsComponent implements OnInit {
       onChange: this.actionDeriveAccount
     } as Setting);
 
+    walletActions.settings.push({
+      id: 'default_ringct_size',
+      title: 'Default transaction RingCT size',
+      description: `Set the default RingCT size for anon transactions (default: ${DEFAULT_RING_SIZE}, max: ${MAX_RING_SIZE})`,
+      isDisabled: false,
+      type: SettingType.NUMBER,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: walletSettings.default_ringct_size,
+      limits: {min: MIN_RING_SIZE, max: MAX_RING_SIZE},
+      validate: this.actionValidateSizeRingCT
+    } as Setting);
+
     this.settingGroups.push(dangerZone);
   }
 
@@ -467,6 +481,13 @@ export class WalletSettingsComponent implements OnInit {
       return '';
     }
     return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', '1').replace('${max}', '20');
+  }
+
+  private actionValidateSizeRingCT(newValue: number, setting: Setting): string {
+    if ((+newValue >= MIN_RING_SIZE) && (+newValue <= MAX_RING_SIZE) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
+      return '';
+    }
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', `${MIN_RING_SIZE -1}`).replace('${max}', `${MAX_RING_SIZE}`);
   }
 
 }
