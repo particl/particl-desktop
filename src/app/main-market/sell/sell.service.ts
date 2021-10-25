@@ -396,9 +396,15 @@ export class SellService {
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
 
-    const postParams = ['post', templateId, durationDays, true, usePaidImageMsg];
-
-    postParams.push(usingAnonFees ? 'anon' : 'part');
+    const postParams = [
+      'post',
+      templateId,
+      durationDays,
+      true,
+      usePaidImageMsg,
+      (usingAnonFees ? 'anon' : 'part'),
+      12,
+    ];
 
     return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => {
@@ -435,9 +441,15 @@ export class SellService {
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
 
-    const postParams = ['post', templateId, durationDays, false, usePaidImageMsg];
-
-    postParams.push(usingAnonFees ? 'anon' : 'part');
+    const postParams = [
+      'post',
+      templateId,
+      durationDays,
+      true,
+      usePaidImageMsg,
+      (usingAnonFees ? 'anon' : 'part'),
+      12,
+    ];
 
     return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
