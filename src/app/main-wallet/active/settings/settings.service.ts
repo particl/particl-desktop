@@ -96,7 +96,7 @@ export class WalletSettingsService {
       }
 
       const derivedLabel = walletLabels[countProcessed];
-      const walletPath: string = derivedLabel;    // can be reassigned as approiate later if other paths become possible
+      const walletPath: string = derivedLabel;    // can be reassigned as appropriate later if other paths become possible
       const walletCreated = await this._rpc.call('createwallet', [derivedLabel, false, true]).toPromise()
         .then((creationResult ) => {
           console.log('wallet creation result is: ', creationResult);
