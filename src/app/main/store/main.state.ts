@@ -164,7 +164,7 @@ export class WalletInfoState {
 
 
   private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>, loadSettings: boolean = true): Observable<void> {
-    const info$ = this._walletService.getWalletInfo().pipe(
+    const info$ = this._walletService.getWalletInfo(1).pipe(
       tap((info: RpcGetWalletInfo) => {
         if ( (typeof info === 'object')) {
           const newState = JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE));

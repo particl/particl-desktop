@@ -487,7 +487,7 @@ export class WalletSettingsComponent implements OnInit {
     if ((+newValue >= MIN_RING_SIZE) && (+newValue <= MAX_RING_SIZE) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
       return '';
     }
-    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', `${MIN_RING_SIZE -1}`).replace('${max}', `${MAX_RING_SIZE}`);
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', `${MIN_RING_SIZE - 1}`).replace('${max}', `${MAX_RING_SIZE}`);
   }
 
 }
