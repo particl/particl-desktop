@@ -2,7 +2,7 @@
   "name": "particl-desktop-testnet",
   "productName": "Particl Desktop Testnet",
   "version": "3.0.0-dev",
-  "branch": "3.0",
+  "branch": "3.1",
   "preRelease": "",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",

@@ -18,7 +18,7 @@ const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
 const IPC_CHANNEL_WRITE = 'write-core-config';
 const IPC_DELETE_WALLET = 'ipc-delete-wallet';
 
-const SAFE_KEYS = ['addressindex', 'proxy', 'upnp'];
+const SAFE_KEYS = ['txindex', 'addressindex', 'proxy', 'upnp'];
 
 let STORED_CONFIGURATION = {};
 
