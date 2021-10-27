@@ -331,7 +331,7 @@ export class MarketManagementService {
       'post',
       marketId,
       durationDays,
-      true,
+      false,
       null,
       null,
       usePaidImageMsg,

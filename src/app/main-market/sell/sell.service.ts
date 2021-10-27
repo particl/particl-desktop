@@ -445,7 +445,7 @@ export class SellService {
       'post',
       templateId,
       durationDays,
-      true,
+      false,
       usePaidImageMsg,
       (usingAnonFees ? 'anon' : 'part'),
       12,
