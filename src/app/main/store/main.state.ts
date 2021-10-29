@@ -433,9 +433,9 @@ export class WalletBalanceState {
           const currentState = ctx.getState();
           const updatedValues = {};
 
-          if (currentState.lockedPublic !== result.public) updatedValues['lockedPublic'] = result.public;
-          if (currentState.lockedBlind !== result.blind) updatedValues['lockedBlind'] = result.blind;
-          if (currentState.lockedAnon !== result.anon) updatedValues['lockedAnon'] = result.anon;
+          if (currentState.lockedPublic !== result.public) { updatedValues['lockedPublic'] = result.public; }
+          if (currentState.lockedBlind !== result.blind) { updatedValues['lockedBlind'] = result.blind; }
+          if (currentState.lockedAnon !== result.anon) { updatedValues['lockedAnon'] = result.anon; }
 
           return updatedValues;
         })
