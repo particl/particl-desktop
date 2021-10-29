@@ -85,7 +85,7 @@ export interface AnonUTXO {
 }
 
 
-export interface WalletUTXOStateModel {
+export interface WalletBalanceStateModel {
   public: PublicUTXO[];
   blind: BlindUTXO[];
   anon: AnonUTXO[];

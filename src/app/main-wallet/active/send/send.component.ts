@@ -151,7 +151,7 @@ export class SendComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balances$ = this._sendService.getBalances().pipe(
+    const balances$ = this._sendService.getBalances(this.destroy$).pipe(
       tap((result) => {
         this.selectorOptions.forEach(o => {
           o.balance = typeof result[o.value] === 'number' ? result[o.value] : o.balance;
@@ -389,7 +389,7 @@ export class SendComponent implements OnInit, OnDestroy {
         ).subscribe(
           () => {
             // request new balances
-            this._store.dispatch(new WalletDetailActions.GetAllUTXOS());
+            this._store.dispatch(new WalletDetailActions.RefreshBalances());
 
             // present success message
             const trimAddress = trans.targetAddress.substring(0, 16) + '...';

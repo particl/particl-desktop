@@ -13,7 +13,7 @@ import {
   RpcGetWalletInfo,
   WalletStakingStateModel,
   RpcGetColdStakingInfo,
-  WalletUTXOStateModel,
+  WalletBalanceStateModel,
   WalletSettingsStateModel,
   PublicUTXO,
   BlindUTXO,
@@ -33,7 +33,7 @@ import { PartoshiAmount } from 'app/core/util/utils';
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
 const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo');
 const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletStakingStateModel>('walletstakinginfo');
-const WALLET_UTXOS_TOKEN = new StateToken<WalletUTXOStateModel>('walletutxos');
+const WALLET_UTXOS_TOKEN = new StateToken<WalletBalanceStateModel>('walletutxos');
 const WALLET_SETTINGS_STATE_TOKEN = new StateToken<WalletSettingsStateModel>('walletsettings');
 
 
@@ -64,7 +64,7 @@ const DEFAULT_STAKING_INFO_STATE: WalletStakingStateModel = {
 };
 
 
-const DEFAULT_UTXOS_STATE: WalletUTXOStateModel = {
+const DEFAULT_UTXOS_STATE: WalletBalanceStateModel = {
   public: [],
   blind: [],
   anon: []
@@ -114,14 +114,14 @@ export class WalletInfoState {
     const current = ctx.getState();
     if (!current.hdseedid || (current.walletname === null)) {
       return concat(
-        ctx.dispatch(new WalletDetailActions.ResetAllUTXOS()),
+        ctx.dispatch(new WalletDetailActions.ResetBalances()),
         ctx.dispatch(new WalletDetailActions.ResetStakingInfo())
       );
     }
 
     return concat(
       ctx.dispatch(new MainActions.RefreshWalletInfo()),
-      ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
+      ctx.dispatch(new WalletDetailActions.RefreshBalances()),
       ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())
     );
   }
@@ -252,16 +252,16 @@ export class WalletStakingState {
 
 
 
-@State<WalletUTXOStateModel>({
+@State<WalletBalanceStateModel>({
   name: WALLET_UTXOS_TOKEN,
   defaults: JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE))
 })
-export class WalletUTXOState {
+export class WalletBalanceState {
 
   static getValue(field: string) {
     return createSelector(
-      [WalletUTXOState],
-      (state: WalletUTXOState): any[] => {
+      [WalletBalanceState],
+      (state: WalletBalanceState): any[] => {
         return field in state ? state[field] : [];
       }
     );
@@ -270,7 +270,7 @@ export class WalletUTXOState {
 
   static utxosPublic() {
     return createSelector(
-      [WalletUTXOState.getValue('public')],
+      [WalletBalanceState.getValue('public')],
       (utxos: PublicUTXO[]): PublicUTXO[] => utxos
     );
   }
@@ -278,7 +278,7 @@ export class WalletUTXOState {
 
   static utxosBlind() {
     return createSelector(
-      [WalletUTXOState.getValue('blind')],
+      [WalletBalanceState.getValue('blind')],
       (utxos: BlindUTXO[]): BlindUTXO[] => utxos
     );
   }
@@ -286,7 +286,7 @@ export class WalletUTXOState {
 
   static utxosAnon() {
     return createSelector(
-      [WalletUTXOState.getValue('anon')],
+      [WalletBalanceState.getValue('anon')],
       (utxos: AnonUTXO[]): AnonUTXO[] => utxos
     );
   }
@@ -294,24 +294,24 @@ export class WalletUTXOState {
 
   static spendableAmountPublic() {
     return createSelector(
-      [WalletUTXOState.utxosPublic()],
-      (utxos: PublicUTXO[]): string => WalletUTXOState.calculateSpendableAmounts(utxos)
+      [WalletBalanceState.utxosPublic()],
+      (utxos: PublicUTXO[]): string => WalletBalanceState.calculateSpendableAmounts(utxos)
     );
   }
 
 
   static spendableAmountBlind() {
     return createSelector(
-      [WalletUTXOState.utxosBlind()],
-      (utxos: BlindUTXO[]): string => WalletUTXOState.calculateSpendableAmounts(utxos)
+      [WalletBalanceState.utxosBlind()],
+      (utxos: BlindUTXO[]): string => WalletBalanceState.calculateSpendableAmounts(utxos)
     );
   }
 
 
   static spendableAmountAnon() {
     return createSelector(
-      [WalletUTXOState.utxosAnon()],
-      (utxos: AnonUTXO[]): string => WalletUTXOState.calculateSpendableAmounts(utxos)
+      [WalletBalanceState.utxosAnon()],
+      (utxos: AnonUTXO[]): string => WalletBalanceState.calculateSpendableAmounts(utxos)
     );
   }
 
@@ -339,21 +339,21 @@ export class WalletUTXOState {
 
 
   @Action(MainActions.ResetWallet)
-  onResetStateToDefault(ctx: StateContext<WalletUTXOStateModel>) {
+  onResetStateToDefault(ctx: StateContext<WalletBalanceStateModel>) {
     // Explicitly reset the state only
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
   }
 
 
-  @Action(WalletDetailActions.ResetAllUTXOS)
-  onResetAllUTXOS(ctx: StateContext<WalletUTXOStateModel>) {
+  @Action(WalletDetailActions.ResetBalances)
+  onResetBalances(ctx: StateContext<WalletBalanceStateModel>) {
     // Explicitly reset the state only
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
   }
 
 
-  @Action(WalletDetailActions.GetAllUTXOS)
-  fetchAllUTXOS(ctx: StateContext<WalletUTXOStateModel>) {
+  @Action(WalletDetailActions.RefreshBalances)
+  fetchWalletBalances(ctx: StateContext<WalletBalanceStateModel>) {
     return this._walletService.getAllUTXOs().pipe(
       tap((result) => {
 

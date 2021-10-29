@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
+import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
 import { MarketStateActions, MarketUserActions } from '../store/market.actions';
 import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
@@ -141,13 +141,13 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
 
     this.currentBalance = merge(
-      this._store.select(WalletUTXOState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
+      this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
     ).pipe(
       startWith('0'),
       map(() => {
         if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
-          return this._store.selectSnapshot(WalletUTXOState.spendableAmountAnon());
+          return this._store.selectSnapshot(WalletBalanceState.spendableAmountAnon());
         }
         return '0';
       }),

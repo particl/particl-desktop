@@ -6,7 +6,7 @@ import { Subject, merge, of, defer, iif } from 'rxjs';
 import { tap, takeUntil, map, catchError, switchMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { WalletUTXOState } from 'app/main/store/main.state';
+import { WalletBalanceState } from 'app/main/store/main.state';
 import { MarketState } from '../../../store/market.state';
 
 import { MarketManagementService } from '../../management.service';
@@ -146,8 +146,8 @@ export class PromoteMarketConfirmationModalComponent implements OnInit, OnDestro
       switchMap((settings) => iif(
         () => settings.useAnonBalanceForFees,
 
-        defer(() => this._store.select(WalletUTXOState.spendableAmountAnon())),
-        defer(() => this._store.select(WalletUTXOState.spendableAmountPublic())),
+        defer(() => this._store.select(WalletBalanceState.spendableAmountAnon())),
+        defer(() => this._store.select(WalletBalanceState.spendableAmountPublic())),
       )),
       map(value => +value),
       tap((balance) => this.publishForm.get('currentBalance').setValue(balance)),

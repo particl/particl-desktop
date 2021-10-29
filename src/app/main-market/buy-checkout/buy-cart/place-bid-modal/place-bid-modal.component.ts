@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { WalletUTXOState } from 'app/main/store/main.state';
+import { WalletBalanceState } from 'app/main/store/main.state';
 
 import { PriceItem } from '../../../shared/market.models';
 import { isBasicObjectType, getValueOrDefault } from '../../../shared/utils';
@@ -124,13 +124,13 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._store.select(WalletUTXOState.spendableAmountAnon()).pipe(
+    this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(
       tap((amount) => {
         const requiredBalance = +`${this.summary.pricingSummary.orderTotal.whole}${this.summary.pricingSummary.orderTotal.sep}${this.summary.pricingSummary.orderTotal.fraction}` || 0;
         this.errors.insufficientFunds = !this.errors.invalidData && (requiredBalance > +amount);
         this.errors.insufficientUtxos =
           !this.errors.insufficientFunds &&
-          (this.summary.items.length > this._store.selectSnapshot(WalletUTXOState.utxosAnon()).length);
+          (this.summary.items.length > this._store.selectSnapshot(WalletBalanceState.utxosAnon()).length);
       }),
       takeUntil(this.destroy$)
     ).subscribe();

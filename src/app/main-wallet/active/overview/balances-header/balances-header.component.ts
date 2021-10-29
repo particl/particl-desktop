@@ -6,8 +6,8 @@ import { Observable, Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Balance } from './balances.models';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
-import { WalletInfoStateModel, WalletUTXOStateModel, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
+import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
+import { WalletInfoStateModel, WalletBalanceStateModel, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 
 
@@ -60,7 +60,8 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const utxo$: Observable<WalletUTXOStateModel> = this._store.select(WalletUTXOState).pipe(
+    // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    const utxo$: Observable<WalletBalanceStateModel> = this._store.select(WalletBalanceState).pipe(
       takeUntil(this.destroy$)
     );
 
@@ -130,7 +131,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
   }
 
 
-  private setActualBalance(utxos: WalletUTXOStateModel) {
+  private setActualBalance(utxos: WalletBalanceStateModel) {
     const balItem = this._balances.find((bal) => bal.type === 'actual_balance');
     if (!balItem) {
       return;
@@ -145,7 +146,7 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
   }
 
 
-  private setLockedBalance(info: WalletInfoStateModel, utxos: WalletUTXOStateModel) {
+  private setLockedBalance(info: WalletInfoStateModel, utxos: WalletBalanceStateModel) {
     const balItem = this._balances.find((bal) => bal.type === 'locked_balance');
     if (!balItem) {
       return;

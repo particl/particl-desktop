@@ -5,7 +5,7 @@ import { Observable, Subject, merge } from 'rxjs';
 import { takeUntil, skipWhile, tap, distinctUntilChanged, switchMap, map, shareReplay } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
+import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
 import { GovernanceState } from '../store/governance-store.state';
 import { MainActions } from 'app/main/store/main.actions';
 import { WalletInfoService } from 'app/main/services/wallet-info/wallet-info.service';
@@ -78,7 +78,7 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    this.currentWalletBalance$ = this._store.select(WalletUTXOState.spendableAmountPublic()).pipe(
+    this.currentWalletBalance$ = this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(
       takeUntil(this.destroy$)
     );
 
