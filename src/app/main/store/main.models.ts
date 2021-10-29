@@ -89,6 +89,9 @@ export interface WalletBalanceStateModel {
   public: PublicUTXO[];
   blind: BlindUTXO[];
   anon: AnonUTXO[];
+  lockedPublic: number;
+  lockedBlind: number;
+  lockedAnon: number;
 }
 
 
@@ -128,4 +131,15 @@ export interface RpcGetWalletInfo {
   paytxfee: number;
   hdseedid: string;
   private_keys_enabled: boolean;
+}
+
+
+export interface RpcGetLockedBalances {
+  trusted_plain: number;
+  trusted_blind: number;
+  trusted_anon: number;
+  untrusted_plain: number;
+  untrusted_blind: number;
+  untrusted_anon: number;
+  num_locked: number;
 }

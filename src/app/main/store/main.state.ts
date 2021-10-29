@@ -22,8 +22,8 @@ import {
 } from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
-import { Observable, concat } from 'rxjs';
-import { concatMap, tap, mapTo } from 'rxjs/operators';
+import { Observable, concat, forkJoin } from 'rxjs';
+import { concatMap, tap, mapTo, map } from 'rxjs/operators';
 import { xorWith } from 'lodash';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 import { SettingsService } from 'app/core/services/settings.service';
@@ -67,7 +67,10 @@ const DEFAULT_STAKING_INFO_STATE: WalletStakingStateModel = {
 const DEFAULT_UTXOS_STATE: WalletBalanceStateModel = {
   public: [],
   blind: [],
-  anon: []
+  anon: [],
+  lockedPublic: 0,
+  lockedBlind: 0,
+  lockedAnon: 0,
 };
 
 
@@ -316,6 +319,48 @@ export class WalletBalanceState {
   }
 
 
+  static spendableTotal() {
+    return createSelector(
+      [WalletBalanceState.spendableAmountPublic(), WalletBalanceState.spendableAmountBlind(), WalletBalanceState.spendableAmountAnon()],
+      (p: string, b: string, a: string): string => (new PartoshiAmount(+p, false))
+        .add(new PartoshiAmount(+b, false))
+        .add(new PartoshiAmount(+a, false))
+        .particlsString()
+    );
+  }
+
+  static lockedPublic() {
+    return createSelector(
+      [WalletBalanceState.getValue('lockedPublic')],
+      (value: number): number => value
+    );
+  }
+
+  static lockedBlind() {
+    return createSelector(
+      [WalletBalanceState.getValue('lockedBlind')],
+      (value: number): number => value
+    );
+  }
+
+  static lockedAnon() {
+    return createSelector(
+      [WalletBalanceState.getValue('lockedAnon')],
+      (value: number): number => value
+    );
+  }
+
+  static lockedTotal() {
+    return createSelector(
+      [WalletBalanceState.lockedPublic(), WalletBalanceState.lockedBlind(), WalletBalanceState.lockedAnon()],
+      (p: number, b: number, a: number): number => (new PartoshiAmount(p, false))
+        .add(new PartoshiAmount(b, false))
+        .add(new PartoshiAmount(a, false))
+        .particls()
+    );
+  }
+
+
   private static calculateSpendableAmounts(utxos: PublicUTXO[] | BlindUTXO[] | AnonUTXO[]) {
     const tempBal = new PartoshiAmount(0);
 
@@ -354,31 +399,51 @@ export class WalletBalanceState {
 
   @Action(WalletDetailActions.RefreshBalances)
   fetchWalletBalances(ctx: StateContext<WalletBalanceStateModel>) {
-    return this._walletService.getAllUTXOs().pipe(
-      tap((result) => {
+    return forkJoin({
+      utxos: this._walletService.getAllUTXOs().pipe(
+        map((result) => {
 
-        const updatedValues = {};
-        const currentState = ctx.getState();
+          const updatedValues = {};
+          const currentState = ctx.getState();
 
-        const resultKeys = Object.keys(result);
-        for (const resKey of resultKeys) {
-          if (resKey in currentState) {
-            if (!result[resKey].length) {
-              updatedValues[resKey] = [];
-            } else if (
-              (currentState[resKey].length !== result[resKey].length) ||
-              (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
-                currentState[resKey],
-                result[resKey],
-                (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
-              ).length > 0)
-            ) {
-              updatedValues[resKey] = result[resKey];
+          const resultKeys = Object.keys(result);
+          for (const resKey of resultKeys) {
+            if (resKey in currentState) {
+              if (!result[resKey].length) {
+                updatedValues[resKey] = [];
+              } else if (
+                (currentState[resKey].length !== result[resKey].length) ||
+                (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
+                  currentState[resKey],
+                  result[resKey],
+                  (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
+                ).length > 0)
+              ) {
+                updatedValues[resKey] = result[resKey];
+              }
             }
           }
-        }
 
-        if (Object.keys(updatedValues).length > 0 ) {
+          return updatedValues;
+        })
+      ),
+
+      locked: this._walletService.getLockedBalance().pipe(
+        map(result => {
+          const currentState = ctx.getState();
+          const updatedValues = {};
+
+          if (currentState.lockedPublic !== result.public) updatedValues['lockedPublic'] = result.public;
+          if (currentState.lockedBlind !== result.blind) updatedValues['lockedBlind'] = result.blind;
+          if (currentState.lockedAnon !== result.anon) updatedValues['lockedAnon'] = result.anon;
+
+          return updatedValues;
+        })
+      )
+    }).pipe(
+      tap(updates => {
+        const updatedValues = { ...updates.locked, ...updates.utxos };
+        if (Object.keys(updatedValues).length > 0) {
           ctx.patchState(updatedValues);
         }
       })

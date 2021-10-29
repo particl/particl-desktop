@@ -1,10 +1,11 @@
+import { PartoshiAmount } from './../../../core/util/utils';
 import { Injectable } from '@angular/core';
 import { Log } from 'ng2-logger';
 import { Observable, of, forkJoin } from 'rxjs';
 import { retryWhen, catchError, map, mapTo } from 'rxjs/operators';
 
 import { MainRpcService } from '../main-rpc/main-rpc.service';
-import { RpcGetWalletInfo, RpcGetColdStakingInfo, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
+import { RpcGetWalletInfo, RpcGetColdStakingInfo, PublicUTXO, BlindUTXO, AnonUTXO, RpcGetLockedBalances } from 'app/main/store/main.models';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 
 
@@ -101,6 +102,26 @@ export class WalletInfoService {
         blind: blind$,
         anon: anon$
       }
+    );
+  }
+
+
+  getLockedBalance(): Observable<{public: number, blind: number, anon: number}> {
+    return this._rpc.call('getlockedbalances').pipe(
+      map((res: RpcGetLockedBalances) => {
+        const resp = {
+          public: 0,
+          blind: 0,
+          anon: 0,
+        };
+        if (res && (Object.prototype.toString.call(res) === '[object Object]')) {
+          resp.public = new PartoshiAmount(+res.trusted_plain, false).add(new PartoshiAmount(+res.untrusted_plain)).particls();
+          resp.blind = new PartoshiAmount(+res.trusted_blind, false).add(new PartoshiAmount(+res.untrusted_blind)).particls();
+          resp.anon = new PartoshiAmount(+res.trusted_anon, false).add(new PartoshiAmount(+res.untrusted_anon)).particls();
+        }
+        return resp;
+      }),
+      catchError(() => of({public: 0, blind: 0, anon: 0}))
     );
   }
 
