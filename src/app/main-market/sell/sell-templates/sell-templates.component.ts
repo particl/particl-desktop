@@ -20,6 +20,7 @@ import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-m
 import { CloneTemplateModalInput, CloneTemplateModalComponent } from '../modals/clone-template-modal/clone-template-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 
+import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
 import { Market } from '../../services/data/data.models';
 import { ProductItem, TEMPLATE_STATUS_TYPE, ProductMarketTemplate } from '../sell.models';
@@ -354,10 +355,20 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         id: p.id,
         name: p.title,
         image: p.images[0],
+        priceBase: (new PartoshiAmount(+`${p.priceBase.whole}.${p.priceBase.fraction}`, false)).particlsString(),
+        priceShippingLocal: (new PartoshiAmount(+`${p.priceShippingLocal.whole}.${p.priceShippingLocal.fraction}`, false)).particlsString(),
+        priceShippingIntl: (new PartoshiAmount(+`${p.priceShippingIntl.whole}.${p.priceShippingIntl.fraction}`, false)).particlsString(),
         existingMarkets: p.markets.map(pm => ({
           marketId: this.profileMarkets[pm.marketKey] ? this.profileMarkets[pm.marketKey].id : 0,
-          categoryId: +pm.categoryId
-        }))
+          categoryId: +pm.categoryId,
+          priceBase: (new PartoshiAmount(+`${pm.priceBase.whole}.${pm.priceBase.fraction}`, false)).particlsString(),
+          priceShippingLocal: (
+            new PartoshiAmount(+`${pm.priceShippingLocal.whole}.${pm.priceShippingLocal.fraction}`, false)
+          ).particlsString(),
+          priceShippingIntl: (
+            new PartoshiAmount(+`${pm.priceShippingIntl.whole}.${pm.priceShippingIntl.fraction}`, false)
+          ).particlsString(),
+        })),
       }))
     };
 

@@ -458,7 +458,13 @@ export class SellService {
 
 
   async batchPublishProductToMarket(
-    productId: number, market: {id: number, key: string}, categoryId: number, durationDays: number
+    productId: number,
+    market: { id: number, key: string },
+    categoryId: number,
+    priceBase: number,
+    priceShipLocal: number,
+    priceShipIntl: number,
+    durationDays: number
   ): Promise<boolean> {
 
     /**
@@ -546,21 +552,48 @@ export class SellService {
     if (!isBasicObjectType(latestMarketTempl.ItemInformation)) {
       throw new Error('Invalid template information');
     }
+    // check that the latest market template has the correct price set
+    if (
+      !isBasicObjectType(latestMarketTempl.PaymentInformation) ||
+      !isBasicObjectType(latestMarketTempl.PaymentInformation.ItemPrice) ||
+      !isBasicObjectType(latestMarketTempl.PaymentInformation.ItemPrice.ShippingPrice)
+    ) {
+      throw new Error('Invalid template pricing information');
+    }
 
-    if (latestMarketTempl.ItemInformation.itemCategoryId !== categoryId) {
-      // IF template hash is set, then clone template since template cannot be modified
+    // IF template hash is set, then clone template since template cannot be modified
+    const canEditTemplate = !(getValueOrDefault(latestMarketTempl.hash, 'string', '').length > 0);
 
-      if (getValueOrDefault(latestMarketTempl.hash, 'string', '').length > 0) {
+    const newPriceBase = (new PartoshiAmount(priceBase, false));
+    const newPriceShipLocal = (new PartoshiAmount(priceShipLocal, false));
+    const newPriceShipIntl = (new PartoshiAmount(priceShipIntl, false));
 
-        const clonedTempl = await this.cloneTemplate(+latestMarketTempl.id, market.id).toPromise();
+    const changedCategory = (latestMarketTempl.ItemInformation.itemCategoryId !== categoryId);
+    const changedPricing = (
+      new PartoshiAmount(+latestMarketTempl.PaymentInformation.ItemPrice.basePrice, true)
+    ).particlsString() !== newPriceBase.particlsString() ||
+      (
+        new PartoshiAmount(+latestMarketTempl.PaymentInformation.ItemPrice.ShippingPrice.domestic, true)
+      ).particlsString() !== newPriceShipLocal.particlsString() ||
+      (
+        new PartoshiAmount(+latestMarketTempl.PaymentInformation.ItemPrice.ShippingPrice.international, true)
+      ).particlsString() !== newPriceShipIntl.particlsString();
+    const needsTemplateEdit = changedCategory || changedPricing;
 
-        if (!isBasicObjectType(clonedTempl) || !(+clonedTempl.id > 0)) {
-          throw new Error('Invalid cloned market template');
-        }
+    let isTemplateCloned = false;
 
-        latestMarketTempl = clonedTempl;
+    if (!canEditTemplate && needsTemplateEdit) {
+      const clonedTempl = await this.cloneTemplate(+latestMarketTempl.id, market.id).toPromise();
+
+      if (!isBasicObjectType(clonedTempl) || !(+clonedTempl.id > 0)) {
+        throw new Error('Invalid cloned market template');
       }
+      isTemplateCloned = true;
+      latestMarketTempl = clonedTempl;
+    }
 
+    // because if a market template is cloned, it seems the category needs to be updated again for it
+    if (isTemplateCloned || changedCategory) {
       await this._rpc.call('information', [
         'update',
         +latestMarketTempl.id,
@@ -568,6 +601,19 @@ export class SellService {
         getValueOrDefault(latestMarketTempl.ItemInformation.shortDescription, 'string', ''),
         getValueOrDefault(latestMarketTempl.ItemInformation.longDescription, 'string', ''),
         categoryId
+      ]).toPromise();
+    }
+
+    if (changedPricing) {
+      await this._rpc.call('template', [
+        'payment',
+        'update',
+        +latestMarketTempl.id,
+        latestMarketTempl.PaymentInformation.type,
+        latestMarketTempl.PaymentInformation.ItemPrice.currency,
+        newPriceBase.partoshis(),
+        newPriceShipLocal.partoshis(),
+        newPriceShipIntl.partoshis(),
       ]).toPromise();
     }
 
@@ -962,7 +1008,20 @@ export class SellService {
         }
       }
 
-      // Process any associated market templates
+      /**
+       *  Process any associated market templates
+       *  The nested structure of market templates has a max depth 3 currently:
+       *      base (product) template
+       *          |->  first ("root") market template
+       *              |-> updated/edited market template
+       *              |-> updated/edited market template
+       *              ...
+       *              |-> updated/edited market template
+       *
+       *  Updates/edits to any of the children market templates will create a new child market template,
+       *    with the same parent as the edited template.
+       *
+       * */
 
       if (Array.isArray(baseTempl.ChildListingItemTemplates) && (baseTempl.ChildListingItemTemplates.length > 0)) {
         baseTempl.ChildListingItemTemplates.forEach(basicMarketTempl => {
@@ -1043,7 +1102,9 @@ export class SellService {
     const newMarketDetails: ProductMarketTemplate = {
       id: 0,
       title: '',
-      priceBase: {whole: '', sep: '', fraction: ''},
+      priceBase: { whole: '', sep: '', fraction: '' },
+      priceShippingLocal: { whole: '', sep: '', fraction: '' },
+      priceShippingIntl: { whole: '', sep: '', fraction: '' },
       marketKey: '',
       categoryName: '',
       categoryId: 0,
@@ -1097,6 +1158,22 @@ export class SellService {
         sep: basePrice.particlStringSep(),
         fraction: basePrice.particlStringFraction()
       };
+
+      if (isBasicObjectType(src.PaymentInformation.ItemPrice.ShippingPrice)) {
+        const localPrice = new PartoshiAmount(+src.PaymentInformation.ItemPrice.ShippingPrice.domestic, true);
+        newMarketDetails.priceShippingLocal = {
+          whole: localPrice.particlStringInteger(),
+          sep: localPrice.particlStringSep(),
+          fraction: localPrice.particlStringFraction()
+        };
+
+        const intlPrice = new PartoshiAmount(+src.PaymentInformation.ItemPrice.ShippingPrice.international, true);
+        newMarketDetails.priceShippingIntl = {
+          whole: intlPrice.particlStringInteger(),
+          sep: intlPrice.particlStringSep(),
+          fraction: intlPrice.particlStringFraction()
+        };
+      }
     }
 
     return newMarketDetails;

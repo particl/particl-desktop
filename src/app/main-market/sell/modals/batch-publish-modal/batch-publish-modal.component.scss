@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 mat-dialog-title {
   margin: -8px 0 15px;
@@ -26,11 +26,19 @@ mat-dialog-title {
       font-weight: 400;
     }
   }
+  .pricing {
+    margin-right: 24px;
+    .shipping-checkbox {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+  }
 }
 
 .mat-dialog-content {
   height: calc(85vh - 200px); // offset higher mat-dialog-title & -actions
-  width: 56rem;
+  width: 52rem;
   margin: 0 -24px !important;
   padding: calc(var(--paddingV) - 8px) var(--paddingH);
   .introduction {
