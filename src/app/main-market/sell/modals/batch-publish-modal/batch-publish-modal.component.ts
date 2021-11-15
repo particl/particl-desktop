@@ -101,8 +101,8 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
   ];
 
   readonly productPriceChangeOptions: Array<{ label: string, value: PriceChangeOptions }> = [
-    { label: 'Adjust by percentage changes', value: PriceChangeOptions.PERCENTAGE },
-    { label: 'Set pricing manually', value: PriceChangeOptions.NO_UPDATE },
+    { label: 'Specify exact price', value: PriceChangeOptions.NO_UPDATE },
+    { label: 'Update by percentage', value: PriceChangeOptions.PERCENTAGE },
   ];
 
   presetControl: FormControl = new FormControl('');

@@ -15,7 +15,7 @@
 
     <div class="publish-options row" fxLayout fxLayoutAlign="space-between center">
 
-      <section class="select-market" fxFlex="25">
+      <section class="select-market" fxFlex="30">
         <label class="--larger">
           <h3 class="label">Publish to</h3>
           <mat-form-field class="--plain --larger" appearance="fill">
@@ -30,8 +30,7 @@
         </label>
       </section><!-- .select-market -->
 
-      <section class="duration" fxFlex="50">
-        <div class="row" fxLayout fxLayoutAlign="flex-start flex-end">
+      <section class="duration" fxFlex="25">
           <label class="--larger">
             <h3 class="label">Publish duration</h3>
             <mat-form-field class="--plain --larger" appearance="fill">
@@ -43,17 +42,31 @@
               </mat-select>
             </mat-form-field>
           </label>
-        </div><!-- .row -->
       </section><!-- .duration -->
 
-      <section class="pricing" fxFlex="25">
+      <section class="pricing" fxFlex="15">
         <label class="--larger">
-          <h3 class="label">Pricing Adjustments</h3>
-          <mat-form-field class="--plain" appearance="fill">
-            <input formControlName="pricePercentageChange" placeholder="% change" matInput type="number" min="0" step="1" />
+          <h3 class="label">Price % Change</h3>
+          <mat-form-field class="--plain --larger" appearance="fill">
+            <input formControlName="pricePercentageChange" placeholder="Adjust price by %" matInput type="number" min="0" step="1" />
           </mat-form-field>
         </label>
       </section>
+
+
+      <section class="select-preset" fxFlex="25">
+        <label class="--larger">
+          <h3 class="label">Select&hellip;</h3>
+          <mat-form-field class="--plain --larger" appearance="fill">
+            <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
+            <mat-select placeholder="Select Products" [formControl]="presetControl">
+              <mat-option *ngFor="let preset of productPresets" [value]="preset.value" class="">
+                {{ preset.title }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </label>
+      </section><!-- .select-preset -->
 
     </div><!-- .row -->
 
@@ -76,7 +89,7 @@
 
       <ng-container *ngIf="+batchPublishForm.get('selectedMarket').value > 0">
         <ng-container *ngFor="let product of formAvailableProducts.controls; index as formProductIdx">
-          <mat-expansion-panel class="market list-item" *appVar="availableProducts[formProductIdx] as productInfo" [formArrayName]="formProductIdx" hideToggle="true" expanded="true" disabled="true">
+          <mat-expansion-panel class="" *appVar="availableProducts[formProductIdx] as productInfo" [formArrayName]="formProductIdx" hideToggle="true" expanded="true" disabled="true">
             <mat-expansion-panel-header class="header product">
               <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
                 <div class="photo">
@@ -97,7 +110,7 @@
                       <mat-icon fontIcon="part-cog" class="loading-progress"></mat-icon>
                       Publishing in progress
                     </ng-container>
-                    <ng-container *ngIf="product.dirty && product.valid && !isProcessingControl.value">
+                    <ng-container *ngIf="product.valid && !isProcessingControl.value && !specificErrorMessages.has(formProductIdx)">
                       <mat-icon fontIcon="part-check"></mat-icon>
                       Ready for publishing
                     </ng-container>
@@ -129,9 +142,9 @@
 
             <div class="details">
               <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-                <h3 class="item-subtitle">
-                  Pricing
-                </h3>
+                <h5 class="section-title">
+                  Pricing changes
+                </h5>
                 <mat-radio-group class="radio-group block-radio" [formControlName]="5" (change)="setProductPricingStatus(formProductIdx, $event.value)">
                   <mat-radio-button class="filter-option" *ngFor="let option of productPriceChangeOptions" value="{{ option.value }}" color="accent">
                     {{ option.label }}
@@ -139,30 +152,73 @@
                 </mat-radio-group>
               </div>
 
-              <p class="desc">
-                currentPrice: {{ productInfo.currentPriceBase }}<br>
-                current shipping local Price: {{ productInfo.currentPriceShippingLocal }}<br>
-                current shipping Intl Price: {{ productInfo.currentPriceShippingIntl }}<br>
-              </p>
+              <table class="pricing-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Item Price</th>
+                    <th>Shipping (Local)</th>
+                    <th>Shipping (International)</th>
+                  </tr>
+                </thead>
+              <tbody>
+                <tr>
+                  <th>
+                    Current Value
+                    <small>The current, saved value for this item</small>
+                  </th>
+                  <td>
+                    <span class="part price">
+                      {{ productInfo.currentPriceBase }}
+                      <small class="currency">PART</small>
+                    </span>
+                  </td>
 
-              <label class="">
-                <p class="label">New Price</p>
-                <mat-form-field class="--plain" appearance="fill">
-                  <input [formControlName]="2" placeholder="Item Price" matInput />
-                </mat-form-field>
-              </label>
-              <label class="">
-                <p class="label">New Shipping (Local) Price</p>
-                <mat-form-field class="--plain" appearance="fill">
-                  <input [formControlName]="3" placeholder="Item Shipping (Local) Price" matInput />
-                </mat-form-field>
-              </label>
-              <label class="">
-                <p class="label">New Shipping (International) Price</p>
-                <mat-form-field class="--plain" appearance="fill">
-                  <input [formControlName]="4" placeholder="Item Shipping (International) Price" matInput />
-                </mat-form-field>
-              </label>
+                  <td>
+                    <span class="part price">
+                      {{ productInfo.currentPriceShippingLocal }}
+                      <small class="currency">PART</small>
+                    </span>
+                  </td>
+
+                  <td>
+                    <span class="part price">
+                      {{ productInfo.currentPriceShippingIntl }}
+                      <small class="currency">PART</small>
+                    </span>
+
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    New Value
+                    <small>The new price for the item</small>
+                  </th>
+
+                  <td>
+                      <mat-form-field class="--plain" appearance="fill">
+                        <input [formControlName]="2" placeholder="Item Price" matInput />
+                      </mat-form-field>
+                      <span class="part price"><small class="currency">PART</small></span>
+                  </td>
+
+                  <td>
+                      <mat-form-field class="--plain" appearance="fill">
+                        <input [formControlName]="3" placeholder="Item Shipping (Local) Price" matInput />
+                      </mat-form-field>
+                      <span class="part price"><small class="currency">PART</small></span>
+                  </td>
+
+                  <td>
+                      <mat-form-field class="--plain" appearance="fill">
+                        <input [formControlName]="4" placeholder="Item Shipping (International) Price" matInput />
+                      </mat-form-field>
+                      <span class="part price"><small class="currency">PART</small></span>
+                  </td>
+                </tr>
+              </tbody>
+              </table>
+
             </div>
           </mat-expansion-panel>
         </ng-container>
@@ -191,27 +247,14 @@
   <mat-progress-bar *ngIf="isProcessingControl.value" mode="determinate" [value]="publishingInfo.progressPercent"
     color="accent" class="publish-progress"></mat-progress-bar>
 
-  <div class="row">
-    <div fxFlex="30%">
-      <div fxLayout="row" fxLayoutAlign="flex-start center" fxLayoutGap="30px">
+    <div class="row">
+      <div class="right">
         <button mat-button color="basic" (click)="actionCloseModal()" [disabled]="isProcessingControl.value">
           <mat-icon fontIcon="part-cross"></mat-icon>
           Cancel &amp; close
         </button>
       </div>
-    </div>
-
-    <div fxFlex="65%">
-      <div fxLayout="row" fxLayoutAlign="flex-end center" fxLayoutGap="30px">
-        <mat-form-field class="--plain" appearance="fill">
-          <mat-icon matPrefix fontIcon="part-check-2"></mat-icon>
-          <mat-select placeholder="Select Products..." [formControl]="presetControl">
-            <mat-option *ngFor="let preset of productPresets" [value]="preset.value" class="">
-              {{ preset.title }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
+      <div class="left">
         <button mat-raised-button color="primary" [disabled]="isProcessingControl.value || batchPublishForm.invalid"
           (click)="actionBatchPublish()">
           <mat-icon fontIcon="part-check"></mat-icon>
@@ -220,7 +263,6 @@
           <ng-template #buttonTextDoPublish>Publish selected Products</ng-template>
         </button>
       </div>
-    </div>
-  </div><!-- .row -->
+    </div><!-- .row -->
 
 </mat-dialog-actions>
