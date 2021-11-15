@@ -143,6 +143,8 @@ export interface ProductMarketTemplate {
   categoryName: string;
   categoryId: number;
   priceBase: PriceItem;
+  priceShippingLocal: PriceItem;
+  priceShippingIntl: PriceItem;
   hash: string;
   created: number;
   updated: number;
@@ -174,8 +176,14 @@ export interface BatchPublishProductItem {
   id: number;
   name: string;
   image: string;
+  priceBase: string;
+  priceShippingLocal: string;
+  priceShippingIntl: string;
   existingMarkets: {
     marketId: number;
     categoryId: number;
+    priceBase: string;
+    priceShippingLocal: string;
+    priceShippingIntl: string;
   }[];
 }
