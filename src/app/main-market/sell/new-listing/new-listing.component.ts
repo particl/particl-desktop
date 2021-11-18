@@ -384,6 +384,9 @@ export class NewListingComponent implements OnInit, OnDestroy {
       basePrice: +parsedBasePrice > 0 ? parsedBasePrice : '0',
       domesticShippingPrice: +parsedShipLocalPrice > 0 ? parsedShipLocalPrice : '0',
       foreignShippingPrice: +parsedShpIntlPrice > 0 ? parsedShpIntlPrice : '0',
+      escrowPercentageBuyer: +formValues['escrowPercentageBuyer'] >= 0 ? +formValues['escrowPercentageBuyer'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+      escrowPercentageSeller: +formValues['escrowPercentageSeller'] >= 0 ? +formValues['escrowPercentageSeller'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+      escrowRelease: getValueOrDefault(formValues['escrowRelease'], 'string', ESCROW_RELEASE_TYPE.ANON),
       images: Array.isArray(formValues['pendingImages']) ?
           formValues['pendingImages'].map((image: string) => {
             const imgData: TemplateRequestImageItem = {type: 'REQUEST', data: image};
@@ -413,9 +416,9 @@ export class NewListingComponent implements OnInit, OnDestroy {
         shippingFrom: parsedValues.shippingFrom,
         shippingTo: parsedValues.shippingTo,
         escrowType: 'MAD_CT',
-        escrowReleaseType: ESCROW_RELEASE_TYPE.ANON,
-        escrowBuyerRatio: 100,
-        escrowSellerRatio: 100,
+        escrowReleaseType: parsedValues.escrowRelease,
+        escrowBuyerRatio: parsedValues.escrowPercentageBuyer,
+        escrowSellerRatio: parsedValues.escrowPercentageSeller,
         salesType: 'SALE',
         currency: 'PART',
         marketId: parsedValues.selectedMarketId,
@@ -429,7 +432,6 @@ export class NewListingComponent implements OnInit, OnDestroy {
       // Update existing template (beware base templates that need to be cloned to a market template)
 
       const updateTemplateData: UpdateTemplateRequest = {};
-
 
       if (
         (parsedValues.title !== this.savedTempl.savedDetails.title) ||
@@ -464,6 +466,19 @@ export class NewListingComponent implements OnInit, OnDestroy {
           currency: 'PART',
           salesType: 'SALE'
         };
+      }
+
+      if (
+        (parsedValues.escrowPercentageBuyer !== this.savedTempl.savedDetails.escrowBuyer) ||
+        (parsedValues.escrowPercentageSeller !== this.savedTempl.savedDetails.escrowSeller) ||
+        (parsedValues.escrowRelease !== this.savedTempl.savedDetails.escrowReleaseType)
+      ) {
+        updateTemplateData.escrow = {
+          buyerRatio: parsedValues.escrowPercentageBuyer,
+          sellerRatio: parsedValues.escrowPercentageSeller,
+          escrowType: 'MAD_CT',
+          releaseType: parsedValues.escrowRelease,
+        }
       }
 
       if (parsedValues.shippingFrom !== this.savedTempl.savedDetails.shippingOrigin) {
@@ -545,6 +560,8 @@ export class NewListingComponent implements OnInit, OnDestroy {
       priceBase: '',
       priceShipLocal: '',
       priceShipIntl: '',
+      escrowPercentageBuyer: this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+      escrowPercentageSeller: this._sellService.ESCROW_PERCENTAGE_DEFAULT,
       savedImages: [],
       shippingOrigin: '',
       shippingDestinations: [],
@@ -572,6 +589,8 @@ export class NewListingComponent implements OnInit, OnDestroy {
       formDetails.savedImages = templ.savedDetails.images;
       formDetails.shippingOrigin = templ.savedDetails.shippingOrigin;
       formDetails.shippingDestinations = templ.savedDetails.shippingDestinations;
+      formDetails.escrowPercentageBuyer = templ.savedDetails.escrowBuyer;
+      formDetails.escrowPercentageSeller = templ.savedDetails.escrowSeller;
 
       if (templ.marketDetails) {
         formDetails.category.selectedMarketCategoryId = templ.marketDetails.category.id;

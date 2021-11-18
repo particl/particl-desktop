@@ -221,6 +221,68 @@
 
   </div><!-- .row (shipping) -->
 
+
+  <div class="row" fxLayout="row" fxLayoutGap="30px">
+
+    <div class="left column" fxFlex="50">
+      <h2 class="section-title">Escrow (Buyer Percentage)</h2>
+      <mat-card class="shipping no-padding">
+        <label class="--larger">
+          <h3 class="label">Buyer's Percentage</h3>
+          <p class="label-desc">The percentage of the total order price (including shipping) that the buyer will need to have for escrow in order to place an order request (the escrow amount is refunded if escrow is reached and the sale is completed successfully).</p>
+        </label>
+        <div class="row">
+          <div class="half">
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <input matInput type="text" formControlName="escrowPercentageBuyer" placeholder="buyers escrow percentage">
+              <span matSuffix>&nbsp; &#37;</span>
+            </mat-form-field>
+            <p *ngIf="templateForm.controls['escrowPercentageBuyer'].errors !== null" class="warning">
+              <span>Requires a whole number in the range (both inclusive) of 0 - {{ ESCROW_MAX }} (default: {{ ESCROW_DEFAULT }}
+                %)</span>
+            </p>
+          </div>
+          <p *ngIf="+templateForm.controls['escrowPercentageBuyer'].value !== ESCROW_DEFAULT" class="alert --boxed --warning">
+            <span>For optimal protection of both parties in the transaction, it is recommended that the default value is used.
+              <small>Changing this reduces the need for the buyer to remain honest and creates opportunities for potential
+                scammers.</small></span>
+          </p>
+        </div>
+      </mat-card>
+    </div><!-- .left -->
+
+    <div class="right column" fxFlex="50">
+      <h2 class="section-title">Escrow (Seller Percentage)</h2>
+      <mat-card class="shipping no-padding">
+        <label class="--larger">
+          <h3 class="label">Seller (Your) Percentage</h3>
+          <p class="label-desc">The percentage of the total order price (including shipping) that you will need to have for escrow in order to accept an
+          order request (the escrow amount is refunded if escrow is reached and the
+          sale is completed successfully).</p>
+        </label>
+        <div class="row">
+          <div class="half">
+            <mat-form-field appearance="fill" class="--plain --larger">
+              <input matInput type="text" formControlName="escrowPercentageSeller" placeholder="sellers escrow percentage">
+              <span matSuffix>&nbsp; &#37;</span>
+            </mat-form-field>
+            <p *ngIf="templateForm.controls['escrowPercentageSeller'].errors !== null" class="warning">
+              <span>Requires a whole number in the range (both inclusive) of 0 - {{ ESCROW_MAX }} (default: {{ ESCROW_DEFAULT }}
+                %)</span>
+            </p>
+          </div>
+          <p *ngIf="+templateForm.controls['escrowPercentageSeller'].value !== ESCROW_DEFAULT" class="alert --boxed --warning">
+            <span>For optimal protection of both parties in the transaction, it is recommended that the default value is used.
+              <small>By changing this buyers would need greater trust in you, the seller, which may result in reduced sales
+                opportunities.</small></span>
+          </p>
+        </div>
+      </mat-card>
+    </div><!-- .right -->
+
+  </div><!-- .row (escrow) -->
+
+
   <ng-container *ngIf="(markets$ | async).length > 0">
     <h2 class="section-title">Publishing settings <small>(optional)</small></h2>
 

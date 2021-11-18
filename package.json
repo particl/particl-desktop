@@ -186,7 +186,7 @@
     "@ngx-gallery/gallerize": "^5.0.0-beta.0",
     "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
-    "@zasmilingidiot/particl-marketplace": "./zasmilingidiot-particl-marketplace-0.3.4-dev003.tgz",
+    "@zasmilingidiot/particl-marketplace": "./zasmilingidiot-particl-marketplace-0.3.4-dev005.tgz",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "angularx-qrcode": "^1.0.1",
     "autodetect-decoder-stream": "^1.0.3",

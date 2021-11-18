@@ -1,6 +1,5 @@
 import { PartoshiAmount } from 'app/core/util/utils';
 import { PriceItem } from '../shared/market.models';
-
 import {
   CURRENCY_TYPE,
   ESCROW_TYPE,
@@ -41,6 +40,8 @@ export interface TemplateFormDetails {
   priceShipLocal: string;
   priceShipIntl: string;
   shippingOrigin: string;
+  escrowPercentageBuyer: number;
+  escrowPercentageSeller: number;
   shippingDestinations: string[];
   savedImages: { id: number; url: string; }[];
   market: { selectedMarketId: number; canEdit: boolean; };
@@ -60,6 +61,7 @@ export interface TemplateSavedDetails {
   images: {id: number; url: string}[];
   escrowSeller: number;
   escrowBuyer: number;
+  escrowReleaseType: ESCROW_RELEASE_TYPE;
 }
 
 
@@ -126,6 +128,12 @@ export interface UpdateTemplateRequest {
     basePrice: number;
     domesticShippingPrice: number;
     foreignShippingPrice: number;
+  };
+  escrow?: {
+    buyerRatio: number;
+    sellerRatio: number;
+    escrowType: ESCROW_TYPE;
+    releaseType: ESCROW_RELEASE_TYPE;
   };
   shippingFrom?: string;
   shippingTo?: {

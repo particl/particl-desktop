@@ -6,9 +6,10 @@ import { exhaustMap, takeUntil, finalize, map, take, concatMap } from 'rxjs/oper
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { RegionListService } from '../../../../services/region-list/region-list.service';
+import { SellService } from '../../../sell.service';
 import { isBasicObjectType, getValueOrDefault } from '../../../../shared/utils';
 import { TemplateFormDetails } from '../../../sell.models';
-import { RegionListService } from '../../../../services/region-list/region-list.service';
 
 
 interface CsvImportOptions {
@@ -42,6 +43,8 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
     {field: 'item_price', mappedTo: 'priceBase', description: 'price per Product (priced in PART)'},
     {field: 'domestic_shipping_price', mappedTo: 'priceShipLocal', description: 'price (in PART) for shipping the Product inside your country (specified later)'},
     {field: 'international_shipping_price', mappedTo: 'priceShipIntl', description: 'price for shipping the Product worldwide (outside your country)'},
+    {field: 'escrow_buyer_ratio', mappedTo: 'escrowPercentageBuyer', description: 'Percentage of the total amount for an order that the buyer is required to put into (refundable) escrow'},
+    {field: 'escrow_seller_ratio', mappedTo: 'escrowPercentageSeller', description: 'Percentage of the total amount for an order request that you, the seller, is required to put into (refundable) escrow when processing the order'},
     {field: 'source_country', mappedTo: 'shippingOrigin', description: 'the ISO3166 (alpha-2) 2 letter country code where the product is to be shipped from'},
     {field: 'destination_countries', mappedTo: 'shippingDestinations',
       description: '(optional), a comma-separated list of the ISO3166 (alpha-2) 2 letter country codes where the product can be purchased from (where the product can be shipped to).'},
@@ -58,7 +61,8 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
   constructor(
     private _ipc: IpcService,
     private _snackbar: SnackbarService,
-    private _regionService: RegionListService
+    private _regionService: RegionListService,
+    private _sellService: SellService
   ) {
     this.csvInputForm = new FormGroup({
       source: new FormControl('', [Validators.required]),
@@ -170,6 +174,8 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                   priceBase: '',
                   priceShipLocal: '',
                   priceShipIntl: '',
+                  escrowPercentageBuyer: this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+                  escrowPercentageSeller: this._sellService.ESCROW_PERCENTAGE_DEFAULT,
                   shippingOrigin: '',
                   shippingDestinations: [] as string[],
                   savedImages: [],
@@ -191,6 +197,10 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                           .split(',')
                           .map(s => s.trim())
                           .filter(s => s.length > 0);
+                        break;
+
+                      case '[object Number]':
+                        detail[f.mappedTo] = Number.isSafeInteger(+res[f.field]) ? +res[f.field] : detail[f.mappedTo];
                         break;
                     }
                   }
