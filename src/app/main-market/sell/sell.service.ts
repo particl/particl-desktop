@@ -1231,8 +1231,8 @@ export class SellService {
         created: 0,
       },
       escrow: {
-        buyerRatio: 100,
-        sellerRatio: 100,
+        buyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+        sellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
       },
       extra: {
         flaggedProposal: '',
@@ -1325,6 +1325,14 @@ export class SellService {
             listingItem.price.shippingIntl = +src.PaymentInformation.ItemPrice.ShippingPrice.international > 0 ?
               +src.PaymentInformation.ItemPrice.ShippingPrice.international : listingItem.price.shippingIntl;
           }
+        }
+
+        if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+          listingItem.escrow.buyerRatio = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.buyer : listingItem.escrow.buyerRatio;
+
+          listingItem.escrow.sellerRatio = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.seller : listingItem.escrow.sellerRatio;
         }
       }
     }
