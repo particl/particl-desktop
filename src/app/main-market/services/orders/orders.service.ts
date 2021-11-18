@@ -10,7 +10,7 @@ import { RegionListService } from '../region-list/region-list.service';
 
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
-import { BID_DATA_KEY, ORDER_ITEM_STATUS, RespOrderSearchItem, ESCROW_TYPE, BID_STATUS } from '../../shared/market.models';
+import { BID_DATA_KEY, ORDER_ITEM_STATUS, RespOrderSearchItem, ESCROW_TYPE, BID_STATUS, MADCT_ESCROW_PERCENTAGE_DEFAULT } from '../../shared/market.models';
 import {
   OrderItem,
   OrderUserType,
@@ -368,7 +368,8 @@ export class BidOrderService implements IBuyflowController {
       latestBidHash: '',
       marketKey: '',
       created: 0,
-      updated: 0
+      updated: 0,
+      hasWarnings: false,
     };
 
     if (!isBasicObjectType(src) ||
@@ -428,6 +429,12 @@ export class BidOrderService implements IBuyflowController {
       subTotal: { whole: '', sep: '', fraction: '' },
       escrowAmount: { whole: '', sep: '', fraction: '' },
       totalRequired: { whole: '', sep: '', fraction: '' },
+    };
+
+    newOrder.escrow = {
+      buyerPercentage: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+      sellerPercentage: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+      isRecommendedDefault: true,
     };
 
     newOrder.shippingDetails = {
@@ -600,13 +607,16 @@ export class BidOrderService implements IBuyflowController {
         buyflowType = getValueOrDefault(listingItem.PaymentInformation.Escrow.type, 'string', buyflowType);
 
         if (isBasicObjectType(listingItem.PaymentInformation.Escrow.Ratio)) {
-          let percent = itemViewer === 'SELLER' ?
-              listingItem.PaymentInformation.Escrow.Ratio.seller :
-              listingItem.PaymentInformation.Escrow.Ratio.buyer;
-
-          if (!(+percent > 0)) {
-            percent = 100;
+          newOrder.escrow.buyerPercentage = +listingItem.PaymentInformation.Escrow.Ratio.buyer >= 0 ? +listingItem.PaymentInformation.Escrow.Ratio.buyer : newOrder.escrow.buyerPercentage;
+          newOrder.escrow.sellerPercentage = +listingItem.PaymentInformation.Escrow.Ratio.seller >= 0 ? +listingItem.PaymentInformation.Escrow.Ratio.seller : newOrder.escrow.sellerPercentage;
+          newOrder.escrow.isRecommendedDefault = (newOrder.escrow.buyerPercentage === MADCT_ESCROW_PERCENTAGE_DEFAULT) && (newOrder.escrow.sellerPercentage === MADCT_ESCROW_PERCENTAGE_DEFAULT);
+          if (!newOrder.escrow.isRecommendedDefault) {
+            newOrder.hasWarnings = true;
           }
+
+          const percent = itemViewer === 'SELLER' ?
+              newOrder.escrow.sellerPercentage :
+              newOrder.escrow.buyerPercentage;
 
           escrowAmount.multiply(percent / 100);
         }

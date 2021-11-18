@@ -10,7 +10,7 @@ import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
-import { RespListingTemplate, RespItemPost, RespTemplateSize, IMAGE_SEND_TYPE, ESCROW_RELEASE_TYPE } from '../shared/market.models';
+import { RespListingTemplate, RespItemPost, RespTemplateSize, IMAGE_SEND_TYPE, ESCROW_RELEASE_TYPE, MADCT_ESCROW_PERCENTAGE_DEFAULT, MADCT_ESCROW_PERCENTAGE_MAX } from '../shared/market.models';
 import {
   Template,
   TemplateSavedDetails,
@@ -27,8 +27,8 @@ import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail
 @Injectable()
 export class SellService {
 
-  ESCROW_PERCENTAGE_DEFAULT: number = 100;
-  ESCROW_PERCENTAGE_MAX: number = 100;
+  ESCROW_PERCENTAGE_DEFAULT: number = MADCT_ESCROW_PERCENTAGE_DEFAULT;
+  ESCROW_PERCENTAGE_MAX: number = MADCT_ESCROW_PERCENTAGE_MAX;
 
   private readonly IMAGE_SCALING_FACTOR: number = 0.8;
   private readonly IMAGE_QUALITY_FACTOR: number = 1;
