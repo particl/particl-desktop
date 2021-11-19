@@ -384,8 +384,10 @@ export class NewListingComponent implements OnInit, OnDestroy {
       basePrice: +parsedBasePrice > 0 ? parsedBasePrice : '0',
       domesticShippingPrice: +parsedShipLocalPrice > 0 ? parsedShipLocalPrice : '0',
       foreignShippingPrice: +parsedShpIntlPrice > 0 ? parsedShpIntlPrice : '0',
-      escrowPercentageBuyer: +formValues['escrowPercentageBuyer'] >= 0 ? +formValues['escrowPercentageBuyer'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
-      escrowPercentageSeller: +formValues['escrowPercentageSeller'] >= 0 ? +formValues['escrowPercentageSeller'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+      escrowPercentageBuyer: +formValues['escrowPercentageBuyer'] >= 0 ?
+        +formValues['escrowPercentageBuyer'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+      escrowPercentageSeller: +formValues['escrowPercentageSeller'] >= 0 ?
+        +formValues['escrowPercentageSeller'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
       escrowRelease: getValueOrDefault(formValues['escrowRelease'], 'string', ESCROW_RELEASE_TYPE.ANON),
       images: Array.isArray(formValues['pendingImages']) ?
           formValues['pendingImages'].map((image: string) => {
@@ -478,7 +480,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
           sellerRatio: parsedValues.escrowPercentageSeller,
           escrowType: 'MAD_CT',
           releaseType: parsedValues.escrowRelease,
-        }
+        };
       }
 
       if (parsedValues.shippingFrom !== this.savedTempl.savedDetails.shippingOrigin) {

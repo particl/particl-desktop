@@ -14,7 +14,7 @@ export interface CartItem {
     buyerRatio: number;
     sellerRatio: number;
     isRecommendedDefault: boolean;
-  }
+  };
   expiryTime: number;
   price: {
     base: PartoshiAmount;

@@ -607,9 +607,16 @@ export class BidOrderService implements IBuyflowController {
         buyflowType = getValueOrDefault(listingItem.PaymentInformation.Escrow.type, 'string', buyflowType);
 
         if (isBasicObjectType(listingItem.PaymentInformation.Escrow.Ratio)) {
-          newOrder.escrow.buyerPercentage = +listingItem.PaymentInformation.Escrow.Ratio.buyer >= 0 ? +listingItem.PaymentInformation.Escrow.Ratio.buyer : newOrder.escrow.buyerPercentage;
-          newOrder.escrow.sellerPercentage = +listingItem.PaymentInformation.Escrow.Ratio.seller >= 0 ? +listingItem.PaymentInformation.Escrow.Ratio.seller : newOrder.escrow.sellerPercentage;
-          newOrder.escrow.isRecommendedDefault = (newOrder.escrow.buyerPercentage === MADCT_ESCROW_PERCENTAGE_DEFAULT) && (newOrder.escrow.sellerPercentage === MADCT_ESCROW_PERCENTAGE_DEFAULT);
+          newOrder.escrow.buyerPercentage = +listingItem.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+            +listingItem.PaymentInformation.Escrow.Ratio.buyer : newOrder.escrow.buyerPercentage;
+
+          newOrder.escrow.sellerPercentage = +listingItem.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+            +listingItem.PaymentInformation.Escrow.Ratio.seller : newOrder.escrow.sellerPercentage;
+
+          newOrder.escrow.isRecommendedDefault =
+            (newOrder.escrow.buyerPercentage === MADCT_ESCROW_PERCENTAGE_DEFAULT) &&
+            (newOrder.escrow.sellerPercentage === MADCT_ESCROW_PERCENTAGE_DEFAULT);
+
           if (!newOrder.escrow.isRecommendedDefault) {
             newOrder.hasWarnings = true;
           }

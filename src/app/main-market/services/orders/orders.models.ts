@@ -48,7 +48,7 @@ export interface OrderItem {
     buyerPercentage: number;
     sellerPercentage: number;
     isRecommendedDefault: boolean;
-  }
+  };
   shippingDetails?: {
     name: string;
     addressLine1: string;

@@ -36,7 +36,7 @@ export interface BidModalData {
   };
   escrow: {
     includesCustomEscrow: boolean;
-  }
+  };
 }
 
 

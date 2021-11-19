@@ -158,7 +158,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     }
 
     const inputCategory = isBasicObjectType(input.category) ? input.category : { title:  TextContent.UNSET_VALUE };
-    const inputEscrow = isBasicObjectType(input.escrow) ? input.escrow : { buyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT, sellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT};
+    const inputEscrow = isBasicObjectType(input.escrow) ?
+      input.escrow : { buyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT, sellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT };
     const inputTimeValues = isBasicObjectType(input.timeData) ? input.timeData : { created: 0, expires: 0};
     const inputExtras = isBasicObjectType(input.extra) ? input.extra : { isOwn: false, favouriteId: 0, flaggedProposal: '' };
 
@@ -244,7 +245,8 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       escrowRatios: {
         buyer: +inputEscrow.buyerRatio,
         seller: +inputEscrow.sellerRatio,
-        isRecommendedDefault: (+inputEscrow.buyerRatio === MADCT_ESCROW_PERCENTAGE_DEFAULT) && (+inputEscrow.sellerRatio === MADCT_ESCROW_PERCENTAGE_DEFAULT),
+        isRecommendedDefault: (+inputEscrow.buyerRatio === MADCT_ESCROW_PERCENTAGE_DEFAULT) &&
+          (+inputEscrow.sellerRatio === MADCT_ESCROW_PERCENTAGE_DEFAULT),
       },
       category: typeof inputCategory.title === 'string' ? inputCategory.title : TextContent.UNSET_VALUE,
       marketAddress: getValueOrDefault(input.marketHash, 'string', ''),

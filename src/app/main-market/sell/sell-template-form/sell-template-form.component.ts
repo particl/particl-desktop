@@ -29,8 +29,8 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   templateForm: FormGroup;
   imagesPending: FormControl = new FormControl([]);
 
-  readonly ESCROW_MAX = this._sellService.ESCROW_PERCENTAGE_MAX;
-  readonly ESCROW_DEFAULT = this._sellService.ESCROW_PERCENTAGE_DEFAULT;
+  readonly ESCROW_MAX: number = this._sellService.ESCROW_PERCENTAGE_MAX;
+  readonly ESCROW_DEFAULT: number = this._sellService.ESCROW_PERCENTAGE_DEFAULT;
 
   readonly MAX_TITLE: number = 100;
   readonly MAX_SHORT_DESCRIPTION: number = 300;
@@ -59,8 +59,14 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       description: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_LONG_DESCRIPTION)]),
       basePrice: new FormControl('', [Validators.required, amountValidator()]),
       priceShipLocal: new FormControl('', [Validators.required, amountValidator()]),
-      escrowPercentageBuyer: new FormControl(this._sellService.ESCROW_PERCENTAGE_DEFAULT, [Validators.required, Validators.min(0), Validators.max(this._sellService.ESCROW_PERCENTAGE_MAX), integerValidator()]),
-      escrowPercentageSeller: new FormControl(this._sellService.ESCROW_PERCENTAGE_DEFAULT, [Validators.required, Validators.min(0), Validators.max(this._sellService.ESCROW_PERCENTAGE_MAX), integerValidator()]),
+      escrowPercentageBuyer: new FormControl(
+        this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+        [Validators.required, Validators.min(0), Validators.max(this._sellService.ESCROW_PERCENTAGE_MAX), integerValidator()]
+      ),
+      escrowPercentageSeller: new FormControl(
+        this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+        [Validators.required, Validators.min(0), Validators.max(this._sellService.ESCROW_PERCENTAGE_MAX), integerValidator()]
+      ),
       priceShipIntl: new FormControl('', [Validators.required, amountValidator()]),
       shippingOrigin: new FormControl('', [Validators.required]),
       shippingDestinations: new FormControl([]),
