@@ -10,7 +10,11 @@ export interface CartItem {
   marketName: string;
   shippingLocations: string[];
   sourceLocation: string;
-  escrowPercent: number;
+  escrow: {
+    buyerRatio: number;
+    sellerRatio: number;
+    isRecommendedDefault: boolean;
+  }
   expiryTime: number;
   price: {
     base: PartoshiAmount;

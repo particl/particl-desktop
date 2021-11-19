@@ -14,6 +14,7 @@ interface ErrorTypes {
   insufficientFunds: boolean;
   insufficientUtxos: boolean;
   invalidData: boolean;
+  unconfirmedCustomEscow: boolean;
 }
 
 export interface BidModalData {
@@ -33,6 +34,9 @@ export interface BidModalData {
     escrow: PriceItem;
     orderTotal: PriceItem;
   };
+  escrow: {
+    includesCustomEscrow: boolean;
+  }
 }
 
 
@@ -55,13 +59,17 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
       subtotal: { whole: '', sep: '', fraction: '' },
       escrow: { whole: '', sep: '', fraction: '' },
       orderTotal: { whole: '', sep: '', fraction: '' },
+    },
+    escrow: {
+      includesCustomEscrow: false,
     }
   };
 
   readonly errors: ErrorTypes = {
     insufficientFunds: true,
     insufficientUtxos: false,
-    invalidData: false
+    invalidData: false,
+    unconfirmedCustomEscow: false,
   };
 
   private destroy$: Subject<void> = new Subject();
@@ -114,12 +122,20 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
           }
         }
       }
+
+      if (isBasicObjectType(this.data.escrow)) {
+        if (typeof this.data.escrow.includesCustomEscrow === 'boolean') {
+          this.summary.escrow.includesCustomEscrow = this.data.escrow.includesCustomEscrow;
+
+          this.errors.unconfirmedCustomEscow = this.summary.escrow.includesCustomEscrow;
+        }
+      }
     }
 
     // validation of extracted info
     this.errors.invalidData = (this.summary.items.length === 0) ||
-        (this.summary.shippingDetails.address.length === 0) ||
-        (this.summary.pricingSummary.orderTotal.whole.length === 0);
+      (this.summary.shippingDetails.address.length === 0) ||
+      (this.summary.pricingSummary.orderTotal.whole.length === 0);
   }
 
 
@@ -144,7 +160,7 @@ export class PlaceBidModalComponent implements OnInit, OnDestroy {
 
 
   confirmCheckout(): void {
-    if (this.errors.invalidData) {
+    if (this.errors.invalidData || this.errors.unconfirmedCustomEscow) {
       return;
     }
     this._dialogRef.close(true);
