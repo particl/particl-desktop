@@ -1,4 +1,7 @@
 
+export const MADCT_ESCROW_PERCENTAGE_DEFAULT = 100;
+export const MADCT_ESCROW_PERCENTAGE_MAX = 100;
+
 export type SALES_TYPE = 'SALE';
 export type ESCROW_TYPE = 'MAD_CT';
 export type CURRENCY_TYPE = 'PART';

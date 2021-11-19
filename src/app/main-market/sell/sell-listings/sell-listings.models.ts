@@ -16,4 +16,6 @@ export interface SellListing {
   priceBase: string;
   priceShippingLocal: string;
   priceShippingIntl: string;
+  escrowBuyerRatio: number;
+  escrowSellerRatio: number;
 }

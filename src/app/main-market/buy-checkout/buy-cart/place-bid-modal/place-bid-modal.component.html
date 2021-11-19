@@ -85,6 +85,20 @@
           </tr>
         </tbody>
       </table>
+
+      <div *ngIf="summary.escrow.includesCustomEscrow">
+        <p class="message --warning">
+          One or more items you are attempting to purchase includes custom, seller-defined escrow ratios.<br><br>
+          Using non-standard escrow weightings increases the risk of dishonesty from one or both parties in a 2 party escrow system.<br><br>
+          Please ensure that you fully understand the potential risks that may be associated with your transactions of this nature.
+        </p>
+        <div class="checkbox highlight">
+          <p>
+            <mat-checkbox color="primary" class="confirmation-checkbox" (change)="errors.unconfirmedCustomEscow = !errors.unconfirmedCustomEscow">I understand the risks and want to continue
+            </mat-checkbox>
+          </p>
+        </div>
+      </div>
     </mat-card>
   </section><!-- .pricing-info -->
 
@@ -112,7 +126,7 @@
       Once the seller(s) accept and escrow is established will the funds be spent from your wallet.
     </p>
     <p>
-      <button mat-raised-button class="large" color="primary" [disabled]="errors.invalidData || errors.insufficientFunds" (click)="confirmCheckout()">
+      <button mat-raised-button class="large" color="primary" [disabled]="errors.invalidData || errors.insufficientFunds || errors.unconfirmedCustomEscow" (click)="confirmCheckout()">
         <mat-icon fontIcon="part-check"></mat-icon>
         Confirm Order &amp; Submit
       </button>

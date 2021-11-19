@@ -44,6 +44,11 @@ export interface OrderItem {
     escrowAmount: PriceItem;
     totalRequired: PriceItem;
   };
+  escrow?: {
+    buyerPercentage: number;
+    sellerPercentage: number;
+    isRecommendedDefault: boolean;
+  };
   shippingDetails?: {
     name: string;
     addressLine1: string;
@@ -67,6 +72,7 @@ export interface OrderItem {
     rejectionReason: string;
     wasPreviouslyCancelled: boolean;
   };
+  hasWarnings: boolean;
 }
 
 

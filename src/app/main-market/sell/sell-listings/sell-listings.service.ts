@@ -8,7 +8,7 @@ import { MarketState } from '../../store/market.state';
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault, parseImagePath } from 'app/main-market/shared/utils';
-import { RespListingTemplate } from '../../shared/market.models';
+import { RespListingTemplate, MADCT_ESCROW_PERCENTAGE_DEFAULT } from '../../shared/market.models';
 import { SellListing } from './sell-listings.models';
 
 
@@ -111,7 +111,9 @@ export class SellListingsService {
           shippingSource: '',
           priceBase: '',
           priceShippingLocal: '',
-          priceShippingIntl: ''
+          priceShippingIntl: '',
+          escrowBuyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+          escrowSellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
         };
 
 
@@ -150,16 +152,26 @@ export class SellListingsService {
             newListing.marketKey = getValueOrDefault(src.market, 'string', newListing.marketKey);
           }
 
-          if (isBasicObjectType(src.PaymentInformation) && isBasicObjectType(src.PaymentInformation.ItemPrice)) {
-            const basePrice = new PartoshiAmount(src.PaymentInformation.ItemPrice.basePrice, true);
-            newListing.priceBase = basePrice.particlsString();
+          if (isBasicObjectType(src.PaymentInformation)) {
+            if (isBasicObjectType(src.PaymentInformation.ItemPrice)) {
+              const basePrice = new PartoshiAmount(src.PaymentInformation.ItemPrice.basePrice, true);
+              newListing.priceBase = basePrice.particlsString();
 
-            if (isBasicObjectType(src.PaymentInformation.ItemPrice.ShippingPrice)) {
-              const localShip = new PartoshiAmount(src.PaymentInformation.ItemPrice.ShippingPrice.domestic, true);
-              newListing.priceShippingLocal = localShip.particlsString();
+              if (isBasicObjectType(src.PaymentInformation.ItemPrice.ShippingPrice)) {
+                const localShip = new PartoshiAmount(src.PaymentInformation.ItemPrice.ShippingPrice.domestic, true);
+                newListing.priceShippingLocal = localShip.particlsString();
 
-              const intlShip = new PartoshiAmount(src.PaymentInformation.ItemPrice.ShippingPrice.international, true);
-              newListing.priceShippingIntl = intlShip.particlsString();
+                const intlShip = new PartoshiAmount(src.PaymentInformation.ItemPrice.ShippingPrice.international, true);
+                newListing.priceShippingIntl = intlShip.particlsString();
+              }
+            }
+
+            if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+              newListing.escrowBuyerRatio = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+                +src.PaymentInformation.Escrow.Ratio.buyer : newListing.escrowBuyerRatio;
+
+              newListing.escrowSellerRatio = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+                +src.PaymentInformation.Escrow.Ratio.seller : newListing.escrowSellerRatio;
             }
           }
         }

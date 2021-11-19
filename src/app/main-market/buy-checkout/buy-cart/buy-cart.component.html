@@ -8,6 +8,12 @@
       </ng-container>
     </app-page-intro>
 
+    <section *ngIf="isUsingCustomEscrows">
+      <p class="message --warning">
+        One or more of your cart items has custom escrow ratios set by the seller. Please ensure that you understand the risks that this entails and are comfortable purchasing items using custom escrow ratios, prior to placing the order.
+      </p>
+    </section>
+
     <section class="cart" *ngIf="cartItems.length > 0">
 
       <div class="cart-header --cart-layout">
@@ -29,8 +35,14 @@
         </div>
         <div class="title">
           <h3 class="name">{{ cartItem.title }}</h3>
-          <ng-container *ngIf="cartItem.errors.expired || cartItem.errors.expiring || (cartItem.errors.shipping && (selectedLocation.value !== '')); else noCartItemErrors">
+          <ng-container *ngIf="!cartItem.escrow.isRecommendedDefault || cartItem.errors.expired || cartItem.errors.expiring || (cartItem.errors.shipping && (selectedLocation.value !== '')); else noCartItemErrors">
             <div class="info">
+              <span *ngIf="!cartItem.escrow.isRecommendedDefault"
+                class="message --error" matTooltip="Seller specified custom escrow ratios used"
+                matTooltipPosition="after">
+                <mat-icon fontIcon="part-circle-alert" color="warn"></mat-icon>
+                Custom escrow ratios in use
+              </span>
               <!-- show only if expiring AND seller ships to destination -->
               <span *ngIf="cartItem.errors.expiring && !(cartItem.errors.shipping && selectedLocation.value !== '')" class="message --info" matTooltip="Expires at {{cartItem.expiryTime | date: 'yyyy-MM-dd HH:mm:ss'}}" matTooltipPosition="after">
                 <mat-icon fontIcon="part-circle-alert" color="accent"></mat-icon>

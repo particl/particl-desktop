@@ -10,7 +10,15 @@ import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
-import { RespListingTemplate, RespItemPost, RespTemplateSize, IMAGE_SEND_TYPE } from '../shared/market.models';
+import {
+  RespListingTemplate,
+  RespItemPost,
+  RespTemplateSize,
+  IMAGE_SEND_TYPE,
+  ESCROW_RELEASE_TYPE,
+  MADCT_ESCROW_PERCENTAGE_DEFAULT,
+  MADCT_ESCROW_PERCENTAGE_MAX
+} from '../shared/market.models';
 import {
   Template,
   TemplateSavedDetails,
@@ -26,6 +34,9 @@ import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail
 
 @Injectable()
 export class SellService {
+
+  ESCROW_PERCENTAGE_DEFAULT: number = MADCT_ESCROW_PERCENTAGE_DEFAULT;
+  ESCROW_PERCENTAGE_MAX: number = MADCT_ESCROW_PERCENTAGE_MAX;
 
   private readonly IMAGE_SCALING_FACTOR: number = 0.8;
   private readonly IMAGE_QUALITY_FACTOR: number = 1;
@@ -298,6 +309,17 @@ export class SellService {
         details.payment.foreignShippingPrice
       ];
       updates$.push(this._rpc.call('template', args));
+    }
+    if (isBasicObjectType(details.escrow)) {
+      updates$.push(
+        this._rpc.call('escrow', ['update',
+          templateId,
+          details.escrow.escrowType,
+          details.escrow.buyerRatio,
+          details.escrow.sellerRatio,
+          details.escrow.releaseType
+        ])
+      );
     }
     if (typeof details.shippingFrom === 'string') {
       updates$.push(this._rpc.call('template', ['location', 'update', templateId, details.shippingFrom]));
@@ -875,12 +897,17 @@ export class SellService {
     }
 
     if (isBasicObjectType(src.PaymentInformation)) {
-      if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
-        saveDetails.escrowBuyer = +src.PaymentInformation.Escrow.Ratio.buyer > 0 ?
+      if (isBasicObjectType(src.PaymentInformation.Escrow)) {
+        if (isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+          saveDetails.escrowBuyer = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
             +src.PaymentInformation.Escrow.Ratio.buyer : saveDetails.escrowBuyer;
 
-        saveDetails.escrowSeller = +src.PaymentInformation.Escrow.Ratio.seller > 0 ?
-        +src.PaymentInformation.Escrow.Ratio.seller : saveDetails.escrowSeller;
+          saveDetails.escrowSeller = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.seller : saveDetails.escrowSeller;
+        }
+        saveDetails.escrowReleaseType = getValueOrDefault(
+          src.PaymentInformation.Escrow.releaseType, 'string', saveDetails.escrowReleaseType
+        );
       }
 
       if (isBasicObjectType(src.PaymentInformation.ItemPrice)) {
@@ -907,8 +934,9 @@ export class SellService {
       priceShippingLocal: new PartoshiAmount(0),
       priceShippingIntl: new PartoshiAmount(0),
       images: [],
-      escrowBuyer: 100,
-      escrowSeller: 100,
+      escrowBuyer: this.ESCROW_PERCENTAGE_DEFAULT,
+      escrowSeller: this.ESCROW_PERCENTAGE_DEFAULT,
+      escrowReleaseType: ESCROW_RELEASE_TYPE.ANON,
     };
   }
 
@@ -1213,8 +1241,8 @@ export class SellService {
         created: 0,
       },
       escrow: {
-        buyerRatio: 100,
-        sellerRatio: 100,
+        buyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+        sellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
       },
       extra: {
         flaggedProposal: '',
@@ -1307,6 +1335,14 @@ export class SellService {
             listingItem.price.shippingIntl = +src.PaymentInformation.ItemPrice.ShippingPrice.international > 0 ?
               +src.PaymentInformation.ItemPrice.ShippingPrice.international : listingItem.price.shippingIntl;
           }
+        }
+
+        if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+          listingItem.escrow.buyerRatio = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.buyer : listingItem.escrow.buyerRatio;
+
+          listingItem.escrow.sellerRatio = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.seller : listingItem.escrow.sellerRatio;
         }
       }
     }
