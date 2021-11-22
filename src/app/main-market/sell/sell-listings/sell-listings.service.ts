@@ -165,14 +165,18 @@ export class SellListingsService {
                 newListing.priceShippingIntl = intlShip.particlsString();
               }
             }
+          }
 
-            if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
-              newListing.escrowBuyerRatio = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
-                +src.PaymentInformation.Escrow.Ratio.buyer : newListing.escrowBuyerRatio;
+          if (
+            isBasicObjectType(marketTemplate.PaymentInformation) &&
+            isBasicObjectType(marketTemplate.PaymentInformation.Escrow) &&
+            isBasicObjectType(marketTemplate.PaymentInformation.Escrow.Ratio)
+          ) {
+            newListing.escrowBuyerRatio = +marketTemplate.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+              +marketTemplate.PaymentInformation.Escrow.Ratio.buyer : newListing.escrowBuyerRatio;
 
-              newListing.escrowSellerRatio = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
-                +src.PaymentInformation.Escrow.Ratio.seller : newListing.escrowSellerRatio;
-            }
+            newListing.escrowSellerRatio = +marketTemplate.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+              +marketTemplate.PaymentInformation.Escrow.Ratio.seller : newListing.escrowSellerRatio;
           }
         }
 
