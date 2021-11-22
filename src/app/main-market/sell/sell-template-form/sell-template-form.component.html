@@ -121,7 +121,7 @@
 
     <div class="left column" fxFlex="50">
       <h2 class="section-title">Shipping from</h2>
-      <mat-card class="shipping no-padding">
+      <mat-card class="shipping no-padding" [class.--with-error]="shippingOrigin.errors !== null">
 
         <label class="--larger">
           <h3 class="label">Shipping from</h3>
@@ -140,7 +140,9 @@
           </tree-select>
         </label>
 
-        <mat-divider></mat-divider>
+      </mat-card>
+
+      <mat-card class="shipping no-padding">
 
         <label class="--larger">
           <h3 class="label">Local shipping</h3>
@@ -189,9 +191,9 @@
             (onClosed)="shippingDestinations.setValue($event)">
           </tree-select>
         </label>
+      </mat-card>
 
-        <mat-divider></mat-divider>
-
+      <mat-card class="shipping no-padding">
         <label class="--larger">
           <h3 class="label">International shipping</h3>
           <p class="label-desc">Shipping price for sending the item worldwide</p>
