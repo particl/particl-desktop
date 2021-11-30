@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { Observable, Subject, from, concat, of } from 'rxjs';
-import { tap, takeUntil, take, finalize, concatMap, catchError, concatMapTo } from 'rxjs/operators';
+import { Observable, Subject, concat, of, timer, iif, defer, from, merge } from 'rxjs';
+import { tap, takeUntil, take, finalize, concatMap, catchError, concatMapTo, switchMap, mapTo } from 'rxjs/operators';
 
+import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
@@ -71,6 +72,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   settingGroups: MarketSettingGroup[] = [];
   isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
   currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
+  isSmsgRecanButtonEnabled: boolean = false;
 
   readonly pageDetails: PageInfo = {
     title: 'Market Settings',
@@ -86,6 +88,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _store: Store,
+    private _mainRpcService: MainRpcService,
     private _snackbar: SnackbarService,
     private _regionService: RegionListService,
     private _dialog: MatDialog,
@@ -142,20 +145,37 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    this.loadPageData().pipe(
-      tap((groups) => {
-        groups.forEach((group: MarketSettingGroup) => {
-          group.settings.forEach((setting: MarketSetting) => {
-            this.bindSettingFunctions(setting);
-          });
-          this.currentChanges.push([]);
-        });
 
-        this.settingGroups = groups;
-        this.clearChanges();
-      }),
-      take(1),
-      concatMapTo(stateChange$)
+    merge(
+
+      this._store.select(MarketState.lastSmsgScan).pipe(
+        tap(() => this.isSmsgRecanButtonEnabled = false),
+        switchMap(timestamp => iif(
+          () => (timestamp + 30_000) < Date.now(),
+          defer(() => of(true)),
+          defer(() => timer(timestamp + 30_000 - Date.now()).pipe(mapTo(true)))
+        )),
+        tap((isEnabled) => {
+          this.isSmsgRecanButtonEnabled = isEnabled;
+        }),
+        takeUntil(this.destroy$)
+      ),
+
+      this.loadPageData().pipe(
+        tap((groups) => {
+          groups.forEach((group: MarketSettingGroup) => {
+            group.settings.forEach((setting: MarketSetting) => {
+              this.bindSettingFunctions(setting);
+            });
+            this.currentChanges.push([]);
+          });
+
+          this.settingGroups = groups;
+          this.clearChanges();
+        }),
+        take(1),
+        concatMapTo(stateChange$)
+      )
     ).subscribe();
   }
 
@@ -382,6 +402,16 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   }
 
 
+  rescanSmsgMessages() {
+    if (this.startedStatus !== StartedStatus.STARTED) {
+      return;
+    }
+    this._mainRpcService.call('smsgscanbuckets').pipe(
+      concatMap(() => this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', 0)))
+    ).subscribe();
+  }
+
+
   private disableUI(message: string) {
     this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
@@ -526,12 +556,12 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       generalSettings.settings.push({
         id: 'profile.canModifyIdentities',
         title: 'Enable multiple identities for the current profile',
-        description: 'Warning! Enabling this should be considered expirmental at this time AND requires manual intervention for various actions such as backups and restorations. Please only enable this if you know what you are doing!',
+        description: 'Warning! Enabling this should be considered experimental at this time AND requires manual intervention for various actions such as backups and restorations. Please only enable this if you know what you are doing!',
         isDisabled: false,
         type: SettingType.BOOLEAN,
         errorMsg: '',
         currentValue: marketSettings.canModifyIdentities,
-        tags: [],
+        tags: ['Experimental'],
         restartRequired: false,
         waitForServiceStart: true,
         _type: 'setting',

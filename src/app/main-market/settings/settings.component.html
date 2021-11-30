@@ -61,6 +61,11 @@
           <mat-icon fontIcon="part-console-window"></mat-icon>
           Open Marketplace Console
         </button>
+
+        <button mat-button [disabled]="startedStatus !== STARTEDSTATUS.STARTED || !isSmsgRecanButtonEnabled" (click)="rescanSmsgMessages()">
+          <mat-icon fontIcon="part-search"></mat-icon>
+          Force Scan for Marketplace Messages
+        </button>
       </div>
 
     </div><!-- .sidebar -->

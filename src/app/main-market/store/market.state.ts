@@ -44,6 +44,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     daysToNotifyListingExpired: 7,
     marketsLastAdded: 0,
   },
+  lastSmsgScanIssued: 0,
   notifications: {
     identityCartItemCount: 0,
     buyOrdersPendingAction: [],
@@ -126,6 +127,12 @@ export class MarketState {
   @Selector()
   static getNotifications(state: MarketStateModel): MarketNotifications {
     return state.notifications;
+  }
+
+
+  @Selector()
+  static lastSmsgScan(state: MarketStateModel): number {
+    return state.lastSmsgScanIssued;
   }
 
 
@@ -513,6 +520,14 @@ export class MarketState {
         ctx.setState(patch<MarketStateModel>({
           settings: patch<MarketSettings>({ [key] : action.value })}
         ));
+      }
+
+      if (key === 'marketsLastAdded') {
+        ctx.setState(
+          patch<MarketStateModel>({
+            lastSmsgScanIssued: Date.now()
+          })
+        )
       }
     }
   }

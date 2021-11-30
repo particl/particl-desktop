@@ -72,4 +72,5 @@ export interface MarketStateModel {
   defaultConfig: DefaultMarketConfig;
   settings: MarketSettings;
   notifications: MarketNotifications;
+  lastSmsgScanIssued: number;
 }
