@@ -91,7 +91,20 @@ export class ColdstakeService {
           return '';
         })
       ),
-    });
+    }).pipe(
+      concatMap(csDetails => iif(
+        () => csDetails.spendAddress.length > 0,
+
+        defer(() => this._addressService.getAddressInfo(csDetails.spendAddress).pipe(
+          map(addressInfo => {
+            csDetails.spendAddress = addressInfo && (typeof addressInfo.ismine === 'boolean') && addressInfo.ismine ? csDetails.spendAddress : '';
+            return csDetails;
+          })
+        )),
+
+        defer(() => of(csDetails))
+      ))
+    );
   }
 
 
