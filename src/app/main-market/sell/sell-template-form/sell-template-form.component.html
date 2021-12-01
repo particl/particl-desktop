@@ -231,7 +231,7 @@
       <mat-card class="shipping no-padding">
         <label class="--larger">
           <h3 class="label">Buyer's Escrow Ratio</h3>
-          <p class="label-desc">The percentage of the total order price (including shipping) that the buyer will need to have for escrow in order to place an order request (the escrow amount is refunded if escrow is reached and the sale is completed successfully).</p>
+          <p class="label-desc">The percentage of the order’s value (including shipping) that the buyer will need to provide as a security deposit into the escrow contract.</p>
         </label>
         <div class="row">
           <div class="half">
@@ -245,9 +245,8 @@
             </p>
           </div>
           <p *ngIf="+templateForm.controls['escrowPercentageBuyer'].value !== ESCROW_DEFAULT" class="alert --boxed --warning">
-            <span>For optimal protection of both parties in the transaction, it is recommended that the default value is used.
-              <small>Changing this reduces the need for the buyer to remain honest and creates opportunities for potential
-                scammers.</small></span>
+            <span>For optimal protection of both parties, it is recommended to use the default value.
+              <small>Changing this value reduces the need for the buyer to remain honest throughout the transaction and increases the risk of being scammed.</small></span>
           </p>
         </div>
       </mat-card>
@@ -258,9 +257,7 @@
       <mat-card class="shipping no-padding">
         <label class="--larger">
           <h3 class="label">Seller's (Your) Escrow Ratio</h3>
-          <p class="label-desc">The percentage of the total order price (including shipping) that you will need to have for escrow in order to accept an
-          order request (the escrow amount is refunded if escrow is reached and the
-          sale is completed successfully).</p>
+          <p class="label-desc">The percentage of the order’s value (including shipping) that you need to provide as a security deposit into the escrow contract. Your security deposit is immediately refunded, in full, after the order is completed.</p>
         </label>
         <div class="row">
           <div class="half">
@@ -274,9 +271,8 @@
             </p>
           </div>
           <p *ngIf="+templateForm.controls['escrowPercentageSeller'].value !== ESCROW_DEFAULT" class="alert --boxed --warning">
-            <span>For optimal protection of both parties in the transaction, it is recommended that the default value is used.
-              <small>By changing this buyers would need greater trust in you, the seller, which may result in reduced sales
-                opportunities.</small></span>
+            <span>For optimal protection of both parties, it is recommended to use the default value.
+              <small>Changing this value requires buyers to put greater trust in you, the seller. This may or may not result in reduced sales opportunities.</small></span>
           </p>
         </div>
       </mat-card>

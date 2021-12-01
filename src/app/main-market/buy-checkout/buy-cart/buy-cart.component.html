@@ -10,7 +10,7 @@
 
     <section *ngIf="isUsingCustomEscrows">
       <p class="message --warning">
-        One or more of your cart items has custom escrow ratios set by the seller. Please ensure that you understand the risks that this entails and are comfortable purchasing items using custom escrow ratios, prior to placing the order.
+        One or more of the items in your cart is sold with a custom escrow ratio. Be sure you understand the risks this poses to your order, and proceed only if you feel comfortable purchasing items with a custom escrow ratio.
       </p>
     </section>
 
@@ -41,7 +41,7 @@
                 class="message --error" matTooltip="Seller specified custom escrow ratios used"
                 matTooltipPosition="after">
                 <mat-icon fontIcon="part-circle-alert" color="warn"></mat-icon>
-                Custom escrow ratios in use
+                Custom escrow ratio in use
               </span>
               <!-- show only if expiring AND seller ships to destination -->
               <span *ngIf="cartItem.errors.expiring && !(cartItem.errors.shipping && selectedLocation.value !== '')" class="message --info" matTooltip="Expires at {{cartItem.expiryTime | date: 'yyyy-MM-dd HH:mm:ss'}}" matTooltipPosition="after">

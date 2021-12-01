@@ -145,7 +145,7 @@
       </table>
 
       <p class="message --warning" *ngIf="!details.escrowRatios.isRecommendedDefault">
-        Custom escrow ratios have been specified. Please review below the escrow ratios that have been set by the seller.
+        This item is sold using a custom escrow ratio. Please review the escrow parameters required by the seller below.
       </p>
 
     </div><!-- .product-info -->
@@ -226,11 +226,9 @@
             </td>
           </tr>
           <tr class="help-text">
-            <td><small>The percentage of the order value (including shipping) that you, the buyer, needs to provide to be used as a security
-            deposit for this trade &ndash; it will be refunded after the order is
-            completed and delivered</small></td>
+            <td><small>The percentage of the order’s value (including shipping) that you need to provide as a security deposit into the escrow contract. Your security deposit is immediately refunded, in full, after the order is completed.</small></td>
             <td>
-              <small>The percentage of the order value (including shipping) that the seller will provide as security for the trade</small>
+              <small>The percentage of the order’s value (including shipping) that the seller will provide as a security deposit into the escrow contract. </small>
             </td>
           </tr>
         </tbody>
