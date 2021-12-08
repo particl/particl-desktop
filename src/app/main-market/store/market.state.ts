@@ -527,7 +527,7 @@ export class MarketState {
           patch<MarketStateModel>({
             lastSmsgScanIssued: Date.now()
           })
-        )
+        );
       }
     }
   }

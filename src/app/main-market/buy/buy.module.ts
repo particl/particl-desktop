@@ -9,6 +9,7 @@ import { BuyOrdersComponent } from './buy-orders/buy-orders.component';
 import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bid-modal.component';
 import { ConfirmOrderDeliveredModalComponent } from './buy-orders/confirm-order-delivered-modal/confirm-order-delivered-modal.component';
 import { PayOrderModalComponent } from './buy-orders/pay-order-modal/pay-order-modal.component';
+import { ResendOrderActionConfirmationModalComponent } from './buy-orders/resend-order-action-confirmation-modal/resend-order-action-confirmation-modal.component';
 
 
 
@@ -34,11 +35,13 @@ const routes: Routes = [
     CancelBidModalComponent,
     ConfirmOrderDeliveredModalComponent,
     PayOrderModalComponent,
+    ResendOrderActionConfirmationModalComponent,
   ],
   entryComponents: [
     CancelBidModalComponent,
     PayOrderModalComponent,
     ConfirmOrderDeliveredModalComponent,
+    ResendOrderActionConfirmationModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

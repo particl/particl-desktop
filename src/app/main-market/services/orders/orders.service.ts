@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of, iif, defer, concat } from 'rxjs';
-import { map, concatMap, tap } from 'rxjs/operators';
+import { map, concatMap, tap, mapTo, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -22,6 +22,7 @@ import {
   BuyFlowStateStore,
   BuyFlowState,
   BuyFlowActionStore,
+  BuyflowAction,
   ActionTransitionParams,
   BuyflowStateDetails,
   StateStatusClass,
@@ -169,6 +170,13 @@ export class BidOrderService implements IBuyflowController {
     );
   }
 
+  resendSmsgMessage(smsgId: string): Observable<boolean> {
+    return this._rpc.call('smsg', ['resend', smsgId, this._store.selectSnapshot(MarketState.currentIdentity).id]).pipe(
+      mapTo(true),
+      catchError(() => of(false))
+    );
+  }
+
   getRejectReasons(): {key: string, label: string}[] {
     return Object.keys(this.rejectionOptions).map(key => ({key, label: this.rejectionOptions[key]}));
   }
@@ -223,6 +231,24 @@ export class BidOrderService implements IBuyflowController {
       state: this.buyflows.UNSUPPORTED.states.UNKNOWN,
       actions: { PRIMARY: [], ALTERNATIVE: [], PLACEHOLDER_LABEL: [] }
     };
+  }
+
+
+  getPreviousActionableStates(buyflow: BuyFlowType, currentStateId: BuyFlowOrderType, user: OrderUserType): BuyFlowOrderType[] {
+    if (
+      buyflow &&
+      isBasicObjectType(this.buyflows[buyflow]) &&
+      currentStateId &&
+      isBasicObjectType(this.buyflows[buyflow].states[currentStateId])
+    ) {
+
+      return this.getOrderedStateList(buyflow).map(s => s.stateId).filter(stateKey =>
+        this.buyflows[buyflow].actions[stateKey].findIndex((action: BuyflowAction) =>
+          (action.toState === currentStateId) && (action.user === user) && (action.actionType !== 'PLACEHOLDER_LABEL')
+        ) > -1
+      ) as BuyFlowOrderType[];
+    }
+    return <BuyFlowOrderType[]>[];
   }
 
 
@@ -456,107 +482,19 @@ export class BidOrderService implements IBuyflowController {
       return newOrder;
     }
 
-    if (Array.isArray(src.OrderItems[0].Bid.ChildBids) && src.OrderItems[0].Bid.ChildBids.length > 0 ) {
-
-      let latestGenerated = 0;
-      let latestBidHash = '';
-      // find the child bid with the highest quantity of bid datas
-      let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
-
-      let hasCancelOrderRequest = false;
-
-      src.OrderItems[0].Bid.ChildBids.forEach(childBid => {
-        if (isBasicObjectType(childBid)) {
-          if (Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
-            foundBidDatas = childBid.BidDatas;
-          }
-          // extract the latest bid (in order to get to its hash later)
-          if ((+childBid.generatedAt > latestGenerated) && (typeof childBid.hash === 'string') && (childBid.hash.length > 0)) {
-            latestGenerated = +childBid.generatedAt;
-            latestBidHash = childBid.hash;
-          }
-          if (childBid.type === BID_STATUS.ORDER_CANCELLED) {
-            hasCancelOrderRequest = true;
-          }
-        }
-      });
-
-      if (latestBidHash.length > 0) {
-        newOrder.latestBidHash = latestBidHash;
-      }
-
-      // we always have 2 at least, since ORDER_HASH and MARKET_KEY are always present. Additional items means extra info available
-      if (foundBidDatas.length > 2) {
-        newOrder.extraDetails = {
-          escrowMemo: '',
-          shippingMemo: '',
-          releaseMemo: '',
-          escrowTxn: '',
-          releaseTxn: '',
-          rejectionReason: '',
-          wasPreviouslyCancelled: hasCancelOrderRequest && (src.OrderItems[0].status !== ORDER_ITEM_STATUS.CANCELLED),
-        };
-        foundBidDatas.forEach(d => {
-          if (isBasicObjectType(d)) {
-            switch (d.key) {
-              case BID_DATA_KEY.ESCROW_MEMO:
-                newOrder.extraDetails.escrowMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.escrowMemo);
-                break;
-              case BID_DATA_KEY.SHIPPING_MEMO:
-                newOrder.extraDetails.shippingMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.shippingMemo);
-                break;
-              case BID_DATA_KEY.RELEASE_MEMO:
-                newOrder.extraDetails.releaseMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseMemo);
-                break;
-              case BID_DATA_KEY.ESCROW_TX_ID:
-                newOrder.extraDetails.escrowTxn = getValueOrDefault(d.value, 'string', newOrder.extraDetails.escrowTxn);
-                break;
-              case BID_DATA_KEY.RELEASE_TX_ID:
-                newOrder.extraDetails.releaseTxn = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
-                break;
-              case BID_DATA_KEY.REJECT_REASON:
-                const reasonKey = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
-                newOrder.extraDetails.rejectionReason = this.rejectionOptions[reasonKey] || TextContent.REJECT_REASON_UNKNOWN;
-                break;
-              case BID_DATA_KEY.DELIVERY_EMAIL:
-                newOrder.contactDetails.email = getValueOrDefault(d.value, 'string', newOrder.contactDetails.email);
-                break;
-              case BID_DATA_KEY.DELIVERY_PHONE:
-                newOrder.contactDetails.phone = getValueOrDefault(d.value, 'string', newOrder.contactDetails.phone);
-                break;
-            }
-          }
-        });
-      }
-
+    if (!isBasicObjectType(src) ||
+        !(Array.isArray(src.OrderItems) && src.OrderItems.length > 0) ||
+        !isBasicObjectType(src.OrderItems[0]) ||
+        !isBasicObjectType(src.OrderItems[0].Bid) ||
+        !isBasicObjectType(src.OrderItems[0].Bid.ListingItem)
+    ) {
+      return newOrder;
     }
 
-    if (isBasicObjectType(src.ShippingAddress)) {
-      newOrder.shippingDetails.name = `${getValueOrDefault(src.ShippingAddress.firstName, 'string', '')} ${getValueOrDefault(src.ShippingAddress.lastName, 'string', '')}`;
-      newOrder.shippingDetails.addressLine1 = getValueOrDefault(
-        src.ShippingAddress.addressLine1, 'string', newOrder.shippingDetails.addressLine1
-      );
-      newOrder.shippingDetails.addressLine2 = getValueOrDefault(
-        src.ShippingAddress.addressLine2, 'string', newOrder.shippingDetails.addressLine2
-      );
-      newOrder.shippingDetails.city = getValueOrDefault(
-        src.ShippingAddress.city, 'string', newOrder.shippingDetails.city
-      );
-      newOrder.shippingDetails.code = getValueOrDefault(
-        src.ShippingAddress.zipCode, 'string', newOrder.shippingDetails.code
-      );
-      newOrder.shippingDetails.state = getValueOrDefault(
-        src.ShippingAddress.state, 'string', newOrder.shippingDetails.state
-      );
-      newOrder.shippingDetails.country = getValueOrDefault(
-        src.ShippingAddress.country, 'string', newOrder.shippingDetails.country
-      );
-    }
+    const listingItem = src.OrderItems[0].Bid.ListingItem;
+    const itemViewer: OrderUserType = +listingItem.listingItemTemplateId > 0 ? 'SELLER' : 'BUYER';
 
     let itemCountry = '';
-    const listingItem = src.OrderItems[0].Bid.ListingItem;
-
-    const itemViewer: OrderUserType = +listingItem.listingItemTemplateId > 0 ? 'SELLER' : 'BUYER';
 
     if (isBasicObjectType(listingItem.ItemInformation)) {
       newOrder.listing.title = getValueOrDefault(listingItem.ItemInformation.title, 'string', newOrder.listing.title);
@@ -642,7 +580,121 @@ export class BidOrderService implements IBuyflowController {
       };
     }
 
+
     newOrder.currentState = this.getStateDetails(buyflowType, src.OrderItems[0].status, itemViewer);
+
+    if (Array.isArray(src.OrderItems[0].Bid.ChildBids) && src.OrderItems[0].Bid.ChildBids.length > 0 ) {
+
+      let latestGenerated = 0;
+      let latestBidHash = '';
+      let latestBidMsgId = '';
+      let lastActionedBid;
+      // find the child bid with the highest quantity of bid datas
+      let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
+
+      let hasCancelOrderRequest = false;
+
+      src.OrderItems[0].Bid.ChildBids.forEach(childBid => {
+        if (isBasicObjectType(childBid)) {
+          if (Array.isArray(childBid.BidDatas) && childBid.BidDatas.length > foundBidDatas.length) {
+            foundBidDatas = childBid.BidDatas;
+          }
+          // extract the latest bid (in order to get to its hash later)
+          if ((+childBid.generatedAt > latestGenerated) && (typeof childBid.hash === 'string') && (childBid.hash.length > 0)) {
+            latestGenerated = +childBid.generatedAt;
+            latestBidHash = childBid.hash;
+          }
+          if (childBid.type === BID_STATUS.ORDER_CANCELLED) {
+            hasCancelOrderRequest = true;
+          }
+
+          if (childBid.type === newOrder.currentState.state.mappedBidStatus) {
+            lastActionedBid = childBid;
+          }
+        }
+      });
+
+      if (
+        lastActionedBid &&
+        (newOrder.currentState.state.stateId !== ORDER_ITEM_STATUS.CANCELLED) &&
+        (this.getPreviousActionableStates(buyflowType, src.OrderItems[0].status, itemViewer).length > 0)
+      ) {
+        latestBidMsgId = getValueOrDefault(lastActionedBid.msgid, 'string', latestBidMsgId);
+      }
+
+      if (latestBidHash.length > 0) {
+        newOrder.latestBidHash = latestBidHash;
+      }
+
+      newOrder.extraDetails = {
+        escrowMemo: '',
+        shippingMemo: '',
+        releaseMemo: '',
+        escrowTxn: '',
+        releaseTxn: '',
+        rejectionReason: '',
+        msgId: latestBidMsgId,
+        wasPreviouslyCancelled: hasCancelOrderRequest && (src.OrderItems[0].status !== ORDER_ITEM_STATUS.CANCELLED),
+      };
+
+      // we always have 2 at least, since ORDER_HASH and MARKET_KEY are always present. Additional items means extra info available
+      if (foundBidDatas.length > 2) {
+        foundBidDatas.forEach(d => {
+          if (isBasicObjectType(d)) {
+            switch (d.key) {
+              case BID_DATA_KEY.ESCROW_MEMO:
+                newOrder.extraDetails.escrowMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.escrowMemo);
+                break;
+              case BID_DATA_KEY.SHIPPING_MEMO:
+                newOrder.extraDetails.shippingMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.shippingMemo);
+                break;
+              case BID_DATA_KEY.RELEASE_MEMO:
+                newOrder.extraDetails.releaseMemo = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseMemo);
+                break;
+              case BID_DATA_KEY.ESCROW_TX_ID:
+                newOrder.extraDetails.escrowTxn = getValueOrDefault(d.value, 'string', newOrder.extraDetails.escrowTxn);
+                break;
+              case BID_DATA_KEY.RELEASE_TX_ID:
+                newOrder.extraDetails.releaseTxn = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
+                break;
+              case BID_DATA_KEY.REJECT_REASON:
+                const reasonKey = getValueOrDefault(d.value, 'string', newOrder.extraDetails.releaseTxn);
+                newOrder.extraDetails.rejectionReason = this.rejectionOptions[reasonKey] || TextContent.REJECT_REASON_UNKNOWN;
+                break;
+              case BID_DATA_KEY.DELIVERY_EMAIL:
+                newOrder.contactDetails.email = getValueOrDefault(d.value, 'string', newOrder.contactDetails.email);
+                break;
+              case BID_DATA_KEY.DELIVERY_PHONE:
+                newOrder.contactDetails.phone = getValueOrDefault(d.value, 'string', newOrder.contactDetails.phone);
+                break;
+            }
+          }
+        });
+      }
+
+    }
+
+    if (isBasicObjectType(src.ShippingAddress)) {
+      newOrder.shippingDetails.name = `${getValueOrDefault(src.ShippingAddress.firstName, 'string', '')} ${getValueOrDefault(src.ShippingAddress.lastName, 'string', '')}`;
+      newOrder.shippingDetails.addressLine1 = getValueOrDefault(
+        src.ShippingAddress.addressLine1, 'string', newOrder.shippingDetails.addressLine1
+      );
+      newOrder.shippingDetails.addressLine2 = getValueOrDefault(
+        src.ShippingAddress.addressLine2, 'string', newOrder.shippingDetails.addressLine2
+      );
+      newOrder.shippingDetails.city = getValueOrDefault(
+        src.ShippingAddress.city, 'string', newOrder.shippingDetails.city
+      );
+      newOrder.shippingDetails.code = getValueOrDefault(
+        src.ShippingAddress.zipCode, 'string', newOrder.shippingDetails.code
+      );
+      newOrder.shippingDetails.state = getValueOrDefault(
+        src.ShippingAddress.state, 'string', newOrder.shippingDetails.state
+      );
+      newOrder.shippingDetails.country = getValueOrDefault(
+        src.ShippingAddress.country, 'string', newOrder.shippingDetails.country
+      );
+    }
 
     return newOrder;
   }
@@ -659,6 +711,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.CREATED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.CREATED,
+      mappedBidStatus: BID_STATUS.BID_CREATED,
       label: TextContent.STATE_CREATED_LABEL,
       order: 0,
       isFinalState: false,
@@ -672,6 +725,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.REJECTED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.REJECTED,
+      mappedBidStatus: BID_STATUS.BID_REJECTED,
       label: TextContent.STATE_REJECTED_LABEL,
       order: -2,
       isFinalState: true,
@@ -685,6 +739,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.CANCELLED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.CANCELLED,
+      mappedBidStatus: BID_STATUS.ORDER_CANCELLED,
       label: TextContent.STATE_CANCELLED_LABEL,
       order: -1,
       isFinalState: true,
@@ -698,6 +753,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.ACCEPTED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.ACCEPTED,
+      mappedBidStatus: BID_STATUS.BID_ACCEPTED,
       label: TextContent.STATE_ACCEPTED_LABEL,
       order: 1,
       isFinalState: false,
@@ -711,6 +767,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.ESCROW_REQUESTED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.ESCROW_REQUESTED,
+      mappedBidStatus: BID_STATUS.ESCROW_REQUESTED,
       label: TextContent.STATE_ESCROW_LOCKED_LABEL,
       order: 2,
       isFinalState: false,
@@ -724,6 +781,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.ESCROW_COMPLETED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.ESCROW_COMPLETED,
+      mappedBidStatus: BID_STATUS.ESCROW_COMPLETED,
       label: TextContent.STATE_ESCROW_COMPLETED_LABEL,
       order: 3,
       isFinalState: false,
@@ -737,6 +795,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.SHIPPED] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.SHIPPED,
+      mappedBidStatus: BID_STATUS.ITEM_SHIPPED,
       label: TextContent.STATE_SHIPPED_LABEL,
       order: 4,
       isFinalState: false,
@@ -750,6 +809,7 @@ export class BidOrderService implements IBuyflowController {
     states[ORDER_ITEM_STATUS.COMPLETE] = {
       buyflow: buyflowType,
       stateId: ORDER_ITEM_STATUS.COMPLETE,
+      mappedBidStatus: BID_STATUS.COMPLETED,
       label: TextContent.STATE_COMPLETE_LABEL,
       order: 5,
       isFinalState: true,
@@ -1022,6 +1082,7 @@ export class BidOrderService implements IBuyflowController {
       UNKNOWN: {
         buyflow: 'UNSUPPORTED',
         stateId: 'UNKNOWN',
+        mappedBidStatus: null,
         order: 0,
         isFinalState: true,
         label: TextContent.STATE_INVALID_LABEL,

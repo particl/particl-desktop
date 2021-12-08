@@ -97,7 +97,8 @@ export class ColdstakeService {
 
         defer(() => this._addressService.getAddressInfo(csDetails.spendAddress).pipe(
           map(addressInfo => {
-            csDetails.spendAddress = addressInfo && (typeof addressInfo.ismine === 'boolean') && addressInfo.ismine ? csDetails.spendAddress : '';
+            csDetails.spendAddress = addressInfo && (typeof addressInfo.ismine === 'boolean') && addressInfo.ismine ?
+              csDetails.spendAddress : '';
             return csDetails;
           })
         )),
