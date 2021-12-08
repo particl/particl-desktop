@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE, BID_DATA_KEY } from '../../shared/market.models';
+import { PriceItem, ORDER_ITEM_STATUS, ESCROW_TYPE, BID_DATA_KEY, BID_STATUS } from '../../shared/market.models';
 
 
 export const messageListeners = {
@@ -71,6 +71,7 @@ export interface OrderItem {
     releaseTxn: string;
     rejectionReason: string;
     wasPreviouslyCancelled: boolean;
+    msgId: string;
   };
   hasWarnings: boolean;
 }
@@ -118,6 +119,7 @@ export type BuyFlowStateStore = {
 export interface BuyFlowState {
   buyflow: BuyFlowType;
   stateId: BuyFlowOrderType;
+  mappedBidStatus: BID_STATUS;
   label: string;
   filterLabel?: string;
   order: number;

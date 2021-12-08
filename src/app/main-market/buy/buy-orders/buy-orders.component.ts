@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material';
 import { Observable, Subject, of, merge, defer, iif } from 'rxjs';
 import {
   takeUntil, tap, switchMap, catchError, startWith, debounceTime,
-  distinctUntilChanged, filter, auditTime, concatMap, finalize
+  distinctUntilChanged, filter, auditTime, concatMap, finalize, take
 } from 'rxjs/operators';
 
 import { Store, Select } from '@ngxs/store';
@@ -23,6 +23,9 @@ import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/l
 import { CancelBidModalComponent } from './cancel-bid-modal/cancel-bid-modal.component';
 import { PayOrderModalComponent } from './pay-order-modal/pay-order-modal.component';
 import { ConfirmOrderDeliveredModalComponent } from './confirm-order-delivered-modal/confirm-order-delivered-modal.component';
+import {
+  ResendOrderActionConfirmationModalComponent
+} from './resend-order-action-confirmation-modal/resend-order-action-confirmation-modal.component';
 import { isBasicObjectType } from '../../shared/utils';
 
 import { WalletInfoStateModel } from 'app/main/store/main.models';
@@ -35,7 +38,9 @@ enum TextContent {
   LOADING_ERROR = 'Failed to load orders correctly',
   FILTER_LABEL_ALL_ORDERS = 'All Items',
   ORDER_UPDATE_ERROR = 'Order update failed',
-  ACTIONING_ORDER = 'Processing the selected item'
+  ACTIONING_ORDER = 'Processing the selected item',
+  SMSG_RESEND_SUCCESS = 'Successfully re-sent the order status to the seller',
+  SMSG_RESEND_ERROR = 'Resnding of the order status failed! Please try again later',
 }
 
 interface BuyflowStep {
@@ -409,6 +414,34 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
         }
       },
       (err) => this._snackbar.open(TextContent.ORDER_UPDATE_ERROR, 'err')
+    );
+  }
+
+
+  resendActionMessage(msgId: string): void {
+    if (!msgId) {
+      return;
+    }
+    this._dialog.open(ResendOrderActionConfirmationModalComponent).afterClosed().pipe(
+      take(1),
+      concatMap(doProceed => iif(
+        () => !!doProceed,
+        defer(() =>  this._unlocker.unlock({ timeout: 10 }).pipe(
+          concatMap((unlocked: boolean) => iif(
+            () => unlocked,
+            defer(() => this._orderService.resendSmsgMessage(msgId))
+          ))
+        ))
+      ))
+    )
+    .subscribe(
+      (success) => {
+        if (success) {
+          this._snackbar.open(TextContent.SMSG_RESEND_SUCCESS);
+          return;
+        }
+        this._snackbar.open(TextContent.SMSG_RESEND_ERROR, 'warn');
+      }
     );
   }
 
