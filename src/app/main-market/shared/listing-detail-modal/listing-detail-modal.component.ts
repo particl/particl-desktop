@@ -208,7 +208,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     const shipBasePrice = new PartoshiAmount(+inputPrice.base, true);
     const shipLocalPrice = new PartoshiAmount(+inputPrice.shippingDomestic, true);
     const shipIntlPrice = new PartoshiAmount(+inputPrice.shippingIntl, true);
-    const shipActualPrice = isLocalShipping ? shipLocalPrice : shipIntlPrice;
+    const shipActualPrice = new PartoshiAmount((isLocalShipping ? shipLocalPrice : shipIntlPrice).partoshis(), true);
 
     // NB! The price values calculated below use a bit of JS object referential trickery to avoid creating new objects for price type.
     //  ie: the PartoshiAmount is modified and then "snapshot" using the particlString() method (which returns a string value).
@@ -232,14 +232,14 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
           actual: shipActualPrice.particlsString()
         },
         escrow: {
-          local: shipLocalPrice.add(shipBasePrice).particlsString(),
-          intl: shipIntlPrice.add(shipBasePrice).particlsString(),
-          actual: shipActualPrice.particlsString()
+          local: (new PartoshiAmount(shipLocalPrice.add(shipBasePrice).partoshis(), true)).multiply(inputEscrow.buyerRatio / 100).particlsString(),
+          intl: (new PartoshiAmount(shipIntlPrice.add(shipBasePrice).partoshis(), true)).multiply(inputEscrow.buyerRatio / 100).particlsString(),
+          actual: (new PartoshiAmount(shipActualPrice.add(shipBasePrice).partoshis(), true)).multiply(inputEscrow.buyerRatio / 100).particlsString()
         },
         total: {
-          local: shipLocalPrice.add(shipLocalPrice.multiply(inputEscrow.buyerRatio / 100)).particlsString(),
-          intl: shipIntlPrice.add(shipIntlPrice.multiply(inputEscrow.buyerRatio / 100)).particlsString(),
-          actual: shipActualPrice.particlsString()
+          local: shipLocalPrice.add(new PartoshiAmount(shipLocalPrice.partoshis(), true).multiply(inputEscrow.buyerRatio / 100)).particlsString(),
+          intl: shipIntlPrice.add(new PartoshiAmount(shipIntlPrice.partoshis(), true).multiply(inputEscrow.buyerRatio / 100)).particlsString(),
+          actual: shipActualPrice.add(new PartoshiAmount(shipActualPrice.partoshis(), true).multiply(inputEscrow.buyerRatio / 100)).particlsString()
         },
       },
       escrowRatios: {
