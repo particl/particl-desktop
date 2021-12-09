@@ -327,13 +327,14 @@ export class MarketManagementService {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
     const postParams = [
       'post',
       marketId,
       durationDays,
       false,
       null,
-      null,
+      identityId,
       usePaidImageMsg,
       (usingAnonFees ? 'anon' : 'part'),
       12,
