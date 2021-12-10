@@ -23,24 +23,22 @@
 * [License](#license)
 
 ## About
-The [Particl Project](https://particl.news/about/) is committed to providing everyone with privacy, security, resistance to censorship, and freedom in this digital age.
+The [Particl Project](https://particl.io/about) – Striving to protect your rights, freedoms, and privacy.
 
-**Particl Desktop** is a standalone, multi-purpose desktop application capable of hosting multiple functionalities at once and delivering a streamlined user-experience when interacting with Particl's services and applications. 
+**Particl Desktop** is a standalone desktop application that hosts multiple functionalities at once and delivers an easy user-experience when interacting with Particl's services and applications. 
 
-Particl Desktop provides easy access to the Particl Blockchain and the SMSG protocol, hosts Particl coin (PART) related wallets, gives users access to the Particl Marketplace and the encrypted chat application. Additionally, Particl Desktop supports a bot framework to optionally integrate interactions with third-party services within a user-friendly interface. Particl Desktop generally refers to Particl’s flagship application.
+Get access to decentralization:
 
-With **Particl Desktop**, you get access to a decentralized platform delivering the following to you:
-
-* **The Particl Network** 
-All services are peer to peer (p2p). No central authority or central server stands between you and the people you interact with. It's a direct connection.
-   * **An encrypted data exchange protocol** 
+* **Particl Network**<br /> 
+The Particl Network consists of two technologies:<br /><br />
+   * *Encrypted data exchange protocol*<br />
 SecureMessaging (SMSG protocol) is a decentralized storage network (DSN) to store and transfer data between nodes in a privacy-preserving manner. It enables a private and secure environment for e-commerce and communications between users. SMSG powers the Particl Marketplace without bloating the blockchain with excessive data and without leaving any permanent record.
-   * **A programmable blockchain with advanced privacy features** 
-The Particl Blockchain is a decentralized, immutable, and censorship-proof ledger. It is based on bitcoin technology and has been carefully enhanced by the Particl team to provide a more robust level of privacy through industry-leading privacy technologies. The Particl Blockchain processes and validates payments between two users without requiring any third-party such as a bank or a payment processor.
-* **The privacy coin PART** 
-PART is a blazing fast and highly flexible cryptocurrency with multiple privacy states. It lets you send and receive payments without revealing your financial data to anyone. The PART coin provides automation, interoperability, complete resistance to censorship, and privacy to the Particl Marketplace.
-* **The [Particl Marketplace](https://particl.io/marketplace)** 
-The Particl Marketplace is a decentralized and privacy-oriented marketplace that lets you buy and sell goods and services on the web without leaving any digital footprint behind. Payments between two users can be initiated using multiple currencies but always settle in PART. No bank account, documentation, email, phone number, or any other identification type is required. It transforms today's e-commerce into a free, secure, and trustworthy place where the market conditions are fair and equal to all.
+   * *Programmable blockchain with advanced privacy features*<br />
+The Particl Blockchain is a decentralized, immutable, and censorship-proof ledger. It is based on bitcoin technology and has been carefully enhanced by the Particl team to provide a more robust level of privacy through industry-leading privacy technologies. Its role within the network is the processing and validation of payments between users without requiring any third-party such as a bank or a payment processor.<br /><br />
+* **[Particl Coin](https://particl.io/coin)**<br /> 
+PART is a fast and flexible cryptocurrency with multiple privacy states. It lets you send and receive payments without revealing any of your financial data to anyone.
+* **[Particl Marketplace](https://particl.io/marketplace)**<br />
+Buy and sell anything free of commissions, restrictions, and prying eyes. Payments between participants can be initiated using multiple currencies but always settle in PART. No bank account, documentation, email, phone number, or any other identification type is required but the parties get forced to stay honest with its unique [two-party escrow](https://academy.particl.io/en/latest/in-depth/indepth_escrow.html). Transform today's e-commerce into a free, secure, and trustworthy place, yielding fair market conditions.
 
 Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl Marketplace](https://github.com/particl/particl-market) 
 
@@ -48,21 +46,17 @@ Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl
 
 ### Chats
 
-* **For developers** The developers chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) using [Element](https://element.io) (formerly Riot).
+* **For developers** The chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) using [Element](https://element.io) (formerly Riot).
 * **For community** Join the multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/particl?style=social)](http://reddit.com/r/particl)
 
-### Installation
+### Documentation & Installation
 
-For non-developers curious to explore a new world of commerce, binaries can be downloaded and installed. It is the easiest way to get started.
+For non-developers curious to explore a new world of commerce, binaries can be downloaded and installed. It is the easiest way to get started. Following the guides on [Particl Academy](https://acadmy.particl.io) is highly recommended. It's the reference book in straightforward language.
 
-[Download](https://github.com/particl/particl-desktop/releases/latest) 
-
-There currently is an open testnet phase for the upcoming "Particl V3" release. Feel free to test the new version; we happily look forward to your feedback.
-
-[V3 Testnet Download](https://github.com/particl/particl-desktop/releases/)
+[Download](https://github.com/particl/particl-desktop/releases/latest)
 
 ## Development
 
