@@ -47,16 +47,22 @@ Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl
 ### Chats
 
 * **For developers** The chat [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) using [Element](https://element.io) (formerly Riot).
-* **For community** Join the multilingual, open community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl) with [Discord](https://discord.com).
+* **For community** The community chat [https://discord.me/particl](https://discord.me/particl) [![Discord](https://img.shields.io/discord/391967609660112925)](https://discord.me/particl).
 
 [![Twitter Follow](https://img.shields.io/twitter/follow/ParticlProject?label=follow%20us&style=social)](http://twitter.com/particlproject)
 [![Subreddit subscribers](https://img.shields.io/reddit/subreddit-subscribers/particl?style=social)](http://reddit.com/r/particl)
 
-### Documentation & Installation
+### Documentation, installation
 
 For non-developers curious to explore a new world of commerce, binaries can be downloaded and installed. It is the easiest way to get started. Following the guides on [Particl Academy](https://academy.particl.io) is highly recommended. It's the reference book in straightforward language.
 
-[Download](https://github.com/particl/particl-desktop/releases/latest)
+* [Download Particl Desktop](https://github.com/particl/particl-desktop/releases/latest)
+
+#### Community chat support
+
+* [Discord](https://discord.me/particl) navigate to the #support channel
+* [Telegram](https://t.me/particlhelp)
+* [Element](https://app.element.io/#/room/#particlhelp:matrix.org)
 
 ## Development
 
@@ -68,7 +74,7 @@ For non-developers curious to explore a new world of commerce, binaries can be d
 
 ### Requirements
 
-[Node.js®](https://nodejs.org/) v12, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
+[Node.js®](https://nodejs.org/) v14, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
 
 ### Development install
 
@@ -130,19 +136,10 @@ Restart the app with `-reindex` flag:
 yarn run start:electron:dev -testnet --devtools -reindex
 ```
 
-#### Marketplace fails to load
-
-Delete the marketplace testnet `database` folder and restart the app:
-
-| OS      | path                                                       |
-|---------|------------------------------------------------------------|
-| Linux   | `~/.particl-market/testnet/03/`                            |
-| Windows | `%APPDATA%/Particl Market/testnet/03/`                     |
-| macOS   | `~/Library/Application Support/particl-market/testnet/03/` |
-
 ### Other issues
 
-See our [Particl Wiki](https://particl.wiki/) for the most common problems or join [#particlhelp:matrix.org](https://app.element.io/#/room/#particlhelp:matrix.org) on [Element](https://element.io) for community help.
+* [Particl Wiki](https://particl.wiki/) for the most common problems 
+* Developer chat support [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) 
 
 ## Bug bounties
 
