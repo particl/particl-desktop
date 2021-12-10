@@ -22,7 +22,7 @@ import {
   SendTransaction,
   SendTypeToEstimateResponse
 } from './send.models';
-import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE } from 'app/main/store/main.models';
+import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE, MIN_UTXO_SPLIT, MAX_UTXO_SPLIT, DEFAULT_UTXO_SPLIT } from 'app/main/store/main.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { WalletSettingsState } from 'app/main/store/main.state';
@@ -50,6 +50,10 @@ export class SendComponent implements OnInit, OnDestroy {
   selectedTab: FormControl = new FormControl(0);
   sourceType: FormControl = new FormControl('part');
   targetForm: FormGroup;
+
+  readonly minSplitUTXO: number = MIN_UTXO_SPLIT;
+  readonly maxSplitUTXO: number = MAX_UTXO_SPLIT;
+  readonly defaultSplitUTXO: number;
 
   readonly minRingSize: number = MIN_RING_SIZE;
   readonly maxRingSize: number = MAX_RING_SIZE;
@@ -83,13 +87,15 @@ export class SendComponent implements OnInit, OnDestroy {
     private _dialog: MatDialog,
     private _store: Store,
   ) {
-    this.defaultRingSize = _store.selectSnapshot(WalletSettingsState.settings).default_ringct_size || DEFAULT_RING_SIZE;
+    this.defaultRingSize = this._store.selectSnapshot(WalletSettingsState.settings).default_ringct_size || DEFAULT_RING_SIZE;
+    this.defaultSplitUTXO = this._store.selectSnapshot(WalletSettingsState.settings).utxo_split_count || DEFAULT_UTXO_SPLIT;
   }
 
 
   ngOnInit() {
     this.targetForm = new FormGroup({
       ringSize: new FormControl(this.defaultRingSize, [Validators.min(this.minRingSize), Validators.max(this.maxRingSize)]),
+      selectedUTXOCount: new FormControl(this.defaultSplitUTXO, [Validators.min(this.minSplitUTXO), Validators.max(this.maxSplitUTXO)]),
       targetType: new FormControl('blind', targetTypeValidator(this.currentTabType, this.sourceType.value)),
       address: new FormControl('',
         publicAddressUsageValidator(this.currentTabType, this.sourceType.value),
@@ -246,6 +252,10 @@ export class SendComponent implements OnInit, OnDestroy {
     return this.targetForm.get('ringSize');
   }
 
+  get selectedUTXOCount(): AbstractControl {
+    return this.targetForm.get('selectedUTXOCount');
+  }
+
   get targetType(): AbstractControl {
     return this.targetForm.get('targetType');
   }
@@ -362,6 +372,7 @@ export class SendComponent implements OnInit, OnDestroy {
     trans.amount = +this.amount.value;
     trans.narration = this.narration.value || '';
     trans.ringSize = this.ringSize.value;
+    trans.utxoCount = this.selectedUTXOCount.value;
     trans.deductFeesFromTotal = this.sendingAll.value;
     trans.addressLabel = trans.transactionType === 'send' ? this.addressLabel.value : '';
     trans.targetAddress = trans.transactionType === 'send' ? this.address.value : '';

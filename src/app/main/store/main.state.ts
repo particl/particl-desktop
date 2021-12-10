@@ -19,6 +19,7 @@ import {
   BlindUTXO,
   AnonUTXO,
   DEFAULT_RING_SIZE,
+  DEFAULT_UTXO_SPLIT,
 } from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
@@ -77,8 +78,7 @@ const DEFAULT_UTXOS_STATE: WalletBalanceStateModel = {
 const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
   notifications_payment_received: false,
   notifications_staking_reward: false,
-  anon_utxo_split: 3,
-  public_utxo_split: 1,
+  utxo_split_count: DEFAULT_UTXO_SPLIT,
   default_ringct_size: DEFAULT_RING_SIZE,
 };
 

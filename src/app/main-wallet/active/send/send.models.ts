@@ -1,6 +1,6 @@
 import { AddressType } from '../../shared/address.models';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE } from 'app/main/store/main.models';
+import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE, MIN_UTXO_SPLIT, MAX_UTXO_SPLIT } from 'app/main/store/main.models';
 
 
 export type TabType = 'transfer' | 'send';
@@ -62,11 +62,12 @@ export class SendTransaction {
   ringSize: number = DEFAULT_RING_SIZE;
   deductFeesFromTotal: boolean = false;
   coinControl: SendTypeToCoinControl = {};
+  utxoCount: number = 1;
 
 
   constructor() {}
 
-  getSendTypeParams(estimate: boolean = true, utxoCount: number = 1): [
+  getSendTypeParams(estimate: boolean = true): [
     TxType,
     TxType,
     Array<{address: string, amount: number, subfee: boolean, narr: string}>,
@@ -83,9 +84,15 @@ export class SendTransaction {
       ringSize = DEFAULT_RING_SIZE;
     }
 
-    const outputs: {address: string, amount: number, subfee: boolean, narr: string}[] = [];
+    const outputs: { address: string, amount: number, subfee: boolean, narr: string }[] = [];
+    const utxoCount =
+      (typeof this.utxoCount === 'number') &&
+      Number.isSafeInteger(this.utxoCount) &&
+      (this.utxoCount >= MIN_UTXO_SPLIT) &&
+      (this.utxoCount <= MAX_UTXO_SPLIT)
+      ? this.utxoCount : 1;
 
-    if ((utxoCount > 0) && this.amount) {
+    if (this.amount) {
       const calculatedAmount = new PartoshiAmount(this.amount / utxoCount, false).particls();
       const remainderAmount = new PartoshiAmount(this.amount, false);
 
@@ -119,9 +126,5 @@ export class SendTransaction {
       this.coinControl
     ];
   }
-
-  // private getTargetType(): TxType {
-  //   return this.transactionType === 'send' ? this.source : this.targetTransfer;
-  // }
 
 }

@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { Observable, of, throwError, iif, defer, combineLatest } from 'rxjs';
 import { map, catchError, concatMap, takeUntil } from 'rxjs/operators';
 
-import { WalletBalanceState, WalletSettingsState } from 'app/main/store/main.state';
+import { WalletBalanceState } from 'app/main/store/main.state';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AddressService } from '../../shared/address.service';
 import { SendTransaction, SendTypeToEstimateResponse } from './send.models';
@@ -40,37 +40,21 @@ export class SendService {
 
 
   sendTypeTo(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
-    let utxoCount = 1;
-    if (tx.targetTransfer === 'anon') {
-      utxoCount = this._store.selectSnapshot(WalletSettingsState.settings).anon_utxo_split || 1;
-    } else {
-      utxoCount = this._store.selectSnapshot(WalletSettingsState.settings).public_utxo_split || 1;
-    }
-
-    if (! (+utxoCount > 0)) {
-      utxoCount = 1;
-    }
-
-    return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee, utxoCount));
+    return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee));
   }
 
 
   runTransaction(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
     let source: Observable<SendTransaction>;
     if (tx.transactionType === 'transfer') {
-      // let addressSource: Observable<string>;
 
-      // if (estimateFee || (tx.targetTransfer !== 'anon')) {
-      //   addressSource = this._addressService.getDefaultStealthAddress();
-      // } else { // is not estimating fee AND is an anon target
-      //   addressSource = this._addressService.generateStealthAddress();
-      // }
       source = this._addressService.getDefaultStealthAddress().pipe(
         map((address) => {
           tx.targetAddress = address;
           return tx;
         })
       );
+
     } else {
 
       source = this._addressService.validateAddress(tx.targetAddress).pipe(
@@ -88,6 +72,7 @@ export class SendService {
           return of(tx);
         })
       );
+
     }
 
     const labelupdate$ = this._addressService.updateAddressLabel(tx.targetAddress, tx.addressLabel);

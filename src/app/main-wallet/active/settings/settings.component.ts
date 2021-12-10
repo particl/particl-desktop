@@ -20,7 +20,15 @@ import {
   Setting
 } from 'app/main-extra/global-settings/settings.types';
 import { WalletInfoState, WalletSettingsState } from 'app/main/store/main.state';
-import { WalletSettingsStateModel, DEFAULT_RING_SIZE, MAX_RING_SIZE, MIN_RING_SIZE } from 'app/main/store/main.models';
+import {
+  WalletSettingsStateModel,
+  DEFAULT_RING_SIZE,
+  MAX_RING_SIZE,
+  MIN_RING_SIZE,
+  MIN_UTXO_SPLIT,
+  MAX_UTXO_SPLIT,
+  DEFAULT_UTXO_SPLIT
+} from 'app/main/store/main.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
 
 
@@ -355,29 +363,15 @@ export class WalletSettingsComponent implements OnInit {
     } as SettingGroup;
 
     walletActions.settings.push({
-      id: 'anon_utxo_split',
-      title: 'Split UTXOs when sending Private TXs',
-      description: 'Creates a number of UTXOs when sending funds from this wallet to a stealth (private) address – higher the number, the greater anonymity, coin usage and fees (default: 3, max: 20)',
+      id: 'utxo_split_count',
+      title: 'Split UTXOs when sending TXs',
+      description: `Creates a number of UTXOs when sending funds from this wallet – higher the number, the more utxos available, the greater the annonymity for stealth addresses, and the greater the coin usage and fees (default: ${DEFAULT_UTXO_SPLIT}, max: ${MAX_UTXO_SPLIT})`,
       isDisabled: false,
       type: SettingType.NUMBER,
       errorMsg: '',
       tags: [],
       restartRequired: false,
-      currentValue: walletSettings.anon_utxo_split,
-      limits: {min: 1, max: 20},
-      validate: this.actionValidateSplitUTXO
-    } as Setting);
-
-    walletActions.settings.push({
-      id: 'public_utxo_split',
-      title: 'Split UTXOs when sending Public TXs',
-      description: 'Creates a number of UTXOs when sending funds from this wallet to a *public* address – higher the number, the more utxos available, the greater coin usage and fees (default: 1, max: 20)',
-      isDisabled: false,
-      type: SettingType.NUMBER,
-      errorMsg: '',
-      tags: [],
-      restartRequired: false,
-      currentValue: walletSettings.public_utxo_split,
+      currentValue: walletSettings.utxo_split_count,
       limits: {min: 1, max: 20},
       validate: this.actionValidateSplitUTXO
     } as Setting);
@@ -477,10 +471,10 @@ export class WalletSettingsComponent implements OnInit {
   }
 
   private actionValidateSplitUTXO(newValue: number, setting: Setting): string {
-    if ((+newValue > 0) && (+newValue <= 20) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
+    if ((+newValue >= MIN_UTXO_SPLIT) && (+newValue <= MAX_UTXO_SPLIT) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
       return '';
     }
-    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', '1').replace('${max}', '20');
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', `${MIN_UTXO_SPLIT - 1}`).replace('${max}', `${MAX_UTXO_SPLIT}`);
   }
 
   private actionValidateSizeRingCT(newValue: number, setting: Setting): string {

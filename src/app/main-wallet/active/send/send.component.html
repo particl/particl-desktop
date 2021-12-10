@@ -103,7 +103,7 @@
 
               <div class="row" fxLayout fxLayoutAlign="spacebetween center">
                 <p class="widget-help">
-                  The higher privacy level is, the larger fee needs to be paid.
+                  The higher the privacy level is, the larger fee needs to be paid.
                 </p>
                 <button
                   (click)="ringSize.setValue(defaultRingSize)"
@@ -117,6 +117,38 @@
 
             </div>
           </div><!-- advanced -->
+
+
+          <div class="advanced">
+            <div class="subtitle">UTXO split <small>(no. of created outputs)</small></div>
+            <div class="privacy-level">
+              <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
+                <span fxFlex="0 0 50px" class="privacy-label low" (click)="selectedUTXOCount.setValue(minSplitUTXO)"
+                  matTooltip="Minimum no. of UTXOs" matTooltipPosition="below">Minimum
+                </span>
+                <span fxFlex="0 0 50px" class="privacy-label high" (click)="selectedUTXOCount.setValue(defaultSplitUTXO)"
+                  matTooltip="Your default configured no. of UTXOs" matTooltipPosition="below">Default
+                </span>
+                <span fxFlex="0 0 50px" class="privacy-label highest" (click)="selectedUTXOCount.setValue(maxSplitUTXO)"
+                  matTooltip="Set highest privacy" matTooltipPosition="below">Maximum
+                </span>
+              </div>
+
+              <mat-slider thumbLabel color="accent" [min]="minSplitUTXO" (change)="selectedUTXOCount.setValue($event.value)"
+                [max]="maxSplitUTXO" [value]="selectedUTXOCount.value">
+              </mat-slider>
+
+              <div class="row" fxLayout fxLayoutAlign="spacebetween center">
+                <p class="widget-help">
+                  Created outputs: {{selectedUTXOCount.value}} <br/>
+                  The amount will be split evenly between all of the outputs created.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+
         </mat-card>
       </div>
     </div>
