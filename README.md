@@ -54,7 +54,7 @@ Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl
 
 ### Documentation & Installation
 
-For non-developers curious to explore a new world of commerce, binaries can be downloaded and installed. It is the easiest way to get started. Following the guides on [Particl Academy](https://acadmy.particl.io) is highly recommended. It's the reference book in straightforward language.
+For non-developers curious to explore a new world of commerce, binaries can be downloaded and installed. It is the easiest way to get started. Following the guides on [Particl Academy](https://academy.particl.io) is highly recommended. It's the reference book in straightforward language.
 
 [Download](https://github.com/particl/particl-desktop/releases/latest)
 
