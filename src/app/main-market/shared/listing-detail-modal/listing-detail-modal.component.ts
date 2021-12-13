@@ -232,14 +232,26 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
           actual: shipActualPrice.particlsString()
         },
         escrow: {
-          local: (new PartoshiAmount(shipLocalPrice.add(shipBasePrice).partoshis(), true)).multiply(inputEscrow.buyerRatio / 100).particlsString(),
-          intl: (new PartoshiAmount(shipIntlPrice.add(shipBasePrice).partoshis(), true)).multiply(inputEscrow.buyerRatio / 100).particlsString(),
-          actual: (new PartoshiAmount(shipActualPrice.add(shipBasePrice).partoshis(), true)).multiply(inputEscrow.buyerRatio / 100).particlsString()
+          local: (new PartoshiAmount(shipLocalPrice.add(shipBasePrice).partoshis(), true))
+            .multiply(inputEscrow.buyerRatio / 100)
+            .particlsString(),
+          intl: (new PartoshiAmount(shipIntlPrice.add(shipBasePrice).partoshis(), true))
+            .multiply(inputEscrow.buyerRatio / 100)
+            .particlsString(),
+          actual: (new PartoshiAmount(shipActualPrice.add(shipBasePrice).partoshis(), true))
+            .multiply(inputEscrow.buyerRatio / 100)
+            .particlsString(),
         },
         total: {
-          local: shipLocalPrice.add(new PartoshiAmount(shipLocalPrice.partoshis(), true).multiply(inputEscrow.buyerRatio / 100)).particlsString(),
-          intl: shipIntlPrice.add(new PartoshiAmount(shipIntlPrice.partoshis(), true).multiply(inputEscrow.buyerRatio / 100)).particlsString(),
-          actual: shipActualPrice.add(new PartoshiAmount(shipActualPrice.partoshis(), true).multiply(inputEscrow.buyerRatio / 100)).particlsString()
+          local: shipLocalPrice.add(new PartoshiAmount(shipLocalPrice.partoshis(), true)
+            .multiply(inputEscrow.buyerRatio / 100))
+            .particlsString(),
+          intl: shipIntlPrice.add(new PartoshiAmount(shipIntlPrice.partoshis(), true)
+            .multiply(inputEscrow.buyerRatio / 100))
+            .particlsString(),
+          actual: shipActualPrice.add(new PartoshiAmount(shipActualPrice.partoshis(), true)
+            .multiply(inputEscrow.buyerRatio / 100))
+            .particlsString(),
         },
       },
       escrowRatios: {
