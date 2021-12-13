@@ -4,7 +4,7 @@ export const MIN_RING_SIZE = 3;
 export const MAX_RING_SIZE = 32;
 export const DEFAULT_RING_SIZE = 12;
 export const MIN_UTXO_SPLIT = 1;
-export const MAX_UTXO_SPLIT = 20;
+export const MAX_UTXO_SPLIT = 100;
 export const DEFAULT_UTXO_SPLIT = 1;
 
 
