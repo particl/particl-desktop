@@ -46,6 +46,8 @@ export interface TemplateFormDetails {
   savedImages: { id: number; url: string; }[];
   market: { selectedMarketId: number; canEdit: boolean; };
   category: { selectedMarketCategoryId: number; canEdit: boolean; };
+  // pendingImages: encoded images (primarily used for importing products, and should not be used for regular application usage of template forms)
+  pendingImages?: string[];
 }
 
 

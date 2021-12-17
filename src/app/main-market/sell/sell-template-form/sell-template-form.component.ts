@@ -345,5 +345,8 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     this.templateForm.controls['images'].setValue(templ.savedImages);
+    if (Array.isArray(templ.pendingImages)) {
+      this.imagesPending.setValue(templ.pendingImages);
+    }
   }
 }

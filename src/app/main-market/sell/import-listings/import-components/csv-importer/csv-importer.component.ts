@@ -1,13 +1,20 @@
 import { Component, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ImporterComponent } from '../importer.component';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material';
 import { of, defer, Subject, iif } from 'rxjs';
 import { exhaustMap, takeUntil, finalize, map, take, concatMap } from 'rxjs/operators';
+
+import { Store } from '@ngxs/store';
+import { MarketState } from './../../../../store/market.state';
 
 import { IpcService } from 'app/core/services/ipc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { RegionListService } from '../../../../services/region-list/region-list.service';
 import { SellService } from '../../../sell.service';
+
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+
 import { isBasicObjectType, getValueOrDefault } from '../../../../shared/utils';
 import { TemplateFormDetails } from '../../../sell.models';
 
@@ -17,6 +24,7 @@ interface CsvImportOptions {
   quote?: string;
   encoding?: 'win1252' | 'utf8';
   headers?: string[];
+  getFromUrlFields?: {fieldName: string, fieldType: 'IMAGE'}[];
 }
 
 
@@ -24,7 +32,9 @@ enum TextContent {
   CSV_IMPORT_ERROR = 'An error occurred during csv file parsing',
   CSV_PARSED_NO_RESULTS = 'No product rows found',
   CSV_EXAMPLE_EXPORTED_SUCCESS = 'Successfully copied example file',
-  CSV_EXAMPLE_EXPORTED_ERROR = 'Error copying example file'
+  CSV_EXAMPLE_EXPORTED_ERROR = 'Error copying example file',
+  IMPORT_WAIT_MSG = 'Processing your import file',
+  IMPORT_WAIT_HELP = 'This may take some time if there are a large number of images to import from the internet',
 }
 
 
@@ -47,7 +57,12 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
     {field: 'escrow_seller_ratio', mappedTo: 'escrowPercentageSeller', description: 'Percentage of the total amount for an order request that you, the seller, is required to put into (refundable) escrow when processing the order; default is: 100'},
     {field: 'source_country', mappedTo: 'shippingOrigin', description: 'the ISO3166 (alpha-2) 2 letter country code where the product is to be shipped from'},
     {field: 'destination_countries', mappedTo: 'shippingDestinations',
-      description: '(optional), a comma-separated list of the ISO3166 (alpha-2) 2 letter country codes where the product can be purchased from (where the product can be shipped to).'},
+      description: '(optional) A comma-separated list of the ISO3166 (alpha-2) 2 letter country codes where the product can be purchased from (where the product can be shipped to).'
+    },
+    {
+      field: 'images', mappedTo: 'pendingImages',
+      description: '(optional) A comma separated list of URL\'s where the image(s) for this product are found (should be the full path if the image is located on the current machine, or the full url if located on the web). NOTE: only JPEG and PNG formats currently supported'
+    },
   ];
 
   csvInputForm: FormGroup;
@@ -62,7 +77,9 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
     private _ipc: IpcService,
     private _snackbar: SnackbarService,
     private _regionService: RegionListService,
-    private _sellService: SellService
+    private _sellService: SellService,
+    private _dialog: MatDialog,
+    private _store: Store
   ) {
     this.csvInputForm = new FormGroup({
       source: new FormControl('', [Validators.required]),
@@ -129,12 +146,22 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
       exhaustMap(() => defer(() => {
         this.isProcessing = true;
         this.csvInputForm.disable();
+        const loaderDialog = this._dialog.open(ProcessingModalComponent, {
+          disableClose: true,
+          data: { message: TextContent.IMPORT_WAIT_MSG, helptext: TextContent.IMPORT_WAIT_HELP },
+        });
+
+        const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+        const marketSettings = this._store.selectSnapshot(MarketState.settings);
+        const MAX_IMAGE_FILESIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
+
         const values = this.csvInputForm.value;
 
         const options: CsvImportOptions = {
           quote: values.quote,
           separator: values.separator,
-          headers: this.CSV_FIELDS.map(f => f.field)
+          headers: this.CSV_FIELDS.map(f => f.field),
+          getFromUrlFields: [ {fieldName: 'images', fieldType: 'IMAGE'}],
         };
 
         return this._ipc.runCommand(
@@ -147,6 +174,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
           finalize(() => {
             this.isProcessing = false;
             this.csvInputForm.enable();
+            loaderDialog.close();
           }),
           map(results => {
             const details: TemplateFormDetails[]  = [];
@@ -179,6 +207,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                   shippingOrigin: '',
                   shippingDestinations: [] as string[],
                   savedImages: [],
+                  pendingImages: [],
                   market: { selectedMarketId: 0, canEdit: true },
                   category: { selectedMarketCategoryId: 0, canEdit: true },
                 };
@@ -192,11 +221,15 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                         break;
 
                       case '[object Array]':
-                        // value comes back as a string, so split and trim each item and then assign
-                        detail[f.mappedTo] = (<string>getValueOrDefault(res[f.field], 'string', ''))
-                          .split(',')
-                          .map(s => s.trim())
-                          .filter(s => s.length > 0);
+                        if (typeof res[f.field] === 'string') {
+                          // value comes back as a string, so split and trim each item and then assign
+                          detail[f.mappedTo] = (<string>getValueOrDefault(res[f.field], 'string', ''))
+                            .split(',')
+                            .map(s => s.trim())
+                            .filter(s => s.length > 0);
+                        } else if (Array.isArray(res[f.field])) {
+                          detail[f.mappedTo] = res[f.field];
+                        }
                         break;
 
                       case '[object Number]':
@@ -231,7 +264,9 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
         }
         this.importSuccess.emit(results);
       },
-      (err) => this._snackbar.open(TextContent.CSV_IMPORT_ERROR, 'warn')
+      (err) => {
+        this._snackbar.open(TextContent.CSV_IMPORT_ERROR, 'warn');
+      }
     );
   }
 
