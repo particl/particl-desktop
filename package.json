@@ -1,7 +1,7 @@
 {
   "name": "particl-desktop-testnet",
   "productName": "Particl Desktop Testnet",
-  "version": "3.0.0-dev",
+  "version": "3.1.0-dev",
   "branch": "3.1",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -176,6 +176,7 @@
       "node_modules/sqlite3/**/*",
       "node_modules/@zasmilingidiot/particl-marketplace/**/*",
       "node_modules/zeromq/**/*",
+      "node_modules/sharp/**/*",
       "node_modules/event-loop-stats/**/*",
       "resources/templates/*"
     ]
