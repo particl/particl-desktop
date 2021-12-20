@@ -88,6 +88,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
   isAddressValid: FormControl = new FormControl(false);  // public so as to set this value
   canCheckoutForm: FormControl = new FormControl(false); // public so as to read this value
   selectedLocation: FormControl = new FormControl('');
+  isUsingCustomEscrows: boolean = false;
 
 
   private destroy$: Subject<void> = new Subject();
@@ -140,6 +141,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       tap(() => {
         const hasErrors = (this.cartItems.length === 0) || (this.cartItems.findIndex(ci => ci.errors.expired || ci.errors.shipping) > -1);
         this.hasCartErrors.setValue(hasErrors);
+        this.isUsingCustomEscrows = this.cartItems.findIndex(ci => !ci.escrow.isRecommendedDefault) > -1;
       }),
       takeUntil(this.destroy$)
     );
@@ -361,6 +363,9 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         escrow: this.pricingSummary.escrow,
         orderTotal: this.pricingSummary.orderTotal
       },
+      escrow: {
+        includesCustomEscrow: this.isUsingCustomEscrows,
+      },
       shippingDetails: {
         name: `${addressFields.firstName || ''} ${addressFields.lastName || ''}`,
         address: [
@@ -573,7 +578,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
         ci.displayedPrices.subtotal.fraction = cartValue.particlStringFraction();
 
         totals.subtotal.add(cartValue);
-        totals.escrow.add(cartValue.multiply(ci.escrowPercent / 100));
+        totals.escrow.add(cartValue.multiply(ci.escrow.buyerRatio / 100));
 
       } else {
         ci.errors.shipping = true;

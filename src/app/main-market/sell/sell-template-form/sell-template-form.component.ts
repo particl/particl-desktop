@@ -4,7 +4,7 @@ import { Observable, Subject, of, merge } from 'rxjs';
 import { takeUntil, tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 
 import { SellService } from '../sell.service';
-import { amountValidator, totalValueValidator, categorySelectedValidator } from './sell-template-form.validators';
+import { amountValidator, totalValueValidator, categorySelectedValidator, integerValidator } from './sell-template-form.validators';
 import { TreeSelectComponent } from '../../shared/shared.module';
 import { TemplateFormDetails } from '../sell.models';
 
@@ -28,6 +28,9 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
 
   templateForm: FormGroup;
   imagesPending: FormControl = new FormControl([]);
+
+  readonly ESCROW_MAX: number = this._sellService.ESCROW_PERCENTAGE_MAX;
+  readonly ESCROW_DEFAULT: number = this._sellService.ESCROW_PERCENTAGE_DEFAULT;
 
   readonly MAX_TITLE: number = 100;
   readonly MAX_SHORT_DESCRIPTION: number = 300;
@@ -56,12 +59,20 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
       description: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_LONG_DESCRIPTION)]),
       basePrice: new FormControl('', [Validators.required, amountValidator()]),
       priceShipLocal: new FormControl('', [Validators.required, amountValidator()]),
+      escrowPercentageBuyer: new FormControl(
+        this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+        [Validators.required, Validators.min(0), Validators.max(this._sellService.ESCROW_PERCENTAGE_MAX), integerValidator()]
+      ),
+      escrowPercentageSeller: new FormControl(
+        this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+        [Validators.required, Validators.min(0), Validators.max(this._sellService.ESCROW_PERCENTAGE_MAX), integerValidator()]
+      ),
       priceShipIntl: new FormControl('', [Validators.required, amountValidator()]),
       shippingOrigin: new FormControl('', [Validators.required]),
       shippingDestinations: new FormControl([]),
       images: new FormControl({value: [], disabled: true}),
       selectedMarket: new FormControl(0),
-      selectedCategory: new FormControl(0)
+      selectedCategory: new FormControl(0),
       },
       [totalValueValidator, categorySelectedValidator]
     );
@@ -305,7 +316,11 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     this.templateForm.controls['priceShipIntl'].setValue(templ.priceShipIntl, {emitEvent: false});
 
     this.templateForm.controls['shippingOrigin'].setValue(templ.shippingOrigin, {emitEvent: false});
-    this.templateForm.controls['shippingDestinations'].setValue(templ.shippingDestinations, {emitEvent: false});
+    this.templateForm.controls['shippingDestinations'].setValue(templ.shippingDestinations, { emitEvent: false });
+
+    this.templateForm.controls['escrowPercentageBuyer'].setValue(templ.escrowPercentageBuyer, { emitEvent: false });
+    this.templateForm.controls['escrowPercentageSeller'].setValue(templ.escrowPercentageSeller, { emitEvent: false });
+
     this.selectorShipOrigin.resetSelection(templ.shippingOrigin);
     this.selectorShipDestinations.resetSelection(templ.shippingDestinations);
 
@@ -330,5 +345,8 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     this.templateForm.controls['images'].setValue(templ.savedImages);
+    if (Array.isArray(templ.pendingImages)) {
+      this.imagesPending.setValue(templ.pendingImages);
+    }
   }
 }

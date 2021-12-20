@@ -98,6 +98,15 @@
       <table class="meta">
         <tr>
           <th class="title">
+            <mat-icon fontIcon="part-person"></mat-icon>
+            Seller
+          </th>
+          <td class="value">
+            {{ details.seller }}
+          </td>
+        </tr>
+        <tr>
+          <th class="title">
             <mat-icon fontIcon="part-filter"></mat-icon>
             Category
           </th>
@@ -134,6 +143,10 @@
           </td>
         </tr>
       </table>
+
+      <p class="message --warning" *ngIf="!details.escrowRatios.isRecommendedDefault">
+        This item is sold using a custom escrow ratio. Please review the escrow parameters required by the seller below.
+      </p>
 
     </div><!-- .product-info -->
   </div><!-- .product-summary -->
@@ -180,6 +193,51 @@
     </div><!-- .tab-content.details -->
 
     <div class="tab-content shipping" *ngIf="tabSwitcher.selectedIndex === 1">
+
+
+    <h2 class="section-title">Escrow Ratios</h2>
+    <mat-card>
+      <table class="shipping-escrow centered">
+        <thead>
+          <tr>
+            <th>Buyer (Your) Ratio</th>
+            <th>Seller Ratio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span class="part price">
+                <strong>{{ details.escrowRatios.buyer }}</strong>
+                <small class="currency">&#37;</small>
+              </span>
+              <span class="" *ngIf="details.escrowRatios.buyer !== EscrowRecommendedDefault">
+                <small> Recommended: {{ EscrowRecommendedDefault }} &#37; </small>
+              </span>
+            </td>
+            <td>
+              <span class="part price">
+                <strong>{{ details.escrowRatios.seller }}</strong>
+                <small class="currency">&#37;</small>
+              </span>
+              <span class="" *ngIf="details.escrowRatios.seller !== EscrowRecommendedDefault">
+                <small> Recommended: {{ EscrowRecommendedDefault }} &#37; </small>
+              </span>
+            </td>
+          </tr>
+          <tr class="help-text">
+            <td><small>The percentage of the order’s value (including shipping) that you need to provide as a security deposit into the escrow contract. Your security deposit is immediately refunded, in full, after the order is completed.</small></td>
+            <td>
+              <small>The percentage of the order’s value (including shipping) that the seller will provide as a security deposit into the escrow contract. </small>
+            </td>
+          </tr>
+        </tbody>
+      </table><!-- .shipping-escrow -->
+    </mat-card>
+
+
+
+
       <h2 class="section-title">Pricing details</h2>
       <mat-card>
         <table class="shipping-escrow">
@@ -272,7 +330,7 @@
                 Shipping price for 1 item
               </td>
               <td>
-                Security deposit (100% of order value) needed for this trade &ndash; it will be refunded after order is completed and delivered
+                Security deposit (based on the escrow ratio above) needed for this trade &ndash; it will be refunded after the order is completed and delivered
               </td>
               <td>
                 Amount of funds needed in total for this trade (incl. the refundable escrow)

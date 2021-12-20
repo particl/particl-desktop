@@ -3,9 +3,10 @@ import { MatDialog } from '@angular/material';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { Observable, Subject, from, concat, of } from 'rxjs';
-import { tap, takeUntil, take, finalize, concatMap, catchError, concatMapTo } from 'rxjs/operators';
+import { Observable, Subject, concat, of, timer, iif, defer, from, merge } from 'rxjs';
+import { tap, takeUntil, take, finalize, concatMap, catchError, concatMapTo, switchMap, mapTo } from 'rxjs/operators';
 
+import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
@@ -30,14 +31,32 @@ enum TextContent {
   ERROR_LISTING_EXPIRY_NOTIFICATION = 'Invalid value'
 }
 
-interface MarketSetting extends Setting {
-  waitForServiceStart: boolean;
-  _isDisabled: boolean;
+type Modify<T, R> = Omit<T, keyof R> & R;
+type SetType = 'heading' | 'setting';
+
+interface SettingSectionHeading {
+  _type: 'heading';
+  title: string;
+  description: string;
 }
 
-interface MarketSettingGroup extends SettingGroup {
-  settings: MarketSetting[];
-}
+type MarketSetting = Modify<Setting, {
+  _type: 'setting';
+  waitForServiceStart: boolean;
+  _isDisabled: boolean;
+}>;
+
+type ObjectType<T> =
+    T extends 'heading' ? SettingSectionHeading :
+    T extends 'setting' ? MarketSetting :
+    never;
+
+type MarketSettingGroup = Modify<SettingGroup , {
+  settings: ObjectType<SetType>[];
+}>;
+
+
+const getGroupSettings = (items: ObjectType<SetType>[]): MarketSetting[] => items.filter(s => s._type === 'setting') as MarketSetting[];
 
 
 @Component({
@@ -53,6 +72,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   settingGroups: MarketSettingGroup[] = [];
   isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
   currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
+  isSmsgRecanButtonEnabled: boolean = false;
 
   readonly pageDetails: PageInfo = {
     title: 'Market Settings',
@@ -68,6 +88,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _store: Store,
+    private _mainRpcService: MainRpcService,
     private _snackbar: SnackbarService,
     private _regionService: RegionListService,
     private _dialog: MatDialog,
@@ -92,7 +113,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
           this.isWaitingForStartCall = true;
 
           for (const settingGroup of this.settingGroups) {
-            for (const setting of settingGroup.settings) {
+            for (const setting of getGroupSettings(settingGroup.settings)) {
               if (setting.waitForServiceStart) {
                 setting._isDisabled = setting.isDisabled;
                 setting.isDisabled = true;
@@ -107,11 +128,13 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
             (settingsData) => {
               this.settingGroups.forEach((group, groupIdx) => {
                 group.settings.forEach((setting, settingIdx) => {
-                  if (setting.waitForServiceStart) {
-                    const updatedSetting = settingsData[groupIdx].settings[settingIdx];
-                    this.bindSettingFunctions(updatedSetting);
-                    this.resetSetting(updatedSetting);
-                    this.settingGroups[groupIdx].settings[settingIdx] = updatedSetting;
+                  if (setting._type === 'setting') {
+                    if (setting.waitForServiceStart) {
+                      const updatedSetting = settingsData[groupIdx].settings[settingIdx] as MarketSetting;
+                      this.bindSettingFunctions(updatedSetting);
+                      this.resetSetting(updatedSetting);
+                      this.settingGroups[groupIdx].settings[settingIdx] = updatedSetting;
+                    }
                   }
                 });
               });
@@ -122,20 +145,37 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    this.loadPageData().pipe(
-      tap((groups) => {
-        groups.forEach((group: MarketSettingGroup) => {
-          group.settings.forEach((setting: MarketSetting) => {
-            this.bindSettingFunctions(setting);
-          });
-          this.currentChanges.push([]);
-        });
 
-        this.settingGroups = groups;
-        this.clearChanges();
-      }),
-      take(1),
-      concatMapTo(stateChange$)
+    merge(
+
+      this._store.select(MarketState.lastSmsgScan).pipe(
+        tap(() => this.isSmsgRecanButtonEnabled = false),
+        switchMap(timestamp => iif(
+          () => (timestamp + 30_000) < Date.now(),
+          defer(() => of(true)),
+          defer(() => timer(timestamp + 30_000 - Date.now()).pipe(mapTo(true)))
+        )),
+        tap((isEnabled) => {
+          this.isSmsgRecanButtonEnabled = isEnabled;
+        }),
+        takeUntil(this.destroy$)
+      ),
+
+      this.loadPageData().pipe(
+        tap((groups) => {
+          groups.forEach((group: MarketSettingGroup) => {
+            group.settings.forEach((setting: MarketSetting) => {
+              this.bindSettingFunctions(setting);
+            });
+            this.currentChanges.push([]);
+          });
+
+          this.settingGroups = groups;
+          this.clearChanges();
+        }),
+        take(1),
+        concatMapTo(stateChange$)
+      )
     ).subscribe();
   }
 
@@ -158,7 +198,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   }
 
 
-  get currentGroup(): SettingGroup {
+  get currentGroup(): MarketSettingGroup {
     return this.settingGroups[this._currentGroupIdx];
   }
 
@@ -189,11 +229,14 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     if (!(settingIdx >= 0 && settingIdx < this.currentGroup.settings.length)) {
         return;
     }
+    if (this.currentGroup.settings[settingIdx]._type !== 'setting') {
+      return;
+    }
 
     this.isProcessing = true;
     const currentGroup = this.currentGroup;
     const groupIdx = this._currentGroupIdx;
-    const setting = this.currentGroup.settings[settingIdx];
+    const setting = this.currentGroup.settings[settingIdx] as MarketSetting;
 
     setting.newValue = setting.formatValue();
 
@@ -232,7 +275,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     this.isProcessing = true;
 
     this.settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
+      getGroupSettings(group.settings).forEach(setting => {
         this.resetSetting(setting);
         group.errors = [];
       });
@@ -263,7 +306,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
     let hasError = false;
     let hasChanged = false;
     this.settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
+      getGroupSettings(group.settings).forEach(setting => {
         if ( !(setting.type === SettingType.BUTTON)) {
           if (setting.currentValue !== setting.newValue) {
             hasChanged = true;
@@ -306,8 +349,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         tap((refreshedGroups) => {
           this.settingGroups.forEach((group, groupIdx) => {
             group.settings.forEach((setting, settingIdx) => {
-              if (setting.type !== SettingType.BUTTON) {
-                const updatedSetting = refreshedGroups[groupIdx].settings[settingIdx];
+              if ((setting._type === 'setting') && (setting.type !== SettingType.BUTTON)) {
+                const updatedSetting = refreshedGroups[groupIdx].settings[settingIdx] as MarketSetting;
 
                 if (setting.id === updatedSetting.id) {
                   if (setting.newValue !== updatedSetting.currentValue) {
@@ -359,6 +402,16 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
   }
 
 
+  rescanSmsgMessages() {
+    if (this.startedStatus !== StartedStatus.STARTED) {
+      return;
+    }
+    this._mainRpcService.call('smsgscanbuckets').pipe(
+      concatMap(() => this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', 0)))
+    ).subscribe();
+  }
+
+
   private disableUI(message: string) {
     this._dialog.open(ProcessingModalComponent, {
       disableClose: true,
@@ -384,7 +437,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       const actions = [];
 
       this.settingGroups.forEach(group => {
-        group.settings.forEach((setting) => {
+        getGroupSettings(group.settings).forEach((setting) => {
           if ( (setting.type !== SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
             actions.push(new MarketUserActions.SetSetting(setting.id, setting.newValue));
             if (setting.restartRequired) {
@@ -418,16 +471,24 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       const marketSettings: MarketSettings = marketState.settings;
 
       const generalSettings: MarketSettingGroup = {
-        name: 'General',
-        icon: 'part-preferences',
+        name: 'Profile',
+        icon: 'part-people',
         settings: [],
         errors: []
       };
 
+
+      generalSettings.settings.push({
+        title: 'Marketplace Settings',
+        description: '',
+        _type: 'heading',
+      } as SettingSectionHeading);
+
+
       generalSettings.settings.push({
         id: 'profile.defaultIdentityID',
         title: 'Default Identity',
-        description: 'Set the selected identity as the initial selected identity',
+        description: 'The identity to default to using at startup',
         isDisabled: false,
         type: SettingType.SELECT,
         errorMsg: '',
@@ -436,7 +497,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         tags: [],
         restartRequired: false,
         formatValue: this.formatToNumber,
-        waitForServiceStart: true
+        waitForServiceStart: true,
+        _type: 'setting',
       } as MarketSetting);
 
       generalSettings.settings.push({
@@ -450,7 +512,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         currentValue: marketSettings.userRegion,
         tags: [],
         restartRequired: false,
-        waitForServiceStart: true
+        waitForServiceStart: true,
+        _type: 'setting',
       } as MarketSetting);
 
       generalSettings.settings.push({
@@ -464,7 +527,8 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         validate: this.validatePositiveInteger,
         tags: [],
         restartRequired: false,
-        waitForServiceStart: true
+        waitForServiceStart: true,
+        _type: 'setting',
       } as MarketSetting);
 
       generalSettings.settings.push({
@@ -479,7 +543,56 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         validate: this.validateListingExpiryNotifications,
         tags: [],
         restartRequired: false,
-        waitForServiceStart: true
+        waitForServiceStart: true,
+        _type: 'setting',
+      } as MarketSetting);
+
+      generalSettings.settings.push({
+        title: 'Advanced',
+        description: '',
+        _type: 'heading',
+      } as SettingSectionHeading);
+
+      generalSettings.settings.push({
+        id: 'profile.canModifyIdentities',
+        title: 'Enable multiple identities for the current profile',
+        description: 'Warning! Enabling this should be considered experimental at this time AND requires manual intervention for various actions such as backups and restorations. Please only enable this if you know what you are doing!',
+        isDisabled: false,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: marketSettings.canModifyIdentities,
+        tags: ['Experimental'],
+        restartRequired: false,
+        waitForServiceStart: true,
+        _type: 'setting',
+      } as MarketSetting);
+
+      generalSettings.settings.push({
+        id: 'profile.useAnonBalanceForFees',
+        title: 'Use Spendable (Anon) balance for publishing fees',
+        description: 'While allowing for better anonymity of your publishing identity, this results in higher fees and may cause issues such as impacting the ability to batch publish listings or causing delays to published item visibility.',
+        isDisabled: false,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: marketSettings.useAnonBalanceForFees,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true,
+        _type: 'setting',
+      } as MarketSetting);
+
+      generalSettings.settings.push({
+        id: 'profile.usePaidMsgForImages',
+        title: 'Use Paid SMSG for publishing images',
+        description: 'Using paid SMSG (default) allows for larger images to be used but incurs a small fee per image, whereas free messages have no fees but have a greatly reduced image size.',
+        isDisabled: false,
+        type: SettingType.BOOLEAN,
+        errorMsg: '',
+        currentValue: marketSettings.usePaidMsgForImages,
+        tags: [],
+        restartRequired: false,
+        waitForServiceStart: true,
+        _type: 'setting',
       } as MarketSetting);
 
       groups.push(generalSettings);
@@ -506,6 +619,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         validate: this.validatePortNumber,
         formatValue: this.formatToNumber,
         waitForServiceStart: false,
+        _type: 'setting',
       } as MarketSetting);
 
       connectionDetails.settings.push({
@@ -521,59 +635,10 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
         restartRequired: false,
         validate: this.validateTimeout,
         waitForServiceStart: false,
+        _type: 'setting',
       } as MarketSetting);
 
       groups.push(connectionDetails);
-
-
-      const advancedDetails: MarketSettingGroup = {
-        name: 'Advanced Features',
-        icon: 'part-flash',
-        settings: [],
-        errors: []
-      };
-
-      advancedDetails.settings.push({
-        id: 'profile.canModifyIdentities',
-        title: 'Enable multiple identities for the current profile',
-        description: 'Warning! Enabling this should be considered expirmental at this time AND requires manual intervention for various actions such as backups and restorations. Please only enable this if you know what you are doing!',
-        isDisabled: false,
-        type: SettingType.BOOLEAN,
-        errorMsg: '',
-        currentValue: marketSettings.canModifyIdentities,
-        tags: [],
-        restartRequired: false,
-        waitForServiceStart: true,
-      } as MarketSetting);
-
-      advancedDetails.settings.push({
-        id: 'profile.useAnonBalanceForFees',
-        title: 'Use Spendable (Anon) balance for publishing fees',
-        description: 'While allowing for better anonymity of your publishing identity, this results in higher fees and may cause issues such as impacting the ability to batch publish listings or causing delays to published item visibility.',
-        isDisabled: false,
-        type: SettingType.BOOLEAN,
-        errorMsg: '',
-        currentValue: marketSettings.useAnonBalanceForFees,
-        tags: [],
-        restartRequired: false,
-        waitForServiceStart: true,
-      } as MarketSetting);
-
-      advancedDetails.settings.push({
-        id: 'profile.usePaidMsgForImages',
-        title: 'Use Paid SMSG for publishing images',
-        description: 'Using paid SMSG (default) allows for larger images to be used but incurs a small fee per image, whereas free messages have no fees but have a greatly reduced image size.',
-        isDisabled: false,
-        type: SettingType.BOOLEAN,
-        errorMsg: '',
-        currentValue: marketSettings.usePaidMsgForImages,
-        tags: [],
-        restartRequired: false,
-        waitForServiceStart: true,
-      } as MarketSetting);
-
-      groups.push(advancedDetails);
-
 
       observer.next(groups);
       observer.complete();

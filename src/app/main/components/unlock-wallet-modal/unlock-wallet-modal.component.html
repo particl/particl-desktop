@@ -1,4 +1,10 @@
-<mat-dialog-title>Unlock your wallet</mat-dialog-title>
+<mat-dialog-title>
+  Unlock your wallet
+  <small class="wallet-name" *ngIf="otherWalletName?.length > 0">
+    <mat-icon fontIcon="part-cards"></mat-icon>
+    {{ otherWalletName }}
+  </small>
+</mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
   <mat-icon fontIcon="part-cross"></mat-icon>

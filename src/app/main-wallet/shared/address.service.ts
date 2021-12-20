@@ -54,8 +54,18 @@ export class AddressService {
   getDefaultStealthAddress(): Observable<string> {
     return this._rpc.call('liststealthaddresses', null).pipe(
       concatMap((list) => iif(
-        () => list[0] && list[0]['Stealth Addresses'] && list[0]['Stealth Addresses'][0] && (typeof list[0]['Stealth Addresses'][0]['Address'] === 'string'),
-        defer(() => of(list[0]['Stealth Addresses'][0]['Address'])),
+        () => list[0] &&
+          list[0]['Stealth Addresses'] &&
+          list[0]['Stealth Addresses'][0] &&
+          (typeof list[0]['Stealth Addresses'][0]['Address'] === 'string'),
+
+        defer(() => this.getAddressInfo(list[0]['Stealth Addresses'][0]['Address']).pipe(
+          concatMap(addressDetails => iif(
+            () =>  addressDetails && (typeof addressDetails.ismine === 'boolean') && addressDetails.ismine,
+            defer(() => of(addressDetails.address)),
+            defer(() => this.generateStealthAddress())
+          ))
+        )),
         defer(() => this.generateStealthAddress())
       ))
     );

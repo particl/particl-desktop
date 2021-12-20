@@ -1,6 +1,7 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ClipboardModule } from 'ngx-clipboard';
 import { NgxsModule } from '@ngxs/store';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
@@ -9,12 +10,14 @@ import { MarketState } from './store/market.state';
 import { MarketBaseComponent } from './base/market-base.component';
 import { AlphaMainnetWarningComponent } from './base/alpha-mainnet-warning/alpha-mainnet-warning.component';
 import { IdentityAddDetailsModalComponent } from './base/identity-add-modal/identity-add-details-modal.component';
+import { ProfileBackupModalComponent } from './base/profile-backup-modal/profile-backup-modal.component';
 import { MarketRpcService } from './services/market-rpc/market-rpc.service';
 import { MarketSocketService } from './services/market-rpc/market-socket.service';
 import { DataService } from './services/data/data.service';
 import { RegionListService } from './services/region-list/region-list.service';
 import { BidOrderService } from './services/orders/orders.service';
 import { ListingCommentsService } from './services/comments/listing-comments.service';
+import { ProfileService } from './services/profile/profile.service';
 import { MarketStartGuard } from './market.guard';
 
 
@@ -53,7 +56,8 @@ const routes: Routes = [
     NgxsModule.forFeature(
       [MarketState]
     ),
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ClipboardModule,
   ],
   exports: [
     RouterModule
@@ -61,11 +65,13 @@ const routes: Routes = [
   declarations: [
     MarketBaseComponent,
     AlphaMainnetWarningComponent,
-    IdentityAddDetailsModalComponent
+    IdentityAddDetailsModalComponent,
+    ProfileBackupModalComponent,
   ],
   entryComponents: [
     AlphaMainnetWarningComponent,
-    IdentityAddDetailsModalComponent
+    IdentityAddDetailsModalComponent,
+    ProfileBackupModalComponent,
   ],
   providers: [
     MarketStartGuard,
@@ -74,7 +80,8 @@ const routes: Routes = [
     DataService,
     RegionListService,
     BidOrderService,
-    ListingCommentsService
+    ListingCommentsService,
+    ProfileService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

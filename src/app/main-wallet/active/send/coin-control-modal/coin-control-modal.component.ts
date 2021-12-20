@@ -6,7 +6,7 @@ import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
 import { Store, Select } from '@ngxs/store';
-import { WalletUTXOState } from 'app/main/store/main.state';
+import { WalletBalanceState } from 'app/main/store/main.state';
 import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 
 import { PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
@@ -115,9 +115,22 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this._store.select(WalletUTXOState.getValue(this.utxoType)).pipe(
+    let func: any;
+
+    switch (this.utxoType) {
+      case 'public': func = WalletBalanceState.utxosPublic; break;
+      case 'blind': func = WalletBalanceState.utxosBlind; break;
+      case 'anon': func = WalletBalanceState.utxosAnon; break;
+      default: func = null;
+    }
+
+    if (!func) {
+      return;
+    }
+
+    this._store.select<Array<PublicUTXO | BlindUTXO | AnonUTXO>>(func()).pipe(
       tap((utxos) => {
-        const newUtxos = utxos.map((utxo: PublicUTXO | BlindUTXO | AnonUTXO) => {
+        const newUtxos = utxos.map(utxo => {
           const utxoListItem: UTXOListItem = {
             selected: false,
             address: '',

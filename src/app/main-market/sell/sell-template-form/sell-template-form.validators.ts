@@ -24,3 +24,13 @@ export const totalValueValidator: ValidatorFn = (group: FormGroup): ValidationEr
 export const categorySelectedValidator: ValidatorFn = (group: FormGroup): ValidationErrors | null => {
   return +group.get('selectedMarket').value > 0 ? (+group.get('selectedCategory').value > 0 ? null : {selectedCategory: true}) : null;
 };
+
+
+export function integerValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if (typeof +control.value !== 'number' || parseInt(`${+control.value}`, 10) !== +control.value) {
+        return { 'integer': true };
+    }
+    return null;
+  };
+}

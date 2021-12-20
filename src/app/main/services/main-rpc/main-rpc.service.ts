@@ -45,8 +45,12 @@ export class MainRpcService implements OnDestroy {
    * @param method The method to call
    * @param params Any params to pass into the method.
    */
-  call(method: string, params?: Array<any> | null): Observable<any> {
-    return this._rpc.call(this._currentWallet, method, params);
+  call(method: string, params?: Array<any> | null, wallet: string | null = null): Observable<any> {
+    return this._rpc.call(
+      (typeof wallet === 'string') && (wallet.length > 0) ? wallet : this._currentWallet,
+      method,
+      params
+    );
   }
 
 }

@@ -44,6 +44,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     daysToNotifyListingExpired: 7,
     marketsLastAdded: 0,
   },
+  lastSmsgScanIssued: 0,
   notifications: {
     identityCartItemCount: 0,
     buyOrdersPendingAction: [],
@@ -93,7 +94,7 @@ export class MarketState {
 
   @Selector()
   static currentProfile(state: MarketStateModel): Profile {
-    const nullProfile: Profile = { id: 0, name: '-'};
+    const nullProfile: Profile = { id: 0, name: '-', hasMnemonicSaved: false, walletPath: ''};
     return state.profile !== null ? state.profile : nullProfile;
   }
 
@@ -126,6 +127,12 @@ export class MarketState {
   @Selector()
   static getNotifications(state: MarketStateModel): MarketNotifications {
     return state.notifications;
+  }
+
+
+  @Selector()
+  static lastSmsgScan(state: MarketStateModel): number {
+    return state.lastSmsgScanIssued;
   }
 
 
@@ -172,13 +179,30 @@ export class MarketState {
       const savedProfileId = +ctx.getState().settings.defaultProfileID;
 
       return this._marketService.call('profile', ['list']).pipe(
-        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 5})),
+        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
         catchError(() => of([])),
-        concatMap((profileList: RespProfileListItem[]) => {
+        map((profileList: RespProfileListItem[]) => {
+          const profiles: Profile[] = [];
+          if (Array.isArray(profileList)) {
+            profileList.forEach(p => {
+              if (isBasicObjectType(p) && ((+p.profileId > 0) || (!('profileId' in p) && ('id' in p))) && (typeof p.name === 'string')) {
+                profiles.push({
+                  id: +p.profileId || +p.id,
+                  name: p.name,
+                  hasMnemonicSaved: (typeof p.mnemonic === 'string') && (p.mnemonic.length > 0),
+                  walletPath: p.wallet
+                });
+              }
+            });
+          }
+          return profiles;
+        }),
+        concatMap((profileList: Profile[]) => {
+
           if (savedProfileId > 0) {
             const found = profileList.find(profileItem => profileItem.id === savedProfileId);
             if (found !== undefined) {
-              ctx.patchState({profile: {id: found.id, name: found.name}});
+              ctx.patchState({profile: found});
               return of(true);
             }
           }
@@ -186,7 +210,7 @@ export class MarketState {
           // no saved profile -OR- previously saved profile doesn't exist anymore -> revert to loading the default profile
           const defaultProfile = profileList.find(profileItem => profileItem.name === 'DEFAULT');
           if (defaultProfile !== undefined) {
-            ctx.patchState({profile: {id: defaultProfile.id, name: defaultProfile.name}});
+            ctx.patchState({profile: defaultProfile});
             return of(true);
           }
 
@@ -204,7 +228,13 @@ export class MarketState {
           () => isSuccess,
 
           defer(() => {
-            return ctx.dispatch(new MarketStateActions.LoadIdentities()).pipe(tap(() => ctx.patchState({started: StartedStatus.STARTED})));
+            return ctx.dispatch(new MarketStateActions.LoadIdentities()).pipe(tap(() => {
+              if (!ctx.getState().identity) {
+                ctx.patchState({ started: StartedStatus.FAILED });
+                return;
+              }
+              ctx.patchState({ started: StartedStatus.STARTED });
+            }));
           })
       ))
     );
@@ -377,6 +407,31 @@ export class MarketState {
   }
 
 
+  @Action(MarketUserActions.UpdateCurrentProfileDetails)
+  updateCurrentProfileDetails(ctx: StateContext<MarketStateModel>, { profileData }: MarketUserActions.UpdateCurrentProfileDetails) {
+    return iif(
+      () => ctx.getState().profile && isBasicObjectType(profileData),
+
+      defer(() => {
+        const excludedKeys = ['id'];
+        const filteredData = Object.keys(profileData)
+          .filter(key => !excludedKeys.includes(key))
+          .reduce((acc, key) => {
+            return {...acc, [key]: profileData[key]};
+          }, {});
+
+        if (Object.keys(filteredData).length > 0) {
+          ctx.setState(patch<MarketStateModel>({
+            profile: patch<Profile>(filteredData)
+          }));
+        }
+      }),
+
+      defer(() => of(true))
+    );
+  }
+
+
   @Action(MarketUserActions.CreateIdentity)
   createIdentity(ctx: StateContext<MarketStateModel>, { identityName }: MarketUserActions.CreateIdentity) {
 
@@ -465,6 +520,14 @@ export class MarketState {
         ctx.setState(patch<MarketStateModel>({
           settings: patch<MarketSettings>({ [key] : action.value })}
         ));
+      }
+
+      if (key === 'marketsLastAdded') {
+        ctx.setState(
+          patch<MarketStateModel>({
+            lastSmsgScanIssued: Date.now()
+          })
+        );
       }
     }
   }

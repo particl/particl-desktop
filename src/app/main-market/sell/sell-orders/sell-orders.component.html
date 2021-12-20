@@ -90,6 +90,7 @@
             </div>
             <div class="meta" fxFlex="1 1 100%">
               <div class="name">
+                <mat-icon class="warning-icon" fontIcon="part-circle-info" *ngIf="!orderItem.currentState.state.isFinalState && orderItem.hasWarnings">&nbsp;&nbsp;</mat-icon>
                 {{orderItem.listing.title}}
                 <!-- TODO: replace with buy quantity when implemented -->
                 <span class="qty">&times;1</span>
@@ -210,6 +211,30 @@
             </div><!-- .buyer-info -->
 
             <div class="pricing-info" fxFlex="auto">
+
+              <h3 class="item-subtitle">
+                <mat-icon class="warning-icon" fontIcon="part-circle-info" *ngIf="!orderItem.escrow.isRecommendedDefault">&nbsp;&nbsp;</mat-icon>
+                Escrow Ratios
+              </h3>
+              <table class="prices">
+
+                <tbody>
+                  <tr>
+                    <th>Buyer
+                    </th>
+                    <td class="amount part">
+                      {{orderItem.escrow.buyerPercentage}} &#37;
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Seller</th>
+                    <td class="amount part">
+                      {{orderItem.escrow.sellerPercentage}} &#37;
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
               <h3 class="item-subtitle">Pricing</h3>
               <table class="prices">
                 <tfoot>
@@ -276,6 +301,15 @@
             </button>
           </div>
           <div class="right">
+
+            <button mat-button
+              *ngIf="orderItem.extraDetails?.msgId?.length > 0"
+              color="warn" class="small" matTooltip="Resend your last action to the buyer" appDebounceClick
+              (debounceClick)="resendActionMessage(orderItem.extraDetails.msgId)">
+              <mat-icon fontIcon="part-refresh"></mat-icon>
+              Resend order status
+            </button>
+
             <button *ngFor="let actionable of orderItem.currentState.actions.PRIMARY"
                     mat-raised-button [color]="actionable.details.colour" [matTooltip]="actionable.details.tooltip"
                     appDebounceClick

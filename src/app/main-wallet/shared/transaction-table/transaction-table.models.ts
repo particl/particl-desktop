@@ -192,7 +192,13 @@ export class FilteredTransaction {
         break;
 
       case (this.category === 'internal_transfer') && !this.isListingFee:
-        netValue = this.amount;
+        const transferTotal = new PartoshiAmount(0, false);
+        for (const output of this.outputs) {
+          if ((Object.prototype.toString.call(output) === '[object Object]') && +output.amount > 0) {
+            transferTotal.add(new PartoshiAmount(+output.amount, false));
+          }
+        }
+        netValue = transferTotal.particls();
         break;
 
       default:

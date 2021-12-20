@@ -1,4 +1,7 @@
 
+export const MADCT_ESCROW_PERCENTAGE_DEFAULT = 100;
+export const MADCT_ESCROW_PERCENTAGE_MAX = 100;
+
 export type SALES_TYPE = 'SALE';
 export type ESCROW_TYPE = 'MAD_CT';
 export type CURRENCY_TYPE = 'PART';
@@ -188,7 +191,7 @@ export interface PriceItem {
 
 
 // tslint:disable:no-empty-interface
-export interface RespProfileListItem extends RespGeneralProfile {}
+export interface RespProfileListItem extends RespGeneralIdentity {}
 // tslint:enable:no-empty-interface
 
 
@@ -894,4 +897,9 @@ export interface RespOrderSearchItem {
     createdAt: number;
     Profile: RespGeneralProfile;
   };
+}
+
+export interface RespProfileMnemonic {
+  mnemonic: string;
+  passphrase: string;
 }

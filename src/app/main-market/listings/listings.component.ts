@@ -51,7 +51,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   selectedMarketControl: FormControl = new FormControl(0);
 
   // flags controlling what's displayed when
-  hasNewListings: boolean = false;
+  newPendingListingCount: number = 0;
   atEndOfListings: boolean = false;
   isSearching: boolean = false;
   isLoadingListings: boolean = true;
@@ -125,7 +125,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     const newMessageListings$ = this._listingService.getListenerNewListings().pipe(
       tap((resp) => {
         if (resp && this.activeMarket && (resp.market === this.activeMarket.receiveAddress)) {
-          this.hasNewListings = true;
+          this.newPendingListingCount += 1;
           this._cdr.detectChanges();
         }
       }),
@@ -148,27 +148,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
       catchError(() => of()),
       takeUntil(this.destroy$)
     );
-
-
-    // const newMessageComment$ = this._listingService.getListenerComments().pipe(
-    //   filter(() => this.listings.length > 0),
-    //   tap((resp) => {
-    //     if (
-    //       resp.target &&
-    //       this.activeMarket &&
-    //       (resp.receiver === this.activeMarket.receiveAddress) &&
-    //       (typeof resp.target === 'string')
-    //     ) {
-    //       const listing = this.listings.find(l => l.hash === resp.target);
-    //       if (listing) {
-    //         listing.extras.commentCount++;
-    //         this._cdr.detectChanges();
-    //       }
-    //     }
-    //   }),
-    //   catchError(() => of()),
-    //   takeUntil(this.destroy$)
-    // );
 
 
     const identityChange$ = this._store.select(MarketState.currentIdentity).pipe(
@@ -305,7 +284,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.isSearching = isSearching;
 
         if (!this.isSearching && (this.listings.length === 0) && !this.filterFlagged.value) {
-          this.hasNewListings = false;
+          this.newPendingListingCount = 0;
         }
 
         // force view update here

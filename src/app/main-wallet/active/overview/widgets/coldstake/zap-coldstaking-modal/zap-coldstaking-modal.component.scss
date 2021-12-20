@@ -10,7 +10,6 @@
   overflow-y: scroll; // always show vertical scrollbar, so content doesn't jump
 }
 
-
 .zap-option {
   @extend %tfx;
   padding: 8px 24px;
@@ -45,17 +44,17 @@ mat-slider {
   width: 100%;
 }
 
-
 .dot {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--bg);
+  // background: var(--bg);
   margin: 14px 8px 0 var(--content-paddingH);
   margin-right: 12px;
   background: var(--color-alert);
   position: relative;
-  &::before { // pulsating notification "dot"
+  &::before {
+    // pulsating notification "dot"
     content: '';
     width: 22px;
     height: 22px;
@@ -75,13 +74,11 @@ mat-slider {
   }
 }
 
-
 .txn-time {
   background: var(--bg);
   color: var(--color-info);
   margin-right: 1em;
 }
-
 
 .processing {
   display: inline-block;
@@ -92,7 +89,7 @@ mat-slider {
 
   table {
     width: auto;
-    margin-right: 0px;
+    margin-right: 0;
     margin-left: auto;
     text-align: right;
 
@@ -102,7 +99,6 @@ mat-slider {
     }
   }
 }
-
 
 // pulsating "dot" animation
 @keyframes pulse {
@@ -115,4 +111,3 @@ mat-slider {
     opacity: 0;
   }
 }
-

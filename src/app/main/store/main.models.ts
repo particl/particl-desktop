@@ -1,4 +1,13 @@
 
+
+export const MIN_RING_SIZE = 3;
+export const MAX_RING_SIZE = 32;
+export const DEFAULT_RING_SIZE = 12;
+export const MIN_UTXO_SPLIT = 1;
+export const MAX_UTXO_SPLIT = 100;
+export const DEFAULT_UTXO_SPLIT = 1;
+
+
 export interface WalletInfoStateModel {
   walletname: string;
   walletversion: number;
@@ -22,7 +31,8 @@ export interface WalletInfoStateModel {
 export interface WalletSettingsStateModel {
   notifications_payment_received: boolean;
   notifications_staking_reward: boolean;
-  anon_utxo_split: number;
+  utxo_split_count: number;
+  default_ringct_size: number;
 }
 
 
@@ -77,10 +87,13 @@ export interface AnonUTXO {
 }
 
 
-export interface WalletUTXOStateModel {
+export interface WalletBalanceStateModel {
   public: PublicUTXO[];
   blind: BlindUTXO[];
   anon: AnonUTXO[];
+  lockedPublic: number;
+  lockedBlind: number;
+  lockedAnon: number;
 }
 
 
@@ -120,4 +133,15 @@ export interface RpcGetWalletInfo {
   paytxfee: number;
   hdseedid: string;
   private_keys_enabled: boolean;
+}
+
+
+export interface RpcGetLockedBalances {
+  trusted_plain: number;
+  trusted_blind: number;
+  trusted_anon: number;
+  untrusted_plain: number;
+  untrusted_blind: number;
+  untrusted_anon: number;
+  num_locked: number;
 }

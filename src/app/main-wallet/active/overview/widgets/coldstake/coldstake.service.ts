@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { WalletUTXOState } from 'app/main/store/main.state';
+import { WalletBalanceState } from 'app/main/store/main.state';
 import { Observable, of, forkJoin, throwError, iif, defer } from 'rxjs';
 import { catchError, map, concatMap, take, mapTo } from 'rxjs/operators';
 import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
@@ -91,13 +91,27 @@ export class ColdstakeService {
           return '';
         })
       ),
-    });
+    }).pipe(
+      concatMap(csDetails => iif(
+        () => csDetails.spendAddress.length > 0,
+
+        defer(() => this._addressService.getAddressInfo(csDetails.spendAddress).pipe(
+          map(addressInfo => {
+            csDetails.spendAddress = addressInfo && (typeof addressInfo.ismine === 'boolean') && addressInfo.ismine ?
+              csDetails.spendAddress : '';
+            return csDetails;
+          })
+        )),
+
+        defer(() => of(csDetails))
+      ))
+    );
   }
 
 
   fetchZapGroupDetails(strategy: ZapStakingStrategy): Observable<ZapGroupDetailsType> {
     return forkJoin({
-      utxos: this._store.selectOnce(WalletUTXOState.getValue('public')).pipe(take(1)) as Observable<PublicUTXO[]>,
+      utxos: this._store.selectOnce<PublicUTXO[]>(WalletBalanceState.utxosPublic()).pipe(take(1)),
 
       groupings: iif(
         () => strategy !== ZapStakingStrategy.PRIVACY,
@@ -207,7 +221,7 @@ export class ColdstakeService {
     address: string,
     estimateOnly: boolean = true
   ): Observable<{count: number, errors: number, fee: PartoshiAmount}> {
-    const utxos: PublicUTXO[] = this._store.selectSnapshot(WalletUTXOState.getValue('public'));
+    const utxos = this._store.selectSnapshot<PublicUTXO[]>(WalletBalanceState.utxosPublic());
     const actualValues: Array<{amount: number, inputs: {tx: string, n: number}}> = [];
     utxos.forEach(utxo => {
       if (!utxo.coldstaking_address || !utxo.address) {

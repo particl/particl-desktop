@@ -100,10 +100,11 @@
 
         <div class="right">
           <!-- Refresh Listings -->
-          <button mat-button class="small filter-button refresh"  (click)="actionRefresh.setValue(null)" [class.new-listings-available]="hasNewListings" [matTooltip]="hasNewListings && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
+          <button mat-button class="small filter-button refresh"  (click)="actionRefresh.setValue(null)" [class.new-listings-available]="newPendingListingCount > 0" [matTooltip]="(newPendingListingCount > 0) && !filterFlagged.value ? 'New listings available' : 'Refresh listings'">
             <mat-icon fontIcon="part-refresh"></mat-icon>
             Refresh
             <div class="dot"></div>
+            <div *ngIf="newPendingListingCount > 0" class="count small">{{ newPendingListingCount }}</div>
           </button>
         </div>
 
@@ -182,7 +183,7 @@
             If you launched the Marketplace recently, Listings might not load yet.<br>
             Please wait a few minutes and then:
           </p>
-          <button mat-button color="primary" [class.new-listings-available]="hasNewListings" (click)="actionRefresh.setValue(!actionRefresh.value)" matTooltip="Check for new incoming Listings">
+          <button mat-button color="primary" [class.new-listings-available]="newPendingListingCount > 0" (click)="actionRefresh.setValue(!actionRefresh.value)" matTooltip="Check for new incoming Listings">
             <mat-icon fontIcon="part-refresh"></mat-icon>
             Refresh Listings
           </button>

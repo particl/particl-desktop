@@ -56,11 +56,11 @@ export namespace WalletDetailActions {
     static readonly type: string = '[Wallet Details] Reset Staking Info';
   }
 
-  export class GetAllUTXOS {
-    static readonly type: string = '[Wallet Details] Get All Balances';
+  export class RefreshBalances {
+    static readonly type: string = '[Wallet Details] Refresh Balances';
   }
 
-  export class ResetAllUTXOS {
+  export class ResetBalances {
     static readonly type: string = '[Wallet Details] Reset All Balances';
   }
 

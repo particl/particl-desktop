@@ -1,10 +1,9 @@
-@import './src/assets/_config'; // import shared colors etc.
-@import '../list-item-details'; // shared styling for list items
+@import "./src/assets/_config"; // import shared colors etc.
+@import "../list-item-details"; // shared styling for list items
 
 .fiat {
   display: none; // hidden until implemented
 }
-
 
 // ------ GENERAL ------ //
 
@@ -25,7 +24,6 @@ button.modal-close {
   z-index: 30 !important;
 }
 
-
 // ------ LAYOUT ------ //
 
 :host {
@@ -36,7 +34,8 @@ button.modal-close {
         background-repeat: no-repeat;
       }
     }
-    gallery-nav { // recolor the nav arrows to grey
+    gallery-nav {
+      // recolor the nav arrows to grey
       .g-nav-next,
       .g-nav-prev {
         filter: invert(10%);
@@ -65,7 +64,6 @@ button.modal-close {
   overflow-y: scroll; // always show vertical scrollbar, so content doesn't jump
 }
 
-
 // Container for upper part (gallery, name, meta)
 .product-summary {
   margin: 0 -24px;
@@ -81,11 +79,13 @@ button.modal-close {
     .gallery-carousel {
       width: 100%;
       height: 100%;
-      img { // single product image
+      img {
+        // single product image
         @extend %image-center-cover;
       }
     }
-    gallery { // multiple product images in gallery
+    gallery {
+      // multiple product images in gallery
       background: none;
     }
   }
@@ -126,8 +126,9 @@ button.modal-close {
       position: relative;
       top: 3px;
       margin-right: 4px;
-      &::after { // pulsating "ripple"
-        content: '';
+      &::after {
+        // pulsating "ripple"
+        content: "";
         display: block;
         border: 2px solid hsla(var(--color-info-hsl), 0.7);
         width: 12px;
@@ -173,7 +174,8 @@ button.modal-close {
           font-weight: 400;
           margin-left: 5px;
         }
-        .not-available { // product shipping N/A to selected destination
+        .not-available {
+          // product shipping N/A to selected destination
           @extend .big;
           font-style: italic;
           color: var(--color-alert);
@@ -208,7 +210,6 @@ button.modal-close {
     }
   }
 } // << .product-info
-
 
 .product-details {
   margin: 0 -24px;
@@ -265,6 +266,7 @@ button.modal-close {
   table.shipping-escrow {
     width: calc(100% + 2 * var(--paddingH));
     margin: -8px calc(-1 * var(--paddingH));
+
     thead {
       th {
         color: var(--text-muted);
@@ -326,8 +328,16 @@ button.modal-close {
       font-size: 90%;
       margin-left: 0.3rem;
     }
-  }
 
+    &.centered {
+      text-align: center;
+      thead {
+        th {
+          text-align: center;
+        }
+      }
+    }
+  }
 }
 
 mat-dialog-actions {
@@ -362,7 +372,8 @@ mat-dialog-actions {
       }
     }
   }
-  app-favorite { // add/remove from favs icon
+  app-favorite {
+    // add/remove from favs icon
     margin-right: 6px;
   }
 }

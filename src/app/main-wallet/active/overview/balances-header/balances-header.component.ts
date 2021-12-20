@@ -2,12 +2,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Log } from 'ng2-logger';
-import { Observable, Subject, combineLatest } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Balance } from './balances.models';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
-import { WalletInfoStateModel, WalletUTXOStateModel, PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
+import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 
 
@@ -56,25 +56,30 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
       });
     }
 
-    const info$: Observable<WalletInfoStateModel> = this._store.select(WalletInfoState).pipe(
-      takeUntil(this.destroy$)
-    );
+    combineLatest([
+      this._store.select<WalletInfoStateModel>(WalletInfoState).pipe(
+        takeUntil(this.destroy$)
+      ),
 
-    const utxo$: Observable<WalletUTXOStateModel> = this._store.select(WalletUTXOState).pipe(
-      takeUntil(this.destroy$)
-    );
+      this._store.select<string>(WalletBalanceState.spendableTotal()).pipe(
+        takeUntil(this.destroy$)
+      ),
 
-    combineLatest([info$, utxo$]).pipe(
+      this._store.select<number>(WalletBalanceState.lockedTotal()).pipe(
+        takeUntil(this.destroy$)
+      ),
+    ]).pipe(
       takeUntil(this.destroy$)
     ).subscribe(
       (result) => {
         const info = result[0];
-        const utxos = result[1];
+        const spendableTotal = new PartoshiAmount(+result[1], false);
+        const lockedTotal = new PartoshiAmount(+result[2], false);
 
         this.setStandardBalances(info);
 
-        this.setActualBalance(utxos);
-        this.setLockedBalance(info, utxos);
+        this.setActualBalance(spendableTotal);
+        this.setLockedBalance(lockedTotal);
         this.setPendingBalance(info);
       }
     );
@@ -130,38 +135,22 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
   }
 
 
-  private setActualBalance(utxos: WalletUTXOStateModel) {
+  private setActualBalance(totalSpendable: PartoshiAmount) {
     const balItem = this._balances.find((bal) => bal.type === 'actual_balance');
     if (!balItem) {
       return;
     }
-    const total = this.toPartoshiAmount(0);
 
-    for (const key of ['public', 'blind', 'anon']) {
-      total.add(this.extractUTXOSpendable(utxos[key]));
-    }
-
-    this.updateBalanceItem(balItem, total);
+    this.updateBalanceItem(balItem, totalSpendable);
   }
 
 
-  private setLockedBalance(info: WalletInfoStateModel, utxos: WalletUTXOStateModel) {
+  private setLockedBalance(lockedTotal: PartoshiAmount) {
     const balItem = this._balances.find((bal) => bal.type === 'locked_balance');
     if (!balItem) {
       return;
     }
-    const total = this.toPartoshiAmount(0);
-    total.add(this.toPartoshiAmount(+info.total_balance));
-    total.add(this.toPartoshiAmount(+info.staked_balance));
-    total.subtract(this.toPartoshiAmount(+info.unconfirmed_balance));
-    total.subtract(this.toPartoshiAmount(+info.unconfirmed_blind));
-    total.subtract(this.toPartoshiAmount(+info.unconfirmed_anon));
-
-    for (const key of ['public', 'blind', 'anon']) {
-      total.subtract(this.extractUTXOSpendable(utxos[key]));
-    }
-
-    this.updateBalanceItem(balItem, total);
+    this.updateBalanceItem(balItem, lockedTotal);
   }
 
 
@@ -181,24 +170,4 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
 
     this.updateBalanceItem(balItem, total);
   }
-
-
-  private extractUTXOSpendable(utxos: PublicUTXO[] | BlindUTXO[] | AnonUTXO[]): PartoshiAmount {
-    const tempBal = new PartoshiAmount(0);
-
-    for (let ii = 0; ii < utxos.length; ++ii) {
-      const utxo = utxos[ii];
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        const amount = this.toPartoshiAmount(utxo.amount);
-        tempBal.add(amount);
-      }
-    }
-
-    return tempBal;
-  }
-
 }

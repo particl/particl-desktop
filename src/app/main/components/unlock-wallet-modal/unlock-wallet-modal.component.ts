@@ -23,6 +23,8 @@ export class UnlockwalletModalComponent implements AfterViewInit {
   readonly timeoutIsEditable?: boolean;
   readonly showStakingUnlock?: boolean;
 
+  readonly otherWalletName: string;
+
   timeout: number;
   showPass: boolean = false;
   password: string = '';
@@ -33,15 +35,18 @@ export class UnlockwalletModalComponent implements AfterViewInit {
 
   constructor(
     public _dialogRef: MatDialogRef<UnlockwalletModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: UnlockModalConfig,
+    @Inject(MAT_DIALOG_DATA) private data: UnlockModalConfig,
     private _walletService: WalletInfoService,
     private _snackbar: SnackbarService
   ) {
-    this.timeout = (typeof data.timeout === 'number') && (Number.isInteger(data.timeout)) && (data.timeout >= 0) ?
-      data.timeout : 300;
+    this.timeout = (typeof this.data.timeout === 'number') && (Number.isInteger(this.data.timeout)) && (this.data.timeout >= 0) ?
+      this.data.timeout : 300;
 
-    this.showStakingUnlock = typeof data.showStakingUnlock === 'boolean' ? data.showStakingUnlock : false;
-    this.timeoutIsEditable = typeof data.timeoutIsEditable === 'boolean' ? data.timeoutIsEditable : true;
+    this.showStakingUnlock = typeof this.data.showStakingUnlock === 'boolean' ? this.data.showStakingUnlock : false;
+    this.timeoutIsEditable = typeof this.data.timeoutIsEditable === 'boolean' ? this.data.timeoutIsEditable : true;
+
+    this.otherWalletName = this.data.wallet ? this.data.wallet : null;
+
   }
 
 
@@ -68,7 +73,7 @@ export class UnlockwalletModalComponent implements AfterViewInit {
 
     this.isProcessing = true;
 
-    this._walletService.walletPassphrase(this.password, this.timeout, this.unlockForStaking).pipe(
+    this._walletService.walletPassphrase(this.otherWalletName, this.password, this.timeout, this.unlockForStaking).pipe(
       finalize(() => this.isProcessing = false)
     ).subscribe(
       () => {

@@ -1,6 +1,5 @@
 import { PartoshiAmount } from 'app/core/util/utils';
 import { PriceItem } from '../shared/market.models';
-
 import {
   CURRENCY_TYPE,
   ESCROW_TYPE,
@@ -41,10 +40,15 @@ export interface TemplateFormDetails {
   priceShipLocal: string;
   priceShipIntl: string;
   shippingOrigin: string;
+  escrowPercentageBuyer: number;
+  escrowPercentageSeller: number;
   shippingDestinations: string[];
   savedImages: { id: number; url: string; }[];
   market: { selectedMarketId: number; canEdit: boolean; };
   category: { selectedMarketCategoryId: number; canEdit: boolean; };
+  // pendingImages: base64-encoded images
+  //  (primarily used for importing products, and should not be used for regular application usage of template forms)
+  pendingImages?: string[];
 }
 
 
@@ -60,6 +64,7 @@ export interface TemplateSavedDetails {
   images: {id: number; url: string}[];
   escrowSeller: number;
   escrowBuyer: number;
+  escrowReleaseType: ESCROW_RELEASE_TYPE;
 }
 
 
@@ -127,6 +132,12 @@ export interface UpdateTemplateRequest {
     domesticShippingPrice: number;
     foreignShippingPrice: number;
   };
+  escrow?: {
+    buyerRatio: number;
+    sellerRatio: number;
+    escrowType: ESCROW_TYPE;
+    releaseType: ESCROW_RELEASE_TYPE;
+  };
   shippingFrom?: string;
   shippingTo?: {
     add: string[],
@@ -143,6 +154,8 @@ export interface ProductMarketTemplate {
   categoryName: string;
   categoryId: number;
   priceBase: PriceItem;
+  priceShippingLocal: PriceItem;
+  priceShippingIntl: PriceItem;
   hash: string;
   created: number;
   updated: number;
@@ -174,8 +187,14 @@ export interface BatchPublishProductItem {
   id: number;
   name: string;
   image: string;
+  priceBase: string;
+  priceShippingLocal: string;
+  priceShippingIntl: string;
   existingMarkets: {
     marketId: number;
     categoryId: number;
+    priceBase: string;
+    priceShippingLocal: string;
+    priceShippingIntl: string;
   }[];
 }

@@ -22,3 +22,18 @@
     }
   }
 }
+
+
+.menu-item {
+  &.warning {
+    cursor: pointer;
+
+    .mat-icon,
+    &:hover .mat-icon {
+      color: var(--color-alert);
+    }
+    &:hover .text {
+      background: rgba(var(--color-alert), 1);
+    }
+  }
+}

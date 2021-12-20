@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 .row {
   margin-bottom: var(--paddingV);
@@ -117,6 +117,13 @@
   padding: 0 0 1.35em;
   font-size: 16px;
   color: var(--text-muted);
+}
+
+.shipping {
+  margin-bottom: 0.5em;
+  &.#{--with-error} {
+    border-bottom: 2px solid var(--color-alert);
+  }
 }
 
 // ------ PUBLISH OPTIONS ------ //

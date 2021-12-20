@@ -9,7 +9,7 @@ import { RegionListService } from '../region-list/region-list.service';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath, parseMarketResponseItem } from '../../shared/utils';
-import { RespCategoryList, RespMarketListMarketItem, RespListingItem } from '../../shared/market.models';
+import { RespCategoryList, RespMarketListMarketItem, RespListingItem, MADCT_ESCROW_PERCENTAGE_DEFAULT } from '../../shared/market.models';
 import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
 import { CategoryItem, Market } from './data.models';
 
@@ -95,8 +95,8 @@ export class DataService {
         basePrice = 0,
         shipLocal = 0,
         shipIntl = 0,
-        escrowSeller = 100,
-        escrowBuyer = 100,
+        escrowSeller = MADCT_ESCROW_PERCENTAGE_DEFAULT,
+        escrowBuyer = MADCT_ESCROW_PERCENTAGE_DEFAULT,
         flaggedHash = '',
         favouriteId = 0;
 

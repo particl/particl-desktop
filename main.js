@@ -14,7 +14,6 @@ const ALLOWED_EXTERNAL_URLS = [
 
   // particl related domains
   'https://particl.io',
-  'https://particl.academy',
   'https://particl.news',
   'https://particl.community',
   'https://particl.wiki',

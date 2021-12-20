@@ -1,0 +1,35 @@
+<mat-dialog-title>Cancel Order</mat-dialog-title>
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/reject-cancel-bid.svg" alt="Resend order action">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Are you sure you want to re-broadcast your last order status?
+      </p>
+      <p class="help-text">
+        This should mostly be unnecessary, but in some rare cases where the other party to the transaction is having difficulty with their order processing, this may help them obtain the latest transaction status.
+      </p>
+    </div>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Go back
+  </button>
+  <button mat-raised-button color="warn" appDebounceClick (debounceClick)="doAction()">
+    <mat-icon fontIcon="part-circle-remove"></mat-icon>
+    Yes, resend order status
+  </button>
+</mat-dialog-actions>

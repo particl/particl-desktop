@@ -34,6 +34,13 @@ exports.start = function (doReindex = false, zmqPort = zmqDefaultPort) {
     }
   }
 
+  if (+options.txindex !== 1) {
+    const daemonSettings = daemonConfig.getSettings();
+    if (!(daemonSettings.global && daemonSettings.global.txindex === 1)) {
+      daemonConfig.saveSettings({txindex: true});
+    }
+  }
+
   return (new Promise((resolve, reject) => {
 
     exports.check().then(() => {

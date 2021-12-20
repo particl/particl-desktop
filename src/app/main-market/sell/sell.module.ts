@@ -30,6 +30,7 @@ import { ImportListingsComponent } from './import-listings/import-listings.compo
 import { ImporterDirective } from './import-listings/import.directive';
 import { CsvImporterComponent } from './import-listings/import-components/csv-importer/csv-importer.component';
 import { ImportTemplateItemComponent } from './import-listings/import-components/import-template-item/imported-template-item.component';
+import { ResendOrderActionConfirmationModalComponent } from './modals/resend-order-action-confirmation-modal/resend-order-action-confirmation-modal.component';
 // import { WooCommerceImporterComponent } from './import-listings/import-components/woocommerce-importer/woocommerce-importer.component';
 
 
@@ -72,6 +73,7 @@ const routes: Routes = [
     CancelBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
+    ResendOrderActionConfirmationModalComponent,
 
     SellListingsComponent,
 
@@ -88,6 +90,7 @@ const routes: Routes = [
     CancelBidModalComponent,
     EscrowPaymentModalComponent,
     OrderShippedModalComponent,
+    ResendOrderActionConfirmationModalComponent,
 
     ImportTemplateItemComponent,
     CsvImporterComponent,

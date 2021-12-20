@@ -5,10 +5,9 @@ import { Observable, Subject, merge } from 'rxjs';
 import { takeUntil, skipWhile, tap, distinctUntilChanged, switchMap, map, shareReplay } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
+import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
 import { GovernanceState } from '../store/governance-store.state';
 import { MainActions } from 'app/main/store/main.actions';
-import { WalletUTXOStateModel } from 'app/main/store/main.models';
 import { WalletInfoService } from 'app/main/services/wallet-info/wallet-info.service';
 
 import { environment } from 'environments/environment';
@@ -16,8 +15,6 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { GovernanceService } from './governance.service';
 
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-
-import { PartoshiAmount } from 'app/core/util/utils';
 
 
 enum TextContent {
@@ -81,8 +78,7 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    this.currentWalletBalance$ = this._store.select(WalletUTXOState).pipe(
-      map((utxos: WalletUTXOStateModel) => this.extractSpendableBalance(utxos)),
+    this.currentWalletBalance$ = this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(
       takeUntil(this.destroy$)
     );
 
@@ -174,23 +170,5 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
     const nameParts = originalName.split(char);
     return nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0] || originalName;
 
-  }
-
-
-  private extractSpendableBalance(allUtxos: WalletUTXOStateModel): string {
-    const tempBal = new PartoshiAmount(0);
-    const utxos = allUtxos.public || [];
-
-    for (const utxo of utxos) {
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        tempBal.add(new PartoshiAmount(utxo.amount));
-      }
-    }
-
-    return tempBal.particlsString();
   }
 }
