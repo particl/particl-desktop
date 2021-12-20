@@ -220,7 +220,7 @@ class CSVParser extends BaseParser {
         subs.complete();
       })().catch(e => {
         // can be logged...
-        // this simply catches any uncaught exception from occuring(typically should only be programming error) and prevents the parsing request from exploding if an error occurs
+        // this simply catches any uncaught exception from occurring (typically should only be programming errors) and prevents the parsing request from exploding if an error occurs
       });
     }).pipe(
       rxjsOps.finalize(() => {

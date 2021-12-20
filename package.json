@@ -13,7 +13,7 @@
   "author": "Particl contributors",
   "main": "main.js",
   "appVersions": {
-    "wallet": "1.5.0",
+    "wallet": "1.6.0",
     "governance": "0.1.0"
   },
   "browserslist": [
@@ -187,7 +187,7 @@
     "@ngx-gallery/gallerize": "^5.0.0-beta.0",
     "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
-    "@zasmilingidiot/particl-marketplace": "./zasmilingidiot-particl-marketplace-0.3.4-dev006.tgz",
+    "@zasmilingidiot/particl-marketplace": "0.3.4",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "angularx-qrcode": "^1.0.1",
     "autodetect-decoder-stream": "^1.0.3",
