@@ -386,7 +386,7 @@ export class SendComponent implements OnInit, OnDestroy {
       }
     }
 
-    this._unlocker.unlock({timeout: 10}).pipe(
+    this._unlocker.unlock({timeout: 15}).pipe(
       finalize(() => this.isProcessing = false),
       concatMap((unlocked: boolean) => iif(() => unlocked, defer(() => this._sendService.runTransaction(trans, true))))
     ).subscribe(
