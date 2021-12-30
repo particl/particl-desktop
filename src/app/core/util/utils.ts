@@ -94,8 +94,8 @@ export class PartoshiAmount {
 
 export class AddressHelper {
   addressPublicRegex: RegExp = /^[pPrR25][a-km-zA-HJ-NP-Z1-9]{25,52}$/ ;
-  addressPrivateRegex: RegExp = /^[Tt][a-km-zA-HJ-NP-Z1-9]{60,}$/ ;
-  addressBothRegex: RegExp = /^[pPrR25tT][a-km-zA-HJ-NP-Z1-9]{25,}$/ ;
+  addressPrivateRegex: RegExp = /^[TtS][a-km-zA-HJ-NP-Z1-9]{60,}$/ ;
+  addressBothRegex: RegExp = /^[pPrR25tTS][a-km-zA-HJ-NP-Z1-9]{25,}$/ ;
 
   testAddress(address: string, type?: 'public' | 'private'): boolean {
     return this[(type ? type === 'public'

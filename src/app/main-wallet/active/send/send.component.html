@@ -44,13 +44,13 @@
 
           <p class="widget-help">
             <ng-container *ngIf="sourceType.value === 'part'">
-              In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender's and receiver's addresses.
+              Everything is visible on the blockchain &ndash; transaction amount, sender's and receiver's addresses.
             </ng-container>
             <ng-container *ngIf="sourceType.value === 'blind'">
-              Blinded transactions hide transaction amounts, but the sender's and receiver's addresses are still visible.
+              Hides transaction amounts, but both the sender and receiver addresses are visible.
             </ng-container>
             <ng-container *ngIf="sourceType.value === 'anon'">
-              Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
+              Offers the highest privacy &ndash; the transaction amounts, and sender and receiver
               addresses are hidden from public.
             </ng-container>
           </p>
@@ -141,7 +141,7 @@
               <div class="row" fxLayout fxLayoutAlign="spacebetween center">
                 <p class="widget-help">
                   Created outputs: {{selectedUTXOCount.value}} <br/>
-                  The amount will be split evenly between all of the outputs created.
+                  Split the payment evenly between outputs for faster coin maturity and flexibility on batch payments.
                 </p>
               </div>
 
