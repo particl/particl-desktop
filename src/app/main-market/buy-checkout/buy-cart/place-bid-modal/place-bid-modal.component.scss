@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 .mat-dialog-content {
   width: 450px;
@@ -50,7 +50,7 @@ section {
       }
     }
   }
-  
+
   &.shipping {
     .shipping-address {
       color: var(--text-muted);
@@ -72,11 +72,10 @@ section {
       @extend %enable-select;
     }
   }
-
 } // section
 
-
-.no-results { // in this case used instead of "mat-action-buttons
+.no-results {
+  // in this case used instead of "mat-action-buttons
   margin-top: 30px;
   .title {
     color: var(--text) !important;
@@ -84,5 +83,14 @@ section {
   .help-text {
     margin: 0 auto 12px;
     color: var(--text-muted) !important;
+  }
+}
+
+.confirmation-checkbox {
+  margin-right: 24px;
+  color: var(--text-muted);
+  strong {
+    font-weight: 500;
+    color: var(--text);
   }
 }

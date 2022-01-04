@@ -12,7 +12,7 @@ import { DataService } from '../../services/data/data.service';
 
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { RespCartItemListItem, RespAddressListItem, ADDRESS_TYPES, RespAddressAdd } from '../../shared/market.models';
+import { RespCartItemListItem, RespAddressListItem, ADDRESS_TYPES, RespAddressAdd, MADCT_ESCROW_PERCENTAGE_DEFAULT } from '../../shared/market.models';
 import { ShippingAddress } from '../../shared/shipping-profile-address-form/shipping-profile-address.models';
 import { CartItem } from './buy-cart.models';
 import { ListingItemDetail } from '../../shared/listing-detail-modal/listing-detail.models';
@@ -277,7 +277,11 @@ export class BuyCartService {
       category: '',
       marketName: '',
       expiryTime: 0,
-      escrowPercent: 100,
+      escrow: {
+        buyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+        sellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+        isRecommendedDefault: true,
+      },
       price: {
         base: new PartoshiAmount(0),
         shippingLocal: new PartoshiAmount(0),
@@ -343,9 +347,15 @@ export class BuyCartService {
         isBasicObjectType(from.ListingItem.PaymentInformation.Escrow) &&
         isBasicObjectType(from.ListingItem.PaymentInformation.Escrow.Ratio)
       ) {
-        newCartItem.escrowPercent = getValueOrDefault(
-          from.ListingItem.PaymentInformation.Escrow.Ratio.buyer, 'number', newCartItem.escrowPercent
-        );
+        newCartItem.escrow.buyerRatio = +from.ListingItem.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+          +from.ListingItem.PaymentInformation.Escrow.Ratio.buyer : newCartItem.escrow.buyerRatio;
+
+        newCartItem.escrow.sellerRatio = +from.ListingItem.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+          +from.ListingItem.PaymentInformation.Escrow.Ratio.seller : newCartItem.escrow.sellerRatio;
+
+        newCartItem.escrow.isRecommendedDefault =
+          (newCartItem.escrow.buyerRatio === MADCT_ESCROW_PERCENTAGE_DEFAULT) &&
+          (newCartItem.escrow.sellerRatio === MADCT_ESCROW_PERCENTAGE_DEFAULT);
       }
 
       if (isBasicObjectType(from.ListingItem.PaymentInformation.ItemPrice)) {

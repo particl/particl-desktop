@@ -3,15 +3,15 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { Store } from '@ngxs/store';
-import { Subject, merge } from 'rxjs';
+import { Subject, merge, combineLatest } from 'rxjs';
 import { takeUntil, tap, map, finalize } from 'rxjs/operators';
 import { WalletInfoService } from 'app/main/services/wallet-info/wallet-info.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { WalletInfoState, WalletUTXOState } from 'app/main/store/main.state';
+import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
 import { MainActions } from 'app/main/store/main.actions';
 import { IWallet } from './wallet-base.models';
-import { WalletUTXOStateModel, WalletInfoStateModel } from 'app/main/store/main.models';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { environment } from 'environments/environment';
 
@@ -58,11 +58,17 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balance$ = this._store.select(WalletUTXOState).pipe(
-      map((utxos: WalletUTXOStateModel) => {
-        return this.extractUTXOSpendables(utxos);
-      }),
-      tap((amount) => this._walletBalance = (new PartoshiAmount(amount)).particlsString()),
+    const balance$ = combineLatest([
+      this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(takeUntil(this.destroy$)),
+      this._store.select(WalletBalanceState.spendableAmountBlind()).pipe(takeUntil(this.destroy$)),
+      this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
+    ]).pipe(
+      map(balances => (new PartoshiAmount(+balances[0], false))
+        .add(new PartoshiAmount(+balances[1], false))
+        .add(new PartoshiAmount(+balances[2], false))
+        .particlsString()
+      ),
+      tap(result => this._walletBalance = result),
       takeUntil(this.destroy$)
     );
 
@@ -160,9 +166,9 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
             wallet.name.startsWith('regtest\\') ||
             (wallet.name === 'regtest') ||
             // avoid including the current active wallet
-            (wallet.name === this._currentWallet.name) ||
+            (wallet.name === this._currentWallet.name)
             // avoid market profiles (that are technically wallets but shouldn't be used as them for now)
-            (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
+            // (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
           )) {
             this.otherWallets.push(this.processWallet(wallet.name));
           }
@@ -192,29 +198,6 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       initial,
       displayName: dispName,
     };
-  }
-
-
-  // @TODO: zaSmilingIdiot 2020-03-02 -> memoize this in the state to make balances easier to obtain from other components
-  private extractUTXOSpendables(state: WalletUTXOStateModel): number {
-    const tempBal = new PartoshiAmount(0);
-
-    const balTypes = Object.keys(state);
-    for (const key of balTypes) {
-      const utxos = state[key];
-
-      for (let ii = 0; ii < utxos.length; ++ii) {
-        const utxo = utxos[ii];
-        let spendable = true;
-        if ('spendable' in utxo) {
-          spendable = utxo.spendable;
-        }
-        if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-          tempBal.add(new PartoshiAmount(utxo.amount));
-        }
-      }
-    }
-    return tempBal.particls();
   }
 
 

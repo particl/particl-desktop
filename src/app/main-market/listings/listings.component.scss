@@ -1,4 +1,4 @@
-@import './src/assets/_config'; // import shared colors etc.
+@import "./src/assets/_config"; // import shared colors etc.
 
 /* -------------- FILTER SIDEBAR -------------- */
 
@@ -25,18 +25,34 @@
   line-height: 36px;
   &.refresh {
     position: relative;
+
+    .count {
+      position: absolute;
+      left: 0px;
+      top: 80%;
+      margin: 0;
+      padding-left: 2px;
+      padding-right: 2px;
+      line-height: normal;
+      background: hsla(var(--color-secondary-hsl), 0.7);
+      color: var(--color-white);
+      border-radius: 1em;
+      font-size: 0.85em;
+    }
   }
-  &.new-listings-available { // when new ones are available
-    .dot { // notification dot
+  &.new-listings-available {
+    // when new ones are available
+    .dot {
+      // notification dot
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: var(--color-secondary);
       position: absolute;
-      bottom: 10px;
-      left: 22px;
+      top: 6px;
+      left: 5px;
       &::before {
-        content: '';
+        content: "";
         display: block;
         width: 6px;
         height: 6px;
@@ -57,7 +73,8 @@
 }
 
 .mat-option {
-  img.image { // photos in Market switcher
+  img.image {
+    // photos in Market switcher
     --size: 24px;
     width: var(--size);
     height: var(--size);
@@ -80,7 +97,6 @@
     opacity: 0;
   }
 }
-
 
 /* -------------- CONTENT AREA / LAYOUT -------------- */
 
@@ -126,20 +142,25 @@
   }
 }
 
-
 /* -------------- LISTING ITEM -------------- */
 
 mat-card.listing {
   --card-padding: 16px;
   // container width / no. of columns - (grid gutter + card's side padding):
-  flex: 0 0 calc((100% / var(--grid-columns) - var(--grid-gutter)) - 2 * var(--card-padding));
+  flex: 0 0
+    calc(
+      (100% / var(--grid-columns) - var(--grid-gutter)) - 2 *
+        var(--card-padding)
+    );
   padding: var(--card-padding);
   margin: 0 var(--grid-gutter) var(--grid-gutter) 0;
   border-radius: 0;
   .mat-card-image {
     height: 0;
     overflow: hidden;
-    padding-top: calc(100% + 32px); // locking 1:1 aspect ratio + offsetting side paddings for a perfect square
+    padding-top: calc(
+      100% + 32px
+    ); // locking 1:1 aspect ratio + offsetting side paddings for a perfect square
     margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 0;
     position: relative;
     cursor: pointer;

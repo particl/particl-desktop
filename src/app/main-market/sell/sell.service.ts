@@ -10,7 +10,15 @@ import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { PartoshiAmount } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
-import { RespListingTemplate, RespItemPost, RespTemplateSize, IMAGE_SEND_TYPE } from '../shared/market.models';
+import {
+  RespListingTemplate,
+  RespItemPost,
+  RespTemplateSize,
+  IMAGE_SEND_TYPE,
+  ESCROW_RELEASE_TYPE,
+  MADCT_ESCROW_PERCENTAGE_DEFAULT,
+  MADCT_ESCROW_PERCENTAGE_MAX
+} from '../shared/market.models';
 import {
   Template,
   TemplateSavedDetails,
@@ -26,6 +34,9 @@ import { ListingItemDetail } from '../shared/listing-detail-modal/listing-detail
 
 @Injectable()
 export class SellService {
+
+  ESCROW_PERCENTAGE_DEFAULT: number = MADCT_ESCROW_PERCENTAGE_DEFAULT;
+  ESCROW_PERCENTAGE_MAX: number = MADCT_ESCROW_PERCENTAGE_MAX;
 
   private readonly IMAGE_SCALING_FACTOR: number = 0.8;
   private readonly IMAGE_QUALITY_FACTOR: number = 1;
@@ -299,6 +310,17 @@ export class SellService {
       ];
       updates$.push(this._rpc.call('template', args));
     }
+    if (isBasicObjectType(details.escrow)) {
+      updates$.push(
+        this._rpc.call('escrow', ['update',
+          templateId,
+          details.escrow.escrowType,
+          details.escrow.buyerRatio,
+          details.escrow.sellerRatio,
+          details.escrow.releaseType
+        ])
+      );
+    }
     if (typeof details.shippingFrom === 'string') {
       updates$.push(this._rpc.call('template', ['location', 'update', templateId, details.shippingFrom]));
     }
@@ -396,9 +418,15 @@ export class SellService {
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
 
-    const postParams = ['post', templateId, durationDays, true, usePaidImageMsg];
-
-    postParams.push(usingAnonFees ? 'anon' : 'part');
+    const postParams = [
+      'post',
+      templateId,
+      durationDays,
+      true,
+      usePaidImageMsg,
+      (usingAnonFees ? 'anon' : 'part'),
+      12,
+    ];
 
     return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => {
@@ -435,9 +463,15 @@ export class SellService {
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
 
-    const postParams = ['post', templateId, durationDays, false, usePaidImageMsg];
-
-    postParams.push(usingAnonFees ? 'anon' : 'part');
+    const postParams = [
+      'post',
+      templateId,
+      durationDays,
+      false,
+      usePaidImageMsg,
+      (usingAnonFees ? 'anon' : 'part'),
+      12,
+    ];
 
     return this._rpc.call('template', postParams).pipe(
       map((resp: RespItemPost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
@@ -446,7 +480,13 @@ export class SellService {
 
 
   async batchPublishProductToMarket(
-    productId: number, market: {id: number, key: string}, categoryId: number, durationDays: number
+    productId: number,
+    market: { id: number, key: string },
+    categoryId: number,
+    priceBase: number,
+    priceShipLocal: number,
+    priceShipIntl: number,
+    durationDays: number
   ): Promise<boolean> {
 
     /**
@@ -534,21 +574,48 @@ export class SellService {
     if (!isBasicObjectType(latestMarketTempl.ItemInformation)) {
       throw new Error('Invalid template information');
     }
+    // check that the latest market template has the correct price set
+    if (
+      !isBasicObjectType(latestMarketTempl.PaymentInformation) ||
+      !isBasicObjectType(latestMarketTempl.PaymentInformation.ItemPrice) ||
+      !isBasicObjectType(latestMarketTempl.PaymentInformation.ItemPrice.ShippingPrice)
+    ) {
+      throw new Error('Invalid template pricing information');
+    }
 
-    if (latestMarketTempl.ItemInformation.itemCategoryId !== categoryId) {
-      // IF template hash is set, then clone template since template cannot be modified
+    // IF template hash is set, then clone template since template cannot be modified
+    const canEditTemplate = !(getValueOrDefault(latestMarketTempl.hash, 'string', '').length > 0);
 
-      if (getValueOrDefault(latestMarketTempl.hash, 'string', '').length > 0) {
+    const newPriceBase = (new PartoshiAmount(priceBase, false));
+    const newPriceShipLocal = (new PartoshiAmount(priceShipLocal, false));
+    const newPriceShipIntl = (new PartoshiAmount(priceShipIntl, false));
 
-        const clonedTempl = await this.cloneTemplate(+latestMarketTempl.id, market.id).toPromise();
+    const changedCategory = (latestMarketTempl.ItemInformation.itemCategoryId !== categoryId);
+    const changedPricing = (
+      new PartoshiAmount(+latestMarketTempl.PaymentInformation.ItemPrice.basePrice, true)
+    ).particlsString() !== newPriceBase.particlsString() ||
+      (
+        new PartoshiAmount(+latestMarketTempl.PaymentInformation.ItemPrice.ShippingPrice.domestic, true)
+      ).particlsString() !== newPriceShipLocal.particlsString() ||
+      (
+        new PartoshiAmount(+latestMarketTempl.PaymentInformation.ItemPrice.ShippingPrice.international, true)
+      ).particlsString() !== newPriceShipIntl.particlsString();
+    const needsTemplateEdit = changedCategory || changedPricing;
 
-        if (!isBasicObjectType(clonedTempl) || !(+clonedTempl.id > 0)) {
-          throw new Error('Invalid cloned market template');
-        }
+    let isTemplateCloned = false;
 
-        latestMarketTempl = clonedTempl;
+    if (!canEditTemplate && needsTemplateEdit) {
+      const clonedTempl = await this.cloneTemplate(+latestMarketTempl.id, market.id).toPromise();
+
+      if (!isBasicObjectType(clonedTempl) || !(+clonedTempl.id > 0)) {
+        throw new Error('Invalid cloned market template');
       }
+      isTemplateCloned = true;
+      latestMarketTempl = clonedTempl;
+    }
 
+    // because if a market template is cloned, it seems the category needs to be updated again for it
+    if (isTemplateCloned || changedCategory) {
       await this._rpc.call('information', [
         'update',
         +latestMarketTempl.id,
@@ -556,6 +623,19 @@ export class SellService {
         getValueOrDefault(latestMarketTempl.ItemInformation.shortDescription, 'string', ''),
         getValueOrDefault(latestMarketTempl.ItemInformation.longDescription, 'string', ''),
         categoryId
+      ]).toPromise();
+    }
+
+    if (changedPricing) {
+      await this._rpc.call('template', [
+        'payment',
+        'update',
+        +latestMarketTempl.id,
+        latestMarketTempl.PaymentInformation.type,
+        latestMarketTempl.PaymentInformation.ItemPrice.currency,
+        newPriceBase.partoshis(),
+        newPriceShipLocal.partoshis(),
+        newPriceShipIntl.partoshis(),
       ]).toPromise();
     }
 
@@ -817,12 +897,17 @@ export class SellService {
     }
 
     if (isBasicObjectType(src.PaymentInformation)) {
-      if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
-        saveDetails.escrowBuyer = +src.PaymentInformation.Escrow.Ratio.buyer > 0 ?
+      if (isBasicObjectType(src.PaymentInformation.Escrow)) {
+        if (isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+          saveDetails.escrowBuyer = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
             +src.PaymentInformation.Escrow.Ratio.buyer : saveDetails.escrowBuyer;
 
-        saveDetails.escrowSeller = +src.PaymentInformation.Escrow.Ratio.seller > 0 ?
-        +src.PaymentInformation.Escrow.Ratio.seller : saveDetails.escrowSeller;
+          saveDetails.escrowSeller = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.seller : saveDetails.escrowSeller;
+        }
+        saveDetails.escrowReleaseType = getValueOrDefault(
+          src.PaymentInformation.Escrow.releaseType, 'string', saveDetails.escrowReleaseType
+        );
       }
 
       if (isBasicObjectType(src.PaymentInformation.ItemPrice)) {
@@ -849,8 +934,9 @@ export class SellService {
       priceShippingLocal: new PartoshiAmount(0),
       priceShippingIntl: new PartoshiAmount(0),
       images: [],
-      escrowBuyer: 100,
-      escrowSeller: 100,
+      escrowBuyer: this.ESCROW_PERCENTAGE_DEFAULT,
+      escrowSeller: this.ESCROW_PERCENTAGE_DEFAULT,
+      escrowReleaseType: ESCROW_RELEASE_TYPE.ANON,
     };
   }
 
@@ -950,7 +1036,20 @@ export class SellService {
         }
       }
 
-      // Process any associated market templates
+      /**
+       *  Process any associated market templates
+       *  The nested structure of market templates has a max depth 3 currently:
+       *      base (product) template
+       *          |->  first ("root") market template
+       *              |-> updated/edited market template
+       *              |-> updated/edited market template
+       *              ...
+       *              |-> updated/edited market template
+       *
+       *  Updates/edits to any of the children market templates will create a new child market template,
+       *    with the same parent as the edited template.
+       *
+       * */
 
       if (Array.isArray(baseTempl.ChildListingItemTemplates) && (baseTempl.ChildListingItemTemplates.length > 0)) {
         baseTempl.ChildListingItemTemplates.forEach(basicMarketTempl => {
@@ -1031,7 +1130,9 @@ export class SellService {
     const newMarketDetails: ProductMarketTemplate = {
       id: 0,
       title: '',
-      priceBase: {whole: '', sep: '', fraction: ''},
+      priceBase: { whole: '', sep: '', fraction: '' },
+      priceShippingLocal: { whole: '', sep: '', fraction: '' },
+      priceShippingIntl: { whole: '', sep: '', fraction: '' },
       marketKey: '',
       categoryName: '',
       categoryId: 0,
@@ -1085,6 +1186,22 @@ export class SellService {
         sep: basePrice.particlStringSep(),
         fraction: basePrice.particlStringFraction()
       };
+
+      if (isBasicObjectType(src.PaymentInformation.ItemPrice.ShippingPrice)) {
+        const localPrice = new PartoshiAmount(+src.PaymentInformation.ItemPrice.ShippingPrice.domestic, true);
+        newMarketDetails.priceShippingLocal = {
+          whole: localPrice.particlStringInteger(),
+          sep: localPrice.particlStringSep(),
+          fraction: localPrice.particlStringFraction()
+        };
+
+        const intlPrice = new PartoshiAmount(+src.PaymentInformation.ItemPrice.ShippingPrice.international, true);
+        newMarketDetails.priceShippingIntl = {
+          whole: intlPrice.particlStringInteger(),
+          sep: intlPrice.particlStringSep(),
+          fraction: intlPrice.particlStringFraction()
+        };
+      }
     }
 
     return newMarketDetails;
@@ -1124,8 +1241,8 @@ export class SellService {
         created: 0,
       },
       escrow: {
-        buyerRatio: 100,
-        sellerRatio: 100,
+        buyerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
+        sellerRatio: MADCT_ESCROW_PERCENTAGE_DEFAULT,
       },
       extra: {
         flaggedProposal: '',
@@ -1218,6 +1335,14 @@ export class SellService {
             listingItem.price.shippingIntl = +src.PaymentInformation.ItemPrice.ShippingPrice.international > 0 ?
               +src.PaymentInformation.ItemPrice.ShippingPrice.international : listingItem.price.shippingIntl;
           }
+        }
+
+        if (isBasicObjectType(src.PaymentInformation.Escrow) && isBasicObjectType(src.PaymentInformation.Escrow.Ratio)) {
+          listingItem.escrow.buyerRatio = +src.PaymentInformation.Escrow.Ratio.buyer >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.buyer : listingItem.escrow.buyerRatio;
+
+          listingItem.escrow.sellerRatio = +src.PaymentInformation.Escrow.Ratio.seller >= 0 ?
+            +src.PaymentInformation.Escrow.Ratio.seller : listingItem.escrow.sellerRatio;
         }
       }
     }

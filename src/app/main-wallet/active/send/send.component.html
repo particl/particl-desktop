@@ -44,13 +44,13 @@
 
           <p class="widget-help">
             <ng-container *ngIf="sourceType.value === 'part'">
-              In public transactions, everything is visible on the blockchain &ndash; transaction amount, sender's and receiver's addresses.
+              Everything is visible on the blockchain &ndash; transaction amount, sender's and receiver's addresses.
             </ng-container>
             <ng-container *ngIf="sourceType.value === 'blind'">
-              Blinded transactions hide transaction amounts, but the sender's and receiver's addresses are still visible.
+              Hides transaction amounts, but both the sender and receiver addresses are visible.
             </ng-container>
             <ng-container *ngIf="sourceType.value === 'anon'">
-              Anon transaction offer the highest privacy &ndash; both transaction amounts, sender and receiver
+              Offers the highest privacy &ndash; the transaction amounts, and sender and receiver
               addresses are hidden from public.
             </ng-container>
           </p>
@@ -66,7 +66,7 @@
           </div>
 
           <div *ngIf="sourceType.value === 'anon' && showAdvanced" class="advanced">
-            <div class="subtitle">Privacy level <small>(no. of ring sigs)</small></div>
+            <div class="subtitle">Privacy level <small>(no. of ring members)</small></div>
             <div class="privacy-level">
               <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
                 <span
@@ -103,7 +103,7 @@
 
               <div class="row" fxLayout fxLayoutAlign="spacebetween center">
                 <p class="widget-help">
-                  The higher privacy level is, the larger fee needs to be paid.
+                  The higher the privacy level is, the larger fee needs to be paid.
                 </p>
                 <button
                   (click)="ringSize.setValue(defaultRingSize)"
@@ -117,6 +117,38 @@
 
             </div>
           </div><!-- advanced -->
+
+
+          <div class="advanced">
+            <div class="subtitle">UTXO split <small>(no. of created outputs)</small></div>
+            <div class="privacy-level">
+              <div class="privacy-labels" fxLayout="row" fxLayoutAlign="space-between center">
+                <span fxFlex="0 0 50px" class="privacy-label low" (click)="selectedUTXOCount.setValue(minSplitUTXO)"
+                  matTooltip="Minimum no. of UTXOs" matTooltipPosition="below">Minimum
+                </span>
+                <span fxFlex="0 0 50px" class="privacy-label high" (click)="selectedUTXOCount.setValue(defaultSplitUTXO)"
+                  matTooltip="Your default configured no. of UTXOs" matTooltipPosition="below">Default
+                </span>
+                <span fxFlex="0 0 50px" class="privacy-label highest" (click)="selectedUTXOCount.setValue(maxSplitUTXO)"
+                  matTooltip="Set highest privacy" matTooltipPosition="below">Maximum
+                </span>
+              </div>
+
+              <mat-slider thumbLabel color="accent" [min]="minSplitUTXO" (change)="selectedUTXOCount.setValue($event.value)"
+                [max]="maxSplitUTXO" [value]="selectedUTXOCount.value">
+              </mat-slider>
+
+              <div class="row" fxLayout fxLayoutAlign="spacebetween center">
+                <p class="widget-help">
+                  Created outputs: {{selectedUTXOCount.value}} <br/>
+                  Split the payment evenly between outputs for faster coin maturity and flexibility on batch payments.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+
         </mat-card>
       </div>
     </div>

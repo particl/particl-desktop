@@ -1,16 +1,16 @@
 import { Component, ChangeDetectionStrategy, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { Subject, Observable, merge, iif, of, defer } from 'rxjs';
+import { Subject, Observable, merge, iif, of, defer, combineLatest } from 'rxjs';
 import { takeUntil, tap, auditTime, switchMap, concatMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { WalletUTXOState, WalletInfoState } from 'app/main/store/main.state';
+import { WalletBalanceState, WalletInfoState } from 'app/main/store/main.state';
 
 import { OverviewService } from './overview.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { WalletUTXOStateModel, PublicUTXO, AnonUTXO, WalletInfoStateModel } from 'app/main/store/main.models';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
 
 
 type ComponentType = 'buy' | 'sell' | 'management' | 'listings';
@@ -178,17 +178,17 @@ export class OverviewComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const spendable$ = this._store.select(WalletUTXOState).pipe(
-      tap((utxos: WalletUTXOStateModel) => {
-        let anonSpendable: PartoshiAmount;
-        let publicSpendable: PartoshiAmount;
+    const spendable$ = combineLatest([
+      this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
+      this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(takeUntil(this.destroy$)),
+    ]).pipe(
+      tap((amounts) => {
+        const anonSpendable: PartoshiAmount = new PartoshiAmount(0);
+        const publicSpendable: PartoshiAmount = new PartoshiAmount(0);
 
         if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
-          anonSpendable = this.extractUTXOSpendable(utxos.anon);
-          publicSpendable = this.extractUTXOSpendable(utxos.public);
-        } else {
-          anonSpendable = new PartoshiAmount(0);
-          publicSpendable = new PartoshiAmount(0);
+          anonSpendable.add(new PartoshiAmount(+amounts[0], false));
+          publicSpendable.add(new PartoshiAmount(+amounts[1], false));
         }
         this.balances.spendableAnon.whole = anonSpendable.particlStringInteger();
         this.balances.spendableAnon.sep = anonSpendable.particlStringSep();
@@ -266,25 +266,6 @@ export class OverviewComponent implements OnInit, OnDestroy {
       const params = typeof option.urlParams === 'object' ? option.urlParams : {};
       this._router.navigate([option.url], {queryParams: params});
     }
-  }
-
-
-  private extractUTXOSpendable(utxos: PublicUTXO[] | AnonUTXO[]): PartoshiAmount {
-    const tempBal = new PartoshiAmount(0);
-
-    for (let ii = 0; ii < utxos.length; ++ii) {
-      const utxo = utxos[ii];
-      let spendable = true;
-      if ('spendable' in utxo) {
-        spendable = utxo.spendable;
-      }
-      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
-        const amount = new PartoshiAmount(utxo.amount);
-        tempBal.add(amount);
-      }
-    }
-
-    return tempBal;
   }
 
 

@@ -1,12 +1,15 @@
 .order {
-
   // --- Header ---
+  .warning-icon {
+    color: var(--color-secondary);
+  }
   .qty {
     color: var(--text-muted);
     font-weight: 400;
     margin-left: 6px;
   }
-  .hash { // order hash-ID
+  .hash {
+    // order hash-ID
     font-size: 90%;
     font-family: var(--font-mono);
     font-weight: 600;
@@ -18,7 +21,8 @@
     display: inline-block;
     padding: 1px 8px;
     margin-right: 10px;
-    &.id { // order sequence-ID
+    &.id {
+      // order sequence-ID
       margin: 0 -5px 0 0;
       background: var(--bg);
       color: var(--text-muted);
@@ -31,7 +35,8 @@
   }
 
   // --- Content ---
-  .highlights { // shipping details, escrow TXID, rejection reason
+  .highlights {
+    // shipping details, escrow TXID, rejection reason
     @extend %enable-select;
     --table-padding: 16px 24px;
     --table-paddingV: 16px;
@@ -84,8 +89,10 @@
       }
     }
   }
-  .item-details { // shipping & pricing
-    .buyer-info { // shipping address, contact info
+  .item-details {
+    // shipping & pricing
+    .buyer-info {
+      // shipping address, contact info
       .shipping-info {
         @extend %enable-select;
         small {
@@ -115,14 +122,12 @@
       margin: 0;
     }
   }
-
 } // << .order
-
 
 // ------ PROGRESS GRAPH ------ //
 
-
-%progress-dot { // progress step indicator "dot"
+%progress-dot {
+  // progress step indicator "dot"
   --dot-size: 10px;
   width: var(--dot-size);
   height: var(--dot-size);
@@ -130,8 +135,9 @@
   display: inline-block;
 }
 
-@mixin progress-line($color) { // "done" progress between two Order steps
-  content: '';
+@mixin progress-line($color) {
+  // "done" progress between two Order steps
+  content: "";
   position: absolute;
   bottom: 8px;
   left: 50.5%;
@@ -150,7 +156,8 @@
     // finished step
     &.done {
       position: relative;
-      &::after { // draw the progress line to next step (which has to be either finished as well or active)
+      &::after {
+        // draw the progress line to next step (which has to be either finished as well or active)
         @include progress-line(var(--color-primary));
       }
       .dot {
@@ -162,9 +169,10 @@
       .dot {
         background: var(--color-primary);
         position: relative;
-        &::before { // highlight current "dot" to indicate active step
+        &::before {
+          // highlight current "dot" to indicate active step
           @extend %progress-dot;
-          content: '';
+          content: "";
           position: absolute;
           top: 0;
           left: 0;
@@ -176,7 +184,8 @@
       .value {
         font-weight: 500;
       }
-      &.completed { // when Order is done, no need to highlight "Completed" step anymore
+      &.completed {
+        // when Order is done, no need to highlight "Completed" step anymore
         .dot {
           &::before {
             content: none;
@@ -192,13 +201,15 @@
     }
     // rejected bid scenario
     &.rejected {
-      .dot { // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
+      .dot {
+        // recolor the "dot" to red as well, no need to indicate active step (as with Completed step)
         background: var(--color-alert);
         position: relative;
       }
       &.bidding {
         position: relative;
-        &::after { // recolor the progress bar from "bid => rejected" to red
+        &::after {
+          // recolor the progress bar from "bid => rejected" to red
           @include progress-line(var(--color-alert));
         }
       }
@@ -206,7 +217,7 @@
         .dot {
           &::before {
             @extend %progress-dot;
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
@@ -220,7 +231,8 @@
         }
       }
     }
-    .value { // name of step
+    .value {
+      // name of step
       font-size: 13px;
       margin-bottom: 6px;
       @include break(l) {
@@ -230,7 +242,8 @@
         font-size: 15px;
       }
     }
-    .dot { // step indicator "dot"
+    .dot {
+      // step indicator "dot"
       @extend %progress-dot;
       background: var(--bg-muted);
     }

@@ -6,6 +6,9 @@ import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { WalletSettingsComponent } from './settings.component';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
 import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
+import { ChangeWalletPasswordModalComponent } from './change-wallet-password-modal/change-wallet-password-modal.component';
+import { DeriveWalletModalComponent } from './derive-wallet-modal/derive-wallet-modal.component';
+import { WalletSettingsService } from './settings.service';
 
 
 const routes: Routes = [
@@ -18,17 +21,24 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     CommonModule,
     CoreUiModule,
-    MainSharedModule
+    MainSharedModule,
   ],
   exports: [
     RouterModule
   ],
   declarations: [
     WalletSettingsComponent,
-    WalletBackupModalComponent
+    WalletBackupModalComponent,
+    ChangeWalletPasswordModalComponent,
+    DeriveWalletModalComponent,
   ],
   entryComponents: [
-    WalletBackupModalComponent
+    WalletBackupModalComponent,
+    ChangeWalletPasswordModalComponent,
+    DeriveWalletModalComponent,
+  ],
+  providers: [
+    WalletSettingsService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

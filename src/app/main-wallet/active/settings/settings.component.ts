@@ -8,6 +8,9 @@ import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-modal.component';
+import { ChangeWalletPasswordModalComponent } from './change-wallet-password-modal/change-wallet-password-modal.component';
+import { DeriveWalletModalComponent } from './derive-wallet-modal/derive-wallet-modal.component';
+
 
 import {
   PageInfo,
@@ -17,18 +20,26 @@ import {
   Setting
 } from 'app/main-extra/global-settings/settings.types';
 import { WalletInfoState, WalletSettingsState } from 'app/main/store/main.state';
-import { WalletSettingsStateModel } from 'app/main/store/main.models';
+import {
+  WalletSettingsStateModel,
+  DEFAULT_RING_SIZE,
+  MAX_RING_SIZE,
+  MIN_RING_SIZE,
+  MIN_UTXO_SPLIT,
+  MAX_UTXO_SPLIT,
+  DEFAULT_UTXO_SPLIT
+} from 'app/main/store/main.models';
 import { WalletDetailActions } from 'app/main/store/main.actions';
 
 
 enum SpecificTextContent {
-  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${min}, with a max of ${max}'
+  ERROR_UTXO_SPLIT_VALUE = 'Invalid value, number should be greater than ${min}, with a max of ${max}',
 }
 
 
 @Component({
   templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss']
+  styleUrls: ['./settings.component.scss'],
 })
 export class WalletSettingsComponent implements OnInit {
 
@@ -308,6 +319,7 @@ export class WalletSettingsComponent implements OnInit {
   private loadPageData() {
 
     const walletSettings: WalletSettingsStateModel = this._store.selectSnapshot(WalletSettingsState);
+    const hasEncryptionPassword = this._store.selectSnapshot(WalletInfoState.hasEncryptionPassword());
 
     // const notificationsWallet = {
     //   name: 'System notifications',
@@ -351,29 +363,15 @@ export class WalletSettingsComponent implements OnInit {
     } as SettingGroup;
 
     walletActions.settings.push({
-      id: 'anon_utxo_split',
-      title: 'Split UTXOs when sending Private TXs',
-      description: 'Creates a number of UTXOs when sending funds from this wallet to a stealth (private) address – higher the number, the greater anonymity, coin usage and fees (default: 3, max: 20)',
+      id: 'utxo_split_count',
+      title: 'Split UTXOs when sending TXs',
+      description: `Creates a number of UTXOs when sending funds from this wallet – higher the number, the more utxos available, the greater the annonymity for stealth addresses, and the greater the coin usage and fees (default: ${DEFAULT_UTXO_SPLIT}, max: ${MAX_UTXO_SPLIT})`,
       isDisabled: false,
       type: SettingType.NUMBER,
       errorMsg: '',
       tags: [],
       restartRequired: false,
-      currentValue: walletSettings.anon_utxo_split,
-      limits: {min: 1, max: 20},
-      validate: this.actionValidateSplitUTXO
-    } as Setting);
-
-    walletActions.settings.push({
-      id: 'public_utxo_split',
-      title: 'Split UTXOs when sending Public TXs',
-      description: 'Creates a number of UTXOs when sending funds from this wallet to a *public* address – higher the number, the more utxos available, the greater coin usage and fees (default: 1, max: 20)',
-      isDisabled: false,
-      type: SettingType.NUMBER,
-      errorMsg: '',
-      tags: [],
-      restartRequired: false,
-      currentValue: walletSettings.public_utxo_split,
+      currentValue: walletSettings.utxo_split_count,
       limits: {min: 1, max: 20},
       validate: this.actionValidateSplitUTXO
     } as Setting);
@@ -382,7 +380,7 @@ export class WalletSettingsComponent implements OnInit {
 
 
     const dangerZone = {
-      name: 'Danger zone',
+      name: 'Security',
       icon: 'part-alert',
       settings: [],
       errors: []
@@ -403,6 +401,50 @@ export class WalletSettingsComponent implements OnInit {
       onChange: this.actionBackupWallet
     } as Setting);
 
+    dangerZone.settings.push({
+      id: '',
+      title: 'Change Wallet Password',
+      description: 'Allows for the changing of the wallet password if the wallet has an encryption password set',
+      isDisabled: !hasEncryptionPassword,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: {color: 'primary', icon: 'part-refresh'},
+      onChange: this.actionChangePassword
+    } as Setting);
+
+    dangerZone.settings.push({
+      id: '',
+      title: 'Create Derived Wallet Accounts',
+      description: 'Create wallets that are derived accounts from the current active wallet',
+      isDisabled: false,
+      type: SettingType.BUTTON,
+      errorMsg: '',
+      tags: ['Advanced'],
+      restartRequired: false,
+      currentValue: '',
+      newValue: '',
+      limits: {color: 'warn', icon: 'part-add-account'},
+      onChange: this.actionDeriveAccount
+    } as Setting);
+
+    walletActions.settings.push({
+      id: 'default_ringct_size',
+      title: 'Default transaction RingCT size',
+      description: `Set the default RingCT size for anon transactions (default: ${DEFAULT_RING_SIZE}, max: ${MAX_RING_SIZE})`,
+      isDisabled: false,
+      type: SettingType.NUMBER,
+      errorMsg: '',
+      tags: [],
+      restartRequired: false,
+      currentValue: walletSettings.default_ringct_size,
+      limits: {min: MIN_RING_SIZE, max: MAX_RING_SIZE},
+      validate: this.actionValidateSizeRingCT
+    } as Setting);
+
     this.settingGroups.push(dangerZone);
   }
 
@@ -418,11 +460,28 @@ export class WalletSettingsComponent implements OnInit {
     });
   }
 
+
+  private actionChangePassword() {
+    this._dialog.open(ChangeWalletPasswordModalComponent);
+  }
+
+
+  private actionDeriveAccount() {
+    this._dialog.open(DeriveWalletModalComponent, { autoFocus: false });
+  }
+
   private actionValidateSplitUTXO(newValue: number, setting: Setting): string {
-    if ((+newValue > 0) && (+newValue <= 20) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
+    if ((+newValue >= MIN_UTXO_SPLIT) && (+newValue <= MAX_UTXO_SPLIT) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
       return '';
     }
-    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', '1').replace('${max}', '20');
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', `${MIN_UTXO_SPLIT - 1}`).replace('${max}', `${MAX_UTXO_SPLIT}`);
+  }
+
+  private actionValidateSizeRingCT(newValue: number, setting: Setting): string {
+    if ((+newValue >= MIN_RING_SIZE) && (+newValue <= MAX_RING_SIZE) && (`${Math.floor(+newValue)}`.length === `${+newValue}`.length)) {
+      return '';
+    }
+    return SpecificTextContent.ERROR_UTXO_SPLIT_VALUE.replace('${min}', `${MIN_RING_SIZE - 1}`).replace('${max}', `${MAX_RING_SIZE}`);
   }
 
 }

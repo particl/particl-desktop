@@ -65,6 +65,19 @@
     </div>
   </ng-container>
 
+  <ng-container ngProjectAs="sidebar" *ngIf="showProfileWarning">
+    <div class="menu-items">
+      <a class="menu-item warning" appDebounceClick (debounceClick)="openBackupProfileModal()">
+        <mat-icon fontIcon="part-alert"></mat-icon>
+        <span class="text"
+              matTooltip="Your profile secrets should be backed up as soon as possible"
+              matTooltipPosition="above">
+          Backup profile secrets
+        </span>
+      </a>
+    </div>
+  </ng-container>
+
   <ng-container ngProjectAs="app-version">
     <mat-content class="client-version">
       <div class="app item">

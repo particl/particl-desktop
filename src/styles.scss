@@ -785,6 +785,8 @@ table {
 // ------ 3.8. DETAILS/SUMMARY EXPANDER ------ //
 
 details { // Sell > Import & Product list item
+  @extend %help-text;
+  margin-bottom: 16px;
   background: var(--bg);
   border-radius: var(--radius);
   summary {
@@ -802,6 +804,12 @@ details { // Sell > Import & Product list item
   }
   .details {
     padding: 1px 16px 4px;
+    p {
+      margin-top: 0;
+      strong {
+        font-weight: 500;
+      }
+    }
   }
 }
 
@@ -831,23 +839,6 @@ details { // Sell > Import & Product list item
       }
       & + p.message {
         margin-top: 24px;
-      }
-    }
-  }
-}
-
-
-// ------ 3.10. DETAIL/SUMMARY TOGGLE ------ //
-
-// Usage: details > summary + .details
-details {
-  @extend %help-text;
-  margin-bottom: 16px;
-  .details {
-    p {
-      margin-top: 0;
-      strong {
-        font-weight: 500;
       }
     }
   }

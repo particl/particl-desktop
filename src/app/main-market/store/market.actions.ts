@@ -1,4 +1,4 @@
-import { Identity } from './market.models';
+import { Identity, Profile } from './market.models';
 import { Market } from '../services/data/data.models';
 import { OrderUserType } from '../services/orders/orders.models';
 
@@ -34,6 +34,11 @@ export namespace MarketStateActions {
 }
 
 export namespace MarketUserActions {
+
+  export class UpdateCurrentProfileDetails {
+    static readonly type: string = '[Market User] Update Current Profile Details';
+    constructor(public profileData: Partial<Profile>) {}
+  }
 
   export class SetSetting {
     static readonly type: string = '[Market User] Save Market Setting';

@@ -26,6 +26,9 @@ import { CancelBidModalComponent } from '../modals/cancel-bid-modal/cancel-bid-m
 import { EscrowPaymentModalComponent } from '../modals/escrow-payment-modal/escrow-payment-modal.component';
 import { OrderShippedModalComponent } from '../modals/order-shipped-modal/order-shipped-modal.component';
 import { AcceptBidModalComponent } from '../modals/accept-bid-modal/accept-bid-modal.component';
+import {
+  ResendOrderActionConfirmationModalComponent
+} from '../modals/resend-order-action-confirmation-modal/resend-order-action-confirmation-modal.component';
 import { isBasicObjectType } from '../../shared/utils';
 
 import { WalletInfoStateModel } from 'app/main/store/main.models';
@@ -42,7 +45,9 @@ enum TextContent {
   ACTIONING_ORDER = 'Processing the selected item',
   LABEL_DEFAULT_EXPORT_FILENAME_CSV = 'Filtered Orders - ${date}.csv',
   CSV_EXPORTED_SUCCESS = 'Exported Successfully!',
-  CSV_EXPORTED_ERROR = 'Export Failed ${reason}'
+  CSV_EXPORTED_ERROR = 'Export Failed ${reason}',
+  SMSG_RESEND_SUCCESS = 'Successfully re-sent the order status to the buyer',
+  SMSG_RESEND_ERROR = 'Resnding of the order status failed! Please try again later',
 }
 
 interface BuyflowStep {
@@ -454,6 +459,34 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
           }
         }
         this._snackbar.open(errMsg, 'err');
+      }
+    );
+  }
+
+
+  resendActionMessage(msgId: string): void {
+    if (!msgId) {
+      return;
+    }
+    this._dialog.open(ResendOrderActionConfirmationModalComponent).afterClosed().pipe(
+      take(1),
+      concatMap(doProceed => iif(
+        () => !!doProceed,
+        defer(() =>  this._unlocker.unlock({ timeout: 10 }).pipe(
+          concatMap((unlocked: boolean) => iif(
+            () => unlocked,
+            defer(() => this._orderService.resendSmsgMessage(msgId))
+          ))
+        ))
+      ))
+    )
+    .subscribe(
+      (success) => {
+        if (success) {
+          this._snackbar.open(TextContent.SMSG_RESEND_SUCCESS);
+          return;
+        }
+        this._snackbar.open(TextContent.SMSG_RESEND_ERROR, 'warn');
       }
     );
   }

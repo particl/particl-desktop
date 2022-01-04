@@ -2,14 +2,16 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Store } from '@ngxs/store';
 import { Log } from 'ng2-logger';
-import { Observable, Subject, of, timer } from 'rxjs';
-import { map, tap, concatMap, mapTo, startWith, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, of, timer, iif, defer } from 'rxjs';
+import { map, tap, concatMap, mapTo, startWith, distinctUntilChanged, switchMap, takeUntil, take, catchError } from 'rxjs/operators';
 import { UnlockModalConfig } from './wallet-encryption.model';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { UnlockwalletModalComponent } from 'app/main/components/unlock-wallet-modal/unlock-wallet-modal.component';
 import { EncryptwalletModalComponent } from 'app/main/components/encrypt-wallet-modal/encrypt-wallet-modal.component';
+import { RpcService } from 'app/core/services/rpc.service';
 import { WalletInfoService } from '../wallet-info/wallet-info.service';
 import { MainActions } from 'app/main/store/main.actions';
+import { WalletInfoStateModel } from 'app/main/store/main.models';
 
 
 @Injectable()
@@ -24,7 +26,8 @@ export class WalletEncryptionService implements OnDestroy {
   constructor(
     private _store: Store,
     private _dialog: MatDialog,
-    private _walletService: WalletInfoService
+    private _walletService: WalletInfoService,
+    private _rpc: RpcService
   ) {
     this.log.d('starting service...');
 
@@ -92,25 +95,52 @@ export class WalletEncryptionService implements OnDestroy {
 
   /**
    *
+   * Unlocks the current wallet, or the wallet at the path specified.
+   * NB!! Assumes that the wallet at the wallet path specified is already loaded (returning false if not loaded)
+   *
    * @returns {Observable<boolean>} Indicates whether the wallet is successfully unlocked
    */
   unlock(data: UnlockModalConfig = {}): Observable<boolean> {
-    const currentStatus = <string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'));
+    return iif(
 
-    if (['Locked', 'Unlocked, staking only'].includes(currentStatus)) {
-      return this.getUnlockModal(data);
-    }
+      () => data.wallet && data.wallet.length > 0,
 
-    if ((currentStatus === 'Unlocked') && data.timeout) {
-      const unlockUntil = <number>this._store.selectSnapshot(WalletInfoState.getValue('unlocked_until'));
-      const secondsLeft = unlockUntil - Math.floor( (new Date().getTime()) / 1000);
+      defer(() => this._rpc.call(data.wallet, 'getwalletinfo').pipe(
+        take(1),
+        map((resp: WalletInfoStateModel) => {
+          if (
+            resp &&
+            (Object.prototype.toString.call(resp) === '[object Object]') &&
+            (typeof resp.encryptionstatus === 'string')
+          ) {
+            return resp.encryptionstatus;
+          }
 
-      if (data.timeout > secondsLeft) {
-        return this.getUnlockModal(data);
-      }
-    }
+          throw new Error('invalid encryption status');
+        }),
+      )),
 
-    return of(true);
+      defer(() => of(<string>this._store.selectSnapshot(WalletInfoState.getValue('encryptionstatus'))))
+
+    ).pipe(
+      concatMap(currentStatus => {
+        if (['Locked', 'Unlocked, staking only'].includes(currentStatus)) {
+          return this.getUnlockModal(data);
+        }
+
+        if ((currentStatus === 'Unlocked') && data.timeout) {
+          const unlockUntil = <number>this._store.selectSnapshot(WalletInfoState.getValue('unlocked_until'));
+          const secondsLeft = unlockUntil - Math.floor( (new Date().getTime()) / 1000);
+
+          if (data.timeout > secondsLeft) {
+            return this.getUnlockModal(data);
+          }
+        }
+
+        return of(true);
+      }),
+      catchError(() => of(false))
+    );
   }
 
 
@@ -158,11 +188,15 @@ export class WalletEncryptionService implements OnDestroy {
 
       concatMap((success) => {
         if (success) {
+          if (data.wallet) {
+            return of(true);
+          }
           return this._store.dispatch(new MainActions.RefreshWalletInfo()).pipe(
             mapTo(true)
           );
+
         }
-        return of(success);
+        return of(false);
       })
     );
   }

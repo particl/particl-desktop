@@ -300,9 +300,17 @@ export class MarketManagementService {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
-    const postParams = ['post', marketId, durationDays, true, null, null, usePaidImageMsg];
-
-    postParams.push(usingAnonFees ? 'anon' : 'part');
+    const postParams = [
+      'post',
+      marketId,
+      durationDays,
+      true,
+      null,
+      null,
+      usePaidImageMsg,
+      (usingAnonFees ? 'anon' : 'part'),
+      12,
+    ];
 
     return this._rpc.call('market', postParams).pipe(
       map((resp: RespItemPost) => {
@@ -319,9 +327,18 @@ export class MarketManagementService {
     const marketSettings = this._store.selectSnapshot(MarketState.settings);
     const usingAnonFees = marketSettings.useAnonBalanceForFees;
     const usePaidImageMsg = marketSettings.usePaidMsgForImages;
-    const postParams = ['post', marketId, durationDays, false, null, null, usePaidImageMsg];
-
-    postParams.push(usingAnonFees ? 'anon' : 'part');
+    const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    const postParams = [
+      'post',
+      marketId,
+      durationDays,
+      false,
+      null,
+      identityId,
+      usePaidImageMsg,
+      (usingAnonFees ? 'anon' : 'part'),
+      12,
+    ];
 
     return this._rpc.call('market', postParams).pipe(
       map((resp) => isBasicObjectType(resp) && (resp.result === 'Sent.'))

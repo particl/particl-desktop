@@ -61,6 +61,11 @@
           <mat-icon fontIcon="part-console-window"></mat-icon>
           Open Marketplace Console
         </button>
+
+        <button mat-button [disabled]="startedStatus !== STARTEDSTATUS.STARTED || !isSmsgRecanButtonEnabled" (click)="rescanSmsgMessages()">
+          <mat-icon fontIcon="part-search"></mat-icon>
+          Force Scan for Marketplace Messages
+        </button>
       </div>
 
     </div><!-- .sidebar -->
@@ -69,9 +74,9 @@
     <div class="content row">
       <div class="third">
         <ng-container *ngIf="(currentGroup !== undefined) && (currentGroup.settings.length > 0)">
-          <h2 class="section-title"> {{ currentGroup.name }} </h2>
-          <mat-card>
-            <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
+          <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
+            <h2 *ngIf="setting._type === 'heading'" class="section-title"> {{ setting.title }} </h2>
+            <mat-card *ngIf="setting._type === 'setting'">
               <div class="item" [ngSwitch]="setting.type" [ngClass]="setting.errorMsg ? '--with-error' : ''">
 
                 <!-- ========= BOOLEAN ========= -->
@@ -80,7 +85,7 @@
                   <div class="checkbox label">
                     <mat-checkbox
                       class="align-top wrap"
-                      [disabled]="setting.isDisabled"
+                      [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                       [(ngModel)]="setting.newValue"
                       (change)="settingChangedValue(settingIdx)">
                       <h4 class="option">
@@ -107,14 +112,14 @@
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                     <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
                       <input matInput type="number" *ngIf="!setting.limits"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         [(ngModel)]="setting.newValue"
                         (change)="settingChangedValue(settingIdx)">
                       <input matInput type="number" *ngIf="setting.limits"
                         [min]="setting.limits.min"
                         [step]="setting.limits.step"
                         [max]="setting.limits.max"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         [(ngModel)]="setting.newValue"
                         (change)="settingChangedValue(settingIdx)">
                     </mat-form-field>
@@ -135,7 +140,7 @@
                     <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
                       <input matInput
                         [placeholder]="setting.limits?.placeholder"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         [(ngModel)]="setting.newValue"
                         (change)="settingChangedValue(settingIdx)">
                     </mat-form-field>
@@ -154,7 +159,7 @@
                     <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
                     <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
                     <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
-                      <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
+                      <mat-select [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
                         <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
                           {{ option.text }}
                         </mat-option>
@@ -178,7 +183,7 @@
                       <button mat-button
                         color="{{ setting.limits ? setting.limits.color || 'accent' : 'accent' }}"
                         class="validate"
-                        [disabled]="setting.isDisabled"
+                        [disabled]="setting.isDisabled || (startedStatus === STARTEDSTATUS.PENDING)"
                         (click)="settingChangedValue(settingIdx)">
                         <mat-icon *ngIf="setting.limits?.icon?.length > 0" [fontIcon]="setting.limits.icon"></mat-icon>
                         {{ setting.title }}
@@ -188,10 +193,8 @@
                 </ng-container>
 
               </div><!-- .item -->
-
-              <!--hr class="divider" *ngIf="!isLastSetting"-->
-            </ng-container>
-          </mat-card>
+            </mat-card>
+          </ng-container>
         </ng-container>
       </div><!-- .third -->
     </div><!-- .row -->
@@ -201,7 +204,7 @@
     <div class="left">
       <button mat-button
         color="basic"
-        [disabled]="!hasChanges"
+        [disabled]="!hasChanges  || (startedStatus === STARTEDSTATUS.PENDING)"
         appDebounceClick
         (debounceClick)="clearChanges()"
       >

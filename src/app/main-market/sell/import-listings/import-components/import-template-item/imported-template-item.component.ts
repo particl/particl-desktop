@@ -127,6 +127,11 @@ export class ImportTemplateItemComponent implements OnInit, AfterViewInit, OnDes
         shippingTo: Array.isArray(formValues['shippingDestinations']) ? (formValues['shippingDestinations'] as string[]) : [],
         selectedMarketId: +formValues['selectedMarket'] > 0 ? +formValues['selectedMarket'] : 0,
         selectedCategoryId: +formValues['selectedCategory'] > 0 ? +formValues['selectedCategory'] : 0,
+        escrowPercentageBuyer: +formValues['escrowPercentageBuyer'] >= 0 ?
+          +formValues['escrowPercentageBuyer'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+        escrowPercentageSeller: +formValues['escrowPercentageSeller'] >= 0 ?
+          +formValues['escrowPercentageSeller'] : this._sellService.ESCROW_PERCENTAGE_DEFAULT,
+        escrowRelease: getValueOrDefault(formValues['escrowRelease'], 'string', ESCROW_RELEASE_TYPE.ANON),
       };
 
       const newTemplateData: CreateTemplateRequest = {
@@ -140,9 +145,9 @@ export class ImportTemplateItemComponent implements OnInit, AfterViewInit, OnDes
         shippingFrom: parsedValues.shippingFrom,
         shippingTo: parsedValues.shippingTo,
         escrowType: 'MAD_CT',
-        escrowReleaseType: ESCROW_RELEASE_TYPE.ANON,
-        escrowBuyerRatio: 100,
-        escrowSellerRatio: 100,
+        escrowReleaseType: parsedValues.escrowRelease,
+        escrowBuyerRatio: parsedValues.escrowPercentageBuyer,
+        escrowSellerRatio: parsedValues.escrowPercentageSeller,
         salesType: 'SALE',
         currency: 'PART',
         marketId: parsedValues.selectedMarketId,

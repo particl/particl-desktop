@@ -206,7 +206,7 @@ export class ColdstakeWidgetComponent implements OnDestroy {
   private refreshState(): void {
     this._store.dispatch([
       new WalletDetailActions.GetColdStakingInfo(),
-      new WalletDetailActions.GetAllUTXOS()
+      new WalletDetailActions.RefreshBalances()
     ]);
   }
 }

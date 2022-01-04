@@ -13,25 +13,28 @@ import {
   RpcGetWalletInfo,
   WalletStakingStateModel,
   RpcGetColdStakingInfo,
-  WalletUTXOStateModel,
+  WalletBalanceStateModel,
   WalletSettingsStateModel,
   PublicUTXO,
   BlindUTXO,
-  AnonUTXO
+  AnonUTXO,
+  DEFAULT_RING_SIZE,
+  DEFAULT_UTXO_SPLIT,
 } from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
-import { Observable, concat } from 'rxjs';
-import { concatMap, tap, mapTo } from 'rxjs/operators';
+import { Observable, concat, forkJoin } from 'rxjs';
+import { concatMap, tap, mapTo, map } from 'rxjs/operators';
 import { xorWith } from 'lodash';
 import { WalletInfoService } from '../services/wallet-info/wallet-info.service';
 import { SettingsService } from 'app/core/services/settings.service';
+import { PartoshiAmount } from 'app/core/util/utils';
 
 
 const MAIN_STATE_TOKEN = new StateToken<MainStateModel>('main');
 const WALLET_INFO_STATE_TOKEN = new StateToken<WalletInfoStateModel>('walletinfo');
 const WALLET_STAKING_INFO_STATE_TOKEN = new StateToken<WalletStakingStateModel>('walletstakinginfo');
-const WALLET_UTXOS_TOKEN = new StateToken<WalletUTXOStateModel>('walletutxos');
+const WALLET_UTXOS_TOKEN = new StateToken<WalletBalanceStateModel>('walletutxos');
 const WALLET_SETTINGS_STATE_TOKEN = new StateToken<WalletSettingsStateModel>('walletsettings');
 
 
@@ -62,18 +65,21 @@ const DEFAULT_STAKING_INFO_STATE: WalletStakingStateModel = {
 };
 
 
-const DEFAULT_UTXOS_STATE: WalletUTXOStateModel = {
+const DEFAULT_UTXOS_STATE: WalletBalanceStateModel = {
   public: [],
   blind: [],
-  anon: []
+  anon: [],
+  lockedPublic: 0,
+  lockedBlind: 0,
+  lockedAnon: 0,
 };
 
 
 const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
   notifications_payment_received: false,
   notifications_staking_reward: false,
-  anon_utxo_split: 3,
-  public_utxo_split: 1,
+  utxo_split_count: DEFAULT_UTXO_SPLIT,
+  default_ringct_size: DEFAULT_RING_SIZE,
 };
 
 
@@ -93,6 +99,14 @@ export class WalletInfoState {
   }
 
 
+  static hasEncryptionPassword() {
+    return createSelector(
+      [WalletInfoState.getValue('encryptionstatus')],
+      (status: string): boolean => ['Locked', 'Unlocked, staking only', 'Unlocked'].includes(status)
+    );
+  }
+
+
   constructor(
     private _walletService: WalletInfoService
   ) {}
@@ -103,14 +117,14 @@ export class WalletInfoState {
     const current = ctx.getState();
     if (!current.hdseedid || (current.walletname === null)) {
       return concat(
-        ctx.dispatch(new WalletDetailActions.ResetAllUTXOS()),
+        ctx.dispatch(new WalletDetailActions.ResetBalances()),
         ctx.dispatch(new WalletDetailActions.ResetStakingInfo())
       );
     }
 
     return concat(
       ctx.dispatch(new MainActions.RefreshWalletInfo()),
-      ctx.dispatch(new WalletDetailActions.GetAllUTXOS()),
+      ctx.dispatch(new WalletDetailActions.RefreshBalances()),
       ctx.dispatch(new WalletDetailActions.GetColdStakingInfo())
     );
   }
@@ -153,7 +167,7 @@ export class WalletInfoState {
 
 
   private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>, loadSettings: boolean = true): Observable<void> {
-    const info$ = this._walletService.getWalletInfo().pipe(
+    const info$ = this._walletService.getWalletInfo(1).pipe(
       tap((info: RpcGetWalletInfo) => {
         if ( (typeof info === 'object')) {
           const newState = JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE));
@@ -241,19 +255,126 @@ export class WalletStakingState {
 
 
 
-@State<WalletUTXOStateModel>({
+@State<WalletBalanceStateModel>({
   name: WALLET_UTXOS_TOKEN,
   defaults: JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE))
 })
-export class WalletUTXOState {
+export class WalletBalanceState {
 
   static getValue(field: string) {
     return createSelector(
-      [WalletUTXOState],
-      (state: WalletUTXOState): any[] => {
-        return field in state ? state[field] : 0;
+      [WalletBalanceState],
+      (state: WalletBalanceState): any[] => {
+        return field in state ? state[field] : [];
       }
     );
+  }
+
+
+  static utxosPublic() {
+    return createSelector(
+      [WalletBalanceState.getValue('public')],
+      (utxos: PublicUTXO[]): PublicUTXO[] => utxos
+    );
+  }
+
+
+  static utxosBlind() {
+    return createSelector(
+      [WalletBalanceState.getValue('blind')],
+      (utxos: BlindUTXO[]): BlindUTXO[] => utxos
+    );
+  }
+
+
+  static utxosAnon() {
+    return createSelector(
+      [WalletBalanceState.getValue('anon')],
+      (utxos: AnonUTXO[]): AnonUTXO[] => utxos
+    );
+  }
+
+
+  static spendableAmountPublic() {
+    return createSelector(
+      [WalletBalanceState.utxosPublic()],
+      (utxos: PublicUTXO[]): string => WalletBalanceState.calculateSpendableAmounts(utxos)
+    );
+  }
+
+
+  static spendableAmountBlind() {
+    return createSelector(
+      [WalletBalanceState.utxosBlind()],
+      (utxos: BlindUTXO[]): string => WalletBalanceState.calculateSpendableAmounts(utxos)
+    );
+  }
+
+
+  static spendableAmountAnon() {
+    return createSelector(
+      [WalletBalanceState.utxosAnon()],
+      (utxos: AnonUTXO[]): string => WalletBalanceState.calculateSpendableAmounts(utxos)
+    );
+  }
+
+
+  static spendableTotal() {
+    return createSelector(
+      [WalletBalanceState.spendableAmountPublic(), WalletBalanceState.spendableAmountBlind(), WalletBalanceState.spendableAmountAnon()],
+      (p: string, b: string, a: string): string => (new PartoshiAmount(+p, false))
+        .add(new PartoshiAmount(+b, false))
+        .add(new PartoshiAmount(+a, false))
+        .particlsString()
+    );
+  }
+
+  static lockedPublic() {
+    return createSelector(
+      [WalletBalanceState.getValue('lockedPublic')],
+      (value: number): number => value
+    );
+  }
+
+  static lockedBlind() {
+    return createSelector(
+      [WalletBalanceState.getValue('lockedBlind')],
+      (value: number): number => value
+    );
+  }
+
+  static lockedAnon() {
+    return createSelector(
+      [WalletBalanceState.getValue('lockedAnon')],
+      (value: number): number => value
+    );
+  }
+
+  static lockedTotal() {
+    return createSelector(
+      [WalletBalanceState.lockedPublic(), WalletBalanceState.lockedBlind(), WalletBalanceState.lockedAnon()],
+      (p: number, b: number, a: number): number => (new PartoshiAmount(p, false))
+        .add(new PartoshiAmount(b, false))
+        .add(new PartoshiAmount(a, false))
+        .particls()
+    );
+  }
+
+
+  private static calculateSpendableAmounts(utxos: PublicUTXO[] | BlindUTXO[] | AnonUTXO[]) {
+    const tempBal = new PartoshiAmount(0);
+
+    for (const utxo of utxos) {
+      let spendable = true;
+      if ('spendable' in utxo) {
+        spendable = utxo.spendable;
+      }
+      if ((!utxo.coldstaking_address || utxo.address) && utxo.confirmations && spendable) {
+        tempBal.add(new PartoshiAmount(utxo.amount));
+      }
+    }
+
+    return tempBal.particlsString();
   }
 
 
@@ -263,46 +384,66 @@ export class WalletUTXOState {
 
 
   @Action(MainActions.ResetWallet)
-  onResetStateToDefault(ctx: StateContext<WalletUTXOStateModel>) {
+  onResetStateToDefault(ctx: StateContext<WalletBalanceStateModel>) {
     // Explicitly reset the state only
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
   }
 
 
-  @Action(WalletDetailActions.ResetAllUTXOS)
-  onResetAllUTXOS(ctx: StateContext<WalletUTXOStateModel>) {
+  @Action(WalletDetailActions.ResetBalances)
+  onResetBalances(ctx: StateContext<WalletBalanceStateModel>) {
     // Explicitly reset the state only
     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_UTXOS_STATE)));
   }
 
 
-  @Action(WalletDetailActions.GetAllUTXOS)
-  fetchAllUTXOS(ctx: StateContext<WalletUTXOStateModel>) {
-    return this._walletService.getAllUTXOs().pipe(
-      tap((result) => {
+  @Action(WalletDetailActions.RefreshBalances)
+  fetchWalletBalances(ctx: StateContext<WalletBalanceStateModel>) {
+    return forkJoin({
+      utxos: this._walletService.getAllUTXOs().pipe(
+        map((result) => {
 
-        const updatedValues = {};
-        const currentState = ctx.getState();
+          const updatedValues = {};
+          const currentState = ctx.getState();
 
-        const resultKeys = Object.keys(result);
-        for (const resKey of resultKeys) {
-          if (resKey in currentState) {
-            if (!result[resKey].length) {
-              updatedValues[resKey] = [];
-            } else if (
-              (currentState[resKey].length !== result[resKey].length) ||
-              (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
-                currentState[resKey],
-                result[resKey],
-                (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
-              ).length > 0)
-            ) {
-              updatedValues[resKey] = result[resKey];
+          const resultKeys = Object.keys(result);
+          for (const resKey of resultKeys) {
+            if (resKey in currentState) {
+              if (!result[resKey].length) {
+                updatedValues[resKey] = [];
+              } else if (
+                (currentState[resKey].length !== result[resKey].length) ||
+                (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
+                  currentState[resKey],
+                  result[resKey],
+                  (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
+                ).length > 0)
+              ) {
+                updatedValues[resKey] = result[resKey];
+              }
             }
           }
-        }
 
-        if (Object.keys(updatedValues).length > 0 ) {
+          return updatedValues;
+        })
+      ),
+
+      locked: this._walletService.getLockedBalance().pipe(
+        map(result => {
+          const currentState = ctx.getState();
+          const updatedValues = {};
+
+          if (currentState.lockedPublic !== result.public) { updatedValues['lockedPublic'] = result.public; }
+          if (currentState.lockedBlind !== result.blind) { updatedValues['lockedBlind'] = result.blind; }
+          if (currentState.lockedAnon !== result.anon) { updatedValues['lockedAnon'] = result.anon; }
+
+          return updatedValues;
+        })
+      )
+    }).pipe(
+      tap(updates => {
+        const updatedValues = { ...updates.locked, ...updates.utxos };
+        if (Object.keys(updatedValues).length > 0) {
           ctx.patchState(updatedValues);
         }
       })
