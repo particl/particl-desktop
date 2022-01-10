@@ -36,6 +36,8 @@ export class MarketManagementService {
   readonly MAX_MARKET_NAME: number = 50;
   readonly MAX_MARKET_SUMMARY: number = 150;
 
+  static readonly MARKET_INVITE_SEP = ':::';
+
 
   private marketRegionsMap: Map<MARKET_REGION | '', string> = new Map();
   private openMarketAddresses: string[];
