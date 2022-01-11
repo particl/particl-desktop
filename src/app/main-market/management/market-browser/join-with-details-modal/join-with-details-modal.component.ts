@@ -21,7 +21,10 @@ enum TextContent {
 
 function inviteCodeValidator(): ValidatorFn {
   return (control: AbstractControl): { [key: string]: boolean } | null => {
-    if (typeof control.value !== 'string' || control.value.split(MarketManagementService.MARKET_INVITE_SEP).findIndex(s => s.length < 25) > -1) {
+    if (
+      (typeof control.value !== 'string') ||
+      (control.value.split(MarketManagementService.MARKET_INVITE_SEP).findIndex(s => s.length < 25) > -1)
+    ) {
         return { 'inviteCode': true };
     }
     return null;
