@@ -11,7 +11,7 @@ export interface ProductInfoModalInput {
 }
 
 export interface ProductInfoAction {
-  action: 'editTemplate',
+  action: 'editTemplate';
   productID: number;
 }
 

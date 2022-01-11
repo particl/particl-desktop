@@ -258,7 +258,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
     const modalData: ProductInfoModalInput = {
       product: foundProduct,
-    }
+    };
 
 
     const dialog = this._dialog.open<ProductInfoModalComponent, ProductInfoModalInput, ProductInfoAction>(ProductInfoModalComponent, {
@@ -273,7 +273,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
 
         defer(() => {
           if (action.action === 'editTemplate') {
-            this._router.navigate(['new-listing'], { relativeTo: this._route, queryParams: { templateID: +action.productID } })
+            this._router.navigate(['new-listing'], { relativeTo: this._route, queryParams: { templateID: +action.productID } });
           }
         })
 

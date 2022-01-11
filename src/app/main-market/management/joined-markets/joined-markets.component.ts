@@ -240,7 +240,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
           this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
         }
       }
-    )
+    );
   }
 
 
