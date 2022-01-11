@@ -1,0 +1,62 @@
+<mat-dialog-title>Product Templates</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="--muted">
+
+  <div class="row">
+    <mat-card>
+      <div class="text">
+        <p class="help-text">
+          The product template serves as a default source to describe  a single product in your inventory.
+        </p>
+      </div>
+    </mat-card>
+    <mat-card>
+      <div class="text">
+        <p class="help-text">
+          A single product may be published on one or more markets, in which case, a template for each of the specific markets can
+          be created. This allows for the product
+          to be customized for the specific market it is published to, while still retaining the default product information.
+        </p>
+      </div>
+    </mat-card>
+    <mat-card>
+      <div class="text">
+        <p class="help-text">
+          This allows, for example, a product template to be set up that contains the default product information, such as title
+          and descriptions, images, and shipping information.
+          When cloning this template to a market template to be used to publish the item to a specific market, the market template
+          begins with a copy of this default information which can then be adjusted
+          and customized for the specific market that its going to be published to; for example: adjusting the price for the
+          specific market, adding or removing additional images, or customizing further the description of the item.
+        </p>
+      </div>
+    </mat-card>
+    <p class="alert --boxed --info">
+      <span>Note that changes to the product template <b>do not</b> apply to existing market templates. To apply the change to a market template, please edit the market template directly.</span>
+    </p>
+  </div>
+
+  <div fxLayout="column" fxLayoutAlign="space-around center">
+    <p class="lead">
+      {{ productName }}
+    </p>
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="editProductTemplate()" [disabled]="productID <= 0">
+      <mat-icon fontIcon="part-pen-1"></mat-icon>
+      Edit Product Template
+    </button>
+  </div>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Close
+  </button>
+</mat-dialog-actions>

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, Observable, defer, forkJoin, merge, timer, iif } from 'rxjs';
@@ -19,6 +19,7 @@ import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../mo
 import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
 import { CloneTemplateModalInput, CloneTemplateModalComponent } from '../modals/clone-template-modal/clone-template-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { ProductInfoAction, ProductInfoModalComponent, ProductInfoModalInput } from '../modals/product-info-modal/product-info-modal.component';
 
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
@@ -88,6 +89,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _store: Store,
     private _sellService: SellService,
     private _sharedService: DataService,
@@ -245,6 +247,38 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  openProductInfoModal(productId: number) {
+    const foundProduct = this.allProducts.find(p => p.id === productId);
+
+    if (!foundProduct) {
+      return;
+    }
+
+    const modalData: ProductInfoModalInput = {
+      product: foundProduct,
+    }
+
+
+    const dialog = this._dialog.open<ProductInfoModalComponent, ProductInfoModalInput, ProductInfoAction>(ProductInfoModalComponent, {
+      data: modalData,
+    });
+
+    dialog.afterClosed().pipe(
+      take(1),
+      concatMap((action) => iif(
+
+        () => !!action,
+
+        defer(() => {
+          if (action.action === 'editTemplate') {
+            this._router.navigate(['new-listing'], { relativeTo: this._route, queryParams: { templateID: +action.productID } })
+          }
+        })
+
+      ))
+    ).subscribe();
   }
 
 
