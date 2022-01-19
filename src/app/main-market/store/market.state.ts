@@ -118,6 +118,12 @@ export class MarketState {
   }
 
 
+  // @Selector()
+  // static profileIncludesDefaultMarket(state: MarketStateModel): boolean {
+  //   return state.identities.find(id => id.markets.findIndex(m => m.publishAddress))
+  // }
+
+
   @Selector()
   static availableCarts(state: MarketStateModel): CartDetail[] {
     return this.currentIdentity(state).carts;

@@ -231,3 +231,19 @@ mat-card.listing {
     }
   }
 }
+
+.no-results {
+  .new-listings-available {
+    .count {
+      margin-left: 1em;
+      margin-right: 1em;
+      padding-left: 0.8em;
+      padding-right: 0.8em;
+      line-height: normal;
+      background: hsla(var(--color-secondary-hsl), 0.7);
+      color: var(--color-white);
+      border-radius: 1em;
+      font-size: 0.85em;
+    }
+  }
+}

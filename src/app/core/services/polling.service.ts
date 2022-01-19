@@ -63,7 +63,9 @@ export class PollingService implements OnDestroy {
   private getRpcPolling(): Observable<any>[] {
 
     const rpcActivities: IPoll[] = [
-      {rpc: 'getnetworkinfo', interval: 10000, action: 'SetNetworkInfo'}
+      { rpc: 'getnetworkinfo', interval: 10000, action: 'SetNetworkInfo' },
+      { rpc: 'getpeerinfo', interval: 10000, action: 'SetPeerInfo' },
+      { rpc: 'getblockcount', interval: 5000, action: 'SetNodeCurrentBlockheight' },
     ];
 
     const obsList: Observable<any>[] = [];
