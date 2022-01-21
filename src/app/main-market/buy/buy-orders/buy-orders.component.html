@@ -298,9 +298,9 @@
           <div class="right">
 
             <button mat-button
-              *ngIf="orderItem.extraDetails?.msgId?.length > 0"
+              *ngIf="orderItem.extraDetails?.msgIds?.length > 0"
               color="warn" class="small" matTooltip="Resend your last action to the seller" appDebounceClick
-              (debounceClick)="resendActionMessage(orderItem.extraDetails.msgId)">
+              (debounceClick)="resendActionMessage(orderItem.extraDetails.msgIds)">
               <mat-icon fontIcon="part-refresh"></mat-icon>
               Resend order status
             </button>

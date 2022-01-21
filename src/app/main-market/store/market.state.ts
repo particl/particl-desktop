@@ -98,6 +98,11 @@ export class MarketState {
     return state.profile !== null ? state.profile : nullProfile;
   }
 
+  @Selector()
+  static currentProfileIdentities(state: MarketStateModel): Identity[] {
+    return state.identities;
+  }
+
 
   @Selector()
   static filteredIdentitiesList(state: MarketStateModel): Identity[] {
@@ -116,12 +121,6 @@ export class MarketState {
   static defaultConfig(state: MarketStateModel): DefaultMarketConfig {
     return state.defaultConfig;
   }
-
-
-  // @Selector()
-  // static profileIncludesDefaultMarket(state: MarketStateModel): boolean {
-  //   return state.identities.find(id => id.markets.findIndex(m => m.publishAddress))
-  // }
 
 
   @Selector()
@@ -152,6 +151,13 @@ export class MarketState {
   static orderCountNotification(key: 'buy' | 'sell') {
     return createSelector([MarketState.getNotifications], (state: MarketNotifications): number => {
       return key === 'buy' ? state.buyOrdersPendingAction.length : (key === 'sell' ? state.sellOrdersPendingAction.length : null);
+    });
+  }
+
+
+  static profileIncludesPredefinedMarket() {
+    return createSelector([MarketState.currentProfileIdentities], (identities: Identity[]): boolean => {
+      return identities.findIndex(id => id.markets.findIndex(m => m.isPredefined === true) > -1) > -1;
     });
   }
 

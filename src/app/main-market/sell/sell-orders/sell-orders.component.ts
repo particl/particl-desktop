@@ -464,8 +464,8 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
   }
 
 
-  resendActionMessage(msgId: string): void {
-    if (!msgId) {
+  resendActionMessage(msgIds: string[]): void {
+    if (!msgIds.length) {
       return;
     }
     this._dialog.open(ResendOrderActionConfirmationModalComponent).afterClosed().pipe(
@@ -475,7 +475,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
         defer(() =>  this._unlocker.unlock({ timeout: 10 }).pipe(
           concatMap((unlocked: boolean) => iif(
             () => unlocked,
-            defer(() => this._orderService.resendSmsgMessage(msgId))
+            defer(() => this._orderService.resendSmsgMessages(msgIds))
           ))
         ))
       ))

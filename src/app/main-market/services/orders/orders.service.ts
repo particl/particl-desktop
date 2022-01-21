@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, throwError, of, iif, defer, concat } from 'rxjs';
+import { Observable, throwError, of, iif, defer, concat, from } from 'rxjs';
 import { map, concatMap, tap, mapTo, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -170,9 +170,12 @@ export class BidOrderService implements IBuyflowController {
     );
   }
 
-  resendSmsgMessage(smsgId: string): Observable<boolean> {
-    return this._rpc.call('smsg', ['resend', smsgId, this._store.selectSnapshot(MarketState.currentIdentity).id]).pipe(
-      mapTo(true),
+  resendSmsgMessages(smsgIds: string[]): Observable<boolean> {
+    const identityID = this._store.selectSnapshot(MarketState.currentIdentity).id;
+    return from(smsgIds).pipe(
+      concatMap(smsgId => this._rpc.call('smsg', ['resend', smsgId, identityID]).pipe(
+        mapTo(true)
+      )),
       catchError(() => of(false))
     );
   }
@@ -234,7 +237,7 @@ export class BidOrderService implements IBuyflowController {
   }
 
 
-  getPreviousActionableStates(buyflow: BuyFlowType, currentStateId: BuyFlowOrderType, user: OrderUserType): BuyFlowOrderType[] {
+  getPreviousActionableStates(buyflow: BuyFlowType, currentStateId: BuyFlowOrderType, user: OrderUserType): {ordering: number, id: BuyFlowOrderType}[] {
     if (
       buyflow &&
       isBasicObjectType(this.buyflows[buyflow]) &&
@@ -242,13 +245,13 @@ export class BidOrderService implements IBuyflowController {
       isBasicObjectType(this.buyflows[buyflow].states[currentStateId])
     ) {
 
-      return this.getOrderedStateList(buyflow).map(s => s.stateId).filter(stateKey =>
-        this.buyflows[buyflow].actions[stateKey].findIndex((action: BuyflowAction) =>
+      return this.getOrderedStateList(buyflow).map(s => ({ordering: s.order, id: s.stateId})).filter(details =>
+        this.buyflows[buyflow].actions[details.id].findIndex((action: BuyflowAction) =>
           (action.toState === currentStateId) && (action.user === user) && (action.actionType !== 'PLACEHOLDER_LABEL')
         ) > -1
-      ) as BuyFlowOrderType[];
+      );
     }
-    return <BuyFlowOrderType[]>[];
+    return [];
   }
 
 
@@ -587,7 +590,7 @@ export class BidOrderService implements IBuyflowController {
 
       let latestGenerated = 0;
       let latestBidHash = '';
-      let latestBidMsgId = '';
+      let latestBidMsgIds = [];
       let lastActionedBid;
       // find the child bid with the highest quantity of bid datas
       let foundBidDatas = src.OrderItems[0].Bid.BidDatas;
@@ -617,9 +620,24 @@ export class BidOrderService implements IBuyflowController {
       if (
         lastActionedBid &&
         (newOrder.currentState.state.stateId !== ORDER_ITEM_STATUS.CANCELLED) &&
-        (this.getPreviousActionableStates(buyflowType, src.OrderItems[0].status, itemViewer).length > 0)
+        getValueOrDefault(lastActionedBid.msgid, 'string', '').length > 0
       ) {
-        latestBidMsgId = getValueOrDefault(lastActionedBid.msgid, 'string', latestBidMsgId);
+
+        const previousStates = this.getPreviousActionableStates(buyflowType, src.OrderItems[0].status, itemViewer);
+
+        if (previousStates.length > 0) {
+          for (const prevState of previousStates) {
+            if (this.getPreviousActionableStates(buyflowType, prevState.id, itemViewer).length > 0) {
+              const prevStateDetails = this.getStateDetails(buyflowType, prevState.id, itemViewer);
+              const foundChildBid = src.OrderItems[0].Bid.ChildBids.find(cb => cb.type === prevStateDetails.state.mappedBidStatus);
+              if (foundChildBid && (getValueOrDefault(foundChildBid.msgid, 'string', '').length > 0)) {
+                latestBidMsgIds.push(foundChildBid.msgid);
+              }
+            }
+          }
+
+          latestBidMsgIds.push(lastActionedBid.msgid);
+        }
       }
 
       if (latestBidHash.length > 0) {
@@ -633,7 +651,7 @@ export class BidOrderService implements IBuyflowController {
         escrowTxn: '',
         releaseTxn: '',
         rejectionReason: '',
-        msgId: latestBidMsgId,
+        msgIds: latestBidMsgIds,
         wasPreviouslyCancelled: hasCancelOrderRequest && (src.OrderItems[0].status !== ORDER_ITEM_STATUS.CANCELLED),
       };
 
