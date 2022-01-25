@@ -9,5 +9,5 @@
     "inline-style-disabled": true,
     "src-not-empty": true,
     "attr-no-duplication": true,
-    "title-require": true
+    "title-require": false
 }
