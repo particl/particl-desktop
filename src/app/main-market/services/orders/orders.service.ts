@@ -237,7 +237,11 @@ export class BidOrderService implements IBuyflowController {
   }
 
 
-  getPreviousActionableStates(buyflow: BuyFlowType, currentStateId: BuyFlowOrderType, user: OrderUserType): {ordering: number, id: BuyFlowOrderType}[] {
+  getPreviousActionableStates(
+    buyflow: BuyFlowType,
+    currentStateId: BuyFlowOrderType,
+    user: OrderUserType
+  ): { ordering: number, id: BuyFlowOrderType }[] {
     if (
       buyflow &&
       isBasicObjectType(this.buyflows[buyflow]) &&
@@ -590,7 +594,7 @@ export class BidOrderService implements IBuyflowController {
 
       let latestGenerated = 0;
       let latestBidHash = '';
-      let latestBidMsgIds = [];
+      const latestBidMsgIds = [];
       let lastActionedBid;
       // find the child bid with the highest quantity of bid datas
       let foundBidDatas = src.OrderItems[0].Bid.BidDatas;

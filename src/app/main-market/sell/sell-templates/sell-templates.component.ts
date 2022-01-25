@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, of, Observable, defer, forkJoin, merge, timer, iif } from 'rxjs';
+import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, throwError } from 'rxjs';
 import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -37,6 +37,7 @@ enum TextContent {
   ERROR_CLONE_ITEM = 'An error occurred cloning the selected item',
   ERROR_TEMPLATE_SIZE = 'Maximum listing size exceeded - please reduce image or text sizes',
   PUBLISH_FAILED = 'Failed to publish the template',
+  PUBLISH_FAILED_IMAGES = 'Template published but missing some images',
   PUBLISH_SUCCESS = 'Successfully created a listing!',
 }
 
@@ -337,7 +338,21 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
                 });
 
                 return this._sellService.publishMarketTemplate(marketTemplId, +details.duration).pipe(
-                  catchError(() => of(false)),
+                  tap(success => {
+                    if (!success) {
+                      throw new Error('Publish Failed');
+                    }
+                  }),
+                  catchError(err => {
+                    let errMsg = TextContent.PUBLISH_FAILED;
+                    if (err && (typeof err.message === 'string')) {
+                      switch (true) {
+                        case err.message.includes('images'): errMsg = TextContent.PUBLISH_FAILED_IMAGES; break;
+                      }
+                    }
+                    this._snackbar.open(errMsg, 'warn');
+                    return of(false);
+                  }),
                   tap((isSuccess) => {
                     loaderDialog.close();
 
@@ -348,8 +363,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
                         marketTempl.hash = 'abcdefg';
                       }
                       this.actionRefreshControl.setValue(true);
-                    } else {
-                      this._snackbar.open(TextContent.PUBLISH_FAILED, 'warn');
                     }
                   })
                 );
