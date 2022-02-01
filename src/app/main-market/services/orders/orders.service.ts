@@ -530,8 +530,8 @@ export class BidOrderService implements IBuyflowController {
         whole: cumulAmount.particlStringInteger(), sep: cumulAmount.particlStringSep(), fraction: cumulAmount.particlStringFraction()
       };
 
-      if (isBasicObjectType(listingItem.PaymentInformation.ItemPrice.ShippingPrice)) {
-        const selectedAmount = itemCountry === newOrder.shippingDetails.country ?
+      if (isBasicObjectType(src.ShippingAddress) && isBasicObjectType(listingItem.PaymentInformation.ItemPrice.ShippingPrice)) {
+        const selectedAmount = itemCountry === src.ShippingAddress.country ?
             listingItem.PaymentInformation.ItemPrice.ShippingPrice.domestic :
             listingItem.PaymentInformation.ItemPrice.ShippingPrice.international;
 
