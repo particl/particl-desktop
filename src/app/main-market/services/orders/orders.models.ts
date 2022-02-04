@@ -71,7 +71,7 @@ export interface OrderItem {
     releaseTxn: string;
     rejectionReason: string;
     wasPreviouslyCancelled: boolean;
-    msgId: string;
+    msgIds: string[];
   };
   hasWarnings: boolean;
 }

@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Select } from '@ngxs/store';
 import { Log } from 'ng2-logger';
-import { Observable, Subject, timer, merge } from 'rxjs';
-import { auditTime, concatMap, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
+import { auditTime, concatMap, takeUntil, map } from 'rxjs/operators';
 
+import { Select, Store } from '@ngxs/store';
 import { AppDataState } from 'app/core/store/appdata.state';
-import { BlockSyncService } from './block-sync.service';
+import { MainState } from './../../../store/main.state';
+
 import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
 import { PeerCalculatedStats } from './block-sync.models';
 
@@ -19,7 +20,6 @@ enum TextContent {
 @Component({
   templateUrl: './block-sync-modal.component.html',
   styleUrls: ['./block-sync-modal.component.scss'],
-  providers: [ BlockSyncService ]
 })
 export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
@@ -41,21 +41,47 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _blockSyncService: BlockSyncService,
+    private _store: Store
   ) {
     this.log.d('component intializing');
   }
 
 
   ngOnInit() {
+
+    const calculateStats$ = combineLatest([
+      this._store.select(MainState.highestPeerBlockCount()).pipe(takeUntil(this.destroy$)),
+      this._store.select(AppDataState.blockHeight).pipe(takeUntil(this.destroy$))
+    ]).pipe(
+      map(results => {
+        const highestPeerBlock = results[0];
+        const currentBlock = results[1];
+
+        const remainingBlocks = highestPeerBlock - currentBlock;
+
+        let syncPercentage = -1;
+        if (highestPeerBlock > 0) {
+          syncPercentage = Math.min((currentBlock / highestPeerBlock * 100), 100);
+        }
+
+        const stats: PeerCalculatedStats = {
+          remainingBlocks,
+          highestPeerBlock,
+          syncPercentage,
+          currentBlock
+        };
+
+        return stats;
+      }),
+      takeUntil(this.destroy$)
+    );
+
     merge(
       this.blockWatcher$.pipe(takeUntil(this.destroy$)),
       timer(0, 10000).pipe(takeUntil(this.destroy$))
     ).pipe(
       auditTime(5000),  // do a new check every this many (milli-)seconds
-      concatMap(() => {
-        return this._blockSyncService.fetchCalculatedStats();
-      }),
+      concatMap(() => calculateStats$),
     ).subscribe(
       this.processStats.bind(this),
       this.handleError.bind(this)

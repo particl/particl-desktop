@@ -438,13 +438,13 @@ export class SellService {
 
           if (+resp.totalFees > 0) {
             amount = +resp.totalFees;
-          } else if (+resp.fee > 0) {
-            amount += +resp.fee;
           }
 
           if ((typeof resp.error === 'string')) {
             if (usingAnonFees && (resp.error.toLowerCase().includes('enough utxos'))) {
               sendErrors.push(PublishWarnings.INSUFFICIENT_UTXOS);
+            } else {
+              throwError(resp.error);
             }
           }
 
@@ -474,7 +474,12 @@ export class SellService {
     ];
 
     return this._rpc.call('template', postParams).pipe(
-      map((resp: RespItemPost) => isBasicObjectType(resp) && (resp.result === 'Sent.'))
+      map((resp: RespItemPost) => {
+        if ((typeof resp.error === 'string') && resp.error) {
+          throw new Error(resp.error);
+        }
+        return isBasicObjectType(resp) && (resp.result === 'Sent.');
+      })
     );
   }
 
@@ -639,7 +644,7 @@ export class SellService {
       ]).toPromise();
     }
 
-    const success = await this.publishMarketTemplate(+latestMarketTempl.id, durationDays).toPromise();
+    const success = await this.publishMarketTemplate(+latestMarketTempl.id, durationDays).toPromise().catch(() => false);
 
     if (!success) {
       throw new Error('Publish Failed');

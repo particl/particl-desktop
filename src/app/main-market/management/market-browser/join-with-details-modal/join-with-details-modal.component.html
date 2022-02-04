@@ -73,27 +73,17 @@
 
       </mat-card><!-- market details -->
 
-      <!-- @TODO: The market type and the ID/key input should probably be first in this modal, followed by name and then all the optional inputs (description, image, region, etc) -->
-
       <h2 class="section-title">
-        Market ID and Keys
+        Invite Code
       </h2>
 
       <mat-card class="market-ids no-padding">
 
         <label class="--larger">
-          <h3 class="label">Market ID</h3>
+          <h3 class="label">Invite Code</h3>
           <mat-form-field class="--larger --plain" appearance="fill">
             <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
-            <input matInput placeholder="Market ID of the market to be joined" formControlName="keyReceive">
-          </mat-form-field>
-        </label>
-
-        <label class="--larger">
-          <h3 class="label">Access/Publish key</h3>
-          <mat-form-field class="--larger --plain" appearance="fill">
-            <mat-icon matPrefix fontIcon="part-lock-open"></mat-icon>
-            <input matInput placeholder="Market Key of the market to be joined" formControlName="keyPublish">
+            <input matInput placeholder="Invite code for the market" formControlName="inviteCode">
           </mat-form-field>
         </label>
 

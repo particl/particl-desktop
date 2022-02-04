@@ -16,6 +16,7 @@ import { PublishTemplateModalComponent } from './modals/publish-template-modal/p
 import { DeleteTemplateModalComponent } from './modals/delete-template-modal/delete-template-modal.component';
 import { BatchPublishModalComponent } from './modals/batch-publish-modal/batch-publish-modal.component';
 import { CloneTemplateModalComponent } from './modals/clone-template-modal/clone-template-modal.component';
+import { ProductInfoModalComponent } from './modals/product-info-modal/product-info-modal.component';
 
 import { SellOrdersComponent } from './sell-orders/sell-orders.component';
 import { AcceptBidModalComponent } from './modals/accept-bid-modal/accept-bid-modal.component';
@@ -66,6 +67,7 @@ const routes: Routes = [
     DeleteTemplateModalComponent,
     CloneTemplateModalComponent,
     BatchPublishModalComponent,
+    ProductInfoModalComponent,
 
     SellOrdersComponent,
     AcceptBidModalComponent,
@@ -84,6 +86,7 @@ const routes: Routes = [
     DeleteTemplateModalComponent,
     CloneTemplateModalComponent,
     BatchPublishModalComponent,
+    ProductInfoModalComponent,
 
     AcceptBidModalComponent,
     RejectBidModalComponent,

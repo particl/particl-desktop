@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import {  concatMap, finalize } from 'rxjs/operators';
 
@@ -16,6 +16,19 @@ enum TextContent {
   ERROR_IMAGE_ADD = 'The image selected is not valid',
   MARKET_JOIN_SUCCESS = 'Successfully joined this market',
   MARKET_JOIN_ERROR = 'Failed to join the specified market'
+}
+
+
+function inviteCodeValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    if (
+      (typeof control.value !== 'string') ||
+      (control.value.split(MarketManagementService.MARKET_INVITE_SEP).findIndex(s => s.length < 25) > -1)
+    ) {
+        return { 'inviteCode': true };
+    }
+    return null;
+  };
 }
 
 
@@ -51,8 +64,7 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
       summary: new FormControl('', [Validators.maxLength(this.MAX_SUMMARY)]),
       image: new FormControl(''),
       region: new FormControl(''),
-      keyReceive: new FormControl('', [Validators.required, Validators.minLength(25)]),
-      keyPublish: new FormControl('', [Validators.required, Validators.minLength(25)])
+      inviteCode: new FormControl('', [Validators.required, inviteCodeValidator()]),
     });
 
     this.optionsMarketRegions = this._manageService.getMarketRegions();
@@ -101,8 +113,10 @@ export class JoinWithDetailsModalComponent implements AfterViewInit {
     const descReq = this.marketForm.get('summary').value;
     const regionReq = this.marketForm.get('region').value;
     const imageReq = this.marketForm.get('image').value;
-    const recKey = this.marketForm.get('keyReceive').value;
-    const pubKey = this.marketForm.get('keyPublish').value;
+    const inviteCode = String(this.marketForm.get('inviteCode').value);
+    const ivParts = inviteCode.split(MarketManagementService.MARKET_INVITE_SEP);
+    const recKey = ivParts[0];
+    const pubKey = ivParts[1];
 
     const createRequest: CreateMarketRequest = {
       name: this.marketForm.get('name').value,

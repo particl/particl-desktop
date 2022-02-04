@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subject, BehaviorSubject, merge, iif, defer, combineLatest } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject, merge, iif, defer, combineLatest, throwError } from 'rxjs';
 import { map, catchError, takeUntil, tap, concatMap, mapTo, take } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -39,6 +39,7 @@ enum TextContent {
   PROCESSING_TEMPLATE_SAVE = 'Saving the current changes',
   PROCESSING_TEMPLATE_PUBLISH = 'Publishing the template to the selected market',
   PUBLISH_FAILED = 'Failed to publish the template',
+  PUBLISH_FAILED_IMAGES = 'Template published but missing some images',
   PUBLISH_SUCCESS = 'Successfully created a listing!'
 }
 
@@ -340,15 +341,27 @@ export class NewListingComponent implements OnInit, OnDestroy {
                     defer(() => {
                       this.processingChangesControl.setValue(2);
                       return this._sellService.publishMarketTemplate(this.savedTempl.id, +details.duration).pipe(
-                        catchError(() => of(false)),
+                        tap(isSuccess => {
+                          if (!isSuccess) {
+                            throw new Error('Publish Failed');
+                          }
+                        }),
+                        catchError(err => {
+                          let errMsg = TextContent.PUBLISH_FAILED;
+                          if (err && (typeof err.message === 'string')) {
+                            switch (true) {
+                              case err.message.includes('images'): errMsg = TextContent.PUBLISH_FAILED_IMAGES; break;
+                            }
+                          }
+                          this._snackbar.open(errMsg, 'warn');
+                          return of(false);
+                        }),
                         tap((isSuccess) => {
                           this.processingChangesControl.setValue(0);
 
                           if (isSuccess) {
                             this._snackbar.open(TextContent.PUBLISH_SUCCESS);
                             this._router.navigate(['../'], {relativeTo: this._route, queryParams: {selectedSellTab: 'templates'}});
-                          } else {
-                            this._snackbar.open(TextContent.PUBLISH_FAILED, 'warn');
                           }
                         })
                       );

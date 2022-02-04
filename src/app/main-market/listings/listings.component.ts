@@ -8,6 +8,7 @@ import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, tak
 import { xor } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
+import { MainState } from 'app/main/store/main.state';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -56,6 +57,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
   isSearching: boolean = false;
   isLoadingListings: boolean = true;
   isRescanningListings: boolean = false;
+  isSystemSyncing: boolean = false;
 
   // filter/search control mechanisms
   searchQuery: FormControl = new FormControl('');
@@ -130,6 +132,17 @@ export class ListingsComponent implements OnInit, OnDestroy {
         }
       }),
       catchError(() => of()),
+      takeUntil(this.destroy$)
+    );
+
+
+    const blockSyncStatus$ = this._store.select(MainState.isBlockchainSynced()).pipe(
+      tap((isSynced) => {
+        if (!isSynced !== this.isSystemSyncing) {
+          this.isSystemSyncing = !isSynced;
+          this._cdr.detectChanges();
+        }
+      }),
       takeUntil(this.destroy$)
     );
 
@@ -316,7 +329,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       loadListings$,
       newMessageListings$,
       newMessageFlagged$,
-      // newMessageComment$
+      blockSyncStatus$,
     ).subscribe();
 
   }

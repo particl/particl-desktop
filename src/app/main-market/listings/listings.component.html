@@ -174,33 +174,48 @@
 
       <div class="no-results" *ngIf="!isLoadingListings && (listings.length === 0)">
 
-        <ng-container *ngIf="!isSearching; else searchingBanner">
-          <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="Market is syncing">
+        <ng-container *ngIf="isSystemSyncing && (newPendingListingCount === 0); else defaultEmptyBanner">
+          <img class="illustration" src="./assets/images/illustrations/blockchain-sync_animated.svg" alt="Market is syncing">
           <p>
-            No Listings on the Marketplace
+            The system is currently syncing...
           </p>
           <p class="help-text">
-            If you launched the Marketplace recently, Listings might not load yet.<br>
-            Please wait a few minutes and then:
+            Listings may only become available once the system is up-to-date.<br>
+            Please wait a few minutes while the system sync completes.
           </p>
-          <button mat-button color="primary" [class.new-listings-available]="newPendingListingCount > 0" (click)="actionRefresh.setValue(!actionRefresh.value)" matTooltip="Check for new incoming Listings">
-            <mat-icon fontIcon="part-refresh"></mat-icon>
-            Refresh Listings
-          </button>
-          <button *ngIf="(marketSettings | async)?.marketsLastAdded > 0" mat-button color="warn" appDebounceClick (debounceClick)="forceSmsgRescan()" [disabled]="isRescanningListings" matTooltip="Rescan ALL LISTINGS on Particl – this takes a lot of time">
-            <mat-icon fontIcon="part-search"></mat-icon>
-            Rescan Listings
-          </button>
         </ng-container>
 
-        <ng-template #searchingBanner>
-          <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
-          <p>
-            Sorry, no matching Listings found
-          </p>
-          <p class="help-text">
-            Try a different, less specific search
-          </p>
+        <ng-template #defaultEmptyBanner>
+          <ng-container *ngIf="!isSearching; else searchingBanner">
+
+            <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No listings available">
+            <p>
+              No Listings on this market
+            </p>
+            <p class="help-text">
+              Perhaps there are no listings yet available, or received listings are still being processed. <br>
+              Once listings become available, please refresh the page to start shopping:
+            </p>
+            <button mat-button color="primary" [class.new-listings-available]="newPendingListingCount > 0" (click)="actionRefresh.setValue(!actionRefresh.value)" matTooltip="Check for new incoming Listings">
+              <mat-icon fontIcon="part-refresh"></mat-icon>
+                Refresh Listings
+              <span *ngIf="newPendingListingCount > 0" class="count small">{{ newPendingListingCount }}</span>
+            </button>
+            <button *ngIf="(marketSettings | async)?.marketsLastAdded > 0" mat-button color="warn" appDebounceClick (debounceClick)="forceSmsgRescan()" [disabled]="isRescanningListings" matTooltip="Rescan ALL LISTINGS on Particl – this takes a lot of time">
+              <mat-icon fontIcon="part-search"></mat-icon>
+              Rescan Listings
+            </button>
+          </ng-container>
+
+          <ng-template #searchingBanner>
+            <img class="illustration" src="./assets/images/illustrations/search.svg" alt="Not found">
+            <p>
+              Sorry, no matching Listings found
+            </p>
+            <p class="help-text">
+              Try a different, less specific search
+            </p>
+          </ng-template>
         </ng-template>
 
       </div><!-- .no-results -->
