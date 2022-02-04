@@ -23,6 +23,8 @@ import {
 } from './main.models';
 import { MainActions, WalletDetailActions } from './main.actions';
 import { AppSettings } from 'app/core/store/app.actions';
+import { PeerInfo } from 'app/core/store/app.models';
+import { AppDataState } from 'app/core/store/appdata.state';
 import { Observable, concat, forkJoin } from 'rxjs';
 import { concatMap, tap, mapTo, map } from 'rxjs/operators';
 import { xorWith } from 'lodash';
@@ -518,6 +520,29 @@ export class MainState {
   @Selector()
   static initialized(state: MainStateModel) {
     return state.isInitialized;
+  }
+
+
+  static highestPeerBlockCount() {
+    return createSelector(
+      [AppDataState.peersInfo()],
+      (peers: PeerInfo[]) => {
+        return peers.reduce((acc, peer) => +peer.blockHeight > +acc ? +peer.blockHeight : +acc, 0);
+      }
+    );
+  }
+
+
+  // NOTE: this is achieved from polling particl-core at regular intervals.
+  // For a more real-time obtaining of data, use the zmq streaming functionality
+  static isBlockchainSynced() {
+    const LEEWAY = 5;
+    return createSelector(
+      [MainState.highestPeerBlockCount(), AppDataState.blockHeight],
+      (peersCount: number, blockcount: number) => {
+        return (peersCount > 0) && (blockcount > 0) ? blockcount > (peersCount - LEEWAY) : false;
+      }
+    );
   }
 
 

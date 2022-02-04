@@ -33,6 +33,8 @@ enum TextContent {
 @Injectable()
 export class MarketManagementService {
 
+  static readonly MARKET_INVITE_SEP: string = ':::';
+
   readonly MAX_MARKET_NAME: number = 50;
   readonly MAX_MARKET_SUMMARY: number = 150;
 
@@ -196,7 +198,8 @@ export class MarketManagementService {
               name: market.name,
               publishAddress: market.publishKey,
               receiveAddress: market.receiveKey,
-              type: market.marketType
+              type: market.marketType,
+              isPredefined: false,
             };
             return this._store.dispatch([
               new MarketUserActions.AddIdentityMarket(idMarket),

@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, of, Observable, defer, forkJoin, merge, timer, iif } from 'rxjs';
+import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, throwError } from 'rxjs';
 import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -19,6 +19,7 @@ import { PublishTemplateModalComponent, PublishTemplateModalInputs } from '../mo
 import { ListingDetailModalComponent, ListingItemDetailInputs } from 'app/main-market/shared/listing-detail-modal/listing-detail-modal.component';
 import { CloneTemplateModalInput, CloneTemplateModalComponent } from '../modals/clone-template-modal/clone-template-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { ProductInfoAction, ProductInfoModalComponent, ProductInfoModalInput } from '../modals/product-info-modal/product-info-modal.component';
 
 import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from 'app/main-market/shared/utils';
@@ -36,6 +37,7 @@ enum TextContent {
   ERROR_CLONE_ITEM = 'An error occurred cloning the selected item',
   ERROR_TEMPLATE_SIZE = 'Maximum listing size exceeded - please reduce image or text sizes',
   PUBLISH_FAILED = 'Failed to publish the template',
+  PUBLISH_FAILED_IMAGES = 'Template published but missing some images',
   PUBLISH_SUCCESS = 'Successfully created a listing!',
 }
 
@@ -88,6 +90,7 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _store: Store,
     private _sellService: SellService,
     private _sharedService: DataService,
@@ -247,6 +250,38 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
     );
   }
 
+  openProductInfoModal(productId: number) {
+    const foundProduct = this.allProducts.find(p => p.id === productId);
+
+    if (!foundProduct) {
+      return;
+    }
+
+    const modalData: ProductInfoModalInput = {
+      product: foundProduct,
+    };
+
+
+    const dialog = this._dialog.open<ProductInfoModalComponent, ProductInfoModalInput, ProductInfoAction>(ProductInfoModalComponent, {
+      data: modalData,
+    });
+
+    dialog.afterClosed().pipe(
+      take(1),
+      concatMap((action) => iif(
+
+        () => !!action,
+
+        defer(() => {
+          if (action.action === 'editTemplate') {
+            this._router.navigate(['new-listing'], { relativeTo: this._route, queryParams: { templateID: +action.productID } });
+          }
+        })
+
+      ))
+    ).subscribe();
+  }
+
 
   openPublishExistingMarketModal(productId: number, marketTemplId: number): void {
 
@@ -303,7 +338,21 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
                 });
 
                 return this._sellService.publishMarketTemplate(marketTemplId, +details.duration).pipe(
-                  catchError(() => of(false)),
+                  tap(success => {
+                    if (!success) {
+                      throw new Error('Publish Failed');
+                    }
+                  }),
+                  catchError(err => {
+                    let errMsg = TextContent.PUBLISH_FAILED;
+                    if (err && (typeof err.message === 'string')) {
+                      switch (true) {
+                        case err.message.includes('images'): errMsg = TextContent.PUBLISH_FAILED_IMAGES; break;
+                      }
+                    }
+                    this._snackbar.open(errMsg, 'warn');
+                    return of(false);
+                  }),
                   tap((isSuccess) => {
                     loaderDialog.close();
 
@@ -314,8 +363,6 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
                         marketTempl.hash = 'abcdefg';
                       }
                       this.actionRefreshControl.setValue(true);
-                    } else {
-                      this._snackbar.open(TextContent.PUBLISH_FAILED, 'warn');
                     }
                   })
                 );

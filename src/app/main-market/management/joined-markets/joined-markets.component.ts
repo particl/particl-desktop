@@ -42,10 +42,9 @@ interface FilterOption {
 
 
 interface DisplayableJoinedMarket extends JoinedMarket {
-  receivePrivateKey?: string;
-  receivePublicKey?: string;
-  publishPrivateKey?: string;
-  publishPublicKey?: string;
+  marketID?: string;
+  inviteAccess?: string;
+  invitePublish?: string;
 }
 
 
@@ -206,49 +205,42 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
   }
 
 
-  copyKeyToClipboard(marketIdx: number, key: 'RECEIVE' | 'PUBLISH', type: 'PUBLIC' | 'PRIVATE') {
+  copyMarketInviteToClipboard(marketIdx: number, type: 'ACCESS' | 'PUBLISH') {
 
     if ((marketIdx >= this.marketsList.length) || (marketIdx < 0) || !isBasicObjectType(this.marketsList[marketIdx])) {
       return;
     }
 
     const marketItem = this.marketsList[marketIdx];
+    const marketID = marketItem.marketID;
+    let fn$: Observable<string>;
 
-    const targetKey = key === 'PUBLISH' ? marketItem.publishKey : marketItem.receiveKey;
+    if ((marketItem.marketType === MarketType.STOREFRONT_ADMIN) && (type === 'ACCESS')) {
+      fn$ = this._manageService.calculatePublicKeyFromPrivate(marketItem.publishKey);
+    } else {
+      fn$ = of(marketItem.publishKey);
+    }
 
-    if (getValueOrDefault(targetKey, 'string', '').length === 0) {
+    if (!fn$) {
       return;
     }
-
-    if ((marketItem.marketType === MarketType.STOREFRONT) && (key === 'PUBLISH') && (type === 'PUBLIC')) {
-      type = 'PRIVATE';
-    }
-
-    if (type === 'PRIVATE') {
-      if (this._clipboard.copyFromContent(targetKey)) {
-        if (marketItem.marketType === MarketType.STOREFRONT) {
-          marketItem.publishPublicKey = key === 'PUBLISH' ? targetKey : marketItem.publishPublicKey;
-        } else {
-          marketItem.publishPrivateKey = key === 'PUBLISH' ? targetKey : marketItem.publishPrivateKey;
+    fn$.subscribe(
+      (key: string) => {
+        if (getValueOrDefault(key, 'string', '').length <= 0) {
+          return;
         }
-
-        marketItem.receivePrivateKey = key === 'RECEIVE' ? targetKey : marketItem.receivePrivateKey;
-        this._cdr.detectChanges();
-        this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
-      }
-    } else {
-      this._manageService.calculatePublicKeyFromPrivate(targetKey).subscribe(
-        (pubKey) => {
-          if ((getValueOrDefault(pubKey, 'string', '').length > 0) && this._clipboard.copyFromContent(pubKey)) {
-            marketItem.publishPublicKey = key === 'PUBLISH' ? pubKey : marketItem.publishPublicKey;
-            marketItem.receivePublicKey = key === 'RECEIVE' ? pubKey : marketItem.receivePublicKey;
-            this._cdr.detectChanges();
-            this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
+        const invite = `${marketID}${MarketManagementService.MARKET_INVITE_SEP}${key}`;
+        if (this._clipboard.copyFromContent(invite)) {
+          if (type === 'ACCESS') {
+            marketItem.inviteAccess = invite;
+          } else if (type === 'PUBLISH') {
+            marketItem.invitePublish = invite;
           }
+          this._cdr.detectChanges();
+          this._snackbar.open(TextContent.COPIED_TO_CLIPBOARD);
         }
-
-      );
-    }
+      }
+    );
   }
 
 
@@ -416,7 +408,7 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
         }),
         tap(markets => {
           this.isLoading = false;
-          this.marketsList = markets;
+          this.marketsList = markets.map(m => ({...m, marketID: m.receiveKey}));
           this.renderFilteredControl.setValue(null);
 
           if ((this.marketsList.length > 0) && (this.requestedOpenCategoryModal > 0)) {

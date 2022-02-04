@@ -1407,11 +1407,27 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-"@zasmilingidiot/particl-marketplace@0.3.4":
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.4.tgz#80ae6aa4108f37ac5719d492e407af8eff1db3be"
-  integrity sha512-wuOZ3eWloo2ms8pw1FzlyaR3MRJ8QFnoY2awdZrMNAd0B5fMoizCPqD6XOBYFkO5VbAtaZA/ozBYxmS8B+09Eg==
+"@zasmilingidiot/omp-lib@0.1.154":
+  version "0.1.154"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/omp-lib/-/omp-lib-0.1.154.tgz#bc7dbc5164468f7fa3c2377a0b8930bcc5a0fbd6"
+  integrity sha512-cqfkvYVEvfYTt2UzowXbC/ojtGFi4rqPFqHQjeNmg38dNIYSNcpqKQSz/xJfZqjpv7CWMg6k9crcwUmVVhzjNg==
   dependencies:
+    inversify "^4.13.0"
+    js-sha256 "^0.9.0"
+    lodash "^4.17.11"
+    particl-bitcore-lib "https://github.com/kewde/particl-bitcore-lib.git"
+    pjson "^1.0.9"
+    reflect-metadata "^0.1.12"
+    semverv "^5.6.5"
+    tslib "^1.9.3"
+    web-request "^1.0.7"
+
+"@zasmilingidiot/particl-marketplace@0.3.5":
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.5.tgz#2c8c4deb999856edf3031b3441fdf8a0e54cc28e"
+  integrity sha512-CsEK2/s39WW4YLP+ii9vx3ByZrGxeSHgiDEtZju2bHrTrHr0I5hc3QpNNdYqTgQT1RUyLcf6mt+sRR/PdEUAOA==
+  dependencies:
+    "@zasmilingidiot/omp-lib" "0.1.154"
     "@zasmilingidiot/particl-zmq" "1.0.7"
     basic-auth "^2.0.0"
     body-parser "^1.17.2"
@@ -1452,7 +1468,6 @@
     merge "1.2.1"
     morgan "^1.9.1"
     multer "^1.4.1"
-    omp-lib "^0.1.153"
     particl-bitcore-lib "^0.16.0"
     path "^0.12.7"
     piexifjs "^1.0.3"
@@ -8773,21 +8788,6 @@ obuf@^1.0.0, obuf@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/obuf/-/obuf-1.1.2.tgz#09bea3343d41859ebd446292d11c9d4db619084e"
   integrity sha512-PX1wu0AmAdPqOL1mWhqmlOd8kOIZQwGZw6rh7uby9fTc5lhaOWFLX3I6R1hrF9k3zUY40e6igsLGkDXK92LJNg==
-
-omp-lib@^0.1.153:
-  version "0.1.153"
-  resolved "https://registry.yarnpkg.com/omp-lib/-/omp-lib-0.1.153.tgz#5538cfbbd33d5a99184b3147fe4324927c7463f6"
-  integrity sha512-fKo/j9fLBwMC+5dD2ch6N3oAAkTddrrCZbwD16dRFI8pB5wBxzNGPCbcKtno3KUnaH04SjwaqQQ4GDLEPSehWg==
-  dependencies:
-    inversify "^4.13.0"
-    js-sha256 "^0.9.0"
-    lodash "^4.17.11"
-    particl-bitcore-lib "https://github.com/kewde/particl-bitcore-lib.git"
-    pjson "^1.0.9"
-    reflect-metadata "^0.1.12"
-    semverv "^5.6.5"
-    tslib "^1.9.3"
-    web-request "^1.0.7"
 
 on-finished@^2.3.0, on-finished@~2.3.0:
   version "2.3.0"

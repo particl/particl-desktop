@@ -55,6 +55,7 @@ export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: 
     publishAddress: '',
     identityId: 0,
     image: '',
+    isPredefined: false,
   };
 
   if (!isBasicObjectType(src)) {
@@ -65,9 +66,13 @@ export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: 
   resp.type = getValueOrDefault(src.type, 'string', resp.type);
   resp.receiveAddress = getValueOrDefault(src.receiveAddress, 'string', resp.receiveAddress);
   resp.publishAddress = getValueOrDefault(src.publishAddress, 'string', resp.publishAddress);
-  resp.name = DefaulOpenMarketAddresses.includes(resp.receiveAddress) ?
-    TextContent.OPEN_MARKET_NAME :
-    getValueOrDefault(src.name, 'string', resp.name);
+  if (DefaulOpenMarketAddresses.includes(resp.receiveAddress)) {
+    resp.name = TextContent.OPEN_MARKET_NAME;
+    resp.isPredefined = true;
+  } else {
+    resp.name = getValueOrDefault(src.name, 'string', resp.name);
+  }
+
   resp.identityId = +src.identityId > 0 ? +src.identityId : resp.identityId;
 
   if (+src.imageId > 0) {

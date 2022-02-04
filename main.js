@@ -68,6 +68,8 @@ if (!instanceLock) {
   app.quit();
 } else {  // This is the primary instance that we're creating
 
+  let windowFrameTitle = 'Particl Desktop';
+
   try {
     /* check for paths existence and create */
     [ app.getPath('userData')].map(path => !fs.existsSync(path) && fs.mkdirSync(path));
@@ -76,7 +78,11 @@ if (!instanceLock) {
     log                  = require('./modules/logger').init();
     options              = require('./modules/options').get();
     const init           = require('./modules/init');
-    const _auth          = require('./modules/webrequest/http-auth');
+    const _auth = require('./modules/webrequest/http-auth');
+
+    if (!!options.testnet) {
+      windowFrameTitle = `${windowFrameTitle} - Testnet`;
+    }
 
     log.info(`init ${app.getName()} : ${app.getVersion()}`);
 
@@ -152,6 +158,7 @@ if (!instanceLock) {
 
         // Display a 'modal'-like window indicating that the application is shutting down
         closingWindow = new BrowserWindow({
+          title:     windowFrameTitle,
           width:     500,
           minWidth:  500,
           height:    320,
@@ -282,6 +289,7 @@ if (!instanceLock) {
         // (this triggers smaller breakpoints) - this size should cause
         // the same layout results on all OSes
         // minWidth/minHeight: both need to be specified or none will work
+        title:     windowFrameTitle,
         width:     1270,
         minWidth:  1270,
         height:    675,
@@ -355,6 +363,7 @@ if (!instanceLock) {
         });
 
         const errorWin = new BrowserWindow({
+          title:     windowFrameTitle,
           width:     500,
           minWidth:  500,
           height:    320,
@@ -465,6 +474,7 @@ if (!instanceLock) {
     function createCrashWindow() {
 
       const errorWindow = new BrowserWindow({
+        title:     windowFrameTitle,
         width:     500,
         minWidth:  500,
         height:    320,

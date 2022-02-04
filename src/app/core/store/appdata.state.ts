@@ -1,3 +1,4 @@
+import { xorWith } from 'lodash';
 import {
   State,
   StateToken,
@@ -6,10 +7,12 @@ import {
   StateContext,
   createSelector,
 } from '@ngxs/store';
+import { patch } from '@ngxs/store/operators';
 
 import { Global, AppData } from './app.actions';
 import {
   AppDataStateModel,
+  PeerInfo,
 } from './app.models';
 import { PollingService } from '../services/polling.service';
 
@@ -27,7 +30,9 @@ const APP_DATA_TOKEN = new StateToken<AppDataStateModel>('appdata');
     },
     appVersions: {
       latestClient: ''
-    }
+    },
+    peers: [],
+    currentBlockHeight: 0,
   }
 })
 export class AppDataState {
@@ -37,6 +42,16 @@ export class AppDataState {
     return state.networkInfo;
   }
 
+
+  @Selector()
+  static _peersList(state: AppDataStateModel) {
+    return state.peers;
+  }
+
+  @Selector()
+  static blockHeight(state: AppDataStateModel) {
+    return state.currentBlockHeight;
+  }
 
   static networkValue(field: string) {
     return createSelector(
@@ -54,6 +69,14 @@ export class AppDataState {
       (state: AppDataStateModel) => {
         return state.appVersions[field];
       }
+    );
+  }
+
+
+  static peersInfo() {
+    return createSelector(
+      [AppDataState._peersList],
+      (peers: PeerInfo[]) => peers
     );
   }
 
@@ -89,6 +112,43 @@ export class AppDataState {
       if (Object.keys(newVals).length > 0) {
         ctx.patchState({networkInfo: {...currentState, ...newVals}});
       }
+    }
+  }
+
+
+  @Action(AppData.SetPeerInfo)
+  setPeerInfo(ctx: StateContext<AppDataStateModel>, {peers}: AppData.SetPeerInfo) {
+    if (Array.isArray(peers)) {
+      const formattedPeers: PeerInfo[] = peers.map(p => ({
+        address: (typeof p.addr === 'string') && p.addr ? p.addr : '',
+        blockHeight: +p.currentheight >= 0 ? +p.currentheight : -1,
+      }));
+      const currentStatePeers = ctx.getState().peers;
+
+      if (
+        (currentStatePeers.length !== formattedPeers.length) ||
+        (xorWith<PeerInfo>(
+          currentStatePeers,
+          formattedPeers,
+          (curr, req) =>
+            (curr.address === req.address) &&
+            (curr.blockHeight === req.blockHeight)
+        ).length > 0)
+      ) {
+        ctx.setState(patch<AppDataStateModel>({
+          peers: formattedPeers
+        }));
+      }
+    }
+  }
+
+  @Action(AppData.SetNodeCurrentBlockheight)
+  setCurrentBlockheight(ctx: StateContext<AppDataStateModel>, {count}: AppData.SetNodeCurrentBlockheight) {
+    if ((+count > 0) && (+count !== ctx.getState().currentBlockHeight)) {
+
+      ctx.setState(patch<AppDataStateModel>({
+        currentBlockHeight: +count
+      }));
     }
   }
 

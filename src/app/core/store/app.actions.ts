@@ -2,7 +2,8 @@ import {
   APP_MODE,
   CoreConnectionModel,
   NetworkInfoModel,
-  AppVersionsModel
+  AppVersionsModel,
+  RpcPeerInfoModel,
 } from './app.models';
 
 export namespace Global {
@@ -54,6 +55,16 @@ export namespace AppData {
   export class SetVersionInfo {
     static readonly type: string = '[AppData] Set Version Info';
     constructor(public versions: AppVersionsModel) {}
+  }
+
+  export class SetPeerInfo {
+    static readonly type: string = '[AppData] Set Peer Info';
+    constructor(public peers: RpcPeerInfoModel[]) {}
+  }
+
+  export class SetNodeCurrentBlockheight {
+    static readonly type: string = '[AppData] Set Node Current Blockheight';
+    constructor(public count: number) {}
   }
 
 }
