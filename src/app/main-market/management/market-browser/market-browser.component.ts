@@ -2,7 +2,10 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestro
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Subject, of, merge, Observable, defer, iif } from 'rxjs';
-import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime, finalize, map, mapTo } from 'rxjs/operators';
+import {
+  catchError, tap, takeUntil, switchMap, startWith, debounceTime,
+  distinctUntilChanged, concatMap, auditTime, finalize, map, mapTo
+} from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
@@ -168,7 +171,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
         createRequest.image = {
           data: marketItem.image,
           type: 'REQUEST'
-        }
+        };
       }
 
       obs$ = this._unlocker.unlock({ timeout: 20 }).pipe(
