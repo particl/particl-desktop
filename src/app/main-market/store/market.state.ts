@@ -155,13 +155,6 @@ export class MarketState {
   }
 
 
-  static profileIncludesPredefinedMarket() {
-    return createSelector([MarketState.currentProfileIdentities], (identities: Identity[]): boolean => {
-      return identities.findIndex(id => id.markets.findIndex(m => m.isPredefined === true) > -1) > -1;
-    });
-  }
-
-
   constructor(
     private _marketService: MarketRpcService,
     private _socketService: MarketSocketService,

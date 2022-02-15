@@ -1,18 +1,22 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, of, merge, Observable, defer } from 'rxjs';
-import { catchError, tap, takeUntil, switchMap, startWith, debounceTime, distinctUntilChanged, concatMap, auditTime, finalize } from 'rxjs/operators';
+import { Subject, of, merge, Observable, defer, iif } from 'rxjs';
+import {
+  catchError, tap, takeUntil, switchMap, startWith, debounceTime,
+  distinctUntilChanged, concatMap, auditTime, finalize, map, mapTo
+} from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 import { MarketSettings } from '../../store/market.models';
 
+import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
 import { MarketManagementService } from '../management.service';
 import { JoinWithDetailsModalComponent } from './join-with-details-modal/join-with-details-modal.component';
-import { AvailableMarket } from '../management.models';
+import { AvailableMarket, CreateMarketRequest } from '../management.models';
 import { MarketType } from '../../shared/market.models';
 
 
@@ -57,6 +61,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   filterRegionControl: FormControl = new FormControl('');
 
   isLoading: boolean = true;
+  defaultMarkets: AvailableMarket[] = [];
   displayedMarkets: number[] = [];
   marketsList: AvailableMarket[] = [];
   isRescanning: boolean = false;
@@ -71,6 +76,7 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
     private _socket: MarketSocketService,
     private _manageService: MarketManagementService,
     private _snackbar: SnackbarService,
+    private _unlocker: WalletEncryptionService,
     private _dialog: MatDialog
   ) {
     this.optionsFilterMarketRegion = this._manageService.getMarketRegions();
@@ -78,6 +84,8 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+
+    this.defaultMarkets = this._manageService.getDefaultMarkets();
 
     const filterChange$ = merge(
       this.searchControl.valueChanges.pipe(
@@ -140,25 +148,65 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   }
 
 
-  actionJoinMarket(idx: number): void {
-    if ((idx < 0) || (idx >= this.marketsList.length)) {
+  actionJoinMarket(idx: number, isDefault: boolean = false): void {
+
+    let obs$: Observable<boolean>;
+    if (isDefault) {
+      if ((idx < 0) || (idx >= this.defaultMarkets.length)) {
+        return;
+      }
+
+      const marketItem = this.defaultMarkets[idx];
+
+      const createRequest: CreateMarketRequest = {
+        name: marketItem.name,
+        marketType: marketItem.marketType,
+        description: marketItem.summary,
+        region: marketItem.region.value,
+        publishKey: marketItem.publishKey,
+        receiveKey: marketItem.receiveKey,
+      };
+
+      if (marketItem.image) {
+        createRequest.image = {
+          data: marketItem.image,
+          type: 'REQUEST'
+        };
+      }
+
+      obs$ = this._unlocker.unlock({ timeout: 20 }).pipe(
+        concatMap((unlocked) => iif(
+          () => unlocked,
+          defer(() => this._manageService.createMarket(createRequest).pipe(
+            tap(() => {
+              this.defaultMarkets = this._manageService.getDefaultMarkets();
+              this._cdr.detectChanges();
+            }),
+            mapTo(true)
+          ))
+        )),
+      );
+
+    } else {
+      if ((idx < 0) || (idx >= this.marketsList.length)) {
+        return;
+      }
+
+      const marketItem = this.marketsList[idx];
+      obs$ = this._manageService.joinAvailableMarket(marketItem);
+    }
+
+    if (!obs$) {
       return;
     }
-    const marketItem = this.marketsList[idx];
 
-    this._manageService.joinAvailableMarket(marketItem).pipe(
+    obs$.pipe(
       tap((isSuccess) => {
         if (isSuccess) {
           this._snackbar.open(TextContent.JOIN_MARKET_SUCCESS);
         }
-      })
-    ).subscribe(
-      (isSuccess) => {
-        if (isSuccess) {
-          this._snackbar.open(TextContent.JOIN_MARKET_SUCCESS);
-        }
-      },
-      (err) => {
+      }),
+      catchError((err) => {
         let msg = TextContent.JOIN_MARKET_ERROR_GENERIC;
 
         if (typeof err === 'string') {
@@ -177,8 +225,9 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
         }
 
         this._snackbar.open(msg, 'warn');
-      }
-    );
+        return of(false);
+      })
+    ).subscribe();
   }
 
 
@@ -206,10 +255,10 @@ export class MarketBrowserComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadMarkets(showLoadingBar: boolean = true): Observable<AvailableMarket[]> {
+  private loadMarkets(): Observable<AvailableMarket[]> {
     return of({}).pipe(
       tap(() => {
-        this.isLoading = showLoadingBar;
+        this.isLoading = true;
         this.displayedMarkets = [];
         this.marketsList = [];
         this._cdr.detectChanges();

@@ -14,13 +14,14 @@ export interface AvailableMarket {
   image: string;
   region: {
     label: string;
-    value: string;
+    value: MARKET_REGION;
   };
   summary: string;
   receiveKey: string;
   publishKey: string;
   marketType: MarketType;
   expires: number;
+  isDefaultMarket: boolean;
 }
 
 
@@ -31,7 +32,7 @@ export interface JoinedMarket {
   image: string;
   region: {
     label: string;
-    value: string;
+    value: MARKET_REGION;
   };
   marketType: MarketType;
   receiveKey: string;

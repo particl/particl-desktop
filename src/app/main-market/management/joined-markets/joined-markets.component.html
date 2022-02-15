@@ -169,7 +169,9 @@
                   <mat-icon fontIcon="part-pen-1"></mat-icon>
                   Edit Categories
                 </button>
-                <button mat-raised-button color="primary" matTooltip="Publish to Market browser" appDebounceClick (debounceClick)="actionOpenPromoteMarketModal(marketIdx)">
+                <button mat-raised-button color="primary" matTooltip="Publish to Market browser"
+                  *ngIf="marketItem.canPromote === true"
+                  appDebounceClick (debounceClick)="actionOpenPromoteMarketModal(marketIdx)">
                   <mat-icon fontIcon="part-notification-speaker"></mat-icon>
                   Promote Market
                 </button>

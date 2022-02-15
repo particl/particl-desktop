@@ -83,6 +83,86 @@
       </div>
     </div>
 
+
+    <ng-template #marketTypeStorefront>Storefront</ng-template>
+
+
+    <ng-container *ngIf="defaultMarkets.length > 0">
+
+      <h2 class="section-title">
+        Default Markets
+      </h2>
+
+      <mat-accordion>
+        <mat-expansion-panel class="market list-item no-padding" *ngFor="let market of defaultMarkets; let mIdx = index;">
+          <mat-expansion-panel-header class="header">
+            <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+              <div class="photo">
+                <img [src]="market.image">
+              </div>
+              <div class="info" fxFlex="1 1 100%">
+                <h3 class="box-title --larger">
+                  <span class="name">{{ market.name }}</span>
+                </h3>
+                <div class="desc">
+                  <span class="market-type tag">
+                    <ng-container *ngIf="market.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">
+                      Community Market
+                    </ng-container>
+                  </span>
+                  <span class="market-region">
+                    <mat-icon fontIcon="part-globe"></mat-icon>
+                    {{ market.region.label }}
+                  </span>
+                </div>
+              </div><!-- .meta -->
+            </div>
+          </mat-expansion-panel-header>
+
+          <div class="details">
+            <div class="row" fxLayout fxLayoutGap="30px">
+              <div fxFlex="1 1 100%">
+                <h3 class="item-subtitle">Market summary</h3>
+                <p class="desc">
+                  {{ market.summary }}
+                </p>
+              </div>
+              <p class="desc meta" fxFlex="0 0 160px">
+                <strong>Promoted until</strong>
+                <small>(never expires)</small>
+              </p>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="keys">
+              <h3 class="box-title">Market ID</h3>
+              <p class="help-text">
+                <strong>Market Access Key</strong>
+              </p>
+              <div class="public key">{{ market.receiveKey }}</div>
+            </div><!-- .keys -->
+          </div><!-- .details -->
+
+          <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+            <div class="left">
+            </div>
+            <div class="right">
+              <button mat-raised-button color="primary" appDebounceClick (debounceClick)="actionJoinMarket(mIdx, true)">
+                <mat-icon fontIcon="part-circle-plus"></mat-icon>
+                Join this Market
+              </button>
+            </div>
+          </mat-action-row>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-container>
+
+
+    <h2 class="section-title" *ngIf="defaultMarkets.length > 0">
+      Promoted Markets
+    </h2>
+
+
     <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
       <mat-accordion>
 
@@ -101,7 +181,6 @@
                   <div class="desc">
                     <span class="market-type tag">
                       <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
-                      <ng-template #marketTypeStorefront>Storefront</ng-template>
                     </span>
                     <span class="market-region">
                       <mat-icon fontIcon="part-globe"></mat-icon>
@@ -111,7 +190,7 @@
                 </div><!-- .meta -->
               </div>
             </mat-expansion-panel-header>
-            
+
             <div class="details">
               <div class="row" fxLayout fxLayoutGap="30px">
                 <div fxFlex="1 1 100%">
@@ -156,7 +235,7 @@
       <div class="no-results" *ngIf="marketsList.length === 0">
         <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets available">
         <p>
-          No Markets promoted
+          No promoted Markets
         </p>
         <p class="help-text">
           If you're looking for a specific Market, ask any of its members for the Market ID and join it manually

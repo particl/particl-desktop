@@ -16,7 +16,6 @@ export interface Market {
   publishAddress: string;
   identityId: number;
   image: string;
-  isPredefined: boolean;
 }
 
 

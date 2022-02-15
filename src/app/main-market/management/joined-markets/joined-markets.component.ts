@@ -45,6 +45,7 @@ interface DisplayableJoinedMarket extends JoinedMarket {
   marketID?: string;
   inviteAccess?: string;
   invitePublish?: string;
+  canPromote?: boolean;
 }
 
 
@@ -408,7 +409,12 @@ export class JoinedMarketsComponent implements OnInit, OnDestroy {
         }),
         tap(markets => {
           this.isLoading = false;
-          this.marketsList = markets.map(m => ({...m, marketID: m.receiveKey}));
+          const defaultMarketAddresses = new Set(this._manageService.DEFAULT_MARKETS.map(m => m.address));
+          this.marketsList = markets.map(m => ({
+            ...m,
+            marketID: m.receiveKey,
+            canPromote: !(defaultMarketAddresses.has(m.publishAddress) || defaultMarketAddresses.has(m.receiveAddress)),
+          }));
           this.renderFilteredControl.setValue(null);
 
           if ((this.marketsList.length > 0) && (this.requestedOpenCategoryModal > 0)) {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { Observable, Subject, iif, merge, of, defer, timer, from } from 'rxjs';
@@ -88,12 +88,16 @@ export class ListingsComponent implements OnInit, OnDestroy {
   private forceReload$: FormControl = new FormControl();
   @ViewChild('categorySelection', {static: false}) private componentCategory: TreeSelectComponent;
   @ViewChild('countrySourceSelection', {static: false}) private componentCountrySource: TreeSelectComponent;
-  @ViewChild('countryDestinationSelection', {static: false}) private componentCountryDestination: TreeSelectComponent;
+  @ViewChild('countryDestinationSelection', { static: false }) private componentCountryDestination: TreeSelectComponent;
+
+  private readonly ROUTE_TO_MARKET_JOIN: string = '/main/market/management/';
+  private readonly ROUTE_TO_MARKET_CREATE: string = '/main/market/management/create/';
 
 
   constructor(
     private _cdr: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _store: Store,
     private _listingService: ListingsService,
     private _sharedService: DataService,
@@ -171,6 +175,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
         this.isLoadingListings = true;
         this._cdr.detectChanges();
       }),
+      // could probably get the markets from the identity/profile on the store, since there should be a list of them available there
       switchMap((identity) => this._sharedService.loadMarkets(identity.id).pipe(
         catchError(() => of([] as Market[])),
         tap((markets: Market[]) => {
@@ -200,7 +205,6 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
     const marketChange$ = this.selectedMarketControl.valueChanges.pipe(
-
       map((srcMarketId: number) => {
         let foundMarket;
         if (+srcMarketId > 0) {
@@ -366,6 +370,15 @@ export class ListingsComponent implements OnInit, OnDestroy {
         }
       })
     ).subscribe();
+  }
+
+
+  navigateToMarketJoin() {
+    this._router.navigate([this.ROUTE_TO_MARKET_JOIN], {queryParams: {selectedManagementTab: 'browser'}});
+  }
+
+  navigateToMarketCreate() {
+    this._router.navigate([this.ROUTE_TO_MARKET_CREATE]);
   }
 
 
