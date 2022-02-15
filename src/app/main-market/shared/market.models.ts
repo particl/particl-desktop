@@ -903,3 +903,12 @@ export interface RespProfileMnemonic {
   mnemonic: string;
   passphrase: string;
 }
+
+
+export interface DefaultOpenMarketDetails {
+  address: string;
+  key: string;
+  name: string;
+  isTest: boolean;
+  marketType: MarketType;
+}

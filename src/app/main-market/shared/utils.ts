@@ -1,6 +1,5 @@
-import { RespGeneralImageItem, IMAGE_VERSION, RespIdentityMarketItem } from './market.models';
+import { RespGeneralImageItem, IMAGE_VERSION, RespIdentityMarketItem, DefaultOpenMarketDetails, MarketType } from './market.models';
 import { Market } from '../services/data/data.models';
-import * as marketConfig from '../../../../modules/market/config.js';
 
 
 enum TextContent {
@@ -8,11 +7,24 @@ enum TextContent {
 }
 
 
-const DefaulOpenMarketAddresses: string[] = [];
+const defaultOpenMarkets: DefaultOpenMarketDetails[] = [
+  {
+    address: 'PZijh4WzjCWLbSgBkMUtLHZBaU6dSSmkqN',
+    key: '4dgpQuxsDVxytK22ay8Ky7xTSDGJzPu2tnr14tyBoU7CmZC6dqM',
+    name: TextContent.OPEN_MARKET_NAME,
+    isTest: false,
+    marketType: MarketType.MARKETPLACE,
+  },
 
-if (isBasicObjectType(marketConfig.addressesOpenMarketplace)) {
-  DefaulOpenMarketAddresses.push(...Object.keys(marketConfig.addressesOpenMarketplace));
-}
+  {
+    address: 'pmktyVZshdMAQ6DPbbRXEFNGuzMbTMkqAA',
+    key: '2Zc2pc9jSx2qF5tpu25DCZEr1Dwj8JBoVL5WP4H1drJsX9sP4ek',
+    name: TextContent.OPEN_MARKET_NAME,
+    isTest: true,
+    marketType: MarketType.MARKETPLACE,
+  }
+
+];
 
 
 export function getValueOrDefault<T>(value: T, type: 'string' | 'number' | 'boolean', defaultValue: T): T {
@@ -46,6 +58,11 @@ export function parseImagePath(image: RespGeneralImageItem, version: IMAGE_VERSI
 }
 
 
+export function openMarketAddresses(): readonly DefaultOpenMarketDetails[] {
+  return Object.freeze(defaultOpenMarkets);
+}
+
+
 export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: string, defaultImage: string): Market {
   const resp: Market = {
     id: 0,
@@ -55,7 +72,6 @@ export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: 
     publishAddress: '',
     identityId: 0,
     image: '',
-    isPredefined: false,
   };
 
   if (!isBasicObjectType(src)) {
@@ -66,9 +82,10 @@ export function parseMarketResponseItem(src: RespIdentityMarketItem, marketUrl: 
   resp.type = getValueOrDefault(src.type, 'string', resp.type);
   resp.receiveAddress = getValueOrDefault(src.receiveAddress, 'string', resp.receiveAddress);
   resp.publishAddress = getValueOrDefault(src.publishAddress, 'string', resp.publishAddress);
-  if (DefaulOpenMarketAddresses.includes(resp.receiveAddress)) {
-    resp.name = TextContent.OPEN_MARKET_NAME;
-    resp.isPredefined = true;
+
+  const defaultMarketIndex = defaultOpenMarkets.findIndex(omp => omp.address === resp.receiveAddress);
+  if ( defaultMarketIndex > -1) {
+    resp.name = openMarketAddresses()[defaultMarketIndex].name;
   } else {
     resp.name = getValueOrDefault(src.name, 'string', resp.name);
   }
