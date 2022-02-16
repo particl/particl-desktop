@@ -189,16 +189,16 @@
             </label>
 
             <label class="--larger">
-              <h3 class="label">Receiver's name</h3>
               <mat-form-field appearance="fill" class="address-label --plain --larger">
+                <h3 class="label">Receiver's name</h3>
                 <input matInput type="text" formControlName="addressLabel" placeholder="Save Receiver's address by labeling it here (optional)">
               </mat-form-field>
             </label>
 
             <label class="--larger">
-              <h3 class="label">Narration</h3>
-              <mat-form-field appearance="fill" class="narration --plain --larger">
-                <input matInput type="text" formControlName="narration" maxlength="24"
+              <mat-form-field appearance="fill" class="--plain --larger">
+                <h3 class="label">Narration</h3>
+                <input matInput type="text" formControlName="narration"
                   [placeholder]="sourceType.value === 'part'
                   ? 'Send a short public message with the payment (optional)'
                   : 'Send a short private message with the payment (optional)'">
