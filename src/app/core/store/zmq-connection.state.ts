@@ -9,6 +9,7 @@ import {
 import { ZmqConnectionStateModel, ZmqTypeField, ZmqActions, ZmqFieldStatus } from './app.models';
 import { ZMQ } from './app.actions';
 import { ZmqService } from '../services/zmq.service';
+import { patch } from '@ngxs/store/operators';
 
 
 const ZMQ_CONNECTION_TOKEN = new StateToken<ZmqConnectionStateModel>('zmq');
@@ -58,9 +59,9 @@ export class ZmqConnectionState implements NgxsOnInit {
 
   static getData(field: string) {
     return createSelector(
-      [ZmqConnectionState],
-      (state: ZmqConnectionStateModel): string => {
-        return field in state ? state[field].data : null;
+      [ZmqConnectionState.get(field)],
+      (fieldData: ZmqTypeField): string => {
+        return fieldData ? fieldData.data : null;
       }
     );
   }
@@ -93,43 +94,64 @@ export class ZmqConnectionState implements NgxsOnInit {
       return;
     }
 
-    const fieldValues = JSON.parse(JSON.stringify(current[action.field])) as ZmqTypeField;
-
     switch (action.action) {
       case ZmqActions.CONNECTED:
-        fieldValues.status.connected = true;
-        fieldValues.status.retryCount = 0;
-        fieldValues.status.error = false;
+        ctx.setState(patch<ZmqConnectionStateModel>({
+          [action.field]: patch<ZmqTypeField>({
+            status: patch<ZmqFieldStatus>({
+              connected: true,
+              retryCount: 0,
+              error: false,
+            }),
+          })
+        }));
         break;
 
       case ZmqActions.CLOSED:
-        fieldValues.status.connected = false;
-        fieldValues.status.retryCount = 0;
-        fieldValues.status.error = false;
+        ctx.setState(patch<ZmqConnectionStateModel>({
+          [action.field]: patch<ZmqTypeField>({
+            status: patch<ZmqFieldStatus>({
+              connected: false,
+              retryCount: 0,
+              error: false,
+            }),
+          })
+        }));
         break;
 
       case ZmqActions.ERROR:
-        fieldValues.status.retryCount = 0;
-        fieldValues.status.error = true;
+        ctx.setState(patch<ZmqConnectionStateModel>({
+          [action.field]: patch<ZmqTypeField>({
+            status: patch<ZmqFieldStatus>({
+              retryCount: 0,
+              error: true,
+            }),
+          })
+        }));
         break;
 
       case ZmqActions.RETRY:
-        fieldValues.status.connected = false;
-        fieldValues.status.retryCount = action.value;
+        ctx.setState(patch<ZmqConnectionStateModel>({
+          [action.field]: patch<ZmqTypeField>({
+            status: patch<ZmqFieldStatus>({
+              connected: false,
+              retryCount: +action.value,
+            }),
+          })
+        }));
         break;
 
       case ZmqActions.DATA:
-        if (!fieldValues.status.connected) {
-          fieldValues.status.connected = true;
-          fieldValues.status.error = false;
-        }
-        fieldValues.data = action.value;
+        ctx.setState(patch<ZmqConnectionStateModel>({
+          [action.field]: patch<ZmqTypeField>({
+            status: patch<ZmqFieldStatus>({
+              connected: true,
+              error: false,
+            }),
+            data: action.value
+          })
+        }));
         break;
     }
-
-    const patch = {};
-    patch[action.field] = fieldValues;
-
-    ctx.patchState(patch);
   }
 }
