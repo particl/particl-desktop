@@ -3,8 +3,8 @@ import { Log } from 'ng2-logger';
 import { slideDown } from 'app/core-ui/core.animations';
 
 import { Store, Select } from '@ngxs/store';
-import { Observable, merge, Subject } from 'rxjs';
-import { auditTime, distinctUntilChanged, takeUntil, switchMap, concatMap, tap, skip } from 'rxjs/operators';
+import { Observable, merge, Subject, defer, of } from 'rxjs';
+import { auditTime, distinctUntilChanged, takeUntil, switchMap, concatMap, tap, skip, catchError } from 'rxjs/operators';
 
 import { TransactionService } from './transactions.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
@@ -19,6 +19,8 @@ import * as zmqOptions from '../../../../../modules/zmq/services.js';
 enum TextContent {
   FETCH_ERROR = 'An error occurred while fetching the transactions',
   TXID_COPIED = 'TX ID copied to the cliboard',
+  TX_ABANDON_SUCCESS = 'Successfully abandoned tx: {txid}',
+  TX_ABANDON_ERROR = 'Failed to abandon/cancel that transaction',
 }
 
 
@@ -64,16 +66,16 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.log.d(`transaction-table created`);
 
-    const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashtx')).pipe(
+    const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashblock')).pipe(
+      skip(1),  // skip the first, as this will trigger on first access of the store value
       auditTime(zmqOptions.throttledSeconds * 1000), // Prevent flooding during a block sync for example
       distinctUntilChanged(),
-      skip(1),  // skip the first, as this will trigger on first access of the store value
       takeUntil(this.destroy$)
     );
 
     const walletSwitcher$ = this._store.select(WalletInfoState.getValue('walletname')).pipe(
-      distinctUntilChanged(),
       skip(1),  // skip the first, as this will trigger on first access of the store value
+      distinctUntilChanged(),
       takeUntil(this.destroy$)
     );
 
@@ -84,7 +86,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
     obsList.push(walletSwitcher$);
 
     merge(...obsList).pipe(
-      switchMap(() => this.fetchTransactionInfo()),
+      switchMap(() => defer(() => this.fetchTransactionInfo())),
       takeUntil(this.destroy$)
     ).subscribe(
       (txns: FilteredTransaction[]) => {
@@ -150,8 +152,8 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  public styleConfimations(confirm: number, required: number): string {
-    if (confirm >= required) {
+  public styleConfimations(confirm: number, required: number, isAbandoned: boolean = false): string {
+    if (isAbandoned || (confirm >= required)) {
       return 'confirm-ok';
     }
 
@@ -161,17 +163,6 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
 
     return 'confirm-1';
 
-    // if (confirm <= 0) {
-    //   return 'confirm-none';
-    // } else if (confirm >= 1 && confirm <= 4) {
-    //   return 'confirm-1';
-    // } else if (confirm >= 5 && confirm <= 8) {
-    //   return 'confirm-2';
-    // } else if (confirm >= 9 && confirm <= 12) {
-    //   return 'confirm-3';
-    // } else {
-    //   return 'confirm-ok';
-    // }
   }
 
 
@@ -188,6 +179,30 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   copyToClipBoard(): void {
     this._snackbar.open(TextContent.TXID_COPIED);
   }
+
+
+  abandonTransaction(txid: string): void {
+    if (!txid.length) {
+      return;
+    }
+    this._txservice.abandonTransaction(txid).pipe(
+      catchError(() => of(false))
+    ).subscribe(
+      (success) => {
+        if (!success) {
+          this._snackbar.open(TextContent.TX_ABANDON_ERROR, 'warn');
+          return;
+        }
+
+        this._snackbar.open(TextContent.TX_ABANDON_SUCCESS.replace('{txid}', txid));
+        const txn = this.txns.find(t => t.txid === txid);
+        if (txn) {
+          txn.isAbandoned = true;
+        }
+      }
+    );
+  }
+
 
 
   private fetchTransactionInfo(): Observable<FilteredTransaction[]> {

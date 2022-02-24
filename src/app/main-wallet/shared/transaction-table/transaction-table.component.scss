@@ -20,6 +20,9 @@
   }
 
   .tx-overview {
+    &.abandoned {
+      color: hsla(var(--text-muted-hsl), 0.8) !important;
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,7 +45,7 @@
 
   // confirmations
   .confirmations {
-    flex: 0 0 70px;
+    flex: 0 0 120px;
     .confirmation-tag {
       border-radius: var(--radius);
       font-size: 12px;
@@ -52,31 +55,36 @@
         font-size: 13px;
       }
     }
-    .confirmations { // icon
+    .confirmations {
+      // icon
       margin-right: 3px;
       font-size: 12px;
       position: relative;
       top: 1px;
     }
-    &.confirm-none { // unconfirmed TXs
+    &.confirm-none {
+      // unconfirmed TXs
       color: var(--color-confirms-0-pct);
       .confirmation-tag {
         background: hsla(var(--color-confirms-0-pct-hsl), 0.15);
       }
     }
-    &.confirm-1 { // 1-4 confirmations
+    &.confirm-1 {
+      // 1-4 confirmations
       color: var(--color-confirms-33-pct);
       .confirmation-tag {
         background: hsla(var(--color-confirms-33-pct-hsl), 0.15);
       }
     }
-    &.confirm-2 { // 5-8 conf.
+    &.confirm-2 {
+      // 5-8 conf.
       color: var(--color-confirms-66-pct);
       .confirmation-tag {
         background: hsla(var(--color-confirms-66-pct-hsl), 0.15);
       }
     }
-    &.confirm-3 { // 9-12 conf.
+    &.confirm-3 {
+      // 9-12 conf.
       color: var(--color-confirms-100-pct);
       .confirmation-tag {
         background: hsla(var(--color-confirms-100-pct-hsl), 0.15);
@@ -168,7 +176,8 @@
         color: var(--tx-negative-decimals);
       }
     }
-    .mat-icon { // icon hiding private TX's value when wallet is locked
+    .mat-icon {
+      // icon hiding private TX's value when wallet is locked
       color: var(--text-muted);
       font-size: 14px;
       position: relative;
@@ -176,7 +185,6 @@
     }
   }
 }
-
 
 .tx-description {
   font-size: 13px;
@@ -200,7 +208,8 @@ table.tx-details {
   width: 100%;
   @include break(xl) {
     --border-spacing: 7px;
-    padding: calc(24px - var(--border-spacing)) calc(35px - var(--border-spacing));
+    padding: calc(24px - var(--border-spacing))
+      calc(35px - var(--border-spacing));
   }
   .tx-detail-item {
     padding: 3px 0;

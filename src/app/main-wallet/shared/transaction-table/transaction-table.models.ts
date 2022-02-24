@@ -85,6 +85,7 @@ export class FilteredTransaction {
   readonly addressType: AddressType;
   readonly transferType: TxTransferType;
   readonly requiredConfirmations: number;
+  isAbandoned: boolean;
 
   readonly isListingFee: boolean;
 
@@ -92,6 +93,9 @@ export class FilteredTransaction {
 
 
   constructor(json: FilterTransactionModel) {
+
+    this.isAbandoned = typeof json.abandoned === 'boolean' ? json.abandoned : false;
+
     /* transactions */
     this.txid = json.txid;
     this.category = json.category;
