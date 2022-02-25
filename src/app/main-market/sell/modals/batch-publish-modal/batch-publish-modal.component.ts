@@ -1,5 +1,4 @@
-import { PartoshiAmount } from 'app/core/util/utils';
-import { Component, OnInit, OnDestroy, Inject, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, ValidatorFn, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -14,6 +13,7 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
 import { DataService } from '../../../services/data/data.service';
 import { SellService } from '../../sell.service';
 import { TreeSelectComponent } from '../../../shared/shared.module';
+import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType } from '../../../shared/utils';
 import { PublishDurations, BatchPublishProductItem } from '../../sell.models';
 import { MarketType } from '../../../shared/market.models';
@@ -64,6 +64,7 @@ interface ReferenceBatchPublishProductItem extends BatchPublishProductItem {
   currentPriceBase: string;
   currentPriceShippingLocal: string;
   currentPriceShippingIntl: string;
+  isVisible: boolean;
 }
 
 
@@ -77,6 +78,8 @@ enum TextContent {
   PUBLISH_ERROR_GENERIC = 'Publishing failed, please try again',
   PUBLISH_ERROR_INVALID_TEMPLATE = 'Publishing error: Invalid product template',
   PUBLISH_ERROR_BLACKLISTED_MARKET = 'Publishing error: Market blacklisted',
+  MARKET_FILTER_NO_FILTER = 'No Filter',
+  MARKET_FILTER_ONLY_UNPUB = 'New Products Only (never been published to a market)',
 }
 
 
@@ -89,6 +92,10 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
   PriceChangeOptions: typeof PriceChangeOptions = PriceChangeOptions; // so we can use it in HTML
 
   readonly availableMarkets: Array<{id: number; name: string, key: string, marketType: MarketType, image: string}> = [];
+  readonly filterMarkets: {id: number, name: string}[] = [
+    { id: 0, name: TextContent.MARKET_FILTER_NO_FILTER },
+    { id: -1, name: TextContent.MARKET_FILTER_ONLY_UNPUB },
+  ];
   readonly availableProducts: ReferenceBatchPublishProductItem[] = [];
   readonly categories$: Observable<{id: number, name: string}[]>;
 
@@ -127,12 +134,14 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private categoryList$: BehaviorSubject<{id: number; name: string}[]> = new BehaviorSubject([]);
   private didModifySomething: boolean = false;
+  private performItemUpdates: FormControl = new FormControl([]);
   @ViewChildren('categorySelector') private categorySelectorChildren: QueryList<TreeSelectComponent>;
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: BatchPublishModalInputs,
     private _dialogRef: MatDialogRef<BatchPublishModalComponent>,
+    private _cdr: ChangeDetectorRef,
     private _store: Store,
     private _sellService: SellService,
     private _sharedService: DataService,
@@ -146,6 +155,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       selectedDuration: new FormControl('', [Validators.required]),
       pricePercentageChange: new FormControl(100, [Validators.required, Validators.min(0.1), Validators.max(1000)]),
       priceChangeShipping: new FormControl(true),
+      filterItemsByMarket: new FormControl(0),
       /**
        * availableProducts control is:
        *    FormArray[
@@ -165,6 +175,7 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
         this.data.markets.forEach(m => {
           if (isBasicObjectType(m) && (typeof m.id === 'number') && (typeof m.name === 'string') && (typeof m.key === 'string')) {
             this.availableMarkets.push(m);
+            this.filterMarkets.push({id: m.id, name: m.name});
           }
         });
       }
@@ -178,7 +189,13 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
             (typeof prod.image === 'string') &&
             Array.isArray(prod.existingMarkets)
           ) {
-            this.availableProducts.push({...prod, currentPriceBase: '', currentPriceShippingLocal: '', currentPriceShippingIntl: ''});
+            this.availableProducts.push({
+              ...prod,
+              currentPriceBase: '',
+              currentPriceShippingLocal: '',
+              currentPriceShippingIntl: '',
+              isVisible: true
+            });
 
             const newArray = new FormArray(
               [
@@ -262,30 +279,71 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
 
       // load the categories into the tree-select for each selector
       tap(categories => this.categoryList$.next(categories)),
-
-      tap(() => {
-        const marketId = this.batchPublishForm.get('selectedMarket').value;
-        const refs = this.categorySelectorChildren.toArray();
-
-        if (marketId > 0) {
-          this.availableProducts.forEach((prod, idx) => {
-            const existingMarket = prod.existingMarkets.find(m => m.marketId === marketId);
-
-            // reset each tree-select (and the equivalent form control value) to any existing market category selection
-            refs[idx].resetSelection(existingMarket && (existingMarket.categoryId > 0) ? existingMarket.categoryId : null);
-            (this.formAvailableProducts.controls[idx] as FormArray).at(1).setValue(existingMarket ? existingMarket.categoryId : 0);
-
-            // update current price and new price for each product for the market selected
-            prod.currentPriceBase = existingMarket ? existingMarket.priceBase : prod.priceBase;
-            prod.currentPriceShippingLocal = existingMarket ? existingMarket.priceShippingLocal : prod.priceShippingLocal;
-            prod.currentPriceShippingIntl = existingMarket ? existingMarket.priceShippingIntl : prod.priceShippingIntl;
-
-            this.setProductPricingStatus(idx, (<FormArray>this.formAvailableProducts.controls[idx]).at(5).value, false);
-          });
-        }
-      }),
-
       takeUntil(this.destroy$)
+    );
+
+
+    const filterItemsByMarket$ = this.batchPublishForm.get('filterItemsByMarket').valueChanges.pipe(
+      startWith(this.batchPublishForm.get('filterItemsByMarket').value),
+      distinctUntilChanged(),
+      takeUntil(this.destroy$)
+    );
+
+    const productUpdate$ = combineLatest([
+      marketChange$,
+      filterItemsByMarket$
+    ]).pipe(
+      tap(values => {
+        const visibleMarketId = +values[1];
+
+        this.availableProducts.forEach((prod) =>
+          prod.isVisible =
+            visibleMarketId === 0 ?
+            true :
+            (
+              visibleMarketId === -1 ?
+              prod.existingMarkets.length === 0 :
+              prod.existingMarkets.findIndex(m => m.marketId === visibleMarketId) > -1
+            )
+        );
+
+        const marketId = this.batchPublishForm.get('selectedMarket').value;
+        // needed here to force angular to detect the correct category tree-select components that are visible.
+        this._cdr.detectChanges();
+        this.performItemUpdates.setValue([marketId, visibleMarketId]);
+      }),
+    );
+
+
+    const updateProducts$ = this.performItemUpdates.valueChanges.pipe(
+      tap((values) => {
+        const selectedMarketId = values[0];
+
+        if (!(selectedMarketId > 0)) {
+          return;
+        }
+
+        const refs = this.categorySelectorChildren.toArray();
+        let visibleProdIdx = -1;
+
+        this.availableProducts.forEach((prod, idx) => {
+          const existingMarket = prod.existingMarkets.find(m => m.marketId === selectedMarketId);
+
+          // reset each tree-select (and the equivalent form control value) to any existing market category selection
+          if (prod.isVisible) {
+            visibleProdIdx++;
+            refs[visibleProdIdx].resetSelection(existingMarket && (existingMarket.categoryId > 0) ? existingMarket.categoryId : null);
+          }
+          (this.formAvailableProducts.controls[idx] as FormArray).at(1).setValue(existingMarket ? existingMarket.categoryId : 0);
+
+          // update current price and new price for each product for the market selected
+          prod.currentPriceBase = existingMarket ? existingMarket.priceBase : prod.priceBase;
+          prod.currentPriceShippingLocal = existingMarket ? existingMarket.priceShippingLocal : prod.priceShippingLocal;
+          prod.currentPriceShippingIntl = existingMarket ? existingMarket.priceShippingIntl : prod.priceShippingIntl;
+
+          this.setProductPricingStatus(idx, (<FormArray>this.formAvailableProducts.controls[idx]).at(5).value, false);
+        });
+      })
     );
 
 
@@ -326,8 +384,10 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
         if (presetValue === '') {
           return;
         }
-        this.formAvailableProducts.controls.forEach(c => {
-          (c as FormArray).at(0).setValue(presetValue === 'all');
+        this.formAvailableProducts.controls.forEach((c, cidx) => {
+          if (this.availableProducts[cidx].isVisible) {
+            (c as FormArray).at(0).setValue(presetValue === 'all');
+          }
         });
 
         this.presetControl.setValue('');
@@ -372,7 +432,8 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
     merge(
       identityChange$,
       balanceChange$,
-      marketChange$,
+      updateProducts$,
+      productUpdate$,
       globalPercentageUpdates$,
       preselectChange$,
       process$

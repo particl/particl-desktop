@@ -113,6 +113,7 @@ mat-dialog-title {
         font-size: 15px;
         font-weight: 500;
         margin-bottom: 1px;
+        flex-grow: 1;
       }
       .publish-status {
         color: var(--text-muted);

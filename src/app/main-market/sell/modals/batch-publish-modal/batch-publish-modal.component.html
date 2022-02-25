@@ -85,48 +85,64 @@
       If you want to adjust your Listings per chosen Markets, don’t Batch Publish and instead Publish them one by one.
     </p>
 
+    <div *ngIf="+batchPublishForm.get('selectedMarket').value > 0">
+      <label>
+        <h3 class="label">Filter visible items by existing market:</h3>
+        <mat-form-field class="--plain --larger" appearance="fill">
+          <mat-icon matPrefix fontIcon="part-shop"></mat-icon>
+          <mat-select formControlName="filterItemsByMarket">
+            <mat-option *ngFor="let market of filterMarkets" [value]="market.id" class="--larger">
+              {{ market.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </label>
+    </div>
+
     <section class="available-products" formArrayName="availableProducts">
 
       <ng-container *ngIf="+batchPublishForm.get('selectedMarket').value > 0">
         <ng-container *ngFor="let product of formAvailableProducts.controls; index as formProductIdx">
-          <mat-expansion-panel class="" *appVar="availableProducts[formProductIdx] as productInfo" [formArrayName]="formProductIdx" hideToggle="true" expanded="true" disabled="true">
-            <mat-expansion-panel-header class="header product">
-              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-                <div class="photo">
-                  <img [src]="productInfo.image">
-                </div>
-                <div class="meta">
-                  <div class="title">{{ productInfo.name }}</div>
-                  <div class="publish-status" *ngIf="isSelectedForPublish(formProductIdx)">
-                    <ng-container *ngIf="product.errors && product.hasError('productCategorySelected')">
-                      <mat-icon fontIcon="part-circle-info"></mat-icon>
-                      Please select a category before publishing
-                    </ng-container>
-                    <ng-container *ngIf="product.errors && product.hasError('productPricing')">
-                      <mat-icon fontIcon="part-circle-info"></mat-icon>
-                      Invalid pricing values
-                    </ng-container>
-                    <ng-container *ngIf="product.dirty && product.valid && isProcessingControl.value">
-                      <mat-icon fontIcon="part-cog" class="loading-progress"></mat-icon>
-                      Publishing in progress
-                    </ng-container>
-                    <ng-container *ngIf="product.valid && !isProcessingControl.value && !specificErrorMessages.has(formProductIdx)">
-                      <mat-icon fontIcon="part-check"></mat-icon>
-                      Ready for publishing
-                    </ng-container>
-                    <ng-container *ngIf="!product.dirty && specificErrorMessages.has(formProductIdx)">
-                      <mat-icon fontIcon="part-alert"></mat-icon>
-                      {{ specificErrorMessages.get(formProductIdx) }}
-                    </ng-container>
+          <ng-container *appVar="availableProducts[formProductIdx] as productInfo">
+            <mat-expansion-panel class="" *ngIf="productInfo.isVisible" [formArrayName]="formProductIdx" hideToggle="true" expanded="true" disabled="true">
+              <mat-expansion-panel-header class="header product">
+                <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+
+                  <div class="photo">
+                    <img [src]="productInfo.image">
                   </div>
-                  <div class="publish-status" *ngIf="!isSelectedForPublish(formProductIdx)">
-                    <ng-container *ngIf="publishingInfo.successProducts.includes(formProductIdx)">
-                      <mat-icon fontIcon="part-circle-check"></mat-icon>
-                      Successfully published
-                    </ng-container>
-                  </div>
-                </div><!-- .meta -->
-                <ng-container>
+                  <div class="meta">
+                    <div class="title">{{ productInfo.name }}</div>
+                    <div class="publish-status" *ngIf="isSelectedForPublish(formProductIdx)">
+                      <ng-container *ngIf="product.errors && product.hasError('productCategorySelected')">
+                        <mat-icon fontIcon="part-circle-info"></mat-icon>
+                        Please select a category before publishing
+                      </ng-container>
+                      <ng-container *ngIf="product.errors && product.hasError('productPricing')">
+                        <mat-icon fontIcon="part-circle-info"></mat-icon>
+                        Invalid pricing values
+                      </ng-container>
+                      <ng-container *ngIf="product.dirty && product.valid && isProcessingControl.value">
+                        <mat-icon fontIcon="part-cog" class="loading-progress"></mat-icon>
+                        Publishing in progress
+                      </ng-container>
+                      <ng-container *ngIf="product.valid && !isProcessingControl.value && !specificErrorMessages.has(formProductIdx)">
+                        <mat-icon fontIcon="part-check"></mat-icon>
+                        Ready for publishing
+                      </ng-container>
+                      <ng-container *ngIf="!product.dirty && specificErrorMessages.has(formProductIdx)">
+                        <mat-icon fontIcon="part-alert"></mat-icon>
+                        {{ specificErrorMessages.get(formProductIdx) }}
+                      </ng-container>
+                    </div>
+                    <div class="publish-status" *ngIf="!isSelectedForPublish(formProductIdx)">
+                      <ng-container *ngIf="publishingInfo.successProducts.includes(formProductIdx)">
+                        <mat-icon fontIcon="part-circle-check"></mat-icon>
+                        Successfully published
+                      </ng-container>
+                    </div>
+                  </div><!-- .meta -->
+
                   <div class="category-select" matTooltip="Select category" matTooltipPosition="before">
                     <tree-select #categorySelector [data$]="categories$" [singleSelection]="true" [isParentNodesSelectable]="false"
                       placeholderLabel="Select a category" prefixIcon="part-filter"
@@ -136,91 +152,91 @@
                   <div class="publish-checkbox">
                     <mat-checkbox [formControlName]="0">Publish</mat-checkbox>
                   </div>
-                </ng-container>
-              </div>
-            </mat-expansion-panel-header>
+                </div>
+              </mat-expansion-panel-header>
 
-            <div class="details">
-              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
-                <h5 class="section-title">
-                  Pricing changes
-                </h5>
-                <mat-radio-group class="radio-group block-radio" [formControlName]="5" (change)="setProductPricingStatus(formProductIdx, $event.value)">
-                  <mat-radio-button class="filter-option" *ngFor="let option of productPriceChangeOptions" value="{{ option.value }}" color="accent">
-                    {{ option.label }}
-                  </mat-radio-button>
-                </mat-radio-group>
-              </div>
+              <div class="details">
+                <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                  <h5 class="section-title">
+                    Pricing changes
+                  </h5>
+                  <mat-radio-group class="radio-group block-radio" [formControlName]="5" (change)="setProductPricingStatus(formProductIdx, $event.value)">
+                    <mat-radio-button class="filter-option" *ngFor="let option of productPriceChangeOptions" value="{{ option.value }}" color="accent">
+                      {{ option.label }}
+                    </mat-radio-button>
+                  </mat-radio-group>
+                </div>
 
-              <table class="pricing-table">
-                <thead>
+                <table class="pricing-table">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <th>Item Price</th>
+                      <th>Shipping (Local)</th>
+                      <th>Shipping (International)</th>
+                    </tr>
+                  </thead>
+                <tbody>
                   <tr>
-                    <th></th>
-                    <th>Item Price</th>
-                    <th>Shipping (Local)</th>
-                    <th>Shipping (International)</th>
+                    <th>
+                      Current Value
+                      <small>The current, saved value for this item</small>
+                    </th>
+                    <td>
+                      <span class="part price">
+                        {{ productInfo.currentPriceBase }}
+                        <small class="currency">PART</small>
+                      </span>
+                    </td>
+
+                    <td>
+                      <span class="part price">
+                        {{ productInfo.currentPriceShippingLocal }}
+                        <small class="currency">PART</small>
+                      </span>
+                    </td>
+
+                    <td>
+                      <span class="part price">
+                        {{ productInfo.currentPriceShippingIntl }}
+                        <small class="currency">PART</small>
+                      </span>
+
+                    </td>
                   </tr>
-                </thead>
-              <tbody>
-                <tr>
-                  <th>
-                    Current Value
-                    <small>The current, saved value for this item</small>
-                  </th>
-                  <td>
-                    <span class="part price">
-                      {{ productInfo.currentPriceBase }}
-                      <small class="currency">PART</small>
-                    </span>
-                  </td>
+                  <tr>
+                    <th>
+                      New Value
+                      <small>The new price for the item</small>
+                    </th>
 
-                  <td>
-                    <span class="part price">
-                      {{ productInfo.currentPriceShippingLocal }}
-                      <small class="currency">PART</small>
-                    </span>
-                  </td>
+                    <td>
+                        <mat-form-field class="--plain" appearance="fill">
+                          <input [formControlName]="2" placeholder="Item Price" matInput />
+                        </mat-form-field>
+                        <span class="part price"><small class="currency">PART</small></span>
+                    </td>
 
-                  <td>
-                    <span class="part price">
-                      {{ productInfo.currentPriceShippingIntl }}
-                      <small class="currency">PART</small>
-                    </span>
+                    <td>
+                        <mat-form-field class="--plain" appearance="fill">
+                          <input [formControlName]="3" placeholder="Item Shipping (Local) Price" matInput />
+                        </mat-form-field>
+                        <span class="part price"><small class="currency">PART</small></span>
+                    </td>
 
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    New Value
-                    <small>The new price for the item</small>
-                  </th>
+                    <td>
+                        <mat-form-field class="--plain" appearance="fill">
+                          <input [formControlName]="4" placeholder="Item Shipping (International) Price" matInput />
+                        </mat-form-field>
+                        <span class="part price"><small class="currency">PART</small></span>
+                    </td>
+                  </tr>
+                </tbody>
+                </table>
 
-                  <td>
-                      <mat-form-field class="--plain" appearance="fill">
-                        <input [formControlName]="2" placeholder="Item Price" matInput />
-                      </mat-form-field>
-                      <span class="part price"><small class="currency">PART</small></span>
-                  </td>
-
-                  <td>
-                      <mat-form-field class="--plain" appearance="fill">
-                        <input [formControlName]="3" placeholder="Item Shipping (Local) Price" matInput />
-                      </mat-form-field>
-                      <span class="part price"><small class="currency">PART</small></span>
-                  </td>
-
-                  <td>
-                      <mat-form-field class="--plain" appearance="fill">
-                        <input [formControlName]="4" placeholder="Item Shipping (International) Price" matInput />
-                      </mat-form-field>
-                      <span class="part price"><small class="currency">PART</small></span>
-                  </td>
-                </tr>
-              </tbody>
-              </table>
-
-            </div>
-          </mat-expansion-panel>
+              </div>
+            </mat-expansion-panel>
+          </ng-container>
         </ng-container>
       </ng-container>
 
