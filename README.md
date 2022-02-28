@@ -9,7 +9,7 @@
 <p align="center">
    <a href="https://github.com/particl/particl-desktop/releases"><img src=".github-readme/button-download.png" alt="Download Wallet"></a>
    <a href="https://particl.io"><img src=".github-readme/button-website.png" alt="Official website"></a>
-   <a href="https://particl.news"><img src=".github-readme/button-news.png" alt="Lastest news"></a>
+   <a href="https://particl.news"><img src=".github-readme/button-news.png" alt="Latest news"></a>
    <a href="https://particl.wiki"><img src=".github-readme/button-wiki.png" alt="Project wiki"></a>
 </p>
 
