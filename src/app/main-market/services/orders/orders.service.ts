@@ -712,7 +712,7 @@ export class BidOrderService implements IBuyflowController {
       );
       newOrder.shippingDetails.state = getValueOrDefault(
         src.ShippingAddress.state, 'string', newOrder.shippingDetails.state
-      );
+      ).trim();
       newOrder.shippingDetails.country = getValueOrDefault(
         src.ShippingAddress.country, 'string', newOrder.shippingDetails.country
       );

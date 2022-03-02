@@ -45,7 +45,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
       addressLine1: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
       addressLine2: new FormControl('', [Validators.maxLength(this.MAX_FIELD_LENGTH)]),
       city: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
-      state: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
+      state: new FormControl('', [Validators.maxLength(this.MAX_FIELD_LENGTH)]),
       zipCode: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
       countryCode: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)])
     });
@@ -91,9 +91,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
     const values: {[key: string]: string} = {};
     controls.forEach(control => {
       values[control] = this.addressForm.controls[control].value;
-      if (typeof values[control] === 'string') {
-        values[control] = values[control].trim();
-      }
+      values[control] = typeof values[control] === 'string' ? values[control].trim() : '';
     });
     return values;
   }

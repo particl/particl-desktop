@@ -322,7 +322,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
           addressLine1: addressFields.addressLine1 || '',
           addressLine2: addressFields.addressLine2 || '',
           city: addressFields.city || '',
-          state: addressFields.state || '',
+          state: addressFields.state || ' ',
           country: null,
           countryCode: addressFields.countryCode || '',
           zipCode: addressFields.zipCode || '',
