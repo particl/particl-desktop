@@ -194,7 +194,9 @@
                 {{orderItem.shippingDetails.addressLine1}}<small>&ndash; Street</small><br>
                 <ng-container *ngIf="orderItem.shippingDetails.addressLine2.length > 0">{{orderItem.shippingDetails.addressLine2}}<small>&ndash; Street</small><br></ng-container>
                 {{orderItem.shippingDetails.city}}<small>&ndash; City</small><br>
-                {{orderItem.shippingDetails.state}}<small>&ndash; State</small><br>
+                <ng-container *ngIf="orderItem.shippingDetails.state?.length > 0">
+                  {{orderItem.shippingDetails.state}}<small>&ndash; State</small><br>
+                </ng-container>
                 {{orderItem.shippingDetails.code}}<small>&ndash; ZIP</small><br>
                 {{orderItem.shippingDetails.country}}<small>&ndash; Country</small>
               </p>
