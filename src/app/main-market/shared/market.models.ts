@@ -335,6 +335,7 @@ export interface RespListingTemplateInformation {
   title: string;
   shortDescription: string;
   longDescription: string;
+  productCode: string | null;
   itemCategoryId: number | null;
   listingItemId: number | null;
   listingItemTemplateId: number;

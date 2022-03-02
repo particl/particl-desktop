@@ -110,14 +110,14 @@ export class SellService {
         }
 
         return from([
-          this._rpc.call('information', [
-            'update',
+          this.rpcInformationUpdate(
             +clonedTemplSrc.id,
             newInfo['title'],
             newInfo['summary'],
             newInfo['description'],
+            undefined,
             +categoryId
-          ]),
+          ),
 
           this._rpc.call('template', ['get', +clonedTemplSrc.id])
         ]).pipe(
@@ -186,7 +186,8 @@ export class SellService {
       data.escrowType,
       data.escrowBuyerRatio,
       data.escrowSellerRatio,
-      data.escrowReleaseType
+      data.escrowReleaseType,
+      data.productCode,
     ];
 
     return this._rpc.call('template', addParams).pipe(
@@ -235,9 +236,8 @@ export class SellService {
 
               if (isBasicObjectType(newMarketTempl) && (+newMarketTempl.id > 0)) {
                 // set the category now (since the market is now set)
-                return this._rpc.call(
-                  'information',
-                  ['update', +newMarketTempl.id, data.title, data.summary, data.description, +data.categoryId]
+                return this.rpcInformationUpdate(
+                  +newMarketTempl.id, data.title, data.summary, data.description, undefined, +data.categoryId
                 ).pipe(
                   // finally, return the latest template details
                   concatMap(() => this._rpc.call('template', ['get', +newMarketTempl.id])),
@@ -286,15 +286,14 @@ export class SellService {
     const usePaidImageMsg = this._store.selectSnapshot(MarketState.settings).usePaidMsgForImages;
 
     if (isBasicObjectType(details.info)) {
-      const rpc$ = this._rpc.call('template', [
-        'information',
-        'update',
+      const rpc$ = this.rpcInformationUpdate(
         templateId,
         details.info.title || '',
         details.info.summary || '',
         details.info.description || '',
+        details.info.productCode || null,
         +details.info.category || null
-      ]);
+      );
       updates$.push(rpc$);
     }
     if (isBasicObjectType(details.payment)) {
@@ -365,6 +364,8 @@ export class SellService {
                 summary = '',
                 description = '';
 
+            const productCode = undefined;
+
             if (isBasicObjectType(details.info)) {
               title = details.info.title;
               summary = details.info.summary;
@@ -377,15 +378,14 @@ export class SellService {
             }
 
             if (+details.cloneToMarket.categoryId > 0) {
-              return this._rpc.call('template', [
-                'information',
-                'update',
+              return this.rpcInformationUpdate(
                 +clonedTemplResp.id,
                 title,
                 summary,
                 description,
+                productCode,
                 +details.cloneToMarket.categoryId
-              ]).pipe(
+              ).pipe(
                 concatMap(() => this.fetchProductTemplate(+clonedTemplResp.id))
               );
             } else {
@@ -621,14 +621,14 @@ export class SellService {
 
     // because if a market template is cloned, it seems the category needs to be updated again for it
     if (isTemplateCloned || changedCategory) {
-      await this._rpc.call('information', [
-        'update',
+      await this.rpcInformationUpdate(
         +latestMarketTempl.id,
         getValueOrDefault(latestMarketTempl.ItemInformation.title, 'string', ''),
         getValueOrDefault(latestMarketTempl.ItemInformation.shortDescription, 'string', ''),
         getValueOrDefault(latestMarketTempl.ItemInformation.longDescription, 'string', ''),
+        getValueOrDefault(latestMarketTempl.ItemInformation.productCode, 'string', undefined),
         categoryId
-      ]).toPromise();
+      ).toPromise();
     }
 
     if (changedPricing) {
@@ -819,12 +819,14 @@ export class SellService {
       //  (if it was set on the non-editable variant of the template it was cloned from)
       if (+tempCategoryId > 0) {
 
-        latestSrcMarketTempl.ItemInformation = await this._rpc.call('information', ['update', +latestSrcMarketTempl.id,
+        latestSrcMarketTempl.ItemInformation = await this.rpcInformationUpdate(
+          +latestSrcMarketTempl.id,
           getValueOrDefault(latestSrcMarketTempl.ItemInformation.title, 'string', ''),
           getValueOrDefault(latestSrcMarketTempl.ItemInformation.shortDescription, 'string', ''),
           getValueOrDefault(latestSrcMarketTempl.ItemInformation.longDescription, 'string', ''),
+          getValueOrDefault(latestSrcMarketTempl.ItemInformation.productCode, 'string', undefined),
           +tempCategoryId
-        ]).toPromise();
+        ).toPromise();
       }
     }
 
@@ -846,6 +848,10 @@ export class SellService {
     }
 
     newTempl.savedDetails = this.extractTemplateSavedDetails(latestSrcMarketTempl);
+
+    if (isBasicObjectType(baseSrcTempl.ItemInformation)) {
+      newTempl.savedDetails.productCode = getValueOrDefault(baseSrcTempl.ItemInformation.productCode, 'string', '');
+    }
 
     let categoryId = 0,
         categoryName = '';
@@ -880,6 +886,7 @@ export class SellService {
       saveDetails.title = getValueOrDefault(src.ItemInformation.title, 'string', saveDetails.title);
       saveDetails.summary = getValueOrDefault(src.ItemInformation.shortDescription, 'string', saveDetails.summary);
       saveDetails.description = getValueOrDefault(src.ItemInformation.longDescription, 'string', saveDetails.description);
+      saveDetails.productCode = getValueOrDefault(src.ItemInformation.productCode, 'string', saveDetails.productCode);
 
       if (isBasicObjectType(src.ItemInformation.ItemLocation)) {
         saveDetails.shippingOrigin = getValueOrDefault(src.ItemInformation.ItemLocation.country, 'string', saveDetails.shippingOrigin);
@@ -933,6 +940,7 @@ export class SellService {
       title: '',
       summary: '',
       description: '',
+      productCode: '',
       shippingOrigin: '',
       shippingDestinations: [],
       priceBase: new PartoshiAmount(0),
@@ -969,6 +977,7 @@ export class SellService {
     baseTemplates.forEach(baseTempl => {
       const newProduct: ProductItem = {
         id: 0,
+        productCode: '',
         title: '',
         summary: '',
         created: 0,
@@ -990,6 +999,7 @@ export class SellService {
       if (isBasicObjectType(baseTempl.ItemInformation)) {
         newProduct.title = getValueOrDefault(baseTempl.ItemInformation.title, 'string', newProduct.title);
         newProduct.summary = getValueOrDefault(baseTempl.ItemInformation.shortDescription, 'string', newProduct.summary);
+        newProduct.productCode = getValueOrDefault(baseTempl.ItemInformation.productCode, 'string', newProduct.productCode);
 
         if (isBasicObjectType(baseTempl.ItemInformation.ItemLocation)) {
           newProduct.sourceLocation = getValueOrDefault(
@@ -1355,6 +1365,26 @@ export class SellService {
     const actualListingItem: ListingItemDetail = listingItem;
 
     return actualListingItem;
+  }
+
+
+  private rpcInformationUpdate(
+    templateId: number,
+    title: string,
+    summary: string,
+    descr: string,
+    productCode?: string,
+    categoryId?: number
+  ): Observable<any> {
+    return this._rpc.call('information', [
+      'update',
+      +templateId,
+      title,
+      summary,
+      descr,
+      productCode,
+      categoryId
+    ]);
   }
 
 }

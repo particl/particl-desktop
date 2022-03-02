@@ -32,6 +32,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   readonly ESCROW_MAX: number = this._sellService.ESCROW_PERCENTAGE_MAX;
   readonly ESCROW_DEFAULT: number = this._sellService.ESCROW_PERCENTAGE_DEFAULT;
 
+  readonly MAX_PRODUCT_CODE: number = 200;
   readonly MAX_TITLE: number = 100;
   readonly MAX_SHORT_DESCRIPTION: number = 300;
   readonly MAX_LONG_DESCRIPTION: number = 7500;
@@ -54,6 +55,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   ) {
     // The basic template information present on all templates
     this.templateForm = new FormGroup({
+      productCode: new FormControl('', [Validators.maxLength(this.MAX_PRODUCT_CODE)]),
       title: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_TITLE)]),
       summary: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_SHORT_DESCRIPTION)]),
       description: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_LONG_DESCRIPTION)]),
@@ -171,6 +173,10 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  get productCodeField(): AbstractControl {
+    return this.templateForm.get('productCode');
   }
 
 
@@ -310,6 +316,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     this.templateForm.controls['title'].setValue(templ.title, {emitEvent: false});
     this.templateForm.controls['summary'].setValue(templ.summary, {emitEvent: false});
     this.templateForm.controls['description'].setValue(templ.description, {emitEvent: false});
+    this.templateForm.controls['productCode'].setValue(templ.productCode, {emitEvent: false});
 
     this.templateForm.controls['basePrice'].setValue(templ.priceBase, {emitEvent: false});
     this.templateForm.controls['priceShipLocal'].setValue(templ.priceShipLocal, {emitEvent: false});
@@ -342,6 +349,7 @@ export class SellTemplateFormComponent implements OnInit, AfterViewInit, OnDestr
     }
     if (!templ.market.canEdit) {
       this.templateForm.controls['selectedMarket'].disable();
+      this.templateForm.controls['productCode'].disable();
     }
 
     this.templateForm.controls['images'].setValue(templ.savedImages);

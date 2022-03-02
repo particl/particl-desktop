@@ -47,6 +47,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
   importSuccess: EventEmitter<TemplateFormDetails[]> = new EventEmitter();
 
   readonly CSV_FIELDS: {field: string; mappedTo: string; description: string}[] = [
+    {field: 'product_code', mappedTo: 'productCode', description: '(optional) Seller defined product code for this particular item'},
     {field: 'title', mappedTo: 'title', description: 'Product\'s title (Listing name)'},
     {field: 'summary', mappedTo: 'summary', description: 'short sentence highlighting Product\'s key features'},
     {field: 'description', mappedTo: 'description', description: 'general description of the Product'},
@@ -151,9 +152,9 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
           data: { message: TextContent.IMPORT_WAIT_MSG, helptext: TextContent.IMPORT_WAIT_HELP },
         });
 
-        const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
-        const marketSettings = this._store.selectSnapshot(MarketState.settings);
-        const MAX_IMAGE_FILESIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
+        // const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
+        // const marketSettings = this._store.selectSnapshot(MarketState.settings);
+        // const MAX_IMAGE_FILESIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
 
         const values = this.csvInputForm.value;
 
@@ -199,6 +200,7 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
                   title: '',
                   summary: '',
                   description: '',
+                  productCode: '',
                   priceBase: '',
                   priceShipLocal: '',
                   priceShipIntl: '',

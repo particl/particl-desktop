@@ -1,6 +1,26 @@
 <form [formGroup]="templateForm">
-  <div class="row" fxLayout="row" fxLayoutGap="30px">
 
+  <div class="row" fxLayout="row" fxLayoutGap="30px">
+    <div class="column" fxFlex="100">
+      <mat-card class="details no-padding" *ngIf="!productCodeField.disabled; else productCodeLabel">
+        <label>
+          <mat-form-field appearance="fill" class="--plain --larger">
+            <h3 CLASS="label">Product code</h3>
+            <input matInput #productcode placeholder="custom identifier for this particular product item" formControlName="productCode">
+            <mat-hint align="end">{{ productcode.value.length }}/{{MAX_PRODUCT_CODE}}</mat-hint>
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+      <ng-template #productCodeLabel>
+        <label>
+          <h2 class="section-title">Product Code: {{ productCodeField.value }}</h2>
+        </label>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="row" fxLayout="row" fxLayoutGap="30px">
     <div class="left column" fxFlex="50">
 
       <h2 class="section-title">Product details</h2>

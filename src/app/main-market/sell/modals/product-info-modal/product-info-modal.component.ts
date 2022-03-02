@@ -24,6 +24,7 @@ export class ProductInfoModalComponent {
 
   readonly productName: string;
   readonly productID: number;
+  readonly productCode: string;
 
 
   constructor(
@@ -34,6 +35,7 @@ export class ProductInfoModalComponent {
     if (isBasicObjectType(this.data) && isBasicObjectType(this.data.product)) {
       this.productName = getValueOrDefault(this.data.product.title, 'string', '');
       this.productID = +this.data.product.id > 0 ? +this.data.product.id : 0;
+      this.productCode = getValueOrDefault(this.data.product.productCode, 'string', '');
     }
 
   }
