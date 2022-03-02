@@ -43,7 +43,8 @@
 
   <div fxLayout="column" fxLayoutAlign="space-around center">
     <p class="lead">
-      {{ productName }}
+      {{ productName }} <br />
+      <small *ngIf="productCode?.length > 0">({{ productCode }})</small>
     </p>
     <button mat-raised-button color="primary" appDebounceClick (debounceClick)="editProductTemplate()" [disabled]="productID <= 0">
       <mat-icon fontIcon="part-pen-1"></mat-icon>

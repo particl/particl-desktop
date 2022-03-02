@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, of, Subject, BehaviorSubject, merge, iif, defer, combineLatest, throwError } from 'rxjs';
+import { Observable, of, Subject, BehaviorSubject, merge, iif, defer, combineLatest } from 'rxjs';
 import { map, catchError, takeUntil, tap, concatMap, mapTo, take } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -394,6 +394,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
       title: getValueOrDefault(formValues['title'], 'string', ''),
       summary: getValueOrDefault(formValues['summary'], 'string', ''),
       description: getValueOrDefault(formValues['description'], 'string', ''),
+      productCode: getValueOrDefault(formValues['productCode'], 'string', ''),
       basePrice: +parsedBasePrice > 0 ? parsedBasePrice : '0',
       domesticShippingPrice: +parsedShipLocalPrice > 0 ? parsedShipLocalPrice : '0',
       foreignShippingPrice: +parsedShpIntlPrice > 0 ? parsedShpIntlPrice : '0',
@@ -424,6 +425,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
         title: parsedValues.title,
         summary: parsedValues.summary,
         description: parsedValues.description,
+        productCode: parsedValues.productCode ? parsedValues.productCode : undefined,
         images: parsedValues.images,
         priceBase: (new PartoshiAmount(+parsedValues.basePrice)).partoshis(),
         priceShippingLocal: (new PartoshiAmount(+parsedValues.domesticShippingPrice)).partoshis(),
@@ -452,16 +454,19 @@ export class NewListingComponent implements OnInit, OnDestroy {
         (parsedValues.title !== this.savedTempl.savedDetails.title) ||
         (parsedValues.summary !== this.savedTempl.savedDetails.summary) ||
         (parsedValues.description !== this.savedTempl.savedDetails.description) ||
-        ((this.savedTempl.type === 'MARKET') && (this.savedTempl.marketDetails.category.id !== parsedValues.selectedCategoryId))
+        ((this.savedTempl.type === 'MARKET') && (this.savedTempl.marketDetails.category.id !== parsedValues.selectedCategoryId)) ||
+        (parsedValues.productCode !== this.savedTempl.savedDetails.productCode)
       ) {
         updateTemplateData.info = {
           title: parsedValues.title,
           summary: parsedValues.summary,
-          description: parsedValues.description
+          description: parsedValues.description,
+          productCode: parsedValues.productCode ? parsedValues.productCode : undefined,
         };
 
         if (this.savedTempl.type === 'MARKET') {
           updateTemplateData.info.category = parsedValues.selectedCategoryId;
+          updateTemplateData.info.productCode = undefined;
         }
       }
 
@@ -572,6 +577,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
       title: '',
       summary: '',
       description: '',
+      productCode: '',
       priceBase: '',
       priceShipLocal: '',
       priceShipIntl: '',
@@ -598,6 +604,7 @@ export class NewListingComponent implements OnInit, OnDestroy {
       formDetails.title = templ.savedDetails.title;
       formDetails.summary = templ.savedDetails.summary;
       formDetails.description = templ.savedDetails.description;
+      formDetails.productCode = templ.savedDetails.productCode;
       formDetails.priceBase = templ.savedDetails.priceBase.particlsString();
       formDetails.priceShipLocal = templ.savedDetails.priceShippingLocal.particlsString();
       formDetails.priceShipIntl = templ.savedDetails.priceShippingIntl.particlsString();

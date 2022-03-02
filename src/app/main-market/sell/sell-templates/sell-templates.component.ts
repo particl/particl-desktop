@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Subject, of, Observable, defer, forkJoin, merge, timer, iif, throwError } from 'rxjs';
+import { Subject, of, Observable, defer, forkJoin, merge, timer, iif } from 'rxjs';
 import { tap, catchError, takeUntil, switchMap, distinctUntilChanged, debounceTime, map, concatMap, take, finalize } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
@@ -494,9 +494,13 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
       const sortBy = this.sortOrder.value;
       const productIdFilter = this.filterBaseTemplateId.value;
 
-      const indexes = this.allProducts.map(
-        (prod, idx) => prod.title.toLowerCase().includes(searchString) && (productIdFilter > 0 ? prod.id === productIdFilter : true) ?
-          idx : -1
+      const indexes = this.allProducts.map((prod, idx) =>
+        (
+          prod.title.toLowerCase().includes(searchString) ||
+          prod.productCode.toLowerCase().includes(searchString)
+        ) &&
+        (productIdFilter > 0 ? prod.id === productIdFilter : true)
+        ? idx : -1
       ).filter(
         idx => (idx > -1)
       ).sort(

@@ -36,6 +36,7 @@ export interface TemplateFormDetails {
   title: string;
   summary: string;
   description: string;
+  productCode: string | null;
   priceBase: string;
   priceShipLocal: string;
   priceShipIntl: string;
@@ -56,6 +57,7 @@ export interface TemplateSavedDetails {
   title: string;
   summary: string;
   description: string;
+  productCode: string;
   priceBase: PartoshiAmount;
   priceShippingLocal: PartoshiAmount;
   priceShippingIntl: PartoshiAmount;
@@ -96,6 +98,7 @@ export interface CreateTemplateRequest {
   title: string;
   summary: string;
   description: string;
+  productCode: string | null;
   priceBase: number;
   priceShippingLocal: number;
   priceShippingIntl: number;
@@ -122,6 +125,7 @@ export interface UpdateTemplateRequest {
     title: string;
     summary: string;
     description: string;
+    productCode: string | null;
     category?: number | null;
   };
   images?: TemplateRequestImageItem[];
@@ -170,6 +174,7 @@ export interface ProductMarketTemplate {
 export interface ProductItem {
   // base template details
   id: number;
+  productCode: string;
   title: string;
   summary: string;
   created: number;

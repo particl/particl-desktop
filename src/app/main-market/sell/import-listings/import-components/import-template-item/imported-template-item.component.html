@@ -7,6 +7,7 @@
       </div>
       <div class="meta" fxFlex="1 1 100%">
         <div class="name">{{template.title}}</div>
+        <div *ngIf="template.productCode?.length > 0" class="help-text">{{template.productCode}}</div>
       </div>
       <ng-container *ngIf="displayControls">
         <div class="status-wrap" fxFlex="0 0 240px">

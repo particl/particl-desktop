@@ -87,7 +87,7 @@
             </div>
             <div class="meta" fxFlex="1 1 100%">
               <div class="name">{{ product.title }}</div>
-              <span class="help-text">{{ product.summary }}</span>
+              <span class="help-text" *ngIf="product.productCode?.length > 0">{{product.productCode}}</span>
             </div>
             <div fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-end">
               <div>
