@@ -47,7 +47,7 @@ export class ShippingProfileAddressFormComponent implements OnInit, OnDestroy {
       city: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
       state: new FormControl('', [Validators.maxLength(this.MAX_FIELD_LENGTH)]),
       zipCode: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
-      countryCode: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)])
+      countryCode: new FormControl('', [Validators.required, Validators.maxLength(this.MAX_FIELD_LENGTH)]),
     });
   }
 
