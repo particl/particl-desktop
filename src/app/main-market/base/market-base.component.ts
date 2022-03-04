@@ -5,7 +5,7 @@ import { MarketState } from '../store/market.state';
 import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
 import { MarketStateActions, MarketUserActions } from '../store/market.actions';
 import { MainActions } from 'app/main/store/main.actions';
-import { Subject, Observable, iif, defer, of, merge } from 'rxjs';
+import { Subject, Observable, iif, defer, of, merge, combineLatest } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
 
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -39,6 +39,11 @@ interface IMenuItem {
 }
 
 
+interface RenderedIdentity extends Identity {
+  isActive: boolean;
+}
+
+
 @Component({
   templateUrl: './market-base.component.html',
   styleUrls: ['./market-base.component.scss'],
@@ -46,11 +51,11 @@ interface IMenuItem {
 })
 export class MarketBaseComponent implements OnInit, OnDestroy {
 
-  @Select(MarketState.filteredIdentitiesList) otherIdentities: Observable<Identity[]>;
-  @Select(MarketState.currentIdentity) selectedIdentity: Observable<Identity>;
   @Select(MarketState.settings) marketSettings: Observable<MarketSettings>;
 
   currentBalance: Observable<string>;
+  identitiesList: RenderedIdentity[] = [];
+  selectedIdentity: RenderedIdentity;
 
   isWarningVisible: boolean = true;
   showProfileWarning: boolean = false;
@@ -131,10 +136,36 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       )
     );
 
+
+    const identities$ = combineLatest([
+      this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
+      this._store.select(MarketState.currentProfileIdentities).pipe(takeUntil(this.destroy$))
+    ]).pipe(
+      tap(values => {
+        const current = values[0];
+        const identities = values[1];
+
+        this.identitiesList = [];
+
+        this.selectedIdentity = {
+          ...current,
+          isActive: true,
+        };
+
+        identities
+          .map(id => ({
+            ...id,
+            isActive: id.id === current.id,
+          }))
+          .forEach(id => this.identitiesList.push(id));
+      }),
+    );
+
     merge(
       startedStatus$,
       indicators$,
       profile$,
+      identities$,
     ).pipe(
       takeUntil(this.destroy$)
     ).subscribe();
@@ -167,7 +198,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   }
 
 
-  trackByIdentityFn(idx: number, item: Identity) {
+  trackByIdentityFn(idx: number, item: RenderedIdentity) {
     return item.id;
   }
 
@@ -216,7 +247,11 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   }
 
 
-  identitySelected(identity: Identity) {
+  identitySelected(identity: RenderedIdentity) {
+
+    if (identity.isActive) {
+      return;
+    }
 
     this.identitySelector.close();
 
