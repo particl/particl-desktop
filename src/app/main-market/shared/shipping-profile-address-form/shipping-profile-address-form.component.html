@@ -1,13 +1,13 @@
 <ng-container [formGroup]="addressForm">
 <div class="row" fxLayout>
   <label class="--larger" fxFlex="40">
-    <h3 class="label">First name</h3>
+    <h3 class="label">First name *</h3>
     <mat-form-field appearance="fill" class="--plain --larger">
       <input matInput type="text" placeholder="Your first name" formControlName="firstName"/>
     </mat-form-field>
   </label>
   <label class="--larger" fxFlex="60">
-    <h3 class="label">Last name</h3>
+    <h3 class="label">Last name *</h3>
     <mat-form-field appearance="fill" class="--plain --larger">
       <input matInput type="text" placeholder="Your last name(s)" formControlName="lastName"/>
     </mat-form-field>
@@ -15,7 +15,7 @@
 </div>
 <div class="row" fxLayout>
   <label class="--larger" fxFlex="40">
-    <h3 class="label">Address</h3>
+    <h3 class="label">Address *</h3>
     <mat-form-field appearance="fill" class="--plain --larger">
       <input matInput type="text" placeholder="Address line 1" formControlName="addressLine1"/>
     </mat-form-field>
@@ -29,13 +29,13 @@
 </div>
 <div class="row" fxLayout>
   <label class="--larger" fxFlex="40">
-    <h3 class="label">Postal code</h3>
+    <h3 class="label">Postal code *</h3>
     <mat-form-field appearance="fill" class="--plain --larger">
       <input matInput type="text" placeholder="ZIP code" formControlName="zipCode"/>
     </mat-form-field>
   </label>
   <label class="--larger" fxFlex="60">
-    <h3 class="label">City</h3>
+    <h3 class="label">City *</h3>
     <mat-form-field appearance="fill" class="--plain --larger">
       <input matInput type="text" placeholder="City" formControlName="city"/>
     </mat-form-field>
@@ -49,7 +49,7 @@
     </mat-form-field>
   </label>
   <label class="--larger" fxFlex="60">
-    <h3 class="label">Country</h3>
+    <h3 class="label">Country *</h3>
     <tree-select
       [data$]="regionList$"
       [singleSelection]="true"
@@ -59,5 +59,10 @@
       (onClosed)="addressForm.get('countryCode').setValue($event[0] || '')">
     </tree-select>
   </label>
+</div>
+<div class="row">
+  <div class="text">
+    <p class="help-text">(* required fields)</p>
+  </div>
 </div>
 </ng-container>

@@ -19,13 +19,18 @@
 
       <ng-template matExpansionPanelContent>
         <div class="options">
-          <a class="item" *ngFor="let wallet of otherWallets;trackBy:trackByWalletsFn" (click)="navigateToWallet(wallet)" (keyup.enter)="navigateToWallet(wallet)" tabindex="0">
-            <div class="icon">{{ wallet.initial }}</div>
-            <div class="text">
-              <div class="name">{{ wallet.displayName }}</div>
-              <div class="value">Switch wallet</div>
-            </div>
-          </a>
+          <ng-container *ngFor="let group of otherWallets">
+            <a class="item" *ngFor="let wallet of group;trackBy:trackByWalletsFn" [class.disabled]="wallet.active" appDebounceClick (debounceClick)="navigateToWallet(wallet)" (keyup.enter)="navigateToWallet(wallet)" tabindex="0">
+              <div class="icon">{{ wallet.initial }}</div>
+              <div class="text">
+                <div class="name">{{ wallet.displayName }}</div>
+                <div class="value" *ngIf="wallet.active">Active wallet</div>
+                <div class="value" *ngIf="!wallet.active">Switch wallet</div>
+              </div>
+            </a>
+            <div class="divider"></div>
+          </ng-container>
+
           <a class="item" (click)="navigateToCreateWallet()" (keyup.enter)="navigateToCreateWallet()" tabindex="0">
             <div class="icon">+</div>
             <div class="text">

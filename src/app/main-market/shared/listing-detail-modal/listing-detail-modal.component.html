@@ -135,10 +135,9 @@
         <tr>
           <th class="title">
             <mat-icon fontIcon="part-date"></mat-icon>
-            Added / Expires
+            Expires
           </th>
           <td class="value">
-            {{ details.created | date:'medium' }}<br>
             <span *ngIf="itemExpiry.timestamp > 0">{{ itemExpiry.timestamp | date:'medium' }}</span><span *ngIf="itemExpiry.timestamp === 0">N/A</span>
           </td>
         </tr>

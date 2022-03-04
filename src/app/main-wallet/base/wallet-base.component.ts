@@ -32,13 +32,13 @@ enum TextContent {
 })
 export class WalletBaseComponent implements OnInit, OnDestroy {
 
-  otherWallets: IWallet[] = [];
+  otherWallets: IWallet[][] = [];
 
   readonly walletVersion: string = environment.walletVersion || '';
 
 
   private destroy$: Subject<void> = new Subject();
-  private _currentWallet: IWallet = { name: '-', displayName: '-', initial: ''};
+  private _currentWallet: IWallet = { name: '-', displayName: '-', initial: '', active: true};
   private _walletBalance: string = '0';
 
   @ViewChild(MatExpansionPanel, {static: true}) private walletSelector: MatExpansionPanel;
@@ -54,7 +54,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     const wallet$ = this._store.select(WalletInfoState.getValue('walletname')).pipe(
-      tap((walletName: string) => this._currentWallet = this.processWallet(walletName)),
+      tap((walletName: string) => this._currentWallet = this.processWallet(walletName, true)),
       takeUntil(this.destroy$)
     );
 
@@ -99,6 +99,11 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
 
   navigateToWallet(wallet: IWallet) {
+
+    if (wallet.name === this._currentWallet.name) {
+      return;
+    }
+
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.WALLET_LOADING}});
     this.cleanupWalletSelector();
 
@@ -154,6 +159,9 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       )
     ).subscribe(
       (wallets) => {
+
+        const foundWallets: IWallet[] = [];
+
         wallets.forEach((wallet) => {
           const wName = wallet.name.toLowerCase();
           if (!(
@@ -164,15 +172,24 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
             // prevent regtest wallets on mainnet
             wallet.name.startsWith('regtest/') ||
             wallet.name.startsWith('regtest\\') ||
-            (wallet.name === 'regtest') ||
-            // avoid including the current active wallet
-            (wallet.name === this._currentWallet.name)
-            // avoid market profiles (that are technically wallets but shouldn't be used as them for now)
-            // (wName.startsWith('profiles') && ((wName.split('/').length === 2) || (wName.split('\\').length === 2)))
+            (wallet.name === 'regtest')
           )) {
-            this.otherWallets.push(this.processWallet(wallet.name));
+            foundWallets.push(this.processWallet(wallet.name, wallet.name === this._currentWallet.name));
           }
         });
+
+        const groupings: {[key: string]: IWallet[]} = {};
+        foundWallets.forEach(fw => {
+          const wp = this.getWalletPath(fw.name);
+
+          if (!groupings[wp]) {
+            groupings[wp] = [];
+          }
+          groupings[wp].push(fw);
+        });
+
+        Object.keys(groupings).forEach(k => this.otherWallets.push(groupings[k]));
+
       },
       () => {
         this._snackbar.open(TextContent.WALLETS_LOAD_ERROR, 'warn');
@@ -186,7 +203,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
   }
 
 
-  private processWallet(name: string): IWallet {
+  private processWallet(name: string, isActive: boolean): IWallet {
     const usedName = name === null ?  TextContent.UNKNOWN_WALLET : name;
     let dispName = usedName === '' ? TextContent.DEFAULT_WALLETNAME : usedName;
     dispName = this.formatWalletDisplayName(dispName, '/');
@@ -197,6 +214,7 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
       name,
       initial,
       displayName: dispName,
+      active: isActive,
     };
   }
 
@@ -210,18 +228,14 @@ export class WalletBaseComponent implements OnInit, OnDestroy {
 
 
   private formatWalletDisplayName(originalName: string, char: string): string {
-    // let dispName = originalName;
-    // if (originalName.includes(char)) {
-    //   let dispNameParts = originalName.split(char);
-    //   if (dispNameParts.length > 2) {
-    //     dispNameParts = [dispNameParts[dispNameParts.length - 2 ], dispNameParts[dispNameParts.length - 1 ]];
-    //   }
-    //   dispName = dispNameParts.join(char);
-    // }
-    // return dispName;
-
     const nameParts = originalName.split(char);
     return nameParts.length > 1 ? nameParts[nameParts.length - 1] : nameParts[0] || originalName;
 
+  }
+
+  private getWalletPath(name: string, splitChar: string = '/'): string {
+    const nameParts = name.split(splitChar);
+    const wName = nameParts.pop() || '';
+    return nameParts.length > 0 ? nameParts.join(splitChar) : '';
   }
 }

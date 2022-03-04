@@ -83,17 +83,17 @@ export class EditShippingProfileModalComponent {
     this.isNew = this.address.id === 0;
     this.titleField.setValue(this.address.title);
 
-    const fieldValid$: Observable<boolean> = combineLatest(
+    const fieldValid$: Observable<boolean> = combineLatest([
       this.isFormValid.valueChanges,
       this.titleField.valueChanges.pipe(startWith(this.titleField.value), map(() => this.titleField.valid))
-    ).pipe(
+    ]).pipe(
       map(([formValid, titleValid]: [boolean, boolean]) => formValid && titleValid)
     );
 
-    this.isActionable = combineLatest(
+    this.isActionable = combineLatest([
       this.canAction.valueChanges.pipe(startWith(this.canAction.value)),
       fieldValid$
-    ).pipe(
+    ]).pipe(
       map(([actionable, valid]: [boolean, boolean]) => actionable ? valid : actionable)
     );
   }

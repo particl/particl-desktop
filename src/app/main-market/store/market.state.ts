@@ -105,13 +105,6 @@ export class MarketState {
 
 
   @Selector()
-  static filteredIdentitiesList(state: MarketStateModel): Identity[] {
-    if (state.identity === 0) { return state.identities; }
-    return state.identities.filter(id => id.id !== state.identity);
-  }
-
-
-  @Selector()
   static settings(state: MarketStateModel): MarketSettings {
     return state.settings;
   }
