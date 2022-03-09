@@ -14,7 +14,8 @@ if (isEmptyObject(_options)) {
   _options = _processOpts.parse();
 }
 
-const conFilePath = path.join( cookie.getParticlPath(_options), 'particl.conf');
+const conDirPath = cookie.getParticlPath(_options);
+const conFilePath = path.join(conDirPath, 'particl.conf');
 const IPC_CHANNEL_WRITE = 'write-core-config';
 const IPC_DELETE_WALLET = 'ipc-delete-wallet';
 
@@ -80,7 +81,7 @@ const formatSettingsOutput = function(rawConfig) {
       }
     }
   } catch (err) {
-    log.error(`Failed formatting daemonConfig: `, err.stack);
+    log.error(`Failed formatting daemonConfig: `, err && err.stack ? err.stack : err);
     formattedConfig = {};
   }
 
@@ -262,20 +263,30 @@ const saveSettings = function(networkOpt) {
 
   if (isModified) {
     const tmpConfPath = conFilePath + '.tmp';
-    fs.writeFile(tmpConfPath, output, (err) => {
-      if (err) {
-        log.error(`Failed writing changes to ${tmpConfPath}`, err.stack);
-      } else {
-        fs.rename(tmpConfPath, conFilePath, (error) => {
-          if (error) {
-            log.error(`Failed updating ${conFilePath}`, err.stack);
-          } else {
-            log.info('Successfully updated particld configuration');
-            loadConfiguration();
-          }
-        });
+
+    let dirExists = true;
+
+    if (!fs.existsSync(conDirPath)){
+      log.info('particld data dir not found; attempting to create it...');
+      try {
+        log.info('particld data dir successfully created');
+        fs.mkdirSync(conDirPath, { recursive: true });
+      } catch (e) {
+        dirExists = false;
+        log.error('Cannot create particld data dir: ', e);
       }
-    });
+    }
+
+    if (dirExists) {
+      try {
+        fs.writeFileSync(tmpConfPath, output);
+        fs.renameSync(tmpConfPath, conFilePath);
+        log.info('Successfully updated particld configuration');
+        loadConfiguration();
+      } catch (err) {
+        log.error(`Failed writing particl.conf changes: `, err && err.stack ? err.stack : err);
+      }
+    }
   }
 }
 
