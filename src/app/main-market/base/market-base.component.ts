@@ -68,6 +68,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     {text: 'Cart', path: 'cart', icon: 'part-cart-2', alwaysEnabled: false, notificationValue: null},
     {text: 'Purchases', path: 'buy', icon: 'part-bag-buy', alwaysEnabled: false, notificationValue: null},
     {text: 'Sell', path: 'sell', icon: 'part-stock', alwaysEnabled: false, notificationValue: null},
+    {text: 'Chat Messages', path: 'chat', icon: 'part-chat', alwaysEnabled: false, notificationValue: null},
     {text: 'Manage Markets', path: 'management', icon: 'part-bullet-list', alwaysEnabled: false, notificationValue: null},
     {text: 'Market Settings', icon: 'part-tool', path: 'settings', alwaysEnabled: true, notificationValue: null}
   ];
@@ -133,7 +134,16 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
           }
         }),
         takeUntil(this.destroy$)
-      )
+      ),
+
+      this._store.select(MarketState.chatUnreadCountNotification('all')).pipe(
+        tap(value => {
+          const menu = this.menu.find(m => m.path === 'chat');
+          if (menu) {
+            menu.notificationValue = +value > 0 ? +value : null;
+          }
+        })
+      ),
     );
 
 

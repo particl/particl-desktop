@@ -1,0 +1,52 @@
+<mat-dialog-title>Un-follow this item</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content>
+
+  <mat-card class="channel">
+    <div class="info">
+      <div class="image">
+        <img [src]="dialogData.image" *ngIf="dialogData.image.length > 0">
+      </div>
+      <h3 class="name">{{ dialogData.title }}</h3>
+    </div>
+    <div class="status-wrap">
+      <div class="status">
+        {{ dialogData.subtitle }}
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="row">
+
+    <div class="image">
+      <img class="illustration" src="./assets/app-market/illustrations/reject-cancel-bid.svg" alt="Unfollow Topic">
+    </div>
+
+    <div class="text">
+      <p class="lead">
+        Are you certain you want to stop receiving chat message notifications to this item?
+      </p>
+      <p *ngIf="dialogData.channelType === TypeChatChannel.ORDERITEM" class="help-text">
+        As this chat is based on an Order, you will still receive notifications when new chat messages are posted by the other party.
+      </p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+  <button mat-raised-button color="warn" appDebounceClick (debounceClick)="confirmAction()">
+    <mat-icon fontIcon="part-circle-remove"></mat-icon>
+    Yes
+  </button>
+</mat-dialog-actions>

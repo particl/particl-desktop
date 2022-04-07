@@ -15,6 +15,7 @@ import { SocketMessages_v03 } from '../shared/market-socket.models';
 import { StartedStatus } from '../store/market.models';
 import { OrderUserType, messageListeners as orderMessageListeners } from '../services/orders/orders.models';
 import { RespOrderSearchItem, ORDER_ITEM_STATUS, BID_DATA_KEY } from '../shared/market.models';
+import { ChatChannelType } from '../services/chats/chats.models';
 
 
 enum TextContent {
@@ -71,8 +72,10 @@ export class NotificationsService implements OnDestroy {
 
   private clearNotifications(): Observable<void> {
     return concat(
-      this._store.dispatch(new MarketUserActions.OrderItemsCleared())
       // perform any notification reset activity here (eg: when identity changes, and notification count needs to be reset)
+      this._store.dispatch([
+        new MarketUserActions.OrderItemsCleared()
+      ])
     );
   }
 
@@ -82,6 +85,7 @@ export class NotificationsService implements OnDestroy {
       this.initOrderNotifications(),
       this.startOrderNotificationListeners(),
       // Add notification listeners here
+      this.startChatMessageListeners(),
     ).pipe(map(() => null));
   }
 
@@ -167,6 +171,41 @@ export class NotificationsService implements OnDestroy {
       sellListener$,
       cancelListener$
     ).pipe(takeUntil(this.stopListeners$));
+  }
+
+
+  private startChatMessageListeners(): Observable<any> {
+    return this._socket.getSocketMessageListener('MPA_CHAT_ADD').pipe(
+      bufferTime(2000),
+      map((items: SocketMessages_v03.ChatMessageAdded[]) => {
+        const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+
+        return items.filter(item =>
+          isBasicObjectType(item)
+          && (typeof item.channel === 'string')
+          && (item.channel.length > 0)
+          && Array.isArray(item.identities)
+          && (item.identities.filter(id => +id === identityId).length > 0)
+          && ([ChatChannelType.LISTINGITEM, ChatChannelType.ORDERITEM].includes(item.channelType as any))
+        )
+        .map(item => ({channel: item.channel, channelType: item.channelType}));
+      }),
+      filter(items => items.length > 0),
+      tap(newItems => {
+        const lmsgs = newItems.filter(item => item.channelType === ChatChannelType.LISTINGITEM).map(item => item.channel);
+        const omsgs = newItems.filter(item => item.channelType === ChatChannelType.ORDERITEM).map(item => item.channel);
+        const actions = [];
+
+        if (lmsgs.length > 0) {
+          actions.push(new MarketUserActions.SetChatChannelsUnread(lmsgs, ChatChannelType.LISTINGITEM));
+        }
+        if (omsgs.length > 0) {
+          actions.push(new MarketUserActions.SetChatChannelsUnread(omsgs, ChatChannelType.ORDERITEM));
+        }
+        this._store.dispatch(actions);
+      }),
+      takeUntil(this.stopListeners$)
+    );
   }
 
 

@@ -1,0 +1,53 @@
+<div class="chat-container">
+
+  <section class="chat-history" #chatHistoryPane>
+
+    <div *ngIf="hasMoreMessages" class="action-wrapper" fxLayoutAlign="stretch stretch">
+      <button mat-button color="primary" class="small refresh" fxFlex="1 1 100%" [disabled]="isLoading" appDebounceClick (debounceClick)="loadMoreHistory()">
+        <mat-icon fontIcon="part-refresh"></mat-icon>
+        Load More
+      </button>
+    </div>
+
+    <div *ngFor="let message of messageList; trackBy:trackByMessageFn" class="message-wrapper" [class.own]="message.isOwn">
+      <div class="message" [class.own]="message.isOwn">
+        <div class="meta" *ngIf="!message.isOwn">
+          <p class="user">
+            <mat-icon fontIcon="part-person"></mat-icon>
+            <span class="sender">{{message.sender}}</span>
+          </p>
+        </div>
+        <p class="chat-content">{{message.message}}</p>
+        <p class="time-date">{{ message.created | date:'short'}}</p>
+      </div>
+    </div>
+
+    <div *ngIf="messageList.length === 0 && !isLoading" class="no-messages">
+      <p>Start of conversation</p>
+    </div>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <section class="input-container">
+    <div class="conversation-input">
+      <mat-form-field class="message-input" color="accent">
+        <textarea matInput
+            [formControl]="textInput"
+            placeholder="Send message"
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="2"></textarea>
+        <mat-hint align="end">{{ textInput.value.length }}/{{ MAX_MESSAGE_LENGTH }}</mat-hint>
+      </mat-form-field>
+      <button mat-button class="small action-button" matTooltip="Send" color="accent" matTooltipPosition="before" appDebounceClick (debounceClick)="requestMessageSending()" [disabled]="isLoading || textInput.invalid">
+        <mat-icon fontIcon="part-arrow-right"></mat-icon>
+      </button>
+    </div>
+  </section>
+
+</div>
+
+
+

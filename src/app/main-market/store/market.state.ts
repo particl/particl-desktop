@@ -13,8 +13,9 @@ import { SettingsService } from 'app/core/services/settings.service';
 import { environment } from 'environments/environment';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault, parseMarketResponseItem } from '../shared/utils';
-import { RespProfileListItem, RespIdentityListItem } from '../shared/market.models';
-import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications } from './market.models';
+import { RespProfileListItem, RespIdentityListItem, RespChatChannelList } from '../shared/market.models';
+import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications, ChatNotifications } from './market.models';
+import { ChatChannelType } from '../services/chats/chats.models';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -49,7 +50,11 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     identityCartItemCount: 0,
     buyOrdersPendingAction: [],
     sellOrdersPendingAction: [],
-  }
+    chatsUnread: {
+      listings: [],
+      orders: [],
+    }
+  },
 };
 
 
@@ -144,6 +149,29 @@ export class MarketState {
   static orderCountNotification(key: 'buy' | 'sell') {
     return createSelector([MarketState.getNotifications], (state: MarketNotifications): number => {
       return key === 'buy' ? state.buyOrdersPendingAction.length : (key === 'sell' ? state.sellOrdersPendingAction.length : null);
+    });
+  }
+
+
+  static chatUnreadCountNotification(key: 'listings' | 'orders' | 'all') {
+    return createSelector([MarketState.notificationValue('chatsUnread')], (state: ChatNotifications): number => {
+      switch (key) {
+      case 'listings': return state.listings.length;
+      case 'orders': return state.orders.length;
+      case 'all': return Object.keys(state).reduce((prev: number, curr: string) => state[curr].length + prev, 0);
+      default: return 0;
+      }
+    });
+  }
+
+
+  static unreadChatChannels(key: ChatChannelType) {
+    return createSelector([MarketState.notificationValue('chatsUnread')], (state: ChatNotifications): string[] => {
+      switch (key) {
+      case ChatChannelType.LISTINGITEM: return state.listings;
+      case ChatChannelType.ORDERITEM: return state.orders;
+      default: return [];
+      }
     });
   }
 
@@ -308,7 +336,7 @@ export class MarketState {
         }),
 
         tap(identities => {
-          ctx.patchState({identities});
+          ctx.patchState({ identities });
         }),
 
         concatMap((identities) => {
@@ -367,17 +395,21 @@ export class MarketState {
 
   @Action(MarketStateActions.SetCurrentIdentity, {cancelUncompleted: true})
   setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketStateActions.SetCurrentIdentity) {
+    let idValue = 0;
     if (identity && (Number.isInteger(+identity.id))) {
       const globalSettings = this._settingsService.fetchGlobalSettings();
       // TODO: not a great way to do this... but we need to verify that the application state wallet is the current wallet
       //  before setting the active identity to that wallet. Look into a better way of doing this...
       if (globalSettings['activatedWallet'] === identity.name) {
-        ctx.patchState({identity: +identity.id});
-        return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
+        idValue = +identity.id;
       }
     }
-    ctx.patchState({identity: 0});
-    return ctx.dispatch(new MarketStateActions.SetIdentityCartCount());
+    ctx.patchState({identity: idValue});
+
+    return ctx.dispatch([
+      new MarketStateActions.SetIdentityCartCount(),
+      new MarketStateActions.ChatNotificationsClearAll()
+    ]);
   }
 
 
@@ -402,6 +434,45 @@ export class MarketState {
         })
       }));
     }
+  }
+
+
+  @Action(MarketStateActions.ChatNotificationsClearAll)
+  chatNotificationsCleared(ctx: StateContext<MarketStateModel>, action: MarketStateActions.ChatNotificationsClearAll) {
+    const identityId = ctx.getState().identity;
+
+    if (identityId > 0) {
+      return this._marketService.call('chat', ['channellist', identityId]).pipe(
+        catchError(() => of({})),
+        tap((resp: RespChatChannelList) => {
+          let items = [];
+          if (isBasicObjectType(resp) && !!resp.success && Array.isArray(resp.data)) {
+            items = resp.data.filter(r =>
+              (typeof r.channel === 'string')
+              && r.channel.length > 0
+              && !!r.has_unread
+            );
+          }
+          ctx.setState(patch<MarketStateModel>({
+            notifications: patch<MarketNotifications>({
+              chatsUnread: patch<ChatNotifications>({
+                listings: items.filter(i => i.channel_type === ChatChannelType.LISTINGITEM).map(i => i.channel),
+                orders: items.filter(i => i.channel_type === ChatChannelType.ORDERITEM).map(i => i.channel),
+              })
+            })
+          }));
+        })
+      );
+    }
+
+    ctx.setState(patch<MarketStateModel>({
+      notifications: patch<MarketNotifications>({
+        chatsUnread: patch<ChatNotifications>({
+          listings: [],
+          orders: [],
+        })
+      })
+    }));
   }
 
 
@@ -571,6 +642,54 @@ export class MarketState {
   }
 
 
+  @Action(MarketUserActions.SetChatChannelsUnread)
+  setChatChannelsUnread(ctx: StateContext<MarketStateModel>, action: MarketUserActions.SetChatChannelsUnread) {
+    const ckey = this.getChatNotificationKey(action.channelType);
+    if (!ckey) {
+      return;
+    }
+
+    ctx.setState(patch<MarketStateModel>({
+      notifications: patch<MarketNotifications>({
+        chatsUnread: patch<ChatNotifications>({
+          [ckey]: [...(new Set([...ctx.getState().notifications.chatsUnread[ckey], ...action.channels]))]
+        })
+      })
+    }));
+  }
+
+
+  @Action(MarketUserActions.ChatChannelRead)
+  setChannelAsRead(ctx: StateContext<MarketStateModel>, action: MarketUserActions.ChatChannelRead) {
+    const ckey = this.getChatNotificationKey(action.channelType);
+    if (!ckey) {
+      return;
+    }
+
+    return this._marketService.call('chat', [
+      'channelsetread',
+      ctx.getState().identity,
+      action.channel,
+      action.channelType,
+      Date.now(),
+    ]).pipe(
+      map(response => isBasicObjectType(response) && (response.success === true)),
+      catchError(() => of(false)),
+      tap(success => {
+        if (success) {
+          ctx.setState(patch<MarketStateModel>({
+            notifications: patch<MarketNotifications>({
+              chatsUnread: patch<ChatNotifications>({
+                [ckey]: removeItem<string>(c => c === action.channel)
+              })
+            })
+          }));
+        }
+      })
+    );
+  }
+
+
   @Action(MarketUserActions.AddOrdersPendingAction, {cancelUncompleted: true})
   addIdentityPendingOrders(
     ctx: StateContext<MarketStateModel>, { identityId, orderType, orderHashes }: MarketUserActions.AddOrdersPendingAction
@@ -698,6 +817,16 @@ export class MarketState {
 
     return newItem;
 
+  }
+
+
+  private getChatNotificationKey(c: ChatChannelType): string {
+    let ckey = '';
+    switch (c) {
+    case ChatChannelType.LISTINGITEM: ckey = 'listings'; break;
+    case ChatChannelType.ORDERITEM: ckey = 'orders'; break;
+    }
+    return ckey;
   }
 
 }

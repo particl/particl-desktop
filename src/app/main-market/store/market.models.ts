@@ -1,4 +1,5 @@
 import { Market } from '../services/data/data.models';
+import { ChatChannelDetails } from '../services/chats/chats.models';
 
 export enum StartedStatus {
   PENDING,
@@ -57,10 +58,17 @@ export interface DefaultMarketConfig {
 }
 
 
+export interface ChatNotifications {
+  orders: string[];
+  listings: string[];
+}
+
+
 export interface MarketNotifications {
   identityCartItemCount: number;
   buyOrdersPendingAction: string[];
   sellOrdersPendingAction: string[];
+  chatsUnread: ChatNotifications;
 }
 
 

@@ -42,10 +42,22 @@ export namespace SocketMessages_v03 {
     objectId: number;
     objectHash: string;
   }
+
+  export interface ChatMessageAdded {
+    from: string;           // message sender
+    to: string;             // message recipient (eg: market receive address or identity address)
+    channel: string;        // the hash of the object which the message is communicating about (eg: listing item hash, or order hash)
+    channelType: string;    // the type of the object which the message is communicating about (eg: LISTINGITEM or ORDER)
+    created: number;        // the timestamp when the message was created
+    identities: number[];   // a list of identity ids that this message applies to
+    objectId: number;       // doesn't appear to be used
+    objectHash: string;     // doesn't appear to be used
+  }
 }
 
 
 export interface SupportedMessageTypes {
+  MPA_CHAT_ADD: SocketMessages_v03.ChatMessageAdded;
   MPA_LISTING_ADD_03: SocketMessages_v03.AddListing;
   MPA_PROPOSAL_ADD: SocketMessages_v03.ProposalAdded;
   MPA_COMMENT_ADD: SocketMessages_v03.CommentAdded;

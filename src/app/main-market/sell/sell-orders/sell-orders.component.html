@@ -101,9 +101,16 @@
                 {{ filterOptionsMarkets[orderItem.marketKey] || '' }}
               </div>
             </div>
-            <div class="status-wrap" fxFlex="0 0 140px">
-              <div class="sell order status" [ngClass]="orderItem.currentState.state.statusClass">
-                <span class="dot"></span>{{ orderItem.currentState.state.filterLabel || orderItem.currentState.state.label }}
+            <div fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-end">
+              <div>
+                <button mat-button color="accent" *ngIf="orderItem._hasUnreadChat" class="tiny icon-only" matTooltip="Unread messages" appDebounceClick (debounceClick)="openChatModal(orderIdx)">
+                  <mat-icon fontIcon="part-people"></mat-icon>
+                </button>
+              </div>
+              <div class="status-wrap" fxFlex="0 0 140px">
+                <div class="sell order status" [ngClass]="orderItem.currentState.state.statusClass">
+                  <span class="dot"></span>{{ orderItem.currentState.state.filterLabel || orderItem.currentState.state.label }}
+                </div>
               </div>
             </div>
           </div>
@@ -300,6 +307,10 @@
             <button mat-button matTooltip="Preview listing" class="small" appDebounceClick (debounceClick)="openListingDetailModal(orderItem.listing.id)">
               <mat-icon fontIcon="part-zoom-in"></mat-icon>
               View Listing
+            </button>
+            <button mat-button color="accent" matTooltip="Chat with buyer" class="small" appDebounceClick (debounceClick)="openChatModal(orderIdx)">
+              <mat-icon fontIcon="part-people"></mat-icon>
+              Open Chat
             </button>
           </div>
           <div class="right">

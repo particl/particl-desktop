@@ -98,7 +98,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
     }
 
 
-    const init$ = forkJoin(
+    const init$ = forkJoin([
         this._sharedService.loadMarkets().pipe(
           tap(marketsList => {
             marketsList.forEach(market => {
@@ -130,7 +130,7 @@ export class SellListingsComponent implements OnInit, OnDestroy {
             this.startTimer();
           }),
         )
-    ).pipe(
+    ]).pipe(
       finalize(() => this.isLoading = false)
     );
 
