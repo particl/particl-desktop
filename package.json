@@ -1,7 +1,7 @@
 {
   "name": "particl-desktop-testnet",
   "productName": "Particl Desktop Testnet",
-  "version": "3.1.2-dev",
+  "version": "3.1.3-dev",
   "branch": "3.1",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -187,7 +187,7 @@
     "@ngx-gallery/gallerize": "^5.0.0-beta.0",
     "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
-    "@zasmilingidiot/particl-marketplace": "0.3.7",
+    "@zasmilingidiot/particl-marketplace": "0.3.8",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "angularx-qrcode": "^1.0.1",
     "autodetect-decoder-stream": "^1.0.3",
