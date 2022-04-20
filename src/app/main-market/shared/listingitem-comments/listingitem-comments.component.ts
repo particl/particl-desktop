@@ -16,11 +16,11 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
 
 
 enum TextContent {
-  LABEL_SECTION_HEADER = 'Comments & Reviews',
+  LABEL_SECTION_HEADER = 'Item Reviews',
   LOADING_ERROR = 'Error occurred while loading comments',
   COMMENT_POST_ERROR = 'Error while creating your comment!',
-  COMMENT_UPDATE_ERROR = 'Comment created, but failed to update the display correctly',
-  COMMENT_LENGTH_ERROR = 'Comment exceeds maximum length allowed'
+  COMMENT_UPDATE_ERROR = 'Review created, but failed to update the display correctly',
+  COMMENT_LENGTH_ERROR = 'Review exceeds maximum length allowed'
 }
 
 

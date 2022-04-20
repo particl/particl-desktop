@@ -104,7 +104,7 @@
             <div fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-end">
               <div>
                 <button mat-button color="accent" *ngIf="orderItem._hasUnreadChat" class="tiny icon-only" matTooltip="Unread messages" appDebounceClick (debounceClick)="openChatModal(orderIdx)">
-                  <mat-icon fontIcon="part-people"></mat-icon>
+                  <mat-icon fontIcon="part-chat-discussion"></mat-icon>
                 </button>
               </div>
               <div class="status-wrap" fxFlex="0 0 140px">
@@ -309,7 +309,7 @@
               View Listing
             </button>
             <button mat-button color="accent" matTooltip="Chat with buyer" class="small" appDebounceClick (debounceClick)="openChatModal(orderIdx)">
-              <mat-icon fontIcon="part-people"></mat-icon>
+              <mat-icon fontIcon="part-chat-discussion"></mat-icon>
               Open Chat
             </button>
           </div>

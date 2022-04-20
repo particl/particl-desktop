@@ -151,7 +151,7 @@
   </div><!-- .product-summary -->
 
   <div class="product-details">
-    <mat-tab-group class="listing-tabs" color="accent" #tabSwitcher [selectedIndex]="initialTab === 'chat' ? 2 : 0" >
+    <mat-tab-group class="listing-tabs" color="accent" #tabSwitcher [selectedIndex]="initialTab === 'review' ? 2 : 0" >
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontIcon="part-attach"></mat-icon>
@@ -166,8 +166,15 @@
       </mat-tab>
       <mat-tab *ngIf="showComments">
         <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-check-2"></mat-icon>
+          Reviews
+        </ng-template>
+      </mat-tab>
+
+      <mat-tab *ngIf="showChatPanel">
+        <ng-template mat-tab-label>
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
-          Comments &amp; Reviews
+          Chat
         </ng-template>
       </mat-tab>
     </mat-tab-group><!-- .listing-tabs -->
@@ -350,6 +357,16 @@
     <div class="tab-content questions-answers" *ngIf="showComments && tabSwitcher.selectedIndex === 2">
 
       <market-listing-comments [listingHash]="details.hash" [marketReceiveAddress]="details.marketAddress" [listingSellerAddress]="details.seller"></market-listing-comments>
+
+    </div><!-- .tab-content.questions-answers -->
+
+    <div class="tab-content chat" *ngIf="showChatPanel && tabSwitcher.selectedIndex === 3">
+
+      <h2 class="section-title">Item Discussion</h2>
+
+      <mat-card class="chat-container">
+        <market-chat [inputChannel]="details.hash" [inputChannelType]="ChatTopicType" style="height:inherit;"></market-chat>
+      </mat-card>
 
     </div><!-- .tab-content.questions-answers -->
 

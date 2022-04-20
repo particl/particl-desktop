@@ -1,3 +1,4 @@
+import { ChatChannelType } from './../services/chats/chats.models';
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
@@ -16,7 +17,8 @@ import { DataService } from '../services/data/data.service';
 import { RegionListService } from '../services/region-list/region-list.service';
 import { ListingsService } from './listings.service';
 
-import { ListingDetailModalComponent } from '../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from '../shared/listing-detail-modal/listing-detail-modal.component';
+import { ChatMessageModalComponent, ChatMessageModalInputs } from '../shared/chat-message-modal/chat-message-modal.component';
 import { TreeSelectComponent } from '../shared/shared.module';
 
 import { isBasicObjectType } from '../shared/utils';
@@ -484,20 +486,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
     this._sharedService.getListingDetailsForMarket(id, this.activeMarket.id).subscribe(
       (listing) => {
         if (+listing.id > 0) {
+          const dialogData: ListingItemDetailInputs = {
+            listing,
+            canReview: true,
+            displayChat: true,
+            initTab: startAtComments ? 'review' : 'default',
+            displayActions: {
+              cart: true,
+              governance: true,
+              fav: true
+            }
+          };
           const dialogRef = this._dialog.open(
             ListingDetailModalComponent,
-            {
-              data: {
-                listing,
-                canChat: true,
-                initTab: startAtComments ? 'chat' : 'default',
-                displayActions: {
-                  cart: true,
-                  governance: true,
-                  fav: true
-                }
-              }
-            }
+            { data: dialogData }
           );
 
           let favId = listing.extra.favouriteId,
@@ -533,6 +535,20 @@ export class ListingsComponent implements OnInit, OnDestroy {
       (err) => this._snackbar.open(TextContent.FAILED_LOAD_DETAILS, 'warn')
     );
 
+  }
+
+
+  openChatModal(listing: ListingOverviewItem): void {
+    const dialogData: ChatMessageModalInputs = {
+      title: listing.title,
+      subtitle: listing.summary,
+      channel: listing.hash,
+      channelType: ChatChannelType.LISTINGITEM,
+    };
+    this._dialog.open(
+      ChatMessageModalComponent,
+      { data: dialogData }
+    );
   }
 
 

@@ -963,3 +963,18 @@ export interface RespChatChannelUnfollow {
   success: boolean;
   errorReason?: ChatRequestErrorReason;
 }
+
+
+export interface RespChatParticipantListItem {
+  success: boolean;
+  errorReason?: ChatRequestErrorReason;
+  data: {
+    address: string;
+    label: string;
+  }[];
+}
+
+export interface RespChatParticipantUpdate {
+  success: boolean;
+  errorReason?: ChatRequestErrorReason;
+}

@@ -210,7 +210,8 @@ export class SellListingsComponent implements OnInit, OnDestroy {
         if (+listing.id > 0) {
           const dialogData: ListingItemDetailInputs = {
             listing,
-            canChat: true,
+            canReview: true,
+            displayChat: true,
             initTab: 'default',
             displayActions: {
               cart: false,

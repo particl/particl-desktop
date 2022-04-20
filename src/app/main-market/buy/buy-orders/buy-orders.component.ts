@@ -19,7 +19,7 @@ import { BidOrderService } from '../../services/orders/orders.service';
 import { DataService } from '../../services/data/data.service';
 import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { CancelBidModalComponent } from './cancel-bid-modal/cancel-bid-modal.component';
 import { PayOrderModalComponent } from './pay-order-modal/pay-order-modal.component';
 import { ConfirmOrderDeliveredModalComponent } from './confirm-order-delivered-modal/confirm-order-delivered-modal.component';
@@ -328,20 +328,21 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const dialogData: ListingItemDetailInputs = {
+          listing,
+          canReview: true,
+          displayChat: true,
+          initTab: 'default',
+          displayActions: {
+            cart: false,
+            governance: false,
+            fav: false
+          }
+        };
+
         this._dialog.open(
           ListingDetailModalComponent,
-          {
-            data: {
-              listing,
-              canChat: true,
-              initTab: 'default',
-              displayActions: {
-                cart: false,
-                governance: false,
-                fav: false
-              }
-            }
-          }
+          { data: dialogData }
         );
       },
       (err) => {

@@ -15,7 +15,7 @@ import { ChatMessageModalComponent, ChatMessageModalInputs } from './../../share
 import {
   UnfollowChannelConfirmationModalComponent, UnfollowChannelConfirmationModalInput
 } from './../chat-modals/unfollow-confirmation-modal/unfollow-confirmation-modal.component';
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketRpcService } from '../../services/market-rpc/market-rpc.service';
@@ -311,20 +311,21 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const dialogData: ListingItemDetailInputs = {
+          listing,
+          canReview: true,
+          displayChat: false,
+          initTab: 'default',
+          displayActions: {
+            cart: false,
+            governance: false,
+            fav: false
+          }
+        };
+
         this._dialog.open(
           ListingDetailModalComponent,
-          {
-            data: {
-              listing,
-              canChat: true,
-              initTab: 'default',
-              displayActions: {
-                cart: false,
-                governance: false,
-                fav: false
-              }
-            }
-          }
+          { data: dialogData }
         );
       },
       (err) => {

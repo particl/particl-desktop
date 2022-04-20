@@ -20,7 +20,7 @@
 
   <mat-form-field class="--boxed" appearance="fill">
     <input matInput type="text" [formControl]="filterSearch"
-          placeholder="Search Orders" (keyup.escape)="filterSearch.setValue('')">
+          placeholder="Search Topics" (keyup.escape)="filterSearch.setValue('')">
     <button *ngIf="filterSearch.value.length > 0" matSuffix mat-button class="small" (click)="filterSearch.setValue('')" matTooltip="Clear" matTooltipPosition="after">
       <mat-icon fontIcon="part-clear-all"></mat-icon>
     </button>
@@ -69,8 +69,7 @@
 
   <ng-container *ngIf="displayedChannelIdxs.length > 0; else noChannelsDisplayed">
     <ng-container *ngFor="let channelIdx of displayedChannelIdxs">
-      <mat-accordion>
-        <mat-expansion-panel class="listing list-item no-padding" *appVar="chatChannelsList[channelIdx] as channel" [expanded]="true">
+        <mat-expansion-panel class="listing list-item no-padding" *appVar="chatChannelsList[channelIdx] as channel" [expanded]="true" hideToggle>
           <mat-expansion-panel-header class="header">
             <div class="header-wrapper">
               <div class="photo">
@@ -83,8 +82,8 @@
 
               <div fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-end">
                 <div>
-                  <button mat-button color="accent" *ngIf="channel.hasUnread" class="tiny icon-only" matTooltip="Unread messages" appDebounceClick (debounceClick)="actionMakeChannelRead(channelIdx)">
-                    <mat-icon fontIcon="part-notification-bell"></mat-icon>
+                  <button mat-button color="accent" *ngIf="channel.hasUnread" class="tiny icon-only" matTooltip="Unread messages" appDebounceClick (debounceClick)="actionOpenChatMessages(channelIdx)">
+                    <mat-icon fontIcon="part-chat-discussion"></mat-icon>
                   </button>
                 </div>
                 <div class="status-wrap" fxFlex="0 0 100px">
@@ -98,12 +97,12 @@
           </mat-expansion-panel-header>
 
           <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
-              <button mat-button matTooltip="Stop receiving notifications for this chat" appDebounceClick (debounceClick)="actionUnfollowChannel(channelIdx)" class="small">
-                <mat-icon fontIcon="part-circle-remove" color="warn"></mat-icon>
+              <button mat-button color="warn" matTooltip="Stop receiving notifications for this chat" appDebounceClick (debounceClick)="actionUnfollowChannel(channelIdx)" class="small">
+                <mat-icon fontIcon="part-circle-remove"></mat-icon>
                 Un-follow
               </button>
-              <button mat-button *ngIf="channel.hasUnread" matTooltip="Mark as read" appDebounceClick (debounceClick)="actionMakeChannelRead(channelIdx)" class="small">
-                <mat-icon fontIcon="part-circle-minus" color="accent"></mat-icon>
+              <button mat-button color="accent" *ngIf="channel.hasUnread" matTooltip="Mark as read" appDebounceClick (debounceClick)="actionMakeChannelRead(channelIdx)" class="small">
+                <mat-icon fontIcon="part-circle-minus"></mat-icon>
                 Mark read
               </button>
               <button mat-button *ngIf="channel._channelType === TypeChatChannel.LISTINGITEM" matTooltip="Show details of the item that is the topic of this conversation" appDebounceClick (debounceClick)="actionShowItemDetail(channelIdx)" class="small">
@@ -111,12 +110,11 @@
                 Show Listing Details
               </button>
               <button mat-raised-button color="primary" matTooltip="Open chat message history" appDebounceClick (debounceClick)="actionOpenChatMessages(channelIdx)" class="small">
-                <mat-icon fontIcon="part-people"></mat-icon>
+                <mat-icon fontIcon="part-chat-discussion"></mat-icon>
                 Open Chat
               </button>
           </mat-action-row>
         </mat-expansion-panel><!-- .listing -->
-      </mat-accordion>
     </ng-container>
   </ng-container>
 

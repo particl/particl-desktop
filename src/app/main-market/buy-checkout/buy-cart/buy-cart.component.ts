@@ -11,7 +11,7 @@ import { MarketState } from '../../store/market.state';
 import { BuyCartService } from './buy-cart.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { PlaceBidModalComponent, BidModalData } from './place-bid-modal/place-bid-modal.component';
 import { ShippingProfileAddressFormComponent } from '../../shared/shipping-profile-address-form/shipping-profile-address-form.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
@@ -231,20 +231,21 @@ export class BuyCartComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const dialogData: ListingItemDetailInputs = {
+          listing,
+          canReview: false,
+          displayChat: false,
+          initTab: 'default',
+          displayActions: {
+            cart: false,
+            governance: false,
+            fav: false
+          }
+        };
+
         this._dialog.open(
           ListingDetailModalComponent,
-          {
-            data: {
-              listing,
-              canChat: false,
-              initTab: 'default',
-              displayActions: {
-                cart: false,
-                governance: false,
-                fav: false
-              }
-            }
-          }
+          { data: dialogData }
         );
       },
       (err) => {
