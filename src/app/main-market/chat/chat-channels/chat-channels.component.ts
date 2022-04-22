@@ -11,7 +11,7 @@ import { MarketState } from '../../store/market.state';
 import { WalletInfoState } from 'app/main/store/main.state';
 import { WalletInfoStateModel } from 'app/main/store/main.models';
 
-import { ChatMessageModalComponent, ChatMessageModalInputs } from './../../shared/chat-message-modal/chat-message-modal.component';
+import { ChatConversationModalComponent, ChatConversationModalInputs } from './../../shared/chat-conversation-modal/chat-conversation-modal.component';
 import {
   UnfollowChannelConfirmationModalComponent, UnfollowChannelConfirmationModalInput
 } from './../chat-modals/unfollow-confirmation-modal/unfollow-confirmation-modal.component';
@@ -120,7 +120,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
 
         this.filterMarketOptions = [];
         (identity.markets || []).forEach(m => {
-          this.filterMarketOptions.push({value: m.publishAddress, name: m.name});
+          this.filterMarketOptions.push({value: m.receiveAddress, name: m.name});
         });
 
         if (identity.id > 0) {
@@ -344,7 +344,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
     }
 
     const channel = this.chatChannelsList[channelIdx];
-    const modalInputs: ChatMessageModalInputs = {
+    const modalInputs: ChatConversationModalInputs = {
       channel: channel._channel,
       channelType: channel._channelType,
       title: channel.title,
@@ -353,7 +353,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
       highlitedLabel: channel.highliteLabel,
     };
 
-    this._dialog.open(ChatMessageModalComponent, { data: modalInputs });
+    this._dialog.open(ChatConversationModalComponent, { data: modalInputs });
   }
 
 
@@ -382,7 +382,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
       if (
         channel.title.toLowerCase().includes(searchTerm) &&
         (marketAddress === '' || (channel.market.address === marketAddress)) &&
-        (filterType === '' || (channel.type === filterType)) &&
+        (filterType === '' || (channel._channelType === filterType)) &&
         (filterUnread === '' || channel.hasUnread === !!+filterUnread)
       ) {
         indexes.push(idx);

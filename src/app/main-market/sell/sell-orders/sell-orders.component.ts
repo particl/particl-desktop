@@ -29,7 +29,7 @@ import { AcceptBidModalComponent } from '../modals/accept-bid-modal/accept-bid-m
 import {
   ResendOrderActionConfirmationModalComponent
 } from '../modals/resend-order-action-confirmation-modal/resend-order-action-confirmation-modal.component';
-import { ChatMessageModalComponent, ChatMessageModalInputs } from './../../shared/chat-message-modal/chat-message-modal.component';
+import { ChatConversationModalComponent, ChatConversationModalInputs } from './../../shared/chat-conversation-modal/chat-conversation-modal.component';
 import { isBasicObjectType } from '../../shared/utils';
 
 import { WalletInfoStateModel } from 'app/main/store/main.models';
@@ -391,14 +391,14 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
     }
     const orderItem = this.ordersList[orderIdx];
 
-    const dialogData: ChatMessageModalInputs = {
+    const dialogData: ChatConversationModalInputs = {
       channel: orderItem.orderHash,
       channelType: ChatChannelType.ORDERITEM,
       title: orderItem.listing.title,
       subtitle: ChatChannelTypeLabels.ORDERITEM
     };
 
-    this._dialog.open(ChatMessageModalComponent, {data: dialogData});
+    this._dialog.open(ChatConversationModalComponent, {data: dialogData});
   }
 
 

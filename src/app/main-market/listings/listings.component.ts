@@ -18,7 +18,7 @@ import { RegionListService } from '../services/region-list/region-list.service';
 import { ListingsService } from './listings.service';
 
 import { ListingDetailModalComponent, ListingItemDetailInputs } from '../shared/listing-detail-modal/listing-detail-modal.component';
-import { ChatMessageModalComponent, ChatMessageModalInputs } from '../shared/chat-message-modal/chat-message-modal.component';
+import { ChatConversationModalComponent, ChatConversationModalInputs } from '../shared/chat-conversation-modal/chat-conversation-modal.component';
 import { TreeSelectComponent } from '../shared/shared.module';
 
 import { isBasicObjectType } from '../shared/utils';
@@ -540,7 +540,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
 
 
   openChatModal(listing: ListingOverviewItem): void {
-    const dialogData: ChatMessageModalInputs = {
+    const dialogData: ChatConversationModalInputs = {
       title: listing.title,
       subtitle: listing.summary,
       channel: listing.hash,
@@ -549,7 +549,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
       highlitedLabel: TextContent.CHAT_LABEL_SELLER,
     };
     this._dialog.open(
-      ChatMessageModalComponent,
+      ChatConversationModalComponent,
       { data: dialogData }
     );
   }

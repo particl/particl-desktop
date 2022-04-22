@@ -39,12 +39,12 @@ interface ChatMessage {
 
 
 @Component({
-  selector: 'market-chat',
-  templateUrl: './chat-message.component.html',
-  styleUrls: ['./chat-message.component.scss'],
+  selector: 'market-conversation',
+  templateUrl: './chat-conversation.component.html',
+  styleUrls: ['./chat-conversation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatMessageComponent implements OnInit, OnDestroy {
+export class ChatConversationComponent implements OnInit, OnDestroy {
 
   @Input() inputChannel: string = '';
   @Input() inputChannelType: ChatChannelType = ChatChannelType.OTHER;
@@ -187,11 +187,8 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
       )),
       finalize(() => {
         this.isLoading = false;
-
-        if (this.chatHistoryPane.nativeElement.scrollTop > (this.chatHistoryPane.nativeElement.scrollHeight - 10)) {
-          this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
-        }
         this._cdr.detectChanges();
+        this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
       })
     ).subscribe();
   }

@@ -9,6 +9,10 @@
       </button>
     </div>
 
+    <div *ngIf="!hasMoreMessages && !isLoading" class="no-messages">
+      <p>Start of conversation</p>
+    </div>
+
     <div *ngFor="let message of messageList; trackBy:trackByMessageFn" class="message-wrapper" [class.own]="message.isOwn">
       <div class="message" [class.own]="message.isOwn" [class.highlited]="message.isHighlited">
         <div class="meta" *ngIf="!message.isOwn">
@@ -23,9 +27,6 @@
       </div>
     </div>
 
-    <div *ngIf="messageList.length === 0 && !isLoading" class="no-messages">
-      <p>No current conversation</p>
-    </div>
   </section>
 
   <mat-divider></mat-divider>

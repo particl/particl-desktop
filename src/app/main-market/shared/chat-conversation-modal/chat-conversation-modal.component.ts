@@ -8,7 +8,7 @@ enum TextContent {
 }
 
 
-export interface ChatMessageModalInputs {
+export interface ChatConversationModalInputs {
   title: string;
   subtitle: string;
   channel: string;
@@ -21,17 +21,17 @@ export interface ChatMessageModalInputs {
  * Simple modal wrapper around the chat-message component
  */
 @Component({
-  templateUrl: './chat-message-modal.component.html',
-  styleUrls: ['./chat-message-modal.component.scss'],
+  templateUrl: './chat-conversation-modal.component.html',
+  styleUrls: ['./chat-conversation-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChatMessageModalComponent {
+export class ChatConversationModalComponent {
 
-  readonly componentData: ChatMessageModalInputs;
+  readonly componentData: ChatConversationModalInputs;
 
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: ChatMessageModalInputs,
+    @Inject(MAT_DIALOG_DATA) private data: ChatConversationModalInputs,
   ) {
 
     this.componentData = {

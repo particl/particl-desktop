@@ -12,8 +12,8 @@ import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { ListingItemCommentsComponent } from './listingitem-comments/listingitem-comments.component';
 import { ListingDetailModalComponent } from './listing-detail-modal/listing-detail-modal.component';
 import { ShippingProfileAddressFormComponent } from './shipping-profile-address-form/shipping-profile-address-form.component';
-import { ChatMessageComponent } from './chat-message/chat-message.component';
-import { ChatMessageModalComponent } from './chat-message-modal/chat-message-modal.component';
+import { ChatConversationComponent } from './chat-conversation/chat-conversation.component';
+import { ChatConversationModalComponent } from './chat-conversation-modal/chat-conversation-modal.component';
 
 @NgModule({
   imports: [
@@ -29,16 +29,16 @@ import { ChatMessageModalComponent } from './chat-message-modal/chat-message-mod
     ListingItemCommentsComponent,
     ListingDetailModalComponent,
     ShippingProfileAddressFormComponent,
-    ChatMessageComponent,
-    ChatMessageModalComponent,
+    ChatConversationComponent,
+    ChatConversationModalComponent,
   ],
   exports: [
     TreeSelectComponent,
     ListingItemCommentsComponent,
     ListingDetailModalComponent,
     ShippingProfileAddressFormComponent,
-    ChatMessageComponent,
-    ChatMessageModalComponent,
+    ChatConversationComponent,
+    ChatConversationModalComponent,
     GalleryModule,
     LightboxModule,
     GallerizeModule,
@@ -46,7 +46,7 @@ import { ChatMessageModalComponent } from './chat-message-modal/chat-message-mod
   ],
   entryComponents: [
     ListingDetailModalComponent,
-    ChatMessageModalComponent,
+    ChatConversationModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
