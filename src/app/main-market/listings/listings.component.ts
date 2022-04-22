@@ -37,6 +37,7 @@ enum TextContent {
   CART_ADD_SUCCESS = 'Successfully added to cart',
   ITEM_FLAG_SUCCESS = 'Successfully flagged the listing',
   ITEM_FLAG_FAILED = 'An error occurred while flagging the listing',
+  CHAT_LABEL_SELLER = 'seller',
 }
 
 
@@ -544,6 +545,8 @@ export class ListingsComponent implements OnInit, OnDestroy {
       subtitle: listing.summary,
       channel: listing.hash,
       channelType: ChatChannelType.LISTINGITEM,
+      highlitedAddress: listing.seller,
+      highlitedLabel: TextContent.CHAT_LABEL_SELLER,
     };
     this._dialog.open(
       ChatMessageModalComponent,

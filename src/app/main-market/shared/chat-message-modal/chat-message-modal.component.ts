@@ -12,7 +12,9 @@ export interface ChatMessageModalInputs {
   title: string;
   subtitle: string;
   channel: string;
-  channelType: ChatChannelType
+  channelType: ChatChannelType;
+  highlitedAddress?: string;
+  highlitedLabel?: string;
 }
 
 /**
@@ -44,6 +46,9 @@ export class ChatMessageModalComponent {
       this.componentData.channelType = this.data.channelType;
       this.componentData.title = getValueOrDefault(this.data.title, 'string', this.componentData.title);
       this.componentData.subtitle = getValueOrDefault(this.data.subtitle, 'string', this.componentData.subtitle);
+
+      this.componentData.highlitedAddress = getValueOrDefault(this.data.highlitedAddress, 'string', '');
+      this.componentData.highlitedLabel = getValueOrDefault(this.data.highlitedLabel, 'string', '');
     }
   }
 }

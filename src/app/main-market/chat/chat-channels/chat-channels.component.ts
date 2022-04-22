@@ -35,6 +35,7 @@ enum TextContent {
   LOAD_ERROR = 'Failed to retrieve messages',
   UNFOLLOW_ERROR = 'Could not unfollow this chat at this time',
   MARK_AS_READ_ERROR = '',
+  ADDRESS_LABEL_SELLER = 'seller',
 }
 
 interface ChatChannelDetails {
@@ -46,6 +47,8 @@ interface ChatChannelDetails {
     name: string;
   };
   itemId: number;
+  highliteAddress: string;
+  highliteLabel: string;
 }
 
 interface ChatChannelItem extends ChatChannelDetails {
@@ -57,7 +60,7 @@ interface ChatChannelItem extends ChatChannelDetails {
 
 
 @Component({
-  selector: 'market-chat-messages',
+  selector: 'market-chat-channels',
   templateUrl: './chat-channels.component.html',
   styleUrls: ['./chat-channels.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -346,6 +349,8 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
       channelType: channel._channelType,
       title: channel.title,
       subtitle: channel.type,
+      highlitedAddress: channel.highliteAddress,
+      highlitedLabel: channel.highliteLabel,
     };
 
     this._dialog.open(ChatMessageModalComponent, { data: modalInputs });
@@ -415,6 +420,8 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
         hasUnread: getValueOrDefault(item.has_unread, 'boolean', false),
         lastRead: +item.last_read >= 0 && Number.isSafeInteger(+item.last_read) ? +item.last_read : 0,
         itemId: 0,
+        highliteAddress: '',
+        highliteLabel: '',
       };
 
       let details: ChatChannelDetails;
@@ -457,6 +464,11 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
       }
 
       item.market.address = getValueOrDefault(source.market, 'string', item.market.address);
+    }
+
+    item.highliteAddress = getValueOrDefault(source.seller, 'string', '');
+    if (item.highliteAddress.length > 0) {
+      item.highliteLabel = TextContent.ADDRESS_LABEL_SELLER;
     }
 
     item.itemId = +source.id > 0 ? +source.id : item.itemId;
@@ -525,6 +537,8 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
       },
       type: this.getChannelTypeLabel(ChatChannelType.OTHER),
       itemId: 0,
+      highliteAddress: '',
+      highliteLabel: '',
     };
     return item;
   }

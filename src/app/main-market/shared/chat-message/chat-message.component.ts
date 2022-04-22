@@ -33,6 +33,8 @@ interface ChatMessage {
   sender: string;
   message: string;
   isOwn: boolean;
+  isHighlited: boolean;
+  highlitedLabel?: string;
 }
 
 
@@ -46,6 +48,8 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
 
   @Input() inputChannel: string = '';
   @Input() inputChannelType: ChatChannelType = ChatChannelType.OTHER;
+  @Input() highlitedAddress: string = '';
+  @Input() highlitedAddressLabel: string = '';
 
   @ViewChild('chatHistoryPane', {static: true}) chatHistoryPane: ElementRef;
 
@@ -247,6 +251,7 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
               isOwn: true,
               sender: currentIdentity.address,
               id: resp.id,
+              isHighlited: false,
             };
             this.messageList.push(addedMessage);
             this.textInput.setValue('');
@@ -300,8 +305,12 @@ export class ChatMessageComponent implements OnInit, OnDestroy {
         created: +msg.created_at > 0 ? +msg.created_at : 0,
         sender: getValueOrDefault(msg.sender_label, 'string', '') || getValueOrDefault(msg.sender_address, 'string', ''),
         isOwn: msg.is_own === true,
+        isHighlited: (this.highlitedAddress.length > 0) && (getValueOrDefault(msg.sender_address, 'string', '') === this.highlitedAddress),
       };
 
+      if (chat.isHighlited) {
+        chat.highlitedLabel = this.highlitedAddressLabel;
+      }
       if (Object.keys(chat).filter(k => typeof chat[k] !== 'boolean' ? !chat[k] : false).length > 0 ) {
         return null;
       }

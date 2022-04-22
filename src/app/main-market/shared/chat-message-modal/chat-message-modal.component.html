@@ -8,5 +8,10 @@
 </button>
 
 <mat-dialog-content>
-    <market-chat [inputChannel]="componentData.channel" [inputChannelType]="componentData.channelType" style="height:inherit;"></market-chat>
+    <market-chat
+      [inputChannel]="componentData.channel"
+      [inputChannelType]="componentData.channelType"
+      [highlitedAddress]="componentData.highlitedAddress"
+      [highlitedAddressLabel]="componentData.highlitedLabel"
+      style="height:inherit;"></market-chat>
 </mat-dialog-content>

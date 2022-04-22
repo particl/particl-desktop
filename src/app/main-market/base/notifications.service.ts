@@ -178,7 +178,9 @@ export class NotificationsService implements OnDestroy {
     return this._socket.getSocketMessageListener('MPA_CHAT_ADD').pipe(
       bufferTime(2000),
       map((items: SocketMessages_v03.ChatMessageAdded[]) => {
-        const identityId = this._store.selectSnapshot(MarketState.currentIdentity).id;
+        const currentIdentity = this._store.selectSnapshot(MarketState.currentIdentity);
+        const identityId = currentIdentity.id;
+        const identityAddress = currentIdentity.address;
 
         return items.filter(item =>
           isBasicObjectType(item)
@@ -186,7 +188,7 @@ export class NotificationsService implements OnDestroy {
           && (item.channel.length > 0)
           && Array.isArray(item.identities)
           && (item.identities.filter(id => +id === identityId).length > 0)
-          && ([ChatChannelType.LISTINGITEM, ChatChannelType.ORDERITEM].includes(item.channelType as any))
+          && (item.from !== identityAddress)
         )
         .map(item => ({channel: item.channel, channelType: item.channelType}));
       }),
