@@ -9,7 +9,7 @@ export interface UnfollowChannelConfirmationModalInput {
   title: string;
   subtitle: string;
   image: string;
-  channelType: ChatChannelType
+  channelType: ChatChannelType;
 }
 
 
@@ -43,7 +43,9 @@ export class UnfollowChannelConfirmationModalComponent {
       this.dialogData.title = getValueOrDefault(this.data.title, 'string', this.dialogData.title);
       this.dialogData.subtitle = getValueOrDefault(this.data.subtitle, 'string', this.dialogData.subtitle);
       this.dialogData.image = getValueOrDefault(this.data.image, 'string', this.dialogData.image);
-      this.dialogData.channelType = getValueOrDefault(this.data.channelType as string, 'string', this.dialogData.channelType) as ChatChannelType;
+      this.dialogData.channelType = getValueOrDefault(
+        this.data.channelType as string, 'string', this.dialogData.channelType
+      ) as ChatChannelType;
     }
   }
 

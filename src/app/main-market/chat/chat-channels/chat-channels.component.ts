@@ -173,7 +173,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
           case ChatChannelType.LISTINGITEM: channel.hasUnread = data[1].listings.includes(channel._channel); break;
           case ChatChannelType.ORDERITEM: channel.hasUnread = data[1].orders.includes(channel._channel); break;
           }
-        })
+        });
         this.chatChannelsList = data[0];
         this.filterChange.setValue(true);
       }),
@@ -503,8 +503,8 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
             }
 
             item.image =  parseImagePath(featured, 'MEDIUM', this.defaultMarketUrl) ||
-                                      parseImagePath(featured, 'ORIGINAL', this.defaultMarketUrl) ||
-                                      item.image;
+                          parseImagePath(featured, 'ORIGINAL', this.defaultMarketUrl) ||
+                          item.image;
           }
         }
       }

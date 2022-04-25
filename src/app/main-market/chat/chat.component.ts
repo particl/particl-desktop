@@ -23,8 +23,8 @@ interface ChatTab {
 export class ChatComponent implements OnInit, OnDestroy {
 
   readonly tabs: ChatTab[] = [
-    { title: 'Topics', icon: 'part-chat-discussion', templ: 'chats', notificationValue: null},
-    { title: 'Participants', icon: 'part-person', templ: 'users', notificationValue: null}
+    { title: 'Conversations', icon: 'part-chat-discussion', templ: 'chats', notificationValue: null},
+    { title: 'Saved Addresses', icon: 'part-person', templ: 'users', notificationValue: null}
   ];
 
 

@@ -14,7 +14,10 @@ import { environment } from 'environments/environment';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault, parseMarketResponseItem } from '../shared/utils';
 import { RespProfileListItem, RespIdentityListItem, RespChatChannelList } from '../shared/market.models';
-import { MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig, MarketNotifications, ChatNotifications } from './market.models';
+import {
+  MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig,
+  MarketNotifications, ChatNotifications
+} from './market.models';
 import { ChatChannelType } from '../services/chats/chats.models';
 
 

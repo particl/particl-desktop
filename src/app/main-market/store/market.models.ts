@@ -1,5 +1,4 @@
 import { Market } from '../services/data/data.models';
-import { ChatChannelDetails } from '../services/chats/chats.models';
 
 export enum StartedStatus {
   PENDING,

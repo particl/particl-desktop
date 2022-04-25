@@ -121,7 +121,7 @@ export class ChatParticipantsComponent implements OnInit, OnDestroy {
     };
     this._dialog.open(ChatParticipantEditModalComponent, { data }).afterClosed().pipe(
       take(1),
-      concatMap((updatedDetails:ChatParticipantEditedDetails) => iif(
+      concatMap((updatedDetails: ChatParticipantEditedDetails) => iif(
         () => isBasicObjectType(updatedDetails),
         defer(() => {
           if (this.personsList[idx].address !== updatedDetails.address) {

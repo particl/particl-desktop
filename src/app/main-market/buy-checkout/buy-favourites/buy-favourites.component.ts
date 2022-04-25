@@ -163,7 +163,7 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
             governance: false,
             fav: true
           }
-        }
+        };
 
         const dialogRef = this._dialog.open(
           ListingDetailModalComponent,

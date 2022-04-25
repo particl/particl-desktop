@@ -76,9 +76,7 @@ export class ChatParticipantEditModalComponent implements OnInit {
       updateDetails.label,
     ]).pipe(
       catchError(() => of({success: false})),
-      map(resp => {
-        return isBasicObjectType(resp) && !!resp.success
-      }),
+      map(resp => isBasicObjectType(resp) && !!resp.success),
       tap(success => {
         this.isProcessing = false;
         if (!success) {

@@ -1,5 +1,5 @@
-<app-page-intro childPageAlias="Chat Participants">
-  <ng-container page-title>Chat Participants</ng-container>
+<app-page-intro childPageAlias="Chat Labels">
+  <ng-container page-title>Chat Labels</ng-container>
   <ng-container page-content>
     Lists the addresses that have been previously labelled in your chat discussions.
   </ng-container>
@@ -17,7 +17,7 @@
 
   <mat-form-field class="--boxed" appearance="fill">
     <input matInput type="text" [formControl]="filterSearch"
-          placeholder="Search Saved Participants" (keyup.escape)="filterSearch.setValue('')">
+          placeholder="Search Saved Addresses" (keyup.escape)="filterSearch.setValue('')">
     <button *ngIf="filterSearch.value.length > 0" matSuffix mat-button class="small" (click)="filterSearch.setValue('')" matTooltip="Clear" matTooltipPosition="after">
       <mat-icon fontIcon="part-clear-all"></mat-icon>
     </button>
@@ -38,7 +38,7 @@
   <ng-container *ngIf="displayPersonIdx.length > 0; else nothingDisplayed">
     <ng-container *ngFor="let itemIdx of displayPersonIdx">
 
-      <mat-expansion-panel class="listing list-item no-padding" *appVar="personsList[itemIdx] as item" [expanded]="true" displayMode="flat" [expanded]="false" hideToggle>
+      <mat-expansion-panel class="listing list-item no-padding" *appVar="personsList[itemIdx] as item" [expanded]="true" displayMode="flat" hideToggle>
         <mat-expansion-panel-header class="header">
           <div class="header-wrapper">
             <div class="img-wrapper">

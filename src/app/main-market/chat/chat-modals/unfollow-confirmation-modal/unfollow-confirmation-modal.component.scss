@@ -38,24 +38,24 @@
     align-items: center;
   }
   .image {
-      --size: 60px;
-      width: var(--size);
-      height: var(--size);
-      border-radius: 50%;
-      overflow: hidden;
-      margin-right: 16px;
-      position: relative;
-      img {
+    --size: 60px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 16px;
+    position: relative;
+    img {
       @extend %image-center-cover;
       position: absolute;
       top: 0;
       left: 0;
-      }
+    }
   }
   .name {
-      font-size: 16px;
-      font-weight: 500;
-      margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
   }
 }
 

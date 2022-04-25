@@ -1,13 +1,13 @@
 <app-page-intro childPageAlias="Chat Messages">
-  <ng-container page-title>Chat Topics</ng-container>
+  <ng-container page-title>Chat Conversations</ng-container>
   <ng-container page-content>
-    These are all chats that you have participated in.
+    These are all chats that you are participating in.
   </ng-container>
   <ng-container page-info *ngIf="identityIsEncrypted">
     <span>As this is an encrypted wallet, your wallet will need to be unlocked in order to send a chat message!</span>
   </ng-container>
   <ng-container page-help>
-    You can respond to chat messages, or stop getting notified of new messages on particular chat topics, here.
+    You can respond to chat messages from different conversations, or stop receiving notifications from particular conversations here (Note that you will automatically receive notifications again if a new message is received for an "order" conversation, or you are the seller for a "listing" conversation ).
   </ng-container>
 </app-page-intro>
 

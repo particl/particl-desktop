@@ -6,7 +6,7 @@
     "spec-char-escape": true,
     "space-tab-mixed-disabled": "space2",
     "id-unique": true,
-    "inline-style-disabled": true,
+    "inline-style-disabled": false,
     "src-not-empty": true,
     "attr-no-duplication": true,
     "title-require": false

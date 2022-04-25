@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 mat-dialog-title {
   border-bottom: 1px solid var(--bg-muted);
@@ -8,11 +8,11 @@ mat-dialog-title {
 }
 
 .mat-dialog-content {
-    margin: -24px -24px 0 !important;
-    width: 950px;
-    height: calc(100vh - 160px);
-    max-height: calc(100vh - 160px);
-    padding-left: 1em;
-    padding-right: 1em;
-    padding-top: 0.8em;
-  }
+  margin: -24px -24px 0 !important;
+  width: 950px;
+  height: calc(100vh - 160px);
+  max-height: calc(100vh - 160px);
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.8em;
+}

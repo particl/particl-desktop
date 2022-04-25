@@ -1,5 +1,5 @@
-@import "./src/assets/_config"; // import shared colors etc.
-@import "../list-item-details"; // shared styling for list items
+@import './src/assets/_config'; // import shared colors etc.
+@import '../list-item-details'; // shared styling for list items
 
 .fiat {
   display: none; // hidden until implemented
@@ -128,7 +128,7 @@ button.modal-close {
       margin-right: 4px;
       &::after {
         // pulsating "ripple"
-        content: "";
+        content: '';
         display: block;
         border: 2px solid hsla(var(--color-info-hsl), 0.7);
         width: 12px;

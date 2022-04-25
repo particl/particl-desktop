@@ -2,52 +2,124 @@
 
   <section class="chat-history" #chatHistoryPane>
 
-    <div *ngIf="hasMoreMessages" class="action-wrapper" fxLayoutAlign="stretch stretch">
-      <button mat-button color="primary" class="small refresh" fxFlex="1 1 100%" [disabled]="isLoading" appDebounceClick (debounceClick)="loadMoreHistory()">
-        <mat-icon fontIcon="part-refresh"></mat-icon>
-        Load More
-      </button>
-    </div>
+    <ng-container *ngIf="selectedChatMessage === null; else selectedMessageDetails">
 
-    <div *ngIf="!hasMoreMessages && !isLoading" class="no-messages">
-      <p>Start of conversation</p>
-    </div>
-
-    <div *ngFor="let message of messageList; trackBy:trackByMessageFn" class="message-wrapper" [class.own]="message.isOwn">
-      <div class="message" [class.own]="message.isOwn" [class.highlited]="message.isHighlited">
-        <div class="meta" *ngIf="!message.isOwn">
-          <p class="user">
-            <mat-icon fontIcon="part-person"></mat-icon>
-            <span class="sender" *ngIf="message.isHighlited">({{message.highlitedLabel}}) &nbsp;</span>
-            <span class="sender">{{message.sender}}</span>
-          </p>
-        </div>
-        <p class="chat-content">{{message.message}}</p>
-        <p class="time-date">{{ message.created | date:'short'}}</p>
+      <div *ngIf="hasMoreMessages" class="action-wrapper" fxLayoutAlign="stretch stretch">
+        <button mat-button color="primary" class="small refresh" fxFlex="1 1 100%" [disabled]="isLoading" appDebounceClick (debounceClick)="loadMoreHistory()">
+          <mat-icon fontIcon="part-refresh"></mat-icon>
+          Load More
+        </button>
       </div>
-    </div>
+
+      <div *ngIf="!hasMoreMessages && !isLoading" class="no-messages">
+        <p>Start of conversation</p>
+      </div>
+
+      <div *ngFor="let message of messageList; trackBy:trackByMessageFn" class="message-wrapper" [class.own]="message.isOwn">
+        <div class="message" [class.own]="message.isOwn" [class.highlited]="message.isHighlited">
+          <div class="meta" appDebounceClick (debounceClick)="showMessageDetails(message)">
+            <p class="user">
+              <mat-icon fontIcon="part-person"></mat-icon>
+              <span class="sender" *ngIf="message.isHighlited">({{message.highlitedLabel}}) &nbsp;</span>
+              <span class="sender">{{ message.sender.value }}</span>
+            </p>
+          </div>
+          <p class="chat-content">{{ message.message }}</p>
+          <p class="time-date">{{ message.created | date:'short'}}</p>
+        </div>
+      </div>
+
+    </ng-container>
 
   </section>
 
-  <mat-divider></mat-divider>
+  <ng-container *ngIf="selectedChatMessage === null">
 
-  <section class="input-container">
-    <div class="conversation-input">
-      <mat-form-field class="message-input" color="accent">
-        <textarea matInput
-            [formControl]="textInput"
-            placeholder="Send message"
-            cdkTextareaAutosize
-            #autosize="cdkTextareaAutosize"
-            cdkAutosizeMinRows="1"
-            cdkAutosizeMaxRows="2"></textarea>
-        <mat-hint align="end">{{ textInput.value.length }}/{{ MAX_MESSAGE_LENGTH }}</mat-hint>
-      </mat-form-field>
-      <button mat-button class="small action-button" matTooltip="Send" color="accent" matTooltipPosition="before" appDebounceClick (debounceClick)="requestMessageSending()" [disabled]="isLoading || textInput.invalid">
-        <mat-icon fontIcon="part-arrow-right"></mat-icon>
-      </button>
+    <mat-divider></mat-divider>
+
+    <section class="input-container">
+      <div class="conversation-input">
+        <mat-form-field class="message-input" color="accent">
+          <textarea matInput
+              [formControl]="textInput"
+              placeholder="Send message"
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="2"></textarea>
+          <mat-hint align="end">{{ textInput.value.length }}/{{ MAX_MESSAGE_LENGTH }}</mat-hint>
+        </mat-form-field>
+        <button mat-raised-button class="small action-button" matTooltip="Send" color="accent" matTooltipPosition="before" appDebounceClick (debounceClick)="requestMessageSending()" [disabled]="isLoading || textInput.invalid">
+          <mat-icon fontIcon="part-arrow-right"></mat-icon>
+        </button>
+      </div>
+    </section>
+
+  </ng-container>
+
+
+  <ng-template #selectedMessageDetails>
+    <div class="message-detail-container">
+      <h2 class="section-title">Message Details</h2>
+      <mat-card>
+        <table class="message-details">
+          <tbody>
+            <tr>
+              <td><span class="row-field-name"><strong>Sender Address</strong></span></td>
+              <td><span class="row-field-value">{{ selectedChatMessage?.sender.address }}</span></td>
+            </tr>
+            <tr>
+              <td><span class="row-field-name"><strong>Saved Label</strong></span></td>
+              <td><span class="row-field-value">{{ selectedChatMessage?.sender.label }}</span></td>
+            </tr>
+            <tr>
+              <td><span class="row-field-name"><strong>Date/Time</strong></span></td>
+              <td><span class="row-field-value">{{ selectedChatMessage?.created | date:'long' }}</span></td>
+            </tr>
+            <tr>
+              <td><span class="row-field-name"><strong>Message ID</strong></span></td>
+              <td><span class="row-field-value">{{ selectedChatMessage?.id }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card>
+
+      <h2 class="section-title">Edit Sender Label</h2>
+      <mat-card class="form-wrapper">
+        <div class="form-input" fxFlex="1 1 70%">
+          <mat-form-field class="--larger" appearance="fill" matTooltip="Address Label" matTooltipPosition="before">
+            <mat-icon matPrefix fontIcon="part-person"></mat-icon>
+            <input matInput
+              type="text"
+              [formControl]="selectedMessageLabelInput"
+              placeholder="Address label (e.g. owner's name)"
+            >
+          </mat-form-field>
+          <mat-hint class="input-hint" align="end">{{ selectedMessageLabelInput.value.length }}/{{ MAX_ADDRESS_LABEL_LENGTH }}</mat-hint>
+        </div>
+
+        <button class="button" mat-button color="primary" fxFlex="1 1 20%" appDebounceClick (debounceClick)="setMessageDetailLabel()" [disabled]="isLoading || selectedMessageLabelInput.invalid || selectedMessageLabelInput.value === selectedChatMessage.sender.label">
+          <mat-icon fontIcon="part-person-edit"></mat-icon>
+          Update
+        </button>
+        <button class="button" mat-button fxFlex="1 1 15%" appDebounceClick (debounceClick)="selectedMessageLabelInput.setValue(selectedChatMessage?.sender.label || '')" [disabled]="isLoading || selectedMessageLabelInput.value === selectedChatMessage.sender.label">
+          <mat-icon fontIcon="part-refresh"></mat-icon>
+          Reset
+        </button>
+
+      </mat-card>
+
+      <h2 class="section-title"></h2>
+      <mat-card>
+        <div class="actions" fxLayoutAlign="stretch stretch">
+          <button class="button" mat-raised-button color="accent" appDebounceClick (debounceClick)="closeMessageDetailsView()" fxFlex="1 1 100%" [disabled]="isLoading">
+            <mat-icon fontIcon="part-previous-single"></mat-icon>
+            Return to Chat
+          </button>
+        </div>
+      </mat-card>
     </div>
-  </section>
+  </ng-template>
 
 </div>
 
