@@ -1,15 +1,15 @@
 <div class="chat-container">
 
+  <div *ngIf="hasMoreMessages && (selectedChatMessage === null)" class="action-wrapper" fxLayoutAlign="stretch stretch">
+    <button mat-button color="primary" class="small refresh" fxFlex="1 1 100%" [disabled]="isLoading" appDebounceClick (debounceClick)="loadMoreHistory()">
+      <mat-icon fontIcon="part-refresh"></mat-icon>
+      Load More
+    </button>
+  </div>
+
   <section class="chat-history" #chatHistoryPane>
 
     <ng-container *ngIf="selectedChatMessage === null; else selectedMessageDetails">
-
-      <div *ngIf="hasMoreMessages" class="action-wrapper" fxLayoutAlign="stretch stretch">
-        <button mat-button color="primary" class="small refresh" fxFlex="1 1 100%" [disabled]="isLoading" appDebounceClick (debounceClick)="loadMoreHistory()">
-          <mat-icon fontIcon="part-refresh"></mat-icon>
-          Load More
-        </button>
-      </div>
 
       <div *ngIf="!hasMoreMessages && !isLoading" class="no-messages">
         <p>Start of conversation</p>

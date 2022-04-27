@@ -57,7 +57,7 @@ export namespace SocketMessages_v03 {
 
 
 export interface SupportedMessageTypes {
-  MPA_CHAT_ADD: SocketMessages_v03.ChatMessageAdded;
+  MPA_CHAT_MESSAGE: SocketMessages_v03.ChatMessageAdded;
   MPA_LISTING_ADD_03: SocketMessages_v03.AddListing;
   MPA_PROPOSAL_ADD: SocketMessages_v03.ProposalAdded;
   MPA_COMMENT_ADD: SocketMessages_v03.CommentAdded;

@@ -235,7 +235,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
             if (msg.sender.address === this.selectedChatMessage.sender.address) {
               msg.sender.label = labelValue;
               if (!msg.isOwn) {
-                msg.sender.value = labelValue;
+                msg.sender.value = labelValue || msg.sender.address;
               }
             }
           });
@@ -259,11 +259,6 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
     this._cdr.detectChanges();
 
     this._unlocker.unlock({timeout: 10}).pipe(
-      finalize(() => {
-        this.isLoading = false;
-        this._cdr.detectChanges();
-        this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
-      }),
       concatMap((unlocked) => iif(
         () => unlocked,
         defer(() => this.sendMessage())
@@ -272,6 +267,9 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
         if (success) {
           this._store.dispatch(new MarketUserActions.ChatChannelRead(this.inputChannel, this.inputChannelType));
         }
+        this.isLoading = false;
+        this._cdr.detectChanges();
+        this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
       }),
     ).subscribe();
   }

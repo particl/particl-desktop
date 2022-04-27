@@ -175,7 +175,7 @@ export class NotificationsService implements OnDestroy {
 
 
   private startChatMessageListeners(): Observable<any> {
-    return this._socket.getSocketMessageListener('MPA_CHAT_ADD').pipe(
+    return this._socket.getSocketMessageListener('MPA_CHAT_MESSAGE').pipe(
       bufferTime(2000),
       map((items: SocketMessages_v03.ChatMessageAdded[]) => {
         const currentIdentity = this._store.selectSnapshot(MarketState.currentIdentity);
