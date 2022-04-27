@@ -209,7 +209,7 @@ table.tx-details {
   @include break(xl) {
     --border-spacing: 7px;
     padding: calc(24px - var(--border-spacing))
-      calc(35px - var(--border-spacing));
+    calc(35px - var(--border-spacing));
   }
   .tx-detail-item {
     padding: 3px 0;
