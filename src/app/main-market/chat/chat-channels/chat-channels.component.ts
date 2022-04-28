@@ -97,6 +97,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private controlLoadChats: FormControl = new FormControl(0);
   private filterChange: FormControl = new FormControl();
+  private currentyIdentityId: number = 0;
   private defaultMarketImage: string;
   private defaultMarketUrl: string;
 
@@ -127,29 +128,60 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
           const walletState: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
           this.identityIsEncrypted = (+walletState.unlocked_until > 0) || (walletState.encryptionstatus !== 'Unencrypted');
         }
-        this.controlLoadChats.setValue(identity.id);
+        this.currentyIdentityId = +identity.id > 0 ? +identity.id : 0;
+        this.controlLoadChats.setValue(true);
       }),
       takeUntil(this.destroy$)
     );
 
     const loadChatChannels$ = this.controlLoadChats.valueChanges.pipe(
-      tap(() => {
-        this.chatChannelsList = [];
-        this.resetFilters();
+      tap((doReset: boolean) => {
+        if (doReset) {
+          this.chatChannelsList = [];
+          this.resetFilters();
+        }
         this.isLoading = true;
         this._cdr.detectChanges();
       }),
-      switchMap(id => this._rpc.call('chat', [
+      switchMap((doReset: boolean) => this._rpc.call('chat', [
         'channellist',
-        id,
+        this.currentyIdentityId,
         null,
         true
-      ])),
-      catchError(() => {
-        this._snackbar.open(TextContent.LOAD_ERROR, 'warn');
-        return of({});
-      }),
-      map(resp => this.buildChatChannelItems(resp)),
+      ]).pipe(
+        catchError(() => {
+          this._snackbar.open(TextContent.LOAD_ERROR, 'warn');
+          return of({});
+        }),
+        map(resp => {
+          const newChannels = this.buildChatChannelItems(resp);
+          if (doReset) {
+            return newChannels;
+          }
+
+          let foundIdx = -1;
+          const lastExistingChannel = this.chatChannelsList[this.chatChannelsList.length - 1];
+
+          console.log('GOT LAST OF EXISTING: ', lastExistingChannel);
+
+          if (lastExistingChannel) {
+            for (let ii = newChannels.length - 1; ii >= 0; ii--) {
+              console.log('PROCESSING newchannel: ', ii, '>>', newChannels[ii]);
+              if (
+                (newChannels[ii]._channel === lastExistingChannel._channel) &&
+                (newChannels[ii]._channelType === lastExistingChannel._channelType)
+              ) {
+                foundIdx = ii;
+                break;
+              }
+            }
+          }
+          for (let jj = foundIdx + 1; jj < newChannels.length; jj++) {
+            this.chatChannelsList.push(newChannels[jj]);
+          }
+          return this.chatChannelsList;
+        }),
+      )),
       tap(() => this.isLoading = false),
       takeUntil(this.destroy$)
     );
@@ -168,12 +200,22 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
       unreadUpdates$
     ]).pipe(
       tap(data => {
+        let countUnread = 0;
+
         data[0].forEach(channel => {
           switch (channel._channelType) {
           case ChatChannelType.LISTINGITEM: channel.hasUnread = data[1].listings.includes(channel._channel); break;
           case ChatChannelType.ORDERITEM: channel.hasUnread = data[1].orders.includes(channel._channel); break;
           }
+          if (channel.hasUnread) {
+            countUnread++;
+          }
         });
+
+        if (countUnread < [...data[1].listings, ...data[1].orders].length) {
+          this.controlLoadChats.setValue(false);
+        }
+
         this.chatChannelsList = data[0];
         this.filterChange.setValue(true);
       }),
@@ -254,7 +296,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
 
             return this._rpc.call('chat', [
               'channelunfollow',
-              this._store.selectSnapshot(MarketState.currentIdentity).id,
+              this.currentyIdentityId,
               channel._channel,
               channel._channelType
             ]).pipe(
@@ -266,6 +308,8 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
                   this._cdr.detectChanges();
                   return;
                 }
+
+                this.actionMakeChannelRead(channelIdx);
 
                 this.displayedChannelIdxs = this.displayedChannelIdxs.filter(idx => idx !== channelIdx);
                 this._cdr.detectChanges();
