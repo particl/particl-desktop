@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material';
-import { Observable, Subject, of, merge, defer, iif } from 'rxjs';
+import { Observable, Subject, of, merge, defer, iif, combineLatest } from 'rxjs';
 import {
   takeUntil, tap, switchMap, catchError, startWith, debounceTime,
-  distinctUntilChanged, filter, auditTime, concatMap, finalize, take
+  distinctUntilChanged, filter, auditTime, concatMap, finalize, take, map
 } from 'rxjs/operators';
 
 import { Store, Select } from '@ngxs/store';
@@ -20,7 +20,7 @@ import { BidOrderService } from '../../services/orders/orders.service';
 import { DataService } from '../../services/data/data.service';
 import { MarketSocketService } from '../../services/market-rpc/market-socket.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 import { RejectBidModalComponent } from '../modals/reject-bid-modal/reject-bid-modal.component';
 import { CancelBidModalComponent } from '../modals/cancel-bid-modal/cancel-bid-modal.component';
 import { EscrowPaymentModalComponent } from '../modals/escrow-payment-modal/escrow-payment-modal.component';
@@ -29,12 +29,14 @@ import { AcceptBidModalComponent } from '../modals/accept-bid-modal/accept-bid-m
 import {
   ResendOrderActionConfirmationModalComponent
 } from '../modals/resend-order-action-confirmation-modal/resend-order-action-confirmation-modal.component';
+import { ChatConversationModalComponent, ChatConversationModalInputs } from './../../shared/chat-conversation-modal/chat-conversation-modal.component';
 import { isBasicObjectType } from '../../shared/utils';
 
 import { WalletInfoStateModel } from 'app/main/store/main.models';
 import { OrderItem, BuyFlowOrderType, OrderUserType, ActionTransitionParams } from '../../services/orders/orders.models';
 import { Identity } from '../../store/market.models';
 import { ORDER_ITEM_STATUS } from '../../shared/market.models';
+import { ChatChannelType, ChatChannelTypeLabels } from '../../services/chats/chats.models';
 
 
 enum TextContent {
@@ -82,6 +84,11 @@ interface ExportSellOrderItem {
 }
 
 
+interface RenderedOrderItem extends OrderItem {
+  _hasUnreadChat: boolean;
+}
+
+
 @Component({
   selector: 'market-sell-orders',
   templateUrl: './sell-orders.component.html',
@@ -109,7 +116,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
   };
 
   filteredOrderIdxs: number[] = [];
-  ordersList: OrderItem[] = [];
+  ordersList: RenderedOrderItem[] = [];
 
 
   private readonly viewer: OrderUserType = 'SELLER';
@@ -184,63 +191,78 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const orderLoader$ = this.loadOrdersControl.valueChanges.pipe(
-      tap((doClear: boolean) => {
-        this.isLoading = true;
+    const orderLoader$ = combineLatest([
+      this.loadOrdersControl.valueChanges.pipe(
+        tap((doClear: boolean) => {
+          this.isLoading = true;
 
-        if (!!doClear) {
-          this.filteredOrderIdxs = [];
-          this.ordersList = [];
-          this.filterOptionsStatus.forEach(s => s.count = 0);
-        }
-
-        this._cdr.detectChanges();
-
-      }),
-      switchMap(() => defer(() => this.fetchOrders().pipe(
-        tap(orders => {
-          const isInit = this.ordersList.length === 0;
-
-          if (isInit) {
-            this.ordersList.push(...orders);
-          } else {
-            // Ensure that the filters are cleared if there were not already
-            //  (wouldn't be if finding updates rather than requesting from scratch)
+          if (!!doClear) {
+            this.filteredOrderIdxs = [];
+            this.ordersList = [];
             this.filterOptionsStatus.forEach(s => s.count = 0);
           }
 
-          orders.forEach(newOrder => {
-            // update filter counts
-            const optionTotal = this.filterOptionsStatus.find(s => s.value === '');
-            if (optionTotal) {
-              optionTotal.count++;
-            }
-
-            const optionStatus = this.filterOptionsStatus.find(s => s.value === newOrder.currentState.state.stateId);
-            if (optionStatus) {
-              optionStatus.count++;
-            }
-
-            // update the order list if existing order were retrieved
-            if (!isInit) {
-              const existingOrderIdx = this.ordersList.findIndex(o => o.orderId === newOrder.orderId);
-
-              if (existingOrderIdx === -1) {
-                this.ordersList.unshift(newOrder);
-              } else if (
-                (this.ordersList[existingOrderIdx].currentState.state.stateId !== newOrder.currentState.state.stateId) &&
-                (this.ordersList[existingOrderIdx].orderId === newOrder.orderId)
-              ) {
-                this.ordersList[existingOrderIdx] = newOrder;
-              }
-            }
-          });
-
-          this.isLoading = false;
-          this.renderOrdersControl.setValue(null);
           this._cdr.detectChanges();
+
         }),
-      ))),
+        switchMap(() => defer(() => this.fetchOrders())),
+        takeUntil(this.destroy$)
+      ),
+
+
+      this._store.select(MarketState.unreadChatChannels(ChatChannelType.ORDERITEM)).pipe(takeUntil(this.destroy$))
+
+    ]).pipe(
+      tap(dataSources => {
+
+        const unreadTopicSet = new Set(dataSources[1]);
+        const orders = dataSources[0];
+
+        const isInit = this.ordersList.length === 0;
+
+        if (isInit) {
+          this.ordersList.push(...orders);
+        } else {
+          // Ensure that the filters are cleared if there were not already
+          //  (wouldn't be if finding updates rather than requesting from scratch)
+          this.filterOptionsStatus.forEach(s => s.count = 0);
+        }
+
+        orders.forEach(newOrder => {
+          // update filter counts
+          const optionTotal = this.filterOptionsStatus.find(s => s.value === '');
+          if (optionTotal) {
+            optionTotal.count++;
+          }
+
+          const optionStatus = this.filterOptionsStatus.find(s => s.value === newOrder.currentState.state.stateId);
+          if (optionStatus) {
+            optionStatus.count++;
+          }
+
+          // update the order list if existing order were retrieved
+          if (!isInit) {
+            const existingOrderIdx = this.ordersList.findIndex(o => o.orderId === newOrder.orderId);
+
+            if (existingOrderIdx === -1) {
+              this.ordersList.unshift(newOrder);
+            } else if (
+              (this.ordersList[existingOrderIdx].currentState.state.stateId !== newOrder.currentState.state.stateId) &&
+              (this.ordersList[existingOrderIdx].orderId === newOrder.orderId)
+            ) {
+              this.ordersList[existingOrderIdx] = newOrder;
+            }
+          }
+        });
+
+        this.ordersList.forEach(o => {
+          o._hasUnreadChat = unreadTopicSet.has(o.orderHash);
+        });
+
+        this.isLoading = false;
+        this.renderOrdersControl.setValue(null);
+        this._cdr.detectChanges();
+      }),
       takeUntil(this.destroy$)
     );
 
@@ -339,26 +361,44 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const dialogData: ListingItemDetailInputs = {
+          listing,
+          canReview: true,
+          displayChat: true,
+          initTab: 'default',
+          displayActions: {
+            cart: false,
+            governance: false,
+            fav: false
+          }
+        };
+
         this._dialog.open(
           ListingDetailModalComponent,
-          {
-            data: {
-              listing,
-              canChat: true,
-              initTab: 'default',
-              displayActions: {
-                cart: false,
-                governance: false,
-                fav: false
-              }
-            }
-          }
+          { data: dialogData }
         );
       },
       (err) => {
         // do something useful here to inform that the orders failed to load??
       }
     );
+  }
+
+
+  openChatModal(orderIdx: number): void {
+    if (this.isLoading || orderIdx >= this.ordersList.length || orderIdx < 0) {
+      return;
+    }
+    const orderItem = this.ordersList[orderIdx];
+
+    const dialogData: ChatConversationModalInputs = {
+      channel: orderItem.orderHash,
+      channelType: ChatChannelType.ORDERITEM,
+      title: orderItem.listing.title,
+      subtitle: ChatChannelTypeLabels.ORDERITEM
+    };
+
+    this._dialog.open(ChatConversationModalComponent, {data: dialogData});
   }
 
 
@@ -433,7 +473,8 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
         ) {
           const foundOrderIdx = this.ordersList.findIndex(o => o.orderId === orderItem.orderId);
           if (foundOrderIdx > -1) {
-            this.ordersList[foundOrderIdx] = newItem;
+            const roi: RenderedOrderItem = {...newItem, _hasUnreadChat: this.ordersList[foundOrderIdx]._hasUnreadChat };
+            this.ordersList[foundOrderIdx] = roi;
 
             const decStatus = this.filterOptionsStatus.find(s => s.value === orderItem.currentState.state.stateId);
             if (decStatus) {
@@ -619,16 +660,20 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
   }
 
 
-  private fetchOrders(): Observable<OrderItem[]> {
+  private fetchOrders(): Observable<RenderedOrderItem[]> {
     if (!this.currentIdentity || !this.currentIdentity.address) {
-      return of([] as OrderItem[]);
+      return of([] as RenderedOrderItem[]);
     }
 
     return this._orderService.fetchBids(this.viewer).pipe(
       catchError(() => {
         this._snackbar.open(TextContent.LOADING_ERROR, 'warn');
-        return of([]);
-      })
+        return of([] as OrderItem[]);
+      }),
+      map(orderItems => orderItems.map(oi => {
+        const roi: RenderedOrderItem = {...oi, _hasUnreadChat: false};
+        return roi;
+      }))
     );
   }
 

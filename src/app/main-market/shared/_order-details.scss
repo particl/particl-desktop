@@ -137,7 +137,7 @@
 
 @mixin progress-line($color) {
   // "done" progress between two Order steps
-  content: "";
+  content: '';
   position: absolute;
   bottom: 8px;
   left: 50.5%;
@@ -172,7 +172,7 @@
         &::before {
           // highlight current "dot" to indicate active step
           @extend %progress-dot;
-          content: "";
+          content: '';
           position: absolute;
           top: 0;
           left: 0;
@@ -217,7 +217,7 @@
         .dot {
           &::before {
             @extend %progress-dot;
-            content: "";
+            content: '';
             position: absolute;
             top: 0;
             left: 0;

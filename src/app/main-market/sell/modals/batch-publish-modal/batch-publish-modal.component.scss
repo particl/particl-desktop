@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 mat-dialog-title {
   margin: -8px 0 15px;
@@ -89,7 +89,7 @@ mat-dialog-title {
     margin-bottom: 1em;
   }
 
-  .mat-expansion-panel-header[aria-disabled="true"] {
+  .mat-expansion-panel-header[aria-disabled='true'] {
     color: var(--text);
   }
 

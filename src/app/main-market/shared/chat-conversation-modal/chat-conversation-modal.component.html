@@ -1,0 +1,17 @@
+<mat-dialog-title >
+  {{ componentData.title }}
+  <p class="help-text">{{ componentData.subtitle }}</p>
+</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+<mat-dialog-content>
+    <market-conversation
+      [inputChannel]="componentData.channel"
+      [inputChannelType]="componentData.channelType"
+      [highlitedAddress]="componentData.highlitedAddress"
+      [highlitedAddressLabel]="componentData.highlitedLabel"
+      style="height:inherit;"></market-conversation>
+</mat-dialog-content>

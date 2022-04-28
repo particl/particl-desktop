@@ -1,4 +1,4 @@
-@import "./src/assets/_config"; // import shared colors etc.
+@import './src/assets/_config'; // import shared colors etc.
 
 /* -------------- FILTER SIDEBAR -------------- */
 
@@ -28,7 +28,7 @@
 
     .count {
       position: absolute;
-      left: 0px;
+      left: 0;
       top: 80%;
       margin: 0;
       padding-left: 2px;
@@ -52,7 +52,7 @@
       top: 6px;
       left: 5px;
       &::before {
-        content: "";
+        content: '';
         display: block;
         width: 6px;
         height: 6px;
@@ -148,10 +148,10 @@ mat-card.listing {
   --card-padding: 16px;
   // container width / no. of columns - (grid gutter + card's side padding):
   flex: 0 0
-    calc(
-      (100% / var(--grid-columns) - var(--grid-gutter)) - 2 *
-        var(--card-padding)
-    );
+  calc(
+    (100% / var(--grid-columns) - var(--grid-gutter)) - 2 *
+      var(--card-padding)
+  );
   padding: var(--card-padding);
   margin: 0 var(--grid-gutter) var(--grid-gutter) 0;
   border-radius: 0;

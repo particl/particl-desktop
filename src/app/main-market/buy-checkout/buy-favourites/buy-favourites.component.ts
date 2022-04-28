@@ -6,7 +6,7 @@ import { finalize, takeUntil, take, tap, concatMap, switchMap, catchError } from
 import { Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
 
-import { ListingDetailModalComponent } from '../../shared/listing-detail-modal/listing-detail-modal.component';
+import { ListingDetailModalComponent, ListingItemDetailInputs } from '../../shared/listing-detail-modal/listing-detail-modal.component';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { FavouritesService } from './buy-favourites.service';
@@ -153,20 +153,21 @@ export class BuyFavouritesComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const dialogData: ListingItemDetailInputs = {
+          listing,
+          canReview: true,
+          displayChat: true,
+          initTab: 'default',
+          displayActions: {
+            cart: true,
+            governance: false,
+            fav: true
+          }
+        };
+
         const dialogRef = this._dialog.open(
           ListingDetailModalComponent,
-          {
-            data: {
-              listing,
-              canChat: true,
-              initTab: 'default',
-              displayActions: {
-                cart: true,
-                governance: false,
-                fav: true
-              }
-            }
-          }
+          { data: dialogData }
         );
 
 

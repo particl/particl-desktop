@@ -438,7 +438,8 @@ export class SellTemplatesComponent implements OnInit, OnDestroy {
         if (+listing.id > 0) {
           const data: ListingItemDetailInputs = {
             listing,
-            canChat: false,
+            canReview: false,
+            displayChat: false,
             initTab: 'default',
             displayActions: {
               cart: false,

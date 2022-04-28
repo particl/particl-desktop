@@ -38,6 +38,8 @@ const routes: Routes = [
         loadChildren: () => import('./buy/buy.module').then(m => m.BuyModule) },
       { path: 'sell', canActivate: [MarketStartGuard],
         loadChildren: () => import('./sell/sell.module').then(m => m.SellModule) },
+      { path: 'chat', canActivate: [MarketStartGuard],
+        loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule) },
       { path: 'settings',
         loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule) },
       { path: 'loading',

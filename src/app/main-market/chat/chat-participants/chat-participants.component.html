@@ -1,0 +1,131 @@
+<app-page-intro childPageAlias="Chat Labels">
+  <ng-container page-title>Chat Labels</ng-container>
+  <ng-container page-content>
+    Lists the addresses that have been previously labelled in your chat discussions.
+  </ng-container>
+  <ng-container page-help>
+    Provides a convenient means to list and manage previously saved address labels.
+  </ng-container>
+</app-page-intro>
+
+
+<div class="filter">
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="filterSearch"
+          placeholder="Search Saved Addresses" (keyup.escape)="filterSearch.setValue('')">
+    <button *ngIf="filterSearch.value.length > 0" matSuffix mat-button class="small" (click)="filterSearch.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="filterSearch.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+
+  <!-- <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button> -->
+
+</div><!-- .filter -->
+
+
+<div class="listings section with-filter">
+
+  <ng-container *ngIf="displayPersonIdx.length > 0; else nothingDisplayed">
+    <ng-container *ngFor="let itemIdx of displayPersonIdx">
+
+      <mat-expansion-panel class="listing list-item no-padding" *appVar="personsList[itemIdx] as item" [expanded]="true" displayMode="flat" hideToggle>
+        <mat-expansion-panel-header class="header">
+          <div class="header-wrapper">
+            <div class="img-wrapper">
+              <img src="assets/icons/SVG/circle-user.svg">
+            </div>
+            <div class="meta" fxFlex="1 1 100%">
+              <div class="name">{{ item.label }}</div>
+              <span class="published-markets">{{ item.address }}</span>
+            </div>
+          </div>
+        </mat-expansion-panel-header>
+
+        <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+          <button mat-button color="warn" matTooltip="Remove the saved label" appDebounceClick (debounceClick)="actionRemoveAddressLabel(itemIdx)" class="small">
+            <mat-icon fontIcon="part-circle-remove" color="warn"></mat-icon>
+            Remove
+          </button>
+          <button mat-button color="primary" matTooltip="Edit the label" appDebounceClick (debounceClick)="actionEditParticipantDetails(itemIdx)" class="small">
+            <mat-icon fontIcon="part-pen-1"></mat-icon>
+            Edit
+          </button>
+          <button mat-button matTooltip="Copy address" ngxClipboard [cbContent]="item.address" class="small">
+            <mat-icon fontIcon="part-copy"></mat-icon>
+            Copy Address
+          </button>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+    </ng-container>
+  </ng-container>
+
+
+  <!-- define the template, so we can reuse it -->
+  <ng-template #loadingPlaceholder>
+    <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="photo placeholder --lighter"></div>
+      <div fxFlex="1 0 175px">
+        <div class="name placeholder"></div>
+        <div class="meta placeholder"></div>
+      </div>
+      <div fxFlex="1 0 155px" fxLayout fxLayoutAlign="flex-end center">
+        <span class="status placeholder --lighter"></span>
+        <span class="arrow placeholder --lighter"></span>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #nothingDisplayed>
+
+    <!-- show loading-placeholder when items are initially loading -->
+    <div class="loading-placeholder market listings" *ngIf="(personsList.length === 0)">
+
+      <ng-container *ngIf="isLoading">
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      </ng-container>
+
+      <div class="no-results" *ngIf="!isLoading">
+        <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Chat Topics">
+        <p>
+          No labelled persons currently exist
+        </p>
+        <p class="help-text">
+          Select a chat message user's address to save (or update) a name or other identifier to that particular chat user's address
+        </p>
+      </div><!-- .no-results -->
+    </div>
+
+    <!-- no matching search results -->
+    <div class="no-results" *ngIf="(personsList.length > 0)">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No chat topics match the search criteria">
+      <p>
+        No matches found
+      </p>
+      <p class="help-text">
+      </p>
+    </div><!-- .no-results -->
+  </ng-template>
+</div><!-- .listings-list -->
+
+
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

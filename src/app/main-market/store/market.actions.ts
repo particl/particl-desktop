@@ -1,6 +1,7 @@
 import { Identity, Profile } from './market.models';
 import { Market } from '../services/data/data.models';
 import { OrderUserType } from '../services/orders/orders.models';
+import { ChatChannelType } from '../services/chats/chats.models';
 
 
 export namespace MarketStateActions {
@@ -29,6 +30,10 @@ export namespace MarketStateActions {
 
   export class SetIdentityCartCount {
     static readonly type: string = '[Market State] Set Identity Cart Count';
+  }
+
+  export class ChatNotificationsClearAll {
+    static readonly type: string = '[Market State] Chat Notifications Cleared';
   }
 
 }
@@ -87,5 +92,15 @@ export namespace MarketUserActions {
 
   export class OrderItemsCleared {
     static readonly type: string = '[Market User] Remove All Pending Order Items';
+  }
+
+  export class SetChatChannelsUnread {
+    static readonly type: string = '[Market User] Set Chat Channels Unread';
+    constructor(public channels: string[], public channelType: ChatChannelType) {}
+  }
+
+  export class ChatChannelRead {
+    static readonly type: string = '[Market User] Chat Channel Read';
+    constructor(public channel: string, public channelType: ChatChannelType) {}
   }
 }

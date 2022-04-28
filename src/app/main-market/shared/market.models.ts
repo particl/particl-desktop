@@ -75,6 +75,13 @@ export enum BID_DATA_KEY {
   DELIVERY_PHONE = 'delivery.phone',
   DELIVERY_EMAIL = 'delivery.email'
 }
+
+export enum ChatRequestErrorReason {
+  GENERIC = 'GENERIC_ERROR',
+  SIGNING_ERROR = 'CHAT_SIGN_ERROR',
+  SIZE_ERROR = 'MESSAGE_SIZE_ERROR',
+  SMSG_SEND_FAILED = 'SMSG_SENDING_FAILED',
+}
 type CRYPTO_ADDRESS_TYPE = 'STEALTH';
 
 
@@ -912,4 +919,62 @@ export interface DefaultOpenMarketDetails {
   name: string;
   isTest: boolean;
   marketType: MarketType;
+}
+
+
+export interface RespChatChannelList {
+  success: boolean;
+  data?: {
+    channel: string;
+    channel_type: string;
+    has_unread: boolean;
+    participant_count: number;
+    newest_message: number;
+    last_read: number;
+    channelDetails?: RespOrderSearchItem | RespListingItem;
+  }[];
+  errorReason: ChatRequestErrorReason;
+}
+
+
+export interface RespChatChannelMessages {
+  success: boolean;
+  data: {
+    msgid: string;
+    message: string;
+    created_at: number;
+    sender_address: string;
+    sender_label: string;
+    is_read: boolean;
+    is_own: boolean;
+  }[];
+  errorReason?: ChatRequestErrorReason;
+}
+
+
+export interface RespChatMessagePost {
+  success: boolean;
+  errorReason?: ChatRequestErrorReason;
+  id: string;
+}
+
+
+export interface RespChatChannelUnfollow {
+  success: boolean;
+  errorReason?: ChatRequestErrorReason;
+}
+
+
+export interface RespChatParticipantListItem {
+  success: boolean;
+  errorReason?: ChatRequestErrorReason;
+  data: {
+    address: string;
+    label: string;
+  }[];
+}
+
+export interface RespChatParticipantUpdate {
+  success: boolean;
+  errorReason?: ChatRequestErrorReason;
 }

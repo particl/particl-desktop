@@ -13,9 +13,10 @@ import { PartoshiAmount } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault } from '../utils';
 import { ListingItemDetail } from './listing-detail.models';
 import { MADCT_ESCROW_PERCENTAGE_DEFAULT } from './../market.models';
+import { ChatChannelType } from './../../services/chats/chats.models';
 
 
-type InitialTabSelectionType = 'default' | 'chat';
+type InitialTabSelectionType = 'default' | 'review';
 
 
 enum TextContent {
@@ -39,7 +40,8 @@ interface Actionables {
 
 export interface ListingItemDetailInputs {
   listing: ListingItemDetail;
-  canChat: boolean;
+  canReview: boolean;
+  displayChat: boolean;
   initTab?: InitialTabSelectionType;
   displayActions: Actionables;
 }
@@ -57,6 +59,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
   @Output() eventFlaggedItem: EventEmitter<string> = new EventEmitter();
 
   readonly EscrowRecommendedDefault: number = MADCT_ESCROW_PERCENTAGE_DEFAULT;
+  readonly ChatTopicType: ChatChannelType = ChatChannelType.LISTINGITEM;
 
 
   expiryTimer: string = '';
@@ -69,6 +72,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     fav: false
   };
   readonly showComments: boolean;
+  readonly showChatPanel: boolean;
 
   readonly details: {
     id: number;
@@ -280,8 +284,11 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.showComments = isInputValuesObject && (typeof data.canChat === 'boolean') && (this.details.id > 0) ?
-        data.canChat : false;
+    this.showComments = isInputValuesObject && (typeof data.canReview === 'boolean') && (this.details.id > 0) ?
+        data.canReview : false;
+
+    this.showChatPanel = isInputValuesObject && (typeof data.displayChat === 'boolean') && (this.details.id > 0) ?
+        data.displayChat : false;
 
 
     const expiryTime = +inputTimeValues.expires || 0;
@@ -294,7 +301,7 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     };
 
     if (isInputValuesObject && typeof data.initTab === 'string') {
-      this.initialTab = data.initTab === 'chat' && this.showComments ? 'chat' : this.initialTab;
+      this.initialTab = data.initTab === 'review' && this.showComments ? 'review' : this.initialTab;
     }
   }
 
