@@ -1,6 +1,13 @@
-<mat-dialog-title >
-  {{ componentData.title }}
-  <p class="help-text">{{ componentData.subtitle }}</p>
+<mat-dialog-title fxLayout fxLayoutAlign="stretch center">
+  <div class="selected-conversation" fxLayout fxLayoutAlign="flex-start center" [matTooltip]="isPrivateChat ? 'Direct conversation between yourself and the other party only' : 'Multi-party public chat'" matTooltipPosition="after">
+    <div class="avatar">
+      <mat-icon [fontIcon]="isPrivateChat ? 'part-person' : 'part-people'"></mat-icon>
+    </div>
+    <div class="text">
+      <div class="conversation-title">{{ componentData.title }}</div>
+      <div class="conversation-subtitle">{{ componentData.subtitle }}</div>
+    </div>
+  </div>
 </mat-dialog-title>
 
 <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
@@ -13,5 +20,6 @@
       [inputChannelType]="componentData.channelType"
       [highlitedAddress]="componentData.highlitedAddress"
       [highlitedAddressLabel]="componentData.highlitedLabel"
+      [doSmoothScroll]="true"
       style="height:inherit;"></market-conversation>
 </mat-dialog-content>

@@ -28,6 +28,7 @@ export interface ChatConversationModalInputs {
 export class ChatConversationModalComponent {
 
   readonly componentData: ChatConversationModalInputs;
+  readonly isPrivateChat: boolean;
 
 
   constructor(
@@ -50,5 +51,7 @@ export class ChatConversationModalComponent {
       this.componentData.highlitedAddress = getValueOrDefault(this.data.highlitedAddress, 'string', '');
       this.componentData.highlitedLabel = getValueOrDefault(this.data.highlitedLabel, 'string', '');
     }
+
+    this.isPrivateChat = this.componentData.channelType === ChatChannelType.ORDERITEM;
   }
 }

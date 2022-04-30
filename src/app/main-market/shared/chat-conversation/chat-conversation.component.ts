@@ -57,11 +57,14 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
   @Input() inputChannelType: ChatChannelType = ChatChannelType.OTHER;
   @Input() highlitedAddress: string = '';
   @Input() highlitedAddressLabel: string = '';
+  @Input() doSmoothScroll: boolean = false;
 
   @ViewChild('chatHistoryPane', {static: true}) chatHistoryPane: ElementRef;
 
   readonly MAX_MESSAGE_LENGTH: number = 500;
   readonly MAX_ADDRESS_LABEL_LENGTH: number = 100;
+  isPublicChat: boolean = true;
+  agreedToPublicPostingWarning: boolean = false;
 
   messageList: ChatMessage[] = [];
   hasMoreMessages: boolean = false;
@@ -79,6 +82,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
   private readonly MESSAGE_COUNT: number = 15;
   private earliestMessageId: string = '';
   private savedScrollHeight: number = 0;
+  private scrollHeightMax: number = 0;
 
 
   constructor(
@@ -91,6 +95,9 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+    this.isPublicChat = this.inputChannelType !== ChatChannelType.ORDERITEM;
+    this.agreedToPublicPostingWarning = !this.isPublicChat;
+
     if (
       !(getValueOrDefault(this.inputChannel, 'string', '').length > 0)
       || this.inputChannelType === ChatChannelType.OTHER
@@ -132,7 +139,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
 
         this._cdr.detectChanges();
 
-        this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
+        this.scrollToBottom();
       }),
       takeUntil(this.destroy$)
     );
@@ -158,9 +165,16 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
           this.messageList = [];
           this.earliestMessageId = messages[0].id;
         }
+
         this.messageList.push(...messages);
-        this._store.dispatch(new MarketUserActions.ChatChannelRead(this.inputChannel, this.inputChannelType));
-        this._cdr.detectChanges();
+        if (this.selectedChatMessage === null) {
+          this._store.dispatch(new MarketUserActions.ChatChannelRead(this.inputChannel, this.inputChannelType));
+          const doScroll = (this.scrollHeightMax > 0) && (this.chatHistoryPane.nativeElement.scrollTop > (this.scrollHeightMax - 70));
+          this._cdr.detectChanges();
+          if (doScroll) {
+            this.scrollToBottom();
+          }
+        }
       }),
       takeUntil(this.destroy$)
     );
@@ -187,6 +201,11 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
   }
 
 
+  agreeToPublicPostingWarning() {
+    this.agreedToPublicPostingWarning = true;
+  }
+
+
   showMessageDetails(message: ChatMessage) {
     if (!message) {
       return;
@@ -203,6 +222,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
       this.selectedMessageLabelInput.setValue('', {emitEvent: false});
       this._cdr.detectChanges();
       this.chatHistoryPane.nativeElement.scrollTop = this.savedScrollHeight;
+      this._store.dispatch(new MarketUserActions.ChatChannelRead(this.inputChannel, this.inputChannelType));
     }
   }
 
@@ -269,7 +289,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
         }
         this.isLoading = false;
         this._cdr.detectChanges();
-        this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
+        this.scrollToBottom();
       }),
     ).subscribe();
   }
@@ -411,6 +431,15 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
     ).reverse();
 
     return chats;
+  }
+
+  private scrollToBottom() {
+    if (this.doSmoothScroll) {
+      this.chatHistoryPane.nativeElement.scrollTo({top: this.chatHistoryPane.nativeElement.scrollHeight, behavior: 'smooth' });
+    } else {
+      this.chatHistoryPane.nativeElement.scrollTop = this.chatHistoryPane.nativeElement.scrollHeight;
+    }
+    this.scrollHeightMax = this.chatHistoryPane.nativeElement.scrollTop;
   }
 
 }
