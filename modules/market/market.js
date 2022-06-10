@@ -46,14 +46,19 @@ exports.init = function() {
       }
 
       child.on('close', code => {
-        log.info('market process ended.');
         if ((isStarted === null) && !observer.closed) {
+          if (timeoutMonitor !== null) {
+            // market process is busy starting up and needs to go through the correct error handling (child process closed itself)
+            observer.error('MP_STARTUP_FAILURE');
+            stop();
+          }
           // market process is shutdown before obtaining the "ready" signal
           observer.unsubscribe();
           // observer.next(false);
           // observer.complete();
         }
         resetTimeoutCheck();
+        log.info('market process ended.');
       });
 
       child.stdout.on('data', data => {
@@ -81,7 +86,7 @@ exports.init = function() {
       child.stderr.on('data', data => console.log(data.toString('utf8')));
 
       // If app is not started correctly in x seconds, stop and return a fail
-      timeoutMonitor = setTimeout(function () {
+      timeoutMonitor = setTimeout(() => {
         if (isStarted === null) {
           stop();
         }
