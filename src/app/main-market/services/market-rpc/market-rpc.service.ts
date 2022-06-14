@@ -56,12 +56,12 @@ export class MarketRpcService {
       return observableThrowError('Market service not started');
     }
 
-    const postData = JSON.stringify({
+    const postData = {
       method: method,
       params: params,
       id: 1,
       jsonrpc: '2.0'
-    });
+    };
 
     const headerJson = {
       'Content-Type': 'application/json',

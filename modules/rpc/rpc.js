@@ -42,7 +42,7 @@ exports.call = function(method, params, callback) {
 
   const settingsAuth = _options.getAuth();
   rpcOptions.auth = settingsAuth || '';
-  rpcOptions.headers['Content-Length'] = postData.length;
+  // rpcOptions.headers['Content-Length'] = postData.length;
 
   const request = http.request(rpcOptions, response => {
     let data = '';

@@ -174,7 +174,6 @@ if (!instanceLock) {
             nodeIntegration: false,
             sandbox: true,
             contextIsolation: false,
-            nativeWindowOpen: true,
             webSecurity: true,
             enableRemoteModule: false
           }
@@ -306,7 +305,6 @@ if (!instanceLock) {
           nodeIntegration: false,
           sandbox: true,
           contextIsolation: true,
-          nativeWindowOpen: true,
           webSecurity: true,
           enableRemoteModule: false,
           preload: path.join(__dirname, 'preload.js')
@@ -408,7 +406,7 @@ if (!instanceLock) {
           submenu: [
             {
               label: 'Open Dev Tools',
-              click() { mainWindow.openDevTools(); }
+              click() { mainWindow.webContents.openDevTools(); }
             }
           ]
         },
@@ -490,7 +488,6 @@ if (!instanceLock) {
           nodeIntegration: false,
           sandbox: true,
           contextIsolation: false,
-          nativeWindowOpen: true,
           webSecurity: true,
           enableRemoteModule: false
         }

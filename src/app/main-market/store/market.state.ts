@@ -286,7 +286,7 @@ export class MarketState {
         failed$,
         defer(() => {
           // the path appended here is necessary since the marketplace is using socket.io and this is needed specifically for socket.io
-          let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=3&transport=websocket`;
+          let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=4&transport=websocket`;
 
           if (url.startsWith('http')) {
             url = url.replace('http', 'ws');
