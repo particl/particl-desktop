@@ -417,10 +417,10 @@
           </p>
           <p *ngIf="details.governance.voteCast === details.governance.voteOptionKeep">
             <button [disabled]="!canAction" mat-button class="small icon-only" color="warn" appDebounceClick (debounceClick)="actionVoteItem('REMOVE')"
-              matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed from Market">
+              matTooltip="I've changed my mind, the item is inappropriate/illegal and should be removed">
               <mat-icon fontIcon="part-thumb-down"></mat-icon>
             </button>
-            I've changed my mind, the item is inappropriate/illegal and should be removed from Market
+            I've changed my mind, the item is inappropriate/illegal and should be removed
           </p>
         </div>
       </div><!-- .reporting -->
