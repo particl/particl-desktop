@@ -540,6 +540,7 @@ export class BuyCartComponent implements OnInit, OnDestroy {
       tap(results => {
         this.cartItems = results.cartItems;
         this.addresses = results.addresses;
+        this.modifyShippingProfile.setValue(this.addresses.length === 0);
         this.updateCartExpiryTimer();
         this.updateCartItemPricing();
         this.cartModified.setValue(true);

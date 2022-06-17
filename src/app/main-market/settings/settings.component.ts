@@ -625,7 +625,7 @@ export class MarketSettingsComponent implements OnInit, OnDestroy {
       connectionDetails.settings.push({
         id: 'startupWaitTimeoutSeconds',
         title: 'Marketplace Service Startup Timeout',
-        description: 'Number of seconds to wait for a successful startup response from the Marketplace service before deeming that the service has errored. Increasing this value may resolve startup issues on some slower machines (default: 60 seconds)',
+        description: 'Number of seconds to wait for a successful startup response from the Marketplace service before deeming that the service has errored. Increasing this value may resolve startup issues on some slower machines (default: 120 seconds)',
         isDisabled: false,
         type: SettingType.NUMBER,
         limits: { min: 20, max: 900 },

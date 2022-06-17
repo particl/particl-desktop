@@ -298,11 +298,11 @@ export class MarketManagementService {
     ];
 
     return this._rpc.call('market', postParams).pipe(
-      map((resp: RespItemPost) => {
+      concatMap((resp: RespItemPost) => {
         if (isBasicObjectType(resp) && (+resp.fee > 0)) {
-          return +resp.fee;
+          return of(+resp.fee);
         }
-        throwError('Invalid Estimation');
+        return throwError(typeof resp.error === 'string' && resp.error.includes('utxos') ? 'Insufficient utxos' : 'Invalid Estimation');
       })
     );
   }

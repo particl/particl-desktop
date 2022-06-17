@@ -364,7 +364,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
           displayChat: false,
           initTab: 'default',
           displayActions: {
-            cart: false,
+            cart: true,
             governance: false,
             fav: false
           }

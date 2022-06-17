@@ -29,19 +29,6 @@
           {{ txn.formattedTime }}
         </div>
 
-        <!-- Confirmations -->
-        <div *ngIf="(txn.confirmations <= txn.requiredConfirmations)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations, txn.requiredConfirmations, txn.isAbandoned)">
-          <div *ngIf="!txn.isAbandoned" class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
-            <mat-icon fontIcon="part-date" class="confirmations"></mat-icon>
-            {{ txn.confirmations }}/{{txn.requiredConfirmations}}
-          </div>
-
-          <div *ngIf="txn.isAbandoned" class="confirmation-tag" matTooltip="Abandoned/Cancelled transaction" matTooltipPosition="before">
-            <mat-icon fontIcon="part-error" class="confirmations"></mat-icon>
-            Cancelled
-          </div>
-        </div>
-
         <!-- Category icon -->
         <div class="type">
 
@@ -107,6 +94,21 @@
             </ng-container>
 
         </div>
+
+
+        <!-- Confirmations -->
+        <div *ngIf="(txn.confirmations <= txn.requiredConfirmations)" class="confirmations" [ngClass]="styleConfimations(txn.confirmations, txn.requiredConfirmations, txn.isAbandoned)">
+          <div *ngIf="!txn.isAbandoned" class="confirmation-tag" matTooltip="Unconfirmed transaction" matTooltipPosition="before">
+            <mat-icon fontIcon="part-date" class="confirmations"></mat-icon>
+            {{ txn.confirmations }}/{{txn.requiredConfirmations}}
+          </div>
+
+          <div *ngIf="txn.isAbandoned" class="confirmation-tag" matTooltip="Abandoned/Cancelled transaction" matTooltipPosition="before">
+            <mat-icon fontIcon="part-error" class="confirmations"></mat-icon>
+            Cancelled
+          </div>
+        </div>
+
 
         <!-- Amount -->
         <div class="tx-value">

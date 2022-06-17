@@ -435,6 +435,7 @@ mat-expansion-panel.mat-expansion-panel {
     position: relative;
     max-width: 1000px;
     padding: 18px 24px 24px;
+    overflow-y: hidden;
     .modal-close { // new modal close button (use with `mat-button color="warn"`
       @extend %tfx;
       position: absolute;
