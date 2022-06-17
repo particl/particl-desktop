@@ -214,7 +214,7 @@
     "rx-ipc-electron": "^0.1.2",
     "rxjs": "^6.5.4",
     "rxjs-stream": "^3.2.1",
-    "sharp": "^0.29.3",
+    "sharp": "^0.30.5",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
