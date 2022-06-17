@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/particl-desktop
     docker:
-      - image: circleci/node:14.17.1-browsers
+      - image: circleci/node:16.15.1-browsers
     steps:
       - checkout
       - restore_cache:

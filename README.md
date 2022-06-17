@@ -25,22 +25,22 @@
 ## About
 The [Particl Project](https://particl.io/about) – Striving to protect your rights, freedoms, and privacy.
 
-**Particl Desktop** is a standalone desktop application that hosts multiple functionalities at once and delivers an easy user-experience when interacting with Particl's services and applications. 
+**Particl Desktop** is a standalone desktop application that hosts multiple functionalities at once and delivers an easy user-experience when interacting with Particl's services and applications.
 
 Get access to decentralization:
 
-* **Particl Network**<br /> 
+* **Particl Network**<br />
 The Particl Network consists of two technologies:<br /><br />
    * *Encrypted data exchange protocol*<br />
 SecureMessaging (SMSG protocol) is a decentralized storage network (DSN) to store and transfer data between nodes in a privacy-preserving manner. It enables a private and secure environment for e-commerce and communications between users. SMSG powers the Particl Marketplace without bloating the blockchain with excessive data and without leaving any permanent record.
    * *Programmable blockchain with advanced privacy features*<br />
 The Particl Blockchain is a decentralized, immutable, and censorship-proof ledger. It is based on bitcoin technology and has been carefully enhanced by the Particl team to provide a more robust level of privacy through industry-leading privacy technologies. Its role within the network is the processing and validation of payments between users without requiring any third-party such as a bank or a payment processor.<br /><br />
-* **[Particl Coin](https://particl.io/coin)**<br /> 
-PART is a fast and flexible cryptocurrency with multiple privacy states. It lets you send and receive payments without revealing any of your financial data to anyone.<br /><br /> 
+* **[Particl Coin](https://particl.io/coin)**<br />
+PART is a fast and flexible cryptocurrency with multiple privacy states. It lets you send and receive payments without revealing any of your financial data to anyone.<br /><br />
 * **[Particl Marketplace](https://particl.io/marketplace)**<br />
 Buy and sell anything free of commissions, restrictions, and prying eyes. Payments between participants can be initiated using multiple currencies but always settle in PART. No bank account, documentation, email, phone number, or any other identification type is required but the parties get forced to stay honest with its unique [two-party escrow](https://academy.particl.io/en/latest/in-depth/indepth_escrow.html). Transform today's e-commerce into a free, secure, and trustworthy place, yielding fair market conditions.
 
-Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl Marketplace](https://github.com/particl/particl-market) 
+Repositories: [Particl Core](https://github.com/particl/particl-core) | [Particl Marketplace](https://github.com/particl/particl-market)
 
 ## Participate
 
@@ -74,7 +74,7 @@ For non-developers curious to explore a new world of commerce, binaries can be d
 
 ### Requirements
 
-[Node.js®](https://nodejs.org/) v14, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
+[Node.js®](https://nodejs.org/) v16, [git](https://git-scm.com/), and [yarn](https://yarnpkg.com/en/)
 
 ### Development install
 
@@ -138,8 +138,8 @@ yarn run start:electron:dev -testnet --devtools -reindex
 
 ### Other issues
 
-* [Particl Wiki](https://particl.wiki/) for the most common problems 
-* Developer chat support [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org) 
+* [Particl Wiki](https://particl.wiki/) for the most common problems
+* Developer chat support [#particl-dev:matrix.org](https://app.element.io/#/room/#particl-dev:matrix.org)
 
 ## Bug bounties
 
