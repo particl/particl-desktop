@@ -199,7 +199,7 @@
     "echarts": "^5.1.2",
     "electron-log": "^2.2.14",
     "get-stream": "^6.0.1",
-    "got": "^9.6.0",
+    "got": "^11.8.5",
     "hammerjs": "^2.0.8",
     "iconv-lite": "^0.6.2",
     "iso3166-2-db": "^2.2.1",
