@@ -1,7 +1,7 @@
 {
   "name": "particl-desktop",
   "productName": "Particl Desktop",
-  "version": "3.2.1",
+  "version": "3.2.2",
   "branch": "3.2",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -187,7 +187,7 @@
     "@ngx-gallery/gallerize": "^5.0.0-beta.0",
     "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
-    "@zasmilingidiot/particl-marketplace": "0.3.10",
+    "@zasmilingidiot/particl-marketplace": "0.3.11",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "angularx-qrcode": "^1.0.1",
     "autodetect-decoder-stream": "^1.0.3",
