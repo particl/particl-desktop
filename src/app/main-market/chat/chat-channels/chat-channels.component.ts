@@ -162,11 +162,8 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
           let foundIdx = -1;
           const lastExistingChannel = this.chatChannelsList[this.chatChannelsList.length - 1];
 
-          console.log('GOT LAST OF EXISTING: ', lastExistingChannel);
-
           if (lastExistingChannel) {
             for (let ii = newChannels.length - 1; ii >= 0; ii--) {
-              console.log('PROCESSING newchannel: ', ii, '>>', newChannels[ii]);
               if (
                 (newChannels[ii]._channel === lastExistingChannel._channel) &&
                 (newChannels[ii]._channelType === lastExistingChannel._channelType)
