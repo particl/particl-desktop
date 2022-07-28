@@ -86,10 +86,10 @@ export class AppDataState {
   ) {}
 
 
-  @Action(Global.Connected)
-  pollForData() {
-    this._pollingService.start();
-  }
+  // @Action(Global.Connected)
+  // pollForData() {
+  //   this._pollingService.start();
+  // }
 
 
   @Action(AppData.SetNetworkInfo)

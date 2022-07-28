@@ -1,11 +1,11 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
 import { Log } from 'ng2-logger';
-import { Store } from '@ngxs/store';
 import { Subject, merge } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
+import { catchError, finalize, takeUntil, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { MotdService, MessageQuote } from 'app/core/services/motd.service';
+import { BackendService } from 'app/core/services/backend.service';
 
 import { environment } from 'environments/environment';
 import { termsObj } from 'app/startup/terms/terms-txt';
@@ -23,13 +23,13 @@ export class LoadingComponent implements OnInit, OnDestroy {
   hasError: boolean = false;
   motd: MessageQuote = {author: '', text: ''};
 
-  private unsubscribe$: Subject<void> = new Subject();
+  private destroy$: Subject<void> = new Subject();
   private log: any = Log.create('loading.component');
 
   constructor(
-    private _store: Store,
     private _router: Router,
     private _motdService: MotdService,
+    private _backendService: BackendService,
   ) {
     this.log.i('loading component initialized');
   }
@@ -37,40 +37,31 @@ export class LoadingComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     merge(
-      this._store.select(state => state.global.loadingMessage).pipe(
-        tap((msg: string) => {
-          this.hasError = msg.startsWith('ERROR:');
-
+      this._backendService.sendAndWait<string>('init-system').pipe(
+        finalize(() => {
           if (!this.hasError) {
-            this.loadingMessage = msg.replace('ERROR:', '');
-            return;
+            this.getNextRoute();
           }
-          this.loadingMessage = msg;
         }),
-        takeUntil(this.unsubscribe$),
+        tap(msg => this.loadingMessage = msg),
+        catchError((err: string) => {
+          this.loadingMessage = err;
+          this.hasError = true;
+          return err;
+        }),
+        takeUntil(this.destroy$)
       ),
 
       this._motdService.motd.pipe(
         tap((motd) => this.motd = motd),
-        takeUntil(this.unsubscribe$)
+        takeUntil(this.destroy$)
       )
     ).subscribe();
-
-    this._store.select(state => state.global.isConnected).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe(
-      (isConnected: boolean) => {
-        if (!isConnected) {
-          return;
-        }
-        this.getNextRoute();
-      }
-    );
   }
 
   ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private getNextRoute() {
@@ -78,15 +69,11 @@ export class LoadingComponent implements OnInit, OnDestroy {
     if (!termsVersion ||
         ((termsVersion.createdAt !== termsObj.createdAt) || (termsVersion.text !== termsObj.text))
     ) {
-      this.goToTerms();
+      this.log.d('Going to terms');
+      this._router.navigate(['loading', 'terms']);
       return;
     }
 
     this._router.navigate(['/main/extra/welcome']);
-  }
-
-  private goToTerms() {
-    this.log.d('Going to terms');
-    this._router.navigate(['loading', 'terms']);
   }
 }

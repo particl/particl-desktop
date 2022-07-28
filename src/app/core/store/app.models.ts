@@ -7,7 +7,6 @@ export enum APP_MODE {
 
 
 export interface AppStateModel {
-  isConnected: boolean;
   loadingMessage: string;
   appMode: APP_MODE;
 }

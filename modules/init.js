@@ -1,193 +1,252 @@
-const electron      = require('electron');
-const log           = require('electron-log');
-const rxIpc         = require('rx-ipc-electron/lib/main').default;
-const Observable    = require('rxjs').Observable;
-
-const daemon        = require('./daemon/daemon');
-const daemonWarner  = require('./daemon/update');
-const daemonManager = require('./daemon/daemonManager');
-const daemonConfig  = require('./daemon/daemonConfig');
-const _auth         = require('./webrequest/http-auth');
-const notification  = require('./notification/notification');
-const closeGui      = require('./close-gui/close-gui');
-const market        = require('./market/market');
-// const bot           = require('./bot/bot');
-const systemDialogs = require('./dialogs/dialogs');
-const zmq           = require('./zmq/zmq');
+const { ipcMain } = require('electron');
+const { Observable, isObservable, Subject } = require('rxjs');
+const { takeUntil } = require('rxjs/operators');
 
 
-let isInitializedGUI = false;
-let isInitializedSystem = false;
+const InitializationStatus = {
+  Stopped: 0,
+  Starting: 1,
+  Started: 2,
+};
 
 
-function setupDaemonManagerListener(zmqPort) {
-  daemonManager.on('status', (status, msg) => {
+const textContent = {
+  INITIALIZATION_STARTING: 'Loading modules...',
+  INIT_COMPLETE: 'Module loading complete',
+  MODULE_LOADING: 'Initializing module: ${mod}',
+  MODULE_ADD_EVENTS: 'Adding module events: ${mod}',
+  MODULE_LOAD_ERROR: 'Error loading module: ${mod}'
+};
 
-    // warns GUI (if initialized) that daemon is downloading
-    if (isInitializedGUI) {
-      if (status === 'downloading') {
-        daemonWarner.send('A valid Particl Core binary was not found, starting download', 'info');
-      } else if (status === 'download') {
-        daemonWarner.send(msg, 'update');
-      } else if (status === 'error') {
-        daemonWarner.send(msg, 'error');
-      } else if (status === 'loadConfig') {
-        daemonWarner.send(msg, 'info');
-      }
-    }
+/**
+ * Handles all of:
+ *  - proxying channels from modules, allowing for preload.js channels/functions to be added from the module itself, rather than needing to hardcode the channels in the preload.js script,
+ *  - validating the channels and listeners,
+ *  - allowing for use of observables in the backend (and technically the frontend, but requires some processing on the frontend to get right)
+ *
+ */
+class ModuleManager {
 
-    // Done -> means we have a binary!
-    if (status === 'done') {
-      log.debug('Particl Daemon Manager has found particl core binary... starting');
-      daemonWarner.send('Booting Particl Core...', 'info');
-      daemonManager.shutdown();
-      daemon.start(false, zmqPort).catch(
-        (err) => {
-          log.error('daemon start error: ', err);
-          daemonWarner.send('Daemon startup failed', 'error');
-        }
-      );
-    } else if (status === 'error') {
-      log.error('Daemon Manager errored: ' + msg);
-      daemonManager.shutdown();
+  #startedStatus = InitializationStatus.Stopped;
 
-      // Failed to get clientBinaries.json => connection issues?
-      if (msg === 'Request timed out') {
-        log.error('Unable to fetch the latest clients.');
+  #obsDestroyer = new Subject();
 
-        // alert that we weren't able to update.
-        electron.dialog.showMessageBox({
-          type: 'warning',
-          buttons: ['Stop', 'Retry'],
-          message: 'Unable to check for updates, please check your connection. Do you want to retry?'
-        }, (response) => {
-          if (response === 0) {
-            electron.app.quit();
-          } else if(response === 1) {
-            daemonManager.init();
-          }
-        });
-      } else if (msg.toLowerCase().indexOf('hash mismatch') !== -1) {
-        // show hash mismatch error
-        dialog.showMessageBox({
-          type: 'warning',
-          buttons: ['OK'],
-          message: 'Checksum mismatch in downloaded node. Cannot continue'
-        }, () => {
-          electron.app.quit();
-        });
-
-        // throw so the main.js can catch it
-        if (!(err.status && err.status === 'cancel')) {
-          throw err;
-        }
-      }
-    }
-  });
-}
+  #channelListeners = {
+    on: {},             // channels for backend to receive data from frontend on
+    invoke: {},         // channels for backend to receive data from frontend on, and reply with some data (uses observables)
+    send: new Map(),    // channels for backend to send data to frontend automatically (channels are created automatically)
+  };
 
 
-function destroySystemListeners() {
-  rxIpc.removeListeners('start-system');
-}
+  constructor() {
+    ipcMain.handle('PD_SEND_AND_WAIT', this.#handleInvoke.bind(this));
+    ipcMain.on('PD_SEND', this.#handleSend.bind(this));
+    ipcMain.on('PD_REMOVE_LISTENER', this.#handleRemoveListener.bind(this));
 
-
-exports.startSystem = function () {
-  log.info('Start system called');
-
-  destroySystemListeners();
-
-  rxIpc.registerListener('start-system', (options) => {
-    return Observable.create(observer => {
-      try {
-        daemonWarner.send('Checking for running Particl daemon', 'info');
-        daemonConfig.loadAuth();
-        daemon.check().then(
-          () => {
-            log.info('Particl daemon already started... connecting!');
-            daemonWarner.send('Connecting to already running particl daemon...', 'info');
-            const configOptions = daemonConfig.getConfig();
-            if (!isInitializedSystem) {
-              _auth.setAuthConfig(configOptions);
-            }
-            daemonWarner.send({...configOptions, isRunningDaemon: true}, 'done');
-          }
-        ).catch(
-          () => {
-            daemonConfig.clearAuth();
-            log.info('Particl daemon instance not running: attempting to boot Particl Core');
-            daemonWarner.send('Attempting to boot particl core...', 'info');
-            setupDaemonManagerListener(options.zmq_port);
-            daemonManager.init();
-          }
-        ).then(
-          () => {
-            isInitializedSystem = true;
-          }
-        ).catch(
-          (error) => {
-            log.error(error);
-            daemonWarner.send(error, 'error');
-          }
-        );
-        observer.next(true);
-      } catch (err) {
-        observer.error(_err);
-      }
-
-      observer.complete();
-    });
-  });
-}
-
-
-exports.startGUI = function (mainWindow) {
-  if (isInitializedGUI) {
-    exports.stopGUI();
+    this.#setupOwnListeners();
   }
-  notification.init();
-  closeGui.init();
-  market.init();
-  // bot.init();
-  daemonConfig.setupComms();
-
-  systemDialogs.init(mainWindow);
-
-  /* Initialize daemonWarner */
-  daemonWarner.init(mainWindow);
-  zmq.init(mainWindow);
-
-  isInitializedGUI = true;
-}
 
 
-exports.stopGUI = function() {
-  daemonManager.shutdown(); // stops downloads from occurring when the GUI closes.
-  notification.destroy();
-  closeGui.destroy();
+  async cleanup() {
+    // allow observables to clean themselves up
+    this.#obsDestroyer.next();
+    // this.#obsDestroyer.complete();
 
-  // bot.destroy();
-  market.destroy();
-  daemonConfig.destroyComms();
-  systemDialogs.destroy();
-  daemonWarner.destroy();
-  zmq.destroy();
+    // destroy 'on' events
+    this.#channelListeners.on = {};
 
-  isInitializedGUI = false;
-}
+    // destroy observable reference
+    const obsKeys = Object.keys(this.#channelListeners.invoke);
+    obsKeys.forEach(key => {
+      if (key !== 'init-system') {
+        delete this.#channelListeners.invoke[key];
+      }
+    });
 
-
-exports.stopSystem = async function() {
-  destroySystemListeners();
-
-  await daemon.stop().catch(
-    (err) => {
-      log.error('daemon.stop() errored:', err);
+    // clean out listener channels
+    for (const receiverKey of this.#channelListeners.send.keys()) {
+      this.#removeListener(receiverKey, null);
     }
-  ).then(
-    () => {
-      log.info('daemon.stop() complete');
+
+    this.#startedStatus = InitializationStatus.Stopped;
+  }
+
+
+  #handleInvoke(event, channel, replyChannel, ...data) {
+    const receiver = event.sender;
+    // const win = BrowserWindow.fromWebContents(webContents);
+    // TODO: validate the window or webcontents here
+
+    if (
+      typeof channel === 'string' &&
+      (channel in this.#channelListeners.invoke) &&
+      typeof replyChannel === 'string'
+    ) {
+      const channelCount = +replyChannel.replace(`${channel}:`, '');
+      if (Number.isSafeInteger(channelCount) && (channelCount >= 0) && replyChannel === `${channel}:${channelCount}`) {
+        this.#addListener(replyChannel, receiver, this.#channelListeners.invoke[channel]);
+      }
     }
-  );
-  isInitializedSystem = false;
+  }
+
+
+  #handleSend(event, ...data) {
+    // this is the actual channel that is being requested
+    const channelName = data.shift();
+
+    if (typeof channelName === 'string' && channelName in this.#channelListeners.on) {
+      try {
+        this.#channelListeners.on[channelName](...data);
+      } catch (e) {
+        // TODO: log this error out somewhere?
+      }
+    }
+  }
+
+
+  #handleRemoveListener(event, channelName) {
+    if (typeof channelName !== 'string') {
+      return;
+    }
+    this.#removeListener(event.sender.id, channelName);
+  }
+
+
+  #setupOwnListeners() {
+    if (!('init-system' in this.#channelListeners.invoke)) {
+      this.#channelListeners.invoke['init-system'] = new Observable(observer => {
+        if (this.#startedStatus !== InitializationStatus.Stopped) {
+          observer.complete();
+          return;
+        }
+        this.#startedStatus = InitializationStatus.Starting;
+
+        const modulePaths = [
+          // something to do with core
+          //'./zmq/zmq',
+          //'./dialogs/dialogs',
+          // './notification/notification',
+          // './close-gui/close-gui',
+          // './market/market'
+        ];
+
+        observer.next(textContent.INITIALIZATION_STARTING);
+
+        let success = true;
+
+        for (const modpath of modulePaths) {
+          const modName = modpath
+            .split('/')
+            .reduce((acc, curr) => curr !== '.' && curr.length > 0 ? `${acc}${acc.length > 0 ? ':' : ''}${curr}` : acc, '');
+
+          try {
+
+            observer.next(`${modName} loading`);
+
+            const mod = require(modpath);
+
+            observer.next(textContent.MODULE_LOADING.replace('${mod}', modName));
+            if (Object.prototype.toString.call(mod['init']) === '[object Function]') {
+                mod['init']();
+            }
+
+            observer.next(textContent.MODULE_ADD_EVENTS.replace('${mod}', modName));
+
+            if (Object.prototype.toString.call(mod['channels']) === '[object Object]') {
+              for (const listenerType of ['invoke', 'on']) {
+                if (Object.prototype.toString.call(mod['channels'][listenerType]) === '[object Object]') {
+                  for (const channelName of Object.keys(mod['channels'][listenerType])) {
+                    const modChannelName = `${modName}:${channelName}`;
+
+                    // do not re-add
+                    if (!(modChannelName in this.#channelListeners[listenerType])) {
+                      switch(listenerType) {
+                        case 'invoke':
+                          if (isObservable(mod['channels'][listenerType][channelName])) {
+                            this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName].pipe(takeUntil(this.#obsDestroyer));
+                          }
+                          break;
+                        default:
+                          if (Object.prototype.toString.call(mod['channels'][listenerType][channelName]) === '[object Function]') {
+                            this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName];
+                          }
+                        }
+                    }
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            observer.error(textContent.MODULE_LOAD_ERROR.replace('${mod}', modName));
+            // TODO: log out the actual error
+            console.log('Error loading module: ', err);
+            success = false;
+            break;
+          }
+        }
+
+        if (success) {
+          observer.next(textContent.INIT_COMPLETE);
+          observer.complete();
+          this.#startedStatus = InitializationStatus.Started;
+        } else {
+          this.cleanup();
+        }
+      });
+    }
+  }
+
+
+  #addListener(channel, receiver, observable) {
+    if (!this.#channelListeners.send.has(receiver.id)) {
+      this.#channelListeners.send.set(receiver.id, {});
+    }
+
+    if (channel in this.#channelListeners.send.get(receiver.id)) {
+      return;
+    }
+
+    this.#channelListeners.send.get(receiver.id)[channel] = observable.subscribe({
+      next: (data) => {
+        receiver.send(channel, 'obs_next', data);
+      },
+      error: (err) => {
+        receiver.send(channel, 'obs_error', err);
+      },
+      complete: () => {
+        receiver.send(channel, 'obs_complete');
+        delete this.#channelListeners.send[channel];
+      }
+    });
+
+    receiver.on('destroyed', () => {
+      this.#removeListener(receiver.id, channel);
+    });
+  }
+
+
+  #removeListener(receiverId, channelName) {
+    if (!(receiverId && this.#channelListeners.send.has(receiverId))) {
+      return;
+    }
+
+    const subscribedChannels = this.#channelListeners.send.get(receiverId);
+
+    if (channelName === null) {
+      for (const ch of Object.keys(subscribedChannels)) {
+        subscribedChannels[ch].unsubsribe();
+      }
+      this.#channelListeners.send.delete(receiverId);
+    } else if (typeof channelName === 'string' && channelName in subscribedChannels) {
+      const cSegs = channelName.split(':');
+      if (Number.isSafeInteger(+cSegs[cSegs.length - 1])) {
+        subscribedChannels[channelName].unsubscribe();
+        delete subscribedChannels[channelName];
+      }
+    }
+  }
 }
+
+const modmanager = new ModuleManager();
+
+module.exports = modmanager;

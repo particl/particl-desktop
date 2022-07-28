@@ -5,11 +5,8 @@ import {
   StateContext,
   NgxsModuleOptions,
   Selector,
-  NgxsOnInit
 } from '@ngxs/store';
 import { environment } from 'environments/environment';
-
-import { ConnectionService } from 'app/core/services/connection.service';
 
 import { Global  } from './app.actions';
 import {
@@ -45,13 +42,12 @@ const APP_STATE_TOKEN = new StateToken<AppStateModel>('global');
 @State<AppStateModel>({
   name: APP_STATE_TOKEN,
   defaults: {
-    isConnected: false,
     appMode: null,
     loadingMessage: ''
   },
   children: [CoreConnectionState, AppSettingsState, AppDataState, ZmqConnectionState]
 })
-export class ApplicationState implements NgxsOnInit {
+export class ApplicationState {
 
 
   @Selector([CoreConnectionState, AppSettingsState])
@@ -70,28 +66,15 @@ export class ApplicationState implements NgxsOnInit {
   }
 
 
-  constructor(
-    private _connectionService: ConnectionService
-  ) {}
+  constructor() {}
 
 
-  ngxsOnInit() {
-    this._connectionService.connect();
-  }
-
-
-  @Action(Global.SetLoadingMessage)
-  setApplicationLoadingMessage(ctx: StateContext<AppStateModel>, action: Global.SetLoadingMessage) {
-    ctx.patchState({
-      loadingMessage: action.message
-    });
-  }
-
-
-  @Action(Global.Connected)
-  setConnected(ctx: StateContext<AppStateModel>) {
-    ctx.patchState({isConnected: true});
-  }
+  // @Action(Global.SetLoadingMessage)
+  // setApplicationLoadingMessage(ctx: StateContext<AppStateModel>, action: Global.SetLoadingMessage) {
+  //   ctx.patchState({
+  //     loadingMessage: action.message
+  //   });
+  // }
 
 
   @Action(Global.ChangeMode)

@@ -1,6 +1,6 @@
 {
-  "name": "particl-desktop-testnet",
-  "productName": "Particl Desktop Testnet",
+  "name": "particl-desktop",
+  "productName": "Particl Desktop",
   "version": "3.2.1",
   "branch": "3.2",
   "preRelease": "",
@@ -32,7 +32,7 @@
     "generate:versions": "node modules/clientBinaries/generateVersions.js",
     "checksum": "cd packages && checksum -a sha256 *.*",
     "build:electron:prod": "ng build --base-href=./ --prod --configuration=production",
-    "start:electron:dev": "electron . --dev",
+    "start:electron:dev": "electron . -mode=developer",
     "start:electron:fast": "ng build --base-href=./ --sourceMap=false && electron .",
     "start:electron": "ng build --base-href=./ && electron .",
     "package:mac": "yarn build:electron:prod && electron-builder -m && yarn checksum",
@@ -40,7 +40,6 @@
     "package:win": "yarn build:electron:prod && electron-builder --win --x64 && yarn checksum",
     "package": "yarn build:electron:prod && electron-builder -ml && electron-builder --win --x64 && yarn checksum",
     "coveralls": "cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js",
-    "compodoc": "compodoc -p tsconfig.json -d docs",
     "travis:mac": "electron-builder -m && yarn checksum",
     "travis:linux": "electron-builder -l && yarn checksum",
     "travis:win64": "electron-builder --win --x64 && yarn checksum",
@@ -51,8 +50,8 @@
   },
   "build": {
     "electronVersion": "19.0.4",
-    "appId": "io.particl.desktop.testnet",
-    "productName": "Particl Desktop Testnet",
+    "appId": "io.particl.desktop",
+    "productName": "Particl Desktop",
     "npmRebuild": true,
     "afterSign": "build/notarize.js",
     "directories": {
@@ -125,7 +124,7 @@
       "uninstallerIcon": "resources/icon.ico",
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "menuCategory": "Particl Desktop Testnet",
+      "menuCategory": "Particl Desktop",
       "runAfterFinish": true
     },
     "linux": {
@@ -157,11 +156,11 @@
           ]
         }
       ],
-      "executableName": "Particl Desktop Testnet",
+      "executableName": "Particl Desktop",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl-desktop",
-        "Name": "Particl Desktop Testnet",
+        "Name": "Particl Desktop",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
@@ -189,6 +188,7 @@
     "@ngxs/store": "^3.6.0",
     "@zasmilingidiot/particl-marketplace": "0.3.10",
     "@zasmilingidiot/particl-zmq": "1.0.7",
+    "ajv": "^8.11.0",
     "angularx-qrcode": "^1.0.1",
     "autodetect-decoder-stream": "^1.0.3",
     "bluebird": "^3.4.7",
@@ -197,7 +197,8 @@
     "csv-parser": "^3.0.0",
     "del": "^5.1.0",
     "echarts": "^5.1.2",
-    "electron-log": "^2.2.14",
+    "electron-log": "^4.4.8",
+    "electron-store": "^8.0.2",
     "get-stream": "^6.0.1",
     "got": "^9.6.0",
     "hammerjs": "^2.0.8",

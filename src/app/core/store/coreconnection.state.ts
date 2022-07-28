@@ -45,85 +45,84 @@ export class CoreConnectionState {
 
   constructor(
     private _ipcService: IpcService,
-    private _rpcService: RpcService
+    // private _rpcService: RpcService
   ) {}
 
 
-  @Action(Global.ConnectionReady)
-  configureConnectionDetails(ctx: StateContext<CoreConnectionModel>, action: Global.ConnectionReady) {
-    if (Object.prototype.toString.call(action.config) !== '[object Object]') {
-      return;
-    }
+  // @Action(Global.ConnectionReady)
+  // configureConnectionDetails(ctx: StateContext<CoreConnectionModel>, action: Global.ConnectionReady) {
+  //   if (Object.prototype.toString.call(action.config) !== '[object Object]') {
+  //     return;
+  //   }
 
-    if (typeof action.config.rpcbind === 'string' && action.config.rpcbind.length) {
-      ctx.patchState({rpcbind: action.config.rpcbind});
-    }
+  //   if (typeof action.config.rpcbind === 'string' && action.config.rpcbind.length) {
+  //     ctx.patchState({rpcbind: action.config.rpcbind});
+  //   }
 
-    if (typeof action.config.port === 'number' && action.config.port > 0) {
-      ctx.patchState({port: action.config.port});
-    }
+  //   if (typeof action.config.port === 'number' && action.config.port > 0) {
+  //     ctx.patchState({port: action.config.port});
+  //   }
 
-    if (typeof action.config.auth === 'string' && action.config.auth.length) {
-      ctx.patchState({auth: action.config.auth});
-    }
+  //   if (typeof action.config.auth === 'string' && action.config.auth.length) {
+  //     ctx.patchState({auth: action.config.auth});
+  //   }
 
-    if (typeof action.config.proxy === 'string' && action.config.proxy.length) {
-      ctx.patchState({proxy: action.config.proxy});
-    }
+  //   if (typeof action.config.proxy === 'string' && action.config.proxy.length) {
+  //     ctx.patchState({proxy: action.config.proxy});
+  //   }
 
-    if (typeof action.config.upnp === 'boolean') {
-      ctx.patchState({upnp: action.config.upnp});
-    }
+  //   if (typeof action.config.upnp === 'boolean') {
+  //     ctx.patchState({upnp: action.config.upnp});
+  //   }
 
-    const keys = Object.keys(action.config);
-    if (keys.includes('upnp')) {
-      ctx.patchState({upnp: Boolean(+action.config.upnp)});
-    }
+  //   const keys = Object.keys(action.config);
+  //   if (keys.includes('upnp')) {
+  //     ctx.patchState({upnp: Boolean(+action.config.upnp)});
+  //   }
 
-    if (keys.includes('testnet')) {
-      ctx.patchState({testnet: Boolean(+action.config.testnet)});
-    } else if (keys.includes('regtest')) {
-      ctx.patchState({regtest: Boolean(+action.config.regtest)});
-    }
+  //   if (keys.includes('testnet')) {
+  //     ctx.patchState({testnet: Boolean(+action.config.testnet)});
+  //   } else if (keys.includes('regtest')) {
+  //     ctx.patchState({regtest: Boolean(+action.config.regtest)});
+  //   }
 
-    const appState = ctx.getState();
+  //   const appState = ctx.getState();
 
-    const connDetails = {
-      rpcHostname: appState.rpcbind,
-      rpcPort: appState.port,
-      rpcAuth: appState.auth
-    } as ConnectionDetails;
+  //   const connDetails = {
+  //     rpcHostname: appState.rpcbind,
+  //     rpcPort: appState.port,
+  //     rpcAuth: appState.auth
+  //   } as ConnectionDetails;
 
-    this._rpcService.setConnectionDetails(connDetails);
+  //   this._rpcService.setConnectionDetails(connDetails);
 
-    // Polls until the connection is actually ready (ie: daemon may be performing internal sync)...
-    //  ... Prevents responses with -28 error codes for example.
-    this._rpcService.call('', 'getblockchaininfo').pipe(
-      retryWhen (
-        errors => errors.pipe(
-          delayWhen(() => timer(1000)), // retry every 1000 ms if an error occurs
-        )
-      ),
-      tap((blockchaininfo) => {
-          if (blockchaininfo && ('chain' in blockchaininfo)) {
-            ctx.patchState({testnet: blockchaininfo.chain === 'test'});
-            ctx.patchState({regtest: blockchaininfo.chain === 'regtest'});
-          }
-      }),
-      concatMap((blockchaininfo) => {
-        if (!blockchaininfo) {
-          return of(blockchaininfo);
-        }
-        return ctx.dispatch([
-          new Global.SetLoadingMessage('Application ready'),
-          new AppSettings.SetActiveWallet(null),
-          new Global.ChangeMode(null),
-        ]).pipe(
-          tap(() => ctx.dispatch(new Global.Connected()))
-        );
-      })
-    ).subscribe();
-  }
+  //   // Polls until the connection is actually ready (ie: daemon may be performing internal sync)...
+  //   //  ... Prevents responses with -28 error codes for example.
+  //   this._rpcService.call('', 'getblockchaininfo').pipe(
+  //     retryWhen (
+  //       errors => errors.pipe(
+  //         delayWhen(() => timer(1000)), // retry every 1000 ms if an error occurs
+  //       )
+  //     ),
+  //     tap((blockchaininfo) => {
+  //         if (blockchaininfo && ('chain' in blockchaininfo)) {
+  //           ctx.patchState({testnet: blockchaininfo.chain === 'test'});
+  //           ctx.patchState({regtest: blockchaininfo.chain === 'regtest'});
+  //         }
+  //     }),
+  //     concatMap((blockchaininfo) => {
+  //       if (!blockchaininfo) {
+  //         return of(blockchaininfo);
+  //       }
+  //       return ctx.dispatch([
+  //         new AppSettings.SetActiveWallet(null),
+  //         new Global.ChangeMode(null),
+  //       ]).pipe(
+  //         // tap(() => ctx.dispatch(new Global.Connected())) // TODO: no longer used
+  //       );
+  //     })
+  //   ).subscribe();
+  // }
 
 
   @Action(AppSettings.SetSetting)
