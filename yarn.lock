@@ -1768,10 +1768,10 @@
     tslib "^1.9.3"
     web-request "^1.0.7"
 
-"@zasmilingidiot/particl-marketplace@0.3.10":
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.10.tgz#0a7379c2b1c1a91573b82b456cba798615974d8f"
-  integrity sha512-ViH0TZ1b+Yy+dKn2b09NMJtmwzPrjxfMlaZjx7z/aAvFSPqSLZtZk1tQzwFOVNYIHcTf4hJC46BdJepCKbj+Kw==
+"@zasmilingidiot/particl-marketplace@0.3.11":
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.11.tgz#549d2cda861235d19bdfa6ae857642ce4ce55883"
+  integrity sha512-DDWD1bN7K1801Z6aYQksG/oEr039VxjQPpyZiqEctfxCalRla+z36d+Tccl0cGnqFB3ZbPqpkC7Lwrd2QvnQPg==
   dependencies:
     "@zasmilingidiot/omp-lib" "0.1.155"
     "@zasmilingidiot/particl-zmq" "1.0.7"
