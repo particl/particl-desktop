@@ -128,7 +128,8 @@ class ModuleManager {
           //'./zmq/zmq',
           // './notification/notification',
           // './market/market'
-          './gui/gui'
+          './gui/gui',
+          './gui/notification'
         ];
 
         observer.next(textContent.INITIALIZATION_STARTING);

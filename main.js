@@ -22,6 +22,15 @@ if (!instanceLock) {
 }
 
 
+if (process.platform === 'win32') {
+  // Fix for windows 10 regarding notifications, etc
+  const appId = require('./package.json').build.appId;
+  if (typeof appId === 'string' && appId.length > 0) {
+    electron.setAppUserModelId(appId);
+  }
+}
+
+
 // Set up logging: turn off file logging until we know that the target directory is created and writeable
 let log;
 let mainWindow;
