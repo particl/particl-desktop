@@ -74,7 +74,7 @@ class ModuleManager {
 
   #handleInvoke(event, channel, replyChannel, ...data) {
     const receiver = event.sender;
-    // const win = BrowserWindow.fromWebContents(webContents);
+    // const win = BrowserWindow.fromWebContents(receiver);
     // TODO: validate the window or webcontents here
 
     if (
@@ -84,13 +84,15 @@ class ModuleManager {
     ) {
       const channelCount = +replyChannel.replace(`${channel}:`, '');
       if (Number.isSafeInteger(channelCount) && (channelCount >= 0) && replyChannel === `${channel}:${channelCount}`) {
-        this.#addListener(replyChannel, receiver, this.#channelListeners.invoke[channel]);
+        this.#addListener(replyChannel, receiver, this.#channelListeners.invoke[channel], ...data);
       }
     }
   }
 
 
   #handleSend(event, ...data) {
+    // TODO: validate the window or webcontents here
+
     // this is the actual channel that is being requested
     const channelName = data.shift();
 
@@ -124,10 +126,9 @@ class ModuleManager {
         const modulePaths = [
           // something to do with core
           //'./zmq/zmq',
-          //'./dialogs/dialogs',
           // './notification/notification',
-          // './close-gui/close-gui',
           // './market/market'
+          './gui/gui'
         ];
 
         observer.next(textContent.INITIALIZATION_STARTING);
@@ -160,17 +161,7 @@ class ModuleManager {
 
                     // do not re-add
                     if (!(modChannelName in this.#channelListeners[listenerType])) {
-                      switch(listenerType) {
-                        case 'invoke':
-                          if (isObservable(mod['channels'][listenerType][channelName])) {
-                            this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName].pipe(takeUntil(this.#obsDestroyer));
-                          }
-                          break;
-                        default:
-                          if (Object.prototype.toString.call(mod['channels'][listenerType][channelName]) === '[object Function]') {
-                            this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName];
-                          }
-                        }
+                      this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName];
                     }
                   }
                 }
@@ -197,12 +188,25 @@ class ModuleManager {
   }
 
 
-  #addListener(channel, receiver, observable) {
+  #addListener(channel, receiver, callable, ...data) {
     if (!this.#channelListeners.send.has(receiver.id)) {
       this.#channelListeners.send.set(receiver.id, {});
     }
 
     if (channel in this.#channelListeners.send.get(receiver.id)) {
+      return;
+    }
+
+    let observable;
+    if (isObservable(callable)) {
+      // callable is an observable
+      observable = callable;
+    } else if (Object.prototype.toString.call(callable) === '[object Function]') {
+      // callable is a function and the return value should be an observable
+      observable = callable(receiver, ...data);
+    }
+
+    if (observable === undefined) {
       return;
     }
 
