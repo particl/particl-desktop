@@ -129,7 +129,8 @@ class ModuleManager {
           // './notification/notification',
           // './market/market'
           './gui/gui',
-          './gui/notification'
+          './gui/notification',
+          './market/services',
         ];
 
         observer.next(textContent.INITIALIZATION_STARTING);

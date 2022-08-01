@@ -13,7 +13,7 @@ export class CloseGuiService {
   }
 
   /** Quit electron and fired an event to backend */
-  public quitElectron() {
-    this._backendService.send('gui:gui:close-gui');
+  public quitElectron(doRestart: boolean = false) {
+    this._backendService.send('gui:gui:close-gui', doRestart);
   }
 }

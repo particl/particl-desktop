@@ -1,19 +1,78 @@
-const rxIpc = require('rx-ipc-electron/lib/main').default;
-const rxjs = require('rxjs');
-const rxjsOps = require('rxjs/operators');
-
-const _csv = require('csv-parser');
 const _fs = require('fs');
 const _path = require('path');
+const _csv = require('csv-parser');
 const _url = require('url');
 const _got = require('got');
 const _sharp = require('sharp');
 const _iconv = require('iconv-lite');
 const _autoDetectDecoderStream = require('autodetect-decoder-stream');
 const _getStream = require('get-stream');
+const { Observable, Subject, defer, from, throwError } = require('rxjs');
+const { skipWhile, catchError, takeUntil, finalize } = require('rxjs/operators');
+const { rxToStream } = require('rxjs-stream');
+const { Transform } = require('json2csv');
+const bitcore = require('particl-bitcore-lib');
 
 
-const destroy$ = new rxjs.Subject();
+class CSVWriter {
+
+  _targetPath;
+
+  constructor(targetPath) {
+    if ((typeof targetPath === 'string') && (targetPath.length > 3) ) {
+      this._targetPath = targetPath;
+    }
+  }
+
+  _validatePath() {
+    return !!this._targetPath;
+  }
+
+
+  write(data /* JSON objects to be written */) {
+    return defer(() => {
+      let writeStream;
+
+      return new Observable(obs$ => {
+        if (!Array.isArray(data)) {
+          obs$.error('INVALID_DATA');
+          return;
+        }
+
+        writeStream = _fs.createWriteStream(this._targetPath, { encoding: 'utf8' });
+        const sourceStream = from(data).pipe(
+          skipWhile(d => !d || Object.prototype.toString.call(d) !== '[object Object]'),
+          catchError(e => this.destroy$.next()),
+          takeUntil(destroy$)
+        );
+        const json2csv = new Transform({}, {highWaterMark: 16384, encoding: 'utf8', objectMode: true});
+        json2csv
+          .on('header', header => console.log('EXPORT (OUTPUT HEADER): ', header))
+          .on('line', line => console.log('EXPORT (OUTPUT LINE):', line))
+          .on('error', err => console.log('EXPORT (ERROR!!):', err));
+
+        writeStream
+          .on('error', (err) => {
+            obs$.error(err);
+          })
+          .on('finish', () => {
+            obs$.next();
+            obs$.complete();
+          });
+
+        rxToStream(sourceStream, { objectMode: true }).pipe(json2csv).pipe(writeStream);
+      }).pipe(
+        finalize(() => {
+          if (writeStream && !writeStream.destroyed) {
+            writeStream.end();
+          }
+        }),
+        takeUntil(destroy$)
+      );
+    });
+  }
+
+}
 
 
 class BaseParser {
@@ -72,7 +131,7 @@ class CSVParser extends BaseParser {
         });
 
         if (selectedHeaders.length > 0) {
-          _config.mapHeaders = ({ header, headerIdx }) => selectedHeaders.includes(header) ? header : null;
+          _config.mapHeaders = ({ header, _ }) => selectedHeaders.includes(header) ? header : null;
         }
       }
 
@@ -115,7 +174,7 @@ class CSVParser extends BaseParser {
     parserConfig = this.omitKey(this.parseArgs, 'externalSourceFields');
     let rStream;
 
-    return new rxjs.Observable(subs => {
+    return new Observable(subs => {
       (async () => {
         const results = [];
         rStream = _fs.createReadStream(source);
@@ -223,12 +282,12 @@ class CSVParser extends BaseParser {
         // this simply catches any uncaught exception from occurring (typically should only be programming errors) and prevents the parsing request from exploding if an error occurs
       });
     }).pipe(
-      rxjsOps.finalize(() => {
+      finalize(() => {
         if (rStream && !rStream.destroyed) {
           rStream.destroy();
         }
       }),
-      rxjsOps.takeUntil(destroy$)
+      takeUntil(destroy$)
     );
   };
 
@@ -240,34 +299,108 @@ class CSVParser extends BaseParser {
 }
 
 
+let destroy$ = new Subject();
+
+
 const SUPPORTED_PARSERS = {
   csv: CSVParser
 };
 
 
-exports.init = function() {
-  rxIpc.registerListener('market-importer', (parseType /* SUPPORTED_PARSERS keys */, source /* string: file/url/path to process */, parseArgs /* object: args for the parser */) => {
-    return rxjs.defer(() => {
-      if ((typeof parseType !== 'string') || !Object.keys(SUPPORTED_PARSERS).includes(parseType)) {
-        return rxjs.throwError(new Error('INVALID_PARSER'));
-      }
-
-      if ((typeof source !== 'string') || (!source.length > 0)) {
-        return rxjs.throwError(new Error('INVALID_SOURCE'));
-      }
-
-      if ((Object.prototype.toString.call(parseArgs) !== '[object Object]')) {
-        return rxjs.throwError(new Error('INVALID_PARSER_ARGS'));
-      }
-
-      return rxjs.defer(() => (new SUPPORTED_PARSERS[parseType](parseArgs)).parse(source));
-    })
-  });
+exports.init = () => {
+  if (!destroy$) {
+    destroy$ = new Subject();
+  } else {
+    // may have been completed already
+    try {
+      destroy$.next();
+    } catch(err) {
+      destroy$ = new Subject();
+    }
+  }
 }
 
 
 exports.destroy = function() {
-  rxIpc.removeListeners('market-importer');
   destroy$.next();
   destroy$.complete();
 }
+
+
+exports.channels = {
+  invoke: {
+
+    'export-writecsv': (targetPath /* string: file/url/path to save data to */, data /* Array of JSON objects */) => {
+      return defer(() => (new CSVWriter(targetPath)).write(data));
+    },
+
+    'export-example-csv': (targetPath /* string */) => {
+      const basePath = app.getAppPath();
+      const SOURCE_CSV_PATH = _path.join(basePath, 'resources', 'templates', 'csv_template.csv');
+
+      return new Observable(observer => {
+        if ((typeof targetPath !== 'string') || (targetPath.length < 3) || !_fs.existsSync(SOURCE_CSV_PATH)) {
+          observer.error('MP_COPY_ERROR');
+          observer.complete();
+        } else {
+          try {
+            _fs.copyFile(SOURCE_CSV_PATH, targetPath, _fs.constants.COPYFILE_EXCL, (err) => {
+              if (err) {
+                observer.error(err);
+              } else {
+                observer.next(true);
+              }
+              observer.complete();
+            });
+          } catch (err1) {
+            observer.error('MP_COPY_ERROR');
+            observer.complete();
+          }
+        }
+      });
+    },
+
+    'importer': (parseType /* SUPPORTED_PARSERS keys */, source /* string: file/url/path to process */, parseArgs /* object: args for the parser */) => {
+      return defer(() => {
+        if ((typeof parseType !== 'string') || !Object.keys(SUPPORTED_PARSERS).includes(parseType)) {
+          return throwError(new Error('INVALID_PARSER'));
+        }
+
+        if ((typeof source !== 'string') || (!source.length > 0)) {
+          return throwError(new Error('INVALID_SOURCE'));
+        }
+
+        if ((Object.prototype.toString.call(parseArgs) !== '[object Object]')) {
+          return throwError(new Error('INVALID_PARSER_ARGS'));
+        }
+
+        return defer(() => (new SUPPORTED_PARSERS[parseType](parseArgs)).parse(source));
+      });
+    },
+
+    'key-generator': (keyTypeRequired /* 'PRIVATE' | 'PUBLIC' */, fromKey /* string */ ) => {
+      return new Observable(observer => {
+        if ((typeof keyTypeRequired !== 'string') || !['PUBLIC'].includes(keyTypeRequired) || (typeof fromKey !== 'string')) {
+          observer.error('MP_KEYGEN_INVALID_PARAMS');
+        } else {
+          try {
+            let newKey;
+            switch (keyTypeRequired) {
+              case 'PUBLIC': newKey = bitcore.PrivateKey.fromWIF(fromKey).toPublicKey().toString(); break;
+            }
+            if ((typeof newKey !== 'string') || !(newKey.length > 0)) {
+              throw new Error('something went wrong');
+            } else {
+              observer.next(newKey);
+            }
+
+          } catch (err) {
+            observer.error('MP_KEYGEN_INVALID_KEY');
+          }
+          observer.complete();
+        }
+      });
+    },
+
+  }
+};

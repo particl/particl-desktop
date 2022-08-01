@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { IpcService } from 'app/core/services/ipc.service';
+import { CloseGuiService } from 'app/core/services/close-gui.service';
 
 
 @Component({
@@ -13,11 +13,11 @@ export class ApplicationRestartModalComponent {
 
   constructor(
     private dialogRef: MatDialogRef<ApplicationRestartModalComponent>,
-    private _ipc: IpcService
+    private _close: CloseGuiService
   ) { }
 
   doRestart(): void {
-    this._ipc.runCommand('close-gui', null, true);
+    this._close.quitElectron(true);
     this.onConfirmation.emit(true);
     this.dialogClose();
   }

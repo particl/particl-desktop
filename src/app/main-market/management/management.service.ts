@@ -7,7 +7,7 @@ import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 import { MarketState } from '../store/market.state';
 import { MarketUserActions } from '../store/market.actions';
 
-import { IpcService } from 'app/core/services/ipc.service';
+import { BackendService } from 'app/core/services/backend.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { isBasicObjectType, getValueOrDefault, parseImagePath, parseMarketResponseItem, openMarketAddresses } from '../shared/utils';
 import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet, IMAGE_SEND_TYPE, DefaultOpenMarketDetails } from '../shared/market.models';
@@ -52,7 +52,7 @@ export class MarketManagementService {
     private _rpc: MarketRpcService,
     private _daemonRpc: MainRpcService,
     private _store: Store,
-    private _ipc: IpcService,
+    private _backend: BackendService,
   ) {
     this.marketRegionsMap.set('', TextContent.LABEL_REGION_ALL);
     this.marketRegionsMap.set(MARKET_REGION.WORLDWIDE, TextContent.LABEL_REGION_WORLDWIDE);
@@ -422,7 +422,7 @@ export class MarketManagementService {
   }
 
   calculatePublicKeyFromPrivate(privateKey: string): Observable<string> {
-    return this._ipc.runCommand('market-keygen', null, 'PUBLIC', privateKey);
+    return this._backend.sendAndWait<string>('market:services:key-generator', 'PUBLIC', privateKey);
   }
 
 

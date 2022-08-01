@@ -5,10 +5,7 @@ import { MatDialog } from '@angular/material';
 import { of, defer, Subject, iif } from 'rxjs';
 import { exhaustMap, takeUntil, finalize, map, take, concatMap } from 'rxjs/operators';
 
-import { Store } from '@ngxs/store';
-import { MarketState } from './../../../../store/market.state';
-
-import { IpcService } from 'app/core/services/ipc.service';
+import { BackendService } from 'app/core/services/backend.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { RegionListService } from '../../../../services/region-list/region-list.service';
 import { SellService } from '../../../sell.service';
@@ -75,12 +72,11 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
 
 
   constructor(
-    private _ipc: IpcService,
+    private _backendService: BackendService,
     private _snackbar: SnackbarService,
     private _regionService: RegionListService,
     private _sellService: SellService,
     private _dialog: MatDialog,
-    private _store: Store
   ) {
     this.csvInputForm = new FormGroup({
       source: new FormControl('', [Validators.required]),
@@ -124,12 +120,12 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
       }
     };
 
-    this._ipc.runCommand('open-system-dialog', null, options).pipe(
+    this._backendService.sendAndWait('gui:gui:open-dialog', options).pipe(
       finalize(() => this.isProcessing = false),
       take(1),
       concatMap(path => iif(
         () => (typeof path === 'string') && (path.length > 0),
-        defer(() => this._ipc.runCommand('market-export-example-csv', null, path))
+        defer(() => this._backendService.sendAndWait('market:services:export-example-csv', path))
       ))
     ).subscribe(
       () => this._snackbar.open(TextContent.CSV_EXAMPLE_EXPORTED_SUCCESS),
@@ -152,10 +148,6 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
           data: { message: TextContent.IMPORT_WAIT_MSG, helptext: TextContent.IMPORT_WAIT_HELP },
         });
 
-        // const defaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
-        // const marketSettings = this._store.selectSnapshot(MarketState.settings);
-        // const MAX_IMAGE_FILESIZE = marketSettings.usePaidMsgForImages ? defaultConfig.imageMaxSizePaid : defaultConfig.imageMaxSizeFree;
-
         const values = this.csvInputForm.value;
 
         const options: CsvImportOptions = {
@@ -165,9 +157,8 @@ export class CsvImporterComponent implements ImporterComponent, AfterViewInit, O
           getFromUrlFields: [ {fieldName: 'images', fieldType: 'IMAGE'}],
         };
 
-        return this._ipc.runCommand(
-          'market-importer',
-          null,
+        return this._backendService.sendAndWait(
+          'market:services:importer',
           'csv',
           values.source,
           options
