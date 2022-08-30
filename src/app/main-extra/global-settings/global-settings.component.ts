@@ -6,6 +6,7 @@ import { Observable, from } from 'rxjs';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
 import { AppSettings } from 'app/core/store/app.actions';
 
 import {
@@ -91,6 +92,11 @@ export class GlobalSettingsComponent implements OnInit {
 
   trackBySettingFn(idx: number, item: Setting) {
     return item.id;
+  }
+
+
+  actionShowTerms() {
+    this._dialog.open(TermsConditionsModalComponent);
   }
 
 
@@ -324,68 +330,7 @@ export class GlobalSettingsComponent implements OnInit {
       restartRequired: false
     } as Setting);
 
-
-    const coreNetConfig = {
-      name: 'Core network connection',
-      icon: 'part-globe',
-      settings: [],
-      errors: []
-    } as SettingGroup;
-
-    coreNetConfig.settings.push({
-      id: 'core.network.upnp',
-      title: 'Enable UPnP',
-      description: 'Use UPnP to map the listening port',
-      isDisabled: false,
-      type: SettingType.BOOLEAN,
-      errorMsg: '',
-      currentValue: globalSettings.upnp,
-      tags: [],
-      restartRequired: true
-    } as Setting);
-
-    coreNetConfig.settings.push({
-      id: 'core.network.proxy',
-      title: 'Connect via Proxy',
-      description: 'Directs core to connect via a SOCKS5 proxy.',
-      isDisabled: false,
-      type: SettingType.STRING,
-      limits: {placeholder: 'e.g. 127.0.0.1:9050 for Tor'},
-      errorMsg: '',
-      currentValue: globalSettings.proxy,
-      tags: [],
-      restartRequired: true,
-      validate: this.validateIPAddressPort
-    } as Setting);
-
     this.settingGroups.push(userInterface);
-    this.settingGroups.push(coreNetConfig);
-  }
-
-  private validateIPAddressPort(value: any, setting: Setting): string | null {
-    const strVal = String(value);
-    if (strVal.length === 0) {
-      return null;
-    }
-    const parts = strVal.split(':');
-    const octs = String(parts[0]).split('.');
-    let isValid = (
-      (octs.length === 4) &&
-      (octs.find(oct => !isFinite(+oct) || (+oct > 255) || (+oct < 0) || (oct.length === 0)
-    ) === undefined) );
-
-    if (parts[1]) {
-      const port = +(String(parts[1]));
-      isValid = isValid && (port > 0) && (port <= 65535);
-    } else if (!parts[1] && strVal.includes(':')) {
-      isValid = false;
-    }
-
-    if (!isValid) {
-      return 'Invalid IPv4 address and/or port';
-    }
-
-    return null;
   }
 
 }

@@ -18,7 +18,7 @@ export class WelcomeComponent implements OnDestroy {
   private destroy$: Subject<void> = new Subject();
 
   constructor(
-    private _motdService: MotdService
+    private _motdService: MotdService,
   ) {
     this._motdService.motd.pipe(
       tap((motd) => this.motd = motd),

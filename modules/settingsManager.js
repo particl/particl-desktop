@@ -1,5 +1,4 @@
 const Ajv             = require('ajv');
-// const _electronStore  = require('electron-store');
 const path            = require('path');
 const fs              = require('fs');
 
@@ -150,8 +149,9 @@ class AppSettingsManager {
       ALLOWED_EXTERNAL_URLS: urlsAllowed,
       STARTUP_WITH_DEVTOOLS: false,
       PATHS: {
-        config: this.#basePath,
-        binaries: path.join(this.#basePath, 'binaries')
+        logs: path.join(this.#basePath, 'logs'),
+        config: path.join(this.#basePath, 'settings'),
+        binaries: path.join(this.#basePath, 'binaries'),
       }
     };
 
@@ -163,29 +163,12 @@ class AppSettingsManager {
       }
     }
 
-    defaultSettings.PATHS.config = path.join(this.#basePath, defaultSettings.MODE);
-
     if (this.#defaultValidator(defaultSettings)) {
       this.#settings.set(this.#defaultSettingsKey, Object.freeze(defaultSettings));
       return true;
     }
 
     return false;
-  }
-
-
-  loadSettings(label, userConfigPath) {
-    if (label === this.#defaultSettingsKey) {
-      return false;
-    }
-    // this.#store = new _electronStore({
-    //   schema: schema,
-    //   migrations: migrations,
-    //   name: 'settings',
-    //   cwd: configFileLocation,
-    //   fileExtension: 'json',
-    //   clearInvalidConfig: false,
-    // });
   }
 
 

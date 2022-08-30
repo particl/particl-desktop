@@ -40,8 +40,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     ipcRenderer.send('PD_SEND', channel, ...args);
   },
 
-  sendAndWait: (channel, ...args) => {
-    ipcRenderer.invoke('PD_SEND_AND_WAIT', channel, ...args);
+  sendAndWait: (channel, listenerType, ...args) => {
+    ipcRenderer.invoke('PD_SEND_AND_WAIT', channel, listenerType, ...args);
   },
 
   listen: (channel, func) => {

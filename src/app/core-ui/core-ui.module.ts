@@ -11,13 +11,15 @@ import { MaterialModule } from './material/material.module';
 import { PaginatorComponent } from 'app/core-ui/paginator/paginator.component';
 import { HeaderComponent } from 'app/core-ui/components/header/header.component';
 import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro.component';
+import { TermsContentComponent } from 'app/core-ui/components/terms-content/terms-content.component';
 
 
 @NgModule({
   declarations: [
     PaginatorComponent,
     HeaderComponent,
-    PageIntroComponent
+    PageIntroComponent,
+    TermsContentComponent,
   ],
   imports: [
     CommonModule,
@@ -32,7 +34,8 @@ import { PageIntroComponent } from 'app/core-ui/components/page-intro/page-intro
     DirectiveModule,
     PipeModule,
     HeaderComponent,
-    PageIntroComponent
+    PageIntroComponent,
+    TermsContentComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

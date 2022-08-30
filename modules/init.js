@@ -32,9 +32,11 @@ class ModuleManager {
   #obsDestroyer = new Subject();
 
   #channelListeners = {
-    on: {},             // channels for backend to receive data from frontend on
+    on: {},             // channels for backend to receive data from frontend on (single call without response required)
     invoke: {},         // channels for backend to receive data from frontend on, and reply with some data (uses observables)
-    send: new Map(),    // channels for backend to send data to frontend automatically (channels are created automatically)
+    send: new Map(),    // holds the observables to which a frontend renderer might be listening for data on (channels are created automatically) - mostly internal
+    destroyFuncs: [],
+    emitter: {},        // backend emitters, that a frontend renderer simply listens to data on (comms initiated via backend... there may be 0 or more renderers receiving the data)
   };
 
 
@@ -47,10 +49,12 @@ class ModuleManager {
   }
 
 
-  async cleanup() {
+  async cleanup(shutdown = false) {
     // allow observables to clean themselves up
     this.#obsDestroyer.next();
-    // this.#obsDestroyer.complete();
+    if (shutdown) {
+      this.#obsDestroyer.complete();
+    }
 
     // destroy 'on' events
     this.#channelListeners.on = {};
@@ -58,7 +62,7 @@ class ModuleManager {
     // destroy observable reference
     const obsKeys = Object.keys(this.#channelListeners.invoke);
     obsKeys.forEach(key => {
-      if (key !== 'init-system') {
+      if (shutdown ? true : (key !== 'init-system')) {
         delete this.#channelListeners.invoke[key];
       }
     });
@@ -68,24 +72,43 @@ class ModuleManager {
       this.#removeListener(receiverKey, null);
     }
 
+    // run destroy functions on each module if provided
+    for (const fn of this.#channelListeners.destroyFuncs) {
+      try {
+        if (this.#isRegularFunction(fn)) {
+          fn();
+        } else if (this.#isAsyncFunction(fn)) {
+          await fn();
+        }
+      } catch(err) {
+        // TODO: log this out correctly
+        console.log('Error caught running destroy function:', err);
+      }
+    }
+    this.#channelListeners.destroyFuncs = [];
+
     this.#startedStatus = InitializationStatus.Stopped;
   }
 
 
-  #handleInvoke(event, channel, replyChannel, ...data) {
+  #handleInvoke(event, channel, replyChannel, listenerType, ...data) {
     const receiver = event.sender;
     // const win = BrowserWindow.fromWebContents(receiver);
     // TODO: validate the window or webcontents here
 
-    if (
-      typeof channel === 'string' &&
-      (channel in this.#channelListeners.invoke) &&
-      typeof replyChannel === 'string'
-    ) {
+    if ((typeof channel === 'string') && (typeof replyChannel === 'string')) {
       const channelCount = +replyChannel.replace(`${channel}:`, '');
+
       if (Number.isSafeInteger(channelCount) && (channelCount >= 0) && replyChannel === `${channel}:${channelCount}`) {
-        this.#addListener(replyChannel, receiver, this.#channelListeners.invoke[channel], ...data);
+
+        if (listenerType === 'invoker' && (channel in this.#channelListeners.invoke)) {
+          this.#addListener(replyChannel, receiver, this.#channelListeners.invoke[channel], ...data);
+        } else if (listenerType === 'emitter' && (channel in this.#channelListeners.emitter)) {
+          this.#addListener(replyChannel, receiver, this.#channelListeners.emitter[channel]);
+        }
+
       }
+
     }
   }
 
@@ -122,18 +145,16 @@ class ModuleManager {
           return;
         }
         this.#startedStatus = InitializationStatus.Starting;
+        observer.next(textContent.INITIALIZATION_STARTING);
 
         const modulePaths = [
-          // something to do with core
+          './coreManager',
           //'./zmq/zmq',
-          // './notification/notification',
           // './market/market'
           './gui/gui',
           './gui/notification',
           './market/services',
         ];
-
-        observer.next(textContent.INITIALIZATION_STARTING);
 
         let success = true;
 
@@ -149,14 +170,19 @@ class ModuleManager {
             const mod = require(modpath);
 
             observer.next(textContent.MODULE_LOADING.replace('${mod}', modName));
-            if (Object.prototype.toString.call(mod['init']) === '[object Function]') {
+
+            if (this.#isFunction(mod['destroy'])) {
+              this.#channelListeners.destroyFuncs.push(mod['destroy']);
+            }
+
+            if (this.#isRegularFunction(mod['init'])) {
                 mod['init']();
             }
 
             observer.next(textContent.MODULE_ADD_EVENTS.replace('${mod}', modName));
 
             if (Object.prototype.toString.call(mod['channels']) === '[object Object]') {
-              for (const listenerType of ['invoke', 'on']) {
+              for (const listenerType of ['invoke', 'on', 'emitter']) {
                 if (Object.prototype.toString.call(mod['channels'][listenerType]) === '[object Object]') {
                   for (const channelName of Object.keys(mod['channels'][listenerType])) {
                     const modChannelName = `${modName}:${channelName}`;
@@ -183,7 +209,7 @@ class ModuleManager {
           observer.complete();
           this.#startedStatus = InitializationStatus.Started;
         } else {
-          this.cleanup();
+          this.cleanup(false);
         }
       });
     }
@@ -191,28 +217,29 @@ class ModuleManager {
 
 
   #addListener(channel, receiver, callable, ...data) {
+
     if (!this.#channelListeners.send.has(receiver.id)) {
       this.#channelListeners.send.set(receiver.id, {});
     }
 
     if (channel in this.#channelListeners.send.get(receiver.id)) {
-      return;
+      return true;
     }
 
     let observable;
     if (isObservable(callable)) {
       // callable is an observable
       observable = callable;
-    } else if (Object.prototype.toString.call(callable) === '[object Function]') {
+    } else if (this.#isRegularFunction(callable)) {
       // callable is a function and the return value should be an observable
       observable = callable(receiver, ...data);
     }
 
     if (observable === undefined) {
-      return;
+      return false;
     }
 
-    this.#channelListeners.send.get(receiver.id)[channel] = observable.subscribe({
+    this.#channelListeners.send.get(receiver.id)[channel] = observable.pipe(takeUntil(this.#obsDestroyer)) .subscribe({
       next: (data) => {
         receiver.send(channel, 'obs_next', data);
       },
@@ -220,14 +247,18 @@ class ModuleManager {
         receiver.send(channel, 'obs_error', err);
       },
       complete: () => {
-        receiver.send(channel, 'obs_complete');
-        delete this.#channelListeners.send[channel];
+        if (receiver && !receiver.isDestroyed()) {
+          receiver.send(channel, 'obs_complete');
+          delete this.#channelListeners.send[channel];
+        }
       }
     });
 
     receiver.on('destroyed', () => {
       this.#removeListener(receiver.id, channel);
     });
+
+    return true;
   }
 
 
@@ -250,6 +281,19 @@ class ModuleManager {
         delete subscribedChannels[channelName];
       }
     }
+  }
+
+
+  #isRegularFunction(fn) {
+    return Object.prototype.toString.call(fn) === '[object Function]';
+  }
+
+  #isAsyncFunction(fn) {
+    return Object.prototype.toString.call(fn) === '[object AsyncFunction]';
+  }
+
+  #isFunction(fn) {
+    return this.#isRegularFunction(fn) || this.#isAsyncFunction(fn);
   }
 }
 

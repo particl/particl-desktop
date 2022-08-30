@@ -27,6 +27,14 @@ hr.divider {
     & > .sidebar {
       flex: 0 0 var(--settings-sidebar-width);
       margin-right: var(--paddingH);
+
+      .buttons {
+        margin-top: 24px;
+
+        button {
+          margin-bottom: 12px;
+        }
+      }
     }
     & > .content {
       flex: 1 1 100%;

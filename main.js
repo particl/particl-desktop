@@ -83,12 +83,12 @@ try {
 // Default system setup is complete, and relevant directories are created, so turn on file logging and configure the logger correctly
 log.transports.file.fileName = 'application.log';
 log.transports.file.resolvePath = (variables) => {
-  return path.join(settingsManager.getSettings(null, 'PATHS').config, variables.fileName);
+  return path.join(settingsManager.getSettings(null, 'PATHS').logs, variables.fileName);
 }
 log.transports.console.level = log.transports.file.level = settingsManager.getSettings(null, 'DEBUGGING_LEVEL');
 log.hooks.push(
   (message, transport) => {
-    message.data = message.data.map(m => typeof m === 'string' ? m.replace(app.getPath('home'), '<USER_HOME_PATH>') : m);
+    message.data = message.data.map(m => typeof m === 'string' ? m.replaceAll(app.getPath('home'), '<USER_HOME_PATH>') : m);
     return message;
   }
 );
@@ -262,7 +262,7 @@ app.once('will-quit', async function beforeQuit(event) {
     }
   }
 
-  await modManager.cleanup().catch(() => {
+  await modManager.cleanup(true).catch(() => {
     // do nothing, here just to ensure that we prevent errors from aborting the shutdown process
   });
 

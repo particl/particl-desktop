@@ -22,13 +22,28 @@ export class BackendService {
 
 
   sendAndWait<T>(channel: string, ...args: any[]): Observable<T> {
+    return this.createListener<T>('invoker', channel, ...args);
+  }
+
+
+  listen<T>(channelName: string) {
+    return this.createListener<T>('emitter', channelName);
+  }
+
+
+  private isElectronBackend(): boolean {
+    return !!(window.electronAPI && window.electronAPI.electron);
+  }
+
+
+  private createListener<T>(listenerType: 'invoker' | 'emitter', channelName: string, ...args: any[]): Observable<T> {
     if (!this.isElectronBackend()) {
       return EMPTY;
     }
 
-    const replyChannel = `${channel}:${this.listenerCount++}`;
+    const replyChannel = `${channelName}:${this.listenerCount++}`;
 
-    window.electronAPI.sendAndWait(channel, replyChannel, ...args);
+    window.electronAPI.sendAndWait(channelName, replyChannel, listenerType, ...args);
 
     return new Observable(observer => {
       window.electronAPI.listen(replyChannel, (type: string, response: T) => {
@@ -48,11 +63,6 @@ export class BackendService {
         window.electronAPI.removeListener(replyChannel);
       }
     });
-
-  }
-
-  private isElectronBackend(): boolean {
-    return !!(window.electronAPI && window.electronAPI.electron);
   }
 
 }
