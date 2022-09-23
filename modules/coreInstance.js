@@ -4,7 +4,7 @@ const { EventEmitter } = require("events");
 module.exports = class CoreInstance extends EventEmitter {
 
 
-    constructor(settingsPath, abortSignal) {
+    constructor() {
         super();
     }
 
@@ -31,5 +31,9 @@ module.exports = class CoreInstance extends EventEmitter {
 
     updateSettings(changedSettings) {
         return false;
+    }
+
+    listListeners() {
+        return [];
     }
 }

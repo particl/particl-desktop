@@ -1,6 +1,6 @@
 const log = require('electron-log');
 const EventEmitter = require('events');
-const { BehaviorSubject } = require('rxjs');
+const { Observable } = require('rxjs');
 const settingsManager = require('./settingsManager');
 const CoreInstance = require('./coreInstance');
 
@@ -11,33 +11,27 @@ const isObject = (obj) => {
 
 
 const availableCores = [
-  { label: 'particl', module: './daemon/particlcore' },
+  { label: 'particl', module: ('./particl-core/particlcore.js') },
 ];
 
 
-const abortController = new AbortController();
+// keep track of the modules and related data
 const coreInstances = {};
-const coreStatuses = {};
-
-let status$ = new BehaviorSubject({});
-
 
 exports.init = () => {
+
+  const appConfig = settingsManager.getSettings(null);
+
   for (const core of availableCores) {
     if (core.label.length > 0 && core.module.length > 0) {
       log.info(`Loading core instance "${core.label}"`);
       try {
         const mod = require(core.module);
-        const obj = new mod(settingsManager.getSettings(null, 'PATHS').config, abortController.signal);
+        const obj = new mod(appConfig);
 
         if ((obj instanceof EventEmitter) && (obj instanceof CoreInstance)) {
           coreInstances[core.label] = obj;
-          coreStatuses[core.label] = null;
 
-          coreInstances[core.label].on('status', (status) => {
-            coreStatuses[core.label] = status;
-            status$.next(coreStatuses);
-          });
           log.info(`Loaded core instance "${core.label}"`);
         }
       } catch (err) {
@@ -45,38 +39,62 @@ exports.init = () => {
       }
     }
   }
-
-  if (abortController.signal.aborted) {
-    abortController = new AbortController();
-  }
-
-  status$.next(coreStatuses);
 }
 
 
 exports.destroy = async () => {
 
-  abortController.abort();
-
+  log.info(`Ensure Core instances are stopped...`);
   for (const coreLabel of Object.keys(coreInstances)) {
     const mod = coreInstances[coreLabel];
-    mod.removeAllListeners();
-    await mod.stop().catch(err => {
-      log.error(`Core instance "${coreLabel}" failed to stop: `, err);
-    });
-    coreStatuses[coreLabel] = null;
+    await mod.stop()
+      .then(() => {
+        mod.removeAllListeners();
+        delete coreInstances[coreLabel];
+      })
+      .catch(err => {
+        log.error(`"${coreLabel}" errored during stop request: `, err);
+      });
   }
 
-  if (status$ && !status$.isStopped) {
-    status$.complete();
-  }
+  log.info(`Core instance cleanup complete`);
 
 }
 
 
 exports.channels = {
   emitter: {
-    status: status$.asObservable(),
+    events: (_, coreLabel, eventName) => {
+      return new Observable(observer => {
+
+        let listenerFn;
+
+        if (
+          (typeof coreLabel === 'string') &&
+          (typeof eventName === 'string') &&
+          (coreLabel in coreInstances)
+        ) {
+          try {
+            const corelisteners = coreInstances[coreLabel].listListeners();
+            if (Array.isArray(corelisteners) && corelisteners.includes(eventName)) {
+              listenerFn = (value) => observer.next(value);
+            }
+          } catch (_) { }
+        }
+
+        if (listenerFn) {
+          coreInstances[coreLabel].on(eventName, listenerFn);
+          return () => {
+            try {
+              coreInstances[coreLabel].off(eventName, listenerFn);
+            } catch(_) { }
+          }
+        }
+
+        observer.error('Invalid Core or Event requested!');
+        observer.complete();
+      });
+    }
   },
 
   invoke: {
@@ -99,19 +117,16 @@ exports.channels = {
             if (typeof success !== 'boolean') {
               throw new Error('Unknown settings update status');
             }
-            observer.next({core: coreLabel, request: 'update', status: success});
+            observer.next({core: coreLabel, request: 'update', status: success, hasError: false});
           } else {
             const settings = coreInstances[coreLabel].getSettings();
-            if (!(isObject(settings) && ('schema' in settings) && isObject(settings.schema) && ('values' in settings) && isObject(settings.values))) {
-              throw new Error('Invalid settings object returned');
-            }
 
-            observer.next({core: coreLabel, request: 'settings', schema: settings.schema, values: settings.values});
+            observer.next({core: coreLabel, request: 'settings', settings, hasError: false});
           }
 
         } catch(err) {
           log.error(`Failed settings request for ${coreLabel} :`, err);
-          observer.error('Failed settings request');
+          observer.error({core: coreLabel, request: 'update', status: false, hasError: true});
         }
 
         observer.complete();
@@ -124,38 +139,46 @@ exports.channels = {
 
     'initialize': (coreLabel) => {
       if (!(typeof coreLabel === 'string' && (coreLabel in coreInstances))) {
-        log.error(`Unknown initialize request for core "${coreLabel}"`);
+        log.error(`Unknown initialize request for "${coreLabel}"`);
         return;
       }
-      log.info(`Initializing core "${coreLabel}"`);
+      log.info(`Initializing "${coreLabel}"`);
       coreInstances[coreLabel].initialize()
-        .then(() => log.info(`Initialized core "${coreLabel}"`))
-        .catch(err => log.error(`Initialization of core "${coreLabel}" failed: `, err));
+        .then(() => log.info(`Initialized "${coreLabel}"`))
+        .catch(err => log.error(`Initialization of "${coreLabel}" failed: `, err));
     },
 
 
     'start': (coreLabel) => {
       if (!(typeof coreLabel === 'string' && (coreLabel in coreInstances))) {
-        log.error(`Unknown start request for core "${coreLabel}"`);
+        log.error(`Unknown start request for "${coreLabel}"`);
         return;
       }
-      log.info(`Starting core "${coreLabel}"`);
+      log.info(`Requested start for "${coreLabel}"`);
       coreInstances[coreLabel].start()
-        .then(() => log.info(`Started core "${coreLabel}"`))
-        .catch(err => log.error(`Start request for core "${coreLabel}" failed: `, err));
+        .catch(err => log.error(`Start request for "${coreLabel}" failed: `, err));
     },
 
 
     'stop': (coreLabel) => {
       if (!(typeof coreLabel === 'string' && (coreLabel in coreInstances))) {
-        log.error(`Unknown stop request for core "${coreLabel}"`);
+        log.error(`Unknown stop request for "${coreLabel}"`);
         return;
       }
-      log.info(`Stopping core "${coreLabel}"`);
+      log.info(`Requested stop for "${coreLabel}"`);
       coreInstances[coreLabel].stop()
-        .then(() => log.info(`Stopped core "${coreLabel}"`))
-        .catch(err => log.error(`Stopping of core "${coreLabel}" failed: `, err));
+        .then(() => log.info(`Stopped "${coreLabel}"`))
+        .catch(err => log.error(`Stopping of "${coreLabel}" failed: `, err));
     },
 
   }
-}
+};
+
+
+// exports.getStatus = (coreLabel) => {
+//   if (!(typeof coreLabel === 'string' && (coreLabel in coreInstances))) {
+//     return;
+//   }
+
+//   return coreStatuses[coreLabel];
+// };

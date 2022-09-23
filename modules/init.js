@@ -104,7 +104,7 @@ class ModuleManager {
         if (listenerType === 'invoker' && (channel in this.#channelListeners.invoke)) {
           this.#addListener(replyChannel, receiver, this.#channelListeners.invoke[channel], ...data);
         } else if (listenerType === 'emitter' && (channel in this.#channelListeners.emitter)) {
-          this.#addListener(replyChannel, receiver, this.#channelListeners.emitter[channel]);
+          this.#addListener(replyChannel, receiver, this.#channelListeners.emitter[channel], ...data);
         }
 
       }
@@ -149,7 +149,6 @@ class ModuleManager {
 
         const modulePaths = [
           './coreManager',
-          //'./zmq/zmq',
           // './market/market'
           './gui/gui',
           './gui/notification',

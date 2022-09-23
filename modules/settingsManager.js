@@ -1,6 +1,8 @@
 const Ajv             = require('ajv');
 const path            = require('path');
 const fs              = require('fs');
+const packageJson     = require('../package.json');
+const mpPackageJson   = require('../node_modules/@zasmilingidiot/particl-marketplace/package.json');
 
 
 const urlsAllowed = [
@@ -67,9 +69,24 @@ const settingsSchema = {
       },
       required: ['config', 'binaries'],
       additionalProperties: { "type": "string" }
+    },
+
+    'VERSIONS': {
+      type: 'object',
+      properties: {
+        app: { type: 'string' },
+        wallet: { type: 'string' },
+        marketplace: { type: 'string' },
+        governance: { type: 'string' }
+      },
+      required: ['app']
+    },
+    'TESTING_MODE': {
+      type: 'boolean',
+      default: false,
     }
   },
-  required: ['MODE', 'DEBUGGING_LEVEL' ],
+  required: ['MODE', 'DEBUGGING_LEVEL', 'VERSIONS' ],
   additionalProperties: false
 };
 
@@ -101,6 +118,10 @@ const parseCliArgs = () => {
         case '-devtools':
         case '--devtools':
           options.STARTUP_WITH_DEVTOOLS = true;
+          break;
+
+        case '-force-mode-test':
+          options.TESTING_MODE = true;
           break;
       };
 
@@ -152,7 +173,14 @@ class AppSettingsManager {
         logs: path.join(this.#basePath, 'logs'),
         config: path.join(this.#basePath, 'settings'),
         binaries: path.join(this.#basePath, 'binaries'),
-      }
+      },
+      VERSIONS: {
+        app: packageJson.version,
+        wallet: packageJson.appVersions.wallet,
+        marketplace: mpPackageJson.version,
+        governance: packageJson.appVersions.governance,
+      },
+      TESTING_MODE: packageJson.version.includes('test'),
     };
 
     const parsedArgs = parseCliArgs();
@@ -161,6 +189,12 @@ class AppSettingsManager {
       if (defaultSettings[key] !== undefined) {
         defaultSettings[key] = parsedArgs[key];
       }
+    }
+
+    if (defaultSettings.MODE === 'developer') {
+      const devBasePath = [this.#basePath, 'developer'];
+      defaultSettings.PATHS.logs = path.join(...devBasePath, 'logs');
+      defaultSettings.PATHS.config = path.join(...devBasePath, 'settings');
     }
 
     if (this.#defaultValidator(defaultSettings)) {

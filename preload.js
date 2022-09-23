@@ -3,34 +3,6 @@
 // careful to not leak any objects into the global scope!
 const { contextBridge, ipcRenderer } = require('electron');
 
-// TODO: re-add in all these commands that were previously used (or at least those that are relevant still)
-// const exposedIpc = new SafeIpcRenderer([
-//   'start-system',
-//   'zmq-connect',
-
-//   'notifications',
-//   'daemon',
-//   'close-gui',
-
-//   'start-market',
-//   'stop-market',
-//   'market-keygen',
-//   'market-importer',
-//   'market-export-example-csv',
-//   'market-export-writecsv',
-
-//   'zmq',
-//   'write-core-config',
-//   'ipc-delete-wallet',
-//   'open-system-dialog',
-
-//   'rx-ipc-check-reply',
-//   'rx-ipc-check-listener',
-
-//   // 'start-bot-framework',
-//   // 'stop-bot-framework'
-// ]);
-
 
 // Proxy anything on the .send, .invoke, and .on calls to a specific channel
 contextBridge.exposeInMainWorld('electronAPI', {

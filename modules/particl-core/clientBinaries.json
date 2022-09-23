@@ -1,0 +1,37 @@
+{
+  "3": {
+    "version": "22.0.3.0",
+    "platforms": {
+      "osx": {
+        "x64": {
+          "url": "https://github.com/particl/particl-core/releases/download/v22.0.3.0/particl-22.0.3.0-osx64.tar.gz",
+          "sha256": "5969d85166ef266e56aba8995b9efdebf304bfa68fabb6f4396125e85a06b8e9"
+        }
+      },
+      "win": {
+        "ia32": {
+          "url": "https://github.com/particl/particl-core/releases/download/v22.0.3.0/particl-22.0.3.0-win32.zip",
+          "sha256": "6aac598872870f01322f11ba52f88fd1013b25faa325137150d2b7664a56719e"
+        },
+        "x64": {
+          "url": "https://github.com/particl/particl-core/releases/download/v22.0.3.0/particl-22.0.3.0-win64.zip",
+          "sha256": "bc1d41dea88c142f35ef16f4f28b0cd337d66e5401b57c4165f053e1cf1209ee"
+        }
+      },
+      "linux": {
+        "x64": {
+          "url": "https://github.com/particl/particl-core/releases/download/v22.0.3.0/particl-22.0.3.0_nousb-x86_64-linux-gnu.tar.gz",
+          "sha256": "ed27fc2947d1972651844a6a5f58382832cb65df895a874023521f2d786faf5e"
+        },
+        "arm64": {
+          "url": "https://github.com/particl/particl-core/releases/download/v22.0.3.0/particl-22.0.3.0_nousb-aarch64-linux-gnu.tar.gz",
+          "sha256": "18a98d4ffafe8b8720aae8a5fac507ca1d76fa5b05236ce05d71106976fb9440"
+        },
+        "arm": {
+          "url": "https://github.com/particl/particl-core/releases/download/v22.0.3.0/particl-22.0.3.0_nousb-arm-linux-gnueabihf.tar.gz",
+          "sha256": "1c82691b99a2e30a1797c17d6f8f4ae9c617839c46b9e86e7640705708fe7abb"
+        }
+      }
+    }
+  }
+}
