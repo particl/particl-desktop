@@ -191,7 +191,7 @@ app.on('web-contents-created', (event, contents) => {
       });
     }
 
-    const errorWin = createNewWindow('Particl Desktop - load URL error', 500, 500);
+    const errorWin = createNewWindow('Particl Desktop - load URL error', 500, 500, true);
     errorWin.once('ready-to-show', () => errorWin.show());
     errorWin.loadURL(url.format({
       protocol: 'file:',
@@ -231,7 +231,7 @@ app.once('will-quit', async function beforeQuit(event) {
   try {
 
     // Display a 'modal'-like window indicating that the application is shutting down
-    closingWindow = createNewWindow('Closing Particl Desktop', 320, 500);
+    closingWindow = createNewWindow('Closing Particl Desktop', 320, 500, false);
 
     closingWindow.loadURL(url.format({
       protocol: 'file:',
@@ -262,6 +262,7 @@ app.once('will-quit', async function beforeQuit(event) {
     }
   }
 
+  log.info('Cleaning up modules.');
   await modManager.cleanup(true).catch(() => {
     // do nothing, here just to ensure that we prevent errors from aborting the shutdown process
   });
@@ -270,11 +271,12 @@ app.once('will-quit', async function beforeQuit(event) {
     closingWindow.setClosable(true);
     closingWindow.close();
   }
+  log.info('Shutdown complete.');
   app.quit();
 });
 
 
-function createNewWindow(title, minHeight, minWidth) {
+function createNewWindow(title, minHeight, minWidth, showFrame = true) {
   return new BrowserWindow({
     title:     title,
     width:     minWidth,
@@ -284,7 +286,7 @@ function createNewWindow(title, minHeight, minWidth) {
     icon:      path.join(__dirname, 'resources', 'icon.png'),
 
     backgroundColor: '#222828',
-    frame: true,
+    frame: showFrame !== false,
     darkTheme: true,
 
     webPreferences: {
@@ -302,7 +304,7 @@ function createNewWindow(title, minHeight, minWidth) {
 
 
 function openCrashWindow() {
-  const errorWindow = createNewWindow('Particl Desktop Error', 320, 500);
+  const errorWindow = createNewWindow('Particl Desktop Error', 320, 500, true);
   errorWindow.loadURL(url.format({
     protocol: 'file:',
     pathname: path.join(__dirname, `${settingsManager.getSettings(null, 'MODE') === 'developer' ? 'src' : 'dist'}`, 'assets', 'modals', 'crash.html'),
@@ -321,7 +323,7 @@ function createMainGUI() {
 
   createSystemTray();
 
-  const win = createNewWindow('Particl Desktop', 675, 1270);
+  const win = createNewWindow('Particl Desktop', 675, 1270, true);
 
   win.setMenuBarVisibility(false);
   win.setAutoHideMenuBar(true);

@@ -4,16 +4,20 @@ import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
 import { auditTime, concatMap, takeUntil, map } from 'rxjs/operators';
 
 import { Select, Store } from '@ngxs/store';
-import { AppDataState } from 'app/core/store/appdata.state';
-import { MainState } from './../../../store/main.state';
-
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
-import { PeerCalculatedStats } from './block-sync.models';
+import { Particl } from 'app/networks/networks.module';
 
 
 enum TextContent {
   BLOCK_CHECK = 'Calculating…',
   SYNC_COMPLETE = 'Done',
+}
+
+
+interface PeerCalculatedStats {
+  remainingBlocks: number;
+  highestPeerBlock: number;
+  currentBlock: number;
+  syncPercentage: number;
 }
 
 
@@ -23,8 +27,8 @@ enum TextContent {
 })
 export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
-  @Select(AppDataState.networkValue('connections')) totalConnections: Observable<number>;
-  @Select(ZmqConnectionState.getData('hashtx')) blockWatcher$: Observable<string>;
+  @Select(Particl.State.Blockchain.networkValue('connections')) totalConnections: Observable<number>;
+  @Select(Particl.State.ZMQ.getData('hashtx')) blockWatcher$: Observable<string>;
 
   remainderBlocks: string = TextContent.BLOCK_CHECK;
   currentBlock: number = 0;
@@ -50,8 +54,8 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     const calculateStats$ = combineLatest([
-      this._store.select(MainState.highestPeerBlockCount()).pipe(takeUntil(this.destroy$)),
-      this._store.select(AppDataState.blockHeight).pipe(takeUntil(this.destroy$))
+      this._store.select(Particl.State.Blockchain.highestPeerBlockCount()).pipe(takeUntil(this.destroy$)),
+      this._store.select(Particl.State.Blockchain.blockHeight).pipe(takeUntil(this.destroy$))
     ]).pipe(
       map(results => {
         const highestPeerBlock = results[0];

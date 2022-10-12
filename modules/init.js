@@ -1,3 +1,4 @@
+const _log = require('electron-log');
 const { ipcMain } = require('electron');
 const { Observable, isObservable, Subject } = require('rxjs');
 const { takeUntil } = require('rxjs/operators');
@@ -106,9 +107,7 @@ class ModuleManager {
         } else if (listenerType === 'emitter' && (channel in this.#channelListeners.emitter)) {
           this.#addListener(replyChannel, receiver, this.#channelListeners.emitter[channel], ...data);
         }
-
       }
-
     }
   }
 
@@ -138,85 +137,95 @@ class ModuleManager {
 
 
   #setupOwnListeners() {
-    if (!('init-system' in this.#channelListeners.invoke)) {
-      this.#channelListeners.invoke['init-system'] = new Observable(observer => {
-        if (this.#startedStatus !== InitializationStatus.Stopped) {
-          observer.complete();
-          return;
+    if ('init-system' in this.#channelListeners.invoke) {
+      return;
+    }
+
+    this.#channelListeners.invoke['init-system'] = new Observable(observer => {
+
+      const logger = (msg, isError) => {
+        if (isError) {
+          observer.error(msg);
+          _log.error(msg);
+        } else {
+          observer.next(msg);
+          _log.info(msg);
         }
-        this.#startedStatus = InitializationStatus.Starting;
-        observer.next(textContent.INITIALIZATION_STARTING);
+      }
+      if (this.#startedStatus !== InitializationStatus.Stopped) {
+        observer.complete();
+        return;
+      }
+      this.#startedStatus = InitializationStatus.Starting;
+      logger(textContent.INITIALIZATION_STARTING, false);
 
-        const modulePaths = [
-          './coreManager',
-          // './market/market'
-          './gui/gui',
-          './gui/notification',
-          './market/services',
-        ];
+      const modulePaths = [
+        './application',
+        './gui/gui',
+        './gui/notification',
+        './coreManager',
+        // './market/market'
+        './market/services',
+      ];
 
-        let success = true;
+      let success = true;
 
-        for (const modpath of modulePaths) {
-          const modName = modpath
-            .split('/')
-            .reduce((acc, curr) => curr !== '.' && curr.length > 0 ? `${acc}${acc.length > 0 ? ':' : ''}${curr}` : acc, '');
+      for (const modpath of modulePaths) {
+        const modName = modpath
+          .split('/')
+          .reduce((acc, curr) => curr !== '.' && curr.length > 0 ? `${acc}${acc.length > 0 ? ':' : ''}${curr}` : acc, '');
 
-          try {
+        try {
 
-            observer.next(`${modName} loading`);
+          logger(`Loading module: ${modName}`, false);
 
-            const mod = require(modpath);
+          const mod = require(modpath);
 
-            observer.next(textContent.MODULE_LOADING.replace('${mod}', modName));
+          logger(textContent.MODULE_LOADING.replace('${mod}', modName), false);
 
-            if (this.#isFunction(mod['destroy'])) {
-              this.#channelListeners.destroyFuncs.push(mod['destroy']);
-            }
+          if (this.#isFunction(mod['destroy'])) {
+            this.#channelListeners.destroyFuncs.push(mod['destroy']);
+          }
 
-            if (this.#isRegularFunction(mod['init'])) {
-                mod['init']();
-            }
+          if (this.#isRegularFunction(mod['init'])) {
+              mod['init']();
+          }
 
-            observer.next(textContent.MODULE_ADD_EVENTS.replace('${mod}', modName));
+          logger(textContent.MODULE_ADD_EVENTS.replace('${mod}', modName), false);
 
-            if (Object.prototype.toString.call(mod['channels']) === '[object Object]') {
-              for (const listenerType of ['invoke', 'on', 'emitter']) {
-                if (Object.prototype.toString.call(mod['channels'][listenerType]) === '[object Object]') {
-                  for (const channelName of Object.keys(mod['channels'][listenerType])) {
-                    const modChannelName = `${modName}:${channelName}`;
+          if (Object.prototype.toString.call(mod['channels']) === '[object Object]') {
+            for (const listenerType of ['invoke', 'on', 'emitter']) {
+              if (Object.prototype.toString.call(mod['channels'][listenerType]) === '[object Object]') {
+                for (const channelName of Object.keys(mod['channels'][listenerType])) {
+                  const modChannelName = `${modName}:${channelName}`;
 
-                    // do not re-add
-                    if (!(modChannelName in this.#channelListeners[listenerType])) {
-                      this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName];
-                    }
+                  // do not re-add
+                  if (!(modChannelName in this.#channelListeners[listenerType])) {
+                    this.#channelListeners[listenerType][modChannelName] = mod['channels'][listenerType][channelName];
                   }
                 }
               }
             }
-          } catch (err) {
-            observer.error(textContent.MODULE_LOAD_ERROR.replace('${mod}', modName));
-            // TODO: log out the actual error
-            console.log('Error loading module: ', err);
-            success = false;
-            break;
           }
+        } catch (err) {
+          logger(`${textContent.MODULE_LOAD_ERROR.replace('${mod}', modName)} -> ${err && err.message ? err.message : err}`, true);
+          success = false;
+          break;
         }
+      }
 
-        if (success) {
-          observer.next(textContent.INIT_COMPLETE);
-          observer.complete();
-          this.#startedStatus = InitializationStatus.Started;
-        } else {
-          this.cleanup(false);
-        }
-      });
-    }
+      if (success) {
+        logger(textContent.INIT_COMPLETE, false);
+        observer.complete();
+        this.#startedStatus = InitializationStatus.Started;
+      } else {
+        this.cleanup(false);
+      }
+    });
   }
 
 
   #addListener(channel, receiver, callable, ...data) {
-
     if (!this.#channelListeners.send.has(receiver.id)) {
       this.#channelListeners.send.set(receiver.id, {});
     }

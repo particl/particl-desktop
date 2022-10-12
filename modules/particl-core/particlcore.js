@@ -371,15 +371,17 @@ module.exports = class ParticlCore extends CoreInstance {
   }
 
 
-  updateSettings(newSettings) {
+  updateSettings(settingsType, newSettings) {
     // TODO: some validation here would probably be necessary, maybe instead return some sort of error on failed update
     try {
       this.#settingsRef.set(newSettings);
       this.#settingsValues = this.#settingsRef.store;
-      return true;
-    } catch(_) {
+    } catch(err) {
+      _log.err(`Particl Update Settings failed: `, err.message);
       return false;
     }
+
+    return true;
   }
 
 
@@ -389,6 +391,7 @@ module.exports = class ParticlCore extends CoreInstance {
 
 
   async initialize() {
+    this.#updateStatus({});
     if (this.#settingsValues.startup.autoStart) {
       await this.#startSystem();
     }
@@ -408,9 +411,7 @@ module.exports = class ParticlCore extends CoreInstance {
     // no need to continue if already stopping or stopped
     if ((this.#startedParams.started === STARTED_STATUS.STOPPED) || (this.#startedParams.started === STARTED_STATUS.STOPPING)) return;
 
-    // TODO: might need to wait a few seconds here to let abort controller signal processing complete
-
-    this.#updateStatus({hasError: false, started: STARTED_STATUS.STOPPING, message: 'attempting to stop Particl Core'});
+    this.#updateStatus({hasError: false, started: STARTED_STATUS.STOPPING, message: 'Stopping Particl Core'});
 
     let success = false;
 
@@ -428,31 +429,36 @@ module.exports = class ParticlCore extends CoreInstance {
 
     if (this.#startedDaemon) {
 
-      const isStopped = await new Promise((resolve, reject) => {
-        this.#startedDaemon.once('close', code => {
-          this.#updateStatus({message: `Particl Core exited with code ${code}`});
-          resolve();
-        });
+      // request core to stop, giving it 30 seconds to do so.
+      const isStopped = await Promise.race([
+        new Promise((resolve, reject) => {
+          this.#startedDaemon.once('close', code => {
+            this.#updateStatus({message: `Particl Core exited with code ${code}`});
+            resolve();
+          });
 
-        this.#updateStatus({message: 'Using rpc to request Particl Core to stop'});
+          this.#updateStatus({message: 'Using rpc to request Particl Core to stop'});
 
-        const headers = {
-          'Content-Type': 'application/json',
-          'Authorization': `Basic ${Buffer.from(this.#startedParams.auth).toString('base64')}`,
-          'Accept': 'application/json',
-        };
+          const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${this.#startedParams.auth}`,
+            'Accept': 'application/json',
+          };
 
-        _fetch(
-          `${this.#getRpcUrl()}`,
-          { method: 'POST', headers, redirect: 'follow', body: JSON.stringify({'jsonrpc': '1.0', method: 'stop', params: [], id: 'particl-desktop'}), timeout: 5_000}
-        ).then(res =>
-          res.json()
-        ).then(res => {
-          if (!res || res.id !== 'particl-desktop' || res.error !== null ) {
-            reject();
-          }
-        }).catch(() => reject());
-      }).then(() => true).catch(() => false);
+          _fetch(
+            `${this.#getRpcUrl()}`,
+            { method: 'POST', headers, redirect: 'follow', body: JSON.stringify({'jsonrpc': '1.0', method: 'stop', params: [], id: 'particl-desktop'}), timeout: 5_000}
+          ).then(res =>
+            res.json()
+          ).then(res => {
+            if (!res || res.id !== 'particl-desktop' || res.error !== null ) {
+              reject();
+            }
+          }).catch(() => reject());
+        }).then(() => true).catch(() => false),
+
+        _sleep(30_000, false)
+      ]);
 
       if (!isStopped) {
         this.#updateStatus({message: 'Particl Core failed to stop via rpc - killing it brutally :('});
@@ -559,7 +565,6 @@ module.exports = class ParticlCore extends CoreInstance {
           message: 'Failed to connect to Particl Core instance',
           hasError: true,
         });
-        this.stop();
         return;
       }
 
@@ -606,7 +611,7 @@ module.exports = class ParticlCore extends CoreInstance {
 
     if (this.#cancelSignal.aborted) return;
 
-    // Set up zmq notifications if available
+    // 3. Set up zmq notifications if available
     if (!(
       (this.#startedParams.started === STARTED_STATUS.STARTED) &&
       (Object.keys(this.#startedParams.zmq).length > 0) &&
@@ -1061,7 +1066,7 @@ module.exports = class ParticlCore extends CoreInstance {
         this.stop(true);
         return;
       }
-      this.stop();
+      // this.stop();
 
     });
 
@@ -1272,14 +1277,14 @@ module.exports = class ParticlCore extends CoreInstance {
       }
     }
 
-    return rpcAuth;
+    return Buffer.from(rpcAuth).toString('base64');
   }
 
 
   async #testRpcConnection(rpcUrl, rpcAuth) {
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${Buffer.from(rpcAuth).toString('base64')}`,
+      'Authorization': `Basic ${rpcAuth}`,
       'Accept': 'application/json',
     };
 
@@ -1322,7 +1327,7 @@ module.exports = class ParticlCore extends CoreInstance {
   async #getZmqAvailability(rpcUrl, rpcAuth) {
     const headers = {
       'Content-Type': 'application/json',
-      'Authorization': `Basic ${Buffer.from(rpcAuth).toString('base64')}`,
+      'Authorization': `Basic ${rpcAuth}`,
       'Accept': 'application/json',
     };
 

@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
 import { MotdService, MessageQuote } from 'app/core/services/motd.service';
-import { environment } from 'environments/environment';
+import { Select } from '@ngxs/store';
+import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
 
 
 @Component({
@@ -12,7 +13,7 @@ import { environment } from 'environments/environment';
 })
 export class WelcomeComponent implements OnDestroy {
 
-  readonly clientVersion: string = environment.version;
+  @Select(ApplicationConfigState.moduleVersions('app')) clientVersion$: Observable<string>;
   motd: MessageQuote = {author: '', text: ''};
 
   private destroy$: Subject<void> = new Subject();

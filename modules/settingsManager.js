@@ -84,6 +84,10 @@ const settingsSchema = {
     'TESTING_MODE': {
       type: 'boolean',
       default: false,
+    },
+    'LANGUAGE': {
+      type: 'string',
+      default: 'en-US',
     }
   },
   required: ['MODE', 'DEBUGGING_LEVEL', 'VERSIONS' ],

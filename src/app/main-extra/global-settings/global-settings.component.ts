@@ -1,23 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Store } from '@ngxs/store';
-import { take, concatMap, finalize } from 'rxjs/operators';
-import { Observable, from } from 'rxjs';
-import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
-import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
-import { AppSettings } from 'app/core/store/app.actions';
 
-import {
-  PageInfo,
-  TextContent,
-  SettingType,
-  SettingGroup,
-  Setting,
-  SelectableOption
-} from 'app/main-extra/global-settings/settings.types';
-import { ApplicationState } from 'app/core/store/app.state';
+import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
+import { ApplicationConfigStateModel } from 'app/core/app-global-state/state.models';
+
+import { BackendService } from 'app/core/services/backend.service';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
+import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
+
+import { PageInfo, TextContent, Setting } from 'app/main-extra/global-settings/settings.types';
+
+
+type StatusType = Pick<Setting, 'id' | 'title' | 'description' | 'isDisabled' | 'errorMsg' | 'currentValue' | 'restartRequired' | 'tags' | 'options' | 'formatValue'>;
 
 
 @Component({
@@ -25,11 +22,7 @@ import { ApplicationState } from 'app/core/store/app.state';
   styleUrls: ['./global-settings.component.scss']
 })
 export class GlobalSettingsComponent implements OnInit {
-  settingType: (typeof SettingType) = SettingType;  // Template typings
-
-  settingGroups: SettingGroup[] = [];
-  isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
-  currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
+  settings: StatusType[] = [];
 
   readonly pageDetails: PageInfo = {
     title: 'Particl Desktop Settings',
@@ -37,60 +30,23 @@ export class GlobalSettingsComponent implements OnInit {
     help: 'For configuration of separate wallets, open the specific wallet and go to Wallet Settings page'
   } as PageInfo;
 
-  private _currentGroupIdx: number = 0;
+
 
 
   constructor(
     private _store: Store,
     private _dialog: MatDialog,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _backendService: BackendService,
   ) { }
 
 
   ngOnInit() {
-    this.loadPageData();
-
-    // Perform relevant data binding
-    this.settingGroups.forEach((group: SettingGroup) => {
-      group.settings.forEach((setting: Setting) => {
-        if (setting.validate) {
-          setting.validate = setting.validate.bind(this);
-        }
-        if (setting.onChange) {
-          setting.onChange = setting.onChange.bind(this);
-        }
-      });
-
-      this.currentChanges.push([]);
-    });
-    this.clearChanges();
+    this.settings = this.buildSettingsItems();
   }
 
 
-  get hasErrors(): boolean {
-    return this.settingGroups.findIndex(group => group.errors.length > 0) > -1;
-  }
-
-  get hasChanges(): boolean {
-    return this.currentChanges.findIndex(group => group.length > 0) > -1;
-  }
-
-
-  get currentGroup(): SettingGroup {
-    return this.settingGroups[this._currentGroupIdx];
-  }
-
-  get currentGroupIdx(): number {
-    return this._currentGroupIdx;
-  }
-
-
-  trackBySettingGroupFn(idx: number, item: SettingGroup) {
-    return idx;
-  }
-
-
-  trackBySettingFn(idx: number, item: Setting) {
+  trackBySettingFn(_: number, item: Setting) {
     return item.id;
   }
 
@@ -100,193 +56,34 @@ export class GlobalSettingsComponent implements OnInit {
   }
 
 
-  changeSelectedGroup(idx: number) {
-    if (idx >= 0 && idx < this.settingGroups.length) {
-      this._currentGroupIdx = idx;
-    }
-  }
-
-
   settingChangedValue(settingIdx: number) {
-    if (!(settingIdx >= 0 && settingIdx < this.currentGroup.settings.length)) {
+    if (!(settingIdx >= 0 && settingIdx < this.settings.length)) {
         return;
     }
 
-    this.isProcessing = true;
-    const currentGroup = this.currentGroup;
-    const groupIdx = this._currentGroupIdx;
-    const setting = this.currentGroup.settings[settingIdx];
-
-    if (setting.validate) {
-      const response = setting.validate(setting.newValue, setting);
-      setting.errorMsg = response ? response : '';
+    let newValue = this.settings[settingIdx].currentValue;
+    if (this.settings[settingIdx].formatValue) {
+      newValue = this.settings[settingIdx].formatValue(newValue);
     }
-    if (!setting.errorMsg && setting.onChange) {
-      const response = setting.onChange(setting.newValue, setting);
-      setting.errorMsg = response ? response : '';
-    }
-    const listedError = currentGroup.errors.findIndex(errItem => errItem === settingIdx);
-
-    if (setting.errorMsg && (listedError === -1)) {
-      currentGroup.errors.push(settingIdx);
-    } else if (!setting.errorMsg && (listedError > -1)) {
-      currentGroup.errors.splice(listedError, 1);
-    }
-
-    const changeIdx = this.currentChanges[groupIdx].findIndex((c) => c === settingIdx);
-
-    if ((setting.currentValue !== setting.newValue) && (changeIdx === -1)) {
-      this.currentChanges[groupIdx].push(settingIdx);
-    } else if ((setting.currentValue === setting.newValue) && (changeIdx !== -1)) {
-      this.currentChanges[groupIdx].splice(changeIdx, 1);
-    }
-
-    this.isProcessing = false;
-  }
-
-
-  clearChanges() {
-    if (this.isProcessing) {
-      return;
-    }
-    this.isProcessing = true;
-
-    this.settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          setting.newValue = setting.currentValue;
-        }
-        setting.errorMsg = '';
-        group.errors = [];
-      });
-    });
-
-    this.currentChanges = this.currentChanges.map(change => []);
-    this.isProcessing = false;
-  }
-
-  /**
-   * Saves all modified changes on the current displayed page/tab.
-   * Validates each modified setting if a validate function is specified.
-   * If no setting validation errors occur, then the SettingPages's "save" function is invoked.
-   */
-  saveChanges() {
-    if (this.isProcessing) {
-      this._snackbar.open(TextContent.ERROR_BUSY_PROCESSING, 'err');
-      return;
-    }
-    this.isProcessing = true;
-
-    this.disableUI(TextContent.SAVING);
-
-    // Validation of each changed setting ensures current settings are not in an error state
-    let hasError = false;
-    let hasChanged = false;
-    this.settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          if (setting.currentValue !== setting.newValue) {
-            hasChanged = true;
-
-            if (setting.validate) {
-              const response = setting.validate(setting.newValue, setting);
-              if (response) {
-                setting.errorMsg = response;
-                hasError = true;
-              }
-            }
+    this._backendService.sendAndWait<boolean>(
+      'application:settings',
+      true,
+      this.settings[settingIdx].id,
+      this.settings[settingIdx].currentValue
+    ).subscribe({
+      next: (success) => {
+        if (success) {
+          this._snackbar.open(TextContent.SAVE_SETTING_SUCCESSFUL.replace('{setting}', this.settings[settingIdx].title));
+          if (this.settings[settingIdx].restartRequired) {
+            this.actionRestartApplication();
           }
-        }
-      });
-    });
-
-    if (!hasChanged || hasError) {
-      const errMsg = !hasChanged ? TextContent.SAVE_NOT_NEEDED : TextContent.ERROR_INVALID_ITEMS;
-      this.isProcessing = false;
-      this.enableUI();
-      this._snackbar.open(errMsg, 'err');
-      return;
-    }
-
-    this.saveActualChanges().pipe(
-      take(1),
-      finalize(() => {
-        this.isProcessing = false;
-        this.enableUI();
-      })
-    ).subscribe(
-      (doRestart: boolean) => {
-
-        // Change current settings in case it has not been done
-        this.settingGroups.forEach(group => {
-          group.settings.forEach(setting => {
-            if ( !(setting.type === SettingType.BUTTON)) {
-              setting.currentValue = setting.newValue;
-            }
-            setting.errorMsg = '';
-          });
-          group.errors = [];
-        });
-
-        // reset the list of current changes
-        this.currentChanges = this.currentChanges.map(change => []);
-        this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
-
-        if (doRestart) {
-          this.actionRestartApplication();
+        } else {
+          this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'err');
         }
       },
-      (err) => {
-        this._snackbar.open(TextContent.SAVE_FAILED, 'err');
+      error: () => {
+        this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'err');
       }
-    );
-  }
-
-
-  private disableUI(message: string) {
-    this._dialog.open(ProcessingModalComponent, {
-      disableClose: true,
-      data: {
-        message: message
-      }
-    });
-  }
-
-
-  private enableUI() {
-    this._dialog.closeAll();
-  }
-
-  /**
-   * Extracts the changed settings for persistence: Modify this depending on the specific settings being configured
-   */
-  private saveActualChanges(): Observable<boolean> {
-    return new Observable((observer) => {
-
-      let restartRequired = false;
-      const actions = [];
-
-      this.settingGroups.forEach(group => {
-        group.settings.forEach((setting) => {
-          if ( (setting.type !== SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
-            actions.push(new AppSettings.SetSetting(setting.id, setting.newValue));
-            if (setting.restartRequired) {
-              restartRequired = true;
-            }
-          }
-        });
-      });
-
-      from(actions).pipe(
-        concatMap((action) => this._store.dispatch(action))
-      ).subscribe(
-        null,
-        null,
-        () => {
-          observer.next(restartRequired);
-          observer.complete();
-        }
-      );
     });
   }
 
@@ -294,43 +91,69 @@ export class GlobalSettingsComponent implements OnInit {
   private actionRestartApplication() {
     const dialogRef = this._dialog.open(ApplicationRestartModalComponent);
     dialogRef.componentInstance.onConfirmation.subscribe(() => {
-      this.disableUI(TextContent.RESTARTING_APPLICATION);
+      this._dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: TextContent.RESTARTING_APPLICATION
+        }
+      });
     });
   }
 
 
-  private loadPageData() {
+  private buildSettingsItems(): StatusType[] {
 
+    const globalSettings = this._store.selectSnapshot<ApplicationConfigStateModel>(ApplicationConfigState);
 
-    const globalSettings = this._store.selectSnapshot(ApplicationState.appSettings);
+    const userSettings: StatusType[] = [
+      {
+        id: 'LANGUAGE',
+        title: 'Language',
+        description: 'Particl Desktop\'s current language',
+        isDisabled: true,
+        errorMsg: '',
+        currentValue: globalSettings.selectedLanguage,
+        restartRequired: false,
+        tags: [],
+        options: [
+          {text: 'English (US)', value: 'en-US', isDisabled: false},
+        ],
+      },
+      {
+        id: 'DEBUGGING_LEVEL',
+        title: 'Debug Level',
+        description: 'Indicates the level at which various events are logged',
+        isDisabled: true,
+        errorMsg: '',
+        currentValue: globalSettings.debugLevel,
+        restartRequired: false,
+        tags: [],
+        options: [
+          {text: 'silly', value: 'silly', isDisabled: false},
+          {text: 'debug', value: 'debug', isDisabled: false},
+          {text: 'info', value: 'info', isDisabled: false},
+          {text: 'warn', value: 'warn', isDisabled: false},
+          {text: 'error', value: 'error', isDisabled: false},
+        ],
+      },
+      {
+        id: 'TESTING_MODE',
+        title: 'Requested network testing mode',
+        description: 'Determines whether or not blockchain networks have been requested to start in testing mode or not.',
+        isDisabled: true,
+        errorMsg: '',
+        currentValue: globalSettings.requestedTestingNetworks ? 'true' : 'false',
+        restartRequired: true,
+        tags: [],
+        options: [
+          {text: 'Yes', value: 'true', isDisabled: false},
+          {text: 'No', value: 'false', isDisabled: false},
+        ],
+        formatValue: (selectedValue) => selectedValue === 'true'
+      }
+    ];
 
-    const userInterface = {
-      name: 'User interface',
-      icon: 'part-select',
-      settings: [],
-      errors: []
-    } as SettingGroup;
-
-    userInterface.settings.push({
-      id: 'global.language',
-      title: 'Language',
-      description: 'Change the application language',
-      isDisabled: true,
-      type: SettingType.SELECT,
-      errorMsg: '',
-      currentValue: globalSettings.language,
-      tags: [],
-      options: [
-        {
-          text: 'English (US)',
-          value: 'en_us',
-          isDisabled: true
-        } as SelectableOption
-      ],
-      restartRequired: false
-    } as Setting);
-
-    this.settingGroups.push(userInterface);
+    return userSettings;
   }
 
 }

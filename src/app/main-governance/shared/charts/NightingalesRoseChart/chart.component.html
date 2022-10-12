@@ -1,9 +1,0 @@
-<ng-container *ngIf="isLoading; else graphContainer">
-    <div class="loading-wrapper" fxLayoutAlign="center center">
-        <div class="lds-dual-ring"></div>
-    </div>
-</ng-container>
-
-<ng-template #graphContainer>
-  <div echarts [options]="chartOptions" [loading]="isLoading"></div>
-</ng-template>

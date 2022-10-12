@@ -2,9 +2,9 @@ import { Component, Inject, HostListener, AfterViewInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UnlockModalConfig } from '../../services/wallet-encryption/wallet-encryption.model';
-import { WalletInfoService } from '../../services/wallet-info/wallet-info.service';
 import { SnackbarService } from '../../services/snackbar/snackbar.service';
-import { CoreErrorModel } from 'app/core/core.models';
+import { ParticlWalletService } from 'app/networks/networks.module';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 import { finalize } from 'rxjs/operators';
 
 
@@ -36,7 +36,7 @@ export class UnlockwalletModalComponent implements AfterViewInit {
   constructor(
     public _dialogRef: MatDialogRef<UnlockwalletModalComponent>,
     @Inject(MAT_DIALOG_DATA) private data: UnlockModalConfig,
-    private _walletService: WalletInfoService,
+    private _walletService: ParticlWalletService,
     private _snackbar: SnackbarService
   ) {
     this.timeout = (typeof this.data.timeout === 'number') && (Number.isInteger(this.data.timeout)) && (this.data.timeout >= 0) ?
@@ -79,7 +79,7 @@ export class UnlockwalletModalComponent implements AfterViewInit {
       () => {
         this._dialogRef.close(this.timeout);
       },
-      (err: CoreErrorModel) => {
+      (err: RPCResponses.Error) => {
         if ((typeof err === 'object') && err.code === -14) {
           this._snackbar.open(TextContent.UNLOCK_ERROR_PASSWORD, 'info');
         } else {

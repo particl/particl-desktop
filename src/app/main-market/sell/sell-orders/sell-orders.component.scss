@@ -1,9 +1,0 @@
-@import './src/assets/_config'; // import shared colors etc.
-@import './src/app/main-market/shared/list-item-details'; // shared styling for list items
-@import './src/app/main-market/shared/order-details'; // shared order details (contents of expansion panel)
-
-.filter {
-  .filter-separator {
-    margin: 24px 0;
-  }
-}

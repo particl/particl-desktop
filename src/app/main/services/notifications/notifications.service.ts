@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Observable, defer, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { BackendService } from 'app/core/services/backend.service';
 
 

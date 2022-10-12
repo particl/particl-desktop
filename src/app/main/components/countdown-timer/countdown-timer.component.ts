@@ -3,7 +3,7 @@ import { Select } from '@ngxs/store';
 import { Log } from 'ng2-logger';
 import { Observable, Subject, timer, EMPTY } from 'rxjs';
 import { takeWhile, takeUntil, switchMap, scan, mapTo, map, tap } from 'rxjs/operators';
-import { WalletInfoState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 
 @Component({
@@ -13,7 +13,7 @@ import { WalletInfoState } from 'app/main/store/main.state';
 })
 export class CountdownTimerComponent implements OnDestroy, AfterViewInit {
 
-  @Select(WalletInfoState.getValue('unlocked_until')) unlockedUntil$: Observable<number>;
+  @Select(Particl.State.Wallet.Info.getValue('unlocked_until')) unlockedUntil$: Observable<number>;
 
   private log: any = Log.create('countdown-timer.component id: ' + Math.floor((Math.random() * 1000) + 1));
   private destroy$: Subject<void> = new Subject();

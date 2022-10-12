@@ -12,7 +12,7 @@ import { Subject, fromEvent } from 'rxjs';
 import { finalize, takeUntil, filter, map } from 'rxjs/operators';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { ParticlRpcService } from 'app/networks/networks.module';
 import { DateFormatter } from 'app/core/util/utils';
 import { Command } from './command.model';
 
@@ -46,8 +46,8 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
   private historyCount: number = 0;
 
   constructor(
-    private _rpc: MainRpcService,
-    private snackbar: SnackbarService
+    private _rpc: ParticlRpcService,
+    private snackbar: SnackbarService,
   ) { }
 
   ngOnInit() {
@@ -169,7 +169,7 @@ export class ConsoleModalComponent implements OnInit, AfterViewChecked, OnDestro
     this.commandList.push(new Command(1, this.command, this.getDateFormat()),
       new Command(2, response, this.getDateFormat(), 200));
     this.command = '';
-    this.scrollToBottom();
+    setTimeout(() => this.scrollToBottom(), 0);
   }
 
   private formatErrorResponse(error: any) {

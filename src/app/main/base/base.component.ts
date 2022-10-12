@@ -1,11 +1,8 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subject, fromEvent, merge } from 'rxjs';
-import { map, filter, tap, takeUntil, auditTime, debounceTime } from 'rxjs/operators';
-import { Log } from 'ng2-logger';
-import { Store, Actions, ofActionDispatched, ofActionCompleted } from '@ngxs/store';
-import { MainActions } from '../store/main.actions';
-import { ZMQ } from 'app/core/store/app.actions';
-import * as zmqOptions from '../../../../modules/zmq/services.js';
+import { Subject, fromEvent } from 'rxjs';
+import { map, filter, tap, takeUntil } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { GlobalActions } from 'app/core/app-global-state/app.actions';
 
 
 /*
@@ -23,49 +20,14 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showAppSelector: boolean = true;
 
-  private log: any = Log.create('main.component id: ' + Math.floor((Math.random() * 1000) + 1));
-  private unsubscribe$: Subject<void> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(
     private _store: Store,
-    private _actions$: Actions
-  ) {
-
-    const blockWatcher$ = this._actions$.pipe(
-      ofActionDispatched(ZMQ.UpdateStatus),
-      filter((action: ZMQ.UpdateStatus) => action.field === 'hashtx'),
-      auditTime(zmqOptions.throttledSeconds * 1000), // rate-limited to max every x seconds
-      takeUntil(this.unsubscribe$)
-    );
-
-    const walletChanger$ = this._actions$.pipe(
-      ofActionCompleted(MainActions.ChangeWallet),
-      takeUntil(this.unsubscribe$)
-    );
-
-    const walletInit$ = this._actions$.pipe(
-      ofActionCompleted(MainActions.Initialize),
-      takeUntil(this.unsubscribe$)
-    );
-
-    // Create pipeline to update various additional necessary wallet details
-    merge(
-      blockWatcher$,
-      walletChanger$,
-      walletInit$
-    ).pipe(
-      debounceTime(500),
-      takeUntil(this.unsubscribe$)
-    ).subscribe(
-      () => {
-        this._store.dispatch(new MainActions.LoadWalletData());
-      }
-    );
-  }
+  ) { }
 
   ngOnInit() {
-    this.log.d('Main.Component constructed');
-    this._store.dispatch(new MainActions.Initialize(true));
+    this._store.dispatch(new GlobalActions.Initialize());
   }
 
 
@@ -84,13 +46,13 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       filter(Boolean),
       tap(() => document.execCommand('Paste')),
-      takeUntil(this.unsubscribe$)
+      takeUntil(this.destroy$)
     ).subscribe();
   }
 
 
   ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

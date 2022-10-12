@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { MotdService, MessageQuote } from 'app/core/services/motd.service';
 import { BackendService } from 'app/core/services/backend.service';
 
-import { environment } from 'environments/environment';
 import { termsObj } from 'app/startup/terms/terms-txt';
 
 @Component({
@@ -16,8 +15,6 @@ import { termsObj } from 'app/startup/terms/terms-txt';
   styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent implements OnInit, OnDestroy {
-
-  public readonly clientVersion: string = environment.version;
 
   loadingMessage: string = '';
   hasError: boolean = false;

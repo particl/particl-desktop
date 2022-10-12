@@ -1,7 +1,7 @@
 
 export type PageLoadFunction = (group: SettingGroup[]) => Promise<void>;
 export type ValidationFunction = (value: any, setting: Setting) => string | void;
-export type FormatFunction = () => any;
+export type FormatFunction = (value: any) => any;
 
 // Indicates the distinct type of the setting. Impacts the visual rendering of the setting, as well
 //  as functionality (eg: BUTTON types are ignored when performing save functionality)
@@ -86,6 +86,8 @@ export enum TextContent {
   ERROR_BUSY_PROCESSING = 'Changes not saved!',
   ERROR_INVALID_ITEMS = 'Please correct errors before attempting to save',
   SAVE_SUCCESSFUL = 'Successfully applied changes',
+  SAVE_SETTING_SUCCESSFUL = 'Successfully applied changes for {setting}',
+  SAVE_SETTING_FAILED = 'Could not update {setting}. See logs for further details.',
   SAVE_FAILED = 'Failed to apply selected changes',
   SAVE_NOT_NEEDED = 'Aborting save as no changes have been made',
   RESTARTING_APPLICATION = 'Please wait while the application restarts'

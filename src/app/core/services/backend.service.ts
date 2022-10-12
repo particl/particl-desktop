@@ -26,8 +26,8 @@ export class BackendService {
   }
 
 
-  listen<T>(channelName: string) {
-    return this.createListener<T>('emitter', channelName);
+  listen<T>(channelName: string, ...args: any[]): Observable<T> {
+    return this.createListener<T>('emitter', channelName, ...args);
   }
 
 

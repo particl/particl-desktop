@@ -5,7 +5,7 @@ import { Select } from '@ngxs/store';
 import { Observable, Subject, timer } from 'rxjs';
 import { takeUntil, switchMap, tap, skip } from 'rxjs/operators';
 
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
+import { Particl } from 'app/networks/networks.module';
 import { BlockSyncModalComponent } from './block-sync-modal/block-sync-modal.component';
 
 
@@ -16,7 +16,7 @@ import { BlockSyncModalComponent } from './block-sync-modal/block-sync-modal.com
 })
 export class BlockSyncIndicatorComponent implements OnInit, OnDestroy {
 
-  @Select(ZmqConnectionState.getData('hashtx')) blockWatcher$: Observable<string>;
+  @Select(Particl.State.ZMQ.getData('hashtx')) blockWatcher$: Observable<string>;
 
   isSyncing: boolean = false;
 
@@ -38,7 +38,7 @@ export class BlockSyncIndicatorComponent implements OnInit, OnDestroy {
         this.isSyncing = true;
         // If the timeout has been executed (2.5s since the last zmqupdate msg was received),
         //  then set isLoading to false as the sync is likely over (single block received).
-        return timer(2500).pipe(
+        return timer(2_500).pipe(
           tap(() => {
               this.isSyncing = false;
           })

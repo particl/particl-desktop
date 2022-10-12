@@ -9,8 +9,7 @@
     Client
     <span class="version" [ngClass]="newVersion.length === 0 ? 'unknown' : (isClientLatest ? 'current' : 'outdated')" [matTooltip]=" clientUpdateText " matTooltipPosition="right">
       <span class="dot"></span>
-      <span class="selectable">{{ clientVersion }}</span>
-      <span *ngIf="preRelease.length > 0" class="selectable">&nbsp;({{ preRelease }})</span>
+      <span class="selectable">{{ clientVersion$ | async }}</span>
     </span>
   </div>
 </mat-content>

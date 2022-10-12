@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { WalletInfoState } from 'app/main/store/main.state';
+
+import { Particl } from 'app/networks/networks.module';
 import { ConsoleModalComponent } from '../console-modal/console-modal.component';
 
 
@@ -14,16 +15,16 @@ import { ConsoleModalComponent } from '../console-modal/console-modal.component'
 })
 export class MultiwalletSidebarComponent {
 
-  @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
+  @Select(Particl.State.Core.isRunning()) isCoreStarted$: Observable<boolean>;
 
   constructor(
     private _dialog: MatDialog
   ) { }
 
   openConsoleWindow() {
-    this.walletName.pipe(take(1)).subscribe(
-      (name) => {
-        if (name !== null) {
+    this.isCoreStarted$.pipe(take(1)).subscribe(
+      (isStarted) => {
+        if (isStarted) {
           this._dialog.open(ConsoleModalComponent);
         }
       }
