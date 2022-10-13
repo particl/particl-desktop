@@ -111,11 +111,11 @@ body {
       animation: fade-apps 0.6s 1;
       animation-delay: 0.8s;
       animation-fill-mode: forwards; // stay on the last "frame"
-      position: absolute;
+      // position: absolute;
       // top: 50%;
-      left: -50px;
+      // left: -50px;
       z-index: 10;
-      top: calc(50% - (var(--app-height) / 2));
+      //top: calc(50% - (var(--app-height) / 2));
       opacity: 0;
       .app {
         @extend %tfx;
@@ -170,6 +170,28 @@ body {
         }
       }
     } // .apps
+  }
+
+  .status {
+    flex: 0 1 24px;
+    padding: 1em 3em;
+    animation: fade-apps 0.6s 1;
+    animation-delay: 0.8s;
+    animation-fill-mode: forwards; // stay on the last "frame"
+    z-index: 10;
+    opacity: 0;
+    p {
+      display: flex;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 1rem;
+      @include break(xl) {
+        font-size: 1.1rem;
+      }
+      mat-icon {
+        margin-top: 3px;
+      }
+    }
   }
 
   .messages {

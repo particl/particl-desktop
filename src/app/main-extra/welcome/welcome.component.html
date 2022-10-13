@@ -32,12 +32,6 @@
           <p class="desc">Buy and sell on the most private marketplace</p>
         </a>
 
-        <!--a class="app item" routerLink="/main/exchange">
-          <mat-icon fontIcon="part-swap" class="icon"></mat-icon>
-          <h2 class="name">Swap</h2>
-          <p class="desc">Swap your crypto to and from PART effortlessly</p>
-        </a-->
-
         <a class="app item" routerLink="/main/governance">
           <mat-icon fontIcon="part-vote" class="icon"></mat-icon>
           <h2 class="name">Governance</h2>
@@ -46,7 +40,7 @@
 
       </div><!-- .apps -->
 
-      <div class="starting">
+      <!-- <div class="starting">
         <mat-card>
           <mat-spinner color="accent" class="small"></mat-spinner>
           <div class="text">
@@ -54,9 +48,19 @@
             <div class="desc">Application ready&hellip;</div>
           </div>
         </mat-card>
-      </div><!-- .starting -->
+      </div> -->
 
     </section>
+
+    <div class="status" fxLayout fxLayoutAlign="start center" *appVar="(particlCoreStartedIndicator | async) as particlStartedStatus">
+      <p *appVar="(particlCoreStatus | async) as statusMsg">
+        <small>
+          <mat-icon
+            [fontIcon]="particlStartedStatus === RunningStatuses.STARTED ? 'part-globe' : (particlStartedStatus === RunningStatuses.STOPPED ? 'part-alert' : 'part-circle-info')"
+            [color]="particlStartedStatus === RunningStatuses.STARTED ? 'primary' : 'accent' "
+          ></mat-icon>
+        </small> &nbsp; {{ statusMsg || 'Particl Core not running' }}</p>
+    </div>
 
     <div class="messages">
       <div fxFlex="65" *ngIf="(motd.text.length > 0)">
