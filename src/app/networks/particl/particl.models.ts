@@ -18,6 +18,7 @@ export interface ParticlCoreStateModel {
   url: string;
   auth: string;
   zmqServices: { [key: string]: string };
+  version: string;
 }
 
 
@@ -54,6 +55,7 @@ export namespace IPCResponses {
         url: string,
         auth: string,
         zmq: { [key: string]: string },
+        version: string;
       }
 
       export interface ParticlZMQ {

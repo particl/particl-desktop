@@ -137,7 +137,8 @@ export namespace ParticlActions {
     url: '',
     auth: '',
     hasError: false,
-    zmqServices: {}
+    zmqServices: {},
+    version: ''
   },
 })
 @Injectable()
@@ -169,6 +170,11 @@ export class ParticlCoreState {
     return started;
   }
 
+  @Selector([ParticlCoreState])
+  static version (state: ParticlCoreStateModel) {
+    return state.version;
+  }
+
   static isRunning() {
     return createSelector(
       [ParticlCoreState._getStartedStatus],
@@ -197,7 +203,8 @@ export class ParticlCoreState {
     started: 'running',
     hasError: 'hasError',
     message: 'statusMessage',
-    zmq: 'zmqServices'
+    zmq: 'zmqServices',
+    version: 'version',
   };
 
 

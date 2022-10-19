@@ -318,6 +318,7 @@ module.exports = class ParticlCore extends CoreInstance {
     url: '',
     auth: '',
     zmq: { },
+    version: '',
   };
 
   // temporary params to pass to particl-core on its next execution
@@ -367,7 +368,7 @@ module.exports = class ParticlCore extends CoreInstance {
 
 
   getSettings() {
-    return { schema: SETTING_SCHEMA, values: this.#settingsValues.store, startedParams: this.#startedParams };
+    return { schema: SETTING_SCHEMA, values: this.#settingsValues, startedParams: this.#startedParams };
   }
 
 
@@ -573,7 +574,8 @@ module.exports = class ParticlCore extends CoreInstance {
         message: 'Particl Core started and connected',
         url: rpcUrl,
         auth: rpcAuth,
-        zmq: zmqStatus
+        zmq: zmqStatus,
+        version: cfg.version,
       });
 
     } else {
