@@ -165,7 +165,8 @@ class ModuleManager {
         './gui/notification',
         './coreManager',
         // './market/market'
-        './market/services',
+        './apps/market/services',
+        './apps/governance',
       ];
 
       let success = true;
