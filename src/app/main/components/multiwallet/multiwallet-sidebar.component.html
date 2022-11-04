@@ -2,21 +2,12 @@
 <div class="mini-sidebar-menu">
   <div class="app-bar">
 
-    <button mat-button class="wallet app" routerLinkActive="--active" routerLink="wallet">
-      <mat-icon fontIcon="part-stake"></mat-icon>
-      <div class="title">Wallet</div>
-    </button>
-
-    <button mat-button class="market app" routerLinkActive="--active" routerLink="market">
-      <mat-icon fontIcon="part-bag"></mat-icon>
-      <div class="title">Market</div>
-    </button>
-
-    <button mat-button class="exchange app" routerLinkActive="--active" routerLink="governance">
-      <mat-icon fontIcon="part-vote"></mat-icon>
-      <div class="title">Govern</div>
-    </button>
-
+    <ng-container *ngFor="let app of apps">
+      <button mat-button [ngClass]="app.class" routerLinkActive="--active" [routerLink]="app.route">
+        <mat-icon [fontIcon]="app.icon"></mat-icon>
+        <div class="title">{{ app.title }}</div>
+      </button>
+    </ng-container>
   </div><!-- .app-bar -->
 
 

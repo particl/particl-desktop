@@ -172,14 +172,13 @@ app.on('web-contents-created', (event, contents) => {
     }
   });
 
-
   // Handle external URIs;
-  // NOTE: this is called AFTER the window object has already been opened by `window.open()`
-  contents.setWindowOpenHandler(({url}) => {
+  contents.on('new-window', (event, url) => {
+    event.preventDefault();
     let matchesAllowedURL = false;
     for (const allowedUrl of settingsManager.getSettings(null, 'ALLOWED_EXTERNAL_URLS')) {
-      const url = allowedUrl.endsWith('/') ? allowedUrl : `${allowedUrl}/`;
-      if ((requestUrl === allowedUrl) || requestUrl.startsWith(url)) {
+      const testUrl = allowedUrl.endsWith('/') ? allowedUrl : `${allowedUrl}/`;
+      if ((url === allowedUrl) || url.startsWith(testUrl)) {
         matchesAllowedURL = true;
         break;
       }
@@ -187,8 +186,9 @@ app.on('web-contents-created', (event, contents) => {
 
     if (matchesAllowedURL) {
       setImmediate(() => {
-        electron.shell.openExternal(requestUrl);
+        electron.shell.openExternal(url, {activate: true});
       });
+      return;
     }
 
     const errorWin = createNewWindow('Particl Desktop - load URL error', 500, 500, true);
@@ -205,7 +205,6 @@ app.on('web-contents-created', (event, contents) => {
       slashes: true
     }));
 
-    return {action: 'deny'};
   });
 });
 

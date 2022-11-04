@@ -1,0 +1,108 @@
+@import './src/assets/config'; // import shared colors etc.
+
+.fiat {
+  display: none; // hide until implemented (TODO)
+}
+
+
+// ------ LAYOUT ------ //
+
+.mat-dialog-content {
+  width: 30rem;
+  padding: 0 24px 16px;
+  text-align: center;
+  p.message {
+    margin: -16px -24px 24px;
+    background: transparent;
+    color: var(--text-muted);
+    text-align: left;
+    strong {
+      color: var(--text);
+    }
+  }
+}
+
+.tx-info { // info about public/blind/anon TX
+  .mat-icon {
+    font-size: 28px;
+    color: var(--color-primary);
+  }
+  .title { // title of event (public TX, you're buying etc.)
+    @extend %box-title;
+    font-size: 15px;
+    margin: 10px 0;
+  }
+  .help-text {
+    margin: 0 auto 24px;
+    max-width: 20rem;
+  }
+}
+
+.tx-amount {
+  @extend %enable-select;
+  font-weight: 500;
+  .big {
+    font-size: 20px;
+  }
+  .point {
+    color: var(--text-muted);
+  }
+  .small {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-muted);
+  }
+  .currency {
+    font-size: 17px;
+    margin-left: 0.4rem;
+  }
+  .fiat {
+    color: var(--text-muted);
+  }
+}
+
+.arrow-icon {
+  font-size: 20px;
+  margin: 24px 0;
+  color: hsla(var(--text-muted-hsl), 0.5);
+}
+
+.receiver-info {
+  & > .label {
+    font-weight: 500;
+    font-size: 18px;
+    margin-bottom: 8px;
+    padding: 0 24px;
+    .qty {
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-right: 6px;
+    }
+  }
+  & > .address {
+    @extend %enable-select;
+    display: inline-block;
+    max-width: 310px;
+    padding: 5px 10px;
+    background: hsla(var(--color-primary-hsl), 0.04);
+    border-radius: var(--radius);
+    color: var(--color-primary);
+    font-size: 15px;
+    line-height: 1.4;
+    white-space: normal;
+    word-wrap: break-word;
+    &.blind,
+    &.private {
+      color: var(--color-secondary);
+      background: hsla(var(--color-secondary-hsl), 0.04);
+    }
+  }
+}
+
+.fee-info {
+  @extend %help-text;
+  margin: 24px 0 0;
+  & > .amount {
+    margin: 0 0 0 10px;
+  }
+}

@@ -13,6 +13,7 @@ import { ProcessingModalComponent } from './components/processing-modal/processi
 import { ConsoleModalComponent } from './components/console-modal/console-modal.component';
 import { UnlockwalletModalComponent } from './components/unlock-wallet-modal/unlock-wallet-modal.component';
 
+// import { MainRoutingGuard } from './main-guard-service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from './services/wallet-encryption/wallet-encryption.service';
 import { NotificationsService } from './services/notifications/notifications.service';
@@ -38,6 +39,7 @@ import { BlockSyncModalComponent } from './components/block-sync-indicator/block
     NetworksModule,
   ],
   providers: [
+    // MainRoutingGuard,
     SnackbarService,
     WalletEncryptionService,
     NotificationsService,

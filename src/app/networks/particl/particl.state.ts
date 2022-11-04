@@ -15,7 +15,6 @@ import {
   NETWORK_PARTICL_ZMQ_STATE_TOKEN,
   NETWORK_PARTICL_BLOCKCHAIN_TOKEN,
   NETWORK_PARTICL_WALLET_TOKEN,
-  // NETWORK_PARTICL_WALLET_SETTINGS_TOKEN,
   NETWORK_PARTICL_WALLET_UTXOS_TOKEN,
   NETWORK_PARTICL_WALLET_STAKING_TOKEN,
 } from '../networks.tokens';
@@ -24,7 +23,6 @@ import {
   DEFAULT_STAKING_INFO_STATE,
   DEFAULT_WALLET_STATE,
   DEFAULT_UTXOS_STATE,
-  // DEFAULT_WALLET_SETTINGS_STATE,
   RunningStatus,
   IPCResponses,
   ParticlCoreStateModel,
@@ -33,7 +31,6 @@ import {
   WalletInfoStateModel,
   WalletStakingStateModel,
   WalletBalanceStateModel,
-  // WalletSettingsStateModel,
   PublicUTXO,
   BlindUTXO,
   AnonUTXO,
@@ -114,12 +111,6 @@ export namespace ParticlActions {
     export class RefreshBalances {
       static readonly type: string = '[Particl Wallet Actions] Refresh Balances';
     }
-
-
-    // export class UpdateSettings {
-    //   static readonly type: string = '[Particl Wallet Actions] Update Wallet Settings';
-    //   constructor(public settings: WalletSettingsStateModel) {}
-    // }
 
   }
 
@@ -686,105 +677,6 @@ export class WalletStakingState {
 
 
 
-
-// @State({
-//   name: NETWORK_PARTICL_WALLET_SETTINGS_TOKEN,
-//   defaults: JSON.parse(JSON.stringify(DEFAULT_WALLET_SETTINGS_STATE))
-// })
-// export class WalletSettingsState {
-
-//   @Selector()
-//   static settings(state: WalletSettingsStateModel): WalletSettingsStateModel {
-//     return state;
-//   }
-
-//   private currentWallet: string = null;
-
-
-//   constructor(
-//     private _backendService: BackendService
-//   ) {}
-
-
-//   @Action(ParticlActions.WalletActions.ResetWallet)
-//   resetWalletState(ctx: StateContext<WalletSettingsStateModel>) {
-//     ctx.patchState(JSON.parse(JSON.stringify(DEFAULT_WALLET_SETTINGS_STATE)));
-//   }
-
-
-//   @Action(ParticlInternalActions.WalletActions.WalletLoaded)
-//   loadWalletSettings(ctx: StateContext<WalletSettingsStateModel>, { walletName, isInitialized }: ParticlInternalActions.WalletActions.WalletLoaded) {
-//     this.currentWallet = walletName;
-//     const updatedValues = JSON.parse(JSON.stringify(DEFAULT_WALLET_SETTINGS_STATE));
-
-//     if (typeof walletName !== 'string' || !isInitialized) {
-//       ctx.patchState(updatedValues);
-//       return;
-//     }
-
-//     return this._backendService.sendAndWait<IPCResponses.CoreManager.Settings.Particl>('coreManager:settings', 'particl', false, walletName).pipe(
-//       tap(resp => {
-//         // TODO: log out failures
-//         if (!(resp && typeof resp === 'object')) {
-//           return;
-//         }
-//         if (resp.hasError || (resp.request !== 'settings') || !(resp.response && typeof resp.response === 'object')) {
-//           return;
-//         }
-//         const respData = resp.response;
-//         if (respData.name !== this.currentWallet) {
-//           return;
-//         }
-//         Object.keys(updatedValues).forEach(k => {
-//           if (typeof respData[k] === typeof updatedValues[k]) {
-//             updatedValues[k] = respData[k];
-//           }
-//         });
-//         ctx.patchState(updatedValues);
-//       }),
-//       catchError(() => {
-//         // TODO: log out the error
-//         return of(null);
-//       })
-//     );
-//   }
-
-
-//   @Action(ParticlActions.WalletActions.UpdateSettings)
-//   updateWalletSettings(ctx: StateContext<WalletSettingsStateModel>, {settings}: ParticlActions.WalletActions.UpdateSettings) {
-//     if (!settings || (this.currentWallet === null)) {
-//       return;
-//     }
-//     const currentValues = JSON.parse(JSON.stringify(ctx.getState()));
-//     const changedKeys = Object.keys(currentValues).filter(k => (typeof currentValues[k] === typeof settings[k]) && (currentValues[k] !== settings[k]));
-//     if (!changedKeys.length) {
-//       return;
-//     }
-//     changedKeys.forEach(ck => currentValues[ck] = settings[ck]);
-
-//     return this._backendService.sendAndWait<IPCResponses.CoreManager.Settings.Particl>('coreManager:settings', 'particl', true, this.currentWallet, currentValues).pipe(
-//       tap(resp => {
-//         // TODO: log out failures
-//         if (!(resp && typeof resp === 'object')) {
-//           return;
-//         }
-//         if (resp.hasError || (resp.request !== 'update') || !(resp.response && typeof resp.response === 'object')) {
-//           return;
-//         }
-//         const respData = resp.response;
-//         if (respData.name !== this.currentWallet) {
-//           return;
-//         }
-//         ctx.patchState(currentValues);
-//       })
-//     );
-//   }
-
-// }
-
-
-
-
 @State<WalletInfoStateModel>({
   name: NETWORK_PARTICL_WALLET_TOKEN,
   defaults: JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE))
@@ -792,10 +684,10 @@ export class WalletStakingState {
 @Injectable()
 export class WalletInfoState {
 
-  static getValue(field: string) {
+  static getValue(field: keyof WalletInfoStateModel) {
     return createSelector(
       [WalletInfoState],
-      (state: WalletInfoStateModel): number | string | boolean | null => {
+      (state: WalletInfoStateModel): WalletInfoStateModel[keyof WalletInfoStateModel] => {
         return field in state ? state[field] : null;
       }
     );
@@ -846,8 +738,7 @@ export class WalletInfoState {
     }
     return this._walletService.loadWallet(wallet).pipe(
       concatMap(walletLoaded => iif(
-        () => !walletLoaded,
-        null,
+        () => walletLoaded,
         defer(() => {
           const newState = JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE));
           newState.walletname = wallet;

@@ -1,0 +1,36 @@
+<mat-dialog-title>Cold staking setup</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+<mat-dialog-content class="--muted">
+
+  <p class="lead">
+    Enter the&nbsp;public key of&nbsp;your staking node (or&nbsp;a&nbsp;Pool)&nbsp;below
+  </p>
+  
+  <mat-form-field class="pubkey --boxed --larger" appearance="fill" color="accent">
+    <mat-icon fontIcon="part-snowflake" matPrefix></mat-icon>
+    <input matInput [formControl]="addressField" placeholder="Enter staking node's public key" required>
+  </mat-form-field>
+
+  <p class="help-text">
+    Cold staking delegates staking of&nbsp;your coins to&nbsp;other node (like your own Raspberry Pi/Rock64 or&nbsp;a&nbsp;public staking pool) while increasing security of&nbsp;your coins, as&nbsp;staking nodes cannot spend them
+  </p>
+
+</mat-dialog-content>
+
+
+<mat-dialog-actions>
+  <button type="button" mat-button mat-dialog-close>
+    <mat-icon fontIcon="part-cross"></mat-icon>
+    Cancel
+  </button>
+
+  <button mat-raised-button color="accent" appDebounceClick (debounceClick)="activate()" [disabled]="addressField.invalid">
+    <mat-icon fontIcon="part-snowflake"></mat-icon>
+    Enable cold staking
+  </button>
+</mat-dialog-actions>

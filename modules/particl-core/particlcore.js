@@ -319,6 +319,7 @@ module.exports = class ParticlCore extends CoreInstance {
     auth: '',
     zmq: { },
     version: '',
+    chain: ''
   };
 
   // temporary params to pass to particl-core on its next execution
@@ -488,7 +489,9 @@ module.exports = class ParticlCore extends CoreInstance {
         hasError: false,
         url: '',
         auth: '',
-        zmq: { }
+        zmq: { },
+        version: '',
+        chain: '',
       });
 
       if (doRestart) {
@@ -1302,11 +1305,14 @@ module.exports = class ParticlCore extends CoreInstance {
 
         const response = await _fetch(
           `${rpcUrl}`,
-          { method: 'POST', headers, redirect: 'follow', body: JSON.stringify({'jsonrpc': '1.0', method: 'getnetworkinfo', params: [], id: 'particl-desktop'}), timeout: 5_000, signal: this.#cancelSignal}
+          { method: 'POST', headers, redirect: 'follow', body: JSON.stringify({'jsonrpc': '1.0', method: 'getblockchaininfo', params: [], id: 'particl-desktop'}), timeout: 5_000, signal: this.#cancelSignal}
         ).then(res => res.json());
 
         if (response && response.result) {
           success = true;
+          if (typeof response.result.chain === 'string') {
+            this.#updateStatus({chain: response.result.chain});
+          }
         }
       } catch (_) { }
 
@@ -1314,7 +1320,7 @@ module.exports = class ParticlCore extends CoreInstance {
         break;
       }
 
-      // wait 1sec between failed calls
+      // wait some time between failed calls
       if (ii < (maxCalls)) {
         try {
           await _sleep(1_500 * ii, true, {signal: this.#cancelSignal});

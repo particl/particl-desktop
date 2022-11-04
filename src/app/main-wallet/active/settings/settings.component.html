@@ -1,0 +1,42 @@
+<div class="container-block with-tab-bar">
+  <app-page-intro [childPageAlias]="pageDetails.title">
+    <ng-container page-title>{{ pageDetails.title }}</ng-container>
+    <ng-container page-content>
+      {{ pageDetails.description }}
+    </ng-container>
+    <ng-container page-help>
+      {{ pageDetails.help }}
+    </ng-container>
+  </app-page-intro>
+
+  <ng-container *ngTemplateOutlet="content"></ng-container>
+</div>
+
+
+<ng-template #content>
+
+  <div class="container">
+
+    <div class="sidebar">
+
+      <div class="radio-switcher">
+        <label *ngFor="let menu of settingsMenu; index as menuIdx; trackBy: trackBySettingMenuFn">
+          <input type="radio" name="option" (change)="changeSelectedMenu(menuIdx)" [checked]="menuIdx === currentMenuIdx">
+          <div class="switcher-option">
+            <mat-icon [fontIcon]="menu.icon"></mat-icon>
+            <span class="name">{{ menu.label }}</span>
+          </div>
+        </label>
+      </div>
+
+    </div><!-- .sidebar -->
+
+
+    <div class="content row">
+      <div class="third">
+        <div #settingPageCategory></div>
+      </div><!-- .third -->
+    </div><!-- .row -->
+  </div><!-- .container -->
+
+</ng-template>

@@ -65,6 +65,13 @@ export class ParticlWalletService {
   }
 
 
+  listLoadedWallets(): Observable<string[]> {
+    return this._rpc.call<string[]>('listwallets').pipe(
+      catchError(() => of([]))
+    );
+  }
+
+
   getAllUTXOs(): Observable<{public: PublicUTXO[], blind: BlindUTXO[], anon: AnonUTXO[]}> {
     const public$: Observable<PublicUTXO[]> = this._rpc.call('listunspent').pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 1})),
@@ -135,7 +142,9 @@ export class ParticlWalletService {
           return true;
         }
         return false;
-      })
+      }),
+
+      catchError(() => of(false)),
     );
   }
 

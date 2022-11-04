@@ -157,10 +157,10 @@ exports.channels = {
 };
 
 
-// exports.getStatus = (coreLabel) => {
-//   if (!(typeof coreLabel === 'string' && (coreLabel in coreInstances))) {
-//     return;
-//   }
+exports.getCoreSettings = (coreLabel) => {
+  if (!(typeof coreLabel === 'string' && (coreLabel in coreInstances))) {
+    return null;
+  }
 
-//   return coreStatuses[coreLabel];
-// };
+  return coreInstances[coreLabel].getSettings();
+};

@@ -14,42 +14,13 @@
 
       <div class="apps">
 
-        <a class="app item" routerLink="/main/core">
-          <mat-icon fontIcon="part-globe" class="icon"></mat-icon>
-          <h2 class="name">Core</h2>
-            <p class="desc">Particl Core configuration and settings</p>
-        </a>
-
-        <a class="app item" routerLink="/main/wallet">
-          <mat-icon fontIcon="part-stake" class="icon"></mat-icon>
-          <h2 class="name">Wallet</h2>
-          <p class="desc">Send, receive and manage PART coins</p>
-        </a>
-
-        <a class="app item" routerLink="/main/market">
-          <mat-icon fontIcon="part-bag" class="icon"></mat-icon>
-          <h2 class="name">Marketplace</h2>
-          <p class="desc">Buy and sell on the most private marketplace</p>
-        </a>
-
-        <a class="app item" routerLink="/main/governance">
-          <mat-icon fontIcon="part-vote" class="icon"></mat-icon>
-          <h2 class="name">Governance</h2>
-          <p class="desc">Community governance proposals and voting</p>
+        <a *ngFor="let app of appmodules" class="app item" [routerLink]="app.route">
+          <mat-icon [fontIcon]="app.icon" class="icon"></mat-icon>
+          <h2 class="name">{{ app.title }}</h2>
+            <p class="desc">{{ app.desc }}</p>
         </a>
 
       </div><!-- .apps -->
-
-      <!-- <div class="starting">
-        <mat-card>
-          <mat-spinner color="accent" class="small"></mat-spinner>
-          <div class="text">
-            <div class="title">Starting</div>
-            <div class="desc">Application ready&hellip;</div>
-          </div>
-        </mat-card>
-      </div> -->
-
     </section>
 
     <div class="status" fxLayout fxLayoutAlign="start center" *appVar="(particlCoreStartedIndicator | async) as particlStartedStatus">

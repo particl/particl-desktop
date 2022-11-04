@@ -1,0 +1,238 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.history-list {
+  &.mat-expanded {
+    margin: 8px -8px; // expand sideways and visually separate from other items when expanded
+  }
+}
+
+.mat-expansion-panel-header {
+  --size: 50px;
+  min-height: var(--size) !important;
+  max-height: var(--size) !important;
+  @include break(xl) {
+    --size: 60px;
+  }
+  .mat-expansion-panel-header-title {
+    @include break(xl) {
+      font-size: 15px;
+    }
+  }
+
+  .tx-overview {
+    &.abandoned {
+      color: hsla(var(--text-muted-hsl), 0.8) !important;
+    }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & > * {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  // TX date/time
+  .date {
+    color: var(--text-muted);
+    flex: 0 0 145px;
+    @include break(xl) {
+      flex: 0 0 175px;
+    }
+  }
+
+  // confirmations
+  .confirmations {
+    flex: 0 0 120px;
+    .confirmation-tag {
+      border-radius: var(--radius);
+      font-size: 12px;
+      display: inline-block;
+      padding: 5px 10px;
+      @include break(xl) {
+        font-size: 13px;
+      }
+    }
+    .confirmations {
+      // icon
+      margin-right: 3px;
+      font-size: 12px;
+      position: relative;
+      top: 1px;
+    }
+    &.confirm-none {
+      // unconfirmed TXs
+      color: var(--color-confirms-0-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-0-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-1 {
+      // 1-4 confirmations
+      color: var(--color-confirms-33-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-33-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-2 {
+      // 5-8 conf.
+      color: var(--color-confirms-66-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-66-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-3 {
+      // 9-12 conf.
+      color: var(--color-confirms-100-pct);
+      .confirmation-tag {
+        background: hsla(var(--color-confirms-100-pct-hsl), 0.15);
+      }
+    }
+    &.confirm-ok {
+      color: hsla(var(--text-muted-hsl), 0.8);
+    }
+  }
+
+  // TX icon
+  .type {
+    flex: 1 0 175px;
+    .mat-icon {
+      font-size: 14px;
+      position: relative;
+      top: 2px;
+      @include break(xl) {
+        font-size: 16px;
+      }
+      // narration icon
+      &.narration {
+        margin: 0 0 0 6px;
+        font-size: 12px;
+        color: hsla(var(--text-muted-hsl), 0.8) !important;
+        padding: 3px;
+        top: 1px;
+        @include break(xl) {
+          font-size: 14px;
+        }
+      }
+    }
+    .tx-type {
+      .name {
+        font-weight: 500;
+        margin-left: 12px;
+        text-transform: none;
+      }
+      &.staked {
+        .mat-icon {
+          color: var(--color-txtype-staked);
+        }
+      }
+      &.orphan {
+        .mat-icon {
+          color: var(--color-txtype-orphan);
+        }
+      }
+      &.sent {
+        .mat-icon {
+          color: var(--color-txtype-sent);
+        }
+      }
+      &.received {
+        .mat-icon {
+          color: var(--color-txtype-received);
+        }
+      }
+      &.listing-fee {
+        .mat-icon {
+          color: var(--color-txtype-listing-fee);
+        }
+      }
+    }
+  }
+
+  // TX amount
+  .tx-value {
+    // flex: 1 0 135px;
+    text-align: right;
+    font-family: var(--font-mono);
+    display: block;
+    .amount {
+      .big {
+        font-weight: 500;
+      }
+      .point,
+      .small {
+        color: var(--text-muted);
+      }
+      .currency {
+        margin-left: 4px;
+      }
+    }
+    .negative {
+      color: var(--tx-negative-amount);
+      .point,
+      .small {
+        color: var(--tx-negative-decimals);
+      }
+    }
+    .mat-icon {
+      // icon hiding private TX's value when wallet is locked
+      color: var(--text-muted);
+      font-size: 14px;
+      position: relative;
+      top: 1px;
+    }
+  }
+}
+
+.tx-description {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-muted);
+  padding: 18px 24px;
+  border-top: 1px solid var(--bg-muted);
+  border-bottom: 1px dashed var(--bg-muted);
+  @include break(xl) {
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 24px 35px;
+  }
+}
+
+// detail item of TX info
+table.tx-details {
+  --border-spacing: 5px;
+  border-spacing: var(--border-spacing);
+  padding: calc(20px - var(--border-spacing)) calc(24px - var(--border-spacing));
+  width: 100%;
+  @include break(xl) {
+    --border-spacing: 7px;
+    padding: calc(24px - var(--border-spacing))
+    calc(35px - var(--border-spacing));
+  }
+  .tx-detail-item {
+    padding: 3px 0;
+    color: var(--text-muted);
+    font-family: var(--font);
+    th {
+      text-align: left;
+      font-weight: 500;
+      width: 145px;
+    }
+    // shared across inputs
+    .input {
+      border: 0;
+      outline: 0;
+      background: none;
+      padding: 0;
+      width: 100%;
+      font-family: var(--font-mono);
+      cursor: text;
+      text-overflow: ellipsis;
+    }
+    .value {
+      font-family: var(--font-mono);
+    }
+  }
+}

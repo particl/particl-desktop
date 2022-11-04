@@ -1,0 +1,76 @@
+<mat-dialog-title>Add new address</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+<form [formGroup]="addAddressForm" (ngSubmit)="addAddressbookEntry()" #formDir="ngForm">
+  <mat-dialog-content>
+
+    <p class="lead">
+      Save 3rd-party's address (e.g. your friend's) for later use.
+    </p>
+    <p class="widget-help">
+      Keep in mind that re-using same Public addresses for multiple transactions decreases privacy. It is recommended to use Private addresses or ask the other party for a fresh Public address for each transaction.
+    </p>
+
+    <div class="modal-highlight">
+      <p class="message --info" *ngIf="address.pending">
+        Validating...
+      </p>
+      <p class="message --warning" *ngIf="address.invalid && (address.dirty || address.touched)">
+        <!-- This overlaps with the other errors + not needed since the [Add address] button won't activate unless validated -->
+        <!--ng-container *ngIf="address.errors?.required">
+          Address is required
+        </ng-container-->
+        <ng-container *ngIf="address.errors?.properAddress">
+          {{ address.errors.properAddress }}
+        </ng-container>
+        <ng-container *ngIf="address.errors?.notOwnAddress">
+          {{ address.errors.notOwnAddress }}
+        </ng-container>
+      </p>
+      <mat-form-field class="--boxed --larger" appearance="fill" matTooltip="Address" matTooltipPosition="before">
+        <mat-icon matPrefix fontIcon="part-qr"></mat-icon>
+        <input matInput
+          type="text"
+          formControlName="address"
+          placeholder="Enter Address"
+          [ngClass]="{'verify-sucess': !(address.invalid && (address.dirty || address.touched)), 'verify-error': address.invalid && (address.dirty || address.touched) }"
+          #addressInput
+          required
+          (paste)="onAddressPasted($event)">
+        <button mat-button matSuffix class="small"
+          (click)="pasteAddress()"
+          matTooltip="Paste address" matTooltipPosition="after">
+          <mat-icon fontIcon="part-past"></mat-icon>
+        </button>
+      </mat-form-field>
+      <p class="message --warning" *ngIf="label.invalid && (label.dirty || label.touched)">
+        Please choose a label for this address
+      </p>
+      <mat-form-field class="--boxed --larger" appearance="fill" matTooltip="Label" matTooltipPosition="before">
+        <mat-icon matPrefix fontIcon="part-person"></mat-icon>
+        <input matInput
+          type="text"
+          formControlName="label"
+          placeholder="Address label (e.g. owner's name)"
+          required>
+      </mat-form-field>
+    </div><!-- .modal-highlight -->
+
+  </mat-dialog-content><!-- mat-dialog-content -->
+
+
+  <mat-dialog-actions>
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-button mat-raised-button color="primary" [disabled]="!addAddressForm.valid || isProcessing">
+      <mat-icon fontIcon="part-person-add"></mat-icon>
+      Add Address
+    </button>
+  </mat-dialog-actions>
+
+</form>

@@ -64,16 +64,6 @@ export namespace IPCResponses {
         data: undefined | unknown;
       }
     }
-
-    // export namespace Settings {
-
-    //   export interface Particl {
-    //     core: string;
-    //     request: 'update' | 'settings',
-    //     response: WalletSettingsStateModel & {name: string},
-    //     hasError: boolean;
-    //   }
-    // }
   }
 
 }
@@ -97,14 +87,6 @@ export interface WalletInfoStateModel {
   immature_balance: number;
   immature_anon_balance: number;
 }
-
-
-// export interface WalletSettingsStateModel {
-//   notifications_payment_received: boolean;
-//   notifications_staking_reward: boolean;
-//   utxo_split_count: number;
-//   default_ringct_size: number;
-// }
 
 
 export interface WalletStakingStateModel {
@@ -225,14 +207,6 @@ export const DEFAULT_UTXOS_STATE: WalletBalanceStateModel = {
 };
 
 
-// export const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
-//   notifications_payment_received: false,
-//   notifications_staking_reward: false,
-//   utxo_split_count: DEFAULT_UTXO_SPLIT,
-//   default_ringct_size: DEFAULT_RING_SIZE,
-// };
-
-
 export namespace RPCResponses {
 
   export interface Error {
@@ -340,4 +314,273 @@ export namespace RPCResponses {
     size_on_disk: number;
     verificationprogress: number;
   }
+
+  export interface ValidateAddress {
+    isvalid: boolean;
+    address: string;
+    scriptPubKey: string;
+    isscript: boolean;
+    iswitness: boolean;
+    witness_version?: number;
+    witness_program?: string;
+    isstealthaddress?: boolean;
+  }
+
+  export interface GetAddressInfo {
+    address: string;
+    label: string;
+    scriptPubKey: string;
+    ismine: boolean;
+    iswatchonly: boolean;
+    solvable: boolean;
+    isscript: boolean;
+    ischange: boolean;
+    iswitness: boolean;
+    witness_version?: number;
+    witness_program?: string;
+    script?: string;
+    sigsrequired?: number;
+    iscompressed?: boolean;
+    hex?: string;
+    pubkey?: string;
+    pubkeys?: string[];
+    labels?: Array<{name: string, purpose: 'send' | 'receive'}>;
+    timestamp?: number;
+  }
+
+  interface ListStealthAddress {
+    Account: string;
+    'Stealth Addresses': [
+      string,                 // Stealth address label
+      string,                 // Stealth address
+      string,                 // Scan secret, if show_secrets=1
+      string,                 // Spend secret, if show_secrets=1
+      string,                 // Scan public key, if show_secrets=1
+      string,                 // Spend public key, if show_secrets=1
+      // !! Additional keys occur as well!!
+    ];
+  }
+  export type ListStealthAddresses = ListStealthAddress[];
+
+  export type SetLabel = null;
+
+  export type SignMessage = string;
+
+  export type VerifyMessage = boolean;
+
+  export type GetReceivedByAddress = number;
+  export type GetNewAddress = string;
+  export type GetNewStealthAddress = string;
+
+  export interface FilterAddress {
+    address: string;
+    label: string;
+    owned: string;
+    root: string;
+    path?: string;
+    id?: number;
+  }
+
+  export namespace FilterAddresses {
+    export type List = FilterAddress[];
+    export interface Count {
+      total: number;
+      num_receive: number;
+      num_send: number;
+    };
+  }
+
+  export type AbandonTransaction = null;
+
+  export namespace FilterTransactions {
+
+    export type CategoryType = 'send' | 'receive' | 'stake' | 'internal_transfer' | 'orphaned_stake' | 'unknown';
+    export type TransactionType = 'standard' | 'blind' | 'anon';
+
+    export interface Output {
+      stealth_address?: string;
+      address?: string;
+      coldstake_address?: string;
+      label?: string;
+      type?: TransactionType;
+      amount: number;
+      vout: number;
+      narration?: string;
+    }
+
+    export interface Item {
+      confirmations: number;
+      trusted?: boolean;
+      txid: string;
+      time: number;
+      timereceived?: number;
+      fee?: number;
+      reward?: number;
+      requires_unlock?: boolean;
+      category: CategoryType;
+      abandoned?: boolean;
+      outputs: Output[];
+      amount: number;
+      type_in?: 'anon';
+    };
+
+    export type Response = Item[];
+  }
+
+  export namespace ManageAddressBook {
+    export interface NewSend {
+      result: 'success' | 'failed' | '';
+      action: 'newsend';
+      address: string;
+      label: string;
+    }
+  }
+
+  export namespace Mnemonic {
+    export interface DumpWords {
+      words: string[];
+    }
+
+    export interface New {
+      master: string;
+      mnemonic: string;
+    }
+  }
+
+  export type EncryptWallet = string;
+
+  export interface CreateWallet {
+    name: string;
+    warning: string;
+  }
+
+
+  export interface GetStakingInfo {
+    enabled: boolean;
+    staking: boolean;
+    errors: string;
+    percentyearreward: number;
+    moneysupply: number;
+    foundationdonationpercent: number;
+    currentblocksize: number;
+    currentblocktx: number;
+    pooledtx: number;
+    difficulty: number;
+    lastsearchtime: number;
+    weight: number;
+    netstakeweight: number;
+    expectedtime: number;
+  }
+
+  export namespace WalletSettings {
+    export interface ChangeAddress {
+      changeaddress: 'cleared' | {
+        coldstakingaddress: string;
+        time: number;
+      };
+    }
+  };
+
+  export namespace ExtKey{
+    export interface Account {
+      type: string;                                     // eg: "Account"
+      active: 'true' | 'false';
+      label: string;
+      default_account: 'true' | 'false';
+      created_at: number;
+      id: string;                                       // eg: "aUyr52Vi9oMNXYuf8enk4zkwTeC6GBMj7M",
+      has_secret: 'true' | 'false';
+      encrypted: 'true' | 'false';
+      root_key_id: string;                              // eg: "xPXNZLeVEtaWen3X5vED4JA9VhvsikigYj",
+      path: string;                                     // eg: "m/0h",
+      chains: {
+        function?: 'active_external' | 'active_internal' | 'active_stealth';
+        id: string;                                     // eg: "xNAdQKBRq1rbLPVjMhsWwoPrNSXMqdxaVt"
+        chain: string;                                  // eg: "pparszMYp2SyZfGqV2bAEv5euGKjj7D8JtseV..."
+        label: string;
+        active: 'true' | 'false';
+        receive_on: 'true' | 'false';
+        use_type?: 'internal' | 'external' | 'stealth' | 'confidential';
+        num_derives: string;                            // eg: "23",
+        num_derives_h: string;                          // eg: "0"
+        path: string;                                   // eg: "m/0h/0"
+      }[];
+    };
+
+    export interface Item {
+      type: 'Loose' | 'Account';
+      receive_on?: 'false' | 'true';
+      active: 'false' | 'true';
+      encrypted: 'false' | 'true';
+      hardware_device?: 'false' | 'true';
+      label: string;
+      default_account?: 'true' | 'false';
+      created_at?: number;
+      path?: string;
+      has_secret?: 'true' | 'false';
+      key_type?: 'Master';
+      current_master?: 'false' | 'true';
+      root_key_id?: string;
+      id: string;
+      evkey: string;
+      epkey: string;
+      external_chain?: string;
+      internal_chain?: string;
+      num_derives?: string;
+      num_derives_hardened?: string;
+      num_derives_external?: string;
+      num_derives_external_h?: string;
+      num_derives_internal?: string;
+      num_derives_internal_h?: string;
+      num_derives_stealth?: string;
+      num_derives_stealth_h?: string;
+    }
+
+    export interface Info {
+      key_info: {
+        result: string;
+        path: string;
+      };
+    }
+
+    export type List = Item[];
+
+    export interface DeriveAccount {
+      result: string;
+      id: string;
+      key_label: string;
+      note: string;
+      account: string;
+      label: string;
+      key_info: unknown;
+      account_id: string;
+      has_secret: string;
+      account_label: string;
+      scanned_from: number;
+    }
+
+    export interface Import {
+      result: string;
+      id: string;
+      key_label: string;
+      note: string;
+      account: string;
+      label: string;
+      key_info: unknown;
+      account_id: string;
+      has_secret: string;
+      account_label: string;
+      scanned_from: number;
+    }
+  }
+
+  export type ListAddressGroupings = [ string, number, string?, ][][];
+
+  export interface SendTypeTo {
+    fee?: number;
+    bytes: number;
+    need_hwdevice: boolean;
+    error?: boolean;
+  }
+
 }

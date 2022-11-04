@@ -1,0 +1,75 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+// ------ Address details ------ //
+
+.address-details {
+  // content block (type, label, string)
+  margin-left: 30px;
+}
+
+.address-type {
+  text-transform: uppercase;
+  color: var(--text-muted);
+  .mat-icon {
+    margin-right: 4px;
+    position: relative;
+    top: 3px;
+    color: hsla(var(--text-muted-hsl), 0.8);
+  }
+}
+
+.address-label {
+  font-size: 20px;
+  text-transform: none;
+  margin: 0;
+  padding-right: 40px;
+  padding-bottom: 1em;
+  text-overflow: initial;
+  overflow: visible;
+  .label-input {
+    mat-hint {
+      color: var(--color-warning);
+      font-size: 0.9em;
+      margin-bottom: 3px;
+    }
+  }
+  .label {
+    display: inline-block;
+    height: 23px;
+    font-weight: 500;
+    &:disabled {
+      color: hsla(var(--text-hsl), 0.85);
+    }
+    &.no-label {
+      // unlabeled address
+      font-style: italic;
+    }
+  }
+  .mat-button {
+    .mat-icon {
+      margin: 0;
+    }
+  }
+}
+
+.address-string {
+  @extend %enable-select;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-primary);
+  background: hsla(var(--color-primary-hsl), 0.04);
+  padding: 7px 0 7px 14px; // offset flex-wrap margin
+  margin: -6px 0 18px;
+  &.private {
+    color: var(--color-secondary);
+    background: hsla(var(--color-secondary-hsl), 0.04);
+  }
+}
+
+.widget-help {
+  margin-bottom: 0;
+  padding-top: 0.9em;
+}

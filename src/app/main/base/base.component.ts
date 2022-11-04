@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subject, fromEvent } from 'rxjs';
-import { map, filter, tap, takeUntil } from 'rxjs/operators';
-import { Store } from '@ngxs/store';
+import { Subject, fromEvent, iif, defer, of, merge } from 'rxjs';
+import { map, filter, tap, takeUntil, distinctUntilChanged, concatMap } from 'rxjs/operators';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { GlobalActions } from 'app/core/app-global-state/app.actions';
+import { BackendService } from 'app/core/services/backend.service';
+import { Particl, ParticlWalletService } from 'app/networks/networks.module';
 
 
 /*
@@ -24,10 +26,63 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _store: Store,
+    private _actions: Actions,
+    private _backendService: BackendService,
+    private _particlWalletService: ParticlWalletService,
   ) { }
 
   ngOnInit() {
     this._store.dispatch(new GlobalActions.Initialize());
+
+    merge(
+      // load Particl last active wallet once the Particl blockchain is running
+      this._store.select(Particl.State.Core.isRunning()).pipe(
+        distinctUntilChanged(),
+        concatMap(isRunning => iif(
+          () => isRunning,
+          defer(() =>
+          // fetch the last wallet loaded from the backend
+            this._backendService.sendAndWait<string | null>('apps:particl-wallet:lastActiveWallet').pipe(
+              concatMap(walletName => {
+                  const toLoadName = typeof walletName === 'string' ? walletName : '';
+
+                  return this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(toLoadName)).pipe(
+                    concatMap(() => {
+                      // check that the wallet loaded is the same as the requested
+                      const loadedName = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname'));
+                      if (loadedName !== toLoadName) {
+                        // loaded wallet doesn't match, so fallback to whatever the first current loaded wallet is
+                        return this._particlWalletService.listLoadedWallets().pipe(
+                          tap({
+                            next: loadedWallets => {
+                              if (Array.isArray(loadedWallets) && loadedWallets.length > 0) {
+                                this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(loadedWallets[0]));
+                              }
+                            }
+                          })
+                        )
+                      }
+                      return of({});
+                    })
+                  );
+              })
+            )
+          )
+        )),
+        takeUntil(this.destroy$)
+      ),
+
+      // set the last active Particl wallet when the wallet is changed
+      this._actions.pipe(ofActionCompleted(Particl.Actions.WalletActions.ChangeWallet)).pipe(
+        tap({
+          next: () => {
+            const walletName = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname'));
+            this._backendService.send('apps:particl-wallet:setActiveWallet', walletName);
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+    ).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
 

@@ -30,6 +30,7 @@ exports.init = () => {
       fileExtension: 'json',
       clearInvalidConfig: true,
       accessPropertiesByDotNotation: true,
+      projectVersion: _settingsManager.getSettings(null, 'VERSIONS').governance,
     });
   }
 }
@@ -54,7 +55,7 @@ exports.channels = {
       });
     },
 
-    'update': (field, value) => {
+    'update': (_, field, value) => {
       if (!stateRef || (typeof field !== 'string') || field.length === 0) {
         observer.next(false);
         observer.complete();
