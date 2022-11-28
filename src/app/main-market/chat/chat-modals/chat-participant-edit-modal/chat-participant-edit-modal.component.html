@@ -1,0 +1,45 @@
+<mat-dialog-title>Edit Address Details</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+<form [formGroup]="editDetailsForm" (ngSubmit)="updateAddressDetails()" #formDir="ngForm">
+  <mat-dialog-content>
+
+    <p class="lead">
+      Update the details saved for this address
+    </p>
+
+    <div class="address-info">
+      <div class="string">{{ data.address }}</div>
+    </div>
+
+    <div class="modal-highlight">
+      <mat-form-field class="--boxed --larger" appearance="fill" matTooltip="Label" matTooltipPosition="before">
+        <mat-icon matPrefix fontIcon="part-person"></mat-icon>
+        <input matInput
+          type="text"
+          formControlName="label"
+          placeholder="Address label (e.g. owner's name)"
+          #labelInput
+          required>
+      </mat-form-field>
+      <mat-hint align="end">{{ labelInput.value.length }}/100</mat-hint>
+    </div><!-- .modal-highlight -->
+
+  </mat-dialog-content><!-- mat-dialog-content -->
+
+
+  <mat-dialog-actions>
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+    <button mat-button mat-raised-button color="primary" [disabled]="!editDetailsForm.valid || isProcessing">
+      <mat-icon fontIcon="part-pen-1"></mat-icon>
+      Update
+    </button>
+  </mat-dialog-actions>
+
+</form>

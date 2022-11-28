@@ -435,7 +435,7 @@ export class ParticlBlockchainState {
     return state.networkInfo;
   }
 
-  static networkValue(field: string) {
+  static networkValue(field: keyof ParticlBlockchainStateModel['networkInfo']) {
     return createSelector(
       [ParticlBlockchainState],
       (state: ParticlBlockchainStateModel) => {

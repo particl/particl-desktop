@@ -1,0 +1,51 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.shipping-profiles {
+  --items-per-row: 2;
+  --item-margin: 24px;
+  --item-padding: 24px;
+  @include break(l) {
+    --items-per-row: 3;
+  }
+  @include break(xl) {
+    --items-per-row: 4;
+  }
+
+  .profiles-grid {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: calc(-1 * var(--item-margin));
+  }
+
+  .item {
+    @extend %enable-select;
+    flex: 0 0 calc(100% / var(--items-per-row) - var(--item-margin) - 2 * var(--item-padding));
+    margin: 0 var(--item-margin) var(--item-margin) 0;
+    padding: var(--item-padding);
+    position: relative;
+    line-height: 1.3;
+    .edit-profile { // button
+      display: none;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+    &:hover {
+      .edit-profile {
+        display: block;
+      }
+    }
+    span {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+    .profile-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+  }
+
+}

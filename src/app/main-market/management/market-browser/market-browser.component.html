@@ -1,0 +1,263 @@
+<div class="container-block">
+
+  <app-page-intro [childPageAlias]="'MarketBrowser'">
+    <ng-container page-title>Market browser</ng-container>
+    <ng-container page-content>
+      Manage your Markets - browse and join available Markets on Particl platform.
+    </ng-container>
+    <ng-container page-help>
+      Find and join a Market to shop. Not all Markets are listed publicly; you may need their Market ID to join them. Sellers can sell on the default Open Market (available to all users) or create their own public or storefront Markets.
+    </ng-container>
+  </app-page-intro>
+
+
+  <div class="filter">
+
+    <div class="buttons">
+      <!-- Join Market button -->
+      <button mat-raised-button color="primary"
+              appDebounceClick
+              (debounceClick)="openMarketJoinModal()"
+              class="join-button-toggle full-width"
+              matTooltip="Join a new Market using its Market ID"
+              matTooltipPosition="above">
+        <mat-icon fontIcon="part-nodes"></mat-icon>
+        Join via Market ID
+      </button>
+
+    </div><!-- .buttons -->
+
+
+    <h2 class="section-title">
+      Search
+    </h2>
+
+    <mat-form-field class="--boxed" appearance="fill">
+      <input matInput type="text" class="header-input" placeholder="Search Markets" [formControl]="searchControl" (keyup.escape)="searchControl.setValue('')">
+      <button *ngIf="searchControl.value.length > 0" matSuffix mat-button class="small" (click)="searchControl.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+        <mat-icon fontIcon="part-clear-all"></mat-icon>
+      </button>
+      <mat-icon *ngIf="searchControl.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+    </mat-form-field>
+
+    <h2 class="section-title">
+      Filter
+    </h2>
+
+    <mat-card class="filter-card">
+      <mat-form-field class="--plain" appearance="fill">
+        <mat-select [formControl]="filterRegionControl">
+          <mat-option *ngFor="let option of optionsFilterMarketRegion" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-radio-group class="radio-group block-radio" [formControl]="filterTypeControl">
+        <mat-radio-button class="filter-option" *ngFor="let option of optionsFilterMarketType" [value]="option.value" color="primary">
+          {{ option.label }}
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card>
+
+    <button mat-button color="basic" class="clear-filters" (click)="clearFilters()">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+      Clear all filters
+    </button>
+
+  </div><!-- .filter (sidebar) -->
+
+
+  <!-- Management > Market list -->
+  <div class="markets section with-filter">
+
+    <div class="alert --boxed --info --sticky-bottom" *ngIf="(marketSettings | async)?.marketsLastAdded > 0">
+      <span>
+        After you've joined <u>all</u> desired Markets, scan for their Listings
+        <small>Scanning for Listings takes some time &ndash; try to avoid scanning after connecting to each Market individually</small>
+      </span>
+      <div class="action-button">
+        <button class="button" mat-raised-button color="accent" appDebounceClick (debounceClick)="forceSmsgRescan()" [disabled]="isRescanning">
+          <mat-icon fontIcon="part-search"></mat-icon>
+          Scan for Listings
+        </button>
+      </div>
+    </div>
+
+
+    <ng-template #marketTypeStorefront>Storefront</ng-template>
+
+
+    <ng-container *ngIf="defaultMarkets.length > 0">
+
+      <h2 class="section-title">
+        Default Markets
+      </h2>
+
+      <mat-accordion>
+        <mat-expansion-panel class="market list-item no-padding" *ngFor="let market of defaultMarkets; let mIdx = index;">
+          <mat-expansion-panel-header class="header">
+            <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+              <div class="photo">
+                <img [src]="market.image">
+              </div>
+              <div class="info" fxFlex="1 1 100%">
+                <h3 class="box-title --larger">
+                  <span class="name">{{ market.name }}</span>
+                </h3>
+                <div class="desc">
+                  <span class="market-type tag">
+                    <ng-container *ngIf="market.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">
+                      Community Market
+                    </ng-container>
+                  </span>
+                  <span class="market-region">
+                    <mat-icon fontIcon="part-globe"></mat-icon>
+                    {{ market.region.label }}
+                  </span>
+                </div>
+              </div><!-- .meta -->
+            </div>
+          </mat-expansion-panel-header>
+
+          <div class="details">
+            <div class="row" fxLayout fxLayoutGap="30px">
+              <div fxFlex="1 1 100%">
+                <h3 class="item-subtitle">Market summary</h3>
+                <p class="desc">
+                  {{ market.summary }}
+                </p>
+              </div>
+              <p class="desc meta" fxFlex="0 0 160px">
+                <strong>Promoted until</strong>
+                <small>(never expires)</small>
+              </p>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="keys">
+              <h3 class="box-title">Market ID</h3>
+              <p class="help-text">
+                <strong>Market Access Key</strong>
+              </p>
+              <div class="public key">{{ market.receiveKey }}</div>
+            </div><!-- .keys -->
+          </div><!-- .details -->
+
+          <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+            <div class="left">
+            </div>
+            <div class="right">
+              <button mat-raised-button color="primary" appDebounceClick (debounceClick)="actionJoinMarket(mIdx, true)">
+                <mat-icon fontIcon="part-circle-plus"></mat-icon>
+                Join this Market
+              </button>
+            </div>
+          </mat-action-row>
+
+        </mat-expansion-panel>
+      </mat-accordion>
+    </ng-container>
+
+
+    <h2 class="section-title" *ngIf="defaultMarkets.length > 0">
+      Promoted Markets
+    </h2>
+
+
+    <ng-container *ngIf="displayedMarkets.length > 0; else noMarketsVisible">
+      <mat-accordion>
+
+        <ng-container *ngFor="let marketIdx of displayedMarkets; trackBy: trackByMarketIdxFn">
+
+          <mat-expansion-panel class="market list-item no-padding" *appVar="marketsList[marketIdx] as marketItem">
+            <mat-expansion-panel-header class="header">
+              <div class="header-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                <div class="photo">
+                  <img [src]="marketItem.image">
+                </div>
+                <div class="info" fxFlex="1 1 100%">
+                  <h3 class="box-title --larger">
+                    <span class="name">{{ marketItem.name }}</span>
+                  </h3>
+                  <div class="desc">
+                    <span class="market-type tag">
+                      <ng-container *ngIf="marketItem.marketType === marketTypeOptions.MARKETPLACE; else marketTypeStorefront">Community Market</ng-container>
+                    </span>
+                    <span class="market-region">
+                      <mat-icon fontIcon="part-globe"></mat-icon>
+                      {{ marketItem.region.label }}
+                    </span>
+                  </div>
+                </div><!-- .meta -->
+              </div>
+            </mat-expansion-panel-header>
+
+            <div class="details">
+              <div class="row" fxLayout fxLayoutGap="30px">
+                <div fxFlex="1 1 100%">
+                  <h3 class="item-subtitle">Market summary</h3>
+                  <p class="desc">
+                    {{ marketItem.summary }}
+                  </p>
+                </div>
+                <p class="desc meta" fxFlex="0 0 160px">
+                  <strong>Promoted until</strong>
+                  {{ marketItem.expires | date: 'yyyy-MM-dd HH:mm' }}
+                </p>
+              </div>
+              <mat-divider></mat-divider>
+              <div class="keys">
+                <h3 class="box-title">Market ID</h3>
+                <p class="help-text">
+                  <strong>Key required to join this Market.</strong> You can and should share it publicly with others. Whoever joins this Market can further share its Market ID with others.
+                </p>
+                <div class="public key">{{ marketItem.receiveKey }}</div>
+              </div><!-- .keys -->
+            </div><!-- .details -->
+
+            <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
+              <div class="left">
+              </div>
+              <div class="right">
+                <button mat-raised-button color="primary" appDebounceClick (debounceClick)="actionJoinMarket(marketIdx)">
+                  <mat-icon fontIcon="part-circle-plus"></mat-icon>
+                  Join this Market
+                </button>
+              </div>
+            </mat-action-row>
+
+          </mat-expansion-panel><!-- .market -->
+        </ng-container>
+
+      </mat-accordion>
+    </ng-container>
+
+    <ng-template #noMarketsVisible>
+      <div class="no-results" *ngIf="marketsList.length === 0">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets available">
+        <p>
+          No promoted Markets
+        </p>
+        <p class="help-text">
+          If you're looking for a specific Market, ask any of its members for the Market ID and join it manually
+        </p>
+      </div>
+
+      <!-- when searching/filtering: -->
+      <div class="no-results" *ngIf="marketsList.length > 0">
+        <img class="illustration" src="./assets/app-market/illustrations/no-markets.svg" alt="No Markets found">
+        <p>
+          No Markets found
+        </p>
+        <p class="help-text">
+          Sorry, we haven't found any Market matching your criteria
+        </p>
+      </div>
+    </ng-template>
+
+  </div><!-- .markets (content) -->
+</div><!-- .container-block -->
+
+
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

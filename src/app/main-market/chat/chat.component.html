@@ -1,0 +1,24 @@
+<div class="tab-bar">
+  <mat-tab-group (selectedTabChange)="changeTab($event.index)" [selectedIndex]="selectedTab">
+    <mat-tab *ngFor="let tab of tabs">
+      <ng-template mat-tab-label>
+        <mat-icon [fontIcon]="tab.icon"></mat-icon>
+        {{ tab.title }}
+        <span class="notification" *ngIf="tab.notificationValue !== null">{{ tab.notificationValue }}</span>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+
+<ng-container [ngSwitch]="selectedTempl">
+
+  <div *ngSwitchCase="'chats'" class="orders container-block" >
+    <market-chat-channels></market-chat-channels>
+  </div>
+
+  <div *ngSwitchCase="'users'" class="questions container-block" >
+    <market-chat-participants></market-chat-participants>
+  </div>
+
+</ng-container>

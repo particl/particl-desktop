@@ -1,0 +1,180 @@
+<app-page-intro childPageAlias="Chat Messages">
+  <ng-container page-title>Chat Conversations</ng-container>
+  <ng-container page-content>
+    These are all chats that you are participating in.
+  </ng-container>
+  <ng-container page-info *ngIf="identityIsEncrypted">
+    <span>As this is an encrypted wallet, your wallet will need to be unlocked in order to send a chat message!</span>
+  </ng-container>
+  <ng-container page-help>
+    You can respond to chat messages from different conversations, or stop receiving notifications from particular conversations here (Note that you will automatically receive notifications again if a new message is received for an "order" conversation, or you are the seller for a "listing" conversation ).
+  </ng-container>
+</app-page-intro>
+
+
+<div class="filter">
+
+  <h2 class="section-title">
+    Search
+  </h2>
+
+  <mat-form-field class="--boxed" appearance="fill">
+    <input matInput type="text" [formControl]="filterSearch"
+          placeholder="Search Topics" (keyup.escape)="filterSearch.setValue('')">
+    <button *ngIf="filterSearch.value.length > 0" matSuffix mat-button class="small" (click)="filterSearch.setValue('')" matTooltip="Clear" matTooltipPosition="after">
+      <mat-icon fontIcon="part-clear-all"></mat-icon>
+    </button>
+    <mat-icon *ngIf="filterSearch.value.length === 0" matSuffix fontIcon="part-search"></mat-icon>
+  </mat-form-field>
+
+  <h2 class="section-title">
+    Filter
+  </h2>
+
+  <mat-card class="filter-card">
+
+    <mat-form-field class="--plain" appearance="fill">
+      <mat-select placeholder="Filter by Market" [formControl]="filterMarket">
+        <mat-option value="">All Markets</mat-option>
+        <mat-option *ngFor="let market of filterMarketOptions" [value]="market.value">
+          {{ market.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-radio-group class="radio-group block-radio" [formControl]="filterUnread">
+      <mat-radio-button class="filter-option" *ngFor="let item of filterUnreadOptions" [value]="item.value" color="accent">
+        {{ item.title }}
+      </mat-radio-button>
+    </mat-radio-group>
+
+    <mat-divider></mat-divider>
+
+    <mat-radio-group class="radio-group block-radio" [formControl]="filterType">
+      <mat-radio-button class="filter-option" *ngFor="let item of filterTypeOptions" [value]="item.value" color="accent">
+        {{ item.title }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card>
+
+  <button mat-button color="basic" class="clear-filters" (click)="clearAllFilters()">
+    <mat-icon fontSet="partIcon" fontIcon="part-clear-all"></mat-icon>
+    Clear all filters
+  </button>
+
+</div><!-- .filter -->
+
+
+<div class="listings section with-filter">
+
+  <ng-container *ngIf="displayedChannelIdxs.length > 0; else noChannelsDisplayed">
+    <ng-container *ngFor="let channelIdx of displayedChannelIdxs">
+        <mat-expansion-panel class="listing list-item no-padding" *appVar="chatChannelsList[channelIdx] as channel" [expanded]="true" hideToggle>
+          <mat-expansion-panel-header class="header">
+            <div class="header-wrapper">
+              <div class="photo">
+                <img [src]="channel.image">
+              </div>
+              <div class="meta" fxFlex="1 1 100%">
+                <div class="name">{{ channel.title }}</div>
+                <span class="published-markets">{{ channel.market.name }}</span>
+              </div>
+
+              <div fxLayout fxLayoutGap="35px" fxLayoutAlign="space-between flex-end">
+                <div>
+                  <button mat-button color="accent" *ngIf="channel.hasUnread" class="tiny icon-only" matTooltip="Unread messages" appDebounceClick (debounceClick)="actionOpenChatMessages(channelIdx)">
+                    <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+                  </button>
+                </div>
+                <div class="status-wrap" fxFlex="0 0 100px">
+                  <div class="status {{ channel._channelType === TypeChatChannel.LISTINGITEM ? 'color-secondary' : (channel._channelType === TypeChatChannel.ORDERITEM ? 'color-tertiary' : 'color-warning' ) }}">
+                    <span class="dot"></span>
+                    {{ channel.type }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel-header>
+
+          <mat-action-row fxLayout fxLayoutAlign="space-between stretch">
+              <button mat-button color="warn" matTooltip="Stop receiving notifications for this chat" appDebounceClick (debounceClick)="actionUnfollowChannel(channelIdx)" class="small">
+                <mat-icon fontIcon="part-circle-remove"></mat-icon>
+                Un-follow
+              </button>
+              <button mat-button color="accent" *ngIf="channel.hasUnread" matTooltip="Mark as read" appDebounceClick (debounceClick)="actionMakeChannelRead(channelIdx)" class="small">
+                <mat-icon fontIcon="part-circle-minus"></mat-icon>
+                Mark read
+              </button>
+              <button mat-button *ngIf="channel._channelType === TypeChatChannel.LISTINGITEM" matTooltip="Show details of the item that is the topic of this conversation" appDebounceClick (debounceClick)="actionShowItemDetail(channelIdx)" class="small">
+                <mat-icon fontIcon="part-search"></mat-icon>
+                Show Listing Details
+              </button>
+              <button mat-raised-button color="primary" matTooltip="Open chat message history" appDebounceClick (debounceClick)="actionOpenChatMessages(channelIdx)" class="small">
+                <mat-icon fontIcon="part-chat-discussion"></mat-icon>
+                Open Chat
+              </button>
+          </mat-action-row>
+        </mat-expansion-panel><!-- .listing -->
+    </ng-container>
+  </ng-container>
+
+
+  <!-- define the template, so we can reuse it -->
+  <ng-template #loadingPlaceholder>
+    <div class="item" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="photo placeholder --lighter"></div>
+      <div fxFlex="1 0 175px">
+        <div class="name placeholder"></div>
+        <div class="meta placeholder"></div>
+      </div>
+      <div fxFlex="1 0 155px" fxLayout fxLayoutAlign="flex-end center">
+        <span class="status placeholder --lighter"></span>
+        <span class="arrow placeholder --lighter"></span>
+      </div>
+    </div>
+  </ng-template>
+
+
+  <ng-template #noChannelsDisplayed>
+
+    <!-- show loading-placeholder when items are initially loading -->
+    <div class="loading-placeholder market listings" *ngIf="(chatChannelsList.length === 0)">
+
+      <ng-container *ngIf="isLoading">
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+        <ng-container *ngTemplateOutlet="loadingPlaceholder"></ng-container>
+      </ng-container>
+
+      <div class="no-results" *ngIf="!isLoading">
+        <img class="illustration" src="./assets/app-market/illustrations/no-listings.svg" alt="No Chat Topics">
+        <p>
+          No topics are currently followed
+        </p>
+        <p class="help-text">
+          To follow a particular chat topic, find the item on which you would like to discuss something and follow the conversation, or alternatively send a message in the topic chat to automatically follow it.
+        </p>
+      </div><!-- .no-results -->
+    </div>
+
+    <!-- no matching search results -->
+    <div class="no-results" *ngIf="(chatChannelsList.length > 0)">
+      <img class="illustration" src="./assets/images/illustrations/search.svg" alt="No chat topics match the search criteria">
+      <p>
+        No matching chat topics found
+      </p>
+      <p class="help-text">
+        You don't have any chat topics matching your search
+      </p>
+    </div><!-- .no-results -->
+  </ng-template>
+</div><!-- .listings-list -->
+
+
+<div class="loading-bar" *ngIf="isLoading">
+  <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+</div><!-- .loading-bar -->

@@ -459,7 +459,7 @@ module.exports = class ParticlCore extends CoreInstance {
           }).catch(() => reject());
         }).then(() => true).catch(() => false),
 
-        _sleep(30_000, false)
+        _sleep(60_000, false)
       ]);
 
       if (!isStopped) {

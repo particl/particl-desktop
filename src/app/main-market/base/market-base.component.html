@@ -1,0 +1,106 @@
+<main-layout-default>
+  <ng-container ngProjectAs="menu">
+
+    <mat-expansion-panel [disabled]="!isStarted" class="instance-switcher no-padding arrow-colored">
+      <mat-expansion-panel-header class="switcher-toggle" *ngIf="selectedIdentity">
+        <div class="item">
+          <!-- TODO: offer various colors for wallets/whatever to easily tell them apart? -->
+          <div class="icon">{{ selectedIdentity.icon }}</div>
+          <div class="text">
+            <div class="name">{{ selectedIdentity.displayName }}</div>
+            <div class="value">{{ currentBalance | async}} PART</div>
+          </div>
+        </div>
+      </mat-expansion-panel-header>
+
+      <ng-template matExpansionPanelContent>
+        <div class="options">
+          <a class="item" *ngFor="let identity of identitiesList; trackBy:trackByIdentityFn" (click)="identitySelected(identity)" (keyup.enter)="identitySelected(identity)" tabindex="0" [class.disabled]="identity.isActive">
+            <div class="icon">{{ identity.icon }}</div>
+            <div class="text">
+              <div class="name">{{ identity.displayName }}</div>
+              <div class="value" *ngIf="identity.isActive">Active Identity</div>
+              <div class="value" *ngIf="!identity.isActive">Switch Identity</div>
+            </div>
+          </a>
+          <a *ngIf="(marketSettings | async).canModifyIdentities; else identityCreationDisabled" class="item" tabindex="0" appDebounceClick (debounceClick)="openCreateIdentityModal()">
+            <div class="icon">+</div>
+            <div class="text">
+              <div class="name"><em>New Market identity</em></div>
+              <div class="value">Click to create&hellip;</div>
+            </div>
+          </a>
+          <ng-template #identityCreationDisabled>
+            <a class="item disabled">
+              <div class="text">
+                <span class="name"><em>(identity creation disabled)</em></span>
+              </div>
+            </a>
+          </ng-template>
+        </div>
+      </ng-template>
+
+    </mat-expansion-panel>
+
+    <div class="menu-items">
+      <ng-container *ngFor="let menuItem of menu; trackBy:trackByMenuFn">
+        <ng-container *ngIf="(isStarted || menuItem.alwaysEnabled); else menuDeactivated">
+          <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+            <ng-container *ngIf="menuItem.icon.length > 0">
+              <mat-icon [fontIcon]="menuItem.icon"></mat-icon>
+            </ng-container>
+            <span class="text">{{menuItem.text}}</span>
+            <span class="notification" *ngIf="menuItem.notificationValue !== null">{{ menuItem.notificationValue }}</span>
+          </a>
+        </ng-container>
+
+        <ng-template #menuDeactivated>
+          <a class="menu-item disabled" routerLinkActive="" [routerLink]="null">
+            <ng-container *ngIf="menuItem.icon.length > 0">
+              <mat-icon [fontIcon]="menuItem.icon"></mat-icon>
+            </ng-container>
+            <span class="text">{{menuItem.text}}</span>
+          </a>
+        </ng-template>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container ngProjectAs="sidebar" *ngIf="showProfileWarning">
+    <div class="menu-items">
+      <a class="menu-item warning" appDebounceClick (debounceClick)="openBackupProfileModal()">
+        <mat-icon fontIcon="part-alert"></mat-icon>
+        <span class="text"
+              matTooltip="Your profile secrets should be backed up as soon as possible"
+              matTooltipPosition="above">
+          Backup profile secrets
+        </span>
+      </a>
+    </div>
+  </ng-container>
+
+  <ng-container ngProjectAs="app-version">
+    <mat-content class="client-version">
+      <div class="app item">
+        <!-- App name -->
+        Market
+        <span class="version">{{ mpVersion }}</span>
+      </div>
+    </mat-content>
+  </ng-container>
+
+  <main-topbar></main-topbar>
+
+  <div class="alpha-warning" fxLayoutAlign="stretch stretch" *ngIf="isWarningVisible">
+    <button class="button tiny" mat-button color="warn" appDebounceClick (debounceClick)="openWarningMessage()" fxFlex="1 1 100%">
+      <mat-icon fontIcon="part-alert"></mat-icon>
+      The Particl Marketplace is still in development - use it at your own risk!
+      (Click here to read all the details first!)
+    </button>
+    <button class="button tiny icon-only" mat-button matTooltip="Dismiss for this session" matTooltipPosition="before" (click)="isWarningVisible=false;" fxFlex="0 0 46px">
+      <mat-icon fontIcon="part-cross"></mat-icon>
+    </button>
+  </div>
+
+  <router-outlet></router-outlet>
+</main-layout-default>

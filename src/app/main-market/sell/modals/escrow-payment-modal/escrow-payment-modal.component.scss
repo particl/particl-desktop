@@ -1,0 +1,47 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../../../../main-wallet/shared/confirmations-shared'; // shared stuff for confirmation modals
+
+.mat-dialog-content {
+  padding-bottom: 0;
+}
+
+.tx-info {
+  .help-text {
+    max-width: 25rem;
+  }
+}
+
+.receiver-info {
+  @extend %enable-select;
+  .escrow-label {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+    margin: 0 auto 4px;
+  }
+  .order-info {
+    color: var(--text-muted);
+    margin: 12px auto 32px;
+    max-width: 15rem;
+    word-break: break-word;
+  }
+}
+
+.order-note {
+  background: var(--bg);
+  margin: 24px -24px 0;
+  padding: 16px 24px 4px;
+  border-top: 1px dashed var(--bg-muted);
+  p {
+    margin-top: 0;
+    color: var(--text-muted);
+    b {
+      font-weight: 500;
+      color: var(--text);
+    }
+  }
+}
+
+.mat-dialog-actions {
+  border-top: 1px dashed var(--bg-muted);
+}

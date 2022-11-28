@@ -38,7 +38,7 @@
       <td class="amount">{{utxo.amount}}</td>
       <td class="label">{{utxo.label}}</td>
       <td class="address">
-        <a *ngIf="addressURL.length > 0" href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{utxo?.address || ''}}" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a>
+        <a *ngIf="addressURL.length > 0" [href]="addressURL.replace('{addressid}', utxo.address || '')" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a>
         <ng-container *ngIf="addressURL.length === 0">{{utxo.address}}</ng-container>
       </td>
     </tr>

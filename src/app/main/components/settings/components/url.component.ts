@@ -42,7 +42,7 @@ export interface URLSettingDetails {
       </h4>
       <p class="desc" *ngIf="receivedSettings?.description?.length > 0">{{ receivedSettings.description }}</p>
       <p class="warning" *ngIf="valueControl.invalid">{{errorMsg}}</p>
-      <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="errorMsg ? 'warn' : 'primary'">
+      <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="valueControl.invalid ? 'warn' : 'primary'">
         <input matInput
           [placeholder]="receivedSettings?.placeholder"
           [formControl]="valueControl">

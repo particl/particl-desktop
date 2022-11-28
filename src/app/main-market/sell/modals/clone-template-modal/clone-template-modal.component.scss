@@ -1,0 +1,53 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+.mat-dialog-content {
+  width: 30rem;
+  padding: 24px;
+}
+
+header {
+  margin: 0 0 32px;
+  .lead {
+    margin: 0;
+  }
+}
+
+.product {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 14px 18px;
+  .image {
+    --size: 60px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 16px;
+    position: relative;
+    img {
+      @extend %image-center-cover;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+  .name {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+.mat-option {
+  img.image {
+    // photos in Market switcher
+    --size: 24px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    position: relative;
+    top: 7px;
+    margin-right: 4px;
+  }
+}

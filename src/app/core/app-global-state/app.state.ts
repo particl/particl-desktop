@@ -43,7 +43,7 @@ export const ngxsConfig: NgxsModuleOptions = {
 @Injectable()
 export class ApplicationConfigState {
 
-  static moduleVersions(module: string | undefined) {
+  static moduleVersions(module: keyof IPCResponseApplicationSettings['VERSIONS'] | undefined) {
     return createSelector(
       [APP_CONFIG_STATE_TOKEN],
       (appState: ApplicationConfigStateModel): string =>

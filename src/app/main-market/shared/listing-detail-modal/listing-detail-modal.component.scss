@@ -1,0 +1,401 @@
+@import './src/assets/_config'; // import shared colors etc.
+@import '../list-item-details'; // shared styling for list items
+
+.fiat {
+  display: none; // hidden until implemented
+}
+
+// ------ GENERAL ------ //
+
+table {
+  border-spacing: 0;
+  th {
+    text-align: left;
+    font-weight: 600;
+    padding-right: 24px;
+    vertical-align: top;
+  }
+}
+
+// ------ UI ELEMENTS ------ //
+
+button.modal-close {
+  top: 7px !important;
+  z-index: 30 !important;
+}
+
+// ------ LAYOUT ------ //
+
+:host {
+  ::ng-deep {
+    image-item {
+      & > div {
+        background-size: contain; // so all images fit whole
+        background-repeat: no-repeat;
+      }
+    }
+    gallery-nav {
+      // recolor the nav arrows to grey
+      .g-nav-next,
+      .g-nav-prev {
+        filter: invert(10%);
+      }
+    }
+    .listing-tabs {
+      position: sticky;
+      top: 0;
+      background: var(--color-white);
+      box-shadow: 0 5px 6px -2px hsla(var(--bg-black-hsl), 0.15);
+      padding-top: 6px;
+      z-index: 20;
+      .mat-tab-label {
+        width: (100% / 3);
+      }
+    }
+  }
+}
+
+.mat-dialog-content {
+  margin: -24px -24px 0 !important;
+  width: 930px;
+  height: calc(100vh - 120px);
+  max-height: none;
+  background: var(--bg);
+  overflow-y: scroll; // always show vertical scrollbar, so content doesn't jump
+}
+
+// Container for upper part (gallery, name, meta)
+.product-summary {
+  margin: 0 -24px;
+  padding: 24px var(--paddingH) 16px;
+  background: var(--color-white);
+
+  // Featured photo/gallery
+  .product-gallery {
+    --photo-size: 350px;
+    flex: 1 0 var(--photo-size);
+    height: var(--photo-size);
+    margin-right: var(--paddingH);
+    .gallery-carousel {
+      width: 100%;
+      height: 100%;
+      img {
+        // single product image
+        @extend %image-center-cover;
+      }
+    }
+    gallery {
+      // multiple product images in gallery
+      background: none;
+    }
+  }
+}
+
+// Main product info (on top)
+.product-info {
+  flex: 0 1 100%;
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  h1 {
+    font-size: 22px;
+    line-height: 1.4;
+    margin: 0 0 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  .short-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0 0 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-all;
+  }
+  .expires-soon {
+    font-weight: 500;
+    margin: 14px 0 0;
+    .mat-icon {
+      color: var(--color-info);
+      position: relative;
+      top: 3px;
+      margin-right: 4px;
+      &::after {
+        // pulsating "ripple"
+        content: '';
+        display: block;
+        border: 2px solid hsla(var(--color-info-hsl), 0.7);
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 0;
+        border-radius: 50%;
+        animation: pulse-disappear 1.75s infinite;
+      }
+    }
+  }
+
+  // Price info
+  .pricing {
+    background: var(--bg);
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+    margin: 24px calc(-1 * var(--paddingH)) 24px 0;
+    padding: 18px 28px;
+    display: flex;
+    .item {
+      margin-right: 24px;
+      border-right: 1px solid hsla(var(--bg-muted-hsl), 0.6);
+      padding-right: 32px;
+      &:last-of-type {
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+      .title {
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 2px;
+      }
+      .value {
+        .big {
+          font-size: 15px;
+          line-height: 1.2;
+          margin: 0;
+        }
+        .currency {
+          font-size: 13px;
+          font-weight: 400;
+          margin-left: 5px;
+        }
+        .not-available {
+          // product shipping N/A to selected destination
+          @extend .big;
+          font-style: italic;
+          color: var(--color-alert);
+        }
+      }
+      &.price {
+        .title,
+        .big {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // meta table (shipping, category, sold from & date added)
+  table.meta {
+    .title {
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 3px 24px 0 0;
+      width: 140px;
+    }
+    td {
+      padding: 3px 0 0;
+    }
+    .mat-icon {
+      color: hsla(var(--text-muted-hsl), 0.45);
+      font-size: 14px;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+    }
+  }
+} // << .product-info
+
+.product-details {
+  margin: 0 -24px;
+
+  // Tabs' content
+  .tab-content {
+    min-height: 230px; // bigger by default (prevents tabs from jumping with little content)
+    padding: var(--padding);
+    line-height: 1.55;
+    font-size: 14px;
+  }
+
+  .mat-card {
+    padding: var(--padding);
+  }
+
+  // Text description
+  .description {
+    @extend %enable-select;
+    word-wrap: break-word;
+    &.lead {
+      font-weight: 500;
+      font-size: 16px;
+    }
+    &.detailed {
+      white-space: pre-line;
+      margin: 0;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+  }
+
+  .gallery {
+    --image-margin: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 calc(-1 * var(--image-margin));
+    width: calc(100% + 2 * var(--image-margin));
+    .image {
+      --image-size: 176px;
+      @include break(l) {
+        --image-size: 170px;
+      }
+      flex: 0 0 var(--image-size);
+      height: var(--image-size);
+      margin: var(--image-margin);
+      img {
+        @extend %image-center-cover;
+      }
+    }
+  }
+
+  // Shipping & escrow
+  table.shipping-escrow {
+    width: calc(100% + 2 * var(--paddingH));
+    margin: -8px calc(-1 * var(--paddingH));
+
+    thead {
+      th {
+        color: var(--text-muted);
+        font-weight: 500;
+        padding: 0 12px 12px;
+        vertical-align: bottom;
+        &:first-child {
+          padding-left: 24px;
+        }
+        &:last-child {
+          padding-right: 24px;
+        }
+      }
+    }
+    tbody {
+      tr {
+        & > * {
+          &:first-child {
+            padding-left: 24px;
+          }
+          &:last-child {
+            padding-right: 24px;
+          }
+        }
+        th {
+          font-weight: 500;
+          small {
+            color: var(--text-muted);
+            font-size: 90%;
+            font-weight: 400;
+            display: block;
+          }
+        }
+        th,
+        td {
+          border-top: 1px solid var(--bg-muted);
+          padding: 12px;
+          max-width: 150px; // space out cells ~evenly
+        }
+        &.help-text {
+          td {
+            vertical-align: top;
+          }
+        }
+      }
+    }
+    strong {
+      font-weight: 500;
+    }
+    .price {
+      &.part {
+        display: block;
+        strong {
+          font-size: 110%;
+        }
+      }
+    }
+    small.currency {
+      font-size: 90%;
+      margin-left: 0.3rem;
+    }
+
+    &.centered {
+      text-align: center;
+      thead {
+        th {
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
+
+.chat-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  padding: 0.5em !important;
+}
+
+mat-dialog-actions {
+  padding: 12px 24px;
+  margin: 0 -24px -24px;
+  border-top: 1px solid var(--bg-muted);
+
+  // Listing governance
+  .reporting {
+    display: inline-block;
+    .title {
+      color: var(--text-muted);
+      margin-right: 6px;
+    }
+    .voted {
+      color: var(--text-muted);
+      p {
+        margin: 0;
+      }
+    }
+    .voted-icon {
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+      font-size: 14px;
+      line-height: 0;
+    }
+    button {
+      margin: 0 4px 0 0;
+      .mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+  app-favorite {
+    // add/remove from favs icon
+    margin-right: 6px;
+  }
+}
+
+@keyframes pulse-disappear {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}

@@ -1,0 +1,29 @@
+@import './src/assets/config'; // import shared colors etc.
+
+.mat-dialog-title {
+  margin: 0;
+}
+
+.mat-dialog-content {
+  max-width: 34rem;
+}
+
+.address-info {
+  @extend %enable-select;
+  text-align: center;
+  border: 2px dashed hsla(var(--color-alert-hsl), 0.15);
+  border-radius: 4px;
+  padding: 48px 24px;
+  margin: 24px 0 16px;
+  .string {
+    font-family: var(--font-mono);
+    color: var(--color-alert);
+    font-weight: 500;
+    line-height: 1.5;
+    word-break: break-all;
+    background: hsla(var(--color-alert-hsl), 0.1);
+    border-radius: 4px;
+    display: inline-block;
+    padding: 5px 12px;
+  }
+}

@@ -29,15 +29,15 @@ export const routes: Routes = [
           description: 'Send, receive and manage PART coins',
         }
       },
-      // { path: 'market',
-      //   loadChildren: () => import('app/main-market/market.module').then(m => m.MarketModule),
-      //   data: {
-      //     showShortcut: true,
-      //     icon: 'part-bag',
-      //     title: 'Marketplace',
-      //     description: 'Buy and sell on the most private markets',
-      //   }
-      // },
+      { path: 'market',
+        loadChildren: () => import('app/main-market/market.module').then(m => m.MarketModule),
+        data: {
+          showShortcut: true,
+          icon: 'part-bag',
+          title: 'Market',
+          description: 'Buy and sell on the most private markets',
+        }
+      },
       { path: 'governance',
         loadChildren: () => import('app/main-governance/governance.module').then(m => m.GovernanceModule),
         // canActivate: [MainRoutingGuard],

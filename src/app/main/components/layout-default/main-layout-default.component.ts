@@ -12,7 +12,7 @@ import { Particl } from 'app/networks/networks.module';
 })
 export class MainLayoutDefaultComponent {
 
-  @Select(Particl.State.Blockchain.chainType) chainType: Observable<string>;
+  @Select(Particl.State.Blockchain.chainType()) chainType: Observable<string>;
 
   constructor() { }
 }

@@ -1,0 +1,51 @@
+<div class="console-modal">
+  <button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+    <mat-icon fontIcon="part-cross"></mat-icon>
+  </button>
+
+  <div mat-dialog-container>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon fontIcon="part-cart-2"></mat-icon>
+          Market console
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+  <div #debug class="console-modal-form" (scroll)="onScroll()">
+    <app-page-intro [canHideContent]="false">
+      <ng-container page-title>Market Console</ng-container>
+      <ng-container page-content>
+        Welcome to the RPC console for interacting with the market app.<br>
+        Type <code>help</code> for an overview of available commands.
+      </ng-container>
+    </app-page-intro>
+
+    <p class="alert --boxed --warning">
+      <span>Do not use this console without fully understanding the ramification of a command.</span>
+    </p>
+
+    <div class="content-modal" [class.input]="list.type === 1" fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="space-between center" *ngFor="let list of commandList">
+      <div fxFlex="1 1 100%" class="command">
+        <pre class="text-format" *ngIf="list.isJson">{{ list.text | json }}</pre>
+        <pre class="text-format" [class.warn-text]="list.code === -1" *ngIf="!list.isJson">{{ list.text }}</pre>
+      </div>
+      <div fxFlex="0 0 100px" class="time" *ngIf="list.type === 1">
+        {{ list.time }}
+      </div>
+    </div>
+  </div>
+
+  <div class="command-actions" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-between center">
+    <mat-form-field fxFlex="1 1 100%" appearance="fill" class="command-input --plain --larger">
+      <mat-icon matPrefix fontIcon="part-console"></mat-icon>
+      <input #commandInput matInput [(ngModel)]="command" placeholder="Enter command…" [appFocusTimeout]="true">
+    </mat-form-field>
+    <button mat-raised-button color="primary" [disabled]="!command || !waitingForRPC" (click)="rpcCall()" fxFlex="0 1 200px">
+      <mat-icon fontIcon="part-next-single"></mat-icon>
+      Enter
+    </button>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+mat-dialog-title {
+  .mp-name {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-weight: 400;
+    .mat-icon {
+      font-size: 14px;
+      position: relative;
+      top: 1px;
+      margin-right: 3px;
+    }
+  }
+}
+
+.mat-dialog-content {
+  padding: 24px;
+  width: 35rem;
+  min-height: 60vh;
+}
+
+.mat-tree {
+  background: transparent;
+  .mat-tree-node {
+    display: block;
+    min-height: auto;
+    overflow: visible;
+    .category {
+      @extend %mat-card;
+      border-radius: var(--radius);
+      margin-bottom: var(--card-spacing);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 28px;
+      font-size: 13px;
+      padding: 6px 8px 6px 16px;
+      &.first-level {
+        font-weight: 500;
+      }
+      &.add-new-form {
+        display: block;
+        height: auto;
+        padding: 0;
+      }
+      .toggle {
+        color: var(--text-muted);
+        margin-left: 4px;
+      }
+    }
+    .name {
+      flex: 0 1 100%;
+    }
+    .control {
+      display: none;
+      .add-new {
+        flex: 0 1 5%;
+        margin-right: 8px;
+      }
+      .remove {
+        flex: 0 1 5%;
+      }
+    }
+    &:hover {
+      .mat-button {
+        display: inline-block;
+      }
+    }
+  }
+}

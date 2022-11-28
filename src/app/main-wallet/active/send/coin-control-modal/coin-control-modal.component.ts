@@ -2,10 +2,10 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatDialogRef, MatCheckboxChange } from '@angular/material';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
-import { Store, Select } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Particl } from 'app/networks/networks.module';
 
 import { PublicUTXO, BlindUTXO, AnonUTXO } from 'app/networks/particl/particl.models';

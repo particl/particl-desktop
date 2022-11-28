@@ -583,4 +583,9 @@ export namespace RPCResponses {
     error?: boolean;
   }
 
+
+  export interface SmsgScanBuckets {
+    result: string;
+  }
+
 }

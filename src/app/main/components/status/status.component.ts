@@ -68,14 +68,14 @@ export class StatusComponent implements OnInit, OnDestroy {
     merge(
       this._store.select(Particl.State.Blockchain.networkValue('connections')).pipe(
         tap((count) => {
-          this.peerListCount = count;
+          this.peerListCount = +count > 0 ? +count : 0;
         }),
         takeUntil(this.destroy$)
       ),
 
       this._store.select(Particl.State.Blockchain.networkValue('timeoffset')).pipe(
         tap((offset) => {
-          this.timeOffset = offset;
+          this.timeOffset = +offset;
         }),
         takeUntil(this.destroy$)
       ),

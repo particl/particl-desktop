@@ -1,0 +1,23 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+.word-list {
+  margin: 0 -1% 14px 0; // offset flex wrap layout
+  .word-no {
+    --size: 22px;
+    display: inline-block;
+    width: var(--size);
+    height: var(--size);
+    line-height: var(--size);
+    border: 1px solid var(--bg-muted);
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-align: center;
+  }
+  .word {
+    width: calc(100% - 24px);
+    font-size: 16px;
+  }
+}

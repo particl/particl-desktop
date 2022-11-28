@@ -28,7 +28,7 @@ export interface NumberSettingDetails {
       </h4>
       <p class="desc" *ngIf="setting?.description?.length > 0">{{ setting.description }}</p>
       <p class="warning" *ngIf="errorMsg">{{errorMsg}}</p>
-      <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="serrorMsg ? 'warn' : 'primary'">
+      <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="errorMsg ? 'warn' : 'primary'">
         <input matInput type="number" *ngIf="!details"
           [disabled]="setting?.isDisabled"
           [(ngModel)]="setting.value"

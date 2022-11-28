@@ -7,6 +7,7 @@ const _sharp = require('sharp');
 const _iconv = require('iconv-lite');
 const _autoDetectDecoderStream = require('autodetect-decoder-stream');
 const _getStream = require('get-stream');
+const _app = require('electron').app;
 const { Observable, Subject, defer, from, throwError } = require('rxjs');
 const { skipWhile, catchError, takeUntil, finalize } = require('rxjs/operators');
 const { rxToStream } = require('rxjs-stream');
@@ -330,12 +331,12 @@ exports.destroy = function() {
 exports.channels = {
   invoke: {
 
-    'export-writecsv': (targetPath /* string: file/url/path to save data to */, data /* Array of JSON objects */) => {
+    'export-writecsv': (_, targetPath /* string: file/url/path to save data to */, data /* Array of JSON objects */) => {
       return defer(() => (new CSVWriter(targetPath)).write(data));
     },
 
-    'export-example-csv': (targetPath /* string */) => {
-      const basePath = app.getAppPath();
+    'export-example-csv': (_, targetPath /* string */) => {
+      const basePath = _app.getAppPath();
       const SOURCE_CSV_PATH = _path.join(basePath, 'resources', 'templates', 'csv_template.csv');
 
       return new Observable(observer => {
@@ -360,7 +361,7 @@ exports.channels = {
       });
     },
 
-    'importer': (parseType /* SUPPORTED_PARSERS keys */, source /* string: file/url/path to process */, parseArgs /* object: args for the parser */) => {
+    'importer': (_, parseType /* SUPPORTED_PARSERS keys */, source /* string: file/url/path to process */, parseArgs /* object: args for the parser */) => {
       return defer(() => {
         if ((typeof parseType !== 'string') || !Object.keys(SUPPORTED_PARSERS).includes(parseType)) {
           return throwError(new Error('INVALID_PARSER'));
@@ -378,7 +379,7 @@ exports.channels = {
       });
     },
 
-    'key-generator': (keyTypeRequired /* 'PRIVATE' | 'PUBLIC' */, fromKey /* string */ ) => {
+    'key-generator': (_, keyTypeRequired /* 'PRIVATE' | 'PUBLIC' */, fromKey /* string */ ) => {
       return new Observable(observer => {
         if ((typeof keyTypeRequired !== 'string') || !['PUBLIC'].includes(keyTypeRequired) || (typeof fromKey !== 'string')) {
           observer.error('MP_KEYGEN_INVALID_PARAMS');

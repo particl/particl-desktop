@@ -12,6 +12,7 @@ import { ButtonSettingComponent } from './settings/components/button.component';
 import { ToggleSettingComponent } from './settings/components/toggle.component';
 import { NumberSettingComponent } from './settings/components/number.component';
 import { URLSettingComponent } from './settings/components/url.component';
+import { SelectSettingComponent } from './settings/components/select.component';
 
 
 
@@ -28,6 +29,7 @@ import { URLSettingComponent } from './settings/components/url.component';
     ToggleSettingComponent,
     NumberSettingComponent,
     URLSettingComponent,
+    SelectSettingComponent,
   ],
   imports: [
     CommonModule,
@@ -42,12 +44,14 @@ import { URLSettingComponent } from './settings/components/url.component';
     ToggleSettingComponent,
     NumberSettingComponent,
     URLSettingComponent,
+    SelectSettingComponent,
   ],
   entryComponents: [
     ButtonSettingComponent,
     ToggleSettingComponent,
     NumberSettingComponent,
     URLSettingComponent,
+    SelectSettingComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

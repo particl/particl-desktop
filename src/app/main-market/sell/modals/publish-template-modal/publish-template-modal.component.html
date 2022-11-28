@@ -1,0 +1,120 @@
+<mat-dialog-title fxLayout fxLayoutAlign="space-between center">
+  Publishing Listing
+  <div class="selected-identity" fxLayout fxLayoutAlign="flex-start center" matTooltip="Your active Identity&#13;which will publish the Listing" matTooltipPosition="after" matTooltipClass="multi-line">
+    <div class="avatar">{{ currentIdentity.image }}</div>
+    <div class="text">
+      <div class="identity-name">{{ currentIdentity.name }}</div>
+      <div class="available-balance">Publishing balance: {{ currentBalance }}</div>
+    </div>
+  </div>
+</mat-dialog-title>
+
+<button mat-button color="warn" class="modal-close" mat-dialog-close tabindex="-1">
+  <mat-icon fontIcon="part-cross"></mat-icon>
+</button>
+
+
+
+<mat-dialog-content class="--muted">
+
+  <h2 class="section-title">Product to Publish</h2>
+
+  <mat-card class="product item-card">
+    <div class="image">
+      <img [src]="templateDetails.templateImage">
+    </div>
+    <h3 class="name">{{templateDetails.title}}</h3>
+  </mat-card>
+
+  <div class="publishing-to">
+    <p>Publishing to</p>
+    <mat-icon fontIcon="part-arrow-down"></mat-icon>
+  </div>
+
+  <mat-card class="market item-card">
+    <div class="image">
+      <img [src]="templateDetails.marketImage">
+    </div>
+    <div class="meta">
+      <h3 class="name">{{ templateDetails.marketName }}</h3>
+      <div class="category">In category: {{ templateDetails.categoryName }}</div>
+    </div>
+  </mat-card>
+
+  <h2 class="section-title">Publish duration</h2>
+  <mat-card class="publish-duration">
+
+    <p class="help-text">
+      Each Listing is published to Market for a limited time. This helps fight spam and outdated Listings. Fees are proportional to duration.
+    </p>
+    <div class="row" fxLayout fxLayoutGap="30px" fxLayoutAlign="space-between center">
+      <mat-form-field appearance="fill">
+        <mat-select placeholder="Select duration" [formControl]="selectedDuration">
+          <mat-option *ngFor="let duration of availableDurations" [value]="duration.value">
+            {{ duration.title }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div><!-- .row -->
+
+
+    <p class="widget-help" *ngIf="selectedDurationOptionIndex === -1">
+      Select a duration to display an estimate publishing fee.
+    </p>
+    <ng-container *ngIf="(selectedDurationOptionIndex > -1) && (availableDurations[selectedDurationOptionIndex].estimateFee === -1); else hasFee">
+      <p class="warning">
+        There was an error fetching the fee estimate, please check that:
+      </p>
+      <ul class="checks">
+        <li>You have sufficient <strong>spendable Publishing balance</strong></li>
+        <li>You have not voted to remove the market</li>
+        <li>You have a network connection</li>
+        <li>The daemon is running</li>
+        <li>You have peers connected</li>
+        <li>Your wallet is unlocked</li>
+        <li>There are no errors on the template</li>
+      </ul>
+    </ng-container>
+
+    <ng-template #hasFee>
+      <ng-container *ngIf="selectedDurationOptionIndex > -1">
+        <p>
+          Fee is estimated at: PART {{ availableDurations[selectedDurationOptionIndex].estimateFee }}
+        </p>
+        <p class="warning" *ngIf="hasWarnings">
+          While you have sufficient funds to create this listing item, there may not be enough utxos to publish all of its images. You should either:
+        </p>
+        <ul class="checks" *ngIf="hasWarnings">
+          <li>Create additional utxos, typically by sending/converting additional funds (possibly increasing the number of utxo split count)</li>
+          <li>Remove some of the item's images</li>
+        </ul>
+      </ng-container>
+    </ng-template>
+  </mat-card><!-- .publish-duration -->
+
+
+</mat-dialog-content>
+
+
+
+<mat-dialog-actions>
+
+  <div class="left">
+    <button type="button" mat-button mat-dialog-close>
+      <mat-icon fontIcon="part-cross"></mat-icon>
+      Cancel
+    </button>
+  </div>
+
+  <div class="right">
+    <mat-checkbox *ngIf="hasWarnings" [formControl]="warningConfirmation" class="confirmation-checkbox">
+      Publish anyway?
+    </mat-checkbox>
+
+    <button mat-raised-button color="primary" appDebounceClick (debounceClick)="doPublish()" [disabled]="!formIsValid.value">
+      <mat-icon fontIcon="part-check"></mat-icon>
+      Publish Listing
+    </button>
+  </div>
+
+</mat-dialog-actions>

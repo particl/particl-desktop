@@ -163,11 +163,11 @@ class ModuleManager {
         './application',
         './gui/gui',
         './gui/notification',
-        './coreManager',
         './apps/particl-wallet',
-        // './market/market'
+        './apps/market/market',
         './apps/market/services',
         './apps/governance',
+        './coreManager',
       ];
 
       let success = true;
