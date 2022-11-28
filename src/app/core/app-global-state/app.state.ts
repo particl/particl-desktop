@@ -74,6 +74,15 @@ export class ApplicationConfigState {
       }),
     );
   }
+
+
+  @Action(GlobalActions.SetSetting)
+  setApplicationSetting(ctx: StateContext<ApplicationConfigStateModel>, { key, newvalue}: GlobalActions.SetSetting) {
+    const currentState = ctx.getState();
+    if ((key in currentState) && ['debugLevel', 'selectedLanguage'].includes(key) && typeof newvalue === typeof currentState[key]) {
+      ctx.patchState({ [key]: newvalue});
+    }
+  }
 }
 
 

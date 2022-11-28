@@ -34,22 +34,40 @@
 
         <mat-card>
           <ng-container *ngFor="let setting of settings; index as settingIdx; trackBy: trackBySettingFn">
-            <div class="item">
-              <label>
-                <h4 class="option">
-                  {{ setting.title }}
-                  <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
-                </h4>
-                <p class="desc">{{ setting.description }}</p>
-                <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-                <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
-                  <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.currentValue" (selectionChange)="settingChangedValue(settingIdx)">
-                    <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
-                      {{ option.text }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </label>
+            <div class="item" [ngSwitch]="setting.type">
+
+              <ng-container *ngSwitchCase="'select'">
+                <label>
+                  <h4 class="option">
+                    {{ setting.title }}
+                    <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
+                  </h4>
+                  <p class="desc">{{ setting.description }}</p>
+                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+                  <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
+                    <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.currentValue" (selectionChange)="settingChangedValue(settingIdx)">
+                      <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
+                        {{ option.text }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </label>
+              </ng-container>
+
+
+              <ng-container *ngSwitchCase="'label'">
+                <label>
+                  <h4 class="option">
+                    {{ setting.title }}
+                    <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  </h4>
+                  <p class="desc">{{ setting.description }}</p>
+                  <mat-form-field class="full-width --larger --plain" appearance="fill" color="primary">
+                    <input matInput [value]="setting.currentValue" disabled="true">
+                  </mat-form-field>
+                </label>
+              </ng-container>
             </div>
           </ng-container>
         </mat-card>

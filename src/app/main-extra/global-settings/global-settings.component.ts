@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Store } from '@ngxs/store';
 
@@ -10,19 +10,47 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
+import { catchError, concatMap, takeUntil, tap } from 'rxjs/operators';
+import { GlobalActions } from 'app/core/app-global-state/app.actions';
+import { defer, iif, of, Subject } from 'rxjs';
 
-import { PageInfo, TextContent, Setting } from 'app/main-extra/global-settings/settings.types';
 
+interface Setting<T = any> {
+  id_backend: string;
+  id_state: string;
+  title: string;
+  description: string;
+  isDisabled: boolean;
+  errorMsg?: string;
+  options?: { text: string; value: string; isDisabled: boolean; }[];
+  currentValue: T;
+  tags: string[];
+  restartRequired: boolean;
+  formatValue?: (value: any) => T;
+  type: 'select' | 'label',
+}
 
-type StatusType = Pick<Setting, 'id' | 'title' | 'description' | 'isDisabled' | 'errorMsg' | 'currentValue' | 'restartRequired' | 'tags' | 'options' | 'formatValue'>;
+enum TextContent {
+  SAVE_SETTING_SUCCESSFUL = 'Successfully applied changes for {setting}',
+  SAVE_SETTING_FAILED = 'Could not update {setting}. See logs for further details.',
+  SAVE_FAILED = 'Failed to apply selected changes',
+  RESTARTING_APPLICATION = 'Please wait while the application restarts'
+}
+
+interface PageInfo {
+  title: string;
+  description: string;
+  help: string;
+}
 
 
 @Component({
   templateUrl: './global-settings.component.html',
-  styleUrls: ['./global-settings.component.scss']
+  styleUrls: ['./global-settings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GlobalSettingsComponent implements OnInit {
-  settings: StatusType[] = [];
+export class GlobalSettingsComponent implements OnInit, OnDestroy {
+  settings: Setting[] = [];
 
   readonly pageDetails: PageInfo = {
     title: 'Particl Desktop Settings',
@@ -31,6 +59,7 @@ export class GlobalSettingsComponent implements OnInit {
   } as PageInfo;
 
 
+  private destroy$: Subject<void> = new Subject();
 
 
   constructor(
@@ -38,16 +67,40 @@ export class GlobalSettingsComponent implements OnInit {
     private _dialog: MatDialog,
     private _snackbar: SnackbarService,
     private _backendService: BackendService,
+    private _cdr: ChangeDetectorRef
   ) { }
 
 
   ngOnInit() {
     this.settings = this.buildSettingsItems();
+
+    this._store.select<ApplicationConfigStateModel>(ApplicationConfigState).pipe(
+      tap({
+        next: (settings) => {
+          this.settings.forEach(s => {
+            if (s.id_state in settings) {
+              if (s.formatValue) {
+                s.currentValue = s.formatValue(settings[s.id_state]);
+              } else {
+                s.currentValue = settings[s.id_state];
+              }
+            }
+          });
+          this._cdr.detectChanges();
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
   trackBySettingFn(_: number, item: Setting) {
-    return item.id;
+    return item.id_backend;
   }
 
 
@@ -66,23 +119,30 @@ export class GlobalSettingsComponent implements OnInit {
       newValue = this.settings[settingIdx].formatValue(newValue);
     }
     this._backendService.sendAndWait<boolean>(
-      'application:settings',
-      true,
-      this.settings[settingIdx].id,
+      'application:setSetting',
+      this.settings[settingIdx].id_backend,
       this.settings[settingIdx].currentValue
+    ).pipe(
+      concatMap((isSaved) => iif(
+        () => isSaved,
+        defer(() => this._store.dispatch(new GlobalActions.SetSetting(this.settings[settingIdx].id_state, this.settings[settingIdx].currentValue)).pipe(catchError(() => of(true)))),
+        defer(() => of(false)),
+      ))
     ).subscribe({
       next: (success) => {
         if (success) {
           this._snackbar.open(TextContent.SAVE_SETTING_SUCCESSFUL.replace('{setting}', this.settings[settingIdx].title));
+          this.settings[settingIdx].errorMsg = '';
           if (this.settings[settingIdx].restartRequired) {
             this.actionRestartApplication();
           }
         } else {
-          this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'err');
+          this.settings[settingIdx].errorMsg = 'Setting not saved',
+          this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'warn');
         }
       },
       error: () => {
-        this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'err');
+        this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'warn');
       }
     });
   }
@@ -101,31 +161,32 @@ export class GlobalSettingsComponent implements OnInit {
   }
 
 
-  private buildSettingsItems(): StatusType[] {
+  private buildSettingsItems(): Setting[] {
 
-    const globalSettings = this._store.selectSnapshot<ApplicationConfigStateModel>(ApplicationConfigState);
-
-    const userSettings: StatusType[] = [
+    const userSettings: Setting[] = [
       {
-        id: 'LANGUAGE',
+        id_backend: 'LANGUAGE',
+        id_state: 'selectedLanguage',
         title: 'Language',
         description: 'Particl Desktop\'s current language',
-        isDisabled: true,
+        isDisabled: false,
         errorMsg: '',
-        currentValue: globalSettings.selectedLanguage,
+        currentValue: null,
         restartRequired: false,
         tags: [],
         options: [
           {text: 'English (US)', value: 'en-US', isDisabled: false},
         ],
+        type: 'select',
       },
       {
-        id: 'DEBUGGING_LEVEL',
+        id_backend: 'DEBUGGING_LEVEL',
+        id_state: 'debugLevel',
         title: 'Debug Level',
-        description: 'Indicates the level at which various events are logged',
-        isDisabled: true,
+        description: 'Change the current logging level. NOTE: changing this only applies to the current session and does not persist across application restarts.',
+        isDisabled: false,
         errorMsg: '',
-        currentValue: globalSettings.debugLevel,
+        currentValue: null,
         restartRequired: false,
         tags: [],
         options: [
@@ -135,21 +196,32 @@ export class GlobalSettingsComponent implements OnInit {
           {text: 'warn', value: 'warn', isDisabled: false},
           {text: 'error', value: 'error', isDisabled: false},
         ],
+        type: 'select',
       },
       {
-        id: 'TESTING_MODE',
+        id_backend: 'TESTING_MODE',
+        id_state: 'requestedTestingNetworks',
         title: 'Requested network testing mode',
-        description: 'Determines whether or not blockchain networks have been requested to start in testing mode or not.',
-        isDisabled: true,
+        description: 'Indicates if the application has requested blockchain networks to force start in testing mode (typically this means the blockchain network would start using a test network).',
+        isDisabled: false,
         errorMsg: '',
-        currentValue: globalSettings.requestedTestingNetworks ? 'true' : 'false',
-        restartRequired: true,
-        tags: [],
-        options: [
-          {text: 'Yes', value: 'true', isDisabled: false},
-          {text: 'No', value: 'false', isDisabled: false},
-        ],
-        formatValue: (selectedValue) => selectedValue === 'true'
+        currentValue: null,
+        restartRequired: false,
+        tags: ['info'],
+        type: 'label',
+        formatValue: (val) => val === true ? 'Yes' : 'No',
+      },
+      {
+        id_backend: 'MODE',
+        id_state: 'buildMode',
+        title: 'Build Mode',
+        description: 'The current build mode of the application',
+        isDisabled: false,
+        errorMsg: '',
+        currentValue: null,
+        restartRequired: false,
+        tags: ['info'],
+        type: 'label',
       }
     ];
 
