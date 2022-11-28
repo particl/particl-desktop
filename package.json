@@ -240,7 +240,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^5.0.1",
     "coveralls": "^3.0.0",
-    "electron": "19.0.4",
+    "electron": "19.0.11",
     "electron-builder": "^23.0.3",
     "electron-notarize": "^1.2.1",
     "htmlhint": "^1.1.4",
