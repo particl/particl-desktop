@@ -33,16 +33,16 @@
         </small> &nbsp; {{ statusMsg || 'Particl Core not running' }}</p>
     </div>
 
+    <p class="version">
+      Particl Desktop {{ clientVersion$ | async }}
+    </p>
+
     <div class="messages">
       <div fxFlex="65" *ngIf="(motd.text.length > 0)">
         <p>{{ motd.text }}</p>
         <footer *ngIf="(motd.author.length > 0)" class="author">&mdash; {{ motd.author }}</footer>
       </div>
     </div>
-
-    <p class="version">
-      Particl Desktop {{ clientVersion$ | async }}
-    </p>
 
   </div>
 </div><!-- .container -->
