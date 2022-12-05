@@ -32,7 +32,7 @@ export class WalletSettingsComponent implements AfterViewInit {
       component: WalletSpecificSettingsComponent
     },
     {
-      label: 'Configuration Settings',
+      label: 'General Module Configuration',
       icon: 'part-preferences',
       component: GeneralConfigComponent
 
