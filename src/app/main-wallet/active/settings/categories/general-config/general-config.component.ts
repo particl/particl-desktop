@@ -44,7 +44,7 @@ export class GeneralConfigComponent implements AfterViewInit {
     const urlAddressSettings: SettingField<string> = {
       title: 'Address URL',
       description: `The external URL of the block explorer for referencing address-related details. Leave empty to disable. Use the parameter {addressid} that will be substituted with the actual address.`,
-      tags: [],
+      tags: ['Advanced'],
       isDisabled: false,
       requiresRestart: false,
       defaultValue: '',
@@ -77,7 +77,7 @@ export class GeneralConfigComponent implements AfterViewInit {
     const urlTransactionSettings: SettingField<string> = {
       title: 'Transaction URL',
       description: `The external URL of the block explorer for referencing transaction-related details. Leave empty to disable. Use the parameter {txid} that will be substituted with the actual transaction ID.`,
-      tags: [],
+      tags: ['Advanced'],
       isDisabled: false,
       requiresRestart: false,
       defaultValue: '',
