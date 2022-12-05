@@ -8,6 +8,8 @@ const _log            = require('electron-log');
 const _fetch          = require('node-fetch');
 const _sleep          = require('timers/promises').setTimeout;
 const _spawn          = require('child_process').spawn;
+const { Subject }     = require('rxjs');
+const { auditTime }   = require('rxjs/operators');
 const _electronStore  = require('electron-store');
 const _zmq            = require('@zasmilingidiot/particl-zmq');
 const CoreInstance    = require("../coreInstance");
@@ -345,6 +347,8 @@ module.exports = class ParticlCore extends CoreInstance {
   // holds a reference to the zmq socket connection if one is created
   #zmqSocket = undefined;
 
+  #ZMQ_SUBJECTS = {};
+
 
   constructor(appConfig) {
     super();
@@ -423,6 +427,7 @@ module.exports = class ParticlCore extends CoreInstance {
         .then(() => {
           this.#updateStatus({message: 'Successfully disconnected ZMQ socket', zmq: {} });
           this.#zmqSocket = undefined;
+          this.#teardownZmqDataSubjects();
         })
         .catch(err =>
           this.#updateStatus({message: `ZMQ socket disconnect error: ${err && err.message ? err.message : err}`})
@@ -459,6 +464,7 @@ module.exports = class ParticlCore extends CoreInstance {
           }).catch(() => reject());
         }).then(() => true).catch(() => false),
 
+        // If particld has not shutdown after this many seconds, kill the process...
         _sleep(60_000, false)
       ]);
 
@@ -633,9 +639,14 @@ module.exports = class ParticlCore extends CoreInstance {
 
       this.#zmqSocket.connect();
 
-      for (const service of Object.keys(this.#startedParams.zmq)) {
+      const zmqKeys = Object.keys(this.#startedParams.zmq);
+
+      this.#setupZmqDataSubjects(zmqKeys);
+
+      for (const service of zmqKeys) {
+
         this.#zmqSocket.on(service, (data) => {
-          this.emit('zmq', {status: 'data', channel: service, data: data.toString('hex')});
+          this.#ZMQ_SUBJECTS[service].next(data);
         });
       }
 
@@ -1380,6 +1391,32 @@ module.exports = class ParticlCore extends CoreInstance {
         ? `http://${this.#settingsValues.regtest.coreHost}:${this.#settingsValues.regtest.corePort}`
         : `http://${this.#settingsValues.mainnet.coreHost}:${this.#settingsValues.mainnet.corePort}`
       );
+  }
+
+
+  #setupZmqDataSubjects(zmqChannels) {
+    this.#teardownZmqDataSubjects();
+
+    zmqChannels.forEach(channel => {
+      this.#ZMQ_SUBJECTS[channel] = new Subject();
+      this.#ZMQ_SUBJECTS[channel].pipe(
+        auditTime(2_000)
+      ).subscribe({
+        next: (data) => {
+          this.emit('zmq', {status: 'data', channel: channel, data: data.toString('hex')});
+        }
+      });
+    });
+  }
+
+
+  #teardownZmqDataSubjects() {
+    Object.keys(this.#ZMQ_SUBJECTS).forEach(channel => {
+      try {
+        this.#ZMQ_SUBJECTS[channel].complete();
+      } catch (_) { }
+    });
+    this.#ZMQ_SUBJECTS = {};
   }
 }
 

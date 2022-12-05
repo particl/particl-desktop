@@ -321,7 +321,9 @@ export class ParticlZMQState {
   private destroy$: Subject<void> = new Subject();
 
 
-  constructor(private _backendService: BackendService) { }
+  constructor(
+    private _backendService: BackendService,
+  ) { }
 
 
   @Action(ParticlInternalActions.UpdateZMQ)
@@ -346,6 +348,10 @@ export class ParticlZMQState {
           [message.channel]: message.data || null,
         })
       }));
+
+      if (message.channel === 'hashblock') {
+        return ctx.dispatch(new ParticlActions.WalletActions.RefreshBalances);
+      }
     }
   }
 
@@ -373,9 +379,9 @@ export class ParticlZMQState {
         message &&
         (message.status === 'data' || message.status === 'connected' || message.status === 'closed')
       ),
-      tap((data: IPCResponses.CoreManager.Events.ParticlZMQ) =>
-        dispatcherFn(new ParticlInternalActions.UpdateZMQ(data))
-      ),
+      tap((data: IPCResponses.CoreManager.Events.ParticlZMQ) => {
+        dispatcherFn(new ParticlInternalActions.UpdateZMQ(data));
+      }),
       takeUntil(this.destroy$)
     ).subscribe();
   }
@@ -938,6 +944,10 @@ export class WalletBalanceState {
 
   @Action(ParticlActions.WalletActions.RefreshBalances)
   fetchWalletBalances(ctx: StateContext<WalletBalanceStateModel>) {
+    if (!this.isWalletValid) {
+      return;
+    }
+
     return forkJoin({
       utxos: this._walletService.getAllUTXOs().pipe(
         map((result) => {
