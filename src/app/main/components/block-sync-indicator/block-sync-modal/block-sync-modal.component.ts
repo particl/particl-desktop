@@ -36,7 +36,7 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
   lastUpdatedTime: number = Date.now();
   estimatedTimeLeft: string = '';
   syncComplete: boolean = false;
-  syncPercentage: number = 0;
+  syncPercentage: string = TextContent.BLOCK_CHECK;
 
 
   private log: any = Log.create('block-sync-modal.component');
@@ -82,10 +82,11 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
     merge(
       this.blockWatcher$.pipe(takeUntil(this.destroy$)),
-      timer(0, 10000).pipe(takeUntil(this.destroy$))
+      timer(0, 10_000).pipe(takeUntil(this.destroy$))
     ).pipe(
-      auditTime(5000),  // do a new check every this many (milli-)seconds
+      auditTime(2_000),  // do a new check every this many (milli-)seconds
       concatMap(() => calculateStats$),
+      takeUntil(this.destroy$)
     ).subscribe(
       this.processStats.bind(this),
       this.handleError.bind(this)
@@ -109,7 +110,7 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
       this.remainderBlocks = `${stats.remainingBlocks}`;
     }
 
-    this.syncPercentage = +stats.syncPercentage.toPrecision(4);
+    this.syncPercentage = stats.highestPeerBlock > 0 ? stats.syncPercentage.toPrecision(4) : TextContent.BLOCK_CHECK;
     this.totalBlocks = stats.highestPeerBlock;
 
     const timeDiff = Date.now() - this.lastUpdatedTime;
