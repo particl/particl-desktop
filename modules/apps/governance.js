@@ -8,14 +8,17 @@ const SETTING_SCHEMA = {
     title: 'URL',
     description: 'The URL to query for proposals.',
     type: 'string',
+    pattern: "^(?:http(s)?:\\/\\/)?(\\{chain\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{chain\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
     default: 'https://raw.githubusercontent.com/dasource/partyman/master/votingproposals/${chain}/metadata.txt'
   },
   pollInterval: {
     title: 'Poll Interval',
     description: 'Number of minutes between re-polling for updated proposals.',
-    type: 'number',
-    default: 30
-  },
+    type: 'integer',
+    default: 30,
+    minimum: 1,
+    maximum: 3600
+  }
 };
 
 let stateRef;

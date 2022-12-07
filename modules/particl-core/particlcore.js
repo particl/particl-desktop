@@ -10,9 +10,65 @@ const _sleep          = require('timers/promises').setTimeout;
 const _spawn          = require('child_process').spawn;
 const { Subject }     = require('rxjs');
 const { auditTime }   = require('rxjs/operators');
+const _cloneDeep      = require('lodash').cloneDeep;
 const _electronStore  = require('electron-store');
 const _zmq            = require('@zasmilingidiot/particl-zmq');
 const CoreInstance    = require("../coreInstance");
+
+
+const CHAIN_PROPERTIES = {
+  zmqPort: {
+    title: 'ZMQ Port',
+    description: 'The port on which to listen for zmq updates',
+    type: 'integer',
+    minimum: 1025,
+    maximum: 65535,
+    default: 36750
+  },
+  zmqHost: {
+    title: 'ZMQ Host IP Address',
+    description: 'The ip address on which to listen for zmq updates',
+    type: 'string',
+    pattern: '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$',
+    default: '127.0.0.1'
+  },
+  corePort: {
+    title: 'Particl Core Port',
+    description: 'The port number to connect to Particl Core',
+    type: 'integer',
+    minimum: 1025,
+    maximum: 65535,
+    default: 51735
+  },
+  coreHost: {
+    title: 'Particl Core Host IP Address',
+    description: 'The ip address on which to connect to Particl Core',
+    type: 'string',
+    pattern: '^(?:http(s)?:\\/\\/)?[\\w.-]+$',
+    default: '127.0.0.1'
+  },
+  params: {
+    title: 'Additional Startup Parameters',
+    description: 'Arguments to pass to Particl Core on startup',
+    type: 'array',
+    items: {
+      type: 'string',
+      // pattern: '^\\-\\w[\\w|=]*$',
+      pattern: '^-\\w[\\w|=]*$',
+    },
+    uniqueItems: true
+  }
+};
+
+const CHAIN_REGTEST = _cloneDeep(CHAIN_PROPERTIES);
+const CHAIN_TEST = _cloneDeep(CHAIN_PROPERTIES);
+const CHAIN_MAIN = _cloneDeep(CHAIN_PROPERTIES);
+CHAIN_REGTEST.zmqPort.default = 36850;
+CHAIN_REGTEST.corePort.default = 51835;
+CHAIN_TEST.zmqPort.default = 36950;
+CHAIN_TEST.corePort.default = 51935;
+CHAIN_MAIN.zmqPort.default = 36750;
+CHAIN_TEST.corePort.default = 51735;
 
 
 const SETTING_SCHEMA = Object.freeze({
@@ -43,13 +99,16 @@ const SETTING_SCHEMA = Object.freeze({
         title: 'URL',
         description: 'The URL to query for new Particl Core versions',
         type: 'string',
+        pattern: "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         default: `https://raw.githubusercontent.com/particl/particl-desktop/dev/modules/clientBinaries/clientBinaries.json`
       },
       downloadTimeout: {
         title: 'Download Timeout (seconds)',
         description: 'The number of seconds to allocate to the download of a new Particl Core version before the download is considered to have timed out',
-        type: 'number',
-        default: 300
+        type: 'integer',
+        minimum: 20,
+        maximum: 3600,
+        default: 600
       },
     },
     required: [ 'autoStart', 'startNewInstance', 'autoUpdate', 'url', 'downloadTimeout' ],
@@ -77,6 +136,7 @@ const SETTING_SCHEMA = Object.freeze({
         title: 'Proxy URL',
         description: 'The proxy URL through which Particl Core will connect',
         type: 'string',
+        pattern: "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
         default: 'http://127.0.0.1:9050'
       },
     },
@@ -138,42 +198,7 @@ const SETTING_SCHEMA = Object.freeze({
     title: 'Regtest Network Configuration',
     description: "Settings for starting or connecting to a regtest network node",
     type: "object",
-    properties: {
-      zmqPort: {
-        title: 'ZMQ Port',
-        description: 'The port on which to listen for zmq updates',
-        type: 'number',
-        default: 36750
-      },
-      zmqHost: {
-        title: 'ZMQ Host IP Address',
-        description: 'The ip address on which to listen for zmq updates',
-        type: 'string',
-        default: '127.0.0.1'
-      },
-      corePort: {
-        title: 'Particl Core Port',
-        description: 'The port number to connect to Particl Core',
-        type: 'number',
-        default: 51735
-      },
-      coreHost: {
-        title: 'Particl Core Host IP Address',
-        description: 'The ip address on which to connect to Particl Core',
-        type: 'string',
-        default: '127.0.0.1'
-      },
-      params: {
-        title: 'Additional Startup Parameters',
-        description: "Arguments to pass to Particl Core on startup",
-        type: "array",
-        items: {
-          type: "string",
-          pattern: "^\-.?.*$",
-        },
-        uniqueItems: true
-      },
-    },
+    properties: CHAIN_REGTEST,
     required: [ 'zmqPort', 'zmqHost', 'corePort', 'coreHost' ],
 
     default: {}
@@ -183,42 +208,7 @@ const SETTING_SCHEMA = Object.freeze({
     title: 'Test Network Configuration',
     description: "Settings for starting or connecting to a test network node",
     type: "object",
-    properties: {
-      zmqPort: {
-        title: 'ZMQ Port',
-        description: 'The port on which to listen for zmq updates',
-        type: 'number',
-        default: 36950
-      },
-      zmqHost: {
-        title: 'ZMQ Host IP Address',
-        description: 'The ip address on which to listen for zmq updates',
-        type: 'string',
-        default: '127.0.0.1'
-      },
-      corePort: {
-        title: 'Particl Core Port',
-        description: 'The port number to connect to Particl Core',
-        type: 'number',
-        default: 51935
-      },
-      coreHost: {
-        title: 'Particl Core Host IP Address',
-        description: 'The ip address on which to connect to Particl Core',
-        type: 'string',
-        default: '127.0.0.1'
-      },
-      params: {
-        title: 'Additional Startup Parameters',
-        description: "Arguments to pass to Particl Core on startup",
-        type: "array",
-        items: {
-          type: "string",
-          pattern: "^\-.?.*$",
-        },
-        uniqueItems: true
-      },
-    },
+    properties: CHAIN_TEST,
     required: [ 'zmqPort', 'zmqHost', 'corePort', 'coreHost' ],
 
     default: {}
@@ -228,42 +218,7 @@ const SETTING_SCHEMA = Object.freeze({
     title: 'Main Network Configuration',
     description: "Settings for starting or connecting to a main network (ie: real money) node",
     type: "object",
-    properties: {
-      zmqPort: {
-        title: 'ZMQ Port',
-        description: 'The port on which to listen for zmq updates',
-        type: 'number',
-        default: 36750
-      },
-      zmqHost: {
-        title: 'ZMQ Host IP Address',
-        description: 'The ip address on which to listen for zmq updates',
-        type: 'string',
-        default: '127.0.0.1'
-      },
-      corePort: {
-        title: 'Particl Core Port',
-        description: 'The port number to connect to Particl Core',
-        type: 'number',
-        default: 51735
-      },
-      coreHost: {
-        title: 'Particl Core Host IP Address',
-        description: 'The ip address on which to connect to Particl Core',
-        type: 'string',
-        default: '127.0.0.1'
-      },
-      params: {
-        title: 'Additional Startup Parameters',
-        description: "Arguments to pass to Particl Core on startup",
-        type: "array",
-        items: {
-          type: "string",
-          pattern: "^\-.?.*$",
-        },
-        uniqueItems: true
-      },
-    },
+    properties: CHAIN_MAIN,
     required: [ 'zmqPort', 'zmqHost', 'corePort', 'coreHost' ],
     default: {}
   },
@@ -271,7 +226,7 @@ const SETTING_SCHEMA = Object.freeze({
   verification: {
     title: 'Particl Core verifications',
     description: '',
-    type: "object",
+    type: 'object',
     properties: {
       binaryName: {
         title: 'Particl Core Binary Name',

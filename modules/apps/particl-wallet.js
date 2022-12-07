@@ -12,9 +12,11 @@ const networkConfigSchema = {
       properties: {
         transaction: {
           type: 'string',
+          pattern: "^((?:http(s)?:\\/\\/)?(\\{txid\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{txid\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+)?$"
         },
         address: {
-          type: 'string'
+          type: 'string',
+          pattern: "^((?:http(s)?:\\/\\/)?(\\{addressid\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{addressid\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+)?$"
         },
       }
     },
@@ -45,11 +47,15 @@ const networkConfigSchema = {
           },
           utxo_split_count: {
             type: 'integer',
-            default: 1
+            default: 1,
+            minimum: 1,
+            maximum: 100
           },
           default_ringct_size: {
             type: 'integer',
-            default: 12
+            default: 12,
+            minimum: 3,
+            maximum: 32
           }
         }
       },

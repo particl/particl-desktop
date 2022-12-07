@@ -30,12 +30,16 @@ const SETTING_SCHEMA = {
       port: {
         title: 'Port that the marketplace service will start on',
         type: 'integer',
-        default: DEFAULT_PORT
+        minimum: 1025,
+        maximum: 65535,
+        default: DEFAULT_PORT,
       },
       timeout: {
         title: 'Startup timeout delay (in seconds)',
         description: 'The marketplace service does NOT indicate whether it crashed on startup on not; if the startup has not output certain values within the timeout period then it is assumed to have failed startup.',
         type: 'integer',
+        minimum: 20,
+        maximum: 900,
         default: DEFAULT_TIMEOUT,
       }
     },
@@ -50,14 +54,17 @@ const SETTING_SCHEMA = {
           main: {
             type: 'string',
             default: 'https://explorer.particl.io/tx/{txid}',
+            pattern: "^((?:http(s)?:\\/\\/)?(\\{txid\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{txid\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+)?$"
           },
           test: {
             type: 'string',
             default: 'https://explorer-testnet.particl.io/tx/{txid}',
+            pattern: "^((?:http(s)?:\\/\\/)?(\\{txid\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{txid\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+)?$"
           },
           regtest: {
             type: 'string',
             default: '',
+            pattern: "^((?:http(s)?:\\/\\/)?(\\{txid\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{txid\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+)?$"
           }
         },
         required: ['main', 'test'],
@@ -328,8 +335,8 @@ exports.channels = {
 
         let txUrl = '';
         const isValidTxObj = isValidObject(storedValues) && isValidObject(storedValues.urls) && isValidObject(storedValues.urls.transaction);
-        if (isValidTxObj) {
 
+        if (isValidTxObj) {
           if (
             isValidObject(coreSettings) &&
             isValidObject(coreSettings.startedParams) &&
@@ -337,11 +344,11 @@ exports.channels = {
             (coreSettings.startedParams.chain.length > 0) &&
             (typeof storedValues.urls.transaction[coreSettings.startedParams.chain] === 'string')
           ) {
-            txUrl = storedValues.urls.transaction[coreSettings.chain];
+            txUrl = storedValues.urls.transaction[coreSettings.startedParams.chain];
           }
           storedValues.urls.transaction = txUrl;
-
         }
+
         observer.next(storedValues);
         observer.complete();
       });
