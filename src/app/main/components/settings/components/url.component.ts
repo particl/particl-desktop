@@ -5,11 +5,6 @@ import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { SettingField } from '../abstract-setting.model';
 
 
-enum TextContent {
-  InvalidValue = 'Invalid URL',
-}
-
-
 function urlValidator(allowEmpty: boolean = false): ValidatorFn {
   return (control: AbstractControl): {[key: string]: any} | null => {
     if (control.value.length === 0) {
@@ -41,7 +36,7 @@ export interface URLSettingDetails {
         <span class="tag --smaller --alert" *ngIf="receivedSettings?.restartRequired === true">Requires restart</span>
       </h4>
       <p class="desc" *ngIf="receivedSettings?.description?.length > 0">{{ receivedSettings.description }}</p>
-      <p class="warning" *ngIf="valueControl.invalid">{{errorMsg}}</p>
+      <p class="warning" *ngIf="valueControl.invalid || (errorMsg.length > 0)">{{errorMsg || 'Invalid URL'}}</p>
       <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="valueControl.invalid ? 'warn' : 'primary'">
         <input matInput
           [placeholder]="receivedSettings?.placeholder"
@@ -67,14 +62,21 @@ export class URLSettingComponent implements OnInit, OnDestroy {
       this.valueControl.disable();
     }
   };
-  errorMsg: string = TextContent.InvalidValue;
+  errorMsg: string = '';
 
-  private valueControl: FormControl = new FormControl('', [urlValidator(false)]);
+  private valueControl: FormControl = new FormControl('', {validators: [urlValidator(false)], updateOn: 'blur'});
   private destroy$: Subject<void> = new Subject();
 
 
   ngOnInit(): void {
     this.valueControl.valueChanges.pipe(
+      tap({
+        next: () => {
+          if (this.errorMsg.length > 0) {
+            this.errorMsg = '';
+          }
+        }
+      }),
       debounceTime(400),
       tap({
         next: (newvalue) => {

@@ -21,6 +21,7 @@ import { isBasicObjectType } from "app/main-market/shared/utils";
 enum TextContent {
   LOAD_ERROR = 'Failed to load configuration/settings',
   SAVE_FAILED = 'Failed to change {setting}',
+  INLINE_ERROR_URL = 'Invalid URL',
 }
 
 
@@ -116,7 +117,7 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
       value: isBasicObjectType(networkSettings) && isBasicObjectType(networkSettings.network) && typeof networkSettings.network.port === 'number' ? networkSettings.network.port : defaultConfig.port,
     };
     const numPortDetails: NumberSettingDetails = {
-      min: 1,
+      min: 1025,
       max: 65535,
       step: 1
     };
@@ -157,7 +158,6 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
     numTimeoutComp.instance.details = numTimeoutDetails;
     numTimeoutComp.instance.setting = numTimeoutSettings;
 
-
     const txUrl = networkSettings.urls && (typeof networkSettings.urls.transaction === 'string') ?
       networkSettings.urls.transaction || '' :
       (
@@ -166,10 +166,11 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
           ''
       );
 
+    const urlTransactionComp = this.urlsContainer.createComponent(urlFactory);
     const urlTransactionSettings: SettingField<string> = {
-      title: `Transaction URL (chain: ${chain})`,
+      title: `Transaction URL, for chain: ${chain}`,
       description: `The external URL of the block explorer for referencing transaction-related details. Leave empty to disable. Use the parameter {txid} that will be substituted with the actual transaction ID.`,
-      tags: [],
+      tags: [`${chain} chain`],
       isDisabled: !chain,
       requiresRestart: false,
       defaultValue: '',
@@ -183,7 +184,11 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
           catchError(() => of(false)),
           concatMap(success => iif(
             () => !success,
-            defer(() => this._snackbar.open(TextContent.SAVE_FAILED.replace('{setting}', 'transaction URL'), 'warn')),
+            defer(() => {
+              urlTransactionComp.instance.errorMsg = TextContent.INLINE_ERROR_URL;
+              this._cdr.detectChanges();
+              this._snackbar.open(TextContent.SAVE_FAILED.replace('{setting}', 'transaction URL'), 'warn');
+            }),
             defer(() => this._store.dispatch(new MarketUserActions.SetSetting('txUrl', newValue)))
           )),
         ).subscribe();
@@ -193,8 +198,6 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
     const urlTransactionDetails: URLSettingDetails = {
       allowEmpty: true
     };
-
-    const urlTransactionComp = this.urlsContainer.createComponent(urlFactory);
     urlTransactionComp.instance.details = urlTransactionDetails;
     urlTransactionComp.instance.setting = urlTransactionSettings;
   }

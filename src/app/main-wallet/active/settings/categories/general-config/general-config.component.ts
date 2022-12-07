@@ -7,10 +7,12 @@ import { SettingsActions, WalletURLState, WalletURLStateModel } from "app/main-w
 import { SnackbarService } from "app/main/services/snackbar/snackbar.service";
 import { SettingField } from "app/main/components/settings/abstract-setting.model";
 import { URLSettingComponent, URLSettingDetails } from "app/main/components/settings/components/url.component";
+import { Particl } from "app/networks/networks.module";
 
 
 enum TextContent {
   SAVE_FAILED = 'Failed to change {setting}',
+  INLINE_ERROR_URL = 'Invalid URL',
 }
 
 
@@ -39,12 +41,14 @@ export class GeneralConfigComponent implements AfterViewInit {
     const urlFactory = this._resolver.resolveComponentFactory(URLSettingComponent);
 
     const walletURLs = this._store.selectSnapshot<WalletURLStateModel>(WalletURLState);
+    const particlChain = this._store.selectSnapshot(Particl.State.Blockchain._chain);
 
 
+    const urlAddressComp = this.urlContainer.createComponent(urlFactory);
     const urlAddressSettings: SettingField<string> = {
-      title: 'Address URL',
+      title: `Address URL, for chain: ${particlChain}`,
       description: `The external URL of the block explorer for referencing address-related details. Leave empty to disable. Use the parameter {addressid} that will be substituted with the actual address.`,
-      tags: ['Advanced'],
+      tags: ['Advanced', `${particlChain} chain`],
       isDisabled: false,
       requiresRestart: false,
       defaultValue: '',
@@ -58,26 +62,27 @@ export class GeneralConfigComponent implements AfterViewInit {
               const success = this._store.selectSnapshot(WalletURLState.get('address')) === newValue;
               if (!success) {
                 this._snackbar.open(TextContent.SAVE_FAILED.replace('{setting}', 'address URL'), 'warn');
+                urlAddressComp.instance.errorMsg = TextContent.INLINE_ERROR_URL;
+                this._cdr.detectChanges();
               }
             }
           })
-        );
+        ).subscribe();
       },
       value: walletURLs.address,
     };
     const urlAddressDetails: URLSettingDetails = {
       allowEmpty: true
     };
-
-    const urlAddressComp = this.urlContainer.createComponent(urlFactory);
     urlAddressComp.instance.details = urlAddressDetails;
     urlAddressComp.instance.setting = urlAddressSettings;
 
 
+    const urlTransactionComp = this.urlContainer.createComponent(urlFactory);
     const urlTransactionSettings: SettingField<string> = {
-      title: 'Transaction URL',
+      title: `Transaction URL, for chain: ${particlChain}`,
       description: `The external URL of the block explorer for referencing transaction-related details. Leave empty to disable. Use the parameter {txid} that will be substituted with the actual transaction ID.`,
-      tags: ['Advanced'],
+      tags: ['Advanced', `${particlChain} chain`],
       isDisabled: false,
       requiresRestart: false,
       defaultValue: '',
@@ -91,18 +96,18 @@ export class GeneralConfigComponent implements AfterViewInit {
               const success = this._store.selectSnapshot(WalletURLState.get('transaction')) === newValue;
               if (!success) {
                 this._snackbar.open(TextContent.SAVE_FAILED.replace('{setting}', 'transaction URL'), 'warn');
+                urlTransactionComp.instance.errorMsg = TextContent.INLINE_ERROR_URL;
+                this._cdr.detectChanges();
               }
             }
           })
-        );
+        ).subscribe();
       },
       value: walletURLs.transaction,
     };
     const urlTransactionDetails: URLSettingDetails = {
       allowEmpty: true
     };
-
-    const urlTransactionComp = this.urlContainer.createComponent(urlFactory);
     urlTransactionComp.instance.details = urlTransactionDetails;
     urlTransactionComp.instance.setting = urlTransactionSettings;
 

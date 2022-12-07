@@ -229,7 +229,7 @@
           <mat-icon fontIcon="part-copy"></mat-icon>
           Copy TX ID
         </button>
-        <a *ngIf="!txn.isAbandoned || txUrl.length > 0" mat-button color="primary" class="small"
+        <a *ngIf="!txn.isAbandoned && (txUrl.length > 0)" mat-button color="primary" class="small"
           [href]="txUrl.replace('{txid}', txn.txid)" target="_blank">
           <mat-icon fontIcon="part-zoom-in"></mat-icon>
           Open TX in Explorer

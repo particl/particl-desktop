@@ -1,5 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Log } from 'ng2-logger';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { retryWhen, map, mapTo, catchError } from 'rxjs/operators';
 
@@ -11,22 +10,11 @@ import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 @Injectable()
-export class TransactionService implements OnDestroy {
-
-
-  private log: any = Log.create('transaction.service id:' + Math.floor((Math.random() * 1000) + 1));
-
+export class TransactionService {
 
   constructor(
     private _rpc: ParticlRpcService
-  ) {
-    this.log.d('service initializing');
-  }
-
-
-  ngOnDestroy() {
-    this.log.d('service destroyed');
-  }
+  ) { }
 
 
   getFilteredTransactions(filters: FilterTransactionOptionsModel): Observable<FilteredTransaction[]> {
