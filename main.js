@@ -1,7 +1,7 @@
 const electron        = require('electron');
 const path            = require('path');
 const fs              = require('fs');
-const url             = require('url');
+const _url             = require('url');
 
 const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;
@@ -193,7 +193,7 @@ app.on('web-contents-created', (event, contents) => {
 
     const errorWin = createNewWindow('Particl Desktop - load URL error', 500, 500, true);
     errorWin.once('ready-to-show', () => errorWin.show());
-    errorWin.loadURL(url.format({
+    errorWin.loadURL(_url.format({
       protocol: 'file:',
       pathname: path.join(
         __dirname,
@@ -232,7 +232,7 @@ app.once('will-quit', async function beforeQuit(event) {
     // Display a 'modal'-like window indicating that the application is shutting down
     closingWindow = createNewWindow('Closing Particl Desktop', 320, 500, false);
 
-    closingWindow.loadURL(url.format({
+    closingWindow.loadURL(_url.format({
       protocol: 'file:',
       pathname: path.join(
         __dirname,
@@ -304,7 +304,7 @@ function createNewWindow(title, minHeight, minWidth, showFrame = true) {
 
 function openCrashWindow() {
   const errorWindow = createNewWindow('Particl Desktop Error', 320, 500, true);
-  errorWindow.loadURL(url.format({
+  errorWindow.loadURL(_url.format({
     protocol: 'file:',
     pathname: path.join(__dirname, `${settingsManager.getSettings(null, 'MODE') === 'developer' ? 'src' : 'dist'}`, 'assets', 'modals', 'crash.html'),
     slashes: true
@@ -329,7 +329,7 @@ function createMainGUI() {
 
   const url = settingsManager.getSettings(null, 'MODE') === 'developer' ?
     'http://localhost:4200' :
-    url.format({
+    _url.format({
       protocol: 'file:',
       pathname: path.join(__dirname, 'dist', 'index.html'),
       slashes: true
