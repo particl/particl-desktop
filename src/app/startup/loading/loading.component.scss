@@ -64,16 +64,16 @@ body {
   section {
     flex: 1 1 100%;
     display: flex;
-    position: relative;
+    // position: relative;
     .starting {
       width: 25rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      position: absolute;
-      top: 50%;
-      left: 0;
-      transform: translateY(-50%);
+      // position: absolute;
+      // top: 50%;
+      // left: 0;
+      // transform: translateY(-50%);
       .mat-card {
         padding: 26px 32px;
       }

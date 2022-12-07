@@ -7,7 +7,6 @@ import {
   ParticlBlockchainState,
   WalletInfoState,
   WalletBalanceState,
-  // WalletSettingsState,
   WalletStakingState,
 } from './particl/particl.state';
 import { RpcService } from './particl/rpc.service';
@@ -24,7 +23,6 @@ import { ParticlWalletService } from './particl/wallet.service';
         ParticlBlockchainState,
         WalletInfoState,
         WalletBalanceState,
-        // WalletSettingsState,
         WalletStakingState,
     ]),
   ],
@@ -49,7 +47,6 @@ export namespace Particl {
     export namespace Wallet {
       export const Info = WalletInfoState;
       export const Balance = WalletBalanceState;
-      // export const Settings = WalletSettingsState;
       export const Staking = WalletStakingState;
     }
   }
