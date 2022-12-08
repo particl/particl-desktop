@@ -16,6 +16,7 @@ import {
   ApplicationConfigState,
   ngxsConfig
 } from 'app/core/app-global-state/app.state';
+import { AppInitRoutingGuard } from './app-guard.service';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import {
     CoreModule,
     app_routing,
   ],
+  providers: [ AppInitRoutingGuard ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

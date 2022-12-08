@@ -43,6 +43,9 @@ export const ngxsConfig: NgxsModuleOptions = {
 @Injectable()
 export class ApplicationConfigState {
 
+  private isInitialized: boolean = false;
+
+
   static moduleVersions(module: keyof IPCResponseApplicationSettings['VERSIONS'] | undefined) {
     return createSelector(
       [APP_CONFIG_STATE_TOKEN],
@@ -57,6 +60,12 @@ export class ApplicationConfigState {
 
   @Action(GlobalActions.Initialize)
   initializeApplicationConfiguration(ctx: StateContext<ApplicationConfigStateModel>) {
+    if (this.isInitialized) {
+      return;
+    }
+
+    this.isInitialized = true;
+
     return this.backendService.sendAndWait<IPCResponseApplicationSettings>('application:settings').pipe(
       take(1),
       catchError((e) => of({} as IPCResponseApplicationSettings)),

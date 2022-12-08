@@ -2,9 +2,9 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { Subject, fromEvent, iif, defer, of, merge } from 'rxjs';
 import { map, filter, tap, takeUntil, distinctUntilChanged, concatMap } from 'rxjs/operators';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
-import { GlobalActions } from 'app/core/app-global-state/app.actions';
 import { BackendService } from 'app/core/services/backend.service';
 import { Particl, ParticlWalletService } from 'app/networks/networks.module';
+import { NetworkInitService } from '../services/network-init/network-init.service';
 
 
 /*
@@ -28,11 +28,13 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
     private _store: Store,
     private _actions: Actions,
     private _backendService: BackendService,
+    private _networkInitService: NetworkInitService,
     private _particlWalletService: ParticlWalletService,
   ) { }
 
   ngOnInit() {
-    this._store.dispatch(new GlobalActions.Initialize());
+
+    this._networkInitService.requestInitializeNetworks();
 
     merge(
       // load Particl last active wallet once the Particl blockchain is running
@@ -41,7 +43,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
         concatMap(isRunning => iif(
           () => isRunning,
           defer(() =>
-          // fetch the last wallet loaded from the backend
+            // fetch the last wallet loaded from the backend
             this._backendService.sendAndWait<string | null>('apps:particl-wallet:lastActiveWallet').pipe(
               concatMap(walletName => {
                   const toLoadName = typeof walletName === 'string' ? walletName : '';

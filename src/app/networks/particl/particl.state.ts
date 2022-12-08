@@ -37,7 +37,7 @@ import {
   RPCResponses,
   ChainType,
 } from './particl.models';
-import { GlobalActions } from 'app/core/app-global-state/app.actions';
+import { NetworkInitializationAction } from '../network.actions';
 
 
 namespace ParticlInternalActions {
@@ -256,7 +256,7 @@ export class ParticlCoreState {
   }
 
 
-  @Action(GlobalActions.Initialize)
+  @Action(NetworkInitializationAction)
   setupInitialization(ctx: StateContext<ParticlCoreStateModel>) {
     const currentState = ctx.getState();
     if (!currentState.statusListening) {

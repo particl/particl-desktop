@@ -1,5 +1,4 @@
 import { Component, ViewEncapsulation, OnInit, OnDestroy } from '@angular/core';
-import { Log } from 'ng2-logger';
 import { Subject, merge } from 'rxjs';
 import { catchError, finalize, takeUntil, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -21,15 +20,12 @@ export class LoadingComponent implements OnInit, OnDestroy {
   motd: MessageQuote = {author: '', text: ''};
 
   private destroy$: Subject<void> = new Subject();
-  private log: any = Log.create('loading.component');
 
   constructor(
     private _router: Router,
     private _motdService: MotdService,
     private _backendService: BackendService,
-  ) {
-    this.log.i('loading component initialized');
-  }
+  ) { }
 
   ngOnInit() {
 
@@ -66,7 +62,6 @@ export class LoadingComponent implements OnInit, OnDestroy {
     if (!termsVersion ||
         ((termsVersion.createdAt !== termsObj.createdAt) || (termsVersion.text !== termsObj.text))
     ) {
-      this.log.d('Going to terms');
       this._router.navigate(['loading', 'terms']);
       return;
     }
