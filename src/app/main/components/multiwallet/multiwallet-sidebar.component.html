@@ -3,7 +3,7 @@
   <div class="app-bar">
 
     <ng-container *ngFor="let app of apps">
-      <button mat-button [ngClass]="app.class" routerLinkActive="--active" [routerLink]="app.route">
+      <button mat-button [ngClass]="app.class" routerLinkActive="--active" [routerLink]="app.route" [disabled]="!(app.activatorObs | async)">
         <mat-icon [fontIcon]="app.icon"></mat-icon>
         <div class="title">{{ app.title }}</div>
       </button>

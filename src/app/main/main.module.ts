@@ -12,13 +12,14 @@ import { ApplicationRestartModalComponent } from './components/application-resta
 import { ProcessingModalComponent } from './components/processing-modal/processing-modal.component';
 import { ConsoleModalComponent } from './components/console-modal/console-modal.component';
 import { UnlockwalletModalComponent } from './components/unlock-wallet-modal/unlock-wallet-modal.component';
+import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/encrypt-wallet-modal.component';
+import { BlockSyncModalComponent } from './components/block-sync-indicator/block-sync-modal/block-sync-modal.component';
 
-// import { MainRoutingGuard } from './main-guard-service';
+import { MainRoutingGuard } from './main-guard-service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from './services/wallet-encryption/wallet-encryption.service';
 import { NotificationsService } from './services/notifications/notifications.service';
-import { EncryptwalletModalComponent } from './components/encrypt-wallet-modal/encrypt-wallet-modal.component';
-import { BlockSyncModalComponent } from './components/block-sync-indicator/block-sync-modal/block-sync-modal.component';
+import { NetworkInitService } from './services/network-init/network-init.service';
 
 
 @NgModule({
@@ -39,10 +40,11 @@ import { BlockSyncModalComponent } from './components/block-sync-indicator/block
     NetworksModule,
   ],
   providers: [
-    // MainRoutingGuard,
+    MainRoutingGuard,
     SnackbarService,
     WalletEncryptionService,
     NotificationsService,
+    NetworkInitService,
   ],
   entryComponents: [
     ApplicationRestartModalComponent,

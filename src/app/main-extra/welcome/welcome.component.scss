@@ -136,15 +136,22 @@ body {
         @include break(xl) {
           max-width: 310px;
         }
-        &:hover,
-        &:focus {
+        &.active:hover,
+        &.active:focus {
           box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+        }
+        &.disabled {
+          cursor: default;
+          text-decoration: none;
+          color: var(--text-muted);
         }
         .mat-icon {
           font-size: 22px;
           @include break(xl) {
             font-size: 26px;
           }
+        }
+        &.active .mat-icon {
           &.part-stake {
             color: var(--color-primary);
           }
@@ -157,6 +164,9 @@ body {
           &.part-swap {
             color: var(--color-warning);
           }
+        }
+        &.disabled .mat-icon {
+          color: var(--text-muted);
         }
         .name {
           margin: 14px 0 8px;

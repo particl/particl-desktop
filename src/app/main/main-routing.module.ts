@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { BaseComponent } from 'app/main/base/base.component';
-// import { MainRoutingGuard } from './main-guard-service';
+import { MainRoutingGuard } from './main-guard-service';
 
 
 export const routes: Routes = [
   {
     path: '',
     component: BaseComponent,
+    canActivateChild: [MainRoutingGuard],
     children: [
       { path: 'extra', loadChildren: () => import('app/main-extra/extra.module').then(m => m.ExtraModule) },
       { path: 'core',
@@ -27,6 +28,7 @@ export const routes: Routes = [
           icon: 'part-stake',
           title: 'Wallet',
           description: 'Send, receive and manage PART coins',
+          networkDependencies: ['particl'],
         }
       },
       { path: 'market',
@@ -36,18 +38,17 @@ export const routes: Routes = [
           icon: 'part-bag',
           title: 'Market',
           description: 'Buy and sell on the most private markets',
+          networkDependencies: ['particl'],
         }
       },
       { path: 'governance',
         loadChildren: () => import('app/main-governance/governance.module').then(m => m.GovernanceModule),
-        // canActivate: [MainRoutingGuard],
-        // canActivateChild: [MainRoutingGuard],
-        //canLoad: [MainRoutingGuard],
         data: {
           showShortcut: true,
           icon: 'part-vote',
           title: 'Govern',
-          description: 'Community governance proposals and voting'
+          description: 'Community governance proposals and voting',
+          networkDependencies: ['particl'],
         }
       },
       { path: '', redirectTo: 'extra', pathMatch: 'full'},

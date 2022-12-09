@@ -14,11 +14,17 @@
 
       <div class="apps">
 
-        <a *ngFor="let app of appmodules" class="app item" [routerLink]="app.route">
-          <mat-icon [fontIcon]="app.icon" class="icon"></mat-icon>
-          <h2 class="name">{{ app.title }}</h2>
-            <p class="desc">{{ app.desc }}</p>
-        </a>
+        <ng-container *ngFor="let app of appmodules">
+          <a  *appVar="(app.activatorObs | async) as linkIsActive"
+            class="app item"
+            [ngClass]="linkIsActive ? 'active' : 'disabled'"
+            [routerLink]="linkIsActive ? app.route : null"
+          >
+            <mat-icon [fontIcon]="app.icon" class="icon"></mat-icon>
+            <h2 class="name">{{ app.title }}</h2>
+              <p class="desc">{{ app.desc }}</p>
+          </a>
+        </ng-container>
 
       </div><!-- .apps -->
     </section>
