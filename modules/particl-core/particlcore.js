@@ -53,7 +53,6 @@ const CHAIN_PROPERTIES = {
     type: 'array',
     items: {
       type: 'string',
-      // pattern: '^\\-\\w[\\w|=]*$',
       pattern: '^-\\w[\\w|=]*$',
     },
     uniqueItems: true

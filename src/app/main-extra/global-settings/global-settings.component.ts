@@ -3,16 +3,17 @@ import { MatDialog } from '@angular/material';
 import { Store } from '@ngxs/store';
 
 import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
-import { ApplicationConfigStateModel } from 'app/core/app-global-state/state.models';
+import { ApplicationConfigStateModel, IPCResponseApplicationSettings } from 'app/core/app-global-state/state.models';
 
 import { BackendService } from 'app/core/services/backend.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
-import { catchError, concatMap, takeUntil, tap } from 'rxjs/operators';
+import { catchError, concatMap, finalize, take, takeUntil, tap } from 'rxjs/operators';
 import { GlobalActions } from 'app/core/app-global-state/app.actions';
-import { defer, iif, of, Subject } from 'rxjs';
+import { defer, iif, merge, of, Subject } from 'rxjs';
+import { FormControl, Validators } from '@angular/forms';
 
 
 interface Setting<T = any> {
@@ -34,6 +35,8 @@ enum TextContent {
   SAVE_SETTING_SUCCESSFUL = 'Successfully applied changes for {setting}',
   SAVE_SETTING_FAILED = 'Could not update {setting}. See logs for further details.',
   SAVE_FAILED = 'Failed to apply selected changes',
+  FAILED_URL_REMOVE = 'Could not remove the selected URL',
+  FAILED_URL_ADD = 'Could not add the provided URL',
   RESTARTING_APPLICATION = 'Please wait while the application restarts'
 }
 
@@ -51,6 +54,13 @@ interface PageInfo {
 })
 export class GlobalSettingsComponent implements OnInit, OnDestroy {
   settings: Setting[] = [];
+
+  readonly customURLS: string[] = [];
+
+  controlCustomUrlAdd: FormControl = new FormControl('', [
+    Validators.required,
+    Validators.pattern("(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$")
+  ]);
 
   readonly pageDetails: PageInfo = {
     title: 'Particl Desktop Settings',
@@ -74,22 +84,41 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.settings = this.buildSettingsItems();
 
-    this._store.select<ApplicationConfigStateModel>(ApplicationConfigState).pipe(
-      tap({
-        next: (settings) => {
-          this.settings.forEach(s => {
-            if (s.id_state in settings) {
-              if (s.formatValue) {
-                s.currentValue = s.formatValue(settings[s.id_state]);
-              } else {
-                s.currentValue = settings[s.id_state];
+    merge(
+      this._store.select<ApplicationConfigStateModel>(ApplicationConfigState).pipe(
+        tap({
+          next: (settings) => {
+            this.settings.forEach(s => {
+              if (s.id_state in settings) {
+                if (s.formatValue) {
+                  s.currentValue = s.formatValue(settings[s.id_state]);
+                } else {
+                  s.currentValue = settings[s.id_state];
+                }
               }
+            });
+            this._cdr.detectChanges();
+          }
+        }),
+        takeUntil(this.destroy$)
+      ),
+
+      // frontend doesn't store the external allowed URLs, so need this to fetch them
+      this._backendService.sendAndWait<IPCResponseApplicationSettings>('application:settings').pipe(
+        take(1),
+        tap({
+          next: (settings) => {
+            if (settings && Array.isArray(settings.ALLOWED_EXTERNAL_URLS)) {
+              settings.ALLOWED_EXTERNAL_URLS.forEach(url => {
+                if (typeof url === 'string' && url.length > 0) {
+                  this.customURLS.push(url);
+                }
+              });
+              this._cdr.detectChanges();
             }
-          });
-          this._cdr.detectChanges();
-        }
-      }),
-      takeUntil(this.destroy$)
+          }
+        })
+      )
     ).subscribe();
   }
 
@@ -145,6 +174,55 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
         this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'warn');
       }
     });
+  }
+
+
+  actionRemoveURL(index: number): void {
+    if (index >= this.customURLS.length || index < 0) {
+      return;
+    }
+    this.controlCustomUrlAdd.disable();
+
+    const selectedUrl = this.customURLS[index];
+
+    this._backendService.sendAndWait('application:setSetting', 'ALLOWED_EXTERNAL_URLS', null, selectedUrl).pipe(
+      finalize(() => this.controlCustomUrlAdd.enable()),
+      catchError(() => of(false)),
+      tap({
+        next: (success) => {
+          if (success === true) {
+            this.customURLS.splice(index, 1);
+            return;
+          }
+          this._snackbar.open(TextContent.FAILED_URL_REMOVE);
+        }
+      })
+    ).subscribe();
+  }
+
+
+  actionAddURL(): void {
+    if (this.controlCustomUrlAdd.disabled || this.controlCustomUrlAdd.invalid) {
+      return;
+    }
+
+    const newUrl = this.controlCustomUrlAdd.value;
+
+    this._backendService.sendAndWait('application:setSetting', 'ALLOWED_EXTERNAL_URLS', newUrl).pipe(
+      finalize(() => this.controlCustomUrlAdd.enable()),
+      catchError((e) => of(false)),
+      tap({
+        next: (success) => {
+          if (success === true) {
+            this.customURLS.push(newUrl);
+            this.controlCustomUrlAdd.setValue('');
+            return;
+          }
+          this._snackbar.open(TextContent.FAILED_URL_ADD);
+        }
+      })
+    ).subscribe();
+
   }
 
 

@@ -176,7 +176,12 @@ app.on('web-contents-created', (event, contents) => {
   contents.on('new-window', (event, url) => {
     event.preventDefault();
     let matchesAllowedURL = false;
-    for (const allowedUrl of settingsManager.getSettings(null, 'ALLOWED_EXTERNAL_URLS')) {
+    const allowedUrlTypes = settingsManager.getSettings(null, 'ALLOWED_EXTERNAL_URLS');
+    let allowedUrls = [];
+    if (allowedUrlTypes && Array.isArray(allowedUrlTypes.default) && Array.isArray(allowedUrlTypes.custom)) {
+      allowedUrls = [...allowedUrlTypes.default, ...allowedUrlTypes.custom];
+    }
+    for (const allowedUrl of allowedUrls) {
       const testUrl = allowedUrl.endsWith('/') ? allowedUrl : `${allowedUrl}/`;
       if ((url === allowedUrl) || url.startsWith(testUrl)) {
         matchesAllowedURL = true;
@@ -191,7 +196,7 @@ app.on('web-contents-created', (event, contents) => {
       return;
     }
 
-    const errorWin = createNewWindow('Particl Desktop - load URL error', 500, 500, true);
+    const errorWin = createNewWindow(`${url}`, 500, 500, true);
     errorWin.once('ready-to-show', () => errorWin.show());
     errorWin.loadURL(_url.format({
       protocol: 'file:',

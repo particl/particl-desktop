@@ -8,7 +8,7 @@ export namespace GlobalActions {
 
   export class SetSetting {
     static readonly type: string = '[GlobalActions] Set Setting';
-    constructor(public key: string, public newvalue: any) {}
+    constructor(public key: string, public newvalue: any, public oldValue?: any) {}
   }
 
 }

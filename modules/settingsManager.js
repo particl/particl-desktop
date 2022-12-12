@@ -1,6 +1,7 @@
 const Ajv             = require('ajv');
 const path            = require('path');
 const fs              = require('fs');
+const _electronStore  = require('electron-store');
 const packageJson     = require('../package.json');
 const mpPackageJson   = require('../node_modules/@zasmilingidiot/particl-marketplace/package.json');
 
@@ -26,6 +27,34 @@ const urlsAllowed = [
   "https://github.com/particl"
 ];
 
+const CONFIGURABLE_SCHEMA = {
+  updates: {
+    type: 'object',
+    properties: {
+      enabled: {
+        type: 'boolean',
+        default: true,
+      },
+      url: {
+        title: 'URL',
+        description: 'The URL to query for proposals.',
+        type: 'string',
+        pattern: "(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+        default: 'https://api.github.com/repos/particl/particl-desktop/releases/latest'
+      }
+    },
+    required: ['enabled', 'url']
+  },
+  userURLS: {
+    type: 'array',
+    items: {
+      type: 'string',
+      pattern: "(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+    },
+  }
+
+};
+
 
 const DEBUG_OPTIONS = ['silly', 'debug', 'info', 'warn', 'error'];
 const APP_MODE_OPTIONS = ['developer', 'build'];
@@ -45,9 +74,24 @@ const settingsSchema = {
     },
 
     'ALLOWED_EXTERNAL_URLS': {
-      type: 'array',
-      uniqueItems: true,
-      items: { type: 'string' }
+      type: 'object',
+      properties: {
+        default: {
+          type: 'array',
+          items: {
+            type: 'string',
+            pattern: "(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          },
+          uniqueItems: true,
+        },
+        custom: {
+          type: 'array',
+          items: {
+            type: 'string',
+            pattern: "(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
+          }
+        }
+      }
     },
 
     'APP_PERMISSIONS': {
@@ -81,10 +125,12 @@ const settingsSchema = {
       },
       required: ['app']
     },
+
     'TESTING_MODE': {
       type: 'boolean',
       default: false,
     },
+
     'LANGUAGE': {
       type: 'string',
       default: 'en-US',
@@ -143,6 +189,7 @@ class AppSettingsManager {
   #defaultValidator;
   #defaultSettingsKey = 'default';
   #emptySettingsObject = Object.freeze({});
+  #userSettingStore;
 
   constructor() {
     this.#defaultValidator = (new Ajv()).compile(settingsSchema);
@@ -171,7 +218,7 @@ class AppSettingsManager {
       APP_PERMISSIONS: [
         'notifications'
       ],
-      ALLOWED_EXTERNAL_URLS: urlsAllowed,
+      ALLOWED_EXTERNAL_URLS: { default: urlsAllowed, custom: [] },
       STARTUP_WITH_DEVTOOLS: false,
       PATHS: {
         logs: path.join(this.#basePath, 'logs'),
@@ -201,8 +248,32 @@ class AppSettingsManager {
       defaultSettings.PATHS.config = path.join(...devBasePath, 'settings');
     }
 
+    if (!this.#userSettingStore) {
+      try {
+        this.#userSettingStore = new _electronStore({
+          schema: CONFIGURABLE_SCHEMA,
+          // migrations: migrations,
+          name: 'ParticlDesktop',
+          cwd: defaultSettings.PATHS.config,
+          fileExtension: 'json',
+          clearInvalidConfig: true,
+          accessPropertiesByDotNotation: true,
+        });
+      } catch(_) {
+        return false;
+      }
+    }
+
+    const userUrls = [];
+    if (this.#userSettingStore) {
+      const definedUrls = this.#userSettingStore.get('userURLS', []);
+      definedUrls.forEach(definedUrl => userUrls.push(definedUrl));
+    }
+
+    defaultSettings.ALLOWED_EXTERNAL_URLS.custom = [...userUrls];
+
     if (this.#defaultValidator(defaultSettings)) {
-      this.#settings.set(this.#defaultSettingsKey, Object.freeze(defaultSettings));
+      this.#settings.set(this.#defaultSettingsKey, defaultSettings);
       return true;
     }
 
@@ -222,6 +293,38 @@ class AppSettingsManager {
     }
     // TODO: does a user config settings lookup with possible dot-notation for keyPath
     return Object.freeze(settings);
+  }
+
+
+  updateSetting(key, newValue, oldValue) {
+    let success = false;
+    if (key === 'ALLOWED_EXTERNAL_URLS') {
+      if (!this.#userSettingStore) {
+        return false;
+      }
+
+      success = true;
+      const isAdding = typeof newValue === 'string' && newValue.length > 0;
+      let customAllowedUrls = this.#userSettingStore.get('userURLS', []);
+      if (isAdding) {
+        customAllowedUrls.push(newValue);
+      } else if (typeof oldValue === 'string' && oldValue.length > 0) {
+        customAllowedUrls = customAllowedUrls.filter(u => u !== oldValue);
+      } else {
+        success = false;
+      }
+
+      if (success) {
+        try {
+          this.#userSettingStore.set('userURLS', customAllowedUrls );
+          this.#settings.get(this.#defaultSettingsKey).ALLOWED_EXTERNAL_URLS.custom = customAllowedUrls;
+        } catch (_) {
+          success = false;
+        }
+      }
+    }
+
+    return success;
   }
 }
 

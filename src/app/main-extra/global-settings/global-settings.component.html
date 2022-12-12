@@ -72,6 +72,64 @@
           </ng-container>
         </mat-card>
 
+
+        <mat-card>
+            <div class="item">
+              <div class="label">
+                <h4 class="option">
+                  Allowed URL Domains
+                </h4>
+                <p class="desc">
+                  Permission needs to be granted to user-provided URL domains in order for Particl Desktop to trust that the domain can be navigated to. The domains listed here provide a confirmation Particl Desktop can safely attempt to navigate to a particular domain in your browser.
+                </p>
+                <p class="desc">
+                  <b>Only the domain name is required, and not a full URL.</b>
+                </p>
+
+                <div class="item">
+                  <div class="label">
+                    <h4 class="option sub-heading">
+                      Allowed Domains
+                    </h4>
+                    <p class="desc sub-heading" *ngIf="customURLS.length === 0">
+                      No domains have been added yet.
+                    </p>
+
+                    <div class="row" *ngFor="let url of customURLS; let i=index">
+                      <div fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
+                        <p class="desc sub-heading wrap">{{ url }}</p>
+                        <button mat-button color="warn" appDebounceClick (debounceClick)="actionRemoveURL(i)" [disabled]="controlCustomUrlAdd.disabled">
+                          <mat-icon fontIcon="part-cross"></mat-icon>
+                        </button>
+                      </div>
+                    </div>
+
+
+                    <h4 class="option sub-heading">
+                      Add New Domain
+                    </h4>
+
+                    <div class="row domain-input">
+                      <div fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
+                        <mat-form-field class="full-width --larger --plain" appearance="fill" color="primary">
+                          <input  matInput
+                                  [formControl]="controlCustomUrlAdd"
+                                  placeholder="Example: https://particl.io"/>
+                        </mat-form-field>
+                        <button mat-button color="primary" [disabled]="controlCustomUrlAdd.disabled || controlCustomUrlAdd.invalid" appDebounceClick (debounceClick)="actionAddURL()">
+                          <mat-icon fontIcon="part-plus"></mat-icon>
+                          Add Allowed Domain
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </mat-card>
+
       </div><!-- .third -->
     </div><!-- .row -->
   </div><!-- .container -->

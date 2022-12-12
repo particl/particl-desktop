@@ -20,4 +20,5 @@ export interface IPCResponseApplicationSettings {
     MODE: BuildMode;
     TESTING_MODE: boolean;
     LANGUAGE: string;
+    ALLOWED_EXTERNAL_URLS: string[];
 }

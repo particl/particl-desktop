@@ -37,6 +37,7 @@ exports.channels = {
           returnValues.DEBUGGING_LEVEL = log.transports.console.level;
           returnValues.MODE = defaultConfig.MODE;
           returnValues.TESTING_MODE = defaultConfig.TESTING_MODE;
+          returnValues.ALLOWED_EXTERNAL_URLS = defaultConfig.ALLOWED_EXTERNAL_URLS.custom;
           observer.next(returnValues);
         }
         observer.complete();
@@ -44,19 +45,21 @@ exports.channels = {
     },
 
 
-    'setSetting': (_, key, value) => new Observable(observer => {
+    'setSetting': (_, key, newValue, oldValue) => new Observable(observer => {
       let success = false;
 
-      if (key === 'DEBUGGING_LEVEL' && log.levels.includes(value)) {
+      if (key === 'DEBUGGING_LEVEL' && log.levels.includes(newValue)) {
         try {
           if (log.transports.file.level) {
-            log.transports.file.level = value;
+            log.transports.file.level = newValue;
           }
           if (log.transports.console.level) {
-            log.transports.console.level = value;
+            log.transports.console.level = newValue;
           }
           success = true;
         } catch (_) { }
+      } else if (key === 'ALLOWED_EXTERNAL_URLS') {
+        success = settingsManager.updateSetting(key, newValue, oldValue);
       }
 
       observer.next(success);
