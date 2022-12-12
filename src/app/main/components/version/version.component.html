@@ -7,7 +7,7 @@
   </div>
   <div class="client item">
     Client
-    <span class="version" [ngClass]="isClientLatest ? 'current' : 'outdated'" [matTooltip]=" clientUpdateText " matTooltipPosition="right">
+    <span class="version" [ngClass]="(hasNewerClientVersion$ | async) ? 'outdated' : 'current' " [matTooltip]=" clientUpdateText " matTooltipPosition="right">
       <span class="dot"></span>
       <span class="selectable">{{ clientVersion$ | async }}</span>
     </span>

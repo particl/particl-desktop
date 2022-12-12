@@ -39,9 +39,15 @@
         </small> &nbsp; {{ statusMsg || 'Particl Core not running' }}</p>
     </div>
 
-    <p class="version">
-      Particl Desktop {{ clientVersion$ | async }}
-    </p>
+    <div class="client-version">
+      <p class="version-label client item">
+        Particl Desktop {{ clientVersion$ | async }}
+        &nbsp;
+        <span class="version outdated" *ngIf="(hasNewerClientVersion$ | async)" matTooltip=" A newer Particl Desktop version is available " matTooltipPosition="below">
+          <span class="dot"></span>
+        </span>
+      </p>
+    </div>
 
     <div class="messages">
       <div fxFlex="65" *ngIf="(motd.text.length > 0)">

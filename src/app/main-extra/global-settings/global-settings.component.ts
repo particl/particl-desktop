@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Store } from '@ngxs/store';
+import { FormControl, Validators } from '@angular/forms';
+import { defer, iif, merge, of, Subject } from 'rxjs';
+import { catchError, concatMap, finalize, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
+import { Store } from '@ngxs/store';
 import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
+import { GlobalActions } from 'app/core/app-global-state/app.actions';
 import { ApplicationConfigStateModel, IPCResponseApplicationSettings } from 'app/core/app-global-state/state.models';
 
 import { BackendService } from 'app/core/services/backend.service';
@@ -10,10 +14,6 @@ import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
 import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
-import { catchError, concatMap, finalize, take, takeUntil, tap } from 'rxjs/operators';
-import { GlobalActions } from 'app/core/app-global-state/app.actions';
-import { defer, iif, merge, of, Subject } from 'rxjs';
-import { FormControl, Validators } from '@angular/forms';
 
 
 interface Setting<T = any> {
@@ -62,6 +62,8 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     Validators.pattern("(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$")
   ]);
 
+  controlToggleUpdates: FormControl = new FormControl(true);
+
   readonly pageDetails: PageInfo = {
     title: 'Particl Desktop Settings',
     description: 'Adjust settings and configuration that apply to the whole Particl Desktop app',
@@ -103,22 +105,50 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$)
       ),
 
-      // frontend doesn't store the external allowed URLs, so need this to fetch them
+      // frontend doesn't store various settings (eg: the external allowed URLs), so need this to fetch the additional settings
       this._backendService.sendAndWait<IPCResponseApplicationSettings>('application:settings').pipe(
         take(1),
         tap({
           next: (settings) => {
-            if (settings && Array.isArray(settings.ALLOWED_EXTERNAL_URLS)) {
-              settings.ALLOWED_EXTERNAL_URLS.forEach(url => {
-                if (typeof url === 'string' && url.length > 0) {
-                  this.customURLS.push(url);
-                }
-              });
+            if (settings) {
+              if (Array.isArray(settings.ALLOWED_EXTERNAL_URLS)) {
+                settings.ALLOWED_EXTERNAL_URLS.forEach(url => {
+                  if (typeof url === 'string' && url.length > 0) {
+                    this.customURLS.push(url);
+                  }
+                });
+              }
+
+              if (typeof settings.APPLICATION_UPDATES_ALLOWED === 'boolean') {
+                this.controlToggleUpdates.setValue(settings.APPLICATION_UPDATES_ALLOWED, {onlySelf: true, emitEvent: false});
+              }
+
               this._cdr.detectChanges();
             }
           }
         })
+      ),
+
+      // listen for, and respond to, app-update toggle changes
+      this.controlToggleUpdates.valueChanges.pipe(
+        tap({
+          next: newValue => this.controlToggleUpdates.disable({onlySelf: true, emitEvent: false})
+        }),
+        switchMap(newValue => this._backendService.sendAndWait<boolean>('application:setSetting', 'APPLICATION_UPDATES_ALLOWED', newValue).pipe(
+          catchError(() => of(false)),
+          tap({
+            next: success => {
+              if (!success) {
+                this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', 'Application Updates'));
+                this.controlToggleUpdates.setValue(!newValue, {onlySelf: true, emitEvent: false});
+              }
+              this.controlToggleUpdates.enable({onlySelf: true, emitEvent: false})
+            }
+          })
+        )),
+        takeUntil(this.destroy$)
       )
+
     ).subscribe();
   }
 

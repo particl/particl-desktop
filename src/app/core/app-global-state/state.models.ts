@@ -11,6 +11,7 @@ export interface ApplicationConfigStateModel {
     buildMode: BuildMode;
     requestedTestingNetworks: boolean;
     selectedLanguage: string;
+    newAppVersionAvailable: boolean;
 }
 
 
@@ -20,5 +21,6 @@ export interface IPCResponseApplicationSettings {
     MODE: BuildMode;
     TESTING_MODE: boolean;
     LANGUAGE: string;
-    ALLOWED_EXTERNAL_URLS: string[];
+    ALLOWED_EXTERNAL_URLS?: string[];
+    APPLICATION_UPDATES_ALLOWED?: boolean;
 }

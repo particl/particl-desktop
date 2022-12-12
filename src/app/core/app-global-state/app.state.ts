@@ -5,6 +5,7 @@ import {
   Action,
   StateContext,
   createSelector,
+  Selector,
 } from '@ngxs/store';
 import { environment } from 'environments/environment';
 import { of } from 'rxjs';
@@ -36,7 +37,8 @@ export const ngxsConfig: NgxsModuleOptions = {
     buildMode: null,
     debugLevel: null,
     requestedTestingNetworks: false,
-    selectedLanguage: ''
+    selectedLanguage: '',
+    newAppVersionAvailable: false,
   },
   children: []
 })
@@ -44,6 +46,12 @@ export const ngxsConfig: NgxsModuleOptions = {
 export class ApplicationConfigState {
 
   private isInitialized: boolean = false;
+
+
+  @Selector()
+  static hasNewAppVersion(state: ApplicationConfigStateModel) {
+    return state.newAppVersionAvailable;
+  }
 
 
   static moduleVersions(module: keyof IPCResponseApplicationSettings['VERSIONS'] | undefined) {
@@ -65,6 +73,18 @@ export class ApplicationConfigState {
     }
 
     this.isInitialized = true;
+
+    // establish version update listener... no need to unsubscribe as it needs to persist throughtout the application session
+    this.backendService.listen<boolean>('application:versionCheck').pipe(
+      catchError(() => of(false)),
+      tap({
+        next: (hasUpdatedVersion) => {
+          if (typeof hasUpdatedVersion === 'boolean' && ctx.getState().newAppVersionAvailable !== hasUpdatedVersion) {
+            ctx.patchState({newAppVersionAvailable: hasUpdatedVersion})
+          }
+        }
+      })
+    ).subscribe();
 
     return this.backendService.sendAndWait<IPCResponseApplicationSettings>('application:settings').pipe(
       take(1),

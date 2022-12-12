@@ -28,6 +28,7 @@ export class WelcomeComponent implements OnDestroy {
   }[] = [];
 
   @Select(ApplicationConfigState.moduleVersions('app')) clientVersion$: Observable<string>;
+  @Select(ApplicationConfigState.hasNewAppVersion) hasNewerClientVersion$: Observable<boolean>;
   @Select(ParticlCoreState.getStatusMessage) particlCoreStatus: Observable<string>;
   @Select(ParticlCoreState.getStartedStatus) particlCoreStartedIndicator: Observable<RunningStatus>;
 

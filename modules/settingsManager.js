@@ -4,6 +4,7 @@ const fs              = require('fs');
 const _electronStore  = require('electron-store');
 const packageJson     = require('../package.json');
 const mpPackageJson   = require('../node_modules/@zasmilingidiot/particl-marketplace/package.json');
+const { parse } = require('path');
 
 
 const urlsAllowed = [
@@ -43,7 +44,8 @@ const CONFIGURABLE_SCHEMA = {
         default: 'https://api.github.com/repos/particl/particl-desktop/releases/latest'
       }
     },
-    required: ['enabled', 'url']
+    required: ['enabled', 'url'],
+    default: {}
   },
   userURLS: {
     type: 'array',
@@ -134,7 +136,16 @@ const settingsSchema = {
     'LANGUAGE': {
       type: 'string',
       default: 'en-US',
-    }
+    },
+
+    'APPLICATION_UPDATES_ALLOWED': {
+      type: 'boolean',
+      default: false,
+    },
+
+    'APPLICATION_UPDATES_URL': {
+      type: 'string',
+    },
   },
   required: ['MODE', 'DEBUGGING_LEVEL', 'VERSIONS' ],
   additionalProperties: false
@@ -265,12 +276,19 @@ class AppSettingsManager {
     }
 
     const userUrls = [];
+    let enabledAppUpdates = true;
+    let enabledUpdatesUrl = '';
     if (this.#userSettingStore) {
       const definedUrls = this.#userSettingStore.get('userURLS', []);
       definedUrls.forEach(definedUrl => userUrls.push(definedUrl));
+
+      enabledAppUpdates = this.#userSettingStore.get('updates.enabled', enabledAppUpdates);
+      enabledUpdatesUrl = this.#userSettingStore.get('updates.url', enabledUpdatesUrl);
     }
 
     defaultSettings.ALLOWED_EXTERNAL_URLS.custom = [...userUrls];
+    defaultSettings.APPLICATION_UPDATES_ALLOWED = enabledAppUpdates;
+    defaultSettings.APPLICATION_UPDATES_URL = enabledUpdatesUrl;
 
     if (this.#defaultValidator(defaultSettings)) {
       this.#settings.set(this.#defaultSettingsKey, defaultSettings);
@@ -292,7 +310,7 @@ class AppSettingsManager {
       }
     }
     // TODO: does a user config settings lookup with possible dot-notation for keyPath
-    return Object.freeze(settings);
+    return Object.freeze(JSON.parse(JSON.stringify(settings)));
   }
 
 
@@ -321,6 +339,18 @@ class AppSettingsManager {
         } catch (_) {
           success = false;
         }
+      }
+    }
+
+    if (key === 'APPLICATION_UPDATES_ALLOWED') {
+      if (typeof newValue === 'boolean') {
+        try {
+          this.#userSettingStore.set('updates.enabled', newValue );
+          const config = this.#settings.get(this.#defaultSettingsKey);
+          config.APPLICATION_UPDATES_ALLOWED = newValue;
+          this.#settings.set(this.#defaultSettingsKey, config);
+          success = true;
+        } catch (_) { }
       }
     }
 
