@@ -22,15 +22,6 @@ if (!instanceLock) {
 }
 
 
-if (process.platform === 'win32') {
-  // Fix for windows 10 regarding notifications, etc
-  const appId = require('./package.json').build.appId;
-  if (typeof appId === 'string' && appId.length > 0) {
-    electron.setAppUserModelId(appId);
-  }
-}
-
-
 // Set up logging: turn off file logging until we know that the target directory is created and writeable
 let log;
 let mainWindow;
@@ -79,7 +70,6 @@ try {
 }
 
 
-
 // Default system setup is complete, and relevant directories are created, so turn on file logging and configure the logger correctly
 log.transports.file.fileName = 'application.log';
 log.transports.file.resolvePath = (variables) => {
@@ -92,6 +82,19 @@ log.hooks.push(
     return message;
   }
 );
+
+
+if (process.platform === 'win32') {
+  // Fix for windows 10 regarding notifications, etc
+  try {
+    const appId = require('./buildConfiguration.json').appId;
+    if (typeof appId === 'string' && appId.length > 0) {
+      electron.setAppUserModelId(appId);
+    }
+  } catch (err) {
+    log.error('Failed setting win32 AppUserModelId: ', err);
+  }
+}
 
 
 log.info(`Initializing ${app.getName()} : ${app.getVersion()}`);

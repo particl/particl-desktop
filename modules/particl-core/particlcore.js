@@ -99,7 +99,7 @@ const SETTING_SCHEMA = Object.freeze({
         description: 'The URL to query for new Particl Core versions',
         type: 'string',
         pattern: "^(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
-        default: `https://raw.githubusercontent.com/particl/particl-desktop/dev/modules/clientBinaries/clientBinaries.json`
+        default: `https://raw.githubusercontent.com/particl/particl-desktop/dev/modules/particl-core/clientBinaries.json`
       },
       downloadTimeout: {
         title: 'Download Timeout (seconds)',

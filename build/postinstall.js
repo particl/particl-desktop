@@ -1,59 +1,80 @@
 const _path = require('path');
 const _fs = require('fs');
+const _packageJson = require('../package.json');
+
+patchModules();
+extractPackageConfig();
 
 
-const modNames = {
-    'zeromq': patchzeromq,
-};
+function extractPackageConfig() {
+    const filename = 'buildConfiguration.json';
+    console.log('Extracting build configuration to file', filename);
 
-for (const modName of Object.keys(modNames)) {
-    if (modName.length === 0) {
-        continue;
-    }
-
-    let modBaseDir = _path.normalize(_path.dirname(require.resolve(modName)));
-    let isFound = false;
-
+    const data = {
+        appId: _packageJson.build.appId,
+    };
+    const filePath = _path.join('.', filename);
     try {
-
-        while ((modBaseDir.length > 0) && !isFound) {
-            const modParts = _path.parse(modBaseDir);
-            switch (true) {
-            case modParts.dir === modParts.root:
-            case modParts.base === modParts.root:
-            case modParts.base.toLowerCase() === 'node_modules':
-            case modParts.name.toLowerCase() === 'node_modules':
-            case modParts.ext.length > 0:
-                throw new Error(`${modName} node_module not found!`);
-                break;
-            case modParts.name === modName:
-                isFound = true;
-                break;
-            }
-
-            if (!isFound) {
-                modBaseDir = modParts.dir;
-            }
-        }
-
-        if (!isFound) {
-            throw new Error(`${modName} node_module not found!`);
-        }
+        _fs.writeFileSync(filePath, JSON.stringify(data, null, 2), {encoding: 'utf8'});
     } catch (err) {
-        console.log(`ABORTING PATCH OF ${modName}:`, err.message);
-    }
-
-    if (isFound) {
-        console.log(`patching ${modName}...`);
-        const success = modNames[modName](modBaseDir);
-
-        if (!success) {
-            throw new Error(`patching ${modName} failed!`)
-        }
-        console.log(`Successfully patched ${modName}`);
+        console.log('Error writing build configuration to file!', err);
     }
 }
 
+
+function patchModules() {
+    const modNames = {
+        'zeromq': patchzeromq,
+    };
+
+    for (const modName of Object.keys(modNames)) {
+        if (modName.length === 0) {
+            continue;
+        }
+
+        let modBaseDir = _path.normalize(_path.dirname(require.resolve(modName)));
+        let isFound = false;
+
+        try {
+
+            while ((modBaseDir.length > 0) && !isFound) {
+                const modParts = _path.parse(modBaseDir);
+                switch (true) {
+                case modParts.dir === modParts.root:
+                case modParts.base === modParts.root:
+                case modParts.base.toLowerCase() === 'node_modules':
+                case modParts.name.toLowerCase() === 'node_modules':
+                case modParts.ext.length > 0:
+                    throw new Error(`${modName} node_module not found!`);
+                    break;
+                case modParts.name === modName:
+                    isFound = true;
+                    break;
+                }
+
+                if (!isFound) {
+                    modBaseDir = modParts.dir;
+                }
+            }
+
+            if (!isFound) {
+                throw new Error(`${modName} node_module not found!`);
+            }
+        } catch (err) {
+            console.log(`ABORTING PATCH OF ${modName}:`, err.message);
+        }
+
+        if (isFound) {
+            console.log(`patching ${modName}...`);
+            const success = modNames[modName](modBaseDir);
+
+            if (!success) {
+                throw new Error(`patching ${modName} failed!`)
+            }
+            console.log(`Successfully patched ${modName}`);
+        }
+    }
+}
 /**
  * Required to patch zeromq, specifically on Windows.
  * This is due to zeromq v6.0.0-beta.6 not being supported properly on some Windows versions:
