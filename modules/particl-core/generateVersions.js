@@ -37,7 +37,7 @@ const getPre22Checksums = async (coreVersion) => {
 
     const sigFile = signatures.find((sigFile) => (sigFile.path.indexOf(sigPath) === 0) && !sigFile.name.includes("assert.sig"));
     if (!sigFile) {
-      throw new Error(`Unable to retreive hashes for ${coreVersion} for ${sigPath} for platform ${platform}`);
+      throw new Error(`Unable to retrieve hashes for ${coreVersion} for ${sigPath} for platform ${platform}`);
     }
     const textFile = await _fetch(
       sigFile.download_url,

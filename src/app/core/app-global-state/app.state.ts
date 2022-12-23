@@ -74,7 +74,7 @@ export class ApplicationConfigState {
 
     this.isInitialized = true;
 
-    // establish version update listener... no need to unsubscribe as it needs to persist throughtout the application session
+    // establish version update listener... no need to unsubscribe as it needs to persist throughout the application session
     this.backendService.listen<boolean>('application:versionCheck').pipe(
       catchError(() => of(false)),
       tap({

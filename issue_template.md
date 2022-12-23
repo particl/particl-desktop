@@ -1,5 +1,5 @@
 This is the issue template. Everything is optional, but the more you supply, the better.
-Please use short decriptive titles for issues.
+Please use short descriptive titles for issues.
 
 # Describe bug/issue
 
