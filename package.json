@@ -246,7 +246,7 @@
     "checksum": "^0.1.1",
     "codelyzer": "^5.0.1",
     "coveralls": "^3.0.0",
-    "electron": "19.0.11",
+    "electron": "19.1.8",
     "electron-builder": "^23.6.0",
     "htmlhint": "^1.1.4",
     "jasmine-core": "^3.3.0",
