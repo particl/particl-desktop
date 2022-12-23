@@ -200,7 +200,7 @@ export class StartupComponent implements OnInit, OnDestroy {
       }
     }
     this.controlNetwork.setValue(networkSelection, {onlySelf: true, emitEvent: false});
-    if(this.allowEditingNetwork) {
+    if (this.allowEditingNetwork) {
       this.controlNetwork.enable({emitEvent: false});
     }
 

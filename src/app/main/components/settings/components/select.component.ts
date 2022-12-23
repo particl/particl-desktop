@@ -4,7 +4,7 @@ import { SettingField } from '../abstract-setting.model';
 
 export interface SelectSettingField extends SettingField<string | number> {
   options: {label: string; value: string | number; isDisabled?: boolean }[];
-};
+}
 
 
 @Component({

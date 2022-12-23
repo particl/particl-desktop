@@ -304,7 +304,7 @@ export class MarketState {
       ))
     );
 
-    const started$ = defer(() => this._backendService.sendAndWait<IPCResponses.getSettings>('apps:market:market:getSettings').pipe(
+    const started$ = defer(() => this._backendService.sendAndWait<IPCResponses.GetSettings>('apps:market:market:getSettings').pipe(
         map(backendSettings => {
           let success = false;
 
@@ -471,7 +471,7 @@ export class MarketState {
             return ctx.dispatch([
               new MarketStateActions.SetIdentityCartCount(),
               new MarketStateActions.ChatNotificationsClearAll()
-            ])
+            ]);
           }),
           defer(() => {})
         ))
@@ -876,7 +876,7 @@ export class MarketState {
       const mset = Object.prototype.toString.call(allset.market) === '[object Object]' ? allset.market : {};
       const pset = Object.prototype.toString.call(mset.profileData) === '[object Object]' ? mset.profileData : {};
       if (+pset.defaultProfileID > 0) {
-        return +pset.defaultProfileID
+        return +pset.defaultProfileID;
       }
     } catch (e) { }
     return 0;

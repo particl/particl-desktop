@@ -45,9 +45,6 @@ export const ngxsConfig: NgxsModuleOptions = {
 @Injectable()
 export class ApplicationConfigState {
 
-  private isInitialized: boolean = false;
-
-
   @Selector()
   static hasNewAppVersion(state: ApplicationConfigStateModel) {
     return state.newAppVersionAvailable;
@@ -61,6 +58,9 @@ export class ApplicationConfigState {
         appState.appModules && module && appState.appModules[module] ? appState.appModules[module] : ''
     );
   }
+
+
+  private isInitialized: boolean = false;
 
 
   constructor(private backendService: BackendService) { }
@@ -80,7 +80,7 @@ export class ApplicationConfigState {
       tap({
         next: (hasUpdatedVersion) => {
           if (typeof hasUpdatedVersion === 'boolean' && ctx.getState().newAppVersionAvailable !== hasUpdatedVersion) {
-            ctx.patchState({newAppVersionAvailable: hasUpdatedVersion})
+            ctx.patchState({newAppVersionAvailable: hasUpdatedVersion});
           }
         }
       })
@@ -91,11 +91,11 @@ export class ApplicationConfigState {
       catchError((e) => of({} as IPCResponseApplicationSettings)),
       tap((values) => {
         const patchItems: Partial<ApplicationConfigStateModel> = {};
-        if (typeof values.DEBUGGING_LEVEL === 'string') patchItems.debugLevel = values.DEBUGGING_LEVEL;
-        if (typeof values.MODE === 'string') patchItems.buildMode = values.MODE;
-        if (typeof values.TESTING_MODE === 'boolean') patchItems.requestedTestingNetworks = values.TESTING_MODE;
-        if (typeof values.VERSIONS === 'object') patchItems.appModules = values.VERSIONS;
-        if (typeof values.LANGUAGE === 'string') patchItems.selectedLanguage = values.LANGUAGE;
+        if (typeof values.DEBUGGING_LEVEL === 'string') { patchItems.debugLevel = values.DEBUGGING_LEVEL; }
+        if (typeof values.MODE === 'string') { patchItems.buildMode = values.MODE; }
+        if (typeof values.TESTING_MODE === 'boolean') { patchItems.requestedTestingNetworks = values.TESTING_MODE; }
+        if (typeof values.VERSIONS === 'object') { patchItems.appModules = values.VERSIONS; }
+        if (typeof values.LANGUAGE === 'string') { patchItems.selectedLanguage = values.LANGUAGE; }
 
         if (Object.keys(patchItems).length > 0) {
           ctx.patchState(patchItems);

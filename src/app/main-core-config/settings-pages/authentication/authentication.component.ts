@@ -25,8 +25,14 @@ enum Controls {
 export class AuthenticationComponent implements OnInit, OnDestroy {
 
   controluseCookie: FormControl = new FormControl({ value: false, disabled: true});
-  controlRpcUser: FormControl = new FormControl({ value: '', disabled: true}, {validators: [Validators.required, Validators.maxLength(50)],updateOn: 'blur'});
-  controlRpcPass: FormControl = new FormControl({ value: '', disabled: true}, {validators: [Validators.required, Validators.maxLength(100)], updateOn: 'blur'});
+  controlRpcUser: FormControl = new FormControl(
+    { value: '', disabled: true },
+    {validators: [Validators.required, Validators.maxLength(50)], updateOn: 'blur'}
+  );
+  controlRpcPass: FormControl = new FormControl(
+    { value: '', disabled: true},
+    {validators: [Validators.required, Validators.maxLength(100)], updateOn: 'blur'}
+  );
 
   private destroy$: Subject<void> = new Subject();
 

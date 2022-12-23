@@ -62,7 +62,7 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
                               }
                             }
                           })
-                        )
+                        );
                       }
                       return of({});
                     })

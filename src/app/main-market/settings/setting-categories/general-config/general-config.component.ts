@@ -1,17 +1,20 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, OnDestroy, ViewChild, ViewContainerRef } from "@angular/core";
-import { Subject } from "rxjs";
-import { distinctUntilChanged, map, takeUntil, tap } from "rxjs/operators";
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, ComponentFactoryResolver, OnDestroy, ViewChild, ViewContainerRef
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { distinctUntilChanged, map, takeUntil, tap } from 'rxjs/operators';
 
-import { Store } from "@ngxs/store";
-import { MarketState } from "../../../store/market.state";
-import { MarketUserActions } from "../../../store/market.actions";
+import { Store } from '@ngxs/store';
+import { MarketState } from '../../../store/market.state';
+import { MarketUserActions } from '../../../store/market.actions';
 
-import { RegionListService } from "../../../services/region-list/region-list.service";
-import { NumberSettingComponent, NumberSettingDetails } from "app/main/components/settings/components/number.component";
-import { ToggleSettingComponent } from "app/main/components/settings/components/toggle.component";
-import { SettingField } from "app/main/components/settings/abstract-setting.model";
-import { SelectSettingComponent, SelectSettingField } from "app/main/components/settings/components/select.component";
-import { MarketStateModel, StartedStatus } from "../../../store/market.models";
+import { RegionListService } from '../../../services/region-list/region-list.service';
+import { NumberSettingComponent, NumberSettingDetails } from 'app/main/components/settings/components/number.component';
+import { ToggleSettingComponent } from 'app/main/components/settings/components/toggle.component';
+import { SettingField } from 'app/main/components/settings/abstract-setting.model';
+import { SelectSettingComponent, SelectSettingField } from 'app/main/components/settings/components/select.component';
+import { MarketStateModel, StartedStatus } from '../../../store/market.models';
 
 
 @Component({

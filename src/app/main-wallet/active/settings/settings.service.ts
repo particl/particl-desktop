@@ -62,7 +62,9 @@ export class WalletSettingsService {
   }
 
 
-  private async createDerivedWallets(walletLabels: string[], extMasterKey: RPCResponses.ExtKey.Item, skipCount: number = 0): Promise<boolean[]> {
+  private async createDerivedWallets(
+    walletLabels: string[], extMasterKey: RPCResponses.ExtKey.Item, skipCount: number = 0
+  ): Promise<boolean[]> {
     let countProcessed = 0;
     let extraDerivedCount = 0;
 
@@ -159,8 +161,12 @@ export class WalletSettingsService {
       ++countProcessed;
 
       // generate initial addresses for the new wallet... if it fails for some reason then these can be easily generated manually elsewhere
-      this._rpc.call<RPCResponses.GetNewAddress>('getnewaddress', [''], walletPath).toPromise().then(() => true).catch(() => false);
-      this._rpc.call<RPCResponses.GetNewStealthAddress>('getnewstealthaddress', [''], walletPath).toPromise().then(() => true).catch(() => false);
+      this._rpc.call<RPCResponses.GetNewAddress>('getnewaddress', [''], walletPath).toPromise()
+        .then(() => true)
+        .catch(() => false);
+      this._rpc.call<RPCResponses.GetNewStealthAddress>('getnewstealthaddress', [''], walletPath).toPromise()
+        .then(() => true)
+        .catch(() => false);
 
     }
 

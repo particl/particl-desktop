@@ -63,7 +63,7 @@ const DEFAULT_WALLET_SETTINGS_STATE: WalletSettingsStateModel = {
 const DEFAULT_WALLET_URL_STATE: WalletURLStateModel = {
   transaction: '',
   address: '',
-}
+};
 
 
 @State({

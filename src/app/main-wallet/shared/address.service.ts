@@ -122,7 +122,9 @@ export class AddressService {
     labelFilter: string = '',
     ownFilter: AddressFilterOwnership = AddressFilterOwnership.OWNED
   ): Observable<RPCResponses.FilterAddresses.List> {
-    return this._rpc.call<RPCResponses.FilterAddresses.List>('filteraddresses', [offset, count, `${sortDir}`, labelFilter, `${ownFilter}`]).pipe(
+    return this._rpc.call<RPCResponses.FilterAddresses.List>(
+      'filteraddresses', [offset, count, `${sortDir}`, labelFilter, `${ownFilter}`]
+    ).pipe(
       retryWhen (genericPollingRetryStrategy())
     );
   }
@@ -285,7 +287,9 @@ export class AddressService {
   }
 
 
-  private processAddressHistoryItems(addresses: RPCResponses.FilterAddresses.List, type: AddressType | 'all'): RPCResponses.FilterAddresses.List {
+  private processAddressHistoryItems(
+    addresses: RPCResponses.FilterAddresses.List, type: AddressType | 'all'
+  ): RPCResponses.FilterAddresses.List {
     const compare = (a: RPCResponses.FilterAddress, b: RPCResponses.FilterAddress) => b.id - a.id;
 
     const res: RPCResponses.FilterAddresses.List = [];

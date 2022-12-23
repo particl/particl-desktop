@@ -1,20 +1,23 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, OnDestroy, ViewChild, ViewContainerRef } from "@angular/core";
-import { combineLatest, defer, iif, of, Subject } from "rxjs";
-import { catchError, concatMap, take, takeUntil, takeWhile, tap } from "rxjs/operators";
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, ComponentFactoryResolver, OnDestroy, ViewChild, ViewContainerRef
+} from '@angular/core';
+import { combineLatest, defer, iif, of, Subject } from 'rxjs';
+import { catchError, concatMap, take, takeUntil, takeWhile, tap } from 'rxjs/operators';
 
-import { Store } from "@ngxs/store";
-import { Particl } from "app/networks/networks.module";
-import { MarketState } from "../../../store/market.state";
-import { MarketUserActions } from "../../../store/market.actions";
+import { Store } from '@ngxs/store';
+import { Particl } from 'app/networks/networks.module';
+import { MarketState } from '../../../store/market.state';
+import { MarketUserActions } from '../../../store/market.actions';
 
-import { BackendService } from "app/core/services/backend.service";
-import { SnackbarService } from "app/main/services/snackbar/snackbar.service";
-import { NumberSettingComponent, NumberSettingDetails } from "app/main/components/settings/components/number.component";
-import { URLSettingComponent, URLSettingDetails } from "app/main/components/settings/components/url.component";
-import { IPCResponses } from "../../../store/market.models";
-import { ChainType } from "app/networks/particl/particl.models";
-import { SettingField } from "app/main/components/settings/abstract-setting.model";
-import { isBasicObjectType } from "app/main-market/shared/utils";
+import { BackendService } from 'app/core/services/backend.service';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { NumberSettingComponent, NumberSettingDetails } from 'app/main/components/settings/components/number.component';
+import { URLSettingComponent, URLSettingDetails } from 'app/main/components/settings/components/url.component';
+import { IPCResponses } from '../../../store/market.models';
+import { ChainType } from 'app/networks/particl/particl.models';
+import { SettingField } from 'app/main/components/settings/abstract-setting.model';
+import { isBasicObjectType } from 'app/main-market/shared/utils';
 
 
 
@@ -55,7 +58,7 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
         takeWhile(chain => !!chain),
         takeUntil(this.destroy$)
       ),
-      this._backendService.sendAndWait<IPCResponses.getSettings>('apps:market:market:getSettings').pipe(
+      this._backendService.sendAndWait<IPCResponses.GetSettings>('apps:market:market:getSettings').pipe(
         take(1),
         catchError(() => of({ urls: undefined, network: undefined})),
       )
@@ -83,7 +86,7 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  private loadSettings(chain: ChainType, networkSettings: IPCResponses.getSettings): void {
+  private loadSettings(chain: ChainType, networkSettings: IPCResponses.GetSettings): void {
     this.connectionsContainer.clear();
     this.urlsContainer.clear();
 
@@ -161,7 +164,8 @@ export class ModuleSettingsComponent implements AfterViewInit, OnDestroy {
     const txUrl = networkSettings.urls && (typeof networkSettings.urls.transaction === 'string') ?
       networkSettings.urls.transaction || '' :
       (
-        Object.prototype.toString.call(networkSettings.urls.transaction) === '[object Object]' && typeof networkSettings.urls.transaction[chain] === 'string' ?
+        Object.prototype.toString.call(networkSettings.urls.transaction) === '[object Object]' &&
+        typeof networkSettings.urls.transaction[chain] === 'string' ?
           networkSettings.urls.transaction[chain] || '' :
           ''
       );

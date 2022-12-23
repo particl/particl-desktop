@@ -72,7 +72,7 @@ export class CoreConfigComponent implements OnInit, OnDestroy {
           && Object.prototype.toString.call(cr.data) === '[object Object]'
           && typeof cr.data.pathName === 'string'
         ) {
-          this.menu.push({ path: cr.path, text: cr.data.pathName })
+          this.menu.push({ path: cr.path, text: cr.data.pathName });
         }
       });
     }
@@ -99,7 +99,7 @@ export class CoreConfigComponent implements OnInit, OnDestroy {
             icon: Icons.CORE_ICON_START,
           };
 
-          switch(startedStatus) {
+          switch (startedStatus) {
             case RunningStatus.STARTED:
               newStatusData.canStop = true;
               newStatusData.isStarted = true;

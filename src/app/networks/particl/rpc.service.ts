@@ -137,7 +137,7 @@ export class RpcService implements OnDestroy {
 
       const walletName = (typeof wallet === 'string') ? wallet : this.activeWallet;
 
-      if(typeof walletName === 'string') {
+      if (typeof walletName === 'string') {
         /* replace here is crucial for wallets in folder structures on Windows:
             - the path separator (backslash on Windows) is converted to forward slash in the url,
               so this url encodes any backslashes in the url to ensure wallet is named correctly in core

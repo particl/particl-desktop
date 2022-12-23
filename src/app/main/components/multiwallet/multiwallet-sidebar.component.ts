@@ -17,8 +17,6 @@ import { NetworkInitService } from 'app/main/services/network-init/network-init.
 })
 export class MultiwalletSidebarComponent implements OnDestroy {
 
-  private destroy$: Subject<void> = new Subject();
-
   readonly apps: {
     class: string;
     route: string;
@@ -28,6 +26,8 @@ export class MultiwalletSidebarComponent implements OnDestroy {
   }[] = [];
 
   @Select(Particl.State.Core.isRunning()) isCoreStarted$: Observable<boolean>;
+
+  private destroy$: Subject<void> = new Subject();
 
   constructor(
     private _dialog: MatDialog,

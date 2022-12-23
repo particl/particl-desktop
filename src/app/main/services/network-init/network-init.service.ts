@@ -8,7 +8,7 @@ import { map, take } from 'rxjs/operators';
 
 
 interface NetworkStatusMap {
-  [name: string]: Observable<boolean>
+  [name: string]: Observable<boolean>;
 }
 
 
@@ -45,7 +45,7 @@ export class NetworkInitService {
 
 
   getRouteActiveStatus(routeSnapshot: ActivatedRouteSnapshot): Observable<boolean> {
-    let dependencies: Set<keyof NetworkStatusMap> = new Set();
+    const dependencies: Set<keyof NetworkStatusMap> = new Set();
     let tempRoute = routeSnapshot;
 
     while (tempRoute) {

@@ -86,13 +86,13 @@ export interface MarketStateModel {
 
 
 export namespace IPCResponses {
-  export interface getSettings {
+  export interface GetSettings {
     network?: {
       port: number;
       timeout: number;
     };
     urls?: {
       transaction: string;
-    }
+    };
   }
 }

@@ -12,7 +12,7 @@ interface Setting<T> {
     min?: number;
     max?: number;
     pattern?: string;
-  }
+  };
 }
 
 interface JsonLike {
@@ -37,7 +37,7 @@ namespace Responses {
       schema: JsonLike;
       values: JsonLike;
       startedparams: any;
-    }
+    };
   }
 
   export interface GenericUpdateSettings {
@@ -220,7 +220,7 @@ export class CoreConfigurationService {
       }
 
       if (typeof data[objKey].type === 'string') {
-        let propType = data[objKey].type === 'integer' ? 'number' : data[objKey].type;
+        const propType = data[objKey].type === 'integer' ? 'number' : data[objKey].type;
         let foundvalue: any = undefined;
         if (typeof data[objKey].default === propType) {
           foundvalue = data[objKey].default;

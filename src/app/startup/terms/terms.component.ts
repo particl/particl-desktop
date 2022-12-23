@@ -11,9 +11,9 @@ import { TermsContentComponent } from 'app/core-ui/components/terms-content/term
 })
 export class TermsComponent {
 
-  @ViewChild(TermsContentComponent, { static: false }) private termsComp!: TermsContentComponent;
-
   isAccepted: boolean = false;
+
+  @ViewChild(TermsContentComponent, { static: false }) private termsComp!: TermsContentComponent;
 
   constructor(
     private router: Router,

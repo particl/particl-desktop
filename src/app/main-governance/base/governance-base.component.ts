@@ -126,7 +126,9 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         skipWhile(walletName => typeof walletName !== 'string'),
         tap(() => this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.WALLET_LOADING}})),
-        switchMap((walletName) => this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(walletName)).pipe(tap(() => this._dialog.closeAll()))),
+        switchMap((walletName) =>
+          this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(walletName)).pipe(tap(() => this._dialog.closeAll()))
+        ),
         takeUntil(this.destroy$)
       ),
     ).subscribe();

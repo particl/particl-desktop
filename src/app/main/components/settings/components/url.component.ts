@@ -11,7 +11,7 @@ function urlValidator(allowEmpty: boolean = false): ValidatorFn {
       return allowEmpty ? null : { invalidURL: true };
     }
     try {
-      new URL(control.value);
+      const _ = new URL(control.value);
       return null;
     } catch (_) {
 
@@ -54,14 +54,14 @@ export class URLSettingComponent implements OnInit, OnDestroy {
       this.valueControl.setValidators(urlValidator(true));
       this.valueControl.updateValueAndValidity();
     }
-  };
+  }
   @Input() set setting(setting: SettingField<string>) {
     this.receivedSettings = setting;
     this.valueControl.setValue(setting.value);
     if (setting.isDisabled) {
       this.valueControl.disable();
     }
-  };
+  }
   errorMsg: string = '';
 
   private valueControl: FormControl = new FormControl('', {validators: [urlValidator(false)], updateOn: 'blur'});

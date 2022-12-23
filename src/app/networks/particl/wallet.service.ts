@@ -134,7 +134,9 @@ export class ParticlWalletService {
   loadWallet(walletName: string): Observable<boolean> {
     return this._rpc.call<RPCResponses.LoadWallet>('loadwallet', [walletName]).pipe(
       catchError((error: RPCResponses.Error) => {
-        return error && (error.code === -4 || error.code === -35) ? of({name: walletName, warning: ''} as RPCResponses.LoadWallet) : throwError(error);
+        return error && (error.code === -4 || error.code === -35) ?
+          of({name: walletName, warning: ''} as RPCResponses.LoadWallet) :
+          throwError(error);
       }),
 
       map((resp) => {

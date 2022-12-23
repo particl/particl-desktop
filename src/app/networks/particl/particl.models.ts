@@ -35,9 +35,9 @@ export interface ParticlBlockchainStateModel {
     connections: number;
     timeoffset: number;
     subversion: string;
-  },
+  };
   chain: ChainType;
-  peers: {address: string; blockHeight: number}[],
+  peers: {address: string; blockHeight: number}[];
   currentBlockHeight: number;
 }
 
@@ -49,12 +49,12 @@ export namespace IPCResponses {
     export namespace Events {
 
       export interface ParticlStatus {
-        started: number,
-        hasError: boolean,
-        message: string,
-        url: string,
-        auth: string,
-        zmq: { [key: string]: string },
+        started: number;
+        hasError: boolean;
+        message: string;
+        url: string;
+        auth: string;
+        zmq: { [key: string]: string };
         version: string;
       }
 
@@ -296,7 +296,7 @@ export namespace RPCResponses {
     inflight?: number[];
     whitelisted: boolean;
     minfeefilter: number;
-  }>
+  }>;
 
   export interface GetBlockchainInfo {
     bestblockhash: string;
@@ -387,7 +387,7 @@ export namespace RPCResponses {
       total: number;
       num_receive: number;
       num_send: number;
-    };
+    }
   }
 
   export type AbandonTransaction = null;
@@ -422,7 +422,7 @@ export namespace RPCResponses {
       outputs: Output[];
       amount: number;
       type_in?: 'anon';
-    };
+    }
 
     export type Response = Item[];
   }
@@ -479,9 +479,9 @@ export namespace RPCResponses {
         time: number;
       };
     }
-  };
+  }
 
-  export namespace ExtKey{
+  export namespace ExtKey {
     export interface Account {
       type: string;                                     // eg: "Account"
       active: 'true' | 'false';
@@ -505,7 +505,7 @@ export namespace RPCResponses {
         num_derives_h: string;                          // eg: "0"
         path: string;                                   // eg: "m/0h/0"
       }[];
-    };
+    }
 
     export interface Item {
       type: 'Loose' | 'Account';

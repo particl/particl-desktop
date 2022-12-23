@@ -28,7 +28,7 @@ interface Setting<T = any> {
   tags: string[];
   restartRequired: boolean;
   formatValue?: (value: any) => T;
-  type: 'select' | 'label',
+  type: 'select' | 'label';
 }
 
 enum TextContent {
@@ -59,6 +59,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
 
   controlCustomUrlAdd: FormControl = new FormControl('', [
     Validators.required,
+    // tslint:disable-next-line
     Validators.pattern("(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$")
   ]);
 
@@ -134,7 +135,9 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
         tap({
           next: newValue => this.controlToggleUpdates.disable({onlySelf: true, emitEvent: false})
         }),
-        switchMap(newValue => this._backendService.sendAndWait<boolean>('application:setSetting', 'APPLICATION_UPDATES_ALLOWED', newValue).pipe(
+        switchMap(newValue =>
+          this._backendService.sendAndWait<boolean>('application:setSetting', 'APPLICATION_UPDATES_ALLOWED', newValue
+        ).pipe(
           catchError(() => of(false)),
           tap({
             next: success => {
@@ -142,7 +145,7 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
                 this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', 'Application Updates'));
                 this.controlToggleUpdates.setValue(!newValue, {onlySelf: true, emitEvent: false});
               }
-              this.controlToggleUpdates.enable({onlySelf: true, emitEvent: false})
+              this.controlToggleUpdates.enable({onlySelf: true, emitEvent: false});
             }
           })
         )),
@@ -184,7 +187,9 @@ export class GlobalSettingsComponent implements OnInit, OnDestroy {
     ).pipe(
       concatMap((isSaved) => iif(
         () => isSaved,
-        defer(() => this._store.dispatch(new GlobalActions.SetSetting(this.settings[settingIdx].id_state, this.settings[settingIdx].currentValue)).pipe(catchError(() => of(true)))),
+        defer(() => this._store.dispatch(
+          new GlobalActions.SetSetting(this.settings[settingIdx].id_state, this.settings[settingIdx].currentValue)
+        ).pipe(catchError(() => of(true)))),
         defer(() => of(false)),
       ))
     ).subscribe({

@@ -20,7 +20,7 @@ export class MarketRpcService {
       return false;
     }
     try {
-      new URL(url);
+      const _ = new URL(url);
       this.url = url;
       return true;
     } catch (_) { }

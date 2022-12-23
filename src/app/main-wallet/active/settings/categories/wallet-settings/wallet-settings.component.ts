@@ -1,21 +1,24 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ViewChild, ViewContainerRef } from "@angular/core";
-import { MatDialog } from "@angular/material";
-import { of } from "rxjs";
-import { catchError, take, tap } from "rxjs/operators";
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, ComponentFactoryResolver, ViewChild, ViewContainerRef
+} from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { of } from 'rxjs';
+import { catchError, take, tap } from 'rxjs/operators';
 
-import { Store } from "@ngxs/store";
-import { Particl, ParticlRpcService } from "app/networks/networks.module";
-import { SettingsActions, WalletSettingsState, WalletSettingsStateModel } from "app/main-wallet/shared/state-store/wallet-store.state";
+import { Store } from '@ngxs/store';
+import { Particl, ParticlRpcService } from 'app/networks/networks.module';
+import { SettingsActions, WalletSettingsState, WalletSettingsStateModel } from 'app/main-wallet/shared/state-store/wallet-store.state';
 
-import { ButtonSettingComponent, ButtonSettingDetails } from "app/main/components/settings/components/button.component";
-import { NumberSettingComponent, NumberSettingDetails } from "app/main/components/settings/components/number.component";
-import { SettingField } from "app/main/components/settings/abstract-setting.model";
+import { ButtonSettingComponent, ButtonSettingDetails } from 'app/main/components/settings/components/button.component';
+import { NumberSettingComponent, NumberSettingDetails } from 'app/main/components/settings/components/number.component';
+import { SettingField } from 'app/main/components/settings/abstract-setting.model';
 
-import { WalletBackupModalComponent } from "../../wallet-backup-modal/wallet-backup-modal.component";
-import { DeriveWalletModalComponent } from "../../derive-wallet-modal/derive-wallet-modal.component";
-import { ChangeWalletPasswordModalComponent } from "../../change-wallet-password-modal/change-wallet-password-modal.component";
-import { SnackbarService } from "app/main/services/snackbar/snackbar.service";
-import { DEFAULT_RING_SIZE, DEFAULT_UTXO_SPLIT, MAX_RING_SIZE, MAX_UTXO_SPLIT, MIN_RING_SIZE, MIN_UTXO_SPLIT } from "app/networks/particl/particl.models";
+import { WalletBackupModalComponent } from '../../wallet-backup-modal/wallet-backup-modal.component';
+import { DeriveWalletModalComponent } from '../../derive-wallet-modal/derive-wallet-modal.component';
+import { ChangeWalletPasswordModalComponent } from '../../change-wallet-password-modal/change-wallet-password-modal.component';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { DEFAULT_RING_SIZE, DEFAULT_UTXO_SPLIT, MAX_RING_SIZE, MAX_UTXO_SPLIT, MIN_RING_SIZE, MIN_UTXO_SPLIT } from 'app/networks/particl/particl.models';
 
 
 
@@ -188,7 +191,7 @@ export class WalletSpecificSettingsComponent implements AfterViewInit {
       defaultValue: null,
       placeholder: 'Derive Wallets',
       updateValue: () => {
-        this._dialog.open(DeriveWalletModalComponent, { autoFocus: false })
+        this._dialog.open(DeriveWalletModalComponent, { autoFocus: false });
       },
       value: null,
     };

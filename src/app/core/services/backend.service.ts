@@ -59,9 +59,7 @@ export class BackendService {
         });
       });
 
-      return () => {
-        window.electronAPI.removeListener(replyChannel);
-      }
+      return () => { window.electronAPI.removeListener(replyChannel); };
     });
   }
 

@@ -10,7 +10,7 @@ export class NotificationsService {
   notify(title: string, description: string, onlyShowWhenUnfocused: boolean = true): void {
     // very simple implementation: can be later modified to add grouped notifications over a period of time
     //  (so as not to spam the user with notifications)
-    this._backendService.send('gui:notification:notifications', title, description || '', onlyShowWhenUnfocused)
+    this._backendService.send('gui:notification:notifications', title, description || '', onlyShowWhenUnfocused);
   }
 
 }

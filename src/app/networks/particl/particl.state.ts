@@ -135,22 +135,6 @@ export namespace ParticlActions {
 @Injectable()
 export class ParticlCoreState {
 
-  @Selector([ParticlCoreState])
-  private static _getStatusMessage (state: ParticlCoreStateModel) {
-    return state.statusMessage;
-  };
-
-  @Selector([ParticlCoreState])
-  private static _getStartedStatus (state: ParticlCoreStateModel) {
-    return state.running;
-  };
-
-  @Selector([ParticlCoreState])
-  private static _getzmqServices (state: ParticlCoreStateModel) {
-    return state.zmqServices;
-  };
-
-
   @Selector([ParticlCoreState._getStatusMessage])
   static getStatusMessage(statusMessage: string) {
     return statusMessage;
@@ -183,6 +167,21 @@ export class ParticlCoreState {
         return field in zmqServices;
       }
     );
+  }
+
+  @Selector([ParticlCoreState])
+  private static _getStatusMessage (state: ParticlCoreStateModel) {
+    return state.statusMessage;
+  }
+
+  @Selector([ParticlCoreState])
+  private static _getStartedStatus (state: ParticlCoreStateModel) {
+    return state.running;
+  }
+
+  @Selector([ParticlCoreState])
+  private static _getzmqServices (state: ParticlCoreStateModel) {
+    return state.zmqServices;
   }
 
 
@@ -223,7 +222,7 @@ export class ParticlCoreState {
             // skip; neither has values
           } else if ((objKeys.length === 0) && (Object.keys(currentState[this.IPCSettingsToStateMap[k]]).length > 0)) {
             // reset state to empty: received value is empty
-            patchable[this.IPCSettingsToStateMap[k]] = {}
+            patchable[this.IPCSettingsToStateMap[k]] = {};
           } else {
             patchable[this.IPCSettingsToStateMap[k]] = { };
             objKeys.forEach(objKey => {
@@ -239,10 +238,10 @@ export class ParticlCoreState {
     });
 
     if (Object.keys(patchable).length > 0) {
-      let isStopping =
+      const isStopping =
         (currentState.running === RunningStatus.STARTED)
         && (patchable.running === RunningStatus.STOPPING || patchable.running === RunningStatus.STOPPED);
-      let isStarted = (currentState.running !== RunningStatus.STARTED) && (patchable.running === RunningStatus.STARTED);
+      const isStarted = (currentState.running !== RunningStatus.STARTED) && (patchable.running === RunningStatus.STARTED);
       ctx.patchState(patchable);
       if (isStopping || isStarted) {
         if (isStopping) {
@@ -637,7 +636,9 @@ export class WalletStakingState {
 
 
   @Action(ParticlInternalActions.WalletActions.WalletLoaded)
-  initializeWalletColdStakingData(ctx: StateContext<WalletStakingStateModel>, { walletName, isInitialized }: ParticlInternalActions.WalletActions.WalletLoaded) {
+  initializeWalletColdStakingData(
+    ctx: StateContext<WalletStakingStateModel>, { walletName, isInitialized }: ParticlInternalActions.WalletActions.WalletLoaded
+  ) {
     this.isValidWallet = isInitialized;
 
     if (this.isValidWallet) {
@@ -712,16 +713,6 @@ export class WalletInfoState {
   ) {}
 
 
-  // @Action(ParticlInternalActions.BlockchainStarted)
-  // fetchInitialWalletDetails(ctx: StateContext<WalletInfoStateModel>) {
-  //   // fetch initial wallet details (previously saved wallet);
-  //   // attempt to load fetched wallet (can be checked with listwalletdir et al, see old multiwallet service);
-  //   // if wallet not available, fall back to whatever wallet is currently loaded, if any;
-  //   // if wallet is loaded, fetch those details.
-  //   //* If any wallet was loaded, dispatch WalletLoaded action
-  // }
-
-
   @Action(ParticlInternalActions.BlockchainStopped)
   cleanupWalletDetails(ctx: StateContext<WalletInfoStateModel>) {
     return ctx.dispatch(new ParticlActions.WalletActions.ResetWallet());
@@ -764,7 +755,9 @@ export class WalletInfoState {
   }
 
 
-  private updateWalletInfo(ctx: StateContext<WalletInfoStateModel>, newWalletLoaded: boolean = false): Observable<RPCResponses.GetWalletInfo> {
+  private updateWalletInfo(
+    ctx: StateContext<WalletInfoStateModel>, newWalletLoaded: boolean = false
+  ): Observable<RPCResponses.GetWalletInfo> {
     return this._walletService.getWalletInfo(1).pipe(
       tap((info) => {
         if ( (typeof info === 'object')) {
@@ -930,7 +923,9 @@ export class WalletBalanceState {
   }
 
   @Action(ParticlInternalActions.WalletActions.WalletLoaded)
-  initializeWalletBalances(ctx: StateContext<WalletBalanceStateModel>, { isInitialized }: ParticlInternalActions.WalletActions.WalletLoaded) {
+  initializeWalletBalances(
+    ctx: StateContext<WalletBalanceStateModel>, { isInitialized }: ParticlInternalActions.WalletActions.WalletLoaded
+  ) {
     this.isWalletValid = isInitialized;
 
     if (!this.isWalletValid) {

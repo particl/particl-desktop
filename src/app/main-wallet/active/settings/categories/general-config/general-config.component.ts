@@ -1,13 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver, ViewChild, ViewContainerRef } from "@angular/core";
-import { of } from "rxjs";
-import { catchError, take, tap } from "rxjs/operators";
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+  Component, ComponentFactoryResolver, ViewChild, ViewContainerRef
+} from '@angular/core';
+import { of } from 'rxjs';
+import { catchError, take, tap } from 'rxjs/operators';
 
-import { Store } from "@ngxs/store";
-import { SettingsActions, WalletURLState, WalletURLStateModel } from "app/main-wallet/shared/state-store/wallet-store.state";
-import { SnackbarService } from "app/main/services/snackbar/snackbar.service";
-import { SettingField } from "app/main/components/settings/abstract-setting.model";
-import { URLSettingComponent, URLSettingDetails } from "app/main/components/settings/components/url.component";
-import { Particl } from "app/networks/networks.module";
+import { Store } from '@ngxs/store';
+import { SettingsActions, WalletURLState, WalletURLStateModel } from 'app/main-wallet/shared/state-store/wallet-store.state';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { SettingField } from 'app/main/components/settings/abstract-setting.model';
+import { URLSettingComponent, URLSettingDetails } from 'app/main/components/settings/components/url.component';
+import { Particl } from 'app/networks/networks.module';
 
 
 enum TextContent {

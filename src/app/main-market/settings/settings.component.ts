@@ -1,4 +1,7 @@
-import { OnInit, AfterViewInit, OnDestroy, ViewChild, ViewContainerRef, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver } from '@angular/core';
+import {
+  OnInit, AfterViewInit, OnDestroy, ViewChild, ViewContainerRef,
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver
+} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subject, of, timer, iif, defer, combineLatest } from 'rxjs';
 import { tap, takeUntil, concatMap, catchError, switchMap, mapTo, map, distinctUntilChanged } from 'rxjs/operators';
@@ -114,7 +117,9 @@ export class MarketSettingsComponent implements OnInit, AfterViewInit, OnDestroy
       }),
       switchMap(([started, buttonEnabled]) => iif(
         () => started && !buttonEnabled && this._store.selectSnapshot(MarketState.lastSmsgScan) < (Date.now() + 1_000),
-        defer(() => timer(this._store.selectSnapshot(MarketState.lastSmsgScan) + 30_000 - Date.now()).pipe(mapTo(started), takeUntil(this.destroy$))),
+        defer(() => timer(
+          this._store.selectSnapshot(MarketState.lastSmsgScan) + 30_000 - Date.now()).pipe(mapTo(started), takeUntil(this.destroy$))
+        ),
         defer(() => of(started))
       )),
       tap({

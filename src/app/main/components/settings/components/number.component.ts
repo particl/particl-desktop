@@ -75,7 +75,11 @@ export class NumberSettingComponent implements OnDestroy {
       return;
     }
     if (this.details) {
-      if (((+this.setting.value % this.details.step) === 0) && (+this.setting.value >= this.details.min) && (+this.setting.value <= this.details.max) ) {
+      if (
+        ((+this.setting.value % this.details.step) === 0) &&
+        (+this.setting.value >= this.details.min) &&
+        (+this.setting.value <= this.details.max)
+      ) {
         this.changeControl.setValue(this.setting.value);
 
         if (this.errorMsg) {
