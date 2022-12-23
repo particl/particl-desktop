@@ -1,5 +1,5 @@
 const nodePath = require('path');
-const { notarize } = require('electron-notarize');
+const { notarize } = require('@electron/notarize');
 const packageConfig = require('../package.json');
 
 require('dotenv').config({ path: nodePath.join(__dirname, 'mac', '.env') });

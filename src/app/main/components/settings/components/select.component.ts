@@ -14,11 +14,10 @@ export interface SelectSettingField extends SettingField<string | number> {
       <h4 class="option">
         {{ setting?.title }}
         <span class="tag --smaller" *ngFor="let tag of setting?.tags">{{ tag }}</span>
-        <span class="tag --smaller --alert" *ngIf="setting?.restartRequired">Requires restart</span>
+        <span class="tag --smaller --alert" *ngIf="setting?.requiresRestart">Requires restart</span>
       </h4>
       <p class="desc" *ngIf="setting?.description?.length > 0">{{ setting.description }}</p>
-      <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-      <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
+      <mat-form-field class="full-width --larger --plain" appearance="fill">
         <mat-select [disabled]="setting?.isDisabled" [(ngModel)]="setting.value" (selectionChange)="valueChanged()">
           <mat-option *ngFor="let option of setting?.options" [value]="option.value" [disabled]="option.isDisabled">
             {{ option.label }}

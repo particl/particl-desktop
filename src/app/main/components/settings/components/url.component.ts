@@ -33,7 +33,7 @@ export interface URLSettingDetails {
       <h4 class="option">
         {{ receivedSettings?.title }}
         <span class="tag --smaller" *ngFor="let tag of receivedSettings?.tags">{{ tag }}</span>
-        <span class="tag --smaller --alert" *ngIf="receivedSettings?.restartRequired === true">Requires restart</span>
+        <span class="tag --smaller --alert" *ngIf="receivedSettings?.requiresRestart === true">Requires restart</span>
       </h4>
       <p class="desc" *ngIf="receivedSettings?.description?.length > 0">{{ receivedSettings.description }}</p>
       <p class="warning" *ngIf="valueControl.invalid || (errorMsg.length > 0)">{{errorMsg || 'Invalid URL'}}</p>
@@ -64,7 +64,8 @@ export class URLSettingComponent implements OnInit, OnDestroy {
   }
   errorMsg: string = '';
 
-  private valueControl: FormControl = new FormControl('', {validators: [urlValidator(false)], updateOn: 'blur'});
+  valueControl: FormControl = new FormControl('', {validators: [urlValidator(false)], updateOn: 'blur'});
+
   private destroy$: Subject<void> = new Subject();
 
 

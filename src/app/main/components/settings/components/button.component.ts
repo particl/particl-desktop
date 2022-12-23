@@ -15,7 +15,7 @@ export interface ButtonSettingDetails {
         <h4 class="option">
           {{ setting?.title }}
           <span class="tag" *ngFor="let tag of setting?.tags">{{ tag }}</span>
-          <span class="tag restart-required" *ngIf="setting?.restartRequired">Requires restart</span>
+          <span class="tag restart-required" *ngIf="setting?.requiresRestart">Requires restart</span>
         </h4>
         <p class="desc" *ngIf="setting?.description?.length > 0">{{ setting.description }}</p>
         <p class="warning" *ngIf="errorMsg">{{errorMsg}}</p>
