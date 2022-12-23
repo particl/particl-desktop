@@ -67,7 +67,7 @@ CHAIN_REGTEST.corePort.default = 51835;
 CHAIN_TEST.zmqPort.default = 36950;
 CHAIN_TEST.corePort.default = 51935;
 CHAIN_MAIN.zmqPort.default = 36750;
-CHAIN_TEST.corePort.default = 51735;
+CHAIN_MAIN.corePort.default = 51735;
 
 
 const SETTING_SCHEMA = Object.freeze({
