@@ -1,0 +1,92 @@
+<div class="container-block without-tab-bar">
+  <app-page-intro childPageAlias="particl-core-startup">
+    <ng-container page-title>Startup Configuration</ng-container>
+    <ng-container page-content>
+      Settings on this page control details relating to whether Particl Desktop should connect to an already running Particl Core node or start a new node.
+    </ng-container>
+    <ng-container page-help>
+    </ng-container>
+  </app-page-intro>
+
+  <div class="container">
+    <div class="content row">
+
+      <mat-card>
+        <h4 class="option">
+          Automatically Start/Connect Particl Core
+        </h4>
+        <p class="desc">When starting Particl Desktop, should Particl Desktop attempt to start (or connect to) Particl Core automatically?</p>
+        <p class="message --info">If this option is <b>not</b> selected, Particl Core will need to be started manually after starting Particl Desktop, using the controls in the sidebar.</p>
+        <div class="checkbox label">
+          <mat-checkbox class="align-top wrap" [formControl]="controlAutoStart">
+            <h4 class="option">Automatically start Particl Core</h4>
+          </mat-checkbox>
+        </div>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          Start New Particl Core Node
+        </h4>
+        <p class="desc">Indicates whether to start a new Particl Core node or connect to an already running node.</p>
+        <p class="desc">In most situations, starting a new Particl Core node is the correct option. Only if another application has started (and is currently managing) a Particl Core node should this option be un-selected.</p>
+        <p class="message --warning">Un-selecting this option will likely require authentication details to be provided in the relevant "Authentication" settings</p>
+        <div class="checkbox label">
+          <mat-checkbox class="align-top wrap" [formControl]="controlStartNew">
+            <h4 class="option">Start new Particl Core node</h4>
+          </mat-checkbox>
+        </div>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          Network Selection
+        </h4>
+        <p class="desc">Allows for selecting which network to connect to when starting a new Particl Core node.</p>
+        <p class="desc">Note that this selection only applies when starting a new Particl Core node. If Particl Core is already running, it will need to be stopped or disconnected from, and a new node started afterwards, in order to to take effect.</p>
+        <p class="message --info" *ngIf="!allowEditingNetwork">This is currently disabled since the application has been forced into a testing state, in which case the relevant testing network will be enforced (this helps to ensure that testing builds do not result in real funds being used).</p>
+        <p class="message --warning" *ngIf="allowEditingNetwork">This should only typically be changed away from the main network when wanting to test functionality!</p>
+
+        <mat-radio-group  class="from-balance-type block-radio"
+                          fxLayout="column"
+                          fxLayoutGap="10px"
+                          [formControl]="controlNetwork">
+          <mat-radio-button class="balance" fxFlex value="main"><div class="name">Main</div></mat-radio-button>
+          <mat-radio-button class="balance" fxFlex value="test"><div class="name">Test</div></mat-radio-button>
+          <mat-radio-button class="balance" fxFlex value="regtest"><div class="name">RegTest</div></mat-radio-button>
+        </mat-radio-group>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          Custom Data Directory
+        </h4>
+        <p class="desc">By default, Particl Core uses a default data directory. If the default data directory is not possible to be used, then a custom directory can be specified here.</p>
+        <p class="desc">Note that this selection only applies when starting a new Particl Core node. If Particl Core is already running, it will need to be stopped or disconnected from, and a new node started afterwards, in order to to take effect.</p>
+        <p class="message --info">Leave this value blank to make use of the default data directory.</p>
+        <p class="message --warning">Changing data directories changes all Particl Core related data, including wallets available! Please do not change this unless you know what you are doing!</p>
+
+
+            <h4 class="option">
+              Custom data directory (leave blank for default):
+            </h4>
+            <div fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="start center">
+            <mat-form-field class="full-width --larger --plain" appearance="fill">
+              <input matInput [formControl]="controlDataDir">
+            </mat-form-field>
+            <button mat-raised-button class="small" appDebounceClick (debounceClick)="actionSelectDataDir()" matTooltip="Select location" matTooltipPosition="after">
+              &hellip;
+            </button>
+            <button mat-raised-button class="small" color="warn" appDebounceClick (debounceClick)="actionClearSelectDataDir()" matTooltip="Clear selection" matTooltipPosition="after">
+              <mat-icon fontIcon="part-cross"></mat-icon>
+            </button>
+
+        </div>
+      </mat-card>
+
+    </div>
+
+  </div>
+</div>
+
+

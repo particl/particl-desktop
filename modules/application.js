@@ -89,13 +89,22 @@ exports.init = () => {
 
       concatMap(() => {
         return timer(UPDATE_TIMEOUT).pipe(
-          tap({ next: () => checkerSubject.next()}),
+          tap({ next: () => {
+              if (checkerSubject) {
+                try {
+                  checkerSubject.next();
+                } catch (_) { }
+              }
+            }
+          }),
           takeUntil(checkerSubject)
         )
       })
     ).subscribe();
 
-    checkerSubject.next();
+    try {
+      checkerSubject.next();
+    } catch (_) { }
   }
 
 }

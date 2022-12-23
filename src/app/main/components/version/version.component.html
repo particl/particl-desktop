@@ -1,12 +1,12 @@
 <mat-content class="client-version">
   <div class="daemon item">
-    Core
+    Core:
     <span class="version">
       {{ daemonVersion$ | async }}
     </span>
   </div>
   <div class="client item">
-    Client
+    Client:
     <span class="version" [ngClass]="(hasNewerClientVersion$ | async) ? 'outdated' : 'current' " [matTooltip]=" clientUpdateText " matTooltipPosition="right">
       <span class="dot"></span>
       <span class="selectable">{{ clientVersion$ | async }}</span>

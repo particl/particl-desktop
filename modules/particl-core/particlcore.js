@@ -44,7 +44,7 @@ const CHAIN_PROPERTIES = {
     title: 'Particl Core Host IP Address',
     description: 'The ip address on which to connect to Particl Core',
     type: 'string',
-    pattern: '^(?:http(s)?:\\/\\/)?[\\w.-]+$',
+    pattern: '^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$',
     default: '127.0.0.1'
   },
   params: {
@@ -331,13 +331,13 @@ module.exports = class ParticlCore extends CoreInstance {
   }
 
 
-  updateSettings(settingsType, newSettings) {
+  updateSettings(newSettings) {
     // TODO: some validation here would probably be necessary, maybe instead return some sort of error on failed update
     try {
       this.#settingsRef.set(newSettings);
       this.#settingsValues = this.#settingsRef.store;
     } catch(err) {
-      _log.err(`Particl Update Settings failed: `, err.message);
+      _log.error(`Particl Core Update Settings failed: `, err.message);
       return false;
     }
 
@@ -528,6 +528,7 @@ module.exports = class ParticlCore extends CoreInstance {
         this.#updateStatus({
           message: 'Failed to connect to Particl Core instance',
           hasError: true,
+          started: STARTED_STATUS.STOPPED
         });
         return;
       }

@@ -1,0 +1,46 @@
+<div class="container-block without-tab-bar">
+  <app-page-intro childPageAlias="particl-core-proxy">
+    <ng-container page-title>Proxy / Tor Configuration</ng-container>
+    <ng-container page-content>
+      Particl Core can be configured to connect via a proxy with other Particl nodes. Typically this might be the Tor network, an open-source annonymous communications network that aims to protect the privacy, freedom and confidentiality of its users through IP address annonymity.
+    </ng-container>
+    <ng-container page-help>
+    </ng-container>
+  </app-page-intro>
+
+  <div class="container">
+    <div class="content row">
+
+      <mat-card>
+          <h4 class="option">Use a (Tor) proxy</h4>
+          <p class="desc">Instruct Particl Core to connect via a proxy.</p>
+          <p class="desc">Note that this selection only applies when starting a new Particl Core node. If Particl Core is already running, it will need to be stopped or disconnected from, and a new node started afterwards, in order to to take effect.</p>
+          <div class="checkbox label">
+            <mat-checkbox class="align-top wrap" [formControl]="controlUseProxy">
+              <h4 class="option">Use a (Tor) Proxy</h4>
+            </mat-checkbox>
+          </div>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          Proxy Address
+        </h4>
+        <p class="desc">The address of the proxy to connect through.</p>
+        <p class="desc">The default Tor proxy address is provided as a default option, but if it has been customized, or an alternative proxy is being used, the address below should be edited accordingly.</p>
+        <p class="desc">Note that this selection only applies when starting a new Particl Core node. If Particl Core is already running, it will need to be stopped or disconnected from, and a new node started afterwards, in order to to take effect.</p>
+        <label>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlProxyAddress.invalid ? 'warn' : 'primary'">
+            <p class="message --warning" *ngIf="controlProxyAddress.invalid && (controlProxyAddress.dirty || controlProxyAddress.touched)">
+              Invalid Proxy address provided
+            </p>
+            <input matInput
+              placeholder="Example: http://127.0.0.1:9050"
+              [formControl]="controlProxyAddress">
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+    </div>
+  </div>
+</div>

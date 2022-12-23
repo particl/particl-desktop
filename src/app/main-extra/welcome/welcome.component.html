@@ -17,6 +17,7 @@
         <ng-container *ngFor="let app of appmodules">
           <a  *appVar="(app.activatorObs | async) as linkIsActive"
             class="app item"
+            [class.start-here]="(app.showCoreStartBanner | async)"
             [ngClass]="linkIsActive ? 'active' : 'disabled'"
             [routerLink]="linkIsActive ? app.route : null"
           >

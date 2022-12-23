@@ -17,8 +17,9 @@ export const routes: Routes = [
         data: {
           showShortcut: false,
           icon: 'part-globe',
-          title: 'Core',
-          description: 'Particl Core configuration and settings',
+          title: 'Particl Core',
+          description: 'Particl Core startup settings',
+          blockchainCore: 'particl',
         }
       },
       { path: 'wallet',

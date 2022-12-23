@@ -1,3 +1,50 @@
 <main-layout-default>
 
+  <ng-container ngProjectAs="menu">
+    <div class="menu-items">
+      <ng-container *ngFor="let menuItem of menu">
+        <a class="menu-item" routerLinkActive="active" [routerLink]="menuItem.path">
+          <ng-container *ngIf="menuItem.icon?.length > 0">
+            <mat-icon [fontIcon]="menuItem.icon"></mat-icon>
+          </ng-container>
+          <span class="text">{{menuItem.text}}</span>
+          &nbsp;&nbsp;
+          <mat-icon fontIcon="part-next-single"></mat-icon>
+        </a>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container ngProjectAs="sidebar">
+    <div class="menu-items">
+      <div class="menu-item status" *ngIf="startedStatus.statusLabel.length > 0">
+        <mat-icon fontIcon="part-circle-info"></mat-icon>
+        <span class="text">
+          {{ startedStatus.statusLabel }}
+        </span>
+      </div>
+      <a  class="menu-item status actionable"
+          *ngIf="startedStatus.canStart || startedStatus.canStop"
+          [class.started]="startedStatus.canStop"
+          [class.stopped]="startedStatus.canStart"
+          appDebounceClick (debounceClick)="actionCoreStatus()"
+      >
+        <mat-icon [fontIcon]="startedStatus.icon" [color]="startedStatus.isStarted ? 'primary' : 'warn'"></mat-icon>
+        <span class="text">
+          {{ startedStatus.actionLabel  }}
+        </span>
+      </a>
+    </div>
+  </ng-container>
+
+  <main-topbar></main-topbar>
+
+  <div class="status-info-update" fxLayoutAlign="stretch center" *ngIf="startedStatus.statusLabel.length > 0">
+    <p class="desc" color="secondary" fxFlex="1 1 100%">
+      <mat-icon fontIcon="part-circle-info" color="accent"></mat-icon>
+      {{ coreActionStatus }}
+    </p>
+  </div>
+  <router-outlet></router-outlet>
+
 </main-layout-default>

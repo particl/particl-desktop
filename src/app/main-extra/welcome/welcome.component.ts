@@ -25,6 +25,7 @@ export class WelcomeComponent implements OnDestroy {
     title: string;
     desc: string;
     activatorObs: Observable<boolean>;
+    showCoreStartBanner: Observable<boolean>;
   }[] = [];
 
   @Select(ApplicationConfigState.moduleVersions('app')) clientVersion$: Observable<string>;
@@ -57,6 +58,7 @@ export class WelcomeComponent implements OnDestroy {
               title: rc.data.title || '',
               desc: rc.data.description || '',
               activatorObs: this.getRouteActivationObservable(rc.data.networkDependencies),
+              showCoreStartBanner: this.getDisplayCoreStatusBanner(rc.data.blockchainCore),
             });
           }
         });
@@ -68,6 +70,14 @@ export class WelcomeComponent implements OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+
+  private getDisplayCoreStatusBanner(coreNetwork: string | undefined): Observable<boolean> {
+    if (!coreNetwork) {
+      return of(false);
+    }
+    return this._networkInitService.monitorNetworkStartedStatus(coreNetwork).pipe(map(started => !started), takeUntil(this.destroy$));
   }
 
 

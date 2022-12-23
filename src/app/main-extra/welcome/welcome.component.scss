@@ -164,9 +164,15 @@ body {
           &.part-swap {
             color: var(--color-warning);
           }
+          &.part-globe {
+            color: #fab114;
+          }
         }
         &.disabled .mat-icon {
           color: var(--text-muted);
+        }
+        &.start-here {
+          animation: app-start-here 3s infinite;
         }
         .name {
           margin: 14px 0 8px;
@@ -284,5 +290,14 @@ body {
   }
   100% {
     flex: 0 0 550px;
+  }
+}
+
+@keyframes app-start-here {
+  0% {
+    border: 5px solid  rgba(250, 177, 20, 0);;
+  }
+  100% {
+    border: 5px solid  rgba(250, 177, 20, 1);
   }
 }
