@@ -1,7 +1,7 @@
 {
   "name": "particl-desktop",
   "productName": "Particl Desktop",
-  "version": "3.2.2",
+  "version": "3.3.0-test",
   "branch": "3.2",
   "preRelease": "",
   "license": "GPL-2.0",
@@ -13,8 +13,8 @@
   "author": "Particl contributors",
   "main": "main.js",
   "appVersions": {
-    "wallet": "1.7.0",
-    "governance": "0.1.0"
+    "wallet": "1.8.0",
+    "governance": "0.2.0"
   },
   "browserslist": [
     "defaults",
@@ -156,7 +156,7 @@
           ]
         }
       ],
-      "executableName": "Particl Desktop",
+      "executableName": "particl-desktop",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl-desktop",
@@ -164,11 +164,14 @@
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
-        "Categories": "P2P;Finance;Security"
+        "Keywords": "P2P;Finance;Security"
       },
       "category": "Finance",
       "packageCategory": "wallet",
-      "icon": "resources/linux"
+      "icon": "resources/linux/"
+    },
+    "deb": {
+      "depends": ["libnotify4", "libxtst6", "libnss3"]
     },
     "asar": true,
     "asarUnpack": [
