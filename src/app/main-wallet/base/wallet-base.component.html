@@ -54,7 +54,7 @@
       <div class="app item">
         <!-- App name -->
         Wallet
-        <span class="version">{{ walletVersion }}</span>
+        <span class="version">{{ walletVersion$ | async }}</span>
       </div>
     </mat-content>
   </ng-container>

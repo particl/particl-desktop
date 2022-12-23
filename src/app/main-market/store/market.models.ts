@@ -46,11 +46,13 @@ export interface MarketSettings {
   defaultListingCommentPageCount: number;
   daysToNotifyListingExpired: number;
   marketsLastAdded: number;
+  txUrl: string;
 }
 
 
 export interface DefaultMarketConfig {
   url: string;
+  port: number;
   imagePath: string;
   imageMaxSizeFree: number;
   imageMaxSizePaid: number;
@@ -80,4 +82,17 @@ export interface MarketStateModel {
   settings: MarketSettings;
   notifications: MarketNotifications;
   lastSmsgScanIssued: number;
+}
+
+
+export namespace IPCResponses {
+  export interface GetSettings {
+    network?: {
+      port: number;
+      timeout: number;
+    };
+    urls?: {
+      transaction: string;
+    };
+  }
 }

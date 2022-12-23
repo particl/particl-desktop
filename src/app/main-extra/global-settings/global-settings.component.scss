@@ -27,6 +27,14 @@ hr.divider {
     & > .sidebar {
       flex: 0 0 var(--settings-sidebar-width);
       margin-right: var(--paddingH);
+
+      .buttons {
+        margin-top: 24px;
+
+        button {
+          margin-bottom: 12px;
+        }
+      }
     }
     & > .content {
       flex: 1 1 100%;
@@ -100,11 +108,32 @@ hr.divider {
   @include break(xl) {
     font-size: 16px;
   }
+
+  &.sub-heading {
+    padding-top: var(--item-paddingV);
+    padding-bottom: calc(var(--item-paddingV) / 2);
+  }
 }
 
 .desc { // help text for ^
   @extend %help-text;
   margin: 0;
+
+  &.sub-heading {
+    margin-right: var(--item-paddingH);
+    margin-left: var(--item-paddingH);
+  }
+
+  &.wrap {
+    word-break: break-all;
+    max-width: 80%;
+  }
+}
+
+.domain-input {
+  padding-right: var(--item-paddingH);
+  padding-left: var(--item-paddingH);
+  padding-bottom: var(--item-paddingV);
 }
 
 .buttons { // action buttons in options

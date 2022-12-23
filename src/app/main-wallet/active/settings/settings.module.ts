@@ -9,6 +9,8 @@ import { WalletBackupModalComponent } from './wallet-backup-modal/wallet-backup-
 import { ChangeWalletPasswordModalComponent } from './change-wallet-password-modal/change-wallet-password-modal.component';
 import { DeriveWalletModalComponent } from './derive-wallet-modal/derive-wallet-modal.component';
 import { WalletSettingsService } from './settings.service';
+import { GeneralConfigComponent } from './categories/general-config/general-config.component';
+import { WalletSpecificSettingsComponent } from './categories/wallet-settings/wallet-settings.component';
 
 
 const routes: Routes = [
@@ -27,15 +29,20 @@ const routes: Routes = [
     RouterModule
   ],
   declarations: [
-    WalletSettingsComponent,
+
     WalletBackupModalComponent,
     ChangeWalletPasswordModalComponent,
     DeriveWalletModalComponent,
+    WalletSpecificSettingsComponent,
+    GeneralConfigComponent,
+    WalletSettingsComponent,
   ],
   entryComponents: [
     WalletBackupModalComponent,
     ChangeWalletPasswordModalComponent,
     DeriveWalletModalComponent,
+    WalletSpecificSettingsComponent,
+    GeneralConfigComponent,
   ],
   providers: [
     WalletSettingsService,

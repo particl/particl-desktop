@@ -1,16 +1,14 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { FormControl } from '@angular/forms';
-import { Observable, Subject, merge } from 'rxjs';
-import { takeUntil, skipWhile, tap, distinctUntilChanged, switchMap, map, shareReplay } from 'rxjs/operators';
+import { Observable, Subject, merge, of } from 'rxjs';
+import { takeUntil, skipWhile, tap, distinctUntilChanged, switchMap, map, shareReplay, catchError } from 'rxjs/operators';
 
-import { Store } from '@ngxs/store';
-import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
+import { Select, Store } from '@ngxs/store';
+import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
+import { Particl, ParticlWalletService } from 'app/networks/networks.module';
 import { GovernanceState } from '../store/governance-store.state';
-import { MainActions } from 'app/main/store/main.actions';
-import { WalletInfoService } from 'app/main/services/wallet-info/wallet-info.service';
 
-import { environment } from 'environments/environment';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { GovernanceService } from './governance.service';
 
@@ -20,7 +18,7 @@ import { ProcessingModalComponent } from 'app/main/components/processing-modal/p
 enum TextContent {
   ROUTE_LABEL_PROPOSALS = 'Proposals',
   ROUTE_LABEL_ABOUT = 'About & Howto',
-  UNKNOWN_WALLET = '<invalid>',
+  UNKNOWN_WALLET = '<no wallet selected>',
   DEFAULT_WALLETNAME = 'Default Wallet',
   REFRESH_ERROR = 'Updating of the proposals failed',
   WALLET_LOADING = 'Activating the selected wallet',
@@ -48,7 +46,8 @@ interface Wallet {
 })
 export class GovernanceBaseComponent implements OnInit, OnDestroy {
 
-  readonly clientVersion: string = environment.governanceVersion || '';
+  @Select(ApplicationConfigState.moduleVersions('governance')) clientVersion: Observable<string>;
+
   readonly menu: MenuItem[] = [
     { path: 'proposals', icon: 'part-vote', text: TextContent.ROUTE_LABEL_PROPOSALS },
     { path: 'about-howto', icon: 'part-circle-info', text: TextContent.ROUTE_LABEL_ABOUT },
@@ -67,18 +66,18 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
     private _store: Store,
     private _snackbar: SnackbarService,
     private _govService: GovernanceService,
-    private _walletInfo: WalletInfoService,
+    private _walletInfo: ParticlWalletService,
     private _dialog: MatDialog
   ) {
     this._govService.startPolling();
 
-    this.selectedWallet$ = this._store.select(WalletInfoState.getValue('walletname')).pipe(
+    this.selectedWallet$ = this._store.select(Particl.State.Wallet.Info.getValue('walletname')).pipe(
       map((walletName: string) => this.formatWalletDetails(walletName)),
       shareReplay(1),
       takeUntil(this.destroy$)
     );
 
-    this.currentWalletBalance$ = this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(
+    this.currentWalletBalance$ = this._store.select(Particl.State.Wallet.Balance.spendableAmountPublic()).pipe(
       takeUntil(this.destroy$)
     );
 
@@ -104,6 +103,7 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
             this.formatWalletDetails(wallet.name)
           )
         ),
+        catchError(() => of([]))
       )),
       takeUntil(this.destroy$)
     );
@@ -114,7 +114,11 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
     merge(
       this._store.select(GovernanceState.requestDidError()).pipe(
         skipWhile(didError => !didError),
-        tap(() => this._snackbar.open(TextContent.REFRESH_ERROR, 'warn')),
+        tap((didError) => {
+          if (didError) {
+            this._snackbar.open(TextContent.REFRESH_ERROR, 'warn');
+          }
+        }),
         takeUntil(this.destroy$)
       ),
 
@@ -122,7 +126,9 @@ export class GovernanceBaseComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         skipWhile(walletName => typeof walletName !== 'string'),
         tap(() => this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.WALLET_LOADING}})),
-        switchMap((walletName) => this._store.dispatch(new MainActions.ChangeWallet(walletName)).pipe(tap(() => this._dialog.closeAll()))),
+        switchMap((walletName) =>
+          this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(walletName)).pipe(tap(() => this._dialog.closeAll()))
+        ),
         takeUntil(this.destroy$)
       ),
     ).subscribe();

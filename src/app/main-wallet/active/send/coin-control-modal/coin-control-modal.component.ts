@@ -2,15 +2,15 @@ import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatDialogRef, MatCheckboxChange } from '@angular/material';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { takeUntil, tap } from 'rxjs/operators';
 
-import { Store, Select } from '@ngxs/store';
-import { WalletBalanceState } from 'app/main/store/main.state';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { Store } from '@ngxs/store';
+import { Particl } from 'app/networks/networks.module';
 
-import { PublicUTXO, BlindUTXO, AnonUTXO } from 'app/main/store/main.models';
+import { PublicUTXO, BlindUTXO, AnonUTXO } from 'app/networks/particl/particl.models';
 import { PartoshiAmount } from 'app/core/util/utils';
+import { WalletURLState } from 'app/main-wallet/shared/state-store/wallet-store.state';
 
 
 enum TextContent {
@@ -57,8 +57,7 @@ export interface CoinControlModalData {
 })
 export class CoinControlModalComponent implements OnInit, OnDestroy {
 
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
-
+  addressURL: string = '';
   availableUTXOs: UTXOListItem[] = [];
   selectedCount: number = 0;
   selectedTotal: string = '0';
@@ -115,12 +114,22 @@ export class CoinControlModalComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
+
+    this._store.select(WalletURLState.get('address')).pipe(
+      tap({
+        next: (addressURL) => {
+          this.addressURL = typeof addressURL === 'string' ? addressURL : '';
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+
     let func: any;
 
     switch (this.utxoType) {
-      case 'public': func = WalletBalanceState.utxosPublic; break;
-      case 'blind': func = WalletBalanceState.utxosBlind; break;
-      case 'anon': func = WalletBalanceState.utxosAnon; break;
+      case 'public': func = Particl.State.Wallet.Balance.utxosPublic; break;
+      case 'blind': func = Particl.State.Wallet.Balance.utxosBlind; break;
+      case 'anon': func = Particl.State.Wallet.Balance.utxosAnon; break;
       default: func = null;
     }
 

@@ -24,7 +24,6 @@ export class BuyComponent implements OnInit, OnDestroy {
 
   readonly tabs: BuyTab[] = [
     { title: 'Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
-    // { title: 'Answers', icon: 'part-chat-discussion', templ: 'comments', notificationValue: null},
   ];
 
 

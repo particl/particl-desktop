@@ -8,8 +8,8 @@ import {
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
-import { WalletInfoState } from 'app/main/store/main.state';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { Particl } from 'app/networks/networks.module';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
 
 import { ChatConversationModalComponent, ChatConversationModalInputs } from './../../shared/chat-conversation-modal/chat-conversation-modal.component';
 import {
@@ -125,7 +125,7 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
         });
 
         if (identity.id > 0) {
-          const walletState: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
+          const walletState = this._store.selectSnapshot<WalletInfoStateModel>(Particl.State.Wallet.Info);
           this.identityIsEncrypted = (+walletState.unlocked_until > 0) || (walletState.encryptionstatus !== 'Unencrypted');
         }
         this.currentyIdentityId = +identity.id > 0 ? +identity.id : 0;

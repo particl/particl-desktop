@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subject, fromEvent, merge } from 'rxjs';
-import { map, filter, tap, takeUntil, auditTime, debounceTime } from 'rxjs/operators';
-import { Log } from 'ng2-logger';
-import { Store, Actions, ofActionDispatched, ofActionCompleted } from '@ngxs/store';
-import { MainActions } from '../store/main.actions';
-import { ZMQ } from 'app/core/store/app.actions';
-import * as zmqOptions from '../../../../modules/zmq/services.js';
+import { Subject, fromEvent, iif, defer, of, merge } from 'rxjs';
+import { map, filter, tap, takeUntil, distinctUntilChanged, concatMap } from 'rxjs/operators';
+import { Actions, ofActionCompleted, Store } from '@ngxs/store';
+import { BackendService } from 'app/core/services/backend.service';
+import { Particl, ParticlWalletService } from 'app/networks/networks.module';
+import { NetworkInitService } from '../services/network-init/network-init.service';
 
 
 /*
@@ -23,49 +22,69 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showAppSelector: boolean = true;
 
-  private log: any = Log.create('main.component id: ' + Math.floor((Math.random() * 1000) + 1));
-  private unsubscribe$: Subject<void> = new Subject();
+  private destroy$: Subject<void> = new Subject();
 
   constructor(
     private _store: Store,
-    private _actions$: Actions
-  ) {
-
-    const blockWatcher$ = this._actions$.pipe(
-      ofActionDispatched(ZMQ.UpdateStatus),
-      filter((action: ZMQ.UpdateStatus) => action.field === 'hashtx'),
-      auditTime(zmqOptions.throttledSeconds * 1000), // rate-limited to max every x seconds
-      takeUntil(this.unsubscribe$)
-    );
-
-    const walletChanger$ = this._actions$.pipe(
-      ofActionCompleted(MainActions.ChangeWallet),
-      takeUntil(this.unsubscribe$)
-    );
-
-    const walletInit$ = this._actions$.pipe(
-      ofActionCompleted(MainActions.Initialize),
-      takeUntil(this.unsubscribe$)
-    );
-
-    // Create pipeline to update various additional necessary wallet details
-    merge(
-      blockWatcher$,
-      walletChanger$,
-      walletInit$
-    ).pipe(
-      debounceTime(500),
-      takeUntil(this.unsubscribe$)
-    ).subscribe(
-      () => {
-        this._store.dispatch(new MainActions.LoadWalletData());
-      }
-    );
-  }
+    private _actions: Actions,
+    private _backendService: BackendService,
+    private _networkInitService: NetworkInitService,
+    private _particlWalletService: ParticlWalletService,
+  ) { }
 
   ngOnInit() {
-    this.log.d('Main.Component constructed');
-    this._store.dispatch(new MainActions.Initialize(true));
+
+    this._networkInitService.requestInitializeNetworks();
+
+    merge(
+      // load Particl last active wallet once the Particl blockchain is running
+      this._store.select(Particl.State.Core.isRunning()).pipe(
+        distinctUntilChanged(),
+        concatMap(isRunning => iif(
+          () => isRunning,
+          defer(() =>
+            // fetch the last wallet loaded from the backend
+            this._backendService.sendAndWait<string | null>('apps:particl-wallet:lastActiveWallet').pipe(
+              concatMap(walletName => {
+                  const toLoadName = typeof walletName === 'string' ? walletName : '';
+
+                  return this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(toLoadName)).pipe(
+                    concatMap(() => {
+                      // check that the wallet loaded is the same as the requested
+                      const loadedName = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname'));
+                      if (loadedName !== toLoadName) {
+                        // loaded wallet doesn't match, so fallback to whatever the first current loaded wallet is
+                        return this._particlWalletService.listLoadedWallets().pipe(
+                          tap({
+                            next: loadedWallets => {
+                              if (Array.isArray(loadedWallets) && loadedWallets.length > 0) {
+                                this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(loadedWallets[0]));
+                              }
+                            }
+                          })
+                        );
+                      }
+                      return of({});
+                    })
+                  );
+              })
+            )
+          )
+        )),
+        takeUntil(this.destroy$)
+      ),
+
+      // set the last active Particl wallet when the wallet is changed
+      this._actions.pipe(ofActionCompleted(Particl.Actions.WalletActions.ChangeWallet)).pipe(
+        tap({
+          next: () => {
+            const walletName = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname'));
+            this._backendService.send('apps:particl-wallet:setActiveWallet', walletName);
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+    ).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
 
@@ -84,13 +103,13 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
       }),
       filter(Boolean),
       tap(() => document.execCommand('Paste')),
-      takeUntil(this.unsubscribe$)
+      takeUntil(this.destroy$)
     ).subscribe();
   }
 
 
   ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

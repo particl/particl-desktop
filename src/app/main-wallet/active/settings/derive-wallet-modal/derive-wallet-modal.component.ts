@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Observable, Subject } from 'rxjs';
 
 import { Select } from '@ngxs/store';
-import { WalletInfoState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletSettingsService } from '../settings.service';
@@ -26,7 +26,7 @@ enum TextContent {
 })
 export class DeriveWalletModalComponent implements OnDestroy {
 
-  @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
+  @Select(Particl.State.Wallet.Info.getValue('walletname')) walletName: Observable<string>;
 
 
   derivedForm: FormGroup = new FormGroup({

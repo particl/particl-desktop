@@ -2,8 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
 import { Select, Store } from '@ngxs/store';
-import { WalletStakingState, WalletInfoState } from 'app/main/store/main.state';
-import { WalletDetailActions } from 'app/main/store/main.actions';
+import { Particl } from 'app/networks/networks.module';
 import { Observable, Subject, iif, defer, combineLatest, merge } from 'rxjs';
 import { takeUntil, concatMap, take, tap, finalize } from 'rxjs/operators';
 
@@ -14,7 +13,7 @@ import { ZapColdstakingModalComponent } from './zap-coldstaking-modal/zap-coldst
 import { DisableColdstakingConfirmationModalComponent } from './disable-coldstaking-confirmation-modal/disable-coldstaking-confirmation-modal.component';
 import { ColdStakeModalComponent } from './coldstake-modal/coldstake-modal.component';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { CoreErrorModel } from 'app/core/core.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 enum TextContent {
@@ -37,7 +36,7 @@ enum TextContent {
 })
 export class ColdstakeWidgetComponent implements OnDestroy {
 
-  @Select(WalletStakingState.getValue('cold_staking_enabled')) isActivated: Observable<boolean>;
+  @Select(Particl.State.Wallet.Staking.getValue('cold_staking_enabled')) isActivated: Observable<boolean>;
 
   isUnlocked: boolean = false;
   isProcessing: boolean = false;
@@ -58,14 +57,14 @@ export class ColdstakeWidgetComponent implements OnDestroy {
 
     merge(
 
-      this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
+      this._store.select(Particl.State.Wallet.Info.getValue('encryptionstatus')).pipe(
         tap((value: string) => this.isUnlocked = ['Unlocked', 'Unlocked, staking only', 'Unencrypted'].includes(value)),
         takeUntil(this.destroy$)
       ),
 
       combineLatest([
-        this._store.select(WalletStakingState.getValue('percent_in_coldstakeable_script')).pipe(takeUntil(this.destroy$)),
-        this._store.select(WalletStakingState.getValue('coin_in_stakeable_script')).pipe(takeUntil(this.destroy$)),
+        this._store.select(Particl.State.Wallet.Staking.getValue('percent_in_coldstakeable_script')).pipe(takeUntil(this.destroy$)),
+        this._store.select(Particl.State.Wallet.Staking.getValue('coin_in_stakeable_script')).pipe(takeUntil(this.destroy$)),
       ]).pipe(
         tap((values: [boolean, boolean]) => {
           this.coldStakePercent = +values[0];
@@ -135,10 +134,10 @@ export class ColdstakeWidgetComponent implements OnDestroy {
 
       () => {
         this.refreshState();
-        this._snackbar.open(TextContent.ACTIVATE_SUCCESS, '');
+        this._snackbar.open(TextContent.ACTIVATE_SUCCESS, 'success');
       },
 
-      (err: CoreErrorModel) => {
+      (err: RPCResponses.Error) => {
         const errorMessage = ((typeof err !== 'string') && err.code && (err.code === -8)) ?
             TextContent.ACTIVATE_ERROR_ADDRESS :
             TextContent.ACTIVATE_ERROR_GENERIC;
@@ -168,11 +167,11 @@ export class ColdstakeWidgetComponent implements OnDestroy {
         this.refreshState();
 
         if (estimationResults.count === 0 && actualResults.count === 0) {
-          this._snackbar.open(TextContent.REVERT_SUCCESS_NO_TXS, '');
+          this._snackbar.open(TextContent.REVERT_SUCCESS_NO_TXS, 'success');
         } else if (actualResults.errors > 0) {
           this._snackbar.open(TextContent.REVERT_PARTIAL_SUCCESS, 'warn');
         } else {
-          this._snackbar.open(TextContent.REVERT_SUCCESS, '');
+          this._snackbar.open(TextContent.REVERT_SUCCESS, 'success');
         }
       },
       (err) => {
@@ -205,8 +204,8 @@ export class ColdstakeWidgetComponent implements OnDestroy {
 
   private refreshState(): void {
     this._store.dispatch([
-      new WalletDetailActions.GetColdStakingInfo(),
-      new WalletDetailActions.RefreshBalances()
+      new Particl.Actions.WalletActions.UpdateColdStakingInfo(),
+      new Particl.Actions.WalletActions.RefreshBalances()
     ]);
   }
 }

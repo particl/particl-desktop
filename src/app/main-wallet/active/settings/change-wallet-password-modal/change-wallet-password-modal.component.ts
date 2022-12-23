@@ -6,7 +6,7 @@ import { Observable, of, defer } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';
-import { WalletInfoState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletSettingsService } from '../settings.service';
 
@@ -38,7 +38,7 @@ const unchangedValidator: ValidatorFn = (control: AbstractControl): ValidationEr
 })
 export class ChangeWalletPasswordModalComponent {
 
-  @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
+  @Select(Particl.State.Wallet.Info.getValue('walletname')) walletName: Observable<string>;
 
   showCurrent: boolean = false;
   showNew: boolean = false;

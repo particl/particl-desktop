@@ -1,0 +1,66 @@
+<div class="container-block without-tab-bar">
+  <app-page-intro childPageAlias="particl-core-authentication">
+    <ng-container page-title>Core RPC Authentication</ng-container>
+    <ng-container page-content>
+      Applications typically connect to Particl Core using its RPC service. This RPC service usually requires authentication parameters, which can either be generated and obtained automatically (from a cookie file) or from user-provided authentication details.
+    </ng-container>
+    <ng-container page-help>
+    </ng-container>
+  </app-page-intro>
+
+  <div class="container">
+    <div class="content row">
+
+      <mat-card>
+          <h4 class="option">Use RPC cookie file</h4>
+          <p class="desc">When starting a new Particl Core instance, Particl Core can generate single use credentials for connecting to its RPC services. These credentials are read in and made available to Particl Desktop applications without user intervention.</p>
+          <p class="desc">However, if Particl Desktop is not managing the Particl Core node (ie: connecting to a remote Particl Core node instead of starting a new Particl Core node), or custom supplied credentials are wanted to be used, then unselect this option to provide connection details.</p>
+          <p class="message --warning">If connecting to a remote Particl Core node, but the running Particl Core node is running from either of the default location on the current machine, or from a specified custom data directory, then it may be possible to still read the Particl Core generated cookie file.
+            If authentication fails, it may be necessary to configure the remote node with custom RPC credentials and un-select this option to provide the custom RPC credentials further below.</p>
+          <div class="checkbox label">
+            <mat-checkbox class="align-top wrap" [formControl]="controluseCookie">
+              <h4 class="option">Use Particl Core cookie file for authentication</h4>
+            </mat-checkbox>
+          </div>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          RPC Username
+        </h4>
+        <p class="desc">Allows for a custom username to be used for RPC connections.</p>
+        <p class="desc">Starting a new Particl Core node starts the RPC service with this username, and Particl Desktop applications using the RPC service will use this username for data requests.</p>
+        <p class="desc">If connecting to an already running Particl Core node, this username will be used to authenticate against the running instances' RPC service.</p>
+        <p class="message --warning" *ngIf="controlRpcUser.invalid">RPC Username is invalid</p>
+        <label>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlRpcUser.invalid ? 'warn' : 'primary'">
+            <input matInput
+              placeholder="RPC username"
+              [formControl]="controlRpcUser">
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          RPC Password
+        </h4>
+        <p class="desc">Allows for a custom password to be used for RPC connections.</p>
+        <p class="desc">Starting a new Particl Core node starts the RPC service with this password, and Particl Desktop applications using the RPC service will use this password for data requests.</p>
+        <p class="desc">If connecting to an already running Particl Core node, this password will be used to authenticate against the running instances' RPC service.</p>
+        <p class="message --warning" *ngIf="controlRpcPass.invalid">RPC Password is invalid</p>
+        <label>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlRpcPass.invalid ? 'warn' : 'primary'">
+            <input matInput
+              placeholder="RPC password"
+              [formControl]="controlRpcPass">
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+    </div>
+
+  </div>
+</div>
+
+

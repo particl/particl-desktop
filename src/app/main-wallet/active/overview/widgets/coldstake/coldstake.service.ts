@@ -1,30 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { WalletBalanceState } from 'app/main/store/main.state';
+
+import { Particl, ParticlRpcService } from 'app/networks/networks.module';
 import { Observable, of, forkJoin, throwError, iif, defer } from 'rxjs';
 import { catchError, map, concatMap, take, mapTo } from 'rxjs/operators';
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
 import { AddressService } from '../../../../shared/address.service';
 import {
   RpcColdStakingEnabled,
   RpcColdStakingDisabled,
-  RpcWalletsettingsChangeaddress,
-  RpcExtkeyAccount,
-  RpcListaddressgroupings,
   ZapStakingStrategy,
   ZapGroupDetailsType,
   ColdStakingDetails,
   SelectedInputs,
 } from './coldstake.models';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { PublicUTXO } from 'app/main/store/main.models';
+import { PublicUTXO, RPCResponses } from 'app/networks/particl/particl.models';
 
 
 @Injectable()
 export class ColdstakeService {
 
   constructor(
-    private _rpc: MainRpcService,
+    private _rpc: ParticlRpcService,
     private _addressService: AddressService,
     private _store: Store
   ) {}
@@ -65,8 +62,8 @@ export class ColdstakeService {
 
   fetchColdStakingDetails(): Observable<ColdStakingDetails> {
     return forkJoin({
-      spendAddress: this._rpc.call('extkey', ['account']).pipe(
-        map((resp: RpcExtkeyAccount) => {
+      spendAddress: this._rpc.call<RPCResponses.ExtKey.Account>('extkey', ['account']).pipe(
+        map((resp) => {
           if ((Object.prototype.toString.call(resp) === '[object Object]') && Array.isArray(resp.chains)) {
             const chain = resp.chains.find(
               c => (c.function === 'active_internal') && (typeof c.chain === 'string') && (c.chain.length > 0)
@@ -79,8 +76,8 @@ export class ColdstakeService {
         }),
       ),
 
-      stakeAddress: this._rpc.call('walletsettings', ['changeaddress']).pipe(
-        map((resp: RpcWalletsettingsChangeaddress) => {
+      stakeAddress: this._rpc.call<RPCResponses.WalletSettings.ChangeAddress>('walletsettings', ['changeaddress']).pipe(
+        map((resp: RpcColdStakingEnabled) => {
           if (
             (Object.prototype.toString.call(resp) === '[object Object]') &&
             (Object.prototype.toString.call(resp.changeaddress) === '[object Object]') &&
@@ -111,16 +108,16 @@ export class ColdstakeService {
 
   fetchZapGroupDetails(strategy: ZapStakingStrategy): Observable<ZapGroupDetailsType> {
     return forkJoin({
-      utxos: this._store.selectOnce<PublicUTXO[]>(WalletBalanceState.utxosPublic()).pipe(take(1)),
+      utxos: this._store.selectOnce<PublicUTXO[]>(Particl.State.Wallet.Balance.utxosPublic()).pipe(take(1)),
 
       groupings: iif(
         () => strategy !== ZapStakingStrategy.PRIVACY,
 
         defer(() => of(new Map<string, string>())),
 
-        defer(() => this._rpc.call('listaddressgroupings').pipe(
+        defer(() => this._rpc.call<RPCResponses.ListAddressGroupings>('listaddressgroupings').pipe(
 
-          map((groupings: RpcListaddressgroupings) => {
+          map((groupings) => {
             const addressGroups = new Map<string, string>();
             if (!Array.isArray(groupings)) {
               return addressGroups;
@@ -186,7 +183,7 @@ export class ColdstakeService {
 
 
   zapSelectedPrevouts(selectedPrevouts: SelectedInputs, spendAddress: string, stakeAddress: string ): Observable<boolean> {
-    return this._rpc.call('sendtypeto', [
+    return this._rpc.call<RPCResponses.SendTypeTo>('sendtypeto', [
       'part',
       'part',
       [ {
@@ -213,7 +210,7 @@ export class ColdstakeService {
     if (address && address.length) {
       params['coldstakingaddress'] = address;
     }
-    return this._rpc.call('walletsettings', ['changeaddress', params]);
+    return this._rpc.call<RpcColdStakingDisabled | RpcColdStakingEnabled>('walletsettings', ['changeaddress', params]);
   }
 
 
@@ -221,7 +218,7 @@ export class ColdstakeService {
     address: string,
     estimateOnly: boolean = true
   ): Observable<{count: number, errors: number, fee: PartoshiAmount}> {
-    const utxos = this._store.selectSnapshot<PublicUTXO[]>(WalletBalanceState.utxosPublic());
+    const utxos = this._store.selectSnapshot<PublicUTXO[]>(Particl.State.Wallet.Balance.utxosPublic());
     const actualValues: Array<{amount: number, inputs: {tx: string, n: number}}> = [];
     utxos.forEach(utxo => {
       if (!utxo.coldstaking_address || !utxo.address) {
@@ -231,7 +228,7 @@ export class ColdstakeService {
       }
     });
 
-    const sendtypeto = (utxo: {amount: number, inputs: {tx: string, n: number}}) => this._rpc.call('sendtypeto', [
+    const sendtypeto = (utxo: {amount: number, inputs: {tx: string, n: number}}) => this._rpc.call<RPCResponses.SendTypeTo>('sendtypeto', [
       'part',
       'part',
       [

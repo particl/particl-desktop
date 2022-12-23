@@ -16,175 +16,136 @@
 <ng-template #content>
 
   <div class="container">
-
     <div class="sidebar">
-
-      <div class="radio-switcher">
-        <label *ngFor="let group of settingGroups; index as groupIdx; trackBy: trackBySettingGroupFn">
-          <input type="radio" name="option" (change)="changeSelectedGroup(groupIdx)" [checked]="groupIdx === currentGroupIdx">
-          <div class="switcher-option" *ngIf="group.settings.length > 0" [class.--with-error]="group.errors.length">
-            <mat-icon [fontIcon]="group.icon"></mat-icon>
-            <span class="name">{{ group.name }}</span>
-          </div>
-        </label>
-      </div><!-- .radio-switcher -->
+      <div class="buttons">
+        <button mat-button appDebounceClick (debounceClick)="actionShowTerms()">
+          <mat-icon fontIcon="part-document"></mat-icon>
+          Terms and Conditions
+        </button>
+      </div>
 
     </div><!-- .sidebar -->
 
 
     <div class="content row">
       <div class="third">
-        <ng-container *ngIf="currentGroup.settings.length > 0">
-          <h2 class="section-title"> {{ currentGroup.name }} </h2>
-          <mat-card>
-            <ng-container *ngFor="let setting of currentGroup.settings; index as settingIdx; last as isLastSetting; trackBy: trackBySettingFn">
-              <div class="item" [ngSwitch]="setting.type" [ngClass]="setting.errorMsg ? '--with-error' : ''">
 
-                <!-- ========= BOOLEAN ========= -->
+        <h2 class="section-title"> Particl Desktop Configuration </h2>
 
-                <ng-container *ngSwitchCase="settingType.BOOLEAN">
-                  <div class="checkbox label">
-                    <mat-checkbox
-                      class="align-top wrap"
-                      [disabled]="setting.isDisabled"
-                      [(ngModel)]="setting.newValue"
-                      (change)="settingChangedValue(settingIdx)">
-                      <h4 class="option">
-                        {{ setting.title }}
-                        <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                        <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
-                      </h4>
-                      <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                    </mat-checkbox>
-                    <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-                  </div>
-                </ng-container>
+        <mat-card>
+          <ng-container *ngFor="let setting of settings; index as settingIdx; trackBy: trackBySettingFn">
+            <div class="item" [ngSwitch]="setting.type">
 
-                <!-- ========= NUMBER ========= -->
+              <ng-container *ngSwitchCase="'select'">
+                <label>
+                  <h4 class="option">
+                    {{ setting.title }}
+                    <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                    <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
+                  </h4>
+                  <p class="desc">{{ setting.description }}</p>
+                  <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
+                  <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
+                    <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.currentValue" (selectionChange)="settingChangedValue(settingIdx)">
+                      <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
+                        {{ option.text }}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </label>
+              </ng-container>
 
-                <ng-container *ngSwitchCase="settingType.NUMBER">
-                  <label>
-                    <h4 class="option">
-                      {{ setting.title }}
-                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
+
+              <ng-container *ngSwitchCase="'label'">
+                <label>
+                  <h4 class="option">
+                    {{ setting.title }}
+                    <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
+                  </h4>
+                  <p class="desc">{{ setting.description }}</p>
+                  <mat-form-field class="full-width --larger --plain" appearance="fill" color="primary">
+                    <input matInput [value]="setting.currentValue" disabled="true">
+                  </mat-form-field>
+                </label>
+              </ng-container>
+            </div>
+          </ng-container>
+        </mat-card>
+
+
+        <mat-card>
+          <div class="item">
+            <div class="checkbox label">
+              <mat-checkbox class="align-top wrap" [formControl]="controlToggleUpdates">
+                <h4 class="option">
+                  Check for Updates
+                </h4>
+                <p class="desc">Enable Particl Desktop updatee checks</p>
+              </mat-checkbox>
+            </div>
+          </div>
+        </mat-card>
+
+
+        <mat-card>
+            <div class="item">
+              <div class="label">
+                <h4 class="option">
+                  Allowed URL Domains
+                </h4>
+                <p class="desc">
+                  Permission needs to be granted to user-provided URL domains in order for Particl Desktop to trust that the domain can be navigated to. The domains listed here provide a confirmation Particl Desktop can safely attempt to navigate to a particular domain in your browser.
+                </p>
+                <p class="desc">
+                  <b>Only the domain name is required, and not a full URL.</b>
+                </p>
+
+                <div class="item">
+                  <div class="label">
+                    <h4 class="option sub-heading">
+                      Allowed Domains
                     </h4>
-                    <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                    <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-                    <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
-                      <input matInput type="number" *ngIf="!setting.limits"
-                        [disabled]="setting.isDisabled"
-                        [(ngModel)]="setting.newValue"
-                        (change)="settingChangedValue(settingIdx)">
-                      <input matInput type="number" *ngIf="setting.limits"
-                        [min]="setting.limits.min"
-                        [step]="setting.limits.step"
-                        [max]="setting.limits.max"
-                        [disabled]="setting.isDisabled"
-                        [(ngModel)]="setting.newValue"
-                        (change)="settingChangedValue(settingIdx)">
-                    </mat-form-field>
-                  </label>
-                </ng-container>
-
-                <!-- ========= STRING ========= -->
-
-                <ng-container *ngSwitchCase="settingType.STRING">
-                  <label>
-                    <h4 class="option">
-                      {{ setting.title }}
-                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
-                    </h4>
-                    <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                    <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-                    <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
-                      <input matInput
-                        [placeholder]="setting.limits?.placeholder"
-                        [disabled]="setting.isDisabled"
-                        [(ngModel)]="setting.newValue"
-                        (change)="settingChangedValue(settingIdx)">
-                    </mat-form-field>
-                  </label>
-                </ng-container>
-
-                <!-- ========= SELECT ========= -->
-
-                <ng-container *ngSwitchCase="settingType.SELECT">
-                  <label>
-                    <h4 class="option">
-                      {{ setting.title }}
-                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
-                    </h4>
-                    <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                    <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-                    <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="setting.errorMsg ? 'warn' : 'primary'">
-                      <mat-select [disabled]="setting.isDisabled" [(ngModel)]="setting.newValue" (selectionChange)="settingChangedValue(settingIdx)">
-                        <mat-option *ngFor="let option of setting.options" [value]="option.value" [disabled]="option.isDisabled">
-                          {{ option.text }}
-                        </mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </label>
-                </ng-container>
-
-                <!-- ========= BUTTON ========= -->
-
-                <ng-container *ngSwitchCase="settingType.BUTTON">
-                  <div class="button label">
-                    <h4 class="option">
-                      {{ setting.title }}
-                      <span class="tag --smaller" *ngFor="let tag of setting.tags">{{ tag }}</span>
-                      <span class="tag --smaller --alert" *ngIf="setting.restartRequired">Requires restart</span>
-                    </h4>
-                    <p class="desc" *ngIf="setting.description.length > 0">{{ setting.description }}</p>
-                    <p class="warning" *ngIf="setting.errorMsg">{{setting.errorMsg}}</p>
-                    <p class="buttons">
-                      <button mat-button
-                        color="{{ setting.limits ? setting.limits.color || 'accent' : 'accent' }}"
-                        class="validate"
-                        [disabled]="setting.isDisabled"
-                        (click)="settingChangedValue(settingIdx)">
-                        <mat-icon *ngIf="setting.limits?.icon?.length > 0" [fontIcon]="setting.limits.icon"></mat-icon>
-                        {{ setting.title }}
-                      </button>
+                    <p class="desc sub-heading" *ngIf="customURLS.length === 0">
+                      No domains have been added yet.
                     </p>
+
+                    <div class="row" *ngFor="let url of customURLS; let i=index">
+                      <div fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
+                        <p class="desc sub-heading wrap">{{ url }}</p>
+                        <button mat-button color="warn" appDebounceClick (debounceClick)="actionRemoveURL(i)" [disabled]="controlCustomUrlAdd.disabled">
+                          <mat-icon fontIcon="part-cross"></mat-icon>
+                        </button>
+                      </div>
+                    </div>
+
+
+                    <h4 class="option sub-heading">
+                      Add New Domain
+                    </h4>
+
+                    <div class="row domain-input">
+                      <div fxLayout="row" fxLayoutGap="2%" fxLayoutAlign="space-between center">
+                        <mat-form-field class="full-width --larger --plain" appearance="fill" color="primary">
+                          <input  matInput
+                                  [formControl]="controlCustomUrlAdd"
+                                  placeholder="Example: https://particl.io"/>
+                        </mat-form-field>
+                        <button mat-button color="primary" [disabled]="controlCustomUrlAdd.disabled || controlCustomUrlAdd.invalid" appDebounceClick (debounceClick)="actionAddURL()">
+                          <mat-icon fontIcon="part-plus"></mat-icon>
+                          Add Allowed Domain
+                        </button>
+                      </div>
+                    </div>
+
                   </div>
-                </ng-container>
+                </div>
+              </div>
+            </div>
 
-              </div><!-- .item -->
+        </mat-card>
 
-              <!--hr class="divider" *ngIf="!isLastSetting"-->
-            </ng-container>
-          </mat-card>
-        </ng-container>
       </div><!-- .third -->
     </div><!-- .row -->
   </div><!-- .container -->
-
-  <div class="actions">
-    <div class="left">
-      <button mat-button
-        color="basic"
-        [disabled]="!hasChanges"
-        appDebounceClick
-        (debounceClick)="clearChanges()"
-      >
-        <mat-icon fontIcon="part-refresh"></mat-icon>
-        Reset unsaved changes
-      </button>
-    </div>
-    <div class="right">
-      <button mat-raised-button
-        color="primary"
-        class="validate"
-        [disabled]="!hasChanges || hasErrors || isProcessing"
-        (click)="saveChanges()">
-        <mat-icon fontIcon="part-check"></mat-icon>
-        Save changes
-      </button>
-    </div>
-  </div>
 
 </ng-template>

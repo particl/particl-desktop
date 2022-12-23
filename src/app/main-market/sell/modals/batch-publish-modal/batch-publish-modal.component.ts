@@ -7,7 +7,7 @@ import { tap, takeUntil, distinctUntilChanged, switchMap, catchError, map, conca
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
-import { WalletBalanceState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { DataService } from '../../../services/data/data.service';
@@ -234,8 +234,8 @@ export class BatchPublishModalComponent implements OnInit, OnDestroy {
       switchMap((settings) => iif(
         () => settings.useAnonBalanceForFees,
 
-        defer(() => this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(this.destroy$))),
-        defer(() => this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(takeUntil(this.destroy$))),
+        defer(() => this._store.select(Particl.State.Wallet.Balance.spendableAmountAnon()).pipe(takeUntil(this.destroy$))),
+        defer(() => this._store.select(Particl.State.Wallet.Balance.spendableAmountPublic()).pipe(takeUntil(this.destroy$))),
       )),
       map(value => +value),
       tap((balance) => this.currentBalance = balance),

@@ -77,7 +77,8 @@
           padding-bottom: 5px;
         }
         .txid {
-          a {
+          a,
+          p {
             @extend %tfx;
             color: var(--text-muted);
             &:hover,

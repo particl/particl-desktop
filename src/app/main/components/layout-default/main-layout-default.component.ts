@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+
+import { Particl } from 'app/networks/networks.module';
 
 
 @Component({
@@ -11,7 +12,7 @@ import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 })
 export class MainLayoutDefaultComponent {
 
-  @Select(CoreConnectionState.isTestnet) testnet: Observable<boolean>;
+  @Select(Particl.State.Blockchain.chainType()) chainType: Observable<string>;
 
   constructor() { }
 }

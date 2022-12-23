@@ -10,10 +10,9 @@ import {
 
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
-import { WalletInfoState } from 'app/main/store/main.state';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { Particl } from 'app/networks/networks.module';
 
-import { IpcService } from 'app/core/services/ipc.service';
+import { BackendService } from 'app/core/services/backend.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { BidOrderService } from '../../services/orders/orders.service';
@@ -32,7 +31,7 @@ import {
 import { ChatConversationModalComponent, ChatConversationModalInputs } from './../../shared/chat-conversation-modal/chat-conversation-modal.component';
 import { isBasicObjectType } from '../../shared/utils';
 
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
 import { OrderItem, BuyFlowOrderType, OrderUserType, ActionTransitionParams } from '../../services/orders/orders.models';
 import { Identity } from '../../store/market.models';
 import { ORDER_ITEM_STATUS } from '../../shared/market.models';
@@ -96,7 +95,7 @@ interface RenderedOrderItem extends OrderItem {
 })
 export class SellOrdersComponent implements OnInit, OnDestroy {
 
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
+  @Select(MarketState.setting('txUrl')) txUrl: Observable<string>;
 
   identityIsEncrypted: boolean = false;
   isLoading: boolean = true;
@@ -128,7 +127,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private _ipc: IpcService,
+    private _backend: BackendService,
     private _route: ActivatedRoute,
     private _store: Store,
     private _cdr: ChangeDetectorRef,
@@ -164,7 +163,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       tap((identity) => {
         this.currentIdentity = identity;
         if (identity.id > 0) {
-          const walletState: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
+          const walletState: WalletInfoStateModel = this._store.selectSnapshot(Particl.State.Wallet.Info);
           this.identityIsEncrypted = (+walletState.unlocked_until > 0) || (walletState.encryptionstatus !== 'Unencrypted');
         }
         this.loadMarketsControl.setValue(identity.id);
@@ -563,7 +562,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
       }
     };
 
-    this._ipc.runCommand('open-system-dialog', null, options).pipe(
+    this._backend.sendAndWait<string>('gui:gui:open-dialog', options).pipe(
       take(1),
       concatMap(path => iif(
         () => (typeof path === 'string') && (path.length > 0),
@@ -613,7 +612,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
               if (order.listing) {
                 exportOrder.listingId = order.listing.id;
                 exportOrder.listingTitle = order.listing.title;
-                exportOrder.listingHash = order.listing.hash + '"blahblah blah"';
+                exportOrder.listingHash = order.listing.hash;
               }
 
               if (order.pricing) {
@@ -650,7 +649,7 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
             return exportOrder;
           }).filter(order => +order.orderId > 0);
 
-          return this._ipc.runCommand('market-export-writecsv', null, path, orders);
+          return this._backend.sendAndWait<void>('apps:market:services:export-writecsv', path, orders);
         })
       ))
     ).subscribe(

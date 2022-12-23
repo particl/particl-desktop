@@ -4,12 +4,11 @@ import { Store } from '@ngxs/store';
 import { Observable, of, throwError, iif, defer, combineLatest } from 'rxjs';
 import { map, catchError, concatMap, takeUntil } from 'rxjs/operators';
 
-import { WalletBalanceState } from 'app/main/store/main.state';
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { Particl } from 'app/networks/networks.module';
+import { ParticlRpcService } from 'app/networks/networks.module';
 import { AddressService } from '../../shared/address.service';
-import { SendTransaction, SendTypeToEstimateResponse } from './send.models';
-import { ValidatedAddress } from '../../shared/address.models';
-import { CoreErrorModel } from 'app/core/core.models';
+import { SendTransaction } from './send.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 @Injectable()
@@ -17,16 +16,16 @@ export class SendService {
 
   constructor(
     private _store: Store,
-    private _rpc: MainRpcService,
+    private _rpc: ParticlRpcService,
     private _addressService: AddressService
   ) {}
 
 
   getBalances(terminator: Observable<unknown>): Observable<{part: number, blind: number, anon: number}> {
     return combineLatest([
-      this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(takeUntil(terminator)),
-      this._store.select(WalletBalanceState.spendableAmountBlind()).pipe(takeUntil(terminator)),
-      this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(terminator)),
+      this._store.select(Particl.State.Wallet.Balance.spendableAmountPublic()).pipe(takeUntil(terminator)),
+      this._store.select(Particl.State.Wallet.Balance.spendableAmountBlind()).pipe(takeUntil(terminator)),
+      this._store.select(Particl.State.Wallet.Balance.spendableAmountAnon()).pipe(takeUntil(terminator)),
     ]).pipe(
       map(balances => {
         return {
@@ -39,12 +38,12 @@ export class SendService {
   }
 
 
-  sendTypeTo(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
-    return this._rpc.call('sendtypeto', tx.getSendTypeParams(estimateFee));
+  sendTypeTo(tx: SendTransaction, estimateFee: boolean = true): Observable<RPCResponses.SendTypeTo> {
+    return this._rpc.call<RPCResponses.SendTypeTo>('sendtypeto', tx.getSendTypeParams(estimateFee));
   }
 
 
-  runTransaction(tx: SendTransaction, estimateFee: boolean = true): Observable<SendTypeToEstimateResponse | string> {
+  runTransaction(tx: SendTransaction, estimateFee: boolean = true): Observable<RPCResponses.SendTypeTo> {
     let source: Observable<SendTransaction>;
     if (tx.transactionType === 'transfer') {
 
@@ -58,7 +57,7 @@ export class SendService {
     } else {
 
       source = this._addressService.validateAddress(tx.targetAddress).pipe(
-        concatMap((resp: ValidatedAddress) => {
+        concatMap((resp) => {
           if (!resp.isvalid) {
             return throwError('invalid targetAddress');
           }
@@ -79,7 +78,7 @@ export class SendService {
 
     return source.pipe(
       concatMap((trans) => this.sendTypeTo(trans, estimateFee).pipe(
-        catchError((err: CoreErrorModel) => {
+        catchError((err: RPCResponses.Error) => {
           if (estimateFee && (typeof err.message === 'string') && (<string>err.message).toLowerCase().includes('insufficient funds')) {
             // try again if attempting to estimate the fee and there are insufficient funds for the fee not to be deducted
             tx.deductFeesFromTotal = true;

@@ -6,7 +6,7 @@ import { tap, takeUntil, catchError } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
-import { WalletBalanceState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { MarketManagementService } from '../management.service';
@@ -72,7 +72,7 @@ export class MarketGovernanceModalComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const balanceChange$ = this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(
+    const balanceChange$ = this._store.select(Particl.State.Wallet.Balance.spendableAmountPublic()).pipe(
       tap((amount) => this.currentBalance = +amount || 0),
       takeUntil(this.destroy$)
     );

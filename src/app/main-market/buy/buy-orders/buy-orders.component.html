@@ -150,7 +150,7 @@
           </div>
 
           <div class="highlights" *ngIf="orderItem.extraDetails !== undefined">
-            <table>
+            <table *appVar="(txUrl | async) as transactionURL">
               <tr *ngIf="orderItem.extraDetails.escrowMemo.length > 0">
                 <th>Seller's escrow notes</th>
                 <td><em>{{ orderItem.extraDetails.escrowMemo }}</em></td>
@@ -167,7 +167,8 @@
                 <th>Escrow TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{orderItem.extraDetails.escrowTxn}}" target="_blank" title="{{orderItem.extraDetails.escrowTxn}}">Open in Block Explorer</a>
+                    <a *ngIf="transactionURL.length > 0" [href]="transactionURL.replace('{txid}', orderItem.extraDetails.escrowTxn)" target="_blank" title="{{orderItem.extraDetails.escrowTxn}}">Open in Block Explorer</a>
+                    <p *ngIf="transactionURL.length === 0">{{orderItem.extraDetails.escrowTxn}}</p>
                   </div>
                 </td>
               </tr>
@@ -175,7 +176,8 @@
                 <th>Release TXID</th>
                 <td>
                   <div class="txid">
-                    <a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/tx/{{orderItem.extraDetails.releaseTxn}}" target="_blank" title="{{orderItem.extraDetails.releaseTxn}}">Open in Block Explorer</a>
+                    <a *ngIf="transactionURL.length > 0" [href]="transactionURL.replace('{txid}', orderItem.extraDetails.releaseTxn)" target="_blank" title="{{orderItem.extraDetails.releaseTxn}}">Open in Block Explorer</a>
+                    <p *ngIf="transactionURL.length === 0">{{orderItem.extraDetails.releaseTxn}}</p>
                   </div>
                 </td>
               </tr>

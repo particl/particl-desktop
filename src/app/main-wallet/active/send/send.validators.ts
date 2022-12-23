@@ -3,7 +3,6 @@ import { ValidatorFn, AbstractControl, AsyncValidator, ValidationErrors } from '
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AddressService } from '../../shared/address.service';
-import { ValidatedAddress } from '../../shared/address.models';
 import { TabType, TxType } from './send.models';
 import { AddressHelper } from 'app/core/util/utils';
 
@@ -62,7 +61,7 @@ export class ValidAddressValidator implements AsyncValidator {
 
     return this._addressService.validateAddress(`${ctrl.value}`).pipe(
       catchError(() => of(null)),
-      map((resp: ValidatedAddress | null) => {
+      map((resp) => {
         if (resp === null || !resp.isvalid) {
           return {validAddress: false};
         }

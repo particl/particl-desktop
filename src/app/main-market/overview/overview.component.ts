@@ -6,11 +6,11 @@ import { takeUntil, tap, auditTime, switchMap, concatMap } from 'rxjs/operators'
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { WalletBalanceState, WalletInfoState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { OverviewService } from './overview.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
 
 
 type ComponentType = 'buy' | 'sell' | 'management' | 'listings';
@@ -179,8 +179,8 @@ export class OverviewComponent implements OnInit, OnDestroy {
     );
 
     const spendable$ = combineLatest([
-      this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
-      this._store.select(WalletBalanceState.spendableAmountPublic()).pipe(takeUntil(this.destroy$)),
+      this._store.select(Particl.State.Wallet.Balance.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
+      this._store.select(Particl.State.Wallet.Balance.spendableAmountPublic()).pipe(takeUntil(this.destroy$)),
     ]).pipe(
       tap((amounts) => {
         const anonSpendable: PartoshiAmount = new PartoshiAmount(0);
@@ -201,7 +201,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     );
 
-    const pending$ = this._store.select(WalletInfoState).pipe(
+    const pending$ = this._store.select(Particl.State.Wallet.Info).pipe(
       tap((info: WalletInfoStateModel) => {
         const pendingAnon = new PartoshiAmount(0);
         const pendingPublic = new PartoshiAmount(0);

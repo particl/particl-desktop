@@ -8,6 +8,12 @@ import { CountdownTimerComponent } from './countdown-timer/countdown-timer.compo
 import { MainLayoutDefaultComponent } from './layout-default/main-layout-default.component';
 import { LoadingPlaceholderComponent } from './loading-placeholder/loading-placeholder.component';
 import { BlockSyncIndicatorComponent } from './block-sync-indicator/block-sync-indicator.component';
+import { ButtonSettingComponent } from './settings/components/button.component';
+import { ToggleSettingComponent } from './settings/components/toggle.component';
+import { NumberSettingComponent } from './settings/components/number.component';
+import { URLSettingComponent } from './settings/components/url.component';
+import { SelectSettingComponent } from './settings/components/select.component';
+
 
 
 @NgModule({
@@ -19,6 +25,11 @@ import { BlockSyncIndicatorComponent } from './block-sync-indicator/block-sync-i
     MainLayoutDefaultComponent,
     LoadingPlaceholderComponent,
     BlockSyncIndicatorComponent,
+    ButtonSettingComponent,
+    ToggleSettingComponent,
+    NumberSettingComponent,
+    URLSettingComponent,
+    SelectSettingComponent,
   ],
   imports: [
     CommonModule,
@@ -28,7 +39,19 @@ import { BlockSyncIndicatorComponent } from './block-sync-indicator/block-sync-i
     TopbarComponent,
     CountdownTimerComponent,
     MainLayoutDefaultComponent,
-    LoadingPlaceholderComponent
+    LoadingPlaceholderComponent,
+    ButtonSettingComponent,
+    ToggleSettingComponent,
+    NumberSettingComponent,
+    URLSettingComponent,
+    SelectSettingComponent,
+  ],
+  entryComponents: [
+    ButtonSettingComponent,
+    ToggleSettingComponent,
+    NumberSettingComponent,
+    URLSettingComponent,
+    SelectSettingComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

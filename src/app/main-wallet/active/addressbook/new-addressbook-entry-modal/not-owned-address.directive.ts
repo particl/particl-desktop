@@ -4,10 +4,10 @@ import {
   AbstractControl,
   ValidationErrors
 } from '@angular/forms';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AddressService } from '../../../shared/address.service';
-import { AddressInfo } from '../../../shared/address.models';
 
 
 @Injectable()
@@ -20,7 +20,7 @@ export class NotOwnAddressValidator implements AsyncValidator {
   validate(ctrl: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
     return this._addressService.getAddressInfo(ctrl.value).pipe(
       catchError(() => of(null)),
-      map((resp: AddressInfo | null) => {
+      map((resp: RPCResponses.GetAddressInfo | null) => {
         if (resp === null) {
           return {notOwnAddress: 'failed to validate address'};
         }
@@ -33,22 +33,3 @@ export class NotOwnAddressValidator implements AsyncValidator {
   }
 
 }
-
-
-// @Directive({
-//   selector: '[appNotOwnAddress]',
-//   providers: [
-//     {
-//       provide: NG_ASYNC_VALIDATORS,
-//       useExisting: forwardRef(() => NotOwnAddressValidator),
-//       multi: true
-//     }
-//   ]
-// })
-// export class NotOwnAddressValidatorDirective {
-//   constructor(private validator: NotOwnAddressValidator) {}
-
-//   validate(control: AbstractControl) {
-//     this.validator.validate(control);
-//   }
-// }

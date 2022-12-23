@@ -1,4 +1,4 @@
-import { CHAIN_TYPE } from 'app/core/core.models';
+import { ChainType } from 'app/networks/particl/particl.models';
 import { ProposalItem } from '../base/governance.models';
 
 
@@ -28,7 +28,7 @@ export namespace GovernanceStateActions {
 
   export class SetBlockValues {
     static readonly type: string = '[Governance State] Set Block Values';
-    constructor(public blockCount: number, public percentComplete: number, public chainType: CHAIN_TYPE) {}
+    constructor(public blockCount: number, public percentComplete: number, public chainType: ChainType) {}
   }
 
 }

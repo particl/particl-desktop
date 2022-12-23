@@ -25,8 +25,6 @@ import { EscrowPaymentModalComponent } from './modals/escrow-payment-modal/escro
 import { OrderShippedModalComponent } from './modals/order-shipped-modal/order-shipped-modal.component';
 import { CancelBidModalComponent } from './modals/cancel-bid-modal/cancel-bid-modal.component';
 
-import { SellQuestionsComponent } from './sell-questions/sell-questions.component';
-
 import { ImportListingsComponent } from './import-listings/import-listings.component';
 import { ImporterDirective } from './import-listings/import.directive';
 import { CsvImporterComponent } from './import-listings/import-components/csv-importer/csv-importer.component';
@@ -78,8 +76,6 @@ const routes: Routes = [
     ResendOrderActionConfirmationModalComponent,
 
     SellListingsComponent,
-
-    SellQuestionsComponent,
   ],
   entryComponents: [
     PublishTemplateModalComponent,

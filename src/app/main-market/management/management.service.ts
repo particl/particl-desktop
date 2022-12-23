@@ -3,19 +3,20 @@ import { Observable, of, iif, defer, throwError } from 'rxjs';
 import { map, mapTo, catchError, concatMap, last, tap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { Particl } from 'app/networks/networks.module';
 import { MarketState } from '../store/market.state';
 import { MarketUserActions } from '../store/market.actions';
 
-import { IpcService } from 'app/core/services/ipc.service';
+import { BackendService } from 'app/core/services/backend.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
+import { ParticlRpcService } from 'app/networks/networks.module';
+
 import { isBasicObjectType, getValueOrDefault, parseImagePath, parseMarketResponseItem, openMarketAddresses } from '../shared/utils';
 import { MARKET_REGION, RespMarketListMarketItem, RespItemPost, MarketType, RespVoteGet, IMAGE_SEND_TYPE, DefaultOpenMarketDetails } from '../shared/market.models';
 import { CategoryItem, Market } from '../services/data/data.models';
 import { AvailableMarket, CreateMarketRequest, JoinedMarket, MarketGovernanceInfo } from './management.models';
 import { DefaultMarketConfig } from '../store/market.models';
-
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { ChainType, RPCResponses } from 'app/networks/particl/particl.models';
 
 
 enum TextContent {
@@ -50,9 +51,9 @@ export class MarketManagementService {
 
   constructor(
     private _rpc: MarketRpcService,
-    private _daemonRpc: MainRpcService,
+    private _daemonRpc: ParticlRpcService,
     private _store: Store,
-    private _ipc: IpcService,
+    private _backend: BackendService,
   ) {
     this.marketRegionsMap.set('', TextContent.LABEL_REGION_ALL);
     this.marketRegionsMap.set(MARKET_REGION.WORLDWIDE, TextContent.LABEL_REGION_WORLDWIDE);
@@ -91,7 +92,7 @@ export class MarketManagementService {
     const resp: AvailableMarket[] = [];
 
     const marketDefaultConfig = this._store.selectSnapshot(MarketState.defaultConfig);
-    const isTestnet = this._store.selectSnapshot(CoreConnectionState.isTestnet);
+    const isTestnet = this._store.selectSnapshot<ChainType>(Particl.State.Blockchain.chainType()) === 'test';
     const defaultMarkets: Map<string, DefaultOpenMarketDetails> = new Map();
     openMarketAddresses().filter(oma => oma.isTest === isTestnet).forEach(om => {
       defaultMarkets.set(om.address, om);
@@ -422,12 +423,12 @@ export class MarketManagementService {
   }
 
   calculatePublicKeyFromPrivate(privateKey: string): Observable<string> {
-    return this._ipc.runCommand('market-keygen', null, 'PUBLIC', privateKey);
+    return this._backend.sendAndWait<string>('apps:market:services:key-generator', 'PUBLIC', privateKey);
   }
 
 
   forceSmsgRescan(): Observable<any> {
-    return this._daemonRpc.call('smsgscanbuckets').pipe(
+    return this._daemonRpc.call<RPCResponses.SmsgScanBuckets>('smsgscanbuckets').pipe(
       concatMap(() => this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', 0)))
     );
   }

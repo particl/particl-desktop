@@ -6,9 +6,9 @@ import { finalize, concatMap } from 'rxjs/operators';
 import { NotOwnAddressValidator } from './not-owned-address.directive';
 import { AddressService } from '../../../shared/address.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
-import { AddressAdded } from '../../../shared/address.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { AddressHelper } from 'app/core/util/utils';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 enum TextContent {
@@ -92,10 +92,10 @@ export class NewAddressbookEntryModalComponent implements OnInit {
       )),
       finalize(() => this.isProcessing = false)
     ).subscribe(
-      (result: AddressAdded | null) => {
+      (result: RPCResponses.ManageAddressBook.NewSend | null) => {
         if (result !== null) {
           if (result.result === 'success') {
-            this._snackbar.open(TextContent.ADDRESS_ADDED, '');
+            this._snackbar.open(TextContent.ADDRESS_ADDED, 'success');
             this.isAdded.emit(true);
             this.dialogRef.close();
           } else {

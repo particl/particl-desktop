@@ -1,8 +1,9 @@
 import { tap } from 'rxjs/operators';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { isBasicObjectType } from 'app/main-governance/utils';
 import { Observable, Subject, of } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+
+import { isBasicObjectType } from 'app/main-governance/utils';
 
 import { ChartDataItem } from '../charts.models';
 

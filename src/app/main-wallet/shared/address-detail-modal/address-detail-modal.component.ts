@@ -2,13 +2,13 @@ import { Component, Inject } from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { Select } from '@ngxs/store';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { FilteredAddress } from '../address.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
+import { WalletURLState } from '../state-store/wallet-store.state';
 
 
 interface AddressDetailModalTemplateInputs {
-  address: FilteredAddress;
+  address: RPCResponses.FilterAddress;
 }
 
 
@@ -18,9 +18,9 @@ interface AddressDetailModalTemplateInputs {
 })
 export class AddressDetailModalComponent {
 
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
+  @Select(WalletURLState.get('address')) addressURL$: Observable<string>;
 
-  readonly address: FilteredAddress;
+  readonly address: RPCResponses.FilterAddress;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: AddressDetailModalTemplateInputs,
@@ -30,6 +30,6 @@ export class AddressDetailModalComponent {
   }
 
   copyToClipBoard(): void {
-    this._snackbar.open('Address copied to clipboard', '');
+    this._snackbar.open('Address copied to clipboard', 'success');
   }
 }

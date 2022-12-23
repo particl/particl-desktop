@@ -2,9 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { Select } from '@ngxs/store';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+
 import { isBasicObjectType, getValueOrDefault } from '../../../shared/utils';
 import { GenericOrderModalInputs, OrderModalResponse } from '../../../services/orders/orders.models';
 import { PriceItem } from '../../../shared/market.models';
@@ -15,8 +13,6 @@ import { PriceItem } from '../../../shared/market.models';
   styleUrls: ['./escrow-payment-modal.component.scss']
 })
 export class EscrowPaymentModalComponent {
-
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
 
   readonly itemPricing: PriceItem;
   readonly listingTitle: string;

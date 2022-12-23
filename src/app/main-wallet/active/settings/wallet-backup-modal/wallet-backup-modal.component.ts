@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs';
-import { IpcService } from 'app/core/services/ipc.service';
+import { BackendService } from 'app/core/services/backend.service';
 import { Select } from '@ngxs/store';
-import { WalletInfoState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 
 @Component({
@@ -14,7 +14,7 @@ export class WalletBackupModalComponent {
 
   @Output() onConfirmation: EventEmitter<string> = new EventEmitter<string>();
 
-  @Select(WalletInfoState.getValue('walletname')) walletName: Observable<string>;
+  @Select(Particl.State.Wallet.Info.getValue('walletname')) walletName: Observable<string>;
 
   private _error: string = '';
   private _filePath: string;
@@ -22,7 +22,7 @@ export class WalletBackupModalComponent {
 
   constructor(
     private dialogRef: MatDialogRef<WalletBackupModalComponent>,
-    private _ipc: IpcService
+    private _backend: BackendService
   ) { }
 
   get isActionDisabled(): boolean {
@@ -46,7 +46,7 @@ export class WalletBackupModalComponent {
         properties: ['openDirectory']
       }
     };
-    this._ipc.runCommand('open-system-dialog', null, options).toPromise().then(
+    this._backend.sendAndWait<string>('gui:gui:open-dialog', options).toPromise().then(
       (path) => {
         const newPath = Array.isArray(path) && (typeof path[0] === 'string') ? path[0] : undefined;
         if (newPath) {

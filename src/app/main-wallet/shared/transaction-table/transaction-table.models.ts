@@ -1,13 +1,11 @@
 import { PartoshiAmount, DateFormatter } from 'app/core/util/utils';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
-
-type CategoryType = 'send' | 'receive' | 'stake' | 'internal_transfer' | 'orphaned_stake' | 'unknown';
-export type CategoryFilterType = 'all' | CategoryType;
+export type CategoryFilterType = 'all' | RPCResponses.FilterTransactions.CategoryType;
 
 export type SortFilterType = 'time' | 'amount' | 'address' | 'category' | 'confirmations' | 'txid';
 
-type TransactionType = 'standard' | 'blind' | 'anon';
-export type TransactionFilterType = 'all' | TransactionType;
+export type TransactionFilterType = 'all' | RPCResponses.FilterTransactions.TransactionType;
 
 
 export enum AddressType {
@@ -37,40 +35,11 @@ export interface FilterTransactionOptionsModel {
 }
 
 
-interface FilterTransactionOutputModel {
-  stealth_address?: string;
-  address?: string;
-  coldstake_address?: string;
-  label?: string;
-  type?: TransactionType;
-  amount: number;
-  vout: number;
-  narration?: string;
-}
-
-
-export interface FilterTransactionModel {
-  confirmations: number;
-  trusted?: boolean;
-  txid: string;
-  time: number;
-  timereceived?: number;
-  fee?: number;
-  reward?: number;
-  requires_unlock?: boolean;
-  category: CategoryType;
-  abandoned?: boolean;
-  outputs: FilterTransactionOutputModel[];
-  amount: number;
-  type_in?: 'anon';
-}
-
-
 export class FilteredTransaction {
 
   readonly txid: string;
   readonly address: string ;
-  readonly category: CategoryType;
+  readonly category: RPCResponses.FilterTransactions.CategoryType;
   readonly amount: number;
   readonly amountWhole: string;
   readonly amountFraction: string;
@@ -80,7 +49,7 @@ export class FilteredTransaction {
   readonly time: number;
   readonly formattedTime: string;
   readonly requires_unlock: boolean;
-  readonly outputs: FilterTransactionOutputModel[];
+  readonly outputs: RPCResponses.FilterTransactions.Output[];
   readonly confirmations: number;
   readonly addressType: AddressType;
   readonly transferType: TxTransferType;
@@ -92,7 +61,7 @@ export class FilteredTransaction {
   readonly narration: string;
 
 
-  constructor(json: FilterTransactionModel) {
+  constructor(json: RPCResponses.FilterTransactions.Item) {
 
     this.isAbandoned = typeof json.abandoned === 'boolean' ? json.abandoned : false;
 

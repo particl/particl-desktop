@@ -6,12 +6,12 @@ import { takeUntil, filter, tap, skip, concatMap, expand, delay, map, catchError
 import { Log } from 'ng2-logger';
 
 import { Store } from '@ngxs/store';
-import { WalletInfoState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ColdstakeService } from './../coldstake.service';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { PublicUTXO } from 'app/main/store/main.models';
+import { PublicUTXO, RPCResponses } from 'app/networks/particl/particl.models';
 import { ZapStakingStrategy as StakingStrategy, ZapStakingStrategy, ZapGroupDetailsType, SelectedInputs } from '../coldstake.models';
 
 
@@ -107,7 +107,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    const walletLockListener$ = this._store.select(WalletInfoState.getValue('encryptionstatus')).pipe(
+    const walletLockListener$ = this._store.select(Particl.State.Wallet.Info.getValue('encryptionstatus')).pipe(
       skip(1), // skip the initial load status
 
       // trigger only when currently zapping and wallet 'locks'
@@ -349,7 +349,7 @@ export class ZapColdstakingModalComponent implements OnInit, OnDestroy {
 
       )),
 
-      catchError((err) => {
+      catchError((err: RPCResponses.Error) => {
         this.log.er(err);
         switch (true) {
           case err.message === 'ERROR_FAILED_TRANSACTION': this.processError = TextContent.ZAP_ERROR_FAILED_TRANSACTION; break;

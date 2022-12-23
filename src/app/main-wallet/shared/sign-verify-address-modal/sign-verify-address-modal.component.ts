@@ -6,7 +6,7 @@ import { concatMap, finalize } from 'rxjs/operators';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { AddressService } from '../address.service';
-import { FilteredAddress } from '../address.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 enum TextContent {
@@ -26,7 +26,7 @@ type ModalType = 'sign' | 'verify';
 
 
 interface SignVerifyAddressTemplateInputs {
-  address: FilteredAddress;
+  address: RPCResponses.FilterAddress;
   type: ModalType;
 }
 
@@ -131,7 +131,7 @@ export class SignVerifyAddressModalComponent implements OnInit {
           this._snackbar.open(TextContent.ACTION_SIGN_SUCCESS);
         } else {
           const msg = (<boolean>response) ? TextContent.ACTION_VERIFY_SUCCESS : TextContent.ACTION_VERIFY_FAIL;
-          this._snackbar.open(msg, response ? '' : 'err');
+          this._snackbar.open(msg, response ? 'success' : 'err');
         }
       },
       (err) => {

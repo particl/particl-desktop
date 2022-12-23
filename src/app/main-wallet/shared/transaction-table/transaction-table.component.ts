@@ -1,19 +1,16 @@
 import { Component, Input, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { Log } from 'ng2-logger';
 import { slideDown } from 'app/core-ui/core.animations';
+import { Observable, merge, Subject, defer, of } from 'rxjs';
+import { distinctUntilChanged, takeUntil, switchMap, concatMap, tap, skip, catchError } from 'rxjs/operators';
 
 import { Store, Select } from '@ngxs/store';
-import { Observable, merge, Subject, defer, of } from 'rxjs';
-import { auditTime, distinctUntilChanged, takeUntil, switchMap, concatMap, tap, skip, catchError } from 'rxjs/operators';
+import { Particl } from 'app/networks/networks.module';
 
 import { TransactionService } from './transactions.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
-import { WalletInfoState } from 'app/main/store/main.state';
 import { FilterTransactionOptionsModel, FilteredTransaction, AddressType, TxTransferType } from './transaction-table.models';
-import * as zmqOptions from '../../../../../modules/zmq/services.js';
+import { WalletURLState } from '../state-store/wallet-store.state';
 
 
 enum TextContent {
@@ -37,7 +34,8 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   @Input() loadOnInit: boolean = true;
   @Input() count: number = 10;
   @ViewChild('paginator', {static: false}) paginator: any;
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
+
+  txUrl: string = '';
 
   TypeOfAddress: typeof AddressType = AddressType;
   TypeOfTransfer: typeof TxTransferType = TxTransferType;
@@ -47,7 +45,6 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
 
   readonly PageSizeOptions: number[] = [10, 25, 50, 100, 250];
 
-  private log: any = Log.create('transaction-table.component');
   private destroy$: Subject<void> = new Subject();
   private filter$: Subject<void> = new Subject();
 
@@ -64,16 +61,14 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
-    this.log.d(`transaction-table created`);
 
-    const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashblock')).pipe(
+    const blockWatcher$ = this._store.select(Particl.State.ZMQ.getData('hashblock')).pipe(
       skip(1),  // skip the first, as this will trigger on first access of the store value
-      auditTime(zmqOptions.throttledSeconds * 1000), // Prevent flooding during a block sync for example
       distinctUntilChanged(),
       takeUntil(this.destroy$)
     );
 
-    const walletSwitcher$ = this._store.select(WalletInfoState.getValue('walletname')).pipe(
+    const walletSwitcher$ = this._store.select(Particl.State.Wallet.Info.getValue('walletname')).pipe(
       skip(1),  // skip the first, as this will trigger on first access of the store value
       distinctUntilChanged(),
       takeUntil(this.destroy$)
@@ -94,10 +89,19 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
         this.isLoading = false;
       },
       (err) => {
-        this.log.er('Error occurred fetching transactions: ', err);
         this._snackbar.open(TextContent.FETCH_ERROR, 'err');
       }
     );
+
+    // fetch the relevant transaction explorer URL
+    this._store.select(WalletURLState.get('transaction')).pipe(
+      tap({
+        next: (txUrl) => {
+          this.txUrl = typeof txUrl === 'string' ? txUrl : '';
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
 
 
     if (this.loadOnInit) {

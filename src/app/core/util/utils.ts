@@ -1,4 +1,3 @@
-import { environment } from 'environments/environment';
 import { Observable, throwError, timer } from 'rxjs';
 import { mergeMap, finalize } from 'rxjs/operators';
 
@@ -141,25 +140,6 @@ export class DateFormatter {
       );
   }
 }
-
-
-export const isPrerelease = (release?: string): boolean => {
-  let version = release;
-  let found = false;
-  const preParts = ['alpha', 'beta', 'RC'];
-  if (!release) {
-    version = environment.preRelease || environment.version;
-  }
-
-  for (const part of preParts) {
-    if (version.includes(part)) {
-      found = true;
-      break;
-    }
-  }
-
-  return found;
-};
 
 
 export const genericPollingRetryStrategy = ({

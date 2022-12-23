@@ -1,34 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Store } from '@ngxs/store';
-import { take, concatMap, finalize } from 'rxjs/operators';
-import { Observable, from } from 'rxjs';
-import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
-import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
-import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
-import { AppSettings } from 'app/core/store/app.actions';
+import { FormControl, Validators } from '@angular/forms';
+import { defer, iif, merge, of, Subject } from 'rxjs';
+import { catchError, concatMap, finalize, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-import {
-  PageInfo,
-  TextContent,
-  SettingType,
-  SettingGroup,
-  Setting,
-  SelectableOption
-} from 'app/main-extra/global-settings/settings.types';
-import { ApplicationState } from 'app/core/store/app.state';
+import { Store } from '@ngxs/store';
+import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
+import { GlobalActions } from 'app/core/app-global-state/app.actions';
+import { ApplicationConfigStateModel, IPCResponseApplicationSettings } from 'app/core/app-global-state/state.models';
+
+import { BackendService } from 'app/core/services/backend.service';
+import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
+import { ApplicationRestartModalComponent } from 'app/main/components/application-restart-modal/application-restart-modal.component';
+import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
+
+
+interface Setting<T = any> {
+  id_backend: string;
+  id_state: string;
+  title: string;
+  description: string;
+  isDisabled: boolean;
+  errorMsg?: string;
+  options?: { text: string; value: string; isDisabled: boolean; }[];
+  currentValue: T;
+  tags: string[];
+  restartRequired: boolean;
+  formatValue?: (value: any) => T;
+  type: 'select' | 'label';
+}
+
+enum TextContent {
+  SAVE_SETTING_SUCCESSFUL = 'Successfully applied changes for {setting}',
+  SAVE_SETTING_FAILED = 'Could not update {setting}. See logs for further details.',
+  SAVE_FAILED = 'Failed to apply selected changes',
+  FAILED_URL_REMOVE = 'Could not remove the selected URL',
+  FAILED_URL_ADD = 'Could not add the provided URL',
+  RESTARTING_APPLICATION = 'Please wait while the application restarts'
+}
+
+interface PageInfo {
+  title: string;
+  description: string;
+  help: string;
+}
 
 
 @Component({
   templateUrl: './global-settings.component.html',
-  styleUrls: ['./global-settings.component.scss']
+  styleUrls: ['./global-settings.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GlobalSettingsComponent implements OnInit {
-  settingType: (typeof SettingType) = SettingType;  // Template typings
+export class GlobalSettingsComponent implements OnInit, OnDestroy {
+  settings: Setting[] = [];
 
-  settingGroups: SettingGroup[] = [];
-  isProcessing: boolean = false;   // Indicates that the current page is busy processing a change.
-  currentChanges: number[][] = []; // (convenience helper) Tracks which setting items on the current page have changed
+  readonly customURLS: string[] = [];
+
+  controlCustomUrlAdd: FormControl = new FormControl('', [
+    Validators.required,
+    // tslint:disable-next-line
+    Validators.pattern("(?:http(s)?:\\/\\/)?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$")
+  ]);
+
+  controlToggleUpdates: FormControl = new FormControl(true);
 
   readonly pageDetails: PageInfo = {
     title: 'Particl Desktop Settings',
@@ -36,356 +71,274 @@ export class GlobalSettingsComponent implements OnInit {
     help: 'For configuration of separate wallets, open the specific wallet and go to Wallet Settings page'
   } as PageInfo;
 
-  private _currentGroupIdx: number = 0;
+
+  private destroy$: Subject<void> = new Subject();
 
 
   constructor(
     private _store: Store,
     private _dialog: MatDialog,
-    private _snackbar: SnackbarService
+    private _snackbar: SnackbarService,
+    private _backendService: BackendService,
+    private _cdr: ChangeDetectorRef
   ) { }
 
 
   ngOnInit() {
-    this.loadPageData();
+    this.settings = this.buildSettingsItems();
 
-    // Perform relevant data binding
-    this.settingGroups.forEach((group: SettingGroup) => {
-      group.settings.forEach((setting: Setting) => {
-        if (setting.validate) {
-          setting.validate = setting.validate.bind(this);
-        }
-        if (setting.onChange) {
-          setting.onChange = setting.onChange.bind(this);
-        }
-      });
+    merge(
+      this._store.select<ApplicationConfigStateModel>(ApplicationConfigState).pipe(
+        tap({
+          next: (settings) => {
+            this.settings.forEach(s => {
+              if (s.id_state in settings) {
+                if (s.formatValue) {
+                  s.currentValue = s.formatValue(settings[s.id_state]);
+                } else {
+                  s.currentValue = settings[s.id_state];
+                }
+              }
+            });
+            this._cdr.detectChanges();
+          }
+        }),
+        takeUntil(this.destroy$)
+      ),
 
-      this.currentChanges.push([]);
-    });
-    this.clearChanges();
+      // frontend doesn't store various settings (eg: the external allowed URLs), so need this to fetch the additional settings
+      this._backendService.sendAndWait<IPCResponseApplicationSettings>('application:settings').pipe(
+        take(1),
+        tap({
+          next: (settings) => {
+            if (settings) {
+              if (Array.isArray(settings.ALLOWED_EXTERNAL_URLS)) {
+                settings.ALLOWED_EXTERNAL_URLS.forEach(url => {
+                  if (typeof url === 'string' && url.length > 0) {
+                    this.customURLS.push(url);
+                  }
+                });
+              }
+
+              if (typeof settings.APPLICATION_UPDATES_ALLOWED === 'boolean') {
+                this.controlToggleUpdates.setValue(settings.APPLICATION_UPDATES_ALLOWED, {onlySelf: true, emitEvent: false});
+              }
+
+              this._cdr.detectChanges();
+            }
+          }
+        })
+      ),
+
+      // listen for, and respond to, app-update toggle changes
+      this.controlToggleUpdates.valueChanges.pipe(
+        tap({
+          next: newValue => this.controlToggleUpdates.disable({onlySelf: true, emitEvent: false})
+        }),
+        switchMap(newValue =>
+          this._backendService.sendAndWait<boolean>('application:setSetting', 'APPLICATION_UPDATES_ALLOWED', newValue
+        ).pipe(
+          catchError(() => of(false)),
+          tap({
+            next: success => {
+              if (!success) {
+                this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', 'Application Updates'));
+                this.controlToggleUpdates.setValue(!newValue, {onlySelf: true, emitEvent: false});
+              }
+              this.controlToggleUpdates.enable({onlySelf: true, emitEvent: false});
+            }
+          })
+        )),
+        takeUntil(this.destroy$)
+      )
+
+    ).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
 
-  get hasErrors(): boolean {
-    return this.settingGroups.findIndex(group => group.errors.length > 0) > -1;
-  }
-
-  get hasChanges(): boolean {
-    return this.currentChanges.findIndex(group => group.length > 0) > -1;
+  trackBySettingFn(_: number, item: Setting) {
+    return item.id_backend;
   }
 
 
-  get currentGroup(): SettingGroup {
-    return this.settingGroups[this._currentGroupIdx];
-  }
-
-  get currentGroupIdx(): number {
-    return this._currentGroupIdx;
-  }
-
-
-  trackBySettingGroupFn(idx: number, item: SettingGroup) {
-    return idx;
-  }
-
-
-  trackBySettingFn(idx: number, item: Setting) {
-    return item.id;
-  }
-
-
-  changeSelectedGroup(idx: number) {
-    if (idx >= 0 && idx < this.settingGroups.length) {
-      this._currentGroupIdx = idx;
-    }
+  actionShowTerms() {
+    this._dialog.open(TermsConditionsModalComponent);
   }
 
 
   settingChangedValue(settingIdx: number) {
-    if (!(settingIdx >= 0 && settingIdx < this.currentGroup.settings.length)) {
+    if (!(settingIdx >= 0 && settingIdx < this.settings.length)) {
         return;
     }
 
-    this.isProcessing = true;
-    const currentGroup = this.currentGroup;
-    const groupIdx = this._currentGroupIdx;
-    const setting = this.currentGroup.settings[settingIdx];
-
-    if (setting.validate) {
-      const response = setting.validate(setting.newValue, setting);
-      setting.errorMsg = response ? response : '';
+    let newValue = this.settings[settingIdx].currentValue;
+    if (this.settings[settingIdx].formatValue) {
+      newValue = this.settings[settingIdx].formatValue(newValue);
     }
-    if (!setting.errorMsg && setting.onChange) {
-      const response = setting.onChange(setting.newValue, setting);
-      setting.errorMsg = response ? response : '';
-    }
-    const listedError = currentGroup.errors.findIndex(errItem => errItem === settingIdx);
-
-    if (setting.errorMsg && (listedError === -1)) {
-      currentGroup.errors.push(settingIdx);
-    } else if (!setting.errorMsg && (listedError > -1)) {
-      currentGroup.errors.splice(listedError, 1);
-    }
-
-    const changeIdx = this.currentChanges[groupIdx].findIndex((c) => c === settingIdx);
-
-    if ((setting.currentValue !== setting.newValue) && (changeIdx === -1)) {
-      this.currentChanges[groupIdx].push(settingIdx);
-    } else if ((setting.currentValue === setting.newValue) && (changeIdx !== -1)) {
-      this.currentChanges[groupIdx].splice(changeIdx, 1);
-    }
-
-    this.isProcessing = false;
-  }
-
-
-  clearChanges() {
-    if (this.isProcessing) {
-      return;
-    }
-    this.isProcessing = true;
-
-    this.settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          setting.newValue = setting.currentValue;
-        }
-        setting.errorMsg = '';
-        group.errors = [];
-      });
-    });
-
-    this.currentChanges = this.currentChanges.map(change => []);
-    this.isProcessing = false;
-  }
-
-  /**
-   * Saves all modified changes on the current displayed page/tab.
-   * Validates each modified setting if a validate function is specified.
-   * If no setting validation errors occur, then the SettingPages's "save" function is invoked.
-   */
-  saveChanges() {
-    if (this.isProcessing) {
-      this._snackbar.open(TextContent.ERROR_BUSY_PROCESSING, 'err');
-      return;
-    }
-    this.isProcessing = true;
-
-    this.disableUI(TextContent.SAVING);
-
-    // Validation of each changed setting ensures current settings are not in an error state
-    let hasError = false;
-    let hasChanged = false;
-    this.settingGroups.forEach(group => {
-      group.settings.forEach(setting => {
-        if ( !(setting.type === SettingType.BUTTON)) {
-          if (setting.currentValue !== setting.newValue) {
-            hasChanged = true;
-
-            if (setting.validate) {
-              const response = setting.validate(setting.newValue, setting);
-              if (response) {
-                setting.errorMsg = response;
-                hasError = true;
-              }
-            }
+    this._backendService.sendAndWait<boolean>(
+      'application:setSetting',
+      this.settings[settingIdx].id_backend,
+      this.settings[settingIdx].currentValue
+    ).pipe(
+      concatMap((isSaved) => iif(
+        () => isSaved,
+        defer(() => this._store.dispatch(
+          new GlobalActions.SetSetting(this.settings[settingIdx].id_state, this.settings[settingIdx].currentValue)
+        ).pipe(catchError(() => of(true)))),
+        defer(() => of(false)),
+      ))
+    ).subscribe({
+      next: (success) => {
+        if (success) {
+          this._snackbar.open(TextContent.SAVE_SETTING_SUCCESSFUL.replace('{setting}', this.settings[settingIdx].title));
+          this.settings[settingIdx].errorMsg = '';
+          if (this.settings[settingIdx].restartRequired) {
+            this.actionRestartApplication();
           }
-        }
-      });
-    });
-
-    if (!hasChanged || hasError) {
-      const errMsg = !hasChanged ? TextContent.SAVE_NOT_NEEDED : TextContent.ERROR_INVALID_ITEMS;
-      this.isProcessing = false;
-      this.enableUI();
-      this._snackbar.open(errMsg, 'err');
-      return;
-    }
-
-    this.saveActualChanges().pipe(
-      take(1),
-      finalize(() => {
-        this.isProcessing = false;
-        this.enableUI();
-      })
-    ).subscribe(
-      (doRestart: boolean) => {
-
-        // Change current settings in case it has not been done
-        this.settingGroups.forEach(group => {
-          group.settings.forEach(setting => {
-            if ( !(setting.type === SettingType.BUTTON)) {
-              setting.currentValue = setting.newValue;
-            }
-            setting.errorMsg = '';
-          });
-          group.errors = [];
-        });
-
-        // reset the list of current changes
-        this.currentChanges = this.currentChanges.map(change => []);
-        this._snackbar.open(TextContent.SAVE_SUCCESSFUL);
-
-        if (doRestart) {
-          this.actionRestartApplication();
+        } else {
+          this.settings[settingIdx].errorMsg = 'Setting not saved',
+          this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'warn');
         }
       },
-      (err) => {
-        this._snackbar.open(TextContent.SAVE_FAILED, 'err');
-      }
-    );
-  }
-
-
-  private disableUI(message: string) {
-    this._dialog.open(ProcessingModalComponent, {
-      disableClose: true,
-      data: {
-        message: message
+      error: () => {
+        this._snackbar.open(TextContent.SAVE_SETTING_FAILED.replace('{setting}', this.settings[settingIdx].title), 'warn');
       }
     });
   }
 
 
-  private enableUI() {
-    this._dialog.closeAll();
-  }
+  actionRemoveURL(index: number): void {
+    if (index >= this.customURLS.length || index < 0) {
+      return;
+    }
+    this.controlCustomUrlAdd.disable();
 
-  /**
-   * Extracts the changed settings for persistence: Modify this depending on the specific settings being configured
-   */
-  private saveActualChanges(): Observable<boolean> {
-    return new Observable((observer) => {
+    const selectedUrl = this.customURLS[index];
 
-      let restartRequired = false;
-      const actions = [];
-
-      this.settingGroups.forEach(group => {
-        group.settings.forEach((setting) => {
-          if ( (setting.type !== SettingType.BUTTON) && (setting.currentValue !== setting.newValue)) {
-            actions.push(new AppSettings.SetSetting(setting.id, setting.newValue));
-            if (setting.restartRequired) {
-              restartRequired = true;
-            }
+    this._backendService.sendAndWait('application:setSetting', 'ALLOWED_EXTERNAL_URLS', null, selectedUrl).pipe(
+      finalize(() => this.controlCustomUrlAdd.enable()),
+      catchError(() => of(false)),
+      tap({
+        next: (success) => {
+          if (success === true) {
+            this.customURLS.splice(index, 1);
+            return;
           }
-        });
-      });
-
-      from(actions).pipe(
-        concatMap((action) => this._store.dispatch(action))
-      ).subscribe(
-        null,
-        null,
-        () => {
-          observer.next(restartRequired);
-          observer.complete();
+          this._snackbar.open(TextContent.FAILED_URL_REMOVE);
         }
-      );
-    });
+      })
+    ).subscribe();
+  }
+
+
+  actionAddURL(): void {
+    if (this.controlCustomUrlAdd.disabled || this.controlCustomUrlAdd.invalid) {
+      return;
+    }
+
+    const newUrl = this.controlCustomUrlAdd.value;
+
+    this._backendService.sendAndWait('application:setSetting', 'ALLOWED_EXTERNAL_URLS', newUrl).pipe(
+      finalize(() => this.controlCustomUrlAdd.enable()),
+      catchError((e) => of(false)),
+      tap({
+        next: (success) => {
+          if (success === true) {
+            this.customURLS.push(newUrl);
+            this.controlCustomUrlAdd.setValue('');
+            return;
+          }
+          this._snackbar.open(TextContent.FAILED_URL_ADD);
+        }
+      })
+    ).subscribe();
+
   }
 
 
   private actionRestartApplication() {
     const dialogRef = this._dialog.open(ApplicationRestartModalComponent);
     dialogRef.componentInstance.onConfirmation.subscribe(() => {
-      this.disableUI(TextContent.RESTARTING_APPLICATION);
+      this._dialog.open(ProcessingModalComponent, {
+        disableClose: true,
+        data: {
+          message: TextContent.RESTARTING_APPLICATION
+        }
+      });
     });
   }
 
 
-  private loadPageData() {
+  private buildSettingsItems(): Setting[] {
 
+    const userSettings: Setting[] = [
+      {
+        id_backend: 'LANGUAGE',
+        id_state: 'selectedLanguage',
+        title: 'Language',
+        description: 'Particl Desktop\'s current language',
+        isDisabled: false,
+        errorMsg: '',
+        currentValue: null,
+        restartRequired: false,
+        tags: [],
+        options: [
+          {text: 'English (US)', value: 'en-US', isDisabled: false},
+        ],
+        type: 'select',
+      },
+      {
+        id_backend: 'DEBUGGING_LEVEL',
+        id_state: 'debugLevel',
+        title: 'Debug Level',
+        description: 'Change the current logging level. NOTE: changing this only applies to the current session and does not persist across application restarts.',
+        isDisabled: false,
+        errorMsg: '',
+        currentValue: null,
+        restartRequired: false,
+        tags: [],
+        options: [
+          {text: 'silly', value: 'silly', isDisabled: false},
+          {text: 'debug', value: 'debug', isDisabled: false},
+          {text: 'info', value: 'info', isDisabled: false},
+          {text: 'warn', value: 'warn', isDisabled: false},
+          {text: 'error', value: 'error', isDisabled: false},
+        ],
+        type: 'select',
+      },
+      {
+        id_backend: 'TESTING_MODE',
+        id_state: 'requestedTestingNetworks',
+        title: 'Requested network testing mode',
+        description: 'Indicates if the application has requested blockchain networks to force start in testing mode (typically this means the blockchain network would start using a test network).',
+        isDisabled: false,
+        errorMsg: '',
+        currentValue: null,
+        restartRequired: false,
+        tags: ['info'],
+        type: 'label',
+        formatValue: (val) => val === true ? 'Yes' : 'No',
+      },
+      {
+        id_backend: 'MODE',
+        id_state: 'buildMode',
+        title: 'Build Mode',
+        description: 'The current build mode of the application',
+        isDisabled: false,
+        errorMsg: '',
+        currentValue: null,
+        restartRequired: false,
+        tags: ['info'],
+        type: 'label',
+      }
+    ];
 
-    const globalSettings = this._store.selectSnapshot(ApplicationState.appSettings);
-
-    const userInterface = {
-      name: 'User interface',
-      icon: 'part-select',
-      settings: [],
-      errors: []
-    } as SettingGroup;
-
-    userInterface.settings.push({
-      id: 'global.language',
-      title: 'Language',
-      description: 'Change the application language',
-      isDisabled: true,
-      type: SettingType.SELECT,
-      errorMsg: '',
-      currentValue: globalSettings.language,
-      tags: [],
-      options: [
-        {
-          text: 'English (US)',
-          value: 'en_us',
-          isDisabled: true
-        } as SelectableOption
-      ],
-      restartRequired: false
-    } as Setting);
-
-
-    const coreNetConfig = {
-      name: 'Core network connection',
-      icon: 'part-globe',
-      settings: [],
-      errors: []
-    } as SettingGroup;
-
-    coreNetConfig.settings.push({
-      id: 'core.network.upnp',
-      title: 'Enable UPnP',
-      description: 'Use UPnP to map the listening port',
-      isDisabled: false,
-      type: SettingType.BOOLEAN,
-      errorMsg: '',
-      currentValue: globalSettings.upnp,
-      tags: [],
-      restartRequired: true
-    } as Setting);
-
-    coreNetConfig.settings.push({
-      id: 'core.network.proxy',
-      title: 'Connect via Proxy',
-      description: 'Directs core to connect via a SOCKS5 proxy.',
-      isDisabled: false,
-      type: SettingType.STRING,
-      limits: {placeholder: 'e.g. 127.0.0.1:9050 for Tor'},
-      errorMsg: '',
-      currentValue: globalSettings.proxy,
-      tags: [],
-      restartRequired: true,
-      validate: this.validateIPAddressPort
-    } as Setting);
-
-    this.settingGroups.push(userInterface);
-    this.settingGroups.push(coreNetConfig);
-  }
-
-  private validateIPAddressPort(value: any, setting: Setting): string | null {
-    const strVal = String(value);
-    if (strVal.length === 0) {
-      return null;
-    }
-    const parts = strVal.split(':');
-    const octs = String(parts[0]).split('.');
-    let isValid = (
-      (octs.length === 4) &&
-      (octs.find(oct => !isFinite(+oct) || (+oct > 255) || (+oct < 0) || (oct.length === 0)
-    ) === undefined) );
-
-    if (parts[1]) {
-      const port = +(String(parts[1]));
-      isValid = isValid && (port > 0) && (port <= 65535);
-    } else if (!parts[1] && strVal.includes(':')) {
-      isValid = false;
-    }
-
-    if (!isValid) {
-      return 'Invalid IPv4 address and/or port';
-    }
-
-    return null;
+    return userSettings;
   }
 
 }

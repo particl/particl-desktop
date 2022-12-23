@@ -1,0 +1,58 @@
+<div class="container-block without-tab-bar">
+  <app-page-intro childPageAlias="particl-core-network">
+    <ng-container page-title>Network Configuration</ng-container>
+    <ng-container page-content>
+      When starting a new Particl Core node, configure the address and ports that the Particl Core node will use.
+    </ng-container>
+    <ng-container page-help>
+    </ng-container>
+  </app-page-intro>
+
+  <div class="container">
+    <div class="content row">
+
+      <h2 class="section-title"> Connection Details for Network: {{networkLabel}}</h2>
+
+      <mat-card>
+        <h4 class="option">RPC Connection Details</h4>
+        <p class="desc">If starting a new Particl Core node, these details allow for configuring the RPC details of the new node.</p>
+        <p class="desc">If connecting to an existing Particl Core node, these details indicate which connection details to use to connect to the remote RPC services.</p>
+        <label>
+          <h4 class="option">IP Address</h4>
+          <p class="message --warning" *ngIf="controlRpcIP.invalid">Invalid address provided</p>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlRpcIP.invalid ? 'warn' : 'primary'">
+            <input matInput placeholder="Example: 127.0.0.1" [formControl]="controlRpcIP">
+          </mat-form-field>
+        </label>
+        <label>
+          <h4 class="option">Port number</h4>
+          <p class="message --warning" *ngIf="controlRpcPort.invalid">Invalid port number provided</p>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlRpcPort.invalid ? 'warn' : 'primary'">
+            <input matInput type="number" placeholder="Example: 51735" [formControl]="controlRpcPort">
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">ZMQ Connection Details</h4>
+        <p class="desc">If starting a new Particl Core node, these details allow for configuring the ZMQ connection details of the new node.</p>
+        <p class="desc">If connecting to an existing Particl Core node, these details indicate which connection details to use to connect to the remote ZMQ services.</p>
+        <label>
+          <h4 class="option">IP Address</h4>
+          <p class="message --warning" *ngIf="controlZmqIP.invalid">Invalid address provided</p>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlZmqIP.invalid ? 'warn' : 'primary'">
+            <input matInput placeholder="Example: 127.0.0.1" [formControl]="controlZmqIP">
+          </mat-form-field>
+        </label>
+        <label>
+          <h4 class="option">Port number</h4>
+          <p class="message --warning" *ngIf="controlZmqPort.invalid">Invalid port number provided</p>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlZmqPort.invalid ? 'warn' : 'primary'">
+            <input matInput type="number" placeholder="Example: 51735" [formControl]="controlZmqPort">
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+    </div>
+  </div>
+</div>

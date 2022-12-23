@@ -1,0 +1,44 @@
+@import './src/assets/_config'; // import shared colors etc.
+
+
+.menu-item.status {
+
+  .mat-icon,
+  &:hover .mat-icon {
+    color: var(--color-secondary);
+  }
+  &:hover .text {
+    background: rgba(var(--color-secondary), 1);
+  }
+
+  &.actionable {
+    cursor: pointer;
+
+    &.started {
+      .mat-icon,
+      &:hover .mat-icon {
+        color: var(--color-alert);
+      }
+      &:hover .text {
+        background: rgba(var(--color-alert), 1);
+      }
+    }
+
+    &.stopped {
+      .mat-icon,
+      &:hover .mat-icon {
+        color: var(--color-primary);
+      }
+      &:hover .text {
+        background: rgba(var(--color-primary), 1);
+      }
+    }
+  }
+}
+
+
+.status-info-update {
+  border-bottom: 1px dashed var(--bg-muted);
+  padding-left: 1em;
+  padding-right: 1em;
+}

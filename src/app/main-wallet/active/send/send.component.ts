@@ -3,29 +3,27 @@ import { FormControl, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material';
 import { Log } from 'ng2-logger';
-import { Store } from '@ngxs/store';
 import { Subject, merge, defer, iif } from 'rxjs';
 import { takeUntil, tap, startWith, concatMap, take, finalize } from 'rxjs/operators';
+import { Store } from '@ngxs/store';
+import { WalletSettingsState } from '../../shared/state-store/wallet-store.state';
 import { SendService } from './send.service';
-import { targetTypeValidator, amountRangeValidator, ValidAddressValidator, publicAddressUsageValidator } from './send.validators';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SendConfirmationModalComponent } from './send-confirmation-modal/send-confirmation-modal.component';
 import { CoinControlModalComponent, CoinControlModalData } from './coin-control-modal/coin-control-modal.component';
 import { AddressLookupModalComponent } from './addresss-lookup-modal/address-lookup-modal.component';
-import { CoreErrorModel } from 'app/core/core.models';
+import { targetTypeValidator, amountRangeValidator, ValidAddressValidator, publicAddressUsageValidator } from './send.validators';
 import {
   TabType,
   TxTypeOption,
   TabModel,
   SavedAddress,
   SendTransaction,
-  SendTypeToEstimateResponse
 } from './send.models';
-import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE, MIN_UTXO_SPLIT, MAX_UTXO_SPLIT, DEFAULT_UTXO_SPLIT } from 'app/main/store/main.models';
-import { WalletDetailActions } from 'app/main/store/main.actions';
+import { RPCResponses, MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE, MIN_UTXO_SPLIT, MAX_UTXO_SPLIT, DEFAULT_UTXO_SPLIT } from 'app/networks/particl/particl.models';
+import { Particl } from 'app/networks/networks.module';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { WalletSettingsState } from 'app/main/store/main.state';
 
 
 enum TextContent {
@@ -390,7 +388,7 @@ export class SendComponent implements OnInit, OnDestroy {
       finalize(() => this.isProcessing = false),
       concatMap((unlocked: boolean) => iif(() => unlocked, defer(() => this._sendService.runTransaction(trans, true))))
     ).subscribe(
-      (result: SendTypeToEstimateResponse) => {
+      (result: RPCResponses.SendTypeTo) => {
         const dialog = this._dialog.open(SendConfirmationModalComponent, {data: {sendTx: trans, fee: result.fee}});
         dialog.componentInstance.isConfirmed.pipe(
           take(1),
@@ -400,7 +398,7 @@ export class SendComponent implements OnInit, OnDestroy {
         ).subscribe(
           () => {
             // request new balances
-            this._store.dispatch(new WalletDetailActions.RefreshBalances());
+            this._store.dispatch(new Particl.Actions.WalletActions.RefreshBalances());
 
             // present success message
             const trimAddress = trans.targetAddress.substring(0, 16) + '...';
@@ -417,7 +415,7 @@ export class SendComponent implements OnInit, OnDestroy {
             this.narration.reset('');
             this.sendingAll.reset(false);
 
-            this._snackbar.open(text, '');
+            this._snackbar.open(text, 'success');
           },
           (err) => {
             this.log.er('sending failed: ', err);
@@ -427,7 +425,7 @@ export class SendComponent implements OnInit, OnDestroy {
         dialog.afterClosed().pipe(take(1)).subscribe(() => dialog.componentInstance.isConfirmed.unsubscribe());
       },
 
-      (err: CoreErrorModel) => {
+      (err: RPCResponses.Error) => {
         this.log.er('estimation failed: ', err);
         const errorMessage = err.message || '';
         let text: string;

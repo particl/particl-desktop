@@ -1,14 +1,16 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { Log } from 'ng2-logger';
 import { Subject, combineLatest } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Balance } from './balances.models';
-import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { Store } from '@ngxs/store';
+import { Particl } from 'app/networks/networks.module';
+
 import { PartoshiAmount } from 'app/core/util/utils';
+
+import { Balance } from './balances.models';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
+
 
 
 @Component({
@@ -18,7 +20,6 @@ import { PartoshiAmount } from 'app/core/util/utils';
 })
 export class BalancesHeaderComponent implements OnInit, OnDestroy {
 
-  private log: any = Log.create(`balances-list.component`);
   private destroy$: Subject<void> = new Subject();
 
   private _balances: Balance[] = [];
@@ -29,7 +30,6 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.log.d('component initializing');
 
     const definitions = [
       { label: 'TOTAL BALANCE', type: 'total_balance', description: '', horizontal: false },
@@ -57,15 +57,15 @@ export class BalancesHeaderComponent implements OnInit, OnDestroy {
     }
 
     combineLatest([
-      this._store.select<WalletInfoStateModel>(WalletInfoState).pipe(
+      this._store.select<WalletInfoStateModel>(Particl.State.Wallet.Info).pipe(
         takeUntil(this.destroy$)
       ),
 
-      this._store.select<string>(WalletBalanceState.spendableTotal()).pipe(
+      this._store.select<string>(Particl.State.Wallet.Balance.spendableTotal()).pipe(
         takeUntil(this.destroy$)
       ),
 
-      this._store.select<number>(WalletBalanceState.lockedTotal()).pipe(
+      this._store.select<number>(Particl.State.Wallet.Balance.lockedTotal()).pipe(
         takeUntil(this.destroy$)
       ),
     ]).pipe(

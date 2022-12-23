@@ -11,11 +11,12 @@ import { app_routing } from 'app/app.routing';
 
 import { CoreModule } from 'app/core/core.module';
 import { AppComponent } from 'app/app.component';
-import { ApplicationState, ngxsConfig } from 'app/core/store/app.state';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
-import { AppSettingsState } from 'app/core/store/appsettings.state';
-import { AppDataState } from 'app/core/store/appdata.state';
-import { ZmqConnectionState } from './core/store/zmq-connection.state';
+import {
+  ApplicationState,
+  ApplicationConfigState,
+  ngxsConfig
+} from 'app/core/app-global-state/app.state';
+import { AppInitRoutingGuard } from './app-guard.service';
 
 
 @NgModule({
@@ -27,12 +28,13 @@ import { ZmqConnectionState } from './core/store/zmq-connection.state';
     BrowserModule,
     BrowserAnimationsModule,
     NgxsModule.forRoot(
-      [ApplicationState, CoreConnectionState, AppSettingsState, AppDataState, ZmqConnectionState],
+      [ApplicationState, ApplicationConfigState],
       ngxsConfig
     ),
     CoreModule,
     app_routing,
   ],
+  providers: [ AppInitRoutingGuard ],
   bootstrap: [ AppComponent ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

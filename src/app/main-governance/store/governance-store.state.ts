@@ -85,9 +85,7 @@ export class GovernanceState {
   static previousProposals() {
     return createSelector(
       [GovernanceState.filteredProposals],
-      (filteredProposals: ProposalItem[][]): ProposalItem[] => {
-        return filteredProposals[1] || [];
-      }
+      (filteredProposals: ProposalItem[][]): ProposalItem[] => filteredProposals[1] || []
     );
   }
 
@@ -112,7 +110,7 @@ export class GovernanceState {
      *
      * 2. If using ngxsOnInit(), remember that it is called only the first time the state is added to the global store!
      *    - So despite this module potentially being "loaded" multiple times (on each new init of the module),
-     *      this function will only execute on the 1st load of the module.
+     *      ngxsOnInit() will only execute on the 1st load of the module.
      *    - for clean separation, we should be bootstrapping this module as another whole app inside the main application...
      *      We'll get to such a goal eventually... or at least that's the current forward direction.
      */

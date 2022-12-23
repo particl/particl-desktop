@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { CloseGuiService } from 'app/core/services/close-gui.service';
-import { termsObj } from 'app/startup/terms/terms-txt';
+import { TermsContentComponent } from 'app/core-ui/components/terms-content/terms-content.component';
 
 
 @Component({
@@ -11,18 +11,21 @@ import { termsObj } from 'app/startup/terms/terms-txt';
 })
 export class TermsComponent {
 
-  isAccepted: boolean;
+  isAccepted: boolean = false;
 
-  public text: string = termsObj.text;
+  @ViewChild(TermsContentComponent, { static: false }) private termsComp!: TermsContentComponent;
+
   constructor(
     private router: Router,
     private close: CloseGuiService
   ) {}
 
+
   acceptTerms(): void {
-    localStorage.setItem('terms', JSON.stringify(termsObj));
+    this.termsComp.saveContent();
     this.router.navigate(['/main/extra/welcome/']);
   }
+
 
   decline(): void {
     this.close.quitElectron();

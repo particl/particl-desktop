@@ -3,6 +3,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
+import { TermsConditionsModalComponent } from './terms-conditions-modal/terms-conditions-modal.component';
 
 
 
@@ -22,8 +23,10 @@ const routes: Routes = [
   ],
   declarations: [
     GlobalSettingsComponent,
+    TermsConditionsModalComponent,
   ],
   entryComponents: [
+    TermsConditionsModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

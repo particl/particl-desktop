@@ -1,11 +1,11 @@
-import { CHAIN_TYPE } from 'app/core/core.models';
+import { ChainType } from 'app/networks/particl/particl.models';
 import { ProposalItem } from '../base/governance.models';
 
 
 export interface GovernanceStateModel {
   blockCount: number;
   blockchainSynced: boolean;
-  chain: CHAIN_TYPE;
+  chain: ChainType;
   isPolling: boolean;
   lastRequestTime: number;
   lastRequestErrored: boolean;

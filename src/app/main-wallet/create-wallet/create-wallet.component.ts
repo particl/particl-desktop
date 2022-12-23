@@ -12,16 +12,15 @@ import { Log } from 'ng2-logger';
 import { Observable, Subject, of, fromEvent } from 'rxjs';
 import { takeUntil, concatMap, catchError, take, mapTo, map, finalize, filter, tap } from 'rxjs/operators';
 import { Store } from '@ngxs/store';
-import { WalletInfoState } from 'app/main/store/main.state';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
-import { CoreErrorModel } from 'app/core/core.models';
-import { MainActions } from 'app/main/store/main.actions';
+
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { CreateWalletService } from './create-wallet.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
 import { CanComponentDeactivate } from '../deactivation.guard';
+import { RPCResponses, WalletInfoStateModel } from 'app/networks/particl/particl.models';
+import { Particl } from 'app/networks/networks.module';
 
 
 enum TextContent {
@@ -130,7 +129,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
     private _snackbar: SnackbarService,
     private _dialog: MatDialog
   ) {
-    const walletInfo = <WalletInfoStateModel>this._store.selectSnapshot(WalletInfoState);
+    const walletInfo = this._store.selectSnapshot<WalletInfoStateModel>(Particl.State.Wallet.Info);
     if (typeof walletInfo.walletname === 'string') {
       this.walletName = walletInfo.walletname;
     }
@@ -141,7 +140,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
   ngOnInit() {
     this.log.d('component initialized');
 
-    this._store.select(WalletInfoState).pipe(
+    this._store.select(Particl.State.Wallet.Info).pipe(
       takeUntil(this.destroy$)
     ).subscribe(
       (info: WalletInfoStateModel) => {
@@ -192,7 +191,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
       );
     }
 
-    return this._store.dispatch(new MainActions.ChangeWallet(this.walletName)).pipe(mapTo(true));
+    return this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(this.walletName)).pipe(mapTo(true));
   }
 
 
@@ -452,7 +451,7 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
               }),
               concatMap(
                 () => address$.pipe(
-                  concatMap((success) => this._store.dispatch(new MainActions.RefreshWalletInfo()).pipe(mapTo(success)))
+                  concatMap((success) => this._store.dispatch(new Particl.Actions.WalletActions.RefreshWalletInfo()).pipe(mapTo(success)))
                 )
               )
             );
@@ -494,8 +493,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
 
         obs = this._createService.createWallet(this.tempWalletName).pipe(
           tap(() => this.isSettingWalletName = true),
-          concatMap(() => this._store.dispatch(new MainActions.ChangeWallet(this.tempWalletName)).pipe(mapTo(true))),
-          catchError((err: CoreErrorModel) => {
+          concatMap(() => this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(this.tempWalletName)).pipe(mapTo(true))),
+          catchError((err: RPCResponses.Error) => {
             if (err.code === -4) {
               this.errorString = TextContent.ERROR_WALLET_NAME_EXISTS;
             } else {
@@ -516,8 +515,8 @@ export class CreateWalletComponent implements OnInit, OnDestroy, CanComponentDea
 
         if (this.encrypt.length) {
           obs = this._createService.encryptWallet(this.encrypt).pipe(
-            concatMap(() => this._store.dispatch(new MainActions.RefreshWalletInfo()).pipe(mapTo(true))),
-            catchError((err: CoreErrorModel) => {
+            concatMap(() => this._store.dispatch(new Particl.Actions.WalletActions.RefreshWalletInfo()).pipe(mapTo(true))),
+            catchError((err: RPCResponses.Error) => {
               if (String(err.message).includes('running with an encrypted wallet')) {
                 this._snackbar.open(TextContent.ERROR_ENCRYPTION_PREVIOUS, 'warn');
                 return of(true);

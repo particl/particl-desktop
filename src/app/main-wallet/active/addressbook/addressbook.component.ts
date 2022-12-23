@@ -10,7 +10,8 @@ import { NewAddressbookEntryModalComponent } from './new-addressbook-entry-modal
 import { SignVerifyAddressModalComponent } from '../../shared/sign-verify-address-modal/sign-verify-address-modal.component';
 import { AddressDetailModalComponent } from '../../shared/address-detail-modal/address-detail-modal.component';
 import { PageFilter } from '../../shared/shared.models';
-import { SelectableAddressType, FilteredAddress } from '../../shared/address.models';
+import { SelectableAddressType } from '../../shared/address.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 interface TableFilter {
@@ -34,7 +35,7 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   @ViewChild('paginator', {static: false}) paginator: any;
 
   isLoading: boolean = true;
-  displayedResults: FilteredAddress[] = [];
+  displayedResults: RPCResponses.FilterAddresses.List = [];
   searchQuery: FormControl = new FormControl('');
   filterQuery: FormControl = new FormControl('all');
 
@@ -53,14 +54,14 @@ export class AddressBookComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject();
   private pagination$: Subject<void> = new Subject();
-  private _allAddresses: FilteredAddress[] = [];
+  private _allAddresses: RPCResponses.FilterAddresses.List = [];
   /**
    *  Seems there's a tradeoff between the delay and processing involved when querying the core for
    *    search results vs memory consumption of storing filtered and searched results. Seems to be due to the way the pagination works.
    *  Also, there's the additional requirement of searching labels as well as addresses, whereas core seems to only search labels.
    *  Hence, the _searchAddresses option is used here to store the search results.
   */
-  private _searchedAddresses: FilteredAddress[] = [];
+  private _searchedAddresses: RPCResponses.FilterAddresses.List = [];
 
 
   constructor(
@@ -92,7 +93,7 @@ export class AddressBookComponent implements OnInit, OnDestroy {
 
       switchMap(() => {
         return this.doSearchAddresses(<string>this.searchQuery.value).pipe(
-          tap((searchResult: FilteredAddress[]) => {
+          tap((searchResult: RPCResponses.FilterAddresses.List) => {
             this.isLoading = false;
             this.pageFilters.currentPage = 0;
             if (this.paginator) {
@@ -132,13 +133,13 @@ export class AddressBookComponent implements OnInit, OnDestroy {
     return idx;
   }
 
-  displayedAddressTrackFn(idx: number, item: FilteredAddress) {
+  displayedAddressTrackFn(idx: number, item: RPCResponses.FilterAddress) {
     return item.address;
   }
 
 
   copyToClipBoard() {
-    this._snackbar.open(TextContent.ADDRESS_COPIED, '');
+    this._snackbar.open(TextContent.ADDRESS_COPIED, 'success');
   }
 
 
@@ -155,17 +156,17 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   }
 
 
-  openQrCodeModal(address: FilteredAddress) {
+  openQrCodeModal(address: RPCResponses.FilterAddress) {
     this._dialog.open(AddressDetailModalComponent, {data: {address}});
   }
 
 
-  openSignatureModal(address: FilteredAddress) {
+  openSignatureModal(address: RPCResponses.FilterAddress) {
     this._dialog.open(SignVerifyAddressModalComponent, {data: {address, type: 'verify'}});
   }
 
 
-  deleteAddress(address: FilteredAddress) {
+  deleteAddress(address: RPCResponses.FilterAddress) {
     const delModal = this._dialog.open(DeleteAddressConfirmationModalComponent, {data: {address}});
     delModal.componentInstance.isDeleted.subscribe(
       (success: boolean) => {
@@ -190,7 +191,7 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   }
 
 
-  private loadAddresses(addrType: SelectableAddressType): Observable<FilteredAddress[]> {
+  private loadAddresses(addrType: SelectableAddressType): Observable<RPCResponses.FilterAddresses.List> {
     return this._addressService.fetchUnownedAddressHistory(addrType).pipe(
       tap((result) => {
         this._allAddresses = result;
@@ -199,7 +200,7 @@ export class AddressBookComponent implements OnInit, OnDestroy {
   }
 
 
-  private doSearchAddresses(searchTerm: string): Observable<FilteredAddress[]> {
+  private doSearchAddresses(searchTerm: string): Observable<RPCResponses.FilterAddresses.List> {
     const searchString = searchTerm.toLowerCase();
     const filteredAddresses = this._allAddresses.filter(
       (address) =>  ((typeof address.label === 'string') && (address.label.toLowerCase().indexOf(searchString) !== -1)) ||

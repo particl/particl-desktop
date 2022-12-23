@@ -1,10 +1,11 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AppInitRoutingGuard } from './app-guard.service';
 
 /* actual routing */
 const app_routes: Routes = [
   { path: 'loading', loadChildren: () => import('app/startup/startup.module').then(m => m.StartupModule) },
-  { path: 'main', loadChildren: () => import('app/main/main.module').then(m => m.MainModule) },
+  { path: 'main', canActivate: [AppInitRoutingGuard], loadChildren: () => import('app/main/main.module').then(m => m.MainModule) },
   { path: '', redirectTo: 'loading', pathMatch: 'full' }
 ];
 

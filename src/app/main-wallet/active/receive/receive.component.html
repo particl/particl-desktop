@@ -36,7 +36,7 @@
             </button>
           </div>
           <div class="right" fxFlex="70%">
-            <a mat-button matTooltip="Display address' public information on Block Explorer" [disabled]="isLoading || (activeAddress.address.length === 0)" href="https://explorer{{ (isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{activeAddress.address}}" target="_blank">
+            <a mat-button matTooltip="Display address' public information on Block Explorer" [disabled]="isLoading || (activeAddress.address.length === 0) || (addressUrl.length === 0)" [href]="addressUrl.replace('{addressid}', activeAddress.address)" target="_blank">
               <mat-icon fontIcon="part-zoom-in"></mat-icon>
               Show on Explorer
             </a>

@@ -1,10 +1,9 @@
-import { getValueOrDefault } from 'app/main-market/shared/utils';
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { isBasicObjectType } from 'app/main-governance/utils';
+import { isBasicObjectType, getValueOrDefault } from 'app/main-governance/utils';
 
 
 enum TextContent {

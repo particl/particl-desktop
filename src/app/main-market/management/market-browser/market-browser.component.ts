@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material';
 import { Subject, of, merge, Observable, defer, iif } from 'rxjs';
 import {
   catchError, tap, takeUntil, switchMap, startWith, debounceTime,
-  distinctUntilChanged, concatMap, auditTime, finalize, map, mapTo
+  distinctUntilChanged, concatMap, auditTime, finalize, mapTo
 } from 'rxjs/operators';
 
 import { Select } from '@ngxs/store';

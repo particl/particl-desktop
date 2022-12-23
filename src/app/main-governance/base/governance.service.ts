@@ -1,35 +1,43 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormControl } from '@angular/forms';
-import { Log } from 'ng2-logger';
-import { Subject, Observable, concat, interval, iif, defer, of, merge } from 'rxjs';
-import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged, auditTime, mapTo } from 'rxjs/operators';
+import { Subject, Observable, concat, interval, iif, defer, of, merge, combineLatest } from 'rxjs';
+import { takeUntil, retryWhen, tap, take, concatMap, map, finalize, catchError, distinctUntilChanged, auditTime, mapTo, switchMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
+import { Particl } from 'app/networks/networks.module';
 import { GovernanceStateActions } from '../store/governance-store.actions';
 
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { ParticlRpcService } from 'app/networks/networks.module';
 
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { getValueOrDefault, isBasicObjectType } from '../utils';
-import { RpcGetBlockchainInfo } from 'app/core/core.models';
-import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes, ResponseVoteHistory, VoteHistoryItem, ResponseSetVote } from './governance.models';
+import { ResponseProposalDetail, ProposalItem, ResponseTallyVote, TalliedVotes, ResponseVoteHistory, VoteHistoryItem } from './governance.models';
+import { ChainType, RPCResponses } from 'app/networks/particl/particl.models';
+import { BackendService } from 'app/core/services/backend.service';
 
+
+interface SettingSchema {
+  url: string;
+  pollInterval: number;
+}
+interface IPCAppGoveranceSettings {
+  defaults: SettingSchema;
+  values: SettingSchema;
+}
 
 
 @Injectable()
 export class GovernanceService implements OnDestroy {
 
-  readonly AUTO_POLL_TIMEOUT: number = 1_800_000; // 30 minutes
+  AUTO_POLL_TIMEOUT: number = 0;
 
-  private log: any = Log.create('governance.service id:' + Math.floor((Math.random() * 1000) + 1));
+
   private destroy$: Subject<void> = new Subject();
   private stopPolling$: Subject<void> = new Subject();
   private isPolling: FormControl = new FormControl(false);
 
-  private DATA_URL: string = 'https://raw.githubusercontent.com/dasource/partyman/master/votingproposals/${chain}/metadata.txt';
+  private DATA_URL: string = '';
 
   private dataRequest$: Observable<ProposalItem[]> = defer(() => this._http.get(this.DATA_URL).pipe(
     retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2})),
@@ -54,12 +62,11 @@ export class GovernanceService implements OnDestroy {
           if (!isBasicObjectType(rpd)) {
             return newItem;
           }
-
           newItem.proposalId = getValueOrDefault(rpd.proposalid, 'number', newItem.proposalId);
           newItem.name = getValueOrDefault(rpd.name, 'string', newItem.name);
           newItem.blockStart = getValueOrDefault(rpd.blockheight_start, 'number', newItem.blockStart);
           newItem.blockEnd = getValueOrDefault(rpd.blockheight_end, 'number', newItem.blockEnd);
-          newItem.network = rpd.network === 'mainnet' ? 'main' : 'test';
+          newItem.network = (rpd.network.endsWith('net') ? rpd.network.substring(0, rpd.network.length - 3) : rpd.network) as ChainType;
 
           for (const url of urlParams) {
             const linkParam = `link-${url}`;
@@ -95,18 +102,15 @@ export class GovernanceService implements OnDestroy {
   constructor(
     private _http: HttpClient,
     private _store: Store,
-    private _rpc: MainRpcService
+    private _rpc: ParticlRpcService,
+    private _backendService: BackendService,
   ) {
-    this.log.d('starting service...');
 
-    const chain = this._store.selectSnapshot(CoreConnectionState.isTestnet) ? 'testnet' : 'mainnet';
-    this.DATA_URL = this.DATA_URL.replace('${chain}', chain);
-
-    const blockWatcher$ = this._store.select(ZmqConnectionState.getData('hashtx')).pipe(
-      auditTime(5000),
-      concatMap(() => this._rpc.call('getblockchaininfo').pipe(
+    const blockWatcher$ = this._store.select(Particl.State.ZMQ.getData('hashtx')).pipe(
+      auditTime(2_000),
+      switchMap(() => this._rpc.call<RPCResponses.GetBlockchainInfo>('getblockchaininfo').pipe(
         retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 1})),
-        tap((blockResult: RpcGetBlockchainInfo) => {
+        tap((blockResult) => {
           if (isBasicObjectType(blockResult) && !!!blockResult.initialblockdownload && (+blockResult.headers > 0)) {
             const pcntComplete = +Math.fround(+blockResult.blocks / +blockResult.headers * 100).toPrecision(3);
             this._store.dispatch(new GovernanceStateActions.SetBlockValues(+blockResult.blocks, pcntComplete, blockResult.chain));
@@ -120,10 +124,10 @@ export class GovernanceService implements OnDestroy {
       distinctUntilChanged(),
       tap(newVal => this._store.dispatch(new GovernanceStateActions.SetPollingStatus(newVal))),
       concatMap(value => iif(
-        () => !!value,
+        () => !!value && (this.AUTO_POLL_TIMEOUT > 0),
 
         defer(() => concat(
-          // Make initial request, then on success, poll every 30 minutes
+          // Make initial request, then on success, poll every auto_poll_timeout intervals
           this.dataRequest$.pipe(take(1)),
           interval(this.AUTO_POLL_TIMEOUT).pipe(
             concatMap(() => this.dataRequest$),
@@ -145,7 +149,6 @@ export class GovernanceService implements OnDestroy {
 
 
   ngOnDestroy() {
-    this.log.d('stopping service...');
     this.stopPolling$.next();
     this.stopPolling$.complete();
     this.destroy$.next();
@@ -154,7 +157,35 @@ export class GovernanceService implements OnDestroy {
 
 
   startPolling(): void {
-    this.isPolling.setValue(true);
+    combineLatest([
+      this._backendService.sendAndWait<IPCAppGoveranceSettings>('apps:governance:settings').pipe(
+        take(1),
+        takeUntil(this.destroy$)
+      ),
+      this._store.select(Particl.State.Blockchain.chainType()).pipe(takeUntil(this.destroy$))
+    ]).pipe(
+      tap({
+        next: (responses) => {
+          const settings = responses[0];
+          const currentChainType = responses[1];
+          if (
+            !isBasicObjectType(settings) ||
+            !isBasicObjectType(settings.values) ||
+            getValueOrDefault(settings.values.url, 'string', '').length === 0 ||
+            !(Number.isSafeInteger(settings.values.pollInterval)) ||
+            !currentChainType
+          ) {
+            return;
+          }
+
+          const chain = currentChainType === 'main' || currentChainType === 'test' ? `${currentChainType}net` : `${currentChainType}`;
+          this.DATA_URL = settings.values.url.replace('${chain}', chain);
+          this.AUTO_POLL_TIMEOUT = settings.values.pollInterval * 60 * 1_000;
+          this.isPolling.setValue(true);
+        }
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 
 

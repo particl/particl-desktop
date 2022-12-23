@@ -7,18 +7,11 @@ interface NodeModule {
 // TODO: maybe move into ipc.types ?
 
 interface Window {
-  electron: {
+  electronAPI: {
     electron: boolean;
-    require: any;
-    ipc: {
-      on: (channel: string, listener: Function) => void;
-      once: (channel: string, listener: Function) => void;
-      send: (channel: string, arguments?: {}) => void;
-      sendSync: (channel: string, arguments?: {}) => void;
-      sendToHost: (channel: string, arguments?: {}) => void;
-      removeListener: (channel: string, listener: Function) => void;
-      removeAllListeners: (channel?: string) => void;
-      listenerCount: (channel?: string) => number;
-    };
-  };
+    send: (channel: string, arguments?: {}) => void;
+    sendAndWait: <T>(channel: string, replyChannel: string, listenType: 'emitter' | 'invoker', ...args: any[]) => T;
+    listen: (channel: string, callback: Function) => void;
+    removeListener: (channel: string) => void;
+  }
 }

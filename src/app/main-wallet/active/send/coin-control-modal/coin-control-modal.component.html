@@ -37,7 +37,10 @@
       <td class="checkbox"><mat-checkbox [checked]="utxo.selected" (change)="toggleUtxo(utxoIdx, $event)"></mat-checkbox></td>
       <td class="amount">{{utxo.amount}}</td>
       <td class="label">{{utxo.label}}</td>
-      <td class="address"><a href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{utxo?.address || ''}}" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a></td>
+      <td class="address">
+        <a *ngIf="addressURL.length > 0" [href]="addressURL.replace('{addressid}', utxo.address || '')" matTooltip="Show on Block Explorer" matTooltipPosition="before" target="_blank">{{utxo.address}}</a>
+        <ng-container *ngIf="addressURL.length === 0">{{utxo.address}}</ng-container>
+      </td>
     </tr>
   </table>
 

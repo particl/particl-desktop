@@ -9,7 +9,7 @@ import { xorWith } from 'lodash';
 
 import { Store, Select } from '@ngxs/store';
 import { GovernanceState } from '../store/governance-store.state';
-import { WalletInfoState, WalletStakingState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { GovernanceService } from './../base/governance.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -55,6 +55,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     {value: 'complete', title: TextContent.LABEL_STATUS_COMPLETE}
   ];
 
+  isValidWallet: boolean = false;
   blockCounter: number = 0;
   querySearch: FormControl = new FormControl('');
   queryFilterStatus: FormControl = new FormControl('');
@@ -85,7 +86,8 @@ export class ProposalsComponent implements OnInit, OnDestroy {
 
     const proposalData$: Observable<ProposalItem[]> = combineLatest([
 
-      this._store.select(WalletInfoState.getValue('walletname')).pipe(
+      this._store.select(Particl.State.Wallet.Info.getValue('walletname')).pipe(
+        tap(wname => this.isValidWallet = typeof wname === 'string'),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       ),
@@ -231,7 +233,7 @@ export class ProposalsComponent implements OnInit, OnDestroy {
     );
 
     // set up cold-staking check
-    this.isColdStaking$ = this._store.select(WalletStakingState.getValue('cold_staking_enabled')).pipe(
+    this.isColdStaking$ = this._store.select(Particl.State.Wallet.Staking.getValue('cold_staking_enabled')).pipe(
       map((val: boolean) => val),
       shareReplay(1),
       takeUntil(this.destroy$)

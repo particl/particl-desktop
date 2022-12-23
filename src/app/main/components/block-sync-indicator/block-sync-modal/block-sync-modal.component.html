@@ -31,16 +31,16 @@
         </tr>
       </table>
 
-      <ng-container *ngIf="syncPercentage < 100">
+      <ng-container *ngIf="syncPercentageValue < 100">
         <p>
           Please wait for Particl blockchain to finish syncing with the network. Until then, you won't be able to spend PART and see your latest transactions and current balance.
         </p>
         <p class="help-text">
-          If you want to determine how long this process may take and what you can do to ensure a snippy user experience, head over to the Particl Academy - Installation FAQ.
+          If you want to determine how long this process may take and what you can do to ensure a snappy user experience, head over to the Particl Academy - Installation FAQ.
         </p>
       </ng-container>
 
-      <ng-container *ngIf="syncPercentage == 100">
+      <ng-container *ngIf="syncPercentageValue >= 100">
         <p class="lead">
           Blockchain sync is now completed!
         </p>

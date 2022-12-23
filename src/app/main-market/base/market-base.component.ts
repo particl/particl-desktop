@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog, MatExpansionPanel } from '@angular/material';
-import { Store, Select } from '@ngxs/store';
-import { MarketState } from '../store/market.state';
-import { WalletInfoState, WalletBalanceState } from 'app/main/store/main.state';
-import { MarketStateActions, MarketUserActions } from '../store/market.actions';
-import { MainActions } from 'app/main/store/main.actions';
 import { Subject, Observable, iif, defer, of, merge, combineLatest } from 'rxjs';
 import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
+
+import { Store, Select } from '@ngxs/store';
+import { MarketState } from '../store/market.state';
+import { MarketStateActions, MarketUserActions } from '../store/market.actions';
+import { Particl } from 'app/networks/networks.module';
 
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { ProcessingModalComponent } from 'app/main/components/processing-modal/processing-modal.component';
@@ -16,8 +16,7 @@ import { ProfileBackupModalComponent } from './profile-backup-modal/profile-back
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { NotificationsService } from './notifications.service';
 import { StartedStatus, Identity, MarketSettings } from '../store/market.models';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
-import { environment } from 'environments/environment';
+import { ApplicationConfigState } from 'app/core/app-global-state/app.state';
 
 
 enum TextContent {
@@ -86,7 +85,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     private _notifications: NotificationsService,
     private _unlocker: WalletEncryptionService
   ) {
-    this.mpVersion = environment.marketVersion || '';
+    this.mpVersion = this._store.selectSnapshot(ApplicationConfigState.moduleVersions('marketplace'));
     // _notifications is included in base so as to ensure its init'ed correctly when the market base is created, and then destroyed when
     //  the market is destroyed
     const notifyService = this._notifications;
@@ -182,13 +181,13 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
 
     this.currentBalance = merge(
-      this._store.select(WalletBalanceState.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
+      this._store.select(Particl.State.Wallet.Balance.spendableAmountAnon()).pipe(takeUntil(this.destroy$)),
       this._store.select(MarketState.currentIdentity).pipe(takeUntil(this.destroy$)),
     ).pipe(
       startWith('0'),
       map(() => {
         if (+this._store.selectSnapshot(MarketState.currentIdentity).id > 0) {
-          return this._store.selectSnapshot(WalletBalanceState.spendableAmountAnon());
+          return this._store.selectSnapshot(Particl.State.Wallet.Balance.spendableAmountAnon());
         }
         return '0';
       }),
@@ -266,22 +265,22 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
     this.identitySelector.close();
 
     this._dialog.open(ProcessingModalComponent, {disableClose: true, data: {message: TextContent.MARKET_LOADING}});
-    this._store.dispatch(new MainActions.ChangeWallet(identity.name)).pipe(
-      concatMap(() => this._store.dispatch(new MarketStateActions.SetCurrentIdentity(identity))),
+
+    this._store.dispatch(new MarketStateActions.SetCurrentIdentity(identity)).pipe(
       finalize(() => {
         this._dialog.closeAll();
       })
     ).subscribe(
       () => {
-        const walletData: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
+        const walletName: string = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname')) as string;
 
-        if (walletData.walletname === identity.name) {
+        if (walletName === identity.name) {
           this._snackbar.open(TextContent.MARKET_ACTIVATE_SUCCESS, 'success');
         } else {
           this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
         }
       },
-      (err) => {
+      (_) => {
         this._snackbar.open(TextContent.MARKET_ACTIVATE_ERROR, 'err');
       }
     );

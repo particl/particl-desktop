@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, iif, defer, from } from 'rxjs';
 import { mapTo, concatMap, map } from 'rxjs/operators';
 
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { ParticlRpcService } from 'app/networks/networks.module';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
-import { CoreErrorModel } from 'app/core/core.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 @Injectable()
 export class WalletSettingsService {
 
   constructor(
-    private _rpc: MainRpcService,
+    private _rpc: ParticlRpcService,
     private _unlocker: WalletEncryptionService,
   ) {}
 
@@ -41,7 +41,7 @@ export class WalletSettingsService {
         defer(() => this.fetchExtKeyList(true).pipe(
 
           map(extKeys => {
-            let masterKey: ExtKey;
+            let masterKey: RPCResponses.ExtKey.Item;
 
             if (Array.isArray(extKeys)) {
               masterKey = extKeys.find(key => key.type === 'Loose' && key.key_type === 'Master' && key.label === 'Master Key - bip44 derived.' && key.current_master === 'true');
@@ -62,15 +62,17 @@ export class WalletSettingsService {
   }
 
 
-  private async createDerivedWallets(walletLabels: string[], extMasterKey: ExtKey, skipCount: number = 0): Promise<boolean[]> {
+  private async createDerivedWallets(
+    walletLabels: string[], extMasterKey: RPCResponses.ExtKey.Item, skipCount: number = 0
+  ): Promise<boolean[]> {
     let countProcessed = 0;
     let extraDerivedCount = 0;
 
     const successes = walletLabels.map(() => false);
 
     while (countProcessed < walletLabels.length) {
-      const keyInfoResult: string = await this._rpc.call('extkey', ['info', extMasterKey.evkey, `4444446'/${skipCount + countProcessed + extraDerivedCount}'`]).toPromise()
-        .then((keyInfo: ExtKeyInfo) => {
+      const keyInfoResult: string = await this._rpc.call<RPCResponses.ExtKey.Info>('extkey', ['info', extMasterKey.evkey, `4444446'/${skipCount + countProcessed + extraDerivedCount}'`]).toPromise()
+        .then((keyInfo) => {
           if (
             keyInfo
             && (Object.prototype.toString.call(keyInfo) === '[object Object]')
@@ -97,9 +99,8 @@ export class WalletSettingsService {
 
       const derivedLabel = walletLabels[countProcessed];
       const walletPath: string = derivedLabel;    // can be reassigned as appropriate later if other paths become possible
-      const walletCreated = await this._rpc.call('createwallet', [derivedLabel, false, true]).toPromise()
+      const walletCreated = await this._rpc.call<RPCResponses.CreateWallet>('createwallet', [derivedLabel, false, true]).toPromise()
         .then((creationResult ) => {
-          console.log('wallet creation result is: ', creationResult);
           return true;
         })
         .catch(() => false);
@@ -108,18 +109,18 @@ export class WalletSettingsService {
         continue;
       }
 
-      const importedExtKey: ExtKeyResult = await this._rpc.call(
+      const importedExtKey: RPCResponses.ExtKey.Import = await this._rpc.call<RPCResponses.ExtKey.Import>(
         'extkey',
         ['import', extKeyAlt, 'master key', true, true],
         walletPath
       ).toPromise()
-        .then((result: ExtKeyResult) => {
+        .then((result) => {
           if (!result || (typeof result.id !== 'string') || (result.id.length < 1)) {
             throw new Error('invalid result');
           }
           return result;
         })
-        .catch((err: CoreErrorModel) => {
+        .catch((err: RPCResponses.Error) => {
           if (err && (typeof err.message === 'string') && err.message.toLowerCase().includes('already exists in wallet')) {
             ++extraDerivedCount;
           } else {
@@ -137,7 +138,7 @@ export class WalletSettingsService {
         continue;
       }
 
-      const derivedAccount: ExtKeyResult = await this._rpc.call(
+      const derivedAccount: RPCResponses.ExtKey.DeriveAccount = await this._rpc.call<RPCResponses.ExtKey.DeriveAccount>(
         'extkey',
         ['deriveAccount', '', ],
         walletPath
@@ -160,8 +161,12 @@ export class WalletSettingsService {
       ++countProcessed;
 
       // generate initial addresses for the new wallet... if it fails for some reason then these can be easily generated manually elsewhere
-      this._rpc.call('getnewaddress', [''], walletPath).toPromise().then(() => true).catch(() => false);
-      this._rpc.call('getnewstealthaddress', [''], walletPath).toPromise().then(() => true).catch(() => false);
+      this._rpc.call<RPCResponses.GetNewAddress>('getnewaddress', [''], walletPath).toPromise()
+        .then(() => true)
+        .catch(() => false);
+      this._rpc.call<RPCResponses.GetNewStealthAddress>('getnewstealthaddress', [''], walletPath).toPromise()
+        .then(() => true)
+        .catch(() => false);
 
     }
 
@@ -169,61 +174,8 @@ export class WalletSettingsService {
   }
 
 
-  private fetchExtKeyList(showSecrets: boolean = false): Observable<ExtKey[]> {
-    return this._rpc.call('extkey', ['list', showSecrets]);
+  private fetchExtKeyList(showSecrets: boolean = false): Observable<RPCResponses.ExtKey.List> {
+    return this._rpc.call<RPCResponses.ExtKey.List>('extkey', ['list', showSecrets]);
   }
 
-}
-
-
-interface ExtKey {
-  type: 'Loose' | 'Account';
-  receive_on?: 'false' | 'true';
-  active: 'false' | 'true';
-  encrypted: 'false' | 'true';
-  hardware_device?: 'false' | 'true';
-  label: string;
-  default_account?: 'true' | 'false';
-  created_at?: number;
-  path?: string;
-  has_secret?: 'true' | 'false';
-  key_type?: 'Master';
-  current_master?: 'false' | 'true';
-  root_key_id?: string;
-  id: string;
-  evkey: string;
-  epkey: string;
-  external_chain?: string;
-  internal_chain?: string;
-  num_derives?: string;
-  num_derives_hardened?: string;
-  num_derives_external?: string;
-  num_derives_external_h?: string;
-  num_derives_internal?: string;
-  num_derives_internal_h?: string;
-  num_derives_stealth?: string;
-  num_derives_stealth_h?: string;
-}
-
-
-interface ExtKeyInfo {
-  key_info: {
-    result: string;
-    path: string;
-  };
-}
-
-
-interface ExtKeyResult {
-  result: string;
-  id: string;
-  key_label: string;
-  note: string;
-  account: string;
-  label: string;
-  key_info: unknown;
-  account_id: string;
-  has_secret: string;
-  account_label: string;
-  scanned_from: number;
 }

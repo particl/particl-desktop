@@ -1,0 +1,41 @@
+<div class="container-block without-tab-bar">
+  <app-page-intro childPageAlias="particl-core-updates">
+    <ng-container page-title>Binary Updates</ng-container>
+    <ng-container page-content>
+      Controls where Particl Core binary updates are obtained from. This is only applicable if a new Particl Core node is created/started from Particl Desktop.
+    </ng-container>
+    <ng-container page-help>
+    </ng-container>
+  </app-page-intro>
+
+  <div class="container">
+    <div class="content row">
+
+      <mat-card>
+          <h4 class="option">Automatically Update Particl Core</h4>
+          <p class="desc">Enabling this allows for Particl Core to perform a check for new available versions prior to starting a new Particl Core node.</p>
+          <p class="message --warning">Disabling this may prevent the correct Particl Core binary from being downloaded when attempting to start a new Particl Core node for the first time. It is recommended to leave this enabled to ensure that Particl Core is always at the latest recommended version.</p>
+          <div class="checkbox label">
+            <mat-checkbox class="align-top wrap" [formControl]="controlCoreAutoUpdate">
+              <h4 class="option">Allow for Particl Core to automatically update</h4>
+            </mat-checkbox>
+          </div>
+      </mat-card>
+
+      <mat-card>
+        <h4 class="option">
+          Download Timeout (#seconds)
+        </h4>
+        <p class="desc">When downloading a new Particl Core binary, specify how long to wait, in seconds, for the download to complete before abandoning the download.</p>
+        <p class="desc">This value can be increased if using a slow internet/network connection.</p>
+        <p class="message --warning" *ngIf="controlDownloadTimeout.invalid">Invalid number of seconds specified!</p>
+        <label>
+          <mat-form-field class="full-width --larger --plain" appearance="fill" [color]="controlDownloadTimeout.invalid ? 'warn' : 'primary'">
+            <input matInput placeholder="Example: 300" type="number" [formControl]="controlDownloadTimeout">
+          </mat-form-field>
+        </label>
+      </mat-card>
+
+    </div>
+  </div>
+</div>

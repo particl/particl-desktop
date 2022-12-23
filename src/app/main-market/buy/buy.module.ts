@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MarketSharedModule } from '../shared/shared.module';
 import { BuyComponent } from './buy.component';
-import { BuyCommentsComponent } from './buy-comments/buy-comments.component';
 import { BuyOrdersComponent } from './buy-orders/buy-orders.component';
 import { CancelBidModalComponent } from './buy-orders/cancel-bid-modal/cancel-bid-modal.component';
 import { ConfirmOrderDeliveredModalComponent } from './buy-orders/confirm-order-delivered-modal/confirm-order-delivered-modal.component';
@@ -30,7 +29,6 @@ const routes: Routes = [
   ],
   declarations: [
     BuyComponent,
-    BuyCommentsComponent,
     BuyOrdersComponent,
     CancelBidModalComponent,
     ConfirmOrderDeliveredModalComponent,

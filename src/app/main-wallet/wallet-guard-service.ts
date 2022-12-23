@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map, take, concatMap } from 'rxjs/operators';
-import { WalletInfoState } from 'app/main/store/main.state';
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
 import { environment } from 'environments/environment';
-import { MainActions } from 'app/main/store/main.actions';
+import { Particl } from 'app/networks/networks.module';
 
 @Injectable()
 export class WalletGuardService {
@@ -14,9 +13,9 @@ export class WalletGuardService {
   constructor(private _store: Store) {}
 
   isWalletCreated(): Observable<boolean> {
-    const obs = this._store.selectOnce(WalletInfoState).pipe(
+    const obs = this._store.selectOnce<WalletInfoStateModel>(Particl.State.Wallet.Info).pipe(
       take(1),
-      map((info: WalletInfoStateModel) => {
+      map((info) => {
         return typeof info.hdseedid === 'string' && info.hdseedid.length > 0;
       })
     );
@@ -25,7 +24,7 @@ export class WalletGuardService {
       // Only needed for Angular hot-reloading (during dev): force the wallet info to be fetched,
       //  otherwise this request fails and the dev ends up in the 'Create/Restore wallet' flow instead of the regular wallet.
       this._firstLoad = false;
-      return this._store.dispatch(new MainActions.Initialize(true)).pipe(concatMap(() => obs));
+      return this._store.dispatch(new Particl.Actions.WalletActions.RefreshWalletInfo).pipe(concatMap(() => obs));
     }
     return obs;
   }

@@ -38,6 +38,10 @@ body {
     animation: expand-content 1.5s 1;
     animation-delay: 0.3s;
     animation-fill-mode: forwards; // stay on the last "frame"
+
+    section {
+      padding-top: 2em;
+    }
   }
 
   .header-text {
@@ -111,11 +115,11 @@ body {
       animation: fade-apps 0.6s 1;
       animation-delay: 0.8s;
       animation-fill-mode: forwards; // stay on the last "frame"
-      position: absolute;
+      // position: absolute;
       // top: 50%;
-      left: -50px;
+      // left: -50px;
       z-index: 10;
-      top: calc(50% - (var(--app-height) / 2));
+      //top: calc(50% - (var(--app-height) / 2));
       opacity: 0;
       .app {
         @extend %tfx;
@@ -132,15 +136,22 @@ body {
         @include break(xl) {
           max-width: 310px;
         }
-        &:hover,
-        &:focus {
+        &.active:hover,
+        &.active:focus {
           box-shadow: 0 1px 0 var(--bg-muted), 0 3px 16px -4px hsla(var(--text-hsl), 0.3) !important;
+        }
+        &.disabled {
+          cursor: default;
+          text-decoration: none;
+          color: var(--text-muted);
         }
         .mat-icon {
           font-size: 22px;
           @include break(xl) {
             font-size: 26px;
           }
+        }
+        &.active .mat-icon {
           &.part-stake {
             color: var(--color-primary);
           }
@@ -153,6 +164,15 @@ body {
           &.part-swap {
             color: var(--color-warning);
           }
+          &.part-globe {
+            color: #fab114;
+          }
+        }
+        &.disabled .mat-icon {
+          color: var(--text-muted);
+        }
+        &.start-here {
+          animation: app-start-here 3s infinite;
         }
         .name {
           margin: 14px 0 8px;
@@ -172,6 +192,28 @@ body {
     } // .apps
   }
 
+  .status {
+    flex: 0 1 24px;
+    padding: 1.5em 2em 1.5em 5px;
+    animation: fade-apps 0.6s 1;
+    animation-delay: 0.8s;
+    animation-fill-mode: forwards; // stay on the last "frame"
+    z-index: 10;
+    opacity: 0;
+    p {
+      display: flex;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      @include break(xl) {
+        font-size: 0.9rem;
+      }
+      mat-icon {
+        margin-top: 3px;
+      }
+    }
+  }
+
   .messages {
     flex: 0 1 24px;
     padding: 3em;
@@ -183,9 +225,9 @@ body {
     opacity: 0;
     p {
       color: var(--text-muted);
-      font-size: 0.8rem;
+      font-size: 0.8125rem;
       @include break(xl) {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
       }
     }
     footer {
@@ -199,9 +241,10 @@ body {
     }
   }
 
-  .version {
+  .version-label {
     flex: 0 1 24px;
     margin: 0;
+    padding-left: 5px;
     color: hsla(var(--text-muted-hsl), 0.6);
   }
 } // .splash-container
@@ -247,5 +290,14 @@ body {
   }
   100% {
     flex: 0 0 550px;
+  }
+}
+
+@keyframes app-start-here {
+  0% {
+    border: 5px solid  rgba(250, 177, 20, 0);
+  }
+  100% {
+    border: 5px solid  rgba(250, 177, 20, 1);
   }
 }

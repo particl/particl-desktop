@@ -1,4 +1,4 @@
-import { CHAIN_TYPE } from 'app/core/core.models';
+import { ChainType } from 'app/networks/particl/particl.models';
 
 
 export interface ResponseProposalDetail {
@@ -45,7 +45,7 @@ export interface ProposalItem {
   name: string;
   blockStart: number;
   blockEnd: number;
-  network: CHAIN_TYPE;
+  network: ChainType;
   infoUrls: {
     ccs?: string;
     github?: string;

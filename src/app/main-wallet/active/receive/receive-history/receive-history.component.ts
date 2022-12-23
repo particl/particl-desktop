@@ -5,11 +5,12 @@ import { Observable, Subject, of} from 'rxjs';
 import { takeUntil, filter, switchMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { AddressService } from '../../../shared/address.service';
-import { FilteredAddress, AddressType } from '../../../shared/address.models';
+import { AddressType } from '../../../shared/address.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { SignVerifyAddressModalComponent } from '../../../shared/sign-verify-address-modal/sign-verify-address-modal.component';
 import { AddressDetailModalComponent } from '../../../shared/address-detail-modal/address-detail-modal.component';
 import { PageFilter } from '../../../shared/shared.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 enum TextContent {
@@ -24,14 +25,14 @@ enum TextContent {
 })
 export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
 
-  @Input() activeAddress: FilteredAddress;
+  @Input() activeAddress: RPCResponses.FilterAddress;
   @ViewChild('paginator', {static: false}) paginator: any;
   @ViewChild('scroll', {static: false}) scrollContainer: any;
 
   isVisible: FormControl = new FormControl(false);
   searchQuery: FormControl = new FormControl('');
   isLoading: boolean = true;
-  filteredAddresses: FilteredAddress[] = [];
+  filteredAddresses: RPCResponses.FilterAddress[] = [];
 
 
   readonly pageFilters: PageFilter = {
@@ -45,7 +46,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   private loader$: Subject<void> = new Subject();
   private filter$: Subject<void[]> = new Subject();
-  private _addresses: FilteredAddress[] = [];
+  private _addresses: RPCResponses.FilterAddress[] = [];
 
 
   constructor(
@@ -133,8 +134,8 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
         changes.activeAddress.currentValue.address &&
         changes.activeAddress.currentValue.address.length
     ) {
-      const current: FilteredAddress = changes.activeAddress.currentValue;
-      const prev: FilteredAddress = changes.activeAddress.previousValue;
+      const current: RPCResponses.FilterAddress = changes.activeAddress.currentValue;
+      const prev: RPCResponses.FilterAddress = changes.activeAddress.previousValue;
 
       if (!prev) {
         return;
@@ -164,22 +165,22 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
   }
 
 
-  trackByAddressFn(idx: number, item: FilteredAddress) {
+  trackByAddressFn(idx: number, item: RPCResponses.FilterAddress) {
     return item.address;
   }
 
 
   copyToClipBoard() {
-    this._snackbar.open(TextContent.ADDRESS_COPIED, '');
+    this._snackbar.open(TextContent.ADDRESS_COPIED, 'success');
   }
 
 
-  openAddressDetailModal(address: FilteredAddress) {
+  openAddressDetailModal(address: RPCResponses.FilterAddress) {
     this._dialog.open(AddressDetailModalComponent, {data: {address}});
   }
 
 
-  openSignatureModal(address: FilteredAddress) {
+  openSignatureModal(address: RPCResponses.FilterAddress) {
     this._dialog.open(SignVerifyAddressModalComponent, {data: {address, type: 'sign'}});
   }
 
@@ -195,7 +196,7 @@ export class ReceiveHistoryComponent implements OnChanges, OnInit, OnDestroy {
   }
 
 
-  private loadAddresses(): Observable<FilteredAddress[]> {
+  private loadAddresses(): Observable<RPCResponses.FilterAddress[]> {
     const addrType: AddressType = this.activeAddress.address.length >= 35 ? 'private' : 'public';
     return this._addressService.fetchOwnAddressHistory(addrType);
   }

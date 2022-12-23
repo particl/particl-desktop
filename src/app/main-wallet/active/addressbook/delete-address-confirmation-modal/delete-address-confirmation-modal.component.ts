@@ -5,12 +5,12 @@ import { iif, of } from 'rxjs';
 import { concatMap, finalize } from 'rxjs/operators';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { AddressService } from '../../../shared/address.service';
-import { FilteredAddress } from '../../../shared/address.models';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 interface DeleteModalTemplateInputs {
-  address: FilteredAddress;
+  address: RPCResponses.FilterAddress;
 }
 
 enum TextContent {
@@ -58,7 +58,7 @@ export class DeleteAddressConfirmationModalComponent {
       (success: boolean | null) => {
         if (success !== null) {
           if (success) {
-            this._snackbar.open(TextContent.DELETE_SUCCESS, '');
+            this._snackbar.open(TextContent.DELETE_SUCCESS, 'success');
             this.isDeleted.emit(true);
             this.dialogClose();
           } else {

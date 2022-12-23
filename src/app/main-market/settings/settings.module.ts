@@ -6,6 +6,8 @@ import { MarketSharedModule } from '../shared/shared.module';
 
 import { MarketSettingsComponent } from './settings.component';
 import { MarketConsoleModalComponent } from './market-console-modal/market-console-modal.component';
+import { GeneralConfigComponent } from './setting-categories/general-config/general-config.component';
+import { ModuleSettingsComponent } from './setting-categories/module-settings/module-settings.component';
 
 
 const routes: Routes = [
@@ -25,10 +27,14 @@ const routes: Routes = [
   ],
   declarations: [
     MarketSettingsComponent,
-    MarketConsoleModalComponent
+    MarketConsoleModalComponent,
+    GeneralConfigComponent,
+    ModuleSettingsComponent,
   ],
   entryComponents: [
-    MarketConsoleModalComponent
+    MarketConsoleModalComponent,
+    GeneralConfigComponent,
+    ModuleSettingsComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IpcService } from 'app/core/services/ipc.service';
+import { BackendService } from 'app/core/services/backend.service';
 
 
 @Injectable(
@@ -8,14 +8,12 @@ import { IpcService } from 'app/core/services/ipc.service';
 @Injectable()
 export class CloseGuiService {
   constructor(
-    private _ipc: IpcService
+    private _backendService: BackendService
   ) {
   }
 
   /** Quit electron and fired an event to backend */
-  public quitElectron() {
-    if (window.electron) {
-      this._ipc.runCommand('close-gui', null, null);
-    }
+  public quitElectron(doRestart: boolean = false) {
+    this._backendService.send('gui:gui:close-gui', doRestart);
   }
 }

@@ -3,7 +3,10 @@
     <div class="sidebar-menu">
 
       <div class="logo">
-        <div class="network-tag" *ngIf="(testnet | async)">testnet</div>
+        <div class="network-tag" *appVar="(chainType | async) as currentChain">
+          <ng-container *ngIf="currentChain === 'test'">testnet</ng-container>
+          <ng-container *ngIf="currentChain === 'regtest'">regtest</ng-container>
+        </div>
         <img src="./assets/particl-logo.svg" alt="Particl">
       </div>
 

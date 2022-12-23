@@ -10,8 +10,7 @@ import {
 
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../../store/market.state';
-import { WalletInfoState } from 'app/main/store/main.state';
-import { CoreConnectionState } from 'app/core/store/coreconnection.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -30,7 +29,7 @@ import { ChatConversationModalComponent, ChatConversationModalInputs } from './.
 
 import { isBasicObjectType } from '../../shared/utils';
 
-import { WalletInfoStateModel } from 'app/main/store/main.models';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
 import { OrderItem, BuyFlowOrderType, OrderUserType, ActionTransitionParams } from '../../services/orders/orders.models';
 import { Identity } from '../../store/market.models';
 import { ORDER_ITEM_STATUS } from '../../shared/market.models';
@@ -64,7 +63,7 @@ interface RenderedOrderItem extends OrderItem {
 })
 export class BuyOrdersComponent implements OnInit, OnDestroy {
 
-  @Select(CoreConnectionState.isTestnet) isTestnet: Observable<boolean>;
+  @Select(MarketState.setting('txUrl')) txUrl: Observable<string>;
 
   identityIsEncrypted: boolean = false;
   isLoading: boolean = true;
@@ -131,7 +130,7 @@ export class BuyOrdersComponent implements OnInit, OnDestroy {
       tap((identity) => {
         this.currentIdentity = identity;
         if (identity.id > 0) {
-          const walletState: WalletInfoStateModel = this._store.selectSnapshot(WalletInfoState);
+          const walletState = this._store.selectSnapshot<WalletInfoStateModel>(Particl.State.Wallet.Info);
           this.identityIsEncrypted = (+walletState.unlocked_until > 0) || (walletState.encryptionstatus !== 'Unencrypted');
         }
         this.loadMarketsControl.setValue(identity.id);

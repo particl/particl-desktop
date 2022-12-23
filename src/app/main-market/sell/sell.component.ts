@@ -26,7 +26,6 @@ export class SellComponent implements OnInit, OnDestroy {
     { title: 'Orders', icon: 'part-recipe', templ: 'orders', notificationValue: null},
     { title: 'Listings', icon: 'part-bag', templ: 'listings', notificationValue: null},
     { title: 'Inventory & Products', icon: 'part-stock', templ: 'templates', notificationValue: null},
-    // { title: 'Questions', icon: 'part-chat-discussion', templ: 'questions', notificationValue: null},
   ];
 
 

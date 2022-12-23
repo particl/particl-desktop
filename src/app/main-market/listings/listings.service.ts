@@ -7,8 +7,9 @@ import { MarketState } from '../store/market.state';
 import { MarketUserActions } from '../store/market.actions';
 
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { ParticlRpcService } from 'app/networks/networks.module';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 import { getValueOrDefault, isBasicObjectType, parseImagePath } from '../shared/utils';
 import { PartoshiAmount } from 'app/core/util/utils';
@@ -22,7 +23,7 @@ export class ListingsService {
 
   constructor(
     private _rpc: MarketRpcService,
-    private _daemonRpc: MainRpcService,
+    private _daemonRpc: ParticlRpcService,
     private _socket: MarketSocketService,
     private _store: Store
   ) {}
@@ -122,7 +123,7 @@ export class ListingsService {
 
 
   forceSmsgRescan(): Observable<any> {
-    return this._daemonRpc.call('smsgscanbuckets').pipe(
+    return this._daemonRpc.call<RPCResponses.SmsgScanBuckets>('smsgscanbuckets').pipe(
       concatMap(() => this._store.dispatch(new MarketUserActions.SetSetting('profile.marketsLastAdded', 0)))
     );
   }

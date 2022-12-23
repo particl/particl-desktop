@@ -13,11 +13,13 @@
 
 <mat-dialog-actions>
 
-  <div class="left">
-    <a mat-button matTooltip="Display address' public information" href="https://explorer{{(isTestnet | async) ? '-testnet' : ''}}.particl.io/address/{{address?.address || ''}}" target="_blank">
-      <mat-icon fontIcon="part-zoom-in"></mat-icon>
-      Show on Explorer
-    </a>
+  <div class="left" *appVar="(addressURL$ | async ) as addressUrl">
+    <ng-container *ngIf="addressUrl && addressUrl?.length > 0">
+      <a mat-button matTooltip="Display address' public information" [href]="addressUrl?.replace('{addressid}', address?.address)" target="_blank">
+        <mat-icon fontIcon="part-zoom-in"></mat-icon>
+        Show on Explorer
+      </a>
+    </ng-container>
   </div>
 
   <div class="right">

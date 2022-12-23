@@ -1,6 +1,6 @@
 import { AddressType } from '../../shared/address.models';
 import { PartoshiAmount } from 'app/core/util/utils';
-import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE, MIN_UTXO_SPLIT, MAX_UTXO_SPLIT } from 'app/main/store/main.models';
+import { MIN_RING_SIZE, MAX_RING_SIZE, DEFAULT_RING_SIZE, MIN_UTXO_SPLIT, MAX_UTXO_SPLIT } from 'app/networks/particl/particl.models';
 
 
 export type TabType = 'transfer' | 'send';
@@ -30,14 +30,6 @@ export interface SavedAddress {
   address: string;
   label: string;
   type: AddressType;
-}
-
-
-export interface SendTypeToEstimateResponse {
-  bytes: number;
-  fee: number;
-  need_hwdevice: boolean;
-  outputs_fee: any;
 }
 
 export interface SendTypeToCoinControl {

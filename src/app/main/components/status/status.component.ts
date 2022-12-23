@@ -1,12 +1,9 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Log } from 'ng2-logger';
 import { Store, Select } from '@ngxs/store';
 import { Observable, Subject, merge, combineLatest } from 'rxjs';
-import { takeUntil, tap } from 'rxjs/operators';
-import { AppDataState } from 'app/core/store/appdata.state';
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
-import { WalletInfoState, WalletStakingState } from 'app/main/store/main.state';
+import { take, takeUntil, tap } from 'rxjs/operators';
+import { Particl } from 'app/networks/networks.module';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 
 
@@ -17,12 +14,11 @@ import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wal
 })
 export class StatusComponent implements OnInit, OnDestroy {
 
-  @Select(WalletInfoState.getValue('encryptionstatus')) walletStatus: Observable<string>;
-  @Select(WalletStakingState.getValue('cold_staking_enabled')) coldStakingEnabled: Observable<boolean>;
+  @Select(Particl.State.Wallet.Info.getValue('encryptionstatus')) walletStatus: Observable<string>;
+  @Select(Particl.State.Wallet.Staking.getValue('cold_staking_enabled')) coldStakingEnabled: Observable<boolean>;
   peerListCount: number = 0;
   timeOffset: number = 0;
 
-  private log: any = Log.create('status.component id:' + Math.floor(Math.random() * 1000 + 1));
   private destroy$: Subject<void> = new Subject();
   private _zmqStyle: string = '';
   private _zmqStatus: string = '';
@@ -35,36 +31,21 @@ export class StatusComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.log.d('initializing');
 
-    const zmq$ = combineLatest(
-      this._store.select(ZmqConnectionState.getStatus('smsg')),
-      this._store.select(ZmqConnectionState.getStatus('hashblock'))
-    ).pipe(
+    const zmq$ = combineLatest([
+      this._store.select(Particl.State.Core.isZmqConnected('smsg')).pipe(takeUntil(this.destroy$)),
+      this._store.select(Particl.State.Core.isZmqConnected('hashblock')).pipe(takeUntil(this.destroy$))
+    ]).pipe(
       tap(([smsg, hashblock]) => {
         const services = [];
         let msg = '';
 
         switch (true) {
-          case !smsg.connected || !hashblock.connected:
+          case !smsg || !hashblock:
             this._zmqStyle = 'zmq-alert';
-            if (!smsg.connected) { services.push('SMSG'); }
-            if (!hashblock.connected) { services.push('HashBlock'); }
+            if (!smsg) { services.push('SMSG'); }
+            if (!hashblock) { services.push('HashBlock'); }
             msg = `Service Unavailable`;
-            break;
-
-          case smsg.error || hashblock.error:
-            if (smsg.error) { services.push('SMSG'); }
-            if (hashblock.error) { services.push('HashBlock'); }
-            this._zmqStyle = 'zmq-warning';
-            msg = `Service Error`;
-            break;
-
-          case (smsg.retryCount > 0) || (hashblock.retryCount > 0):
-            if (smsg.retryCount > 0) { services.push('SMSG'); }
-            if (hashblock.retryCount > 0) { services.push('HashBlock'); }
-            this._zmqStyle = 'zmq-info';
-            msg = `Retrying Connection`;
             break;
 
           default:
@@ -72,27 +53,31 @@ export class StatusComponent implements OnInit, OnDestroy {
             msg = `Services connected`;
         }
         this._zmqStatus = `${msg}${services.length ? ': ' + services.join(', ') : '' }`;
-      })
+      }),
+      takeUntil(this.destroy$)
     );
 
 
     const walletIcon$ = this.walletStatus.pipe(
       tap(status => {
         this._walletEncryption = status;
-      })
+      }),
+      takeUntil(this.destroy$)
     );
 
     merge(
-      this._store.select(AppDataState.networkValue('connections')).pipe(
+      this._store.select(Particl.State.Blockchain.networkValue('connections')).pipe(
         tap((count) => {
-          this.peerListCount = count;
-        })
+          this.peerListCount = +count > 0 ? +count : 0;
+        }),
+        takeUntil(this.destroy$)
       ),
 
-      this._store.select(AppDataState.networkValue('timeoffset')).pipe(
+      this._store.select(Particl.State.Blockchain.networkValue('timeoffset')).pipe(
         tap((offset) => {
-          this.timeOffset = offset;
-        })
+          this.timeOffset = +offset;
+        }),
+        takeUntil(this.destroy$)
       ),
 
       walletIcon$,
@@ -148,6 +133,6 @@ export class StatusComponent implements OnInit, OnDestroy {
   }
 
   toggleWalletStatus() {
-    this._encrypt.changeCurrentStatus().subscribe();
+    this._encrypt.changeCurrentStatus().pipe(take(1), takeUntil(this.destroy$)).subscribe();
   }
 }

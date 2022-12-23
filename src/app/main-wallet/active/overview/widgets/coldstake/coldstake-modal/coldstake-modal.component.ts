@@ -2,7 +2,6 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { flyInOut } from 'app/core-ui/core.animations';
 import { FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-// import { ValidAddressValidator } from '../coldstake.validators';
 
 
 @Component({
@@ -11,7 +10,6 @@ import { MatDialogRef } from '@angular/material';
   animations: [
     flyInOut()
   ],
-  // providers: [ValidAddressValidator]
 })
 export class ColdStakeModalComponent {
 
@@ -21,11 +19,9 @@ export class ColdStakeModalComponent {
 
   constructor(
     private _dialogRef: MatDialogRef<ColdStakeModalComponent>,
-    // private _addressValidator: ValidAddressValidator,
   ) {
     this.addressField = new FormControl('',
       [Validators.required, Validators.minLength(15)],
-      // this._addressValidator.validate.bind(this._addressValidator)
     );
   }
 

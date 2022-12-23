@@ -1,8 +1,11 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NgxsModule } from '@ngxs/store';
 import { CoreUiModule } from 'app/core-ui/core-ui.module';
 import { MainSharedModule } from 'app/main/components/main-shared.module';
+
+import { WalletSettingsState, WalletURLState } from './shared/state-store/wallet-store.state';
 
 import { WalletBaseComponent } from './base/wallet-base.component';
 import { WalletGuardService } from './wallet-guard-service';
@@ -27,6 +30,9 @@ const routes: Routes = [
     CommonModule,
     CoreUiModule,
     MainSharedModule,
+    NgxsModule.forFeature(
+      [WalletSettingsState, WalletURLState]
+    ),
     RouterModule.forChild(routes)
   ],
   exports: [

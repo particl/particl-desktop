@@ -3,20 +3,19 @@ import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operator
 
 import { State, StateToken, Action, StateContext, Selector, createSelector } from '@ngxs/store';
 import { patch, updateItem, removeItem, iif as nxgsIif } from '@ngxs/store/operators';
-import { MainActions } from 'app/main/store/main.actions';
+import { Particl } from 'app/networks/networks.module';
 import { MarketStateActions, MarketUserActions } from './market.actions';
 
+import { BackendService } from 'app/core/services/backend.service';
 import { MarketRpcService } from '../services/market-rpc/market-rpc.service';
 import { MarketSocketService } from '../services/market-rpc/market-socket.service';
-import { SettingsService } from 'app/core/services/settings.service';
 
-import { environment } from 'environments/environment';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
 import { isBasicObjectType, getValueOrDefault, parseMarketResponseItem } from '../shared/utils';
 import { RespProfileListItem, RespIdentityListItem, RespChatChannelList } from '../shared/market.models';
 import {
   MarketStateModel, StartedStatus, Identity, MarketSettings, Profile, CartDetail, DefaultMarketConfig,
-  MarketNotifications, ChatNotifications
+  MarketNotifications, ChatNotifications, IPCResponses
 } from './market.models';
 import { ChatChannelType } from '../services/chats/chats.models';
 
@@ -31,12 +30,13 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
   identity: 0,
   defaultConfig: {
     imagePath: './assets/images/placeholder_4-3.jpg',
-    url: `http://${environment.marketHost}:${environment.marketPort || 80}/`,
+    url: `http://localhost:45492/`,
+    port: 45492,
     imageMaxSizeFree: 153_600,  // 150 KB
     imageMaxSizePaid: 1_048_576 // 1 MB
   },
   settings: {
-    port: environment.marketPort,
+    port: 45492,
     defaultIdentityID: 0,
     defaultProfileID: 0,
     userRegion: '',
@@ -47,6 +47,7 @@ const DEFAULT_STATE_VALUES: MarketStateModel = {
     defaultListingCommentPageCount: 20,
     daysToNotifyListingExpired: 7,
     marketsLastAdded: 0,
+    txUrl: '',
   },
   lastSmsgScanIssued: 0,
   notifications: {
@@ -118,6 +119,13 @@ export class MarketState {
   }
 
 
+  static setting(key: keyof MarketSettings) {
+    return createSelector([MarketState.settings], (state: MarketSettings) => {
+      return state[key] || null;
+    });
+  }
+
+
   @Selector()
   static defaultConfig(state: MarketStateModel): DefaultMarketConfig {
     return state.defaultConfig;
@@ -182,30 +190,32 @@ export class MarketState {
   constructor(
     private _marketService: MarketRpcService,
     private _socketService: MarketSocketService,
-    private _settingsService: SettingsService
+    private _backendService: BackendService,
   ) {}
 
 
   @Action(MarketStateActions.StartMarketService)
   startMarketServices(ctx: StateContext<MarketStateModel>) {
+
     if ([StartedStatus.PENDING, StartedStatus.STARTED].includes(ctx.getState().started)) {
       return;
     }
 
-    this.loadSettings(ctx);
-
     ctx.patchState({started: StartedStatus.PENDING});
 
-    const failed$ = defer(() => {
-      this._marketService.stopMarketService();
-      const status = ctx.getState().started;
-      if ([StartedStatus.PENDING, StartedStatus.STARTED].includes(status)) {
-        ctx.patchState({started: StartedStatus.STOPPED});
-      }
-    });
+    const failed$ = defer(() => ctx.dispatch(MarketStateActions.StopMarketService).pipe(
+      tap({
+        next: () => {
+          if ([StartedStatus.PENDING, StartedStatus.STARTED].includes(ctx.getState().started)) {
+            ctx.patchState({started: StartedStatus.STOPPED});
+          }
+        }
+      })
+    ));
+
 
     const profile$ = defer(() => {
-      const savedProfileId = +ctx.getState().settings.defaultProfileID;
+      const savedDefaultProfileId = this.getSavedDefaultProfileID();
 
       return this._marketService.call('profile', ['list']).pipe(
         retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
@@ -227,19 +237,24 @@ export class MarketState {
           return profiles;
         }),
         concatMap((profileList: Profile[]) => {
+          let foundProfile: Profile;
 
-          if (savedProfileId > 0) {
-            const found = profileList.find(profileItem => profileItem.id === savedProfileId);
-            if (found !== undefined) {
-              ctx.patchState({profile: found});
-              return of(true);
-            }
+          if (savedDefaultProfileId > 0) {
+            foundProfile = profileList.find(profileItem => profileItem.id === savedDefaultProfileId);
           }
 
           // no saved profile -OR- previously saved profile doesn't exist anymore -> revert to loading the default profile
-          const defaultProfile = profileList.find(profileItem => profileItem.name === 'DEFAULT');
-          if (defaultProfile !== undefined) {
-            ctx.patchState({profile: defaultProfile});
+          if (!foundProfile) {
+            foundProfile = profileList.find(profileItem => profileItem.name === 'DEFAULT');
+          }
+
+          if (foundProfile) {
+            ctx.patchState({profile: foundProfile});
+            ctx.setState(patch<MarketStateModel>({
+              settings: patch<MarketSettings>({
+                defaultProfileID: foundProfile.id,
+              })
+            }));
             return of(true);
           }
 
@@ -248,9 +263,30 @@ export class MarketState {
         })
       );
     }).pipe(
-      tap((isSuccess) => {
-        if (isSuccess) {
-          this.loadSettings(ctx, ctx.getState().profile.id);
+      tap({
+        next: (isProfileLoaded) => {
+          if (isProfileLoaded) {
+            const newStateSettings: MarketSettings = (JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES))).settings;
+            const excludedKeys = ['defaultProfileID', 'port', 'txUrl'];
+
+            const pSettings = this.getLocalProfileSettings(ctx.getState().profile.id);
+
+            if (Object.keys(pSettings).length > 0) {
+              const stateKeys = Object.keys(newStateSettings);
+              stateKeys.forEach(sk => {
+                if (typeof newStateSettings[sk] === typeof pSettings[sk]) {
+                  newStateSettings[sk] = pSettings[sk];
+                }
+              });
+            }
+
+            const currentState = ctx.getState().settings;
+            excludedKeys.forEach(ek => {
+              newStateSettings[ek] = currentState[ek];
+            });
+
+            ctx.patchState({settings: newStateSettings});
+          }
         }
       }),
       concatMap((isSuccess) => iif(
@@ -268,43 +304,81 @@ export class MarketState {
       ))
     );
 
-    const currentSettings = ctx.getState().settings;
+    const started$ = defer(() => this._backendService.sendAndWait<IPCResponses.GetSettings>('apps:market:market:getSettings').pipe(
+        map(backendSettings => {
+          let success = false;
 
-    return this._marketService.startMarketService(currentSettings.port, currentSettings.startupWaitTimeoutSeconds).pipe(
-      map(resp => {
-        const defaultConfig: DefaultMarketConfig = JSON.parse(JSON.stringify(ctx.getState().defaultConfig));
-        defaultConfig.url = resp.url ? resp.url : defaultConfig.url;
-        ctx.patchState({defaultConfig});
-        return resp.started;
-      }),
-      catchError((err) => {
+          if (isBasicObjectType(backendSettings)) {
+            if (isBasicObjectType(backendSettings.network) && getValueOrDefault(backendSettings.network.port, 'number', 0) > 0) {
+              success = true;
+
+              const defaultUrlParts = ctx.getState().defaultConfig.url.split(':');
+              defaultUrlParts[defaultUrlParts.length - 1] = `${backendSettings.network.port}/`;
+              const defaultUrl = defaultUrlParts.join(':');
+              ctx.setState(patch<MarketStateModel>({
+                defaultConfig: patch<DefaultMarketConfig>({
+                  url: defaultUrl
+                }),
+                settings: patch<MarketSettings>({
+                  port: backendSettings.network.port,
+                })
+              }));
+
+              this._marketService._setConnectionParams(defaultUrl);
+            }
+
+            if (isBasicObjectType(backendSettings.urls) && typeof backendSettings.urls.transaction === 'string') {
+              ctx.setState(patch<MarketStateModel>({
+                settings: patch<MarketSettings>({
+                  txUrl: backendSettings.urls.transaction,
+                })
+              }));
+            }
+          }
+
+          return success;
+        }),
+
+        catchError(() => of(false)),
+
+        concatMap(success => iif(
+          () => !success,
+          failed$,
+          defer(() => {
+            let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=3&transport=websocket`;
+
+            if (url.startsWith('http')) {
+              url = url.replace('http', 'ws');
+            }
+            return merge(
+              this._socketService.startSocketService(url),
+              profile$
+            );
+          })
+        ))
+      )
+    );
+
+    return this._backendService.sendAndWait<boolean>('apps:market:market:start').pipe(
+      catchError(() => {
         ctx.patchState({started: StartedStatus.FAILED});
         return of(false);
       }),
       concatMap((isStarted: boolean) => iif(
         () => !isStarted,
         failed$,
-        defer(() => {
-          // the path appended here is necessary since the marketplace is using socket.io and this is needed specifically for socket.io
-          let url = `${ctx.getState().defaultConfig.url}socket.io/?EIO=3&transport=websocket`;
-
-          if (url.startsWith('http')) {
-            url = url.replace('http', 'ws');
-          }
-          return merge(
-            this._socketService.startSocketService(url),
-            profile$
-          );
-        })
+        started$
       ))
     );
+
   }
 
 
   @Action(MarketStateActions.StopMarketService)
   stopMarketServices(ctx: StateContext<MarketStateModel>) {
     this._socketService.stopSocketService();
-    this._marketService.stopMarketService();
+    this._marketService._stopConnection();
+    this._backendService.send('apps:market:market:stop');
     ctx.setState(JSON.parse(JSON.stringify(DEFAULT_STATE_VALUES)));
   }
 
@@ -320,99 +394,90 @@ export class MarketState {
   @Action(MarketStateActions.LoadIdentities)
   loadIdentities(ctx: StateContext<MarketStateModel>) {
     const state = ctx.getState();
-    if ((state.started === StartedStatus.STARTED) || (state.started === StartedStatus.PENDING)) {
-      const profileId = state.profile.id;
-
-      return this._marketService.call('identity', ['list', profileId]).pipe(
-        retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
-        catchError(() => of([])),
-        map((identityList: RespIdentityListItem[]) => {
-          const ids: Identity[] = [];
-          identityList.forEach((idItem: RespIdentityListItem) => {
-            const id = this.buildIdentityItem(idItem, state.defaultConfig.url, state.defaultConfig.imagePath);
-            if (id.id > 0) {
-              ids.push(id);
-            }
-          });
-
-          return ids;
-        }),
-
-        tap(identities => {
-          ctx.patchState({ identities });
-        }),
-
-        concatMap((identities) => {
-          if (identities.length > 0) {
-            const selectedIdentity = ctx.getState().identity;
-
-            if (+selectedIdentity) {
-              const found = identities.find(id => id.id === +selectedIdentity);
-              if (found !== undefined) {
-                // current selected identity is in the list so nothing to do: its already selected
-                return of(null);
-              }
-            }
-
-            // Selected identity is not in the list returned, or there is no selected identity
-            const savedID = ctx.getState().settings.defaultIdentityID;
-
-            if (savedID) {
-              const saved = identities.find(id => id.id === savedID);
-              if (saved !== undefined) {
-                return ctx.dispatch(new MainActions.ChangeWallet(saved.name)).pipe(
-                  concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(saved)))
-                );
-              }
-            }
-
-
-            // MP is starting up, no valid current nor default identity is set.
-            //    So check if the current "global" wallet is set AND is a market related wallet
-            const globalSettings = this._settingsService.fetchGlobalSettings();
-            if ((typeof globalSettings.activatedWallet === 'string') && (globalSettings.activatedWallet.length > 0)) {
-              const savedName = globalSettings.activatedWallet;
-              const saved = identities.find(id => id.name === savedName);
-              if (saved) {
-                return ctx.dispatch(new MainActions.ChangeWallet(saved.name)).pipe(
-                  concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(saved)))
-                );
-              }
-            }
-
-            // No valid current identity and no saved identity... get first identity from list
-            const selected = JSON.parse(JSON.stringify(identities)).sort((a: Identity, b: Identity) => a.id - b.id)[0];
-            if (selected) {
-              return ctx.dispatch(new MainActions.ChangeWallet(selected.name)).pipe(
-                concatMap(() => ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected)))
-              );
-            }
-          }
-
-          return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(NULL_IDENTITY));
-        })
-      );
+    if (!((state.started === StartedStatus.STARTED) || (state.started === StartedStatus.PENDING))) {
+      return;
     }
+    const profileId = state.profile.id;
+
+    return this._marketService.call('identity', ['list', profileId]).pipe(
+      retryWhen(genericPollingRetryStrategy({maxRetryAttempts: 3})),
+      catchError(() => of([])),
+      map((identityList: RespIdentityListItem[]) => {
+        const ids: Identity[] = [];
+        identityList.forEach((idItem: RespIdentityListItem) => {
+          const id = this.buildIdentityItem(idItem, state.defaultConfig.url, state.defaultConfig.imagePath);
+          if (id.id > 0) {
+            ids.push(id);
+          }
+        });
+
+        return ids;
+      }),
+
+      tap(identities => {
+        ctx.patchState({ identities });
+      }),
+
+      concatMap((identities) => {
+        if (identities.length === 0) {
+          return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(NULL_IDENTITY));
+        }
+
+        const selectedIdentity = ctx.getState().identity;
+
+        if (selectedIdentity > 0) {
+          const found = identities.find(id => id.id === +selectedIdentity);
+          if (found !== undefined) {
+            // current selected identity is in the list so nothing to do: its already selected
+            return of(null);
+          }
+        }
+
+        // Selected identity is not in the list returned, or there is no selected identity
+        const savedID = ctx.getState().settings.defaultIdentityID;
+
+        if (savedID) {
+          const saved = identities.find(id => id.id === savedID);
+          if (saved !== undefined) {
+            return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(saved));
+          }
+        }
+
+        // No valid current identity and no saved identity... get first identity from list
+        const selected = JSON.parse(JSON.stringify(identities)).sort((a: Identity, b: Identity) => a.id - b.id)[0];
+        if (selected) {
+          return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected));
+        }
+      })
+    );
   }
 
 
   @Action(MarketStateActions.SetCurrentIdentity, {cancelUncompleted: true})
   setActiveIdentity(ctx: StateContext<MarketStateModel>, { identity }: MarketStateActions.SetCurrentIdentity) {
-    let idValue = 0;
-    if (identity && (Number.isInteger(+identity.id))) {
-      const globalSettings = this._settingsService.fetchGlobalSettings();
-      // TODO: not a great way to do this... but we need to verify that the application state wallet is the current wallet
-      //  before setting the active identity to that wallet. Look into a better way of doing this...
-      if (globalSettings['activatedWallet'] === identity.name) {
-        idValue = +identity.id;
-      }
-    }
-    ctx.patchState({identity: idValue});
 
-    return ctx.dispatch([
-      new MarketStateActions.SetIdentityCartCount(),
-      new MarketStateActions.ChatNotificationsClearAll()
-    ]);
+    if (!(identity && (Number.isInteger(+identity.id)))) {
+      return;
+    }
+
+    if (+identity.id > 0) {
+      return ctx.dispatch(new Particl.Actions.WalletActions.ChangeWallet(identity.name)).pipe(
+        map(() => true),
+        catchError(() => of(false)),
+        concatMap(isChanged => iif(
+          () => isChanged,
+          defer(() => {
+            ctx.patchState({identity: +identity.id});
+            return ctx.dispatch([
+              new MarketStateActions.SetIdentityCartCount(),
+              new MarketStateActions.ChatNotificationsClearAll()
+            ]);
+          }),
+          defer(() => {})
+        ))
+      );
+    }
+    ctx.patchState({identity: 0});
   }
 
 
@@ -575,32 +640,31 @@ export class MarketState {
   changeMarketSetting(ctx: StateContext<MarketStateModel>, action: MarketUserActions.SetSetting) {
     const currentState = ctx.getState();
     const currentSettings = JSON.parse(JSON.stringify(currentState.settings));
-    let key = action.key;
-    let profileID: number;
+    const origKey = action.key;
+    const editedKey = origKey.startsWith('profile.') ? origKey.replace('profile.', '') : origKey;
+    const newValue = action.value;
+    let isSaved = false;
 
-    if (key.startsWith('profile.')) {
-      // Save settings for the current Profile
-      key = key.replace('profile.', '');
-      if (currentState.profile !== null) {
-        profileID = currentState.profile.id;
+    if ( Object.keys(currentSettings).includes(editedKey) && (typeof currentSettings[editedKey] === typeof newValue) ) {
+      if ((origKey !== editedKey) && currentState.profile !== null) {
+        isSaved = this.saveLocalProfileSetting(currentState.profile.id, editedKey, newValue);
+      } else {
+        isSaved = true;
       }
     }
 
-    if ( Object.keys(currentSettings).includes(key) && (typeof currentSettings[key] === typeof action.value) ) {
-      if (this._settingsService.saveMarketSetting(key, action.value, profileID)) {
-        currentSettings[key] = action.value;
-        ctx.setState(patch<MarketStateModel>({
-          settings: patch<MarketSettings>({ [key] : action.value })}
-        ));
-      }
+    if (isSaved) {
+      ctx.setState(patch<MarketStateModel>({
+        settings: patch<MarketSettings>({ [editedKey] : action.value })}
+      ));
+    }
 
-      if (key === 'marketsLastAdded') {
-        ctx.setState(
-          patch<MarketStateModel>({
-            lastSmsgScanIssued: Date.now()
-          })
-        );
-      }
+    if (editedKey === 'marketsLastAdded') {
+      ctx.setState(
+        patch<MarketStateModel>({
+          lastSmsgScanIssued: Date.now()
+        })
+      );
     }
   }
 
@@ -744,33 +808,6 @@ export class MarketState {
   }
 
 
-  private loadSettings(ctx: StateContext<MarketStateModel>, profileId?: number) {
-
-    const stateSettings = ctx.getState().settings;
-    const newStateSettings: MarketSettings = JSON.parse(JSON.stringify(stateSettings));
-    const stateKeys = Object.keys(newStateSettings);
-
-    if (typeof profileId === 'number') {
-      const storedProfile = this._settingsService.fetchMarketSettings(profileId);
-      for (const key of stateKeys) {
-        if (typeof storedProfile[key] === typeof stateSettings[key] ) {
-          newStateSettings[key] = storedProfile[key];
-        }
-      }
-    } else {
-      const storedSettings = this._settingsService.fetchMarketSettings();
-
-      for (const key of stateKeys) {
-        if (typeof storedSettings[key] === typeof stateSettings[key] ) {
-          newStateSettings[key] = storedSettings[key];
-        }
-      }
-    }
-
-    ctx.patchState({settings: newStateSettings});
-  }
-
-
   private buildIdentityItem(src: RespIdentityListItem, marketUrl: string, defaultImage: string): Identity {
     const newItem: Identity = {
       id: 0,
@@ -830,6 +867,60 @@ export class MarketState {
     case ChatChannelType.ORDERITEM: ckey = 'orders'; break;
     }
     return ckey;
+  }
+
+
+  private getSavedDefaultProfileID(): number {
+    try {
+      const allset = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+      const mset = Object.prototype.toString.call(allset.market) === '[object Object]' ? allset.market : {};
+      const pset = Object.prototype.toString.call(mset.profileData) === '[object Object]' ? mset.profileData : {};
+      if (+pset.defaultProfileID > 0) {
+        return +pset.defaultProfileID;
+      }
+    } catch (e) { }
+    return 0;
+  }
+
+
+  private getLocalProfileSettings(profileID: number | null): any {
+    try {
+      const allset = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+      const mset = Object.prototype.toString.call(allset.market) === '[object Object]' ? allset.market : {};
+      const pset = Object.prototype.toString.call(mset.profileData) === '[object Object]' ? mset.profileData : {};
+      if (typeof profileID === 'number' && Number.isSafeInteger(profileID)) {
+        const idStr = `${profileID}`;
+        return Object.prototype.toString.call(pset[idStr]) === '[object Object]' ? pset[idStr] : {};
+      }
+      return pset;
+    } catch (e) { }
+
+    return {};
+  }
+
+
+  private saveLocalProfileSetting(profileID: number, key: string, value: boolean | number | string): boolean {
+    if (!(typeof profileID === 'number' && Number.isSafeInteger(profileID)) || typeof key !== 'string') {
+      return false;
+    }
+    const proSets = this.getLocalProfileSettings(null);
+    const pID = `${profileID}`;
+    if (Object.prototype.toString.call(proSets[pID]) !== '[object Object]') {
+      proSets[pID] = {};
+    }
+    proSets[pID][key] = value;
+
+    try {
+      const saved = JSON.parse(localStorage.getItem('settings') || '{}') || {};
+      if (!('market' in saved) || Object.prototype.toString.call(saved.market) !== '[object Object]') {
+        saved.market = {};
+      }
+      saved.market.profileData = proSets;
+      localStorage.setItem('settings', JSON.stringify(saved));
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
 }

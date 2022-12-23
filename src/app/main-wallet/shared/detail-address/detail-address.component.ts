@@ -6,7 +6,8 @@ import { iif, of } from 'rxjs';
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
 import { AddressService } from '../address.service';
-import { AddressType, FilteredAddress } from '../address.models';
+import { AddressType } from '../address.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 import { AddressHelper } from 'app/core/util/utils';
 
 
@@ -29,8 +30,8 @@ enum TextContent {
 })
 export class DetailAddressComponent implements OnChanges {
 
-  @Input() address: FilteredAddress;
-  @Output() updatedEmitter: EventEmitter<FilteredAddress> = new EventEmitter();
+  @Input() address: RPCResponses.FilterAddress;
+  @Output() updatedEmitter: EventEmitter<RPCResponses.FilterAddress> = new EventEmitter();
 
   widgetHelpText: string = '';
   isEditing: boolean = false;
@@ -50,7 +51,7 @@ export class DetailAddressComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if ('address' in changes) {
-      const address: FilteredAddress = changes.address.currentValue;
+      const address: RPCResponses.FilterAddress = changes.address.currentValue;
       this._addressType = (new AddressHelper()).getAddressType(address.address as AddressType) as AddressType;
       this.isEditing = false;
       this.newLabel = address.label || '';
@@ -129,7 +130,7 @@ export class DetailAddressComponent implements OnChanges {
         if (success) {
           this.address.label = this.newLabel;
           this.updatedEmitter.emit(this.address);
-          this._snackbar.open(TextContent.UPDATE_SUCCESS.replace('${address}', this.address.address), '');
+          this._snackbar.open(TextContent.UPDATE_SUCCESS.replace('${address}', this.address.address), 'success');
         }
       },
       (err) => {
@@ -141,6 +142,6 @@ export class DetailAddressComponent implements OnChanges {
 
 
   copyToClipBoard(): void {
-    this._snackbar.open(TextContent.ADDRESS_COPIED, '');
+    this._snackbar.open(TextContent.ADDRESS_COPIED, 'success');
   }
 }

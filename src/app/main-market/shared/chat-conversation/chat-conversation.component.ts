@@ -248,7 +248,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
       catchError(() => of({success: false})),
       tap((resp: RespChatParticipantUpdate) => {
         if (isBasicObjectType(resp) && (resp.success === true)) {
-          this._snackbar.open(TextContent.UDPATE_SENDER_SUCCESS, '');
+          this._snackbar.open(TextContent.UDPATE_SENDER_SUCCESS);
 
           this.selectedChatMessage.sender.label = labelValue;
           this.messageList.forEach(msg => {
@@ -263,7 +263,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy {
           return;
         }
 
-        this._snackbar.open(TextContent.UDPATE_SENDER_ERROR, '');
+        this._snackbar.open(TextContent.UDPATE_SENDER_ERROR, 'warn');
       })
 
     ).subscribe();

@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { finalize } from 'rxjs/operators';
 import { SnackbarService } from '../../services/snackbar/snackbar.service';
-import { WalletInfoService } from '../../services/wallet-info/wallet-info.service';
+import { ParticlWalletService } from 'app/networks/networks.module';
 
 
 enum TextContent {
@@ -30,7 +30,7 @@ export class EncryptwalletModalComponent {
   constructor(
     public _dialogRef: MatDialogRef<EncryptwalletModalComponent>,
     private _snackbar: SnackbarService,
-    private _walletService: WalletInfoService
+    private _walletService: ParticlWalletService
   ) { }
 
 

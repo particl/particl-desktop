@@ -1,14 +1,18 @@
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Log } from 'ng2-logger';
-
 import { Observable, Subject, merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, takeUntil, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, takeUntil, switchMap } from 'rxjs/operators';
+import { Select } from '@ngxs/store';
+import { Particl } from 'app/networks/networks.module';
 import { StakingInfoService } from './staking-info.service';
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
-import { WalletInfoState } from 'app/main/store/main.state';
-import { RpcGetStakingInfo, NumericStat } from './staking-info-widget.models.js';
-import * as zmqOptions from '../../../../../../../modules/zmq/services.js';
+import { RPCResponses } from 'app/networks/particl/particl.models';
+
+
+interface NumericStat {
+  whole: string;
+  sep: string;
+  fraction: string;
+}
+
 
 @Component({
   selector: 'widget-stakinginfo',
@@ -18,8 +22,8 @@ import * as zmqOptions from '../../../../../../../modules/zmq/services.js';
 })
 export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
-  @Select(ZmqConnectionState.getData('hashblock')) blockWatcher$: Observable<string>;
-  @Select(WalletInfoState.getValue('walletname')) walletSwitcher$: Observable<string>;
+  @Select(Particl.State.ZMQ.getData('hashblock')) blockWatcher$: Observable<string>;
+  @Select(Particl.State.Wallet.Info.getValue('walletname')) walletSwitcher$: Observable<string>;
 
   stakingEnabled: boolean;
   nextRewardTime: string;
@@ -33,9 +37,8 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
   rewardDistribution: NumericStat;
 
 
-  private log: any = Log.create('staking-info-widget.component' + Math.floor((Math.random() * 1000) + 1));
   private destroy$: Subject<void> = new Subject();
-  private monitor$: Observable<RpcGetStakingInfo>;
+  private monitor$: Observable<RPCResponses.GetStakingInfo>;
 
 
   constructor(
@@ -46,7 +49,6 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
     this.monitor$ = merge(
       this.blockWatcher$.pipe(
-        auditTime(zmqOptions.throttledSeconds * 1000),
         distinctUntilChanged(),
         takeUntil(this.destroy$)
       ),
@@ -63,10 +65,10 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
 
   ngAfterViewInit() {
-    this.monitor$.subscribe(
-      this.successHandler.bind(this),
-      this.errorHandler.bind(this)
-    );
+    this.monitor$.subscribe({
+      next: this.successHandler.bind(this),
+      error: this.errorHandler.bind(this),
+    });
   }
 
 
@@ -91,12 +93,12 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
   }
 
 
-  private fetchStakingInfo(): Observable<RpcGetStakingInfo> {
+  private fetchStakingInfo(): Observable<RPCResponses.GetStakingInfo> {
     return this._stakingService.getStakingStats();
   }
 
 
-  private successHandler(response: RpcGetStakingInfo): void {
+  private successHandler(response: RPCResponses.GetStakingInfo): void {
     this.resetStats();
 
     const percentyearreward = +response.percentyearreward || 0;
@@ -154,7 +156,6 @@ export class StakingInfoWidgetComponent implements AfterViewInit, OnDestroy {
 
 
   private errorHandler(): void {
-    this.log.er('Requesting staking stats failed');
     this.resetStats();
   }
 

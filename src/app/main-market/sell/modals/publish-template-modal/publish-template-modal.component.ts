@@ -7,7 +7,7 @@ import { tap, takeUntil, map, catchError, switchMap } from 'rxjs/operators';
 
 import { Store } from '@ngxs/store';
 import { MarketState } from '../../../store/market.state';
-import { WalletBalanceState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { SellService } from '../../sell.service';
 import { PartoshiAmount } from 'app/core/util/utils';
@@ -135,8 +135,8 @@ export class PublishTemplateModalComponent implements OnInit, OnDestroy {
       switchMap((settings) => iif(
         () => settings.useAnonBalanceForFees,
 
-        defer(() => this._store.select(WalletBalanceState.spendableAmountAnon())),
-        defer(() => this._store.select(WalletBalanceState.spendableAmountPublic())),
+        defer(() => this._store.select(Particl.State.Wallet.Balance.spendableAmountAnon())),
+        defer(() => this._store.select(Particl.State.Wallet.Balance.spendableAmountPublic())),
       )),
       map(value => +value),
       tap((balance) => this.currentBalance = balance),

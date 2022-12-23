@@ -1,50 +1,39 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { Log } from 'ng2-logger';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { retryWhen, concatMap, catchError, map } from 'rxjs/operators';
-import { MainRpcService } from 'app/main/services/main-rpc/main-rpc.service';
+import { retryWhen, concatMap, catchError, map, mapTo } from 'rxjs/operators';
+import { ParticlRpcService } from 'app/networks/networks.module';
 import { genericPollingRetryStrategy } from 'app/core/util/utils';
-import { RpcMnemonicNew, RpcMnemonicDumpWords } from './create-wallet.models';
+import { RPCResponses } from 'app/networks/particl/particl.models';
 
 
 @Injectable()
-export class CreateWalletService implements OnDestroy {
-
-
-  private log: any = Log.create('create-wallet.service id:' + Math.floor((Math.random() * 1000) + 1));
+export class CreateWalletService {
 
 
   constructor(
-    private _rpc: MainRpcService
-  ) {
-    this.log.d('service initializing');
+    private _rpc: ParticlRpcService
+  ) { }
+
+
+  createWallet(walletName: string): Observable<RPCResponses.CreateWallet> {
+    return this._rpc.call<RPCResponses.CreateWallet>('createwallet', [walletName]);
   }
 
 
-  ngOnDestroy() {
-    this.log.d('service destroyed');
+  encryptWallet(password: string): Observable<RPCResponses.EncryptWallet> {
+    return this._rpc.call<RPCResponses.EncryptWallet>('encryptwallet', [password]);
   }
 
 
-  createWallet(walletName: string): Observable<any> {
-    return this._rpc.call('createwallet', [walletName]);
-  }
-
-
-  encryptWallet(password: string): Observable<any> {
-    return this._rpc.call('encryptwallet', [password]);
-  }
-
-
-  dumpWordsList(): Observable<RpcMnemonicDumpWords> {
-    return this._rpc.call('mnemonic', ['dumpwords']).pipe(
+  dumpWordsList(): Observable<RPCResponses.Mnemonic.DumpWords> {
+    return this._rpc.call<RPCResponses.Mnemonic.DumpWords>('mnemonic', ['dumpwords']).pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 5}))
     );
   }
 
 
-  generateMnemonic(): Observable<RpcMnemonicNew> {
-    return this._rpc.call('mnemonic', ['new']).pipe(
+  generateMnemonic(): Observable<RPCResponses.Mnemonic.New> {
+    return this._rpc.call<RPCResponses.Mnemonic.New>('mnemonic', ['new']).pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 5})),
     );
   }
@@ -67,29 +56,28 @@ export class CreateWalletService implements OnDestroy {
   }
 
 
-  generateNewStealthAddress(): Observable<any> {
-    return this._rpc.call('getnewstealthaddress', ['']).pipe(
+  generateNewStealthAddress(): Observable<RPCResponses.GetNewStealthAddress> {
+    return this._rpc.call<RPCResponses.GetNewStealthAddress>('getnewstealthaddress', ['']).pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2}))
     );
   }
 
 
-  generateNewAddress(): Observable<any> {
-    return this._rpc.call('getnewaddress', ['']).pipe(
+  generateNewAddress(): Observable<RPCResponses.GetNewAddress> {
+    return this._rpc.call<RPCResponses.GetNewAddress>('getnewaddress', ['']).pipe(
       retryWhen (genericPollingRetryStrategy({maxRetryAttempts: 2}))
     );
   }
 
   generateInitialAddressHelper(): Observable<boolean> {
     return this.generateNewStealthAddress().pipe(
+      mapTo(true),
       catchError(() => of(false)),
-      concatMap((stealthSuccess) => {
-        return this.generateNewAddress().pipe(
-          catchError(() => of(false)),
-          map((addressSuccess) => {
-          return stealthSuccess && addressSuccess;
-        }));
-      })
+      concatMap((stealthSuccess) => this.generateNewAddress().pipe(
+        mapTo(true),
+        catchError(() => of(false)),
+        map((addressSuccess) => stealthSuccess && addressSuccess)
+      ))
     );
   }
 }

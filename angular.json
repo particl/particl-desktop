@@ -66,10 +66,6 @@
             "test": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.test.ts"
-                },
-                {
                   "replace": "src/index.html",
                   "with": "src/index.production.html"
                 }
@@ -116,10 +112,6 @@
               "src/favicon.ico"
             ],
             "fileReplacements": [
-              {
-                "replace": "src/environments/environment.ts",
-                "with": "src/environments/environment.test.ts"
-              }
             ]
           }
         },

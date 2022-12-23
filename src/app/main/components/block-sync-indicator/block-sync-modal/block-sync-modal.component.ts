@@ -4,16 +4,20 @@ import { Observable, Subject, timer, merge, combineLatest } from 'rxjs';
 import { auditTime, concatMap, takeUntil, map } from 'rxjs/operators';
 
 import { Select, Store } from '@ngxs/store';
-import { AppDataState } from 'app/core/store/appdata.state';
-import { MainState } from './../../../store/main.state';
-
-import { ZmqConnectionState } from 'app/core/store/zmq-connection.state';
-import { PeerCalculatedStats } from './block-sync.models';
+import { Particl } from 'app/networks/networks.module';
 
 
 enum TextContent {
   BLOCK_CHECK = 'Calculating…',
   SYNC_COMPLETE = 'Done',
+}
+
+
+interface PeerCalculatedStats {
+  remainingBlocks: number;
+  highestPeerBlock: number;
+  currentBlock: number;
+  syncPercentage: number;
 }
 
 
@@ -23,8 +27,8 @@ enum TextContent {
 })
 export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
-  @Select(AppDataState.networkValue('connections')) totalConnections: Observable<number>;
-  @Select(ZmqConnectionState.getData('hashtx')) blockWatcher$: Observable<string>;
+  @Select(Particl.State.Blockchain.networkValue('connections')) totalConnections: Observable<number>;
+  @Select(Particl.State.ZMQ.getData('hashtx')) blockWatcher$: Observable<string>;
 
   remainderBlocks: string = TextContent.BLOCK_CHECK;
   currentBlock: number = 0;
@@ -32,7 +36,8 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
   lastUpdatedTime: number = Date.now();
   estimatedTimeLeft: string = '';
   syncComplete: boolean = false;
-  syncPercentage: number = 0;
+  syncPercentage: string = TextContent.BLOCK_CHECK;
+  syncPercentageValue: number = 0;
 
 
   private log: any = Log.create('block-sync-modal.component');
@@ -50,8 +55,8 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     const calculateStats$ = combineLatest([
-      this._store.select(MainState.highestPeerBlockCount()).pipe(takeUntil(this.destroy$)),
-      this._store.select(AppDataState.blockHeight).pipe(takeUntil(this.destroy$))
+      this._store.select(Particl.State.Blockchain.highestPeerBlockCount()).pipe(takeUntil(this.destroy$)),
+      this._store.select(Particl.State.Blockchain.blockHeight).pipe(takeUntil(this.destroy$))
     ]).pipe(
       map(results => {
         const highestPeerBlock = results[0];
@@ -78,10 +83,11 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
 
     merge(
       this.blockWatcher$.pipe(takeUntil(this.destroy$)),
-      timer(0, 10000).pipe(takeUntil(this.destroy$))
+      timer(0, 10_000).pipe(takeUntil(this.destroy$))
     ).pipe(
-      auditTime(5000),  // do a new check every this many (milli-)seconds
+      auditTime(2_000),  // do a new check every this many (milli-)seconds
       concatMap(() => calculateStats$),
+      takeUntil(this.destroy$)
     ).subscribe(
       this.processStats.bind(this),
       this.handleError.bind(this)
@@ -105,7 +111,8 @@ export class BlockSyncModalComponent implements OnInit, OnDestroy {
       this.remainderBlocks = `${stats.remainingBlocks}`;
     }
 
-    this.syncPercentage = +stats.syncPercentage.toPrecision(4);
+    this.syncPercentageValue = stats.highestPeerBlock > 0 ? stats.syncPercentage : 0;
+    this.syncPercentage = this.syncPercentageValue > 0 ? this.syncPercentageValue.toPrecision(4) : TextContent.BLOCK_CHECK;
     this.totalBlocks = stats.highestPeerBlock;
 
     const timeDiff = Date.now() - this.lastUpdatedTime;

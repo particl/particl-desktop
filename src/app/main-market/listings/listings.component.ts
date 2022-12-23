@@ -9,7 +9,7 @@ import { takeUntil, concatMap, tap, debounceTime, distinctUntilChanged, map, tak
 import { xor } from 'lodash';
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
-import { MainState } from 'app/main/store/main.state';
+import { Particl } from 'app/networks/networks.module';
 
 import { SnackbarService } from 'app/main/services/snackbar/snackbar.service';
 import { WalletEncryptionService } from 'app/main/services/wallet-encryption/wallet-encryption.service';
@@ -143,7 +143,7 @@ export class ListingsComponent implements OnInit, OnDestroy {
     );
 
 
-    const blockSyncStatus$ = this._store.select(MainState.isBlockchainSynced()).pipe(
+    const blockSyncStatus$ = this._store.select(Particl.State.Blockchain.isBlockchainSynced()).pipe(
       tap((isSynced) => {
         if (!isSynced !== this.isSystemSyncing) {
           this.isSystemSyncing = !isSynced;

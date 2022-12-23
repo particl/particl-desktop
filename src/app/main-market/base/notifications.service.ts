@@ -121,7 +121,7 @@ export class NotificationsService implements OnDestroy {
       filter((bidHashes: string[]) => bidHashes.length > 0),
       tap((bidHashes: string[]) => {
         this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'BUYER', bidHashes));
-        this._appNotify.notify(TextContent.NOTIFICATION_TITLE, TextContent.BUY_ORDER_DESCRIPTION);
+        this._appNotify.notify(TextContent.NOTIFICATION_TITLE, TextContent.BUY_ORDER_DESCRIPTION, true);
       }),
       takeUntil(this.stopListeners$)
     );
@@ -139,7 +139,7 @@ export class NotificationsService implements OnDestroy {
       filter((bidHashes: string[]) => bidHashes.length > 0),
       tap((bidHashes: string[]) => {
         this._store.dispatch(new MarketUserActions.AddOrdersPendingAction(currentIdentity.id, 'SELLER', bidHashes));
-        this._appNotify.notify(TextContent.NOTIFICATION_TITLE, TextContent.SELL_ORDER_DESCRIPTION);
+        this._appNotify.notify(TextContent.NOTIFICATION_TITLE, TextContent.SELL_ORDER_DESCRIPTION, true);
       }),
       takeUntil(this.stopListeners$)
     );

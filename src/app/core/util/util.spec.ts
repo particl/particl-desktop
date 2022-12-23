@@ -1,5 +1,5 @@
 import {
-  AddressHelper, PartoshiAmount, DateFormatter, isPrerelease
+  AddressHelper, PartoshiAmount, DateFormatter
 } from './utils';
 
 describe('AddressHelper', () => {
@@ -56,20 +56,6 @@ describe('DateFormatter', () => {
   // NB: cannot test time values correctly, as the time (along with the date, to be more precise) is displayed in local time,
   //      and the result is dependent on the local timezone.
 
-});
-
-
-describe('Util Functions', () => {
-
-  it('should return the correct pre-release status', () => {
-    expect(isPrerelease('2.0.0-alpha')).toBe(true);
-    expect(isPrerelease('2.0.0-beta')).toBe(true);
-    expect(isPrerelease('2.0.0-RC')).toBe(true);
-    expect(isPrerelease('alpha-2.0.0')).toBe(true);
-    expect(isPrerelease('2.0.0-test')).toBe(false);
-    expect(isPrerelease('2.0.0-testnet')).toBe(false);
-    expect(isPrerelease('random-string')).toBe(false);
-  });
 });
 
 
