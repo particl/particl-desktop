@@ -59,7 +59,7 @@ const CONFIGURABLE_SCHEMA = {
 
 
 const DEBUG_OPTIONS = ['silly', 'debug', 'info', 'warn', 'error'];
-const APP_MODE_OPTIONS = ['developer', 'build'];
+const APP_MODE_OPTIONS = ['build', 'developer'];
 
 const settingsSchema = {
   title: 'Particl Desktop',
