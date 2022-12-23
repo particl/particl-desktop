@@ -8,7 +8,7 @@ const settingsManager = require('./settingsManager');
 let updateEmitter = new BehaviorSubject(false);
 let checkerSubject;
 
-const UPDATE_TIMEOUT = 180_000;
+const UPDATE_TIMEOUT = 1_800_000; // 30 minutes
 
 
 exports.init = () => {
