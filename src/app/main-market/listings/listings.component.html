@@ -152,10 +152,10 @@
       >
 
         <mat-card class="listing" *ngFor="let listing of listings; index as listingIdx; trackBy:trackByListingFn">
-          <div mat-card-image appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id, false)">
+          <div mat-card-image appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id)">
             <img class="img" [src]="listing.image" [alt]="listing.title">
           </div>
-          <mat-card-header appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id, false)">
+          <mat-card-header appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id)">
             <mat-card-title>
               {{ listing.title }}
             </mat-card-title>
@@ -178,10 +178,6 @@
             <button mat-menu-item [disabled]="listing.extras.isFlagged" (click)="reportListing(listingIdx)">
               <mat-icon fontIcon="part-flag" color="warn"></mat-icon>
               <span>{{ listing.extras.isFlagged ? 'Flagged as inappropriate' : 'Report as inappropriate' }}</span>
-            </button>
-            <button mat-menu-item appDebounceClick [debounceTime]="2000" (debounceClick)="openListingDetailModal(listing.id, true)">
-              <mat-icon fontIcon="part-check-2"></mat-icon>
-              <span>Reviews</span>
             </button>
             <button mat-menu-item appDebounceClick [debounceTime]="2000" (debounceClick)="openChatModal(listing)">
               <mat-icon fontIcon="part-chat-discussion"></mat-icon>

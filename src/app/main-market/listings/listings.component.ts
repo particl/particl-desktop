@@ -483,15 +483,14 @@ export class ListingsComponent implements OnInit, OnDestroy {
   }
 
 
-  openListingDetailModal(id: number, startAtComments: boolean = false): void {
+  openListingDetailModal(id: number): void {
     this._sharedService.getListingDetailsForMarket(id, this.activeMarket.id).subscribe(
       (listing) => {
         if (+listing.id > 0) {
           const dialogData: ListingItemDetailInputs = {
             listing,
-            canReview: true,
             displayChat: true,
-            initTab: startAtComments ? 'review' : 'default',
+            initTab: 'default',
             displayActions: {
               cart: true,
               governance: true,

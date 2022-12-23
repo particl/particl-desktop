@@ -357,7 +357,6 @@ export class ChatChannelsComponent implements OnInit, OnDestroy {
 
         const dialogData: ListingItemDetailInputs = {
           listing,
-          canReview: true,
           displayChat: false,
           initTab: 'default',
           displayActions: {

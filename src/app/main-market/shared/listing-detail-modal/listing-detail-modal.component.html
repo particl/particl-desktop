@@ -151,7 +151,7 @@
   </div><!-- .product-summary -->
 
   <div class="product-details">
-    <mat-tab-group class="listing-tabs" color="accent" #tabSwitcher [selectedIndex]="initialTab === 'review' ? 2 : 0" >
+    <mat-tab-group class="listing-tabs" color="accent" #tabSwitcher [selectedIndex]="0" >
       <mat-tab>
         <ng-template mat-tab-label>
           <mat-icon fontIcon="part-attach"></mat-icon>
@@ -164,13 +164,6 @@
           Shipping &amp; Escrow
         </ng-template>
       </mat-tab>
-      <mat-tab *ngIf="showComments">
-        <ng-template mat-tab-label>
-          <mat-icon fontIcon="part-check-2"></mat-icon>
-          Reviews
-        </ng-template>
-      </mat-tab>
-
       <mat-tab *ngIf="showChatPanel">
         <ng-template mat-tab-label>
           <mat-icon fontIcon="part-chat-discussion"></mat-icon>
@@ -200,49 +193,45 @@
 
     <div class="tab-content shipping" *ngIf="tabSwitcher.selectedIndex === 1">
 
-
-    <h2 class="section-title">Escrow Ratios</h2>
-    <mat-card>
-      <table class="shipping-escrow centered">
-        <thead>
-          <tr>
-            <th>Buyer (Your) Ratio</th>
-            <th>Seller Ratio</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <span class="part price">
-                <strong>{{ details.escrowRatios.buyer }}</strong>
-                <small class="currency">&#37;</small>
-              </span>
-              <span class="" *ngIf="details.escrowRatios.buyer !== EscrowRecommendedDefault">
-                <small> Recommended: {{ EscrowRecommendedDefault }} &#37; </small>
-              </span>
-            </td>
-            <td>
-              <span class="part price">
-                <strong>{{ details.escrowRatios.seller }}</strong>
-                <small class="currency">&#37;</small>
-              </span>
-              <span class="" *ngIf="details.escrowRatios.seller !== EscrowRecommendedDefault">
-                <small> Recommended: {{ EscrowRecommendedDefault }} &#37; </small>
-              </span>
-            </td>
-          </tr>
-          <tr class="help-text">
-            <td><small>The percentage of the order’s value (including shipping) that you need to provide as a security deposit into the escrow contract. Your security deposit is immediately refunded, in full, after the order is completed.</small></td>
-            <td>
-              <small>The percentage of the order’s value (including shipping) that the seller will provide as a security deposit into the escrow contract. </small>
-            </td>
-          </tr>
-        </tbody>
-      </table><!-- .shipping-escrow -->
-    </mat-card>
-
-
-
+      <h2 class="section-title">Escrow Ratios</h2>
+      <mat-card>
+        <table class="shipping-escrow centered">
+          <thead>
+            <tr>
+              <th>Buyer (Your) Ratio</th>
+              <th>Seller Ratio</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="part price">
+                  <strong>{{ details.escrowRatios.buyer }}</strong>
+                  <small class="currency">&#37;</small>
+                </span>
+                <span class="" *ngIf="details.escrowRatios.buyer !== EscrowRecommendedDefault">
+                  <small> Recommended: {{ EscrowRecommendedDefault }} &#37; </small>
+                </span>
+              </td>
+              <td>
+                <span class="part price">
+                  <strong>{{ details.escrowRatios.seller }}</strong>
+                  <small class="currency">&#37;</small>
+                </span>
+                <span class="" *ngIf="details.escrowRatios.seller !== EscrowRecommendedDefault">
+                  <small> Recommended: {{ EscrowRecommendedDefault }} &#37; </small>
+                </span>
+              </td>
+            </tr>
+            <tr class="help-text">
+              <td><small>The percentage of the order’s value (including shipping) that you need to provide as a security deposit into the escrow contract. Your security deposit is immediately refunded, in full, after the order is completed.</small></td>
+              <td>
+                <small>The percentage of the order’s value (including shipping) that the seller will provide as a security deposit into the escrow contract. </small>
+              </td>
+            </tr>
+          </tbody>
+        </table><!-- .shipping-escrow -->
+      </mat-card>
 
       <h2 class="section-title">Pricing details</h2>
       <mat-card>
@@ -354,13 +343,7 @@
       </mat-card>
     </div><!-- .tab-content.shipping-->
 
-    <div class="tab-content questions-answers" *ngIf="showComments && tabSwitcher.selectedIndex === 2">
-
-      <market-listing-comments [listingHash]="details.hash" [marketReceiveAddress]="details.marketAddress" [listingSellerAddress]="details.seller"></market-listing-comments>
-
-    </div><!-- .tab-content.questions-answers -->
-
-    <div class="tab-content chat" *ngIf="showChatPanel && tabSwitcher.selectedIndex === 3">
+    <div class="tab-content chat" *ngIf="showChatPanel && tabSwitcher.selectedIndex === 2">
 
       <h2 class="section-title">Item Discussion</h2>
 

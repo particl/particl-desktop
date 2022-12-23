@@ -233,7 +233,6 @@ export class BuyCartComponent implements OnInit, OnDestroy {
 
         const dialogData: ListingItemDetailInputs = {
           listing,
-          canReview: false,
           displayChat: false,
           initTab: 'default',
           displayActions: {

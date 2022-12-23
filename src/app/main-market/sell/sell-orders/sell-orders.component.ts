@@ -362,7 +362,6 @@ export class SellOrdersComponent implements OnInit, OnDestroy {
 
         const dialogData: ListingItemDetailInputs = {
           listing,
-          canReview: true,
           displayChat: true,
           initTab: 'default',
           displayActions: {

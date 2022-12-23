@@ -16,7 +16,7 @@ import { MADCT_ESCROW_PERCENTAGE_DEFAULT } from './../market.models';
 import { ChatChannelType } from './../../services/chats/chats.models';
 
 
-type InitialTabSelectionType = 'default' | 'review';
+type InitialTabSelectionType = 'default';
 
 
 enum TextContent {
@@ -40,7 +40,6 @@ interface Actionables {
 
 export interface ListingItemDetailInputs {
   listing: ListingItemDetail;
-  canReview: boolean;
   displayChat: boolean;
   initTab?: InitialTabSelectionType;
   displayActions: Actionables;
@@ -71,7 +70,6 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
     governance: false,
     fav: false
   };
-  readonly showComments: boolean;
   readonly showChatPanel: boolean;
 
   readonly details: {
@@ -284,9 +282,6 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.showComments = isInputValuesObject && (typeof data.canReview === 'boolean') && (this.details.id > 0) ?
-        data.canReview : false;
-
     this.showChatPanel = isInputValuesObject && (typeof data.displayChat === 'boolean') && (this.details.id > 0) ?
         data.displayChat : false;
 
@@ -299,10 +294,6 @@ export class ListingDetailModalComponent implements OnInit, OnDestroy {
       hasExpired: (expiryTime > 0) && (now >= expiryTime),
       isSoon: this.isExpiringSoon(now, expiryTime),
     };
-
-    if (isInputValuesObject && typeof data.initTab === 'string') {
-      this.initialTab = data.initTab === 'review' && this.showComments ? 'review' : this.initialTab;
-    }
   }
 
 
