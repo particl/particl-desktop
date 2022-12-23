@@ -203,7 +203,7 @@
     "electron-log": "^4.4.8",
     "electron-store": "^8.0.2",
     "get-stream": "^6.0.1",
-    "got": "^11.8.6",
+    "got": "^12.1.0",
     "hammerjs": "^2.0.8",
     "iconv-lite": "^0.6.2",
     "iso3166-2-db": "^2.2.1",
