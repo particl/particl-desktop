@@ -162,6 +162,7 @@ const fetchData = async (usePreRelease, skipCount) => {
   for (const asset of foundRelease.assets) {
 
     const assetType = asset.content_type.replace('application/', '');
+
     if (!['gzip', 'zip', ].includes(assetType.toLowerCase())) continue;
 
     let arch;
@@ -179,9 +180,15 @@ const fetchData = async (usePreRelease, skipCount) => {
         arch = 'ia32';
         break;
     }
+
     if (!arch) continue;
 
-    const platform = ['linux', 'win', 'osx'].find(p => asset.name.includes(p));
+    const platform = ['linux', 'win', 'osx'].find(p => {
+      if (p === 'osx') {
+        return asset.name.includes('-osx') || asset.name.includes('-apple');
+      }
+      return asset.name.includes(`-${p}`);
+    });
     if (!platform) continue;
 
     // store some details about the assets to be used shortly
