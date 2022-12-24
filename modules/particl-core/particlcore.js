@@ -792,7 +792,7 @@ module.exports = class ParticlCore extends CoreInstance {
       return false;
     }
 
-    const binName = this.#settingsValues.verification.binaryName + (process.platform.includes('win') ? '.exe' : '');
+    const binName = this.#settingsValues.verification.binaryName + (process.platform.includes('win32') ? '.exe' : '');
     const binPath = _path.join(this.#binaryPath, binName);
 
     if (this.#cancelSignal.aborted) return false;
