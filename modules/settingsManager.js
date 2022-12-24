@@ -242,7 +242,7 @@ class AppSettingsManager {
         marketplace: mpPackageJson.version,
         governance: packageJson.appVersions.governance,
       },
-      TESTING_MODE: packageJson.version.includes('test'),
+      TESTING_MODE: packageJson.name.toLowerCase().includes('test'),
     };
 
     const parsedArgs = parseCliArgs();
