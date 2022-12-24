@@ -89,7 +89,7 @@ if (process.platform === 'win32') {
   try {
     const appId = require('./buildConfiguration.json').appId;
     if (typeof appId === 'string' && appId.length > 0) {
-      electron.setAppUserModelId(appId);
+      app.setAppUserModelId(appId);
     }
   } catch (err) {
     log.error('Failed setting win32 AppUserModelId: ', err);
