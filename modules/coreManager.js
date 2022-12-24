@@ -107,7 +107,7 @@ exports.channels = {
           }
 
         } catch(err) {
-          log.error(`Failed settings request for ${coreLabel} :`, err);
+          log.error(`Failed settings request for ${coreLabel} : ${err && err.message ? err.message : err}`);
           observer.error({core: coreLabel, request: respLabel, response: undefined, hasError: true});
         }
 

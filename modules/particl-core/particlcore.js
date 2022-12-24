@@ -510,7 +510,7 @@ module.exports = class ParticlCore extends CoreInstance {
 
       if (!isStarted) {
         this.#updateStatus({
-          message: 'Failed to start Particl Core!',
+          // message: 'Failed to start Particl Core!',
           hasError: true,
           started: STARTED_STATUS.STOPPED
         });
@@ -520,7 +520,10 @@ module.exports = class ParticlCore extends CoreInstance {
       const rpcUrl = this.#getRpcUrl();
       const rpcAuth = await this.#getRpcAuth();
       const connected = await this.#testRpcConnection(rpcUrl, rpcAuth);
-      const zmqStatus = await this.#getZmqAvailability(rpcUrl, rpcAuth);
+	  let zmqStatus = {};
+	  if (connected) {
+		zmqStatus = await this.#getZmqAvailability(rpcUrl, rpcAuth);
+	  }
 
       if (this.#cancelSignal.aborted) return;
 
@@ -944,7 +947,7 @@ module.exports = class ParticlCore extends CoreInstance {
                 [fileList[0]]
               )
               .then(() => hasBinary = true)
-              .catch(e => this.#updateStatus({message: `Error reading archive ${packagepath} : ${e && e.message ? e.message : e}`}));
+              .catch(e => this.#updateStatus({message: `Error reading archive ${packagepath} : ${e && e.message ? e.message : e}`, hasError: true}));
             }
           break;
         }
@@ -1022,26 +1025,29 @@ module.exports = class ParticlCore extends CoreInstance {
 
     if (this.#cancelSignal.aborted) return false;
 
-    const childProc = _spawn(binPath, deamonArgs);
+    try {
 
-    // TODO: maybe this is not necessary
-    childProc.stdout.on('data', data => {
-      console.log(data.toString().trim());
-    });
+      this.#startedDaemon = _spawn(binPath, deamonArgs);
 
-    childProc.stderr.on('data', data => {
-      const err = data.toString('utf8');
-      console.log(data.toString().trim());
-      if (err.includes("-reindex")) {
-        this.#tempRestartParams.push('-reindex');
-        this.stop(true);
-        return;
-      }
-      // this.stop();
+      // TODO: maybe this is not necessary
+      this.#startedDaemon.stdout.on('data', data => {
+        console.log(data.toString().trim());
+      });
 
-    });
-
-    this.#startedDaemon = childProc;
+      this.#startedDaemon.stderr.on('data', data => {
+        const err = data.toString('utf8');
+        console.log(data.toString().trim());
+        if (err.includes("-reindex")) {
+          this.#tempRestartParams.push('-reindex');
+          this.stop(true);
+          return;
+        }
+        // this.stop();
+      });
+    } catch (excep) {
+      this.#updateStatus({message: `Error creating particld process: ${excep && excep.message ? excep.message : excep}`});
+      return false;
+    }
 
     return true;
   }
@@ -1132,7 +1138,7 @@ module.exports = class ParticlCore extends CoreInstance {
               }
 
               res.on('end', () => {
-                file.end();
+                // file.end();
                 this.#updateStatus({message: `Download complete`});
                 resolve();
               });
