@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subject, fromEvent, iif, defer, of, merge } from 'rxjs';
+import { Subject, fromEvent, iif, defer, of, merge, forkJoin } from 'rxjs';
 import { map, filter, tap, takeUntil, distinctUntilChanged, concatMap } from 'rxjs/operators';
 import { Actions, ofActionCompleted, Store } from '@ngxs/store';
 import { BackendService } from 'app/core/services/backend.service';
@@ -43,30 +43,41 @@ export class BaseComponent implements OnInit, AfterViewInit, OnDestroy {
         concatMap(isRunning => iif(
           () => isRunning,
           defer(() =>
-            // fetch the last wallet loaded from the backend
-            this._backendService.sendAndWait<string | null>('apps:particl-wallet:lastActiveWallet').pipe(
+            // fetch the last wallet loaded from the backend and a list of wallets available
+            forkJoin({
+              lastUsedWallet: this._backendService.sendAndWait<string | null>('apps:particl-wallet:lastActiveWallet'),
+              walletList: this._particlWalletService.getWalletList()
+            }).pipe(
+              map(responses => {
+                let walletName = responses.lastUsedWallet || '';
+                const lastUsedValidWallet = responses.walletList.wallets.map(w => w.name).find(wName => wName === responses.lastUsedWallet);
+                if ((lastUsedValidWallet === undefined) && (responses.walletList.wallets.length > 0)) {
+                  walletName = responses.walletList.wallets[0].name;
+                }
+                return walletName;
+              }),
               concatMap(walletName => {
-                  const toLoadName = typeof walletName === 'string' ? walletName : '';
+                const toLoadName = typeof walletName === 'string' ? walletName : '';
 
-                  return this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(toLoadName)).pipe(
-                    concatMap(() => {
-                      // check that the wallet loaded is the same as the requested
-                      const loadedName = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname'));
-                      if (loadedName !== toLoadName) {
-                        // loaded wallet doesn't match, so fallback to whatever the first current loaded wallet is
-                        return this._particlWalletService.listLoadedWallets().pipe(
-                          tap({
-                            next: loadedWallets => {
-                              if (Array.isArray(loadedWallets) && loadedWallets.length > 0) {
-                                this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(loadedWallets[0]));
-                              }
+                return this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(toLoadName)).pipe(
+                  concatMap(() => {
+                    // check that the wallet loaded is the same as the requested
+                    const loadedName = this._store.selectSnapshot(Particl.State.Wallet.Info.getValue('walletname'));
+                    if (loadedName !== toLoadName) {
+                      // loaded wallet doesn't match, so fallback to whatever the first current loaded wallet is
+                      return this._particlWalletService.listLoadedWallets().pipe(
+                        tap({
+                          next: loadedWallets => {
+                            if (Array.isArray(loadedWallets) && loadedWallets.length > 0) {
+                              this._store.dispatch(new Particl.Actions.WalletActions.ChangeWallet(loadedWallets[0]));
                             }
-                          })
-                        );
-                      }
-                      return of({});
-                    })
-                  );
+                          }
+                        })
+                      );
+                    }
+                    return of({});
+                  })
+                );
               })
             )
           )
