@@ -43,7 +43,7 @@ class CSVWriter {
         writeStream = _fs.createWriteStream(this._targetPath, { encoding: 'utf8' });
         const sourceStream = from(data).pipe(
           skipWhile(d => !d || Object.prototype.toString.call(d) !== '[object Object]'),
-          catchError(e => this.destroy$.next()),
+          catchError(e => destroy$.next()),
           takeUntil(destroy$)
         );
         const json2csv = new Transform({}, {highWaterMark: 16384, encoding: 'utf8', objectMode: true});

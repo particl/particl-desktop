@@ -142,6 +142,7 @@ export class TransactionsTableComponent implements AfterViewInit, OnDestroy {
   public resetPagination(): void {
     if (this.paginator) {
       this.paginator.resetPagination(0);
+      this.pageCount = 0;
       this.filter$.next();
     }
   }

@@ -40,6 +40,15 @@
       Clear all filters
     </button>
 
+    <mat-divider class="filter-separator"></mat-divider>
+
+    <div class="buttons">
+      <button mat-button class="full-width" color="accent" appDebounceClick (debounceClick)="exportFilteredHistory()">
+        <mat-icon fontIcon="part-send"></mat-icon>
+        Export History
+      </button>
+    </div>
+
   </div><!-- .filter -->
 
   <div class="tx-list section with-filter">

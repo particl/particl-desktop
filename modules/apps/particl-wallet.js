@@ -1,5 +1,9 @@
-const { Observable } = require('rxjs');
+const _fs = require('fs');
+const { Observable, Subject, from, defer } = require('rxjs');
+const { skipWhile, catchError, takeUntil, finalize } = require('rxjs/operators');
 const _electronStore  = require('electron-store');
+const { rxToStream } = require('rxjs-stream');
+const { Transform } = require('json2csv');
 const _settingsManager = require('../settingsManager');
 const _coreManager = require('../coreManager');
 
@@ -70,6 +74,8 @@ const SETTING_SCHEMA = {
 };
 
 let stateRef;
+let destroy$ = new Subject();
+
 
 const getParticlCoreChain = () => {
 
@@ -84,6 +90,64 @@ const getParticlCoreChain = () => {
 
   return '';
 };
+
+
+class CSVWriter {
+
+  #_targetPath;
+
+  constructor(targetPath) {
+    if ((typeof targetPath === 'string') && (targetPath.length > 3) ) {
+      this.#_targetPath = targetPath;
+    }
+  }
+
+
+  write(data /* Array of JSON objects to be written */) {
+    return defer(() => {
+      let writeStream;
+
+      return new Observable(obs$ => {
+        if (!Array.isArray(data)) {
+          obs$.error('INVALID_DATA');
+          return;
+        }
+
+        writeStream = _fs.createWriteStream(this.#_targetPath, { encoding: 'utf8' });
+        const sourceStream = from(data).pipe(
+          skipWhile(d => !d || Object.prototype.toString.call(d) !== '[object Object]'),
+          catchError(e => destroy$.next()),
+          takeUntil(destroy$)
+        );
+        const json2csv = new Transform({}, {highWaterMark: 16384, encoding: 'utf8', objectMode: true});
+        json2csv
+          .on('header', header => console.log('EXPORT (OUTPUT HEADER): ', header))
+          .on('line', line => console.log('EXPORT (OUTPUT LINE):', line))
+          .on('error', err => console.log('EXPORT (ERROR!!):', err));
+
+        writeStream
+          .on('error', (err) => {
+            obs$.error(err);
+          })
+          .on('finish', () => {
+            obs$.next();
+            obs$.complete();
+          });
+
+        rxToStream(sourceStream, { objectMode: true }).pipe(json2csv).pipe(writeStream);
+      }).pipe(
+        finalize(() => {
+          if (writeStream && !writeStream.destroyed) {
+            writeStream.end();
+          }
+        }),
+        takeUntil(destroy$)
+      );
+    });
+  }
+
+}
+
 
 exports.init = () => {
   if (!stateRef) {
@@ -112,10 +176,23 @@ exports.init = () => {
       projectVersion: _settingsManager.getSettings(null, 'VERSIONS').wallet,
     });
   }
+
+  if (!destroy$) {
+    destroy$ = new Subject();
+  } else {
+    // may have been completed already
+    try {
+      destroy$.next();
+    } catch(err) {
+      destroy$ = new Subject();
+    }
+  }
 }
 
 exports.destroy = () => {
   stateRef = undefined;
+  destroy$.next();
+  destroy$.complete();
 }
 
 
@@ -242,6 +319,10 @@ exports.channels = {
         observer.next(success);
         observer.complete();
       });
+    },
+
+    'export-writecsv': (_, targetPath /* string: file/url/path to save data to */, data /* Array of JSON objects */) => {
+      return defer(() => (new CSVWriter(targetPath)).write(data));
     },
   }
 };

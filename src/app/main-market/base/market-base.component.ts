@@ -57,7 +57,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   selectedIdentity: RenderedIdentity;
 
   isWarningVisible: boolean = true;
-  showWalletLockedWarning = false;
+  showWalletLockedWarning: boolean = false;
   showProfileWarning: boolean = false;
 
   readonly mpVersion: string;
