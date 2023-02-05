@@ -25,6 +25,7 @@ if (!instanceLock) {
 // Set up logging: turn off file logging until we know that the target directory is created and writeable
 let log;
 let mainWindow;
+let mainTrayInstance;
 
 try {
   log = require('electron-log');
@@ -258,14 +259,11 @@ app.once('will-quit', async function beforeQuit(event) {
     log.error('Failed creating closing modal window -> ', err);
   }
 
-  if (electron.Tray.length > 0) {
-    for (let ii = 0; ii < electron.Tray.length; ii++) {
-      try {
-        const t = electron.Tray[ii];
-        t.destroy();
-      } catch (err) {
-        log.error('Failed to cleanup Tray item... deferring to system cleanup');
-      }
+  if (mainTrayInstance) {
+    try {
+      mainTrayInstance.destroy();
+    } catch (err) {
+      log.error('Failed to cleanup Tray item... deferring to system cleanup');
     }
   }
 
@@ -360,9 +358,11 @@ function createMainGUI() {
 
 function createSystemTray() {
 
-  if (electron.Tray.length > 0) {
+  if (mainTrayInstance) {
     return;
   }
+
+  let trayIconFilename = 'icon.png';
 
   if (process.platform === 'darwin') {
     electron.Menu.setApplicationMenu(electron.Menu.buildFromTemplate([
@@ -388,11 +388,18 @@ function createSystemTray() {
       }
     ]));
 
+    trayIconFilename = 'iconTemplate.png';
+
+  } else {
+    electron.Menu.setApplicationMenu(null);
+    if (process.platform === 'win32') {
+      trayIconFilename = 'icon.ico';
+    }
   }
 
-  const tray = new electron.Tray(path.join(__dirname, 'resources/icon.png'));
-  tray.setToolTip(`${app.getName()} ${app.getVersion()}`);
-  tray.setContextMenu(electron.Menu.buildFromTemplate([
+  mainTrayInstance = new electron.Tray(path.join(__dirname, 'resources', trayIconFilename));
+  mainTrayInstance.setToolTip(`${app.getName()} ${app.getVersion()}`);
+  mainTrayInstance.setContextMenu(electron.Menu.buildFromTemplate([
     {
       label: 'View',
       submenu: [
