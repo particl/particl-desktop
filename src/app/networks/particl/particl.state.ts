@@ -683,7 +683,6 @@ export class WalletStakingState {
 }
 
 
-
 @State<WalletInfoStateModel>({
   name: NETWORK_PARTICL_WALLET_TOKEN,
   defaults: JSON.parse(JSON.stringify(DEFAULT_WALLET_STATE))
@@ -694,7 +693,7 @@ export class WalletInfoState {
   static getValue(field: keyof WalletInfoStateModel) {
     return createSelector(
       [WalletInfoState],
-      (state: WalletInfoStateModel): WalletInfoStateModel[keyof WalletInfoStateModel] => {
+      (state: WalletInfoStateModel) => {
         return field in state ? state[field] : null;
       }
     );
@@ -704,6 +703,13 @@ export class WalletInfoState {
     return createSelector(
       [WalletInfoState.getValue('encryptionstatus')],
       (status: string): boolean => ['Locked', 'Unlocked, staking only', 'Unlocked'].includes(status)
+    );
+  }
+
+  static isWalletLocked() {
+    return createSelector(
+      [WalletInfoState.getValue('encryptionstatus')],
+      (status: string): boolean => ['Locked', 'Unlocked, staking only'].includes(status)
     );
   }
 

@@ -57,6 +57,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
   selectedIdentity: RenderedIdentity;
 
   isWarningVisible: boolean = true;
+  showWalletLockedWarning = false;
   showProfileWarning: boolean = false;
 
   readonly mpVersion: string;
@@ -101,6 +102,13 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
 
     const profile$ = this._store.select(MarketState.currentProfile).pipe(
       tap(profile => this.showProfileWarning = profile.hasMnemonicSaved),
+      takeUntil(this.destroy$)
+    );
+
+    const showLockedWarning$ = this._store.select(Particl.State.Wallet.Info.isWalletLocked()).pipe(
+      tap({
+        next: isLocked => this.showWalletLockedWarning = isLocked,
+      }),
       takeUntil(this.destroy$)
     );
 
@@ -175,6 +183,7 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
       indicators$,
       profile$,
       identities$,
+      showLockedWarning$,
     ).pipe(
       takeUntil(this.destroy$)
     ).subscribe();

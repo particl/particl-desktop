@@ -66,9 +66,17 @@
     </div>
   </ng-container>
 
-  <ng-container ngProjectAs="sidebar" *ngIf="showProfileWarning">
+  <ng-container ngProjectAs="sidebar" *ngIf="showProfileWarning || showWalletLockedWarning">
     <div class="menu-items">
-      <a class="menu-item warning" appDebounceClick (debounceClick)="openBackupProfileModal()">
+      <a *ngIf="showWalletLockedWarning" class="menu-item warning">
+        <mat-icon fontIcon="part-alert"></mat-icon>
+        <span class="text"
+              matTooltip="Updates to orders can be received while this wallet is encrypted"
+              matTooltipPosition="right">
+          Wallet is currently locked
+        </span>
+      </a>
+      <a *ngIf="showProfileWarning" class="menu-item warning" appDebounceClick (debounceClick)="openBackupProfileModal()">
         <mat-icon fontIcon="part-alert"></mat-icon>
         <span class="text"
               matTooltip="Your profile secrets should be backed up as soon as possible"
