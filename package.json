@@ -1,7 +1,7 @@
 {
-  "name": "particl-desktop-testing",
-  "productName": "Particl Desktop Testing",
-  "version": "3.3.0-RC001",
+  "name": "particl-desktop",
+  "productName": "Particl Desktop",
+  "version": "3.3.0",
   "branch": "3.2",
   "license": "GPL-2.0",
   "description": "Particl Desktop - decentralized marketplace, private currency, messaging & self-governance",
@@ -49,8 +49,8 @@
   },
   "build": {
     "electronVersion": "19.1.9",
-    "appId": "io.particl.desktop.testing",
-    "productName": "Particl Desktop Testing",
+    "appId": "io.particl.desktop",
+    "productName": "Particl Desktop",
     "npmRebuild": true,
     "afterSign": "build/notarize.js",
     "directories": {
@@ -124,7 +124,7 @@
       "uninstallerIcon": "resources/icon.ico",
       "createDesktopShortcut": "always",
       "createStartMenuShortcut": true,
-      "menuCategory": "Particl Desktop Testing",
+      "menuCategory": "Particl Desktop",
       "runAfterFinish": true
     },
     "linux": {
@@ -156,11 +156,11 @@
           ]
         }
       ],
-      "executableName": "particl-desktop-testing",
+      "executableName": "particl-desktop",
       "desktop": {
         "Comment": "Particl, P2P Privacy ecosystem",
         "Icon": "particl-desktop",
-        "Name": "Particl Desktop Testing",
+        "Name": "Particl Desktop",
         "StartupNotify": "true",
         "Terminal": "false",
         "Type": "Application",
