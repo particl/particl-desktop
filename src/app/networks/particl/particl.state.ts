@@ -351,7 +351,8 @@ export class ParticlZMQState {
       if (message.channel === 'hashblock') {
         return ctx.dispatch([
           new ParticlActions.WalletActions.RefreshBalances(),
-          new ParticlActions.WalletActions.RefreshWalletInfo()
+          new ParticlActions.WalletActions.RefreshWalletInfo(),
+          new ParticlActions.WalletActions.UpdateColdStakingInfo(),
         ]);
       }
     }
