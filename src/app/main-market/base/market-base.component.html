@@ -68,10 +68,10 @@
 
   <ng-container ngProjectAs="sidebar" *ngIf="showProfileWarning || showWalletLockedWarning">
     <div class="menu-items">
-      <a *ngIf="showWalletLockedWarning" class="menu-item warning">
+      <a *ngIf="showWalletLockedWarning" class="menu-item warning" appDebounceClick (debounceClick)="openWalletUnlockModal()">
         <mat-icon fontIcon="part-alert"></mat-icon>
         <span class="text"
-              matTooltip="Updates to orders can be received while this wallet is encrypted"
+              matTooltip="Cannot update order statuses while this wallet is encrypted (locked)"
               matTooltipPosition="right">
           Wallet is currently locked
         </span>
