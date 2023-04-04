@@ -218,7 +218,7 @@
 
     <mat-action-row class="action-buttons" fxLayout fxLayoutAlign="space-between stretch">
       <div class="left">
-        <button *ngIf="!txn.isAbandoned && (txn.confirmations === 0)" mat-button color="warn" class="small" appDebounceClick (debounceClick)="abandonTransaction(txn.txid)">
+        <button *ngIf="!txn.isAbandoned && (txn.confirmations === 0) && txn.category === 'send'" mat-button color="warn" class="small" appDebounceClick (debounceClick)="abandonTransaction(txn.txid)">
           <mat-icon fontIcon="part-error"></mat-icon>
           Abandon This Transaction
         </button>
