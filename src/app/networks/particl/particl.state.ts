@@ -349,7 +349,10 @@ export class ParticlZMQState {
       }));
 
       if (message.channel === 'hashblock') {
-        return ctx.dispatch(new ParticlActions.WalletActions.RefreshBalances);
+        return ctx.dispatch([
+          new ParticlActions.WalletActions.RefreshBalances(),
+          new ParticlActions.WalletActions.RefreshWalletInfo()
+        ]);
       }
     }
   }
@@ -961,14 +964,7 @@ export class WalletBalanceState {
             if (resKey in currentState) {
               if (!result[resKey].length) {
                 updatedValues[resKey] = [];
-              } else if (
-                (currentState[resKey].length !== result[resKey].length) ||
-                (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
-                  currentState[resKey],
-                  result[resKey],
-                  (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
-                ).length > 0)
-              ) {
+              } else {
                 updatedValues[resKey] = result[resKey];
               }
             }
