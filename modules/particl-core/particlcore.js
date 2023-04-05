@@ -293,7 +293,7 @@ module.exports = class ParticlCore extends CoreInstance {
   #binaryPath;
 
   #isDevelopmentEnvironment = false;
-  #forceTestnet = false;
+  #blockMainnet = false;
 
   // holds a reference to the spawned pacticl core process (if one is spawned)
   #startedDaemon = undefined;
@@ -321,7 +321,7 @@ module.exports = class ParticlCore extends CoreInstance {
 
     this.#appVersion = appConfig.VERSIONS.app;
     this.#binaryPath = _path.join(appConfig.PATHS.binaries, 'particl');
-    this.#forceTestnet = appConfig.TESTING_MODE === true;
+    this.#blockMainnet = appConfig.TESTING_MODE === true;
     this.#isDevelopmentEnvironment = appConfig.MODE === 'developer';
   }
 
@@ -984,7 +984,7 @@ module.exports = class ParticlCore extends CoreInstance {
 
     let netSettings = this.#settingsValues.mainnet;
 
-    if (this.#settingsValues.network.testnet || this.#forceTestnet) {
+    if (this.#settingsValues.network.testnet) {
       netSettings = this.#settingsValues.testnet;
       deamonArgs.push('-testnet');
     }
@@ -992,6 +992,11 @@ module.exports = class ParticlCore extends CoreInstance {
     if (this.#settingsValues.network.regtest) {
       netSettings = this.#settingsValues.regtest;
       deamonArgs.push('-regtest');
+    }
+
+    if (this.#settingsValues.network.mainnet && this.#blockMainnet) {
+      netSettings = this.#settingsValues.testnet;
+      deamonArgs.push('-testnet');
     }
 
     if ((netSettings.coreHost !== 'localhost') && !netSettings.coreHost.startsWith('127.0.0.1')) {
@@ -1229,11 +1234,14 @@ module.exports = class ParticlCore extends CoreInstance {
         try {
           if (_fs.existsSync(defaultDataDir) && _fs.statSync(defaultDataDir).isDirectory()) {
             const segments = [defaultDataDir];
-            if (this.#settingsValues.network.testnet || this.#forceTestnet) {
+            if (this.#settingsValues.network.testnet) {
               segments.push('testnet');
             } else if (this.#settingsValues.network.regtest) {
               segments.push('regtest');
+            } else if (this.#settingsValues.network.mainnet && this.#blockMainnet) {
+              segments.push('testnet');
             }
+
             segments.push('.cookie');
             const cookiePath = _path.join(...segments);
 
@@ -1346,8 +1354,9 @@ module.exports = class ParticlCore extends CoreInstance {
 
 
   #getRpcUrl() {
-    return this.#settingsValues.network.testnet || this.#forceTestnet ?
-      `http://${this.#settingsValues.testnet.coreHost}:${this.#settingsValues.testnet.corePort}` : (
+    const forceTestnet = this.#settingsValues.network.mainnet && this.#blockMainnet;
+    return this.#settingsValues.network.testnet || forceTestnet
+      ? `http://${this.#settingsValues.testnet.coreHost}:${this.#settingsValues.testnet.corePort}` : (
         this.#settingsValues.network.regtest
         ? `http://${this.#settingsValues.regtest.coreHost}:${this.#settingsValues.regtest.corePort}`
         : `http://${this.#settingsValues.mainnet.coreHost}:${this.#settingsValues.mainnet.corePort}`
