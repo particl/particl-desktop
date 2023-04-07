@@ -37,7 +37,7 @@ export class StartupComponent implements OnInit, OnDestroy {
   controlNetwork: FormControl = new FormControl({ value: '', disabled: true});
   controlDataDir: FormControl = new FormControl({ value: '', disabled: true});
 
-  allowEditingNetwork: boolean = false;
+  allowMainNetwork: boolean = false;
 
   private destroy$: Subject<void> = new Subject();
 
@@ -52,7 +52,7 @@ export class StartupComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.allowEditingNetwork = !this._store.selectSnapshot<ApplicationConfigStateModel>(ApplicationConfigState).requestedTestingNetworks;
+    this.allowMainNetwork = !this._store.selectSnapshot<ApplicationConfigStateModel>(ApplicationConfigState).requestedTestingNetworks;
 
     const settings$ = this._coreConfigService.getSettings().pipe(
       filter(settings => settings !== null),
@@ -98,7 +98,11 @@ export class StartupComponent implements OnInit, OnDestroy {
             [Controls.network_regtest]: false,
           };
           switch (value) {
-            case 'main': updatedValue[Controls.network_main] = true; break;
+            case 'main':
+              if (this.allowMainNetwork) {
+                updatedValue[Controls.network_main] = true;
+               }
+               break;
             case 'test': updatedValue[Controls.network_test] = true; break;
             case 'regtest': updatedValue[Controls.network_regtest] = true; break;
           }
@@ -187,22 +191,18 @@ export class StartupComponent implements OnInit, OnDestroy {
       this.controlStartNew.enable({emitEvent: false});
     }
 
-    let networkSelection = 'main';
-    if (!this.allowEditingNetwork) {
-      networkSelection = 'test';
-    } else {
-      if (settings[Controls.network_main] || settings[Controls.network_test] || settings[Controls.network_regtest]) {
-        switch (true) {
-          case settings[Controls.network_main] && settings[Controls.network_main].value: networkSelection = 'main'; break;
-          case settings[Controls.network_test] && settings[Controls.network_test].value: networkSelection = 'test'; break;
-          case settings[Controls.network_regtest] && settings[Controls.network_regtest].value: networkSelection = 'regtest'; break;
-        }
+    let networkSelection = this.allowMainNetwork ? 'main' : 'test';
+
+    if (settings[Controls.network_main] || settings[Controls.network_test] || settings[Controls.network_regtest]) {
+      switch (true) {
+        case this.allowMainNetwork && settings[Controls.network_main] && settings[Controls.network_main].value: networkSelection = 'main'; break;
+        case settings[Controls.network_test] && settings[Controls.network_test].value: networkSelection = 'test'; break;
+        case settings[Controls.network_regtest] && settings[Controls.network_regtest].value: networkSelection = 'regtest'; break;
       }
     }
+
     this.controlNetwork.setValue(networkSelection, {onlySelf: true, emitEvent: false});
-    if (this.allowEditingNetwork) {
-      this.controlNetwork.enable({emitEvent: false});
-    }
+    this.controlNetwork.enable({emitEvent: false});
 
     if (settings[Controls.datadir]) {
       this.controlDataDir.setValue(settings[Controls.datadir].value, {onlySelf: true, emitEvent: false});

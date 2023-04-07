@@ -189,7 +189,7 @@
     "@ngx-gallery/gallerize": "^5.0.0-beta.0",
     "@ngx-gallery/lightbox": "^5.0.0-beta.0",
     "@ngxs/store": "^3.6.0",
-    "@zasmilingidiot/particl-marketplace": "0.3.12",
+    "@zasmilingidiot/particl-marketplace": "0.3.13",
     "@zasmilingidiot/particl-zmq": "1.0.7",
     "adm-zip": "^0.5.9",
     "ajv": "^8.11.0",

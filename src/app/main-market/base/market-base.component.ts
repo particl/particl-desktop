@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog, MatExpansionPanel } from '@angular/material';
 import { Subject, Observable, iif, defer, of, merge, combineLatest } from 'rxjs';
-import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError } from 'rxjs/operators';
+import { takeUntil, tap,  map, startWith, finalize, concatMap, mapTo, catchError, take } from 'rxjs/operators';
 
 import { Store, Select } from '@ngxs/store';
 import { MarketState } from '../store/market.state';
@@ -262,6 +262,10 @@ export class MarketBaseComponent implements OnInit, OnDestroy {
         })
       ))
     ).subscribe();
+  }
+
+  openWalletUnlockModal() {
+    this._unlocker.changeCurrentStatus().pipe(take(1), takeUntil(this.destroy$)).subscribe();
   }
 
 
