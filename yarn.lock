@@ -1805,10 +1805,10 @@
   resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
   integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
 
-"@zasmilingidiot/omp-lib@0.1.155":
-  version "0.1.155"
-  resolved "https://registry.yarnpkg.com/@zasmilingidiot/omp-lib/-/omp-lib-0.1.155.tgz#6a7e6c13b22203103cae23169f681cb2abccd990"
-  integrity sha512-NviSRimOtB90xP8FIh9/3l3SI54QvhdrDVaaZAEnvtxnJ/MtUpLok4Af8uKg5IUdwFLWkf6lyevDBt4UypOmsw==
+"@zasmilingidiot/omp-lib@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/omp-lib/-/omp-lib-0.2.0.tgz#d57a1e767a49f7eda294bd9c210986a1595fb7d0"
+  integrity sha512-GJCYdFXNZ2mYt4RADF70RiDdUq+3snB84jP/Ig5Dzy00HK8ybeLSIpd1qYxIP3s0O490O4ELDwhtU+yMkcODlA==
   dependencies:
     inversify "^4.13.0"
     js-sha256 "^0.9.0"
@@ -1822,12 +1822,12 @@
     tslib "^1.9.3"
     web-request "^1.0.7"
 
-"@zasmilingidiot/particl-marketplace@0.3.12":
-  version "0.3.12"
-  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.12.tgz#f98bdc78b7b59bfecbc7e934f15f5c9062ad0ab3"
-  integrity sha512-UBkq4ITIXJxiCjhuO96MXoGXnbpB79B11wfOr+OMMQmv9GRvGVHApo7QxBuc+HpZ8vKOMjt5JmmmkJOCMmf+bw==
+"@zasmilingidiot/particl-marketplace@0.3.13":
+  version "0.3.13"
+  resolved "https://registry.yarnpkg.com/@zasmilingidiot/particl-marketplace/-/particl-marketplace-0.3.13.tgz#f4a42b4b70df1507a6c7eed2b62b63d6f654a596"
+  integrity sha512-jsk0DsuCWQA+3VipWtUAJOR94LhLUz7GQjMSU0RYXP3jokqNSVLniDVsx/dT2tpFUyTEUJVAcLCCI/O68obp1g==
   dependencies:
-    "@zasmilingidiot/omp-lib" "0.1.155"
+    "@zasmilingidiot/omp-lib" "0.2.0"
     "@zasmilingidiot/particl-zmq" "1.0.7"
     basic-auth "^2.0.0"
     body-parser "^1.20.0"
@@ -9756,15 +9756,7 @@ pkg-up@^3.1.0:
   dependencies:
     find-up "^3.0.0"
 
-plist@^3.0.1:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/plist/-/plist-3.0.5.tgz#2cbeb52d10e3cdccccf0c11a63a85d830970a987"
-  integrity sha512-83vX4eYdQp3vP9SxuYgEM/G/pJQqLUz/V/xzPrzruLs7fz7jxGQ1msZ/mg1nwZxUSuOp4sb+/bEIbRrbzZRxDA==
-  dependencies:
-    base64-js "^1.5.1"
-    xmlbuilder "^9.0.7"
-
-plist@^3.0.4:
+plist@^3.0.1, plist@^3.0.4:
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/plist/-/plist-3.0.5.tgz#2cbeb52d10e3cdccccf0c11a63a85d830970a987"
   integrity sha512-83vX4eYdQp3vP9SxuYgEM/G/pJQqLUz/V/xzPrzruLs7fz7jxGQ1msZ/mg1nwZxUSuOp4sb+/bEIbRrbzZRxDA==

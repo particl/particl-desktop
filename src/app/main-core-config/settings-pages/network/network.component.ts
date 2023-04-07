@@ -46,7 +46,7 @@ export class NetworkComponent implements OnInit, OnDestroy {
 
 
   private destroy$: Subject<void> = new Subject();
-  private allowEditingNetwork: boolean = false;
+  private allowMainNetwork: boolean = false;
   private controlNetworkPrefix: NetworkPrefix = '';
 
 
@@ -59,7 +59,7 @@ export class NetworkComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-    this.allowEditingNetwork = !this._store.selectSnapshot<ApplicationConfigStateModel>(ApplicationConfigState).requestedTestingNetworks;
+    this.allowMainNetwork = !this._store.selectSnapshot<ApplicationConfigStateModel>(ApplicationConfigState).requestedTestingNetworks;
 
     const settings$ = this._coreConfigService.getSettings().pipe(
       filter(settings => settings !== null),
@@ -131,26 +131,26 @@ export class NetworkComponent implements OnInit, OnDestroy {
   private loadSettings(settings: Settings): void {
 
     let selectedNetwork: NetworkPrefixType = '';
-    if (this.allowEditingNetwork) {
-      if (settings[Controls.network_main] || settings[Controls.network_test] || settings[Controls.network_regtest]) {
-        switch (true) {
-          case settings[Controls.network_main] && settings[Controls.network_main].value: selectedNetwork = 'mainnet'; break;
-          case settings[Controls.network_test] && settings[Controls.network_test].value: selectedNetwork = 'testnet'; break;
-          case settings[Controls.network_regtest] && settings[Controls.network_regtest].value: selectedNetwork = 'regtest'; break;
-        }
+    if (settings[Controls.network_main] || settings[Controls.network_test] || settings[Controls.network_regtest]) {
+      switch (true) {
+        case this.allowMainNetwork && settings[Controls.network_main] && settings[Controls.network_main].value:
+          selectedNetwork = 'mainnet';
+          this.networkLabel = TextContent.NETWORK_LABEL_MAINNET;
+          break;
+        case settings[Controls.network_test] && settings[Controls.network_test].value:
+          selectedNetwork = 'testnet';
+          this.networkLabel = TextContent.NETWORK_LABEL_TESTNET;
+          break;
+        case settings[Controls.network_regtest] && settings[Controls.network_regtest].value:
+          selectedNetwork = 'regtest';
+          this.networkLabel = TextContent.NETWORK_LABEL_REGTEST;
+          break;
+        default:
+          this.networkLabel = '';
       }
-    } else {
-      selectedNetwork = 'testnet';
     }
 
     this.controlNetworkPrefix = selectedNetwork.length > 0 ? `${selectedNetwork}.` : '';
-
-    switch (selectedNetwork) {
-      case 'mainnet': this.networkLabel = TextContent.NETWORK_LABEL_MAINNET; break;
-      case 'testnet': this.networkLabel = TextContent.NETWORK_LABEL_TESTNET; break;
-      case 'regtest': this.networkLabel = TextContent.NETWORK_LABEL_REGTEST; break;
-      default: this.networkLabel = '';
-    }
 
     for (const field of [Controls.rpcIP, Controls.rpcPort, Controls.zmqIP, Controls.zmqPort]) {
       const fieldName = `${this.controlNetworkPrefix}${field}`;

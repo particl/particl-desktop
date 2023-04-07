@@ -1,7 +1,7 @@
 import { of, defer, iif, timer, throwError, merge } from 'rxjs';
 import { tap, catchError, concatMap, retryWhen, map, mapTo } from 'rxjs/operators';
 
-import { State, StateToken, Action, StateContext, Selector, createSelector } from '@ngxs/store';
+import { State, StateToken, Action, StateContext, Selector, createSelector, Store } from '@ngxs/store';
 import { patch, updateItem, removeItem, iif as nxgsIif } from '@ngxs/store/operators';
 import { Particl } from 'app/networks/networks.module';
 import { MarketStateActions, MarketUserActions } from './market.actions';
@@ -18,6 +18,7 @@ import {
   MarketNotifications, ChatNotifications, IPCResponses
 } from './market.models';
 import { ChatChannelType } from '../services/chats/chats.models';
+import { WalletInfoStateModel } from 'app/networks/particl/particl.models';
 
 
 const MARKET_STATE_TOKEN = new StateToken<MarketStateModel>('market');
@@ -191,6 +192,7 @@ export class MarketState {
     private _marketService: MarketRpcService,
     private _socketService: MarketSocketService,
     private _backendService: BackendService,
+    private _store: Store,
   ) {}
 
 
@@ -433,7 +435,7 @@ export class MarketState {
           }
         }
 
-        // Selected identity is not in the list returned, or there is no selected identity
+        // Selected identity is not in the list returned, or there is no selected identity: attempt the default identity
         const savedID = ctx.getState().settings.defaultIdentityID;
 
         if (savedID) {
@@ -443,11 +445,20 @@ export class MarketState {
           }
         }
 
-        // No valid current identity and no saved identity... get first identity from list
+        // No valid current identity and no saved identity... check if the current selected particl wallet is a valid identity
+        const activeParticlWalletInfo = this._store.selectSnapshot<WalletInfoStateModel>(Particl.State.Wallet.Info);
+        const current = identities.find(identity => identity.name === activeParticlWalletInfo.walletname);
+        if (current) {
+          return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(current));
+        }
+
+        // welp, nothing else worked: use first identity found from the marketplace (if it has any)
         const selected = JSON.parse(JSON.stringify(identities)).sort((a: Identity, b: Identity) => a.id - b.id)[0];
         if (selected) {
           return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected));
         }
+
+        // now bail... the null identity is the chosen one
       })
     );
   }

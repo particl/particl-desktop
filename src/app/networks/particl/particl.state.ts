@@ -349,7 +349,11 @@ export class ParticlZMQState {
       }));
 
       if (message.channel === 'hashblock') {
-        return ctx.dispatch(new ParticlActions.WalletActions.RefreshBalances);
+        return ctx.dispatch([
+          new ParticlActions.WalletActions.RefreshBalances(),
+          new ParticlActions.WalletActions.RefreshWalletInfo(),
+          new ParticlActions.WalletActions.UpdateColdStakingInfo(),
+        ]);
       }
     }
   }
@@ -761,8 +765,18 @@ export class WalletInfoState {
   }
 
 
+  @Action(ParticlInternalActions.WalletActions.WalletLoaded)
+  initializeWalletBalances(
+    ctx: StateContext<WalletInfoStateModel>,
+    { walletName }: ParticlInternalActions.WalletActions.WalletLoaded
+  ) {
+    return this._walletService.setSmsgActiveWallet(walletName);
+  }
+
+
   private updateWalletInfo(
-    ctx: StateContext<WalletInfoStateModel>, newWalletLoaded: boolean = false
+    ctx: StateContext<WalletInfoStateModel>,
+    newWalletLoaded: boolean = false
   ): Observable<RPCResponses.GetWalletInfo> {
     return this._walletService.getWalletInfo(1).pipe(
       tap((info) => {
@@ -961,14 +975,7 @@ export class WalletBalanceState {
             if (resKey in currentState) {
               if (!result[resKey].length) {
                 updatedValues[resKey] = [];
-              } else if (
-                (currentState[resKey].length !== result[resKey].length) ||
-                (xorWith<PublicUTXO | BlindUTXO | AnonUTXO>(
-                  currentState[resKey],
-                  result[resKey],
-                  (val, otherVal) => (val.txid === otherVal.txid) && (val.vout === otherVal.vout)
-                ).length > 0)
-              ) {
+              } else {
                 updatedValues[resKey] = result[resKey];
               }
             }
