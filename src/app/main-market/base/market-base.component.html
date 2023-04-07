@@ -66,8 +66,8 @@
     </div>
   </ng-container>
 
-  <ng-container ngProjectAs="sidebar" *ngIf="showProfileWarning || showWalletLockedWarning">
-    <div class="menu-items">
+  <ng-container ngProjectAs="sidebar" *ngIf="isStarted">
+    <div class="menu-items" *ngIf="showProfileWarning || showWalletLockedWarning">
       <a *ngIf="showWalletLockedWarning" class="menu-item warning" appDebounceClick (debounceClick)="openWalletUnlockModal()">
         <mat-icon fontIcon="part-alert"></mat-icon>
         <span class="text"
