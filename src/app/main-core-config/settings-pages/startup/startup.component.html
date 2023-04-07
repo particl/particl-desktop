@@ -44,14 +44,14 @@
         </h4>
         <p class="desc">Allows for selecting which network to connect to when starting a new Particl Core node.</p>
         <p class="desc">Note that this selection only applies when starting a new Particl Core node. If Particl Core is already running, it will need to be stopped or disconnected from, and a new node started afterwards, in order to to take effect.</p>
-        <p class="message --info" *ngIf="!allowEditingNetwork">This is currently disabled since the application has been forced into a testing state, in which case the relevant testing network will be enforced (this helps to ensure that testing builds do not result in real funds being used).</p>
-        <p class="message --warning" *ngIf="allowEditingNetwork">This should only typically be changed away from the main network when wanting to test functionality!</p>
+        <p class="message --info" *ngIf="!allowMainNetwork">The main network is currently disabled since the application has been forced into a testing state, in which case the relevant testing network will be enforced (this helps to ensure that testing builds do not result in real funds being used).</p>
+        <p class="message --warning" *ngIf="allowMainNetwork">This should only typically be changed away from the main network when wanting to test functionality!</p>
 
         <mat-radio-group  class="from-balance-type block-radio"
                           fxLayout="column"
                           fxLayoutGap="10px"
                           [formControl]="controlNetwork">
-          <mat-radio-button class="balance" fxFlex value="main"><div class="name">Main</div></mat-radio-button>
+          <mat-radio-button class="balance" fxFlex value="main" [disabled]="!allowMainNetwork"><div class="name">Main</div></mat-radio-button>
           <mat-radio-button class="balance" fxFlex value="test"><div class="name">Test</div></mat-radio-button>
           <mat-radio-button class="balance" fxFlex value="regtest"><div class="name">RegTest</div></mat-radio-button>
         </mat-radio-group>
