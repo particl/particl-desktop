@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  browser-tools: circleci/browser-tools@x.y
+  browser-tools: circleci/browser-tools@1.4.1
 jobs:
   build:
     working_directory: ~/particl-desktop
