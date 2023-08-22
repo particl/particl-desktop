@@ -181,7 +181,7 @@
 
                 </div>
 
-                <mat-action-row *ngIf="(isColdStaking$ | async) || isValidWallet; else votingActions" class="warnings">
+                <mat-action-row *ngIf="(isColdStaking$ | async) || !isValidWallet; else votingActions" class="warnings">
                   <div class="alert --boxed --warning" *ngIf="isValidWallet">
                     <span>This wallet is currently cold-staking. Voting would need to be performed via the cold-staking wallet.</span>
                   </div>
