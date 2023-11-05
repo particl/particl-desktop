@@ -195,7 +195,9 @@ export class StartupComponent implements OnInit, OnDestroy {
 
     if (settings[Controls.network_main] || settings[Controls.network_test] || settings[Controls.network_regtest]) {
       switch (true) {
-        case this.allowMainNetwork && settings[Controls.network_main] && settings[Controls.network_main].value: networkSelection = 'main'; break;
+        case this.allowMainNetwork && settings[Controls.network_main] && settings[Controls.network_main].value:
+          networkSelection = 'main';
+          break;
         case settings[Controls.network_test] && settings[Controls.network_test].value: networkSelection = 'test'; break;
         case settings[Controls.network_regtest] && settings[Controls.network_regtest].value: networkSelection = 'regtest'; break;
       }

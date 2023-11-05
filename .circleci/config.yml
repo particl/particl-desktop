@@ -1,10 +1,14 @@
 version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1.4.1
 jobs:
   build:
     working_directory: ~/particl-desktop
     docker:
-      - image: cimg/node:16.15.1-browsers
+      - image: cimg/node:16.20.0-browsers
     steps:
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - checkout
       - restore_cache:
           key: dependencies-v1-{{ checksum "yarn.lock" }}
@@ -30,7 +34,7 @@ jobs:
           no_output_timeout: 2m
       - run:
           name: Test Codabase
-          command: CHROME_BIN=/usr/bin/google-chrome yarn travis:test
+          command: CHROME_BIN=/usr/local/google-chrome yarn travis:test
           no_output_timeout: 4m
 
       # - store_artifacts:

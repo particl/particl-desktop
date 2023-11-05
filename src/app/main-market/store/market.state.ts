@@ -452,7 +452,7 @@ export class MarketState {
           return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(current));
         }
 
-        // welp, nothing else worked: use first identity found from the marketplace (if it has any)
+        // whelp, nothing else worked: use first identity found from the marketplace (if it has any)
         const selected = JSON.parse(JSON.stringify(identities)).sort((a: Identity, b: Identity) => a.id - b.id)[0];
         if (selected) {
           return ctx.dispatch(new MarketStateActions.SetCurrentIdentity(selected));
