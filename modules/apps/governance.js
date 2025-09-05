@@ -9,7 +9,7 @@ const SETTING_SCHEMA = {
     description: 'The URL to query for proposals.',
     type: 'string',
     pattern: "^(?:http(s)?:\\/\\/)?(\\{chain\\})?[\\w.-]+(?:\\.[\\w\\.-]+)+[\\w\\-\\._~:/?(\\{chain\\})?#[\\]@!\\$&'\\(\\)\\*\\+,;=.]+$",
-    default: 'https://raw.githubusercontent.com/dasource/partyman/master/votingproposals/${chain}/metadata.txt'
+    default: 'https://raw.githubusercontent.com/cryptoguard/partyman/master/votingproposals/${chain}/metadata.txt'
   },
   pollInterval: {
     title: 'Poll Interval',
